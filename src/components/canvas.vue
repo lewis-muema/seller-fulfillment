@@ -9,11 +9,13 @@
 <script>
 import Desktop from "./components/desktop.vue";
 import Mobile from "./components/mobile.vue";
+import moment from "moment";
 
 export default {
   components: { Desktop, Mobile },
   mounted() {
     this.isMobile();
+    this.languageListener();
   },
   methods: {
     isMobile() {
@@ -27,6 +29,13 @@ export default {
       } else {
         this.$store.commit("setMobile", false);
       }
+    },
+    languageListener() {
+      window.addEventListener("language-changed", (event) => {
+        this.$i18n.locale = event.detail;
+        localStorage.setItem("sellerTimeLocale", event.detail);
+        moment.locale(event.detail);
+      });
     },
   },
 };

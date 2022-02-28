@@ -16,14 +16,19 @@ eslint:
     - npm i eslint
     - npm run lint
 
-unitTest:
+test:
+  image: cypress/base:14.16.0
   stage: test
-  tags:
-    - docker
+
+  cache:
+    paths:
+      - .npm
+      - /root/.cache/Cypress
+
   script:
-    - apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-    - npm i cypress
-    - npm i start-server-and-test
+    - npm ci --prefer-offline
+    - npx cypress cache path
+    - npx cypress cache list
     - npm run test
 
 # buildpush:staging:

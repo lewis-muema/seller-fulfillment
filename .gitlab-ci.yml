@@ -1,0 +1,72 @@
+# image: node:10.24.0-alpine
+
+# variables:
+#   STAGING_IMAGE_NAME: sendy-docker-local.jfrog.io/buyer-fulfillment:latest_$CI_COMMIT_SHORT_SHA
+stages:
+  - lint
+  - test
+  # - buildpush
+  # - deploy
+
+eslint:
+  stage: lint
+  tags:
+    - docker
+  script:
+    - npm i eslint
+    - npm run lint
+
+unitTest:
+  stage: test
+  tags:
+    - docker
+  script:
+    - npm i cypress
+    - npm i start-server-and-test
+    - npm run test
+
+# buildpush:staging:
+#   stage: buildpush
+#   tags:
+#     - shell
+#   script:
+#     - docker build --build-arg DOCKER_ENV=testing --build-arg VUE_APP_OWNER_SEARCH="https://gate.sendyit.com/solr/ownerstaging/" --build-arg VUE_APP_ENVIRONMENT="staging" --build-arg VUE_APP_SENTRY_DSN="https://d017eeb1a2594094a9c30753d9e0b6bb@o32379.ingest.sentry.io/5922214" --build-arg VUE_APP_MIXPANEL_KEY="44f45c8f1e756ba049e6284def96ac7f" --build-arg VUE_APP_NODE_PRIVATE_URL="https://authtest.sendyit.com/v1/" --build-arg VUE_APP_GOOGLE_API_KEY="AIzaSyDvC1_6sdNupEhQWlADRh6NWGHsOex9w_c" --build-arg VUE_APP_AUTH_URL="https://authtest.sendyit.com/" --build-arg VUE_APP_ADONIS_URL="https://authtest.sendyit.com/adonis/" --build-arg VUE_APP_CUSTOMERS_URL="https://authtest.sendyit.com/customers/" --build-arg VUE_APP_PARTNERS_URL="https://authtest.sendyit.com/partners/" --build-arg VUE_APP_ORDERS_URL="https://authtest.sendyit.com/orders/"  --pull -t $STAGING_IMAGE_NAME -f Dockerfile .
+#     - docker push $STAGING_IMAGE_NAME
+#   only:
+#     - staging
+
+# #deploys the app to staging environment
+# deploy:staging:
+#   stage: deploy
+#   tags:
+#     - shell
+#   script:
+#     - ssh -v -f -o StrictHostKeyChecking=no -i ~/keys/id_rsa -l admin kubetest-master.sendyit.com "kubectl set image deploy buyer-fulfillment buyer-fulfillment=$STAGING_IMAGE_NAME"
+#   only:
+#     - staging
+  
+# buildpush:beta:
+#   stage: buildpush
+#   tags:
+#     - shell
+#   before_script:
+#     - export BETA_FLUX_IMAGE_NAME="sendy-docker-local.jfrog.io/buyer-fulfillment:beta_$(date +%Y-%m-%d-%H-%M)"
+#   script:
+#     - docker build --build-arg DOCKER_ENV=beta --build=arg VUE_APP_OWNER_SEARCH="https://gate.sendyit.com/solr/owner/" VUE_APP_ENVIRONMENT="production" --build-arg VUE_APP_SENTRY_DSN="https://d017eeb1a2594094a9c30753d9e0b6bb@o32379.ingest.sentry.io/5922214" --build-arg VUE_APP_NODE_PRIVATE_URL="https://auth.sendyit.com/v1/" --build-arg VUE_APP_AUTH_URL="https://auth.sendyit.com/" --build-arg VUE_APP_ADONIS_URL="https://auth.sendyit.com/adonis/" --build-arg VUE_APP_CUSTOMERS_URL="https://auth.sendyit.com/customers/" --build-arg VUE_APP_PARTNERS_URL="https://auth.sendyit.com/partners/" --build-arg VUE_APP_ORDERS_URL="https://auth.sendyit.com/orders/" --pull -t $BETA_FLUX_IMAGE_NAME -f Dockerfile .
+#     - docker push $BETA_FLUX_IMAGE_NAME
+#   only:
+#     - beta
+
+#builds and pushes the docker image to the artifactory prod
+# buildpush:prod:
+#   stage: buildpush
+#   tags:
+#     - shell
+#   before_script:
+#     - export FLUX_IMAGE_NAME="sendy-docker-local.jfrog.io/buyer-fulfillment:prod_$(date +%Y-%m-%d-%H-%M)"
+#   script:
+#     - docker build --build-arg DOCKER_ENV=production --build-arg VUE_APP_OWNER_SEARCH="https://gate.sendyit.com/solr/owner/" --build-arg VUE_APP_ENVIRONMENT="production" --build-arg VUE_APP_SENTRY_DSN="https://d017eeb1a2594094a9c30753d9e0b6bb@o32379.ingest.sentry.io/5922214" --build-arg VUE_APP_NODE_PRIVATE_URL="https://auth.sendyit.com/v1/" --build-arg VUE_APP_AUTH_URL="https://auth.sendyit.com/" --build-arg VUE_APP_ADONIS_URL="https://auth.sendyit.com/adonis/" --build-arg VUE_APP_CUSTOMERS_URL="https://auth.sendyit.com/customers/" --build-arg VUE_APP_PARTNERS_URL="https://auth.sendyit.com/partners/" --build-arg VUE_APP_ORDERS_URL="https://auth.sendyit.com/orders/" --pull -t $FLUX_IMAGE_NAME -f Dockerfile .
+#     - docker push $FLUX_IMAGE_NAME
+#   only:
+#     - master
+

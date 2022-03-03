@@ -2,6 +2,7 @@ image: node:14.18.1
 
 variables:
   STAGING_IMAGE_NAME: '${CI_REGISTRY}/seller-fulfillment:latest_${CI_COMMIT_SHORT_SHA}'
+  STAGING_IMAGE_NAME_LATEST: sendy-docker-local.jfrog.io/seller-fulfillment:latest
 
 stages:
   - lint
@@ -37,8 +38,9 @@ build:staging:
   tags:
     - shell
   script:
-    - docker build --pull -t $STAGING_IMAGE_NAME -f Dockerfile .
+    - docker build --pull -t $STAGING_IMAGE_NAME -t $STAGING_IMAGE_NAME_LATEST -f Dockerfile .
     - docker push $STAGING_IMAGE_NAME
+    - docker push $STAGING_IMAGE_NAME_LATEST
   only:
     - staging
 

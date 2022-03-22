@@ -21,7 +21,8 @@ eslint:
 test:
   image: cypress/base:14.16.0
   stage: test
-
+  tags:
+    - docker
   cache:
     paths:
       - .npm

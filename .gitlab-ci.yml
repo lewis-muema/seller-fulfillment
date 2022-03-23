@@ -1,13 +1,13 @@
 image: node:14.18.1
 
 variables:
-  STAGING_IMAGE_NAME: '${CI_REGISTRY}/seller-fulfillment:latest_${CI_COMMIT_SHORT_SHA}'
-  STAGING_IMAGE_NAME_LATEST: sendy-docker-local.jfrog.io/seller-fulfillment:latest
-
+  IMAGE_BASE_NAME: ${CI_REGISTRY}/seller-fulfillment
+  STAGING_IMAGE: $CI_REGISTRY/seller-fulfillment:latest_$CI_COMMIT_SHORT_SHA
+  
 stages:
   - lint
   - test
-  - build
+  - doker
   - deploy
 
 eslint:
@@ -34,65 +34,39 @@ test:
     - npx cypress cache list
     - npm run test
 
-build:staging:
-  stage: build
+docker_build:
+  stage: docker
   tags:
-    - shell
+    - shell 
   script:
-    - docker build --pull -t $STAGING_IMAGE_NAME -t $STAGING_IMAGE_NAME_LATEST -f Dockerfile .
-    - docker push $STAGING_IMAGE_NAME
-    - docker push $STAGING_IMAGE_NAME_LATEST
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]
+      then 
+        echo "Setup prod docker builds here!"
+      elif [ "$CI_COMMIT_REF_NAME" == "staging" ]
+      then 
+        IMAGE_TAG=dev_$(date +%Y-%m-%d-%H-%M)
+        IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
+        docker build -t $IMAGE_NAME -t $STAGING_IMAGE .
+        docker push $STAGING_IMAGE
+      else
+        export IMAGE_NAME="sendy-docker-local.jfrog.io/seller-fulfillment:$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')_$(date +%Y-%m-%d-%H-%M)"
+        docker build -t $IMAGE_NAME . 
+      fi
+      docker push $IMAGE_NAME
   only:
     - staging
+    - master
+    - /^feature*.*$/
 
-# #deploys the app to staging environment
 deploy:staging:
   stage: deploy
   tags:
     - shell
   script:
-    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy seller-fulfillment seller-fulfillment=${STAGING_IMAGE_NAME}"
+    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy seller-fulfillment seller-fulfillment=${STAGING_IMAGE}"
   only:
     - staging
-# buildpush:beta:
-#   stage: buildpush
-#   tags:
-#     - shell
-#   before_script:
-#     - export BETA_FLUX_IMAGE_NAME="sendy-docker-local.jfrog.io/buyer-fulfillment:beta_$(date +%Y-%m-%d-%H-%M)"
-#   script:
-#     - docker build --build-arg DOCKER_ENV=beta --build=arg VUE_APP_OWNER_SEARCH="https://gate.sendyit.com/solr/owner/" VUE_APP_ENVIRONMENT="production" --build-arg VUE_APP_SENTRY_DSN="https://d017eeb1a2594094a9c30753d9e0b6bb@o32379.ingest.sentry.io/5922214" --build-arg VUE_APP_NODE_PRIVATE_URL="https://auth.sendyit.com/v1/" --build-arg VUE_APP_AUTH_URL="https://auth.sendyit.com/" --build-arg VUE_APP_ADONIS_URL="https://auth.sendyit.com/adonis/" --build-arg VUE_APP_CUSTOMERS_URL="https://auth.sendyit.com/customers/" --build-arg VUE_APP_PARTNERS_URL="https://auth.sendyit.com/partners/" --build-arg VUE_APP_ORDERS_URL="https://auth.sendyit.com/orders/" --pull -t $BETA_FLUX_IMAGE_NAME -f Dockerfile .
-#     - docker push $BETA_FLUX_IMAGE_NAME
-#   only:
-#     - beta
-
-#builds and pushes the docker image to the artifactory prod
-# buildpush:prod:
-#   stage: buildpush
-#   tags:
-#     - shell
-#   before_script:
-#     - export FLUX_IMAGE_NAME="sendy-docker-local.jfrog.io/buyer-fulfillment:prod_$(date +%Y-%m-%d-%H-%M)"
-#   script:
-#     - docker build --build-arg DOCKER_ENV=production --build-arg VUE_APP_OWNER_SEARCH="https://gate.sendyit.com/solr/owner/" --build-arg VUE_APP_ENVIRONMENT="production" --build-arg VUE_APP_SENTRY_DSN="https://d017eeb1a2594094a9c30753d9e0b6bb@o32379.ingest.sentry.io/5922214" --build-arg VUE_APP_NODE_PRIVATE_URL="https://auth.sendyit.com/v1/" --build-arg VUE_APP_AUTH_URL="https://auth.sendyit.com/" --build-arg VUE_APP_ADONIS_URL="https://auth.sendyit.com/adonis/" --build-arg VUE_APP_CUSTOMERS_URL="https://auth.sendyit.com/customers/" --build-arg VUE_APP_PARTNERS_URL="https://auth.sendyit.com/partners/" --build-arg VUE_APP_ORDERS_URL="https://auth.sendyit.com/orders/" --pull -t $FLUX_IMAGE_NAME -f Dockerfile .
-#     - docker push $FLUX_IMAGE_NAME
-#   only:
-#     - master
-
-build:preview_env:
-  stage: build
-  tags:
-    - shell
-  before_script:
-    - export PREVIEW_ENV_IMAGE_NAME="sendy-docker-local.jfrog.io/seller-fulfillment:$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')_$(date +%Y-%m-%d-%H-%M)"
-    - export FEATURE_ENV="$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')"
-    - echo "$FEATURE_ENV"
-  script:
-    - docker build -t "${PREVIEW_ENV_IMAGE_NAME}" .
-    - docker push h"${PREVIEW_ENV_IMAGE_NAME}
-  only:
-    refs:
-      - /^feature*.*$/
 
 create-preview-env:
   stage: deploy

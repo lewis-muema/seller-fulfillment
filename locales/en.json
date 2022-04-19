@@ -1,3 +1,18 @@
 {
-  "dashboard": "Dashboard"
+  "help": "Help",
+  "settings": "Settings",
+  "payments": "Payments",
+  "deliveries": "Deliveries",
+  "inventory": "Inventory",
+  "home": "Home",
+  "products": "Products",
+  "stocks": "Stock levels",
+  "sendInventory": "Send Inventory",
+  "toCustomers": "To customers",
+  "toFulfilmentCentre": "To Fulfilment Centre",
+  "statements": "Statements",
+  "invoices": "Invoices",
+  "profile": "Profile",
+  "paymentOptions": "Payment Options",
+  "manageUsers": "Manage Users"
 }

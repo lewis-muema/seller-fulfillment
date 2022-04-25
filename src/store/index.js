@@ -8,6 +8,8 @@ export default createStore({
   state() {
     return {
       mobile: false,
+      component: "",
+      external: ["/auth/sign-in", "/auth/sign-up", "/auth/otp"],
     };
   },
   actions,

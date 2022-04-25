@@ -1,11 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>
+  <div v-if="loaded">
     <v-card>
       <v-layout>
-        <sidebar />
+        <sidebar v-if="!external" />
         <v-main style="height: 100vh">
-          <headers />
+          <headers v-if="!external" />
+          <router-view />
         </v-main>
       </v-layout>
     </v-card>
@@ -23,8 +24,23 @@ export default {
     sidebar,
     headers,
   },
+  computed: {
+    external() {
+      if (this.$store.getters.getExternal.includes(this.$route.path)) {
+        return true;
+      }
+      return false;
+    },
+  },
   data() {
-    return {};
+    return {
+      loaded: false,
+    };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loaded = true;
+    }, 100);
   },
   methods: {},
 };

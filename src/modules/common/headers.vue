@@ -17,7 +17,7 @@
               append-icon="mdi-chevron-down"
               class="header-shortcuts-button"
             >
-              {{ $t("new") }}
+              {{ $t("common.new") }}
             </v-btn>
           </template>
           <v-list class="header-list-popup">
@@ -51,7 +51,7 @@
           </template>
           <v-list class="header-list-popup">
             <p class="header-notification-list-title">
-              {{ $t("notifications") }}
+              {{ $t("common.notifications") }}
             </p>
             <v-list-item v-for="(not, i) in notifications" :key="i">
               <v-list-item-title>
@@ -133,17 +133,17 @@ export default {
       profileName: "Irene Jane",
       shortcuts: [
         {
-          title: this.$t("deliverToCustomer"),
+          title: this.$t("common.deliverToCustomer"),
           icon: "mdi-truck-outline",
           url: "en",
         },
         {
-          title: this.$t("sendToFC"),
+          title: this.$t("common.sendToFC"),
           icon: "mdi-warehouse",
           url: "fr",
         },
         {
-          title: this.$t("addProducts"),
+          title: this.$t("common.addProducts"),
           icon: "mdi-plus",
           url: "fr",
         },

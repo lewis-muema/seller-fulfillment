@@ -3,17 +3,32 @@ phrase:
   project_id: 2ad664d459bde73e9dab437523e07b7d
   push:
     sources:
-    - file: ./locales/en.json
+    - file: ./locales/common/en.json
       params:
         file_format: simple_json
         locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+        update_translations: true
+        tags: common
+
+    - file: ./locales/deliveries/en.json
+      params:
+        file_format: simple_json
+        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+        update_translations: true
+        tags: deliveries
+
   pull:
     targets:
-    - file: ./locales/fr.json
+    - file: ./locales/common/fr.json
       params:
         file_format: simple_json
         locale_id: 6a7c82d335ab0c8b9985e0793647009c
-    - file: ./locales/en.json
+        tags: common
+        
+    - file: ./locales/deliveries/fr.json
       params:
         file_format: simple_json
-        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+        locale_id: 6a7c82d335ab0c8b9985e0793647009c
+        tags: deliveries
+
+

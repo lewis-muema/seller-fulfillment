@@ -5,7 +5,7 @@
 <script>
 export default {
   mounted() {
-    this.$store.commit("setComponent", this.$t("deliveriesToCustomers"));
+    this.$store.commit("setComponent", this.$t("common.deliveriesToCustomers"));
   },
 };
 </script>

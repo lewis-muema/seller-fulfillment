@@ -11,11 +11,11 @@
       <v-list density="compact" nav class="desktop-sidebar-items">
         <v-list-item
           prepend-icon="mdi-home-outline"
-          :title="$t('home')"
-          :value="$t('home')"
+          :title="$t('common.home')"
+          :value="$t('common.home')"
           class="desktop-sidebar-icons"
           @click="$router.push('/')"
-          :active="route === $t('dashboard')"
+          :active="route === $t('common.dashboard')"
         ></v-list-item>
 
         <v-list-group>
@@ -23,32 +23,36 @@
             <v-list-item
               v-bind="checkProps(props, 'inventory')"
               prepend-icon="mdi-warehouse"
-              :title="$t('inventory')"
+              :title="$t('common.inventory')"
               class="desktop-sidebar-icons"
               id="inventory"
             ></v-list-item>
           </template>
           <v-list-item
-            :title="$t('products')"
+            :title="$t('common.products')"
             class="desktop-sidebar-sub-menu"
             @click="$router.push('/inventory/products')"
-            :active="route === $t('products')"
-            :append-icon="route === $t('products') ? 'mdi-circle-small' : ''"
+            :active="route === $t('common.products')"
+            :append-icon="
+              route === $t('common.products') ? 'mdi-circle-small' : ''
+            "
           ></v-list-item>
           <v-list-item
-            :title="$t('stocks')"
+            :title="$t('common.stocks')"
             @click="$router.push('/inventory/stock-levels')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('stocks')"
-            :append-icon="route === $t('stocks') ? 'mdi-circle-small' : ''"
+            :active="route === $t('common.stocks')"
+            :append-icon="
+              route === $t('common.stocks') ? 'mdi-circle-small' : ''
+            "
           ></v-list-item>
           <v-list-item
-            :title="$t('sendInventory')"
+            :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('sendInventory')"
+            :active="route === $t('common.sendInventory')"
             :append-icon="
-              route === $t('sendInventory') ? 'mdi-circle-small' : ''
+              route === $t('common.sendInventory') ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
         </v-list-group>
@@ -58,28 +62,30 @@
             <v-list-item
               v-bind="checkProps(props, 'deliveries')"
               prepend-icon="mdi-truck-outline"
-              :title="$t('deliveries')"
-              :value="$t('deliveries')"
+              :title="$t('common.deliveries')"
+              :value="$t('common.deliveries')"
               class="desktop-sidebar-icons"
               id="deliveries"
             ></v-list-item>
           </template>
           <v-list-item
-            :title="$t('toCustomers')"
+            :title="$t('common.toCustomers')"
             @click="$router.push('/deliveries/customer')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('deliveriesToCustomers')"
+            :active="route === $t('common.deliveriesToCustomers')"
             :append-icon="
-              route === $t('deliveriesToCustomers') ? 'mdi-circle-small' : ''
+              route === $t('common.deliveriesToCustomers')
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
           <v-list-item
-            :title="$t('toSendy')"
+            :title="$t('common.toSendy')"
             @click="$router.push('/deliveries/sendy')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('deliveriesToSendy')"
+            :active="route === $t('common.deliveriesToSendy')"
             :append-icon="
-              route === $t('deliveriesToSendy') ? 'mdi-circle-small' : ''
+              route === $t('common.deliveriesToSendy') ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
         </v-list-group>
@@ -89,25 +95,29 @@
             <v-list-item
               v-bind="checkProps(props, 'payments')"
               prepend-icon="mdi-cash-multiple"
-              :title="$t('payments')"
-              :value="$t('payments')"
+              :title="$t('common.payments')"
+              :value="$t('common.payments')"
               class="desktop-sidebar-icons"
               id="payments"
             ></v-list-item>
           </template>
           <v-list-item
-            :title="$t('statements')"
+            :title="$t('common.statements')"
             @click="$router.push('/payments/statements')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('statements')"
-            :append-icon="route === $t('statements') ? 'mdi-circle-small' : ''"
+            :active="route === $t('common.statements')"
+            :append-icon="
+              route === $t('common.statements') ? 'mdi-circle-small' : ''
+            "
           ></v-list-item>
           <v-list-item
-            :title="$t('invoices')"
+            :title="$t('common.invoices')"
             @click="$router.push('/payments/invoices')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('invoices')"
-            :append-icon="route === $t('invoices') ? 'mdi-circle-small' : ''"
+            :active="route === $t('common.invoices')"
+            :append-icon="
+              route === $t('common.invoices') ? 'mdi-circle-small' : ''
+            "
           ></v-list-item>
         </v-list-group>
 
@@ -116,43 +126,47 @@
             <v-list-item
               v-bind="checkProps(props, 'settings')"
               prepend-icon="mdi-account-circle-outline"
-              :title="$t('settings')"
-              :value="$t('settings')"
+              :title="$t('common.settings')"
+              :value="$t('common.settings')"
               class="desktop-sidebar-icons"
               id="settings"
             ></v-list-item>
           </template>
           <v-list-item
-            :title="$t('profile')"
+            :title="$t('common.profile')"
             @click="$router.push('/settings/profile')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('profile')"
-            :append-icon="route === $t('profile') ? 'mdi-circle-small' : ''"
-          ></v-list-item>
-          <v-list-item
-            :title="$t('paymentOptions')"
-            @click="$router.push('/settings/payment-options')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === $t('paymentOptions')"
+            :active="route === $t('common.profile')"
             :append-icon="
-              route === $t('paymentOptions') ? 'mdi-circle-small' : ''
+              route === $t('common.profile') ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
           <v-list-item
-            :title="$t('manageUsers')"
+            :title="$t('common.paymentOptions')"
+            @click="$router.push('/settings/payment-options')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === $t('common.paymentOptions')"
+            :append-icon="
+              route === $t('common.paymentOptions') ? 'mdi-circle-small' : ''
+            "
+          ></v-list-item>
+          <v-list-item
+            :title="$t('common.manageUsers')"
             @click="$router.push('/settings/manage-users')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('manageUsers')"
-            :append-icon="route === $t('manageUsers') ? 'mdi-circle-small' : ''"
+            :active="route === $t('common.manageUsers')"
+            :append-icon="
+              route === $t('common.manageUsers') ? 'mdi-circle-small' : ''
+            "
           ></v-list-item>
         </v-list-group>
 
         <v-list-item
           prepend-icon="mdi-face-agent"
-          :title="$t('help')"
+          :title="$t('common.help')"
           @click="$router.push('/help')"
           class="desktop-sidebar-icons"
-          :active="route === $t('help')"
+          :active="route === $t('common.help')"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>

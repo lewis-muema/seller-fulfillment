@@ -9,7 +9,7 @@ export default createStore({
     return {
       mobile: false,
       component: "",
-      external: ["/auth/sign-in", "/auth/sign-up", "/auth/otp"],
+      external: ["/auth/sign-in", "/auth/sign-up", "/auth/otp", "/auth"],
     };
   },
   actions,

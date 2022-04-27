@@ -26,6 +26,7 @@ export default {
   },
   computed: {
     external() {
+      console.log(this.$route.path);
       if (this.$store.getters.getExternal.includes(this.$route.path)) {
         return true;
       }

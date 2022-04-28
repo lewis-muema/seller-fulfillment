@@ -1,134 +1,116 @@
 <template>
   <div>
-    <v-card class="mx-auto" width="80%">
-      <div class="dropdown language-dropdown">
-        <button
-          class="btn dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          English
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a class="dropdown-item" href="#">French</a></li>
-        </ul>
+    <form action="">
+      <div class="desktop-sign-up" v-if="continueSignup">
+        <v-card-title class="text-center">
+          Sign up for Sendy Fulfilment
+        </v-card-title>
+        <v-card-text class="pt-5">
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Business name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter name of business"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Business email address</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter business email address"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Country of Operation</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="d-grid gap-2 col-12 mx-auto pt-3">
+            <button
+              class="btn btn-primary b"
+              type="button"
+              @click="continueSignUp"
+            >
+              Continue
+            </button>
+            <div class="text-center text-grey">or</div>
+            <button
+              class="btn btn-primary signup-with-google-btn"
+              type="button"
+            >
+              Sign up with Google
+            </button>
+          </div>
+          <p class="desktop-login-link">
+            Already have an account?
+            <router-link to="/auth/sign-in"> Login</router-link>
+          </p>
+        </v-card-text>
       </div>
-      <form action="">
-        <div class="desktop-sign-up" v-if="continueSignup">
-          <v-card-title class="text-center">
-            Sign up for Sendy Fulfilment
-          </v-card-title>
-          <v-card-text class="pt-5">
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Business name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                placeholder="Enter name of business"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Business email address</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                placeholder="Enter business email address"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Country of Operation</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <div class="d-grid gap-2 col-12 mx-auto pt-3">
-              <button
-                class="btn btn-primary b"
-                type="button"
-                @click="continueSignUp"
-              >
-                Continue
-              </button>
-              <div class="text-center text-grey">or</div>
-              <button
-                class="btn btn-primary signup-with-google-btn"
-                type="button"
-              >
-                Sign up with Google
-              </button>
-            </div>
-            <p class="desktop-login-link">
-              Already have an account?
-              <router-link to="/auth/sign-in"> Login</router-link>
-            </p>
-          </v-card-text>
-        </div>
-        <div class="complete-sign-up" v-else>
-          <v-card-title class="text-center"> Complete Sign up </v-card-title>
-          <v-card-text>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Your name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                placeholder="Enter your personal name"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Phone number</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                placeholder="Enter phone number"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Industry of your business</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <div class="d-grid gap-2 col-12 mx-auto pt-3">
-              <button class="btn btn-primary b" type="submit">Sign up</button>
-            </div>
-            <p class="desktop-login-link">
-              By signing up you agree to the
-              <router-link to="/auth/sign-in">
-                terms and conditions</router-link
-              >
-            </p>
-          </v-card-text>
-        </div>
-      </form>
-    </v-card>
+      <div class="complete-sign-up" v-else>
+        <v-card-title class="text-center"> Complete Sign up </v-card-title>
+        <v-card-text>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Your name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter your personal name"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Phone number</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter phone number"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Industry of your business</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="d-grid gap-2 col-12 mx-auto pt-3">
+            <router-link to="/auth/otp" class="btn btn-primary"
+              >SignUp</router-link
+            >
+          </div>
+          <p class="desktop-login-link">
+            By signing up you agree to the
+            <router-link to="/auth/sign-in"> terms and conditions</router-link>
+          </p>
+        </v-card-text>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -148,8 +130,7 @@ export default {
 </script>
 
 <style>
-form,
-.v-card-title {
+form {
   padding: 0px 50px;
 }
 .v-card-text {

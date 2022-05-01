@@ -10,7 +10,7 @@
             class="d-flex justify-content-center align-items-center container"
           >
             <div class="">
-              <div class="d-flex flex-row">
+              <div class="d-flex flex-row desktop-otp-inputs">
                 <input type="text" class="form-control" autofocus="" /><input
                   type="text"
                   class="form-control"
@@ -27,7 +27,9 @@
             >
           </div>
           <span class=""
-            ><p class="mt-2 text-center">Resend code in 120 seconds</p></span
+            ><p class="mt-4 text-center text-grey">
+              Resend code in 120 seconds
+            </p></span
           >
         </v-card-text>
       </div>
@@ -45,5 +47,8 @@ export default {};
 }
 .otp-card {
   margin-bottom: 80px;
+}
+.desktop-otp-inputs > .form-control {
+  padding: 0.75rem 0.75rem !important;
 }
 </style>

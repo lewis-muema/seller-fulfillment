@@ -8,7 +8,7 @@
       >
         <v-col
           cols="12"
-          sm="6"
+          md="6"
           style="min-width: 100px"
           class="flex-grow-0 flex-shrink-1"
         >
@@ -26,7 +26,7 @@
         </v-col>
         <v-col
           cols="12"
-          sm="6"
+          md="6"
           style="min-width: 100px"
           class="flex-grow-0 flex-shrink-1"
         >
@@ -45,6 +45,14 @@
                 <li><a class="dropdown-item" href="#">French</a></li>
               </ul>
             </div>
+            <vueper-slides>
+              <vueper-slide
+                v-for="(slide, i) in slides"
+                :key="i"
+                :title="slide.title"
+                :content="slide.content"
+              />
+            </vueper-slides>
             <router-view></router-view>
           </v-card>
         </v-col>
@@ -54,7 +62,19 @@
 </template>
 
 <script>
-export default {};
+import { VueperSlides, VueperSlide } from "vueperslides";
+import "vueperslides/dist/vueperslides.css";
+export default {
+  data: () => ({
+    components: { VueperSlides, VueperSlide },
+    slides: [
+      {
+        title: "Slide #1",
+        content: "Slide content.",
+      },
+    ],
+  }),
+};
 </script>
 
 <style scoped>

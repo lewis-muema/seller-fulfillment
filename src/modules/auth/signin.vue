@@ -3,8 +3,9 @@
     <form action="">
       <div class="complete-sign-up">
         <v-card-title class="text-center"> Welcome Back </v-card-title>
+        <p class="text-grey ml-5">Login to continue</p>
         <v-card-text style="height: 510px">
-          <div class="mb-3">
+          <div class="mb-5 mt-3">
             <label for="exampleInputEmail1" class="form-label"
               >Your email address</label
             >
@@ -21,16 +22,10 @@
               >Continue with email address</router-link
             >
             <div class="text-center text-grey">or</div>
-            <button
-              class="btn btn-primary signup-with-google-btn"
-              type="button"
-            >
+            <button class="btn btn-primary default-btn" type="button">
               Login with Phone number
             </button>
-            <button
-              class="btn btn-primary signup-with-google-btn"
-              type="button"
-            >
+            <button class="btn btn-primary default-btn" type="button">
               Login with Google
             </button>
           </div>

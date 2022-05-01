@@ -50,10 +50,7 @@
               Continue
             </button>
             <div class="text-center text-grey">or</div>
-            <button
-              class="btn btn-primary signup-with-google-btn"
-              type="button"
-            >
+            <button class="btn btn-primary default-btn" type="button">
               Sign up with Google
             </button>
           </div>
@@ -150,14 +147,18 @@ form {
   padding-top: 30px;
   margin-right: 30px;
 }
-.signup-with-google-btn {
+.default-btn {
   background-color: #ffffff !important;
   color: black !important;
+  border-color: #e2e7ed !important;
 }
 .form-control::placeholder {
   color: #dcdfe6;
 }
 .desktop-login-link {
   padding: 50px 0px 0px 50px;
+}
+.btn {
+  line-height: 1.9 !important;
 }
 </style>

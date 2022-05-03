@@ -57,7 +57,7 @@
               <v-list-item-title>
                 <div class="header-notification-flex">
                   <div class="header-notifications-icon">
-                    <i :class="`mdi ${not.icon}`" v-bind="props"></i>
+                    <i :class="`mdi ${not.icon}`"></i>
                   </div>
                   <div>
                     <div class="header-notification-text">

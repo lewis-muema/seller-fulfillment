@@ -7,13 +7,13 @@ import Products from "../modules/inventory/products.vue";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
 import Customers from "../modules/deliveries/customers.vue";
+import Tracking from "../modules/deliveries/tracking.vue";
 import Sendy from "../modules/deliveries/sendy.vue";
 import Statements from "../modules/payments/statements.vue";
 import Invoices from "../modules/payments/invoices.vue";
 import ManageUsers from "../modules/settings/manageUsers.vue";
 import PaymentOptions from "../modules/settings/paymentOptions.vue";
 import Profile from "../modules/settings/profile.vue";
-import Help from "../modules/help/help.vue";
 
 const routes = [
   {
@@ -62,6 +62,11 @@ const routes = [
     component: Sendy,
   },
   {
+    path: "/deliveries/tracking",
+    name: "Tracking",
+    component: Tracking,
+  },
+  {
     path: "/payments/statements",
     name: "Statements",
     component: Statements,
@@ -85,11 +90,6 @@ const routes = [
     path: "/settings/manage-users",
     name: "Manage Users",
     component: ManageUsers,
-  },
-  {
-    path: "/help",
-    name: "Help",
-    component: Help,
   },
 ];
 

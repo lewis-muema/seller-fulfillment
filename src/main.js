@@ -14,6 +14,8 @@ import {
   faThumbsDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 
@@ -22,6 +24,7 @@ createApp(App)
   .use(router)
   .use(store)
   .use(vuetify)
+  .use(ElementPlus)
   .use("font-awesome-icon", FontAwesomeIcon)
   .use(moment)
   .use(VueGoogleMaps, {

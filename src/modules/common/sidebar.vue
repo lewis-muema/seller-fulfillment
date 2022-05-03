@@ -160,14 +160,6 @@
             "
           ></v-list-item>
         </v-list-group>
-
-        <v-list-item
-          prepend-icon="mdi-face-agent"
-          :title="$t('common.help')"
-          @click="$router.push('/help')"
-          class="desktop-sidebar-icons"
-          :active="route === $t('common.help')"
-        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>

@@ -3,8 +3,8 @@
   <div v-if="loaded">
     <v-card>
       <v-layout>
-        <sidebar v-if="!external" />
-        <v-main style="height: 100vh">
+        <sidebar class="sidebar" v-if="!external" />
+        <v-main>
           <headers v-if="!external" />
           <router-view />
         </v-main>
@@ -55,5 +55,8 @@ export default {
 }
 .nav-closed {
   width: 80px !important;
+}
+.sidebar {
+  height: 100vh;
 }
 </style>

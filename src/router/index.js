@@ -4,6 +4,7 @@ import signIn from "../modules/auth/signin.vue";
 import signUp from "../modules/auth/signup.vue";
 import OTP from "../modules/auth/OTP.vue";
 import Dashboard from "../modules/dashboard/dashboard.vue";
+import getStarted from "../modules/dashboard/getStarted.vue";
 import Products from "../modules/inventory/products.vue";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
@@ -45,9 +46,9 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/s",
-    name: "S",
-    component: signUp,
+    path: "/getStarted",
+    name: "getStarted",
+    component: getStarted,
   },
   {
     path: "/inventory/products",

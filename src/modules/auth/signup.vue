@@ -7,39 +7,32 @@
         </v-card-title>
         <v-card-text class="pt-5">
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Business name</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="Enter name of business"
-            />
+            <label for="businessName" class="form-label">Business name</label>
+            <div class="form-input-group">
+              <i class="fa fa-envelope-o"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter name of business"
+              />
+            </div>
           </div>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
+            <label for="businessEmail" class="form-label"
               >Business email address</label
             >
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="Enter business email address"
-            />
+            <div class="form-input-group">
+              <i class="fa fa-envelope-o"></i>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Enter business email address"
+              />
+            </div>
           </div>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Country of Operation</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-            />
+            <label for="country" class="form-label">Country of Operation</label>
+            <input type="text" class="form-control" />
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
@@ -64,37 +57,33 @@
         <v-card-title class="text-center"> Complete Sign up </v-card-title>
         <v-card-text>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Your name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="Enter your personal name"
-            />
+            <label for="yourName" class="form-label">Your name</label>
+            <div class="form-input-group">
+              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter your personal name"
+              />
+            </div>
           </div>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Phone number</label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="Enter phone number"
-            />
+            <label for="phoneNumber" class="form-label">Phone number</label>
+            <vue-tel-input
+              v-model="phone"
+              v-bind="sendyPhoneProps"
+              :input-options="vueTelInputProps"
+            ></vue-tel-input>
           </div>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
+            <label for="industry" class="form-label"
               >Industry of your business</label
             >
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-            />
+            <select class="form-select" aria-label="Default select example">
+              <option selected>Select</option>
+              <option value="1">Clothing</option>
+              <option value="2">Cosmetics</option>
+            </select>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <router-link to="/auth/otp" class="btn btn-primary"
@@ -116,6 +105,29 @@ export default {
   data() {
     return {
       continueSignup: true,
+      sendyPhoneProps: {
+        mode: "international",
+        defaultCountry: "ke",
+        preferredCountries: ["ke", "ug", "tz"],
+      },
+      vueTelInputProps: {
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: "Enter phone number",
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        autocomplete: "off",
+        name: "telephone",
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
     };
   },
   methods: {
@@ -160,5 +172,31 @@ form {
 }
 .btn {
   line-height: 1.9 !important;
+}
+.form-input-group {
+  position: relative;
+}
+.form-input-group .fa {
+  position: absolute;
+  top: 9px;
+  left: 13px;
+  width: 16px;
+  height: 13.33px;
+  font-size: 19px;
+  color: #909399;
+}
+.form-input-group input {
+  text-indent: 28px;
+}
+
+.form-control::placeholder {
+  color: #dcdfe6 !important;
+}
+.vti__input::placeholder {
+  color: #dcdfe6;
+}
+.vue-tel-input {
+  border: 1px solid #ced4da !important;
+  font-size: 1rem;
 }
 </style>

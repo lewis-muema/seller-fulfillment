@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/auth/sign-in" class="btn btn-primary"
+            <router-link to="/onboarding" class="btn btn-primary"
               >Confirm Code</router-link
             >
           </div>

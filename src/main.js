@@ -10,6 +10,10 @@ import { loadFonts } from "./plugins/webfontloader";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
+import VueTelInput from "vue-tel-input";
+import "vue-tel-input/dist/vue-tel-input.css";
 import {
   faSpinner,
   faThumbsUp,
@@ -24,6 +28,8 @@ createApp(App)
   .use(router)
   .use(store)
   .use(vuetify)
+  .use(ElementPlus)
+  .use(VueTelInput)
   .use("font-awesome-icon", FontAwesomeIcon)
   .use(moment)
   .use(VueGoogleMaps, {

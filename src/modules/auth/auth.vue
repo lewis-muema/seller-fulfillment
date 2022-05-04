@@ -17,12 +17,28 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <p class="">
-            Sendy is such a game changer for my business, it <br />
-            takes away the stress of delivery. My life has <br />
-            never been this easy. I recommend this solution <br />
-            to anyone running an online store.
-          </p>
+          <carousel :items-to-show="1" :autoplay="2000">
+            <slide v-for="slide in slides" :key="slide.title" class="f mt-3">
+              <v-icon class="desktop-auth-icon">mdi-arrow-down-bold-box</v-icon>
+              <div class="a">{{ slide.content }}</div>
+              <br />
+              <div class="d-flex">
+                <v-avatar>
+                  <img
+                    src="https://cdn.vuetifyjs.com/images/john.jpg"
+                    alt="John"
+                  />
+                </v-avatar>
+                <div class="x">
+                  <div class="testimonial-name">{{ slide.name }}</div>
+                  <div>{{ slide.businessName }}</div>
+                </div>
+              </div>
+            </slide>
+            <template #addons>
+              <pagination />
+            </template>
+          </carousel>
         </v-col>
         <v-col
           cols="12"
@@ -45,14 +61,6 @@
                 <li><a class="dropdown-item" href="#">French</a></li>
               </ul>
             </div>
-            <vueper-slides>
-              <vueper-slide
-                v-for="(slide, i) in slides"
-                :key="i"
-                :title="slide.title"
-                :content="slide.content"
-              />
-            </vueper-slides>
             <router-view></router-view>
           </v-card>
         </v-col>
@@ -62,15 +70,29 @@
 </template>
 
 <script>
-import { VueperSlides, VueperSlide } from "vueperslides";
-import "vueperslides/dist/vueperslides.css";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Pagination } from "vue3-carousel";
 export default {
+  components: {
+    Carousel,
+    Slide,
+    Pagination,
+  },
   data: () => ({
-    components: { VueperSlides, VueperSlide },
     slides: [
       {
-        title: "Slide #1",
-        content: "Slide content.",
+        content:
+          "Sendy is such a game changer for my business, it takes away the stress of delivery. My life has never been this easy. I recommend this solution to anyone running an online store.",
+        name: "Jane Mully",
+        businessName: "Business owner, Smart Collections",
+        profilePhoto: "",
+      },
+      {
+        content:
+          "Sendy is such a game changer for my business, it takes away the stress of delivery. My life has never been this easy. I recommend this solution to anyone running an online store.",
+        name: "Jane Mully",
+        businessName: "Business owner, Smart Collections",
+        profilePhoto: "",
       },
     ],
   }),
@@ -100,7 +122,49 @@ export default {
   transform: skewY(-11deg);
 }
 .auth-sendy-logo {
-  width: 70px;
-  margin: 30px !important;
+  width: 90px;
+}
+.f {
+  flex-direction: column !important;
+}
+.a {
+  text-align: left !important;
+  font-size: 18px;
+}
+.carousel {
+  margin-top: 10%;
+}
+.x {
+  text-align: left !important;
+  padding-left: 20px;
+}
+.carousel__slide {
+  align-items: flex-start !important;
+}
+.desktop-auth-icon {
+  background: #d3ddf6;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #324ba8;
+  margin: 0px 10px 20px 0px;
+}
+.carousel__pagination-button {
+  border-radius: 50% !important;
+  color: #fff !important;
+}
+.testimonial-name {
+  color: #606266;
+  font-size: 15px;
+}
+.carousel__pagination {
+  justify-content: left !important;
+}
+ol,
+ul {
+  padding: 0px !important;
 }
 </style>

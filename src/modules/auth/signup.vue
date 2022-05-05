@@ -9,7 +9,7 @@
           <div class="mb-3">
             <label for="businessName" class="form-label">Business name</label>
             <div class="form-input-group">
-              <i class="fa fa-envelope-o"></i>
+              <i class="mdi mdi-store-outline"></i>
               <input
                 type="text"
                 class="form-control"
@@ -22,7 +22,7 @@
               >Business email address</label
             >
             <div class="form-input-group">
-              <i class="fa fa-envelope-o"></i>
+              <i class="mdi mdi-email-outline"></i>
               <input
                 type="email"
                 class="form-control"
@@ -34,6 +34,12 @@
             <label for="country" class="form-label">Country of Operation</label>
             <input type="text" class="form-control" />
           </div>
+          <country-select
+            v-model="country"
+            :country="country"
+            topCountry="KE"
+          />
+          <region-select v-model="region" :country="country" :region="region" />
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
               class="btn btn-primary b"
@@ -43,6 +49,7 @@
               Continue
             </button>
             <div class="text-center text-grey">or</div>
+            <img src="assets/google.png" alt="google" />
             <button class="btn btn-primary default-btn" type="button">
               Sign up with Google
             </button>
@@ -54,12 +61,18 @@
         </v-card-text>
       </div>
       <div class="complete-sign-up" v-else>
-        <v-card-title class="text-center"> Complete Sign up </v-card-title>
+        <div class="d-flex desktop-header-title">
+          <router-link to="auth/sign-up">
+            <i class="mdi mdi-arrow-left" aria-hidden="true"></i
+          ></router-link>
+
+          <v-card-title class="text-center"> Complete Sign up </v-card-title>
+        </div>
         <v-card-text>
           <div class="mb-3">
             <label for="yourName" class="form-label">Your name</label>
             <div class="form-input-group">
-              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+              <i class="mdi mdi-account-circle" aria-hidden="true"></i>
               <input
                 type="text"
                 class="form-control"
@@ -104,6 +117,8 @@
 export default {
   data() {
     return {
+      country: "",
+      region: "",
       continueSignup: true,
       sendyPhoneProps: {
         mode: "international",
@@ -176,7 +191,7 @@ form {
 .form-input-group {
   position: relative;
 }
-.form-input-group .fa {
+.form-input-group .mdi {
   position: absolute;
   top: 9px;
   left: 13px;
@@ -198,5 +213,11 @@ form {
 .vue-tel-input {
   border: 1px solid #ced4da !important;
   font-size: 1rem;
+}
+.desktop-header-title .mdi-arrow-left {
+  width: 18px;
+  height: 18px;
+  color: #5f6368;
+  font-size: 30px;
 }
 </style>

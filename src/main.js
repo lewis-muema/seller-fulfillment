@@ -14,6 +14,7 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import VueTelInput from "vue-tel-input";
 import "vue-tel-input/dist/vue-tel-input.css";
+import vueCountryRegionSelect from "vue3-country-region-select";
 import {
   faSpinner,
   faThumbsUp,
@@ -29,6 +30,7 @@ createApp(App)
   .use(store)
   .use(vuetify)
   .use(ElementPlus)
+  .use(vueCountryRegionSelect)
   .use(VueTelInput)
   .use("font-awesome-icon", FontAwesomeIcon)
   .use(moment)

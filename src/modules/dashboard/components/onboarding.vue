@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-container>
-      <span class="">
-        <h5>Welcome Irene</h5>
+    <v-container class="ml-5">
+      <span class="mt-3 ml-5">
+        <h5>Welcome, Irene! 🎉</h5>
         <p>Complete the steps below to fulfilling your first order</p>
       </span>
       <v-row>
-        <v-col cols="9" class="desktop-dashboard-content">
+        <v-col cols="8" class="desktop-dashboard-content">
           <v-card
             tile
             variant="outlined"
@@ -17,7 +17,26 @@
             <div class="desktop-dashboard-list">
               <v-list density="compact">
                 <v-list-item>
-                  <div class="d-flex">
+                  <v-list-item-avatar start>
+                    <v-icon class="desktop-content-icon">{{
+                      content.icon
+                    }}</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-header>
+                    <v-list-item-title class="desktop-content-title">{{
+                      content.title
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle class="mt-1">{{
+                      content.text
+                    }}</v-list-item-subtitle>
+                    <button
+                      type="submit"
+                      class="btn btn-primary desktop-content-button"
+                    >
+                      {{ content.button }}
+                    </button>
+                  </v-list-item-header>
+                  <!-- <div class="d-flex">
                     <v-icon class="desktop-content-icon">
                       {{ content.icon }}</v-icon
                     >
@@ -35,29 +54,30 @@
                         {{ content.button }}
                       </button>
                     </v-list-item-title>
-                  </div>
+                  </div> -->
                 </v-list-item>
               </v-list>
             </div>
           </v-card>
         </v-col>
         <v-col cols="3" class="desktop-dashboard-content mt-3">
-          <v-card variant="outlined">
+          <v-card variant="outlined" class="c">
             <v-list>
-              <p>Get more out of Sendy fulfillment</p>
-              <v-list-item v-for="(link, i) in dashboardLinks" :key="i">
-                <div class="d-flex">
+              <p class="ml-3">Get more out of Sendy fulfillment</p>
+              <v-list-item
+                v-for="(link, i) in dashboardLinks"
+                :key="i"
+                two-line
+              >
+                <v-list-item-avatar>
                   <v-icon class="dashboard-links-icon">{{ link.icon }}</v-icon>
-                  <v-list-item-title>
-                    <div class="desktop-dashboard-link-title">
-                      {{ link.title }}
-                    </div>
-                    <div class="desktop-dashboard-link-name">
-                      {{ link.name }}
-                    </div>
-                    <v-divider></v-divider>
-                  </v-list-item-title>
-                </div>
+                </v-list-item-avatar>
+                <v-list-item-header>
+                  <v-list-item-title class="desktop-dashboard-link-title">{{
+                    link.title
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ link.name }}</v-list-item-subtitle>
+                </v-list-item-header>
               </v-list-item>
             </v-list>
           </v-card>
@@ -134,7 +154,7 @@ export default {
 }
 .desktop-content-icon {
   color: #116f28;
-  margin: 0px 10px 0px 0px;
+  margin-right: 10px;
 }
 .dashboard-links-icon {
   background: #d3ddf6;
@@ -146,15 +166,19 @@ export default {
   color: #324ba8;
   margin: 0px 10px 0px 0px;
 }
-.desktop-dashboard-list {
-  padding: 8px 0px !important;
-}
 .desktop-dashboard-link-title {
   color: #324ba8;
   font-weight: 500;
 }
-.desktop-dashboard-link-name {
-  overflow-wrap: break-word !important;
-  overflow: hidden !important;
+.desktop-content-title {
+  font-size: 17px !important;
+  color: #324ba8;
+  font-weight: 500;
+}
+.desktop-dashboard-list {
+  margin: 10px 10px;
+}
+.p {
+  margin-top: 300px !important;
 }
 </style>

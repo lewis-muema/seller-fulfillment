@@ -1,10 +1,20 @@
 <template>
   <div>
     <form action="">
-      <div class="">
-        <v-card-title class="text-center"> Verify Email address</v-card-title>
+      <div>
+        <div class="desktop-header-title d-flex">
+          <router-link to="auth/sign-up">
+            <i class="mdi mdi-arrow-left" aria-hidden="true"></i
+          ></router-link>
+          <v-card-title class="text-center">
+            Verify Email address
+          </v-card-title>
+        </div>
         <v-card-text class="otp-card">
-          <p>Enter the code sent to your email jamesmoves@gmail.com</p>
+          <p>
+            Enter the code sent to your email
+            <span class="otp-email">jamesmoves@gmail.com</span>
+          </p>
           <p>Enter code</p>
           <div
             class="d-flex justify-content-center align-items-center container"
@@ -50,5 +60,17 @@ export default {};
 }
 .desktop-otp-inputs > .form-control {
   padding: 0.75rem 0.75rem !important;
+}
+.desktop-header-title .mdi-arrow-left {
+  width: 18px;
+  height: 18px;
+  color: #5f6368;
+  font-size: 30px;
+}
+.otp-card p {
+  font-size: 16px;
+}
+.otp-card span {
+  font-weight: 500;
 }
 </style>

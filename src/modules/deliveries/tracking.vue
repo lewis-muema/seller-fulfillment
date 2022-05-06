@@ -159,4 +159,7 @@ export default {
   background: #324ba8;
   margin-left: auto;
 }
+.vuejs3-datepicker__calendar {
+  box-shadow: none !important;
+}
 </style>

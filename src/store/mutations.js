@@ -29,4 +29,19 @@ export default {
   setOverlay(state, val) {
     state.overlay = val;
   },
+  setStatements(state, val) {
+    state.statements = val;
+  },
+  setInvoices(state, val) {
+    state.invoices = val;
+  },
+  setInvoiceContent(state, val) {
+    state.invoiceContent = val;
+  },
+  setTotalDue(state, val) {
+    state.totalDue = val;
+  },
+  setTransationHistory(state, val) {
+    state.transationHistory = val;
+  },
 };

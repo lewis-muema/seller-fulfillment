@@ -13,6 +13,11 @@ import moment from "moment";
 
 export default {
   components: { Desktop, Mobile },
+  watch: {
+    "$route.path": function () {
+      this.$store.commit("setLoader", "loading-text");
+    },
+  },
   mounted() {
     this.isMobile();
     this.languageListener();

@@ -14,6 +14,7 @@ import Invoices from "../modules/payments/invoices.vue";
 import ManageUsers from "../modules/settings/manageUsers.vue";
 import PaymentOptions from "../modules/settings/paymentOptions.vue";
 import Profile from "../modules/settings/profile.vue";
+import viewInvoice from "../modules/payments/viewInvoice.vue";
 
 const routes = [
   {
@@ -75,6 +76,11 @@ const routes = [
     path: "/payments/invoices",
     name: "Invoices",
     component: Invoices,
+  },
+  {
+    path: "/payments/view-invoice",
+    name: "View Invoice",
+    component: viewInvoice,
   },
   {
     path: "/settings/profile",

@@ -13,4 +13,9 @@ export default {
   getDeliveryInfo: (state) => state.deliveryInfo,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
+  getStatements: (state) => state.statements,
+  getInvoices: (state) => state.invoices,
+  getInvoiceContent: (state) => state.invoiceContent,
+  getTotalDue: (state) => state.totalDue,
+  getTransationHistory: (state) => state.transationHistory,
 };

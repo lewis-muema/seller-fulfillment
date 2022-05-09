@@ -17,44 +17,27 @@
             <div class="desktop-dashboard-list">
               <v-list density="compact">
                 <v-list-item>
-                  <v-list-item-avatar start>
-                    <v-icon class="desktop-content-icon">{{
-                      content.icon
-                    }}</v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-header>
-                    <v-list-item-title class="desktop-content-title">{{
-                      content.title
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle class="mt-1">{{
-                      content.text
-                    }}</v-list-item-subtitle>
-                    <button
-                      type="submit"
-                      class="btn btn-primary desktop-content-button"
-                    >
-                      {{ content.button }}
-                    </button>
-                  </v-list-item-header>
-                  <!-- <div class="d-flex">
+                  <div class="d-flex">
                     <v-icon class="desktop-content-icon">
                       {{ content.icon }}</v-icon
                     >
-                    <v-list-item-title>
-                      <div class="desktop-content-title">
-                        {{ content.title }}
-                      </div>
-                      <div>
-                        {{ content.text }}
-                      </div>
+                    <v-list-item-header>
+                      <v-list-item-title>
+                        <div class="desktop-content-title">
+                          {{ content.title }}
+                        </div>
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="mt-1">{{
+                        content.text
+                      }}</v-list-item-subtitle>
                       <button
                         type="submit"
                         class="btn btn-primary desktop-content-button"
                       >
                         {{ content.button }}
                       </button>
-                    </v-list-item-title>
-                  </div> -->
+                    </v-list-item-header>
+                  </div>
                 </v-list-item>
               </v-list>
             </div>
@@ -70,7 +53,9 @@
                 two-line
               >
                 <v-list-item-avatar>
-                  <v-icon class="dashboard-links-icon">{{ link.icon }}</v-icon>
+                  <v-icon class="dashboard-links-icon mr-5">{{
+                    link.icon
+                  }}</v-icon>
                 </v-list-item-avatar>
                 <v-list-item-header>
                   <v-list-item-title class="desktop-dashboard-link-title">{{
@@ -127,12 +112,12 @@ export default {
         {
           title: "Watch tutorial",
           name: "Learn how to send us your inventory",
-          icon: "mdi-face-agent",
+          icon: "mdi-play-box-multiple",
         },
         {
           title: "Meet us in person",
           name: "Attend one of our upcoming events",
-          icon: "mdi-face-agent",
+          icon: "mdi-calendar-week-begin",
         },
       ],
     };

@@ -5,6 +5,7 @@ import signUp from "../modules/auth/signup.vue";
 import OTP from "../modules/auth/OTP.vue";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
+import AddProduct from "../modules/common/addProduct.vue";
 import Products from "../modules/inventory/products.vue";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
@@ -49,6 +50,11 @@ const routes = [
     path: "/onboarding",
     name: "Onboarding",
     component: Onboarding,
+  },
+  {
+    path: "/inventory/add-product",
+    name: "AddProducts",
+    component: AddProduct,
   },
   {
     path: "/inventory/products",

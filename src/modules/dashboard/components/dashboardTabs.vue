@@ -1,25 +1,45 @@
 <template>
   <div>
     <p>Ongoing deliveries</p>
-    <el-tabs class="demo-tabs" @tab-click="handleClick">
-      <el-tab-pane v-for="tab in tabs" :key="tab.label" :label="tab.label">
-      </el-tab-pane>
-    </el-tabs>
+    <div class="desktop-dashboard-tab-container">
+      <div
+        class="dashboard-deliveries-tab"
+        v-for="tab in tabs"
+        :key="tab.label"
+        :label="tab.label"
+      >
+        <div
+          class="dashboard-deliveries-tab-section"
+          :class="{ active: activeTab === 'To your Customers' }"
+          @click="setTab(tab)"
+        >
+          {{ tab.label }}
+        </div>
+        <v-badge
+          color="#FBDF9A"
+          text-color="#7F3B02"
+          :content="tab.content"
+          inline
+        ></v-badge>
+      </div>
+    </div>
+    <slot></slot>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
       tabs: [
         {
           label: "To your Customers",
-          icon: "",
+          content: "23",
         },
         {
           label: "To Sendy",
-          icon: "",
+          content: "23",
         },
       ],
       deliveries: [
@@ -38,11 +58,43 @@ export default {
     };
   },
   methods: {
-    handleClick(tab) {
-      console.log(tab);
+    ...mapMutations(["setDashboardSelectedTab"]),
+    setTab(tab) {
+      this.setDashboardSelectedTab(tab.label);
+    },
+  },
+  computed: {
+    ...mapGetters(["getDashboardSelectedTab"]),
+    activeTab() {
+      return this.getDashboardSelectedTab;
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style>
+.el-tabs__item.is-active {
+  color: #324ba8 !important;
+}
+.dashboard-deliveries-tab-section {
+  width: max-content;
+  display: flex;
+  cursor: pointer;
+  color: #909399;
+  font-size: 14px;
+  font-weight: 500;
+}
+.desktop-dashboard-tab-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  border-bottom: 1px solid #e2e7ed;
+}
+.dashboard-deliveries-tab {
+  display: flex;
+  height: 40px;
+}
+.active {
+  color: #324ba8 !important;
+  border-bottom: 2px solid #324ba8 !important;
+}
+</style>

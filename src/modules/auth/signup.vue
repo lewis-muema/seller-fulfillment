@@ -174,31 +174,8 @@ form {
   padding-top: 30px;
   margin-right: 30px;
 }
-.default-btn {
-  background-color: #ffffff !important;
-  color: black !important;
-  border-color: #e2e7ed !important;
-}
-.form-control::placeholder {
-  color: #dcdfe6;
-}
 .desktop-login-link {
   padding: 50px 0px 0px 50px;
-}
-.btn {
-  line-height: 1.9 !important;
-}
-.form-input-group {
-  position: relative;
-}
-.form-input-group .mdi {
-  position: absolute;
-  top: 9px;
-  left: 13px;
-  width: 16px;
-  height: 13.33px;
-  font-size: 19px;
-  color: #909399;
 }
 .form-input-group input {
   text-indent: 28px;
@@ -219,5 +196,28 @@ form {
   height: 18px;
   color: #5f6368;
   font-size: 30px;
+}
+.btn {
+  line-height: 1.9 !important;
+}
+.form-input-group {
+  position: relative;
+}
+.default-btn {
+  background-color: #ffffff !important;
+  color: black !important;
+  border-color: #e2e7ed !important;
+}
+.form-control::placeholder {
+  color: #dcdfe6;
+}
+.form-input-group .mdi {
+  position: absolute;
+  top: 9px;
+  left: 13px;
+  width: 16px;
+  height: 13.33px;
+  font-size: 19px;
+  color: #909399;
 }
 </style>

@@ -8,4 +8,10 @@ export default {
   setExternal(state, val) {
     state.external = val;
   },
+  setDashboardSelectedTab(state, val) {
+    state.dashboardSelectedTab = val;
+  },
+  setProductLists(state, val) {
+    state.productLists = val;
+  },
 };

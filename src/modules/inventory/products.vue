@@ -24,7 +24,9 @@
             <tr v-for="product in products" :key="product.id">
               <td>{{ product.product_name }}</td>
               <td>2 Products Options</td>
-              <td>View</td>
+              <td>
+                <router-link to="/inventory/product-details">View</router-link>
+              </td>
             </tr>
           </tbody>
         </v-table>

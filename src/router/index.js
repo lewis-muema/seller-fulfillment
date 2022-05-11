@@ -6,6 +6,7 @@ import OTP from "../modules/auth/OTP.vue";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/common/addProduct.vue";
+import ProductDetails from "../modules/inventory/components/productDetails";
 import Products from "../modules/inventory/products.vue";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
@@ -55,6 +56,11 @@ const routes = [
     path: "/inventory/add-product",
     name: "AddProducts",
     component: AddProduct,
+  },
+  {
+    path: "/inventory/product-details",
+    name: "ProductDetails",
+    component: ProductDetails,
   },
   {
     path: "/inventory/products",

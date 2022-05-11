@@ -133,7 +133,6 @@ export default {
   border-color: #e2e7ed;
 }
 .desktop-content-button {
-  line-height: 18px !important;
   font-size: 14px !important;
   margin: 15px 0px;
 }

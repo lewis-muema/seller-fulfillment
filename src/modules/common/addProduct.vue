@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card variant="outlined" class="desktop-add-product-card">
-      <div class="d-flex desktop-header-title pl-5">
+    <v-card variant="outlined" class="desktop-product-card">
+      <div class="d-flex desktop-header-title">
         <router-link to="auth/sign-up">
           <i class="mdi mdi-arrow-left" aria-hidden="true"></i
         ></router-link>
@@ -51,18 +51,24 @@
               ></textarea>
             </div>
           </div>
-          <div class="desktop-product-options-container">
+          <div class="desktop-product-options-container mt-3 mb-3">
             <div class="desktop-product-options-content">
               <p class="optional-text">Product options (optional)</p>
               <p class="add-product-sizes">
                 Add options if this product comes in different sizes or colours
               </p>
-              <p class="add-product-options" @click="addProductOptions">
+              <p class="add-product-options" @click="showProductOptions = true">
                 Add product options
               </p>
+              <product-options
+                :visible="showProductOptions"
+                @close="showProductOptions = false"
+              />
             </div>
           </div>
-          <button class="btn btn-primary mt-2">Save Product</button>
+          <div class="d-grid">
+            <button class="btn btn-primary mt-2 btn-long">Save Product</button>
+          </div>
         </v-col>
         <v-col cols="6">
           <p class="ml-5">Image (optional)</p>
@@ -77,7 +83,14 @@
 </template>
 
 <script>
+import productOptions from "@/modules/inventory/components/productOptions";
 export default {
+  components: { productOptions },
+  data() {
+    return {
+      showProductOptions: false,
+    };
+  },
   mounted() {
     this.$store.commit("setComponent", this.$t("common.addProduct"));
   },
@@ -85,15 +98,15 @@ export default {
 </script>
 
 <style>
-.desktop-add-product-card {
+.desktop-product-card {
   width: 80%;
   margin: auto !important;
   border-color: #e2e7ed;
   margin-top: 50px !important;
-  height: 80vh;
+  height: auto;
 }
 .desktop-add-product-card-content {
-  padding: 20px 50px !important;
+  padding: 20px 80px !important;
 }
 .form-control::placeholder {
   color: #909399 !important;
@@ -104,11 +117,12 @@ export default {
   border-radius: 6px;
 }
 .desktop-product-options-content {
-  padding: 20px 20px 0px 0px !important;
+  padding: 20px 20px 0px 20px !important;
 }
 .add-product-sizes,
 .add-product-options {
   font-size: 13px;
+  line-height: 1.2;
 }
 .desktop-product-options-content .optional-text {
   font-size: 15px;
@@ -118,11 +132,10 @@ export default {
   cursor: pointer;
 }
 .img-container {
-  border-style: dashed;
-  border-color: #909399;
-  margin: auto !important;
-  max-width: 500px !important;
-  height: 23vh;
+  height: 300px;
+  width: 300px;
+  margin: 25px;
+  border: 1px dashed grey;
   margin: 0px 50px !important;
   display: flex;
   align-items: center;
@@ -132,5 +145,8 @@ export default {
 .upload {
   color: #324ba8 !important;
   font-size: 17px;
+}
+label {
+  color: #303133;
 }
 </style>

@@ -10,6 +10,7 @@
   "addProduct" :"Add Product",
   "productDetails": "Product details",
   "products": "Products",
+  "import" : "Import Products",
   "stocks": "Stock levels",
   "sendInventory": "Send Inventory",
   "toCustomers": "To customers",

@@ -8,6 +8,7 @@ import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/common/addProduct.vue";
 import ProductDetails from "../modules/inventory/components/productDetails";
 import Products from "../modules/inventory/products.vue";
+import Import from "../modules/inventory/components/import";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
 import Customers from "../modules/deliveries/customers.vue";
@@ -61,6 +62,11 @@ const routes = [
     path: "/inventory/product-details",
     name: "ProductDetails",
     component: ProductDetails,
+  },
+  {
+    path: "/inventory/import-products",
+    name: "Import",
+    component: Import,
   },
   {
     path: "/inventory/products",

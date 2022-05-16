@@ -15,7 +15,9 @@
     <div class="product-buttons-container">
       <button class="btn btn-primary mr-4 products-buttons-section">
         <i class="mdi mdi-upload"></i>
-        <router-link to="/" class="import-products-link"
+        <router-link
+          to="/inventory/import-products"
+          class="import-products-link"
           >Import Product</router-link
         >
       </button>

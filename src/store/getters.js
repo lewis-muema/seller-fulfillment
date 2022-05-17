@@ -18,4 +18,7 @@ export default {
   getInvoiceContent: (state) => state.invoiceContent,
   getTotalDue: (state) => state.totalDue,
   getTransationHistory: (state) => state.transationHistory,
+  getUsers: (state) => state.users,
+  getLanguages: (state) => state.languages,
+  getDefaultLanguage: (state) => state.defaultLanguage,
 };

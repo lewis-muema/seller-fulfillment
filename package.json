@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
+    "@fawmi/vue-google-maps": "^0.9.67",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -31,6 +32,7 @@
     "vue-i18n": "^9.2.0-beta.30",
     "vue-router": "^4.0.3",
     "vue3-google-map": "^0.8.3",
+    "vue3-tel-input": "^1.0.4",
     "vuejs3-datepicker": "^1.0.5",
     "vuetify": "^3.0.0-alpha.0",
     "vuex": "^4.0.0",

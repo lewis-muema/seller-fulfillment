@@ -24,6 +24,20 @@ phrase:
         update_translations: true
         tags: payments
 
+    - file: ./locales/settings/en.json
+      params:
+        file_format: simple_json
+        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+        update_translations: true
+        tags: settings
+
+    - file: ./locales/external/en.json
+      params:
+        file_format: simple_json
+        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+        update_translations: true
+        tags: external
+
   pull:
     targets:
     - file: ./locales/common/fr.json
@@ -43,4 +57,15 @@ phrase:
         file_format: simple_json
         locale_id: 6a7c82d335ab0c8b9985e0793647009c
         tags: payments
-
+        
+    - file: ./locales/settings/fr.json
+      params:
+        file_format: simple_json
+        locale_id: 6a7c82d335ab0c8b9985e0793647009c
+        tags: settings
+        
+    - file: ./locales/external/fr.json
+      params:
+        file_format: simple_json
+        locale_id: 6a7c82d335ab0c8b9985e0793647009c
+        tags: external

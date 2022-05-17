@@ -15,6 +15,9 @@ import ManageUsers from "../modules/settings/manageUsers.vue";
 import PaymentOptions from "../modules/settings/paymentOptions.vue";
 import Profile from "../modules/settings/profile.vue";
 import viewInvoice from "../modules/payments/viewInvoice.vue";
+import addUser from "../modules/settings/components/addUser.vue";
+import userPermissions from "../modules/settings/components/userPermissions.vue";
+import invite from "../modules/external/invite.vue";
 
 const routes = [
   {
@@ -88,6 +91,16 @@ const routes = [
     component: Profile,
   },
   {
+    path: "/settings/add-user",
+    name: "Add User",
+    component: addUser,
+  },
+  {
+    path: "/settings/user-permissions",
+    name: "User Permissions",
+    component: userPermissions,
+  },
+  {
     path: "/settings/payment-options",
     name: "Payment Options",
     component: PaymentOptions,
@@ -96,6 +109,11 @@ const routes = [
     path: "/settings/manage-users",
     name: "Manage Users",
     component: ManageUsers,
+  },
+  {
+    path: "/external/invite",
+    name: "Invite",
+    component: invite,
   },
 ];
 

@@ -10,10 +10,119 @@ export default createStore({
     return {
       mobile: false,
       component: "",
-      external: ["/auth/sign-in", "/auth/sign-up", "/auth/otp"],
+      languages: ["English", "French"],
+      defaultLanguage: "English",
+      external: [
+        "/auth/sign-in",
+        "/auth/sign-up",
+        "/auth/otp",
+        "/external/invite",
+      ],
       tab: "All",
       loader: "loading-text",
       overlay: false,
+      users: [
+        {
+          name: "James Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/deactivate-user/",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+            },
+          ],
+        },
+        {
+          name: "James Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/deactivate-user/",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+            },
+          ],
+        },
+        {
+          name: "James Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/deactivate-user/",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+            },
+          ],
+        },
+        {
+          name: "James Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/deactivate-user/",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+            },
+          ],
+        },
+        {
+          name: "James Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/deactivate-user/",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+            },
+          ],
+        },
+      ],
       invoices: [
         {
           number: "ADFHJFEE34",

@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import productOptions from "@/modules/inventory/components/productOptions";
+import productOptions from "@/modules/inventory/products/components/productOptions";
 export default {
   components: { productOptions },
   data() {

@@ -94,7 +94,7 @@ export default {
         },
         {
           icon: "mdi-credit-card-outline",
-          count: "560",
+          count: "Kes 5,600",
           orderStatus: "Amount due",
           color: "#745CCC",
         },

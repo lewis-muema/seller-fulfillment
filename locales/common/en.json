@@ -12,6 +12,7 @@
   "products": "Products",
   "import" : "Import Products",
   "stocks": "Stock levels",
+  "stockDetails": "Stock Details",
   "sendInventory": "Send Inventory",
   "toCustomers": "To customers",
   "toFulfilmentCentre": "To Fulfilment Centre",

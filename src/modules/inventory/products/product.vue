@@ -13,13 +13,7 @@
         </div>
 
         <v-table class="">
-          <thead>
-            <tr>
-              <th class="text-left">Product</th>
-              <th class="text-left">Product Options</th>
-              <th class="text-left">Actions</th>
-            </tr>
-          </thead>
+          <table-header :header="tableHeaders" />
           <tbody>
             <tr v-for="product in products" :key="product.id">
               <td>{{ product.product_name }}</td>
@@ -38,10 +32,13 @@
 <script>
 import { mapGetters } from "vuex";
 import tabs from "@/modules/inventory/components/tabs.vue";
+import tableHeader from "@/modules/inventory/tables/tableHeader";
 export default {
-  components: { tabs },
+  components: { tabs, tableHeader },
   data() {
-    return {};
+    return {
+      headers: ["Product", "Product Options", "Actions"],
+    };
   },
   mounted() {
     this.$store.commit("setComponent", this.$t("common.products"));
@@ -50,6 +47,9 @@ export default {
     ...mapGetters(["getProductLists"]),
     products() {
       return this.getProductLists.data.products;
+    },
+    tableHeaders() {
+      return this.headers;
     },
   },
 };

@@ -6,10 +6,11 @@ import OTP from "../modules/auth/OTP.vue";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/common/addProduct.vue";
-import ProductDetails from "../modules/inventory/components/productDetails";
-import Products from "../modules/inventory/products.vue";
+import ProductDetails from "../modules/inventory/products/components/productDetails";
+import Products from "../modules/inventory/products/product";
+import StockDetails from "../modules/inventory/stocklevels/components/stockDetails";
 import Import from "../modules/inventory/components/import";
-import StockLevels from "../modules/inventory/stockLevels.vue";
+import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
 import Customers from "../modules/deliveries/customers.vue";
 import Sendy from "../modules/deliveries/sendy.vue";
@@ -77,6 +78,11 @@ const routes = [
     path: "/inventory/stock-levels",
     name: "Stock Levels",
     component: StockLevels,
+  },
+  {
+    path: "/inventory/stock-details",
+    name: "Stock Details",
+    component: StockDetails,
   },
   {
     path: "/inventory/send-inventory",

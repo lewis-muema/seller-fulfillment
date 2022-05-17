@@ -11,6 +11,9 @@ export default {
   setDashboardSelectedTab(state, val) {
     state.dashboardSelectedTab = val;
   },
+  setInventorySelectedTab(state, val) {
+    state.inventorySelectedTab = val;
+  },
   setProductLists(state, val) {
     state.productLists = val;
   },

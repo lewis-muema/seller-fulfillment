@@ -3,5 +3,6 @@ export default {
   getComponent: (state) => state.component,
   getExternal: (state) => state.external,
   getDashboardSelectedTab: (state) => state.dashboardSelectedTab,
+  getInventorySelectedTab: (state) => state.inventorySelectedTab,
   getProductLists: (state) => state.productLists,
 };

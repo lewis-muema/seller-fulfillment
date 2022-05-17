@@ -11,6 +11,7 @@ export default createStore({
       component: "",
       external: ["/auth/sign-in", "/auth/sign-up", "/auth/otp", "/auth"],
       dashboardSelectedTab: "To your Customers",
+      inventorySelectedTab: "All",
       productLists: {
         message: "product.list.success",
         data: {

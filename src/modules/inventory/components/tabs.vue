@@ -1,43 +1,67 @@
 <template>
   <div>
-    <div class="desktop-product-tab-container">
+    <div v-if="getRoute === '/inventory/products'">
+      <div class="desktop-product-tab-container">
+        <div
+          class="desktop-product-tab"
+          v-for="tab in productTabs"
+          :key="tab.label"
+          :label="tab.label"
+        >
+          <div class="desktop-product-tab-section" @click="setTab(tab)">
+            {{ tab.label }}
+          </div>
+        </div>
+      </div>
+      <div class="product-buttons-container">
+        <button class="btn btn-primary mr-4 products-buttons-section">
+          <i class="mdi mdi-upload"></i>
+          <router-link
+            to="/inventory/import-products"
+            class="import-products-link"
+            >Import Product</router-link
+          >
+        </button>
+
+        <button class="btn btn-primary">
+          <i class="mdi mdi-plus"></i>
+          <router-link to="/inventory/add-product" class="add-products-link"
+            >Add Products</router-link
+          >
+        </button>
+      </div>
+    </div>
+    <div
+      v-if="getRoute === '/inventory/stock-levels'"
+      class="desktop-product-tab-container"
+    >
       <div
         class="desktop-product-tab"
-        v-for="tab in tabs"
+        v-for="tab in stockLevelTabs"
         :key="tab.label"
         :label="tab.label"
       >
         <div class="desktop-product-tab-section" @click="setTab(tab)">
           {{ tab.label }}
         </div>
+        <v-badge
+          color="#FBDF9A"
+          text-color="#7F3B02"
+          content="23"
+          inline
+        ></v-badge>
       </div>
-    </div>
-    <div class="product-buttons-container">
-      <button class="btn btn-primary mr-4 products-buttons-section">
-        <i class="mdi mdi-upload"></i>
-        <router-link
-          to="/inventory/import-products"
-          class="import-products-link"
-          >Import Product</router-link
-        >
-      </button>
-
-      <button class="btn btn-primary">
-        <i class="mdi mdi-plus"></i>
-        <router-link to="/inventory/add-product" class="add-products-link"
-          >Add Products</router-link
-        >
-      </button>
     </div>
     <slot></slot>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      tabs: [
+      productTabs: [
         {
           label: "All",
         },
@@ -45,7 +69,27 @@ export default {
           label: "Archived",
         },
       ],
+      stockLevelTabs: [
+        {
+          label: "All",
+        },
+        {
+          label: "Out of Stock",
+          content: "23",
+        },
+      ],
     };
+  },
+  computed: {
+    getRoute() {
+      return this.$route.path;
+    },
+  },
+  methods: {
+    ...mapMutations(["setInventorySelectedTab"]),
+    setTab(tab) {
+      this.setInventorySelectedTab(tab.label);
+    },
   },
 };
 </script>
@@ -53,7 +97,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 10% 10%;
+  grid-template-columns: 10% 12%;
   margin: 30px;
 }
 .desktop-product-tab {

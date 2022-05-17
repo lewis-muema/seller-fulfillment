@@ -44,4 +44,13 @@ export default {
   setTransationHistory(state, val) {
     state.transationHistory = val;
   },
+  setUsers(state, val) {
+    state.users = val;
+  },
+  setLanguages(state, val) {
+    state.languages = val;
+  },
+  setDefaultLanguage(state, val) {
+    state.defaultLanguage = val;
+  },
 };

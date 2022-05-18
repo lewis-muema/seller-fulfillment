@@ -1,15 +1,15 @@
 <template>
   <div>
     <v-table>
-      <table-header :headers="tableHeaders" />
-      <t-body>
+      <table-header :header="tableHeaders" />
+      <tbody>
         <tr v-for="activity in activities" :key="activity.id">
           <td>{{ activity.date }}</td>
           <td>{{ activity.user }}</td>
           <td>{{ activity.activity }}</td>
           <td>View</td>
         </tr>
-      </t-body>
+      </tbody>
     </v-table>
   </div>
 </template>

@@ -7,11 +7,7 @@
         :key="tab.label"
         :label="tab.label"
       >
-        <div
-          class="desktop-product-tab-section"
-          :class="{ active: activeTab === 'Overview' }"
-          @click="setTab(tab)"
-        >
+        <div class="desktop-product-tab-section" @click="setTab(tab)">
           {{ tab.label }}
         </div>
       </div>
@@ -21,6 +17,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -34,6 +31,12 @@ export default {
       ],
     };
   },
+  methods: {
+    ...mapMutations(["setStockSelectedTab"]),
+    setTab(tab) {
+      this.setStockSelectedTab(tab.label);
+    },
+  },
 };
 </script>
 
@@ -41,6 +44,6 @@ export default {
 .desktop-stock-tab-container {
   display: grid;
   grid-template-columns: auto auto;
-  margin: 30px;
+  margin-bottom: 30px;
 }
 </style>

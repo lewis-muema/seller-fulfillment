@@ -1,5 +1,5 @@
 <template>
-  <div class="product-details-container">
+  <div class="">
     <div class="product-details-content mb-3">
       <p class="product-header">Description</p>
       <p>Legit butter</p>
@@ -14,14 +14,14 @@
     </div>
     <v-table>
       <table-header :header="tableHeaders" />
-      <t-body>
+      <tbody>
         <tr v-for="stock in stockSummary" :key="stock.id">
-          <th>{{ stock.fulfillmentCenter }}</th>
-          <th>{{ stock.available }}</th>
-          <th>{{ stock.committed }}</th>
-          <th>{{ stock.incoming }}</th>
+          <td>{{ stock.fulfillmentCenter }}</td>
+          <td>{{ stock.available }}</td>
+          <td>{{ stock.committed }}</td>
+          <td>{{ stock.incoming }}</td>
         </tr>
-      </t-body>
+      </tbody>
     </v-table>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   components: { tableHeader },
   data() {
     return {
-      headtableHeadersers: [
+      tableHeaders: [
         "Fulfillment Center",
         "Available",
         "Committed",

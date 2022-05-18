@@ -4,5 +4,6 @@ export default {
   getExternal: (state) => state.external,
   getDashboardSelectedTab: (state) => state.dashboardSelectedTab,
   getInventorySelectedTab: (state) => state.inventorySelectedTab,
+  getStockSelectedTab: (state) => state.stockSelectedTab,
   getProductLists: (state) => state.productLists,
 };

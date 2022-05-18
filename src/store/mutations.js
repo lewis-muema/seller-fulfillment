@@ -17,4 +17,7 @@ export default {
   setProductLists(state, val) {
     state.productLists = val;
   },
+  setStockSelectedTab(state, val) {
+    state.stockSelectedTab = val;
+  },
 };

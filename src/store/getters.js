@@ -6,5 +6,5 @@ export default {
   getInventorySelectedTab: (state) => state.inventorySelectedTab,
   getStockSelectedTab: (state) => state.stockSelectedTab,
   getProductLists: (state) => state.productLists,
-  getselectedProducts: (state) => state.selectedProducts,
+  getSelectedProducts: (state) => state.selectedProducts,
 };

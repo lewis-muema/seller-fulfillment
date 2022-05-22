@@ -47,17 +47,21 @@
             </el-table>
           </v-card>
         </v-col>
-        <v-col cols="3"> Test </v-col>
+        <v-col cols="4">
+          {{ itemsSelectedCountt }}
+          <items-selected :itemsSelectedCount="itemsSelectedCount" />
+        </v-col>
       </v-row>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import Stepper from "./stepper.vue";
+import { mapMutations, mapGetters } from "vuex";
+import Stepper from "./stepper";
+import itemsSelected from "./itemsSelected";
 export default {
-  components: { Stepper },
+  components: { Stepper, itemsSelected },
   data() {
     return {
       tableData: [
@@ -90,6 +94,12 @@ export default {
     ...mapMutations(["setSelectedProducts"]),
     handleSelectionChange(val) {
       this.setSelectedProducts(val);
+    },
+  },
+  computed: {
+    ...mapGetters(["getSelectedProducts"]),
+    itemsSelectedCount() {
+      return this.getSelectedProducts.length;
     },
   },
 };

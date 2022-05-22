@@ -20,4 +20,7 @@ export default {
   setStockSelectedTab(state, val) {
     state.stockSelectedTab = val;
   },
+  setSelectedProducts(state, val) {
+    state.selectedProducts = val;
+  },
 };

@@ -13,6 +13,7 @@ export default createStore({
       dashboardSelectedTab: "To your Customers",
       inventorySelectedTab: "All",
       stockSelectedTab: "Overview",
+      selectedProducts: [],
       productLists: {
         message: "product.list.success",
         data: {

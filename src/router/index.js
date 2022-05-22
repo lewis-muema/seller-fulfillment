@@ -11,6 +11,7 @@ import Products from "../modules/inventory/products/products";
 import StockDetails from "../modules/inventory/stocklevels/components/stockDetails";
 import Import from "../modules/inventory/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
+import ProductsSelect from "../modules/inventory/sendproducts/components/productsSelect";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
 import Customers from "../modules/deliveries/customers.vue";
 import Sendy from "../modules/deliveries/sendy.vue";
@@ -83,6 +84,11 @@ const routes = [
     path: "/inventory/stock-details",
     name: "Stock Details",
     component: StockDetails,
+  },
+  {
+    path: "/inventory/products-select",
+    name: "Product Select",
+    component: ProductsSelect,
   },
   {
     path: "/inventory/send-inventory",

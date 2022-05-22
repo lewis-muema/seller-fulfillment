@@ -133,7 +133,7 @@ export default {
 <style>
 .desktop-dashboard-upper-card {
   border-color: #e2e7ed;
-  height: 110px;
+  height: auto;
 }
 .desktop-quick-links-card {
   border-color: #e2e7ed;

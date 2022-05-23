@@ -9,6 +9,7 @@
         </el-steps>
       </v-col>
     </v-row>
+    <router-view></router-view>
   </div>
 </template>
 

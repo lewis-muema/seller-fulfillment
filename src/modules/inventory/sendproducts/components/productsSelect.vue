@@ -1,77 +1,68 @@
 <template>
   <div>
-    <Stepper />
-    <div>
-      <v-row>
-        <v-col cols="8">
-          <v-card variant="outlined" class="desktop-select-products-card">
-            <div class="select-products-container">
-              <span>Select product</span>
-              <span>
-                <router-link
-                  to="/inventory/add-product/"
-                  class="add-new-product"
-                  >add a new product</router-link
-                >
-              </span>
-            </div>
-            <div class="search-input">
-              <div class="form-input-group">
-                <i class="mdi mdi-magnify search-icon"></i>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Search for product"
-                />
-              </div>
-            </div>
-            <hr />
-            <el-table
-              ref="multipleTableRef"
-              :data="tableData"
-              style="width: 100%"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column type="selection" width="55" />
-              <el-table-column
-                label="Name"
-                property="name"
-                show-overflow-tooltip
+    <v-row>
+      <v-col cols="8">
+        <v-card variant="outlined" class="desktop-select-products-card">
+          <div class="select-products-container">
+            <span>Select product</span>
+            <span>
+              <router-link to="/inventory/add-product/" class="add-new-product"
+                >add a new product</router-link
               >
-              </el-table-column>
-              <el-table-column
-                property="price"
-                label="Price"
-                show-overflow-tooltip
+            </span>
+          </div>
+          <div class="search-input">
+            <div class="form-input-group">
+              <i class="mdi mdi-magnify search-icon"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search for product"
               />
-            </el-table>
-          </v-card>
-        </v-col>
-        <v-col cols="4">
-          {{ itemsSelectedCountt }}
-          <items-selected :itemsSelectedCount="itemsSelectedCount" />
-        </v-col>
-      </v-row>
-    </div>
+            </div>
+          </div>
+          <hr />
+          <el-table
+            ref="multipleTableRef"
+            :data="tableData"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55" />
+            <el-table-column label="Name" property="name" show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              property="price"
+              label="Price"
+              show-overflow-tooltip
+            />
+          </el-table>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <items-selected :itemsSelectedCount="itemsSelectedCount" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import Stepper from "./stepper";
 import itemsSelected from "./itemsSelected";
 export default {
-  components: { Stepper, itemsSelected },
+  components: { itemsSelected },
   data() {
     return {
       tableData: [
         {
           name: "Fossil men’s watch",
           price: "KES 2500",
+          quantity: 0,
         },
         {
           name: "Shear Butter",
           price: "KES 450 - KES 3000",
+          quantity: 0,
           productOptions: [
             {
               name: "250ml",

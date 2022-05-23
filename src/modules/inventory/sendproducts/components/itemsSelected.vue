@@ -5,10 +5,25 @@
       class="desktop-select-products-card items-selected-card"
     >
       <div class="items-selected-container">
-        <p>{{ itemsSelectedCount }} items Selected</p>
-        <button type="submit" class="btn btn-primary">
-          Continue with {{ itemsSelectedCount }} (items Selected )
-        </button>
+        <p>
+          {{
+            getRoute === "/inventory/send-inventory/step/products-select"
+              ? `${itemsSelectedCount}
+          items Selected`
+              : `${itemsAddedCount} items Added`
+          }}
+        </p>
+        <router-link :to="{ name: 'Add Quantity' }">
+          <button type="submit" class="btn btn-primary">
+            Continue with
+            {{
+              getRoute === "/inventory/send-inventory/step/products-select"
+                ? `${itemsSelectedCount}
+          (items Selected )`
+                : `${itemsAddedCount}  (items Added )`
+            }}
+          </button>
+        </router-link>
       </div></v-card
     >
   </div>
@@ -16,7 +31,12 @@
 
 <script>
 export default {
-  props: ["itemsSelectedCount"],
+  props: ["itemsSelectedCount", "itemsAddedCount"],
+  computed: {
+    getRoute() {
+      return this.$route.path;
+    },
+  },
 };
 </script>
 

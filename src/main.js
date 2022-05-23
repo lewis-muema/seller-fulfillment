@@ -25,7 +25,6 @@ const VueTelInputOptions = {
 };
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
-
 loadFonts();
 createApp(App)
   .use(router)

@@ -13,15 +13,17 @@
               : `${itemsAddedCount} items Added`
           }}
         </p>
-        <router-link :to="{ name: 'Add Quantity' }">
+        <router-link
+          :to="{ name: 'Add Quantity' }"
+          v-if="getRoute === '/inventory/send-inventory/step/products-select'"
+        >
           <button type="submit" class="btn btn-primary">
-            Continue with
-            {{
-              getRoute === "/inventory/send-inventory/step/products-select"
-                ? `${itemsSelectedCount}
-          (items Selected )`
-                : `${itemsAddedCount}  (items Added )`
-            }}
+            Continue with {{ itemsSelectedCount }} items Selected
+          </button>
+        </router-link>
+        <router-link :to="{ name: 'Checkout' }" v-else>
+          <button type="submit" class="btn btn-primary">
+            Continue with {{ itemsAddedCount }} items Added
           </button>
         </router-link>
       </div></v-card

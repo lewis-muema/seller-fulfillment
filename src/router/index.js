@@ -14,6 +14,7 @@ import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import Stepper from "../modules/inventory/sendproducts/components/stepper";
 import ProductsSelect from "../modules/inventory/sendproducts/components/productsSelect";
 import AddQuantity from "../modules/inventory/sendproducts/components/addQuantity";
+import Checkout from "../modules/inventory/sendproducts/components/checkout";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
 import Customers from "../modules/deliveries/customers.vue";
 import Sendy from "../modules/deliveries/sendy.vue";
@@ -93,14 +94,24 @@ const routes = [
     component: Stepper,
     children: [
       {
-        path: "products-select",
-        name: "Product Select",
+        path: "products-customer",
+        name: "ProductsToCustomer",
+        component: ProductsSelect,
+      },
+      {
+        path: "products-sendy",
+        name: "ProductsToSendy",
         component: ProductsSelect,
       },
       {
         path: "add-quantity",
         name: "Add Quantity",
         component: AddQuantity,
+      },
+      {
+        path: "checkout",
+        name: "Checkout",
+        component: Checkout,
       },
     ],
   },

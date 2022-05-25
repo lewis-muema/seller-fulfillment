@@ -8,6 +8,7 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { ApmVuePlugin } from "@elastic/apm-rum-vue";
 import {
   faSpinner,
   faThumbsUp,
@@ -32,6 +33,19 @@ createApp(App)
   .use(vuetify)
   .use(ElementPlus)
   .use(VueTelInput, VueTelInputOptions)
+  .use(ApmVuePlugin, {
+    router,
+    config: {
+      serviceName: process.env.ELASTIC_APM_SERVICE_NAME,
+      // agent configuration
+      serverUrl: process.env.ELASTIC_APM_SERVER_URL,
+      serviceVersion: process.env.ELASTIC_APM_SERVICE_VERSION,
+      environment: process.env.ELASTIC_APM_ENVIRONMENT,
+      distributedTracingOrigins: [
+        process.env.ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS,
+      ],
+    },
+  })
   .use("font-awesome-icon", FontAwesomeIcon)
   .use(moment)
   .use(VueGoogleMaps, {

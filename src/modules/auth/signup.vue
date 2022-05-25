@@ -1,6 +1,7 @@
 <template>
   <div>
     <form action="">
+      <v-icon>format_quote</v-icon>
       <div class="desktop-sign-up" v-if="continueSignup">
         <v-card-title class="text-center">
           Sign up for Sendy Fulfilment
@@ -30,16 +31,11 @@
               />
             </div>
           </div>
-          <div class="mb-3">
-            <label for="country" class="form-label">Country of Operation</label>
-            <input type="text" class="form-control" />
-          </div>
-          <country-select
-            v-model="country"
-            :country="country"
-            topCountry="KE"
-          />
-          <region-select v-model="region" :country="country" :region="region" />
+          <select class="form-select mb-3">
+            <option selected v-for="country in countries" :key="country">
+              {{ country.emoji }}{{ country.name }}
+            </option>
+          </select>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
               class="btn btn-primary b"
@@ -49,8 +45,8 @@
               Continue
             </button>
             <div class="text-center text-grey">or</div>
-            <img src="assets/google.png" alt="google" />
             <button class="btn btn-primary default-btn" type="button">
+              <i class="mdi mdi-google"></i>
               Sign up with Google
             </button>
           </div>
@@ -114,10 +110,61 @@
 </template>
 
 <script>
+import cccc from "../../../countries.js";
 export default {
   data() {
     return {
-      country: "",
+      countries: [
+        {
+          name: "Kenya",
+          code: "KE",
+          emoji: "🇰🇪",
+          unicode: "U+1F1F0 U+1F1EA",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg",
+        },
+
+        {
+          name: "Uganda",
+          code: "UG",
+          emoji: "🇺🇬",
+          unicode: "U+1F1FA U+1F1EC",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
+        },
+        {
+          name: "United Nations",
+          code: "UN",
+          emoji: "🇺🇳",
+          unicode: "U+1F1FA U+1F1F3",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UN.svg",
+        },
+        {
+          name: "United States",
+          code: "US",
+          emoji: "🇺🇸",
+          unicode: "U+1F1FA U+1F1F8",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/US.svg",
+        },
+        {
+          name: "Uzbekistan",
+          code: "UZ",
+          emoji: "🇺🇿",
+          unicode: "U+1F1FA U+1F1FF",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UZ.svg",
+        },
+        {
+          name: "South Africa",
+          code: "ZA",
+          emoji: "🇿🇦",
+          unicode: "U+1F1FF U+1F1E6",
+          image:
+            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ZA.svg",
+        },
+      ],
       region: "",
       continueSignup: true,
       sendyPhoneProps: {
@@ -148,6 +195,7 @@ export default {
   methods: {
     continueSignUp() {
       this.continueSignup = false;
+      console.log("here", cccc);
     },
   },
 };

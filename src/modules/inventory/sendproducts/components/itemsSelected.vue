@@ -7,7 +7,8 @@
       <div class="items-selected-container">
         <p>
           {{
-            getRoute === "/inventory/send-inventory/step/products-select"
+            getRoute === "/inventory/send-inventory/step/products-sendy" ||
+            getRoute === "/inventory/send-inventory/step/products-customer"
               ? `${itemsSelectedCount}
           items Selected`
               : `${itemsAddedCount} items Added`
@@ -15,7 +16,10 @@
         </p>
         <router-link
           :to="{ name: 'Add Quantity' }"
-          v-if="getRoute === '/inventory/send-inventory/step/products-select'"
+          v-if="
+            getRoute === '/inventory/send-inventory/step/products-sendy' ||
+            getRoute === '/inventory/send-inventory/step/products-customer'
+          "
         >
           <button type="submit" class="btn btn-primary">
             Continue with {{ itemsSelectedCount }} items Selected

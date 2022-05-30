@@ -8,11 +8,7 @@
         :key="tab.label"
         :label="tab.label"
       >
-        <div
-          class="dashboard-deliveries-tab-section"
-          :class="{ active: activeTab === 'To your Customers' }"
-          @click="setTab(tab)"
-        >
+        <div class="dashboard-deliveries-tab-section" @click="setTab(tab)">
           {{ tab.label }}
         </div>
         <v-badge
@@ -86,14 +82,14 @@ export default {
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 25% 25%;
   border-bottom: 1px solid #e2e7ed;
 }
 .dashboard-deliveries-tab {
   display: flex;
   height: 40px;
 }
-.active {
+.activeTab {
   color: #324ba8 !important;
   border-bottom: 2px solid #324ba8 !important;
 }

@@ -62,10 +62,11 @@
                 type="button"
                 @click="emailAddressLogin"
               >
-                <i class="mdi mdi-phone"></i>
+                <i class="mdi mdi-email-outline"></i>
                 Login with Email address
               </button>
               <button class="btn btn-primary default-btn" type="button">
+                <i class="mdi mdi-google"></i>
                 Login with Google
               </button>
             </div>

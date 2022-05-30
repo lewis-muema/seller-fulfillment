@@ -25,7 +25,14 @@
                         order.orderStatus
                       }}</v-list-item-subtitle>
                     </v-list-item-header>
-                    <v-divider vertical></v-divider>
+                    <v-divider
+                      :class="
+                        order.orderStatus === 'Items out of Stock'
+                          ? 'v-divider-last-item'
+                          : 'v-divider-height'
+                      "
+                      vertical
+                    ></v-divider>
                   </v-list-item>
                 </v-list>
               </v-col>
@@ -41,7 +48,7 @@
             height="500"
           >
             <dashboard-tabs v-if="dashboardTabs === 'To your Customers'">
-              To Your Customers
+              <deliveries :deliveries="deliveries" />
             </dashboard-tabs>
             <dashboard-tabs v-else> To Sendy </dashboard-tabs>
           </v-card>
@@ -67,12 +74,55 @@
 
 <script>
 import dashboardTabs from "@/modules/dashboard/components/dashboardTabs";
+import deliveries from "@/modules/dashboard/components/deliveries";
 import { mapGetters } from "vuex";
 export default {
-  components: { dashboardTabs },
+  components: { dashboardTabs, deliveries },
   data() {
     return {
       tab: null,
+      deliveries: [
+        {
+          customerName: "John Doe",
+          customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "Package is on the way",
+          step: 100,
+          color: "#324ba8",
+          action: "Track Order",
+        },
+        {
+          customerName: "John Doe",
+          customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "Package is on the way",
+          color: "#324ba8",
+          step: 70,
+          action: "Track Order",
+        },
+        {
+          customerName: "John Doe",
+          customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "We will attempt delivery Tomorrow",
+          color: "red",
+          step: 100,
+          action: "Track Order",
+        },
+        {
+          customerName: "John Doe",
+          customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "We are processing your order",
+          color: "#324ba8",
+          step: 20,
+          action: "Track Order",
+        },
+        {
+          customerName: "John Doe",
+          customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "Package has been delivered",
+          color: "#324ba8",
+          step: 100,
+          action: "Track Order",
+        },
+      ],
       orders: [
         {
           icon: "mdi mdi-truck",
@@ -87,16 +137,16 @@ export default {
           color: "#84CC8C",
         },
         {
+          icon: "mdi-home-city",
+          count: "32",
+          orderStatus: "Available Stock",
+          color: "#324BA8",
+        },
+        {
           icon: "mdi-archive",
           count: "4",
           orderStatus: "Items out of Stock",
           color: "#CC6100",
-        },
-        {
-          icon: "mdi-credit-card-outline",
-          count: "Kes 5,600",
-          orderStatus: "Amount due",
-          color: "#745CCC",
         },
       ],
       quickLinks: [
@@ -173,7 +223,11 @@ export default {
   font-weight: 700;
   line-height: 28px;
 }
-.v-divider {
+.v-divider-height {
   height: 40px !important;
+}
+.v-divider-last-item {
+  height: 40px !important;
+  color: transparent !important;
 }
 </style>

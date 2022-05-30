@@ -18,9 +18,24 @@
               <v-list density="compact">
                 <v-list-item>
                   <div class="d-flex">
-                    <v-icon class="desktop-content-icon">
-                      {{ content.icon }}</v-icon
+                    <v-avatar
+                      size="25"
+                      class="desktop-content-icon"
+                      :class="{
+                        'desktop-content-icon-active': i === activeStep,
+                      }"
                     >
+                      <span
+                        class="white--text onboarding-steps"
+                        :class="{
+                          'onboarding-steps-active': i === activeStep,
+                        }"
+                        >{{ i + 1 }}</span
+                      >
+                    </v-avatar>
+                    <!-- <v-icon class="desktop-content-icon">
+                      {{ content.icon }}</v-icon
+                    > -->
                     <v-list-item-header>
                       <v-list-item-title>
                         <div class="desktop-content-title">
@@ -42,6 +57,13 @@
               </v-list>
             </div>
           </v-card>
+          <!-- <button
+            class="btn btn-primary btn-sm"
+            @click="completeSteps()"
+            v-if="activeStep < totalSteps"
+          >
+            Complete Steps
+          </button> -->
         </v-col>
         <v-col cols="3" class="desktop-dashboard-content mt-3">
           <v-card variant="outlined" class="c">
@@ -77,14 +99,18 @@ export default {
   data() {
     return {
       checkbox: true,
+      activeStep: 0,
+      totalSteps: 4,
       dashboardContent: [
         {
+          step: 1,
           title: "Account Created",
           text: "",
           button: "",
           icon: "mdi-check-circle",
         },
         {
+          step: 2,
           title: "Add your Products",
           text: "Add or import the list of products that you will be fulfilling",
           button: "Add Products",
@@ -125,6 +151,13 @@ export default {
   mounted() {
     this.$store.commit("setComponent", this.$t("common.getStarted"));
   },
+  methods: {
+    completeSteps() {
+      this.activeStep += 1;
+      console.log("a", this.activeStep);
+    },
+  },
+  computed: {},
 };
 </script>
 
@@ -137,8 +170,12 @@ export default {
   margin: 15px 0px;
 }
 .desktop-content-icon {
-  color: #116f28;
   margin-right: 10px;
+  background-color: white !important;
+  border: 1px solid #303133;
+}
+.desktop-content-icon-active {
+  background-color: #324ba8 !important;
 }
 .dashboard-links-icon {
   background: #d3ddf6;
@@ -162,7 +199,13 @@ export default {
 .desktop-dashboard-list {
   margin: 10px 10px;
 }
-.p {
-  margin-top: 300px !important;
+.onboarding-steps {
+  font-size: 14px !important;
+}
+.onboarding-steps-active {
+  color: white !important;
+}
+.activestep {
+  background-color: #324ba8;
 }
 </style>

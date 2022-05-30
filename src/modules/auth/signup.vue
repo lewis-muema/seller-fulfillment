@@ -58,9 +58,11 @@
       </div>
       <div class="complete-sign-up" v-else>
         <div class="d-flex desktop-header-title">
-          <router-link to="auth/sign-up">
-            <i class="mdi mdi-arrow-left" aria-hidden="true"></i
-          ></router-link>
+          <i
+            class="mdi mdi-arrow-left"
+            aria-hidden="true"
+            @click="$router.back()"
+          ></i>
 
           <v-card-title class="text-center"> Complete Sign up </v-card-title>
         </div>

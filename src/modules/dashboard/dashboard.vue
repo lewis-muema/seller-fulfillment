@@ -48,9 +48,14 @@
             height="500"
           >
             <dashboard-tabs v-if="dashboardTabs === 'To your Customers'">
-              <deliveries :deliveries="deliveries" />
+              <deliveries
+                :deliveries="deliveries"
+                :selectedTab="dashboardTabs"
+              />
             </dashboard-tabs>
-            <dashboard-tabs v-else> To Sendy </dashboard-tabs>
+            <dashboard-tabs v-else>
+              <deliveries :deliveries="deliveries" :selectedTab="dashboardTabs"
+            /></dashboard-tabs>
           </v-card>
         </v-col>
         <v-col cols="3">
@@ -63,7 +68,9 @@
           >
             <span class="d-flex quick-links">
               <v-icon class="desktop-quick-links-icon">{{ link.icon }}</v-icon>
-              <router-link to="/" class="router">{{ link.name }}</router-link>
+              <router-link :to="{ name: `${link.path}` }" class="router">{{
+                link.name
+              }}</router-link>
             </span>
           </v-card>
         </v-col>
@@ -81,7 +88,7 @@ export default {
   data() {
     return {
       tab: null,
-      deliveries: [
+      deliveriesToCustomer: [
         {
           customerName: "John Doe",
           customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
@@ -102,7 +109,7 @@ export default {
           customerName: "John Doe",
           customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
           progress: "We will attempt delivery Tomorrow",
-          color: "red",
+          color: "#9b101c",
           step: 100,
           action: "Track Order",
         },
@@ -117,6 +124,43 @@ export default {
         {
           customerName: "John Doe",
           customerDeliveryLocation: "Windsor Heights, Kiambu ro...",
+          progress: "Package has been delivered",
+          color: "#324ba8",
+          step: 100,
+          action: "Track Order",
+        },
+      ],
+      deliveriesToSendy: [
+        {
+          productName: "Shear butter & 3",
+          progress: "Package is on the way",
+          step: 100,
+          color: "#324ba8",
+          action: "Track Order",
+        },
+        {
+          productName: "Shear butter & 3",
+          progress: "Package is on the way",
+          step: 100,
+          color: "#324ba8",
+          action: "Track Order",
+        },
+        {
+          productName: "Shear butter & 3",
+          progress: "We will attempt delivery Tomorrow",
+          color: "#9b101c",
+          step: 100,
+          action: "Track Order",
+        },
+        {
+          productName: "Shear butter & 3",
+          progress: "We are processing your order",
+          color: "#324ba8",
+          step: 20,
+          action: "Track Order",
+        },
+        {
+          productName: "Shear butter & 3",
           progress: "Package has been delivered",
           color: "#324ba8",
           step: 100,
@@ -153,17 +197,17 @@ export default {
         {
           icon: "mdi-truck",
           name: "Deliver to a customer",
-          path: "/deliveries/customer",
+          path: "To Customers",
         },
         {
           icon: "mdi-home-city",
           name: "Send inventory to Sendy",
-          path: "/deliveries/sendy",
+          path: "To Sendy",
         },
         {
           icon: "mdi-plus-thick",
           name: "Add Products",
-          path: "/deliveries/customer",
+          path: "AddProducts",
         },
       ],
     };
@@ -176,6 +220,13 @@ export default {
     dashboardTabs() {
       return this.getDashboardSelectedTab;
     },
+    deliveries() {
+      let result =
+        this.dashboardTabs === "To your Customers"
+          ? this.deliveriesToCustomer
+          : this.deliveriesToSendy;
+      return result;
+    },
   },
 };
 </script>
@@ -184,6 +235,7 @@ export default {
 .desktop-dashboard-upper-card {
   border-color: #e2e7ed;
   height: auto;
+  padding-left: 25px;
 }
 .desktop-quick-links-card {
   border-color: #e2e7ed;

@@ -3,22 +3,34 @@
     <v-table class="">
       <thead>
         <tr>
-          <th class="text-left">Customer Info</th>
+          <th class="text-left">
+            {{
+              getSelectedTab === "To your Customers"
+                ? "Customer info"
+                : "Products"
+            }}
+          </th>
           <th class="text-left">Progress</th>
           <th class="text-left">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="delivery in deliveries" :key="delivery.id">
+        <tr v-for="(delivery, index) in deliveries" :key="index">
           <td>
             <v-list-item lines="two">
               <v-list-item-header>
                 <v-list-item-title>{{
-                  delivery.customerName
+                  getSelectedTab === "To your Customers"
+                    ? delivery.customerName
+                    : delivery.productName
                 }}</v-list-item-title>
                 <v-list-item-subtitle
                   class="dashboard-customer-delivery-location"
-                  >{{ delivery.customerDeliveryLocation }}</v-list-item-subtitle
+                  >{{
+                    getSelectedTab === "To your Customers"
+                      ? delivery.customerDeliveryLocation
+                      : "other items"
+                  }}</v-list-item-subtitle
                 >
               </v-list-item-header>
             </v-list-item>
@@ -48,22 +60,26 @@
         </tr>
       </tbody>
     </v-table>
-    <router-link to="/" class="show-more-deliveries-link"
-      >Show more deliveries</router-link
-    >
-    <!-- <el-table :data="deliveries" style="width: 100%">
-      <el-table-column prop="customerName" label="Date" width="180" />
-      <el-table-column prop="customerName" label="Name" width="180" />
-      <el-table-column prop="customerName" label="Address" />
-    </el-table> -->
+    <div class="show-more-deliveries-link">
+      <router-link to="/" class="show-more-deliveries-link"
+        >Show more deliveries</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: ["deliveries"],
+  props: ["deliveries", "selectedTab"],
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters(["getDashboardSelectedTab"]),
+    getSelectedTab() {
+      return this.selectedTab;
+    },
   },
 };
 </script>
@@ -79,7 +95,11 @@ export default {
   color: #909399;
 }
 .show-more-deliveries-link {
-  align-items: center !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.show-more-deliveries-link a {
   color: #324ba8;
 }
 </style>

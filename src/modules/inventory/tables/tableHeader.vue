@@ -1,7 +1,7 @@
 <template>
   <thead>
     <tr>
-      <th v-for="(header, index) in header" :key="index">
+      <th v-for="(header, index) in header" :key="index" class="table-headers">
         {{ header }}
       </th>
     </tr>
@@ -14,4 +14,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-headers {
+  font-size: 15px !important;
+  font-weight: 400;
+}
+</style>

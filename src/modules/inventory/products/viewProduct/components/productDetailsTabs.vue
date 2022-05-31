@@ -2,7 +2,7 @@
   <div>
     <div class="desktop-stock-tab-container">
       <div
-        class="desktop-product-tab"
+        class="desktop-stock-tab"
         v-for="tab in tabs"
         :key="tab.label"
         :label="tab.label"
@@ -43,7 +43,12 @@ export default {
 <style>
 .desktop-stock-tab-container {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 20% 20%;
   margin-bottom: 30px;
+  border-bottom: 1px solid #e2e7ed;
+}
+.desktop-stock-tab {
+  display: flex;
+  height: 40px;
 }
 </style>

@@ -6,9 +6,8 @@ import OTP from "../modules/auth/OTP.vue";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/common/addProduct.vue";
-import ProductDetails from "../modules/inventory/products/components/productDetails";
 import Products from "../modules/inventory/products/products";
-import StockDetails from "../modules/inventory/stocklevels/components/stockDetails";
+import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import Stepper from "../modules/inventory/sendproducts/components/stepper";
@@ -64,11 +63,6 @@ const routes = [
     component: AddProduct,
   },
   {
-    path: "/inventory/product-details",
-    name: "ProductDetails",
-    component: ProductDetails,
-  },
-  {
     path: "/inventory/import-products",
     name: "Import",
     component: Import,
@@ -84,9 +78,9 @@ const routes = [
     component: StockLevels,
   },
   {
-    path: "/inventory/stock-details",
-    name: "Stock Details",
-    component: StockDetails,
+    path: "/inventory/view-product",
+    name: "View Product",
+    component: ViewProduct,
   },
   {
     path: "/inventory/send-inventory/step",

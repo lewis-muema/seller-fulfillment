@@ -246,6 +246,7 @@ form {
   height: 18px;
   color: #5f6368;
   font-size: 30px;
+  cursor: pointer;
 }
 .btn {
   line-height: 1.9 !important;

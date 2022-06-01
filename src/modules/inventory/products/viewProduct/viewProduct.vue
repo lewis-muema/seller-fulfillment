@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="8" class="mx-auto">
-        <v-card variant="outlined" class="stock-details">
+        <v-card variant="outlined" class="p-details">
           <div class="d-flex desktop-header-title mb-2">
             <i
               class="mdi mdi-arrow-left"
@@ -11,7 +11,7 @@
             ></i>
 
             <v-card-title class="text-center">Product Details </v-card-title>
-            <div class="dropdown actions-dropdown">
+            <div class="dropdown actions-dropdown mt-2">
               <button
                 class="btn dropdown-toggle"
                 type="button"
@@ -22,16 +22,32 @@
                 Actions
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">Edit</a></li>
-                <li><a class="dropdown-item" href="#">Archive</a></li>
+                <li class="view-product-dropdown-list">
+                  <router-link
+                    :to="{
+                      name: 'EditProduct',
+                      params: { pV: JSON.stringify(productVariants) },
+                    }"
+                    >Edit</router-link
+                  >
+                </li>
+                <li class="view-product-dropdown-list">
+                  <router-link to="/">Archive</router-link>
+                </li>
               </ul>
             </div>
           </div>
           <product-details-tabs v-if="stockSelectedTab === 'Overview'">
-            <product-overview />
+            <product-overview
+              :productVariants="productVariants"
+              v-if="productVariants"
+            />
           </product-details-tabs>
           <product-details-tabs v-if="stockSelectedTab === 'History'">
-            <product-history />
+            <product-history
+              :productVariants="productVariants"
+              v-if="productVariants"
+            />
           </product-details-tabs>
         </v-card>
       </v-col>
@@ -46,8 +62,17 @@ import productHistory from "@/modules/inventory/products/viewProduct/components/
 import { mapGetters } from "vuex";
 export default {
   components: { productDetailsTabs, productOverview, productHistory },
+  data() {
+    return {
+      productVariants: [],
+      ttt: "",
+    };
+  },
   mounted() {
     this.$store.commit("setComponent", this.$t("common.viewProduct"));
+    if (this.$route.params.pVariants) {
+      this.productVariants = JSON.parse(this.$route.params.pVariants);
+    }
   },
   computed: {
     ...mapGetters(["getStockSelectedTab"]),
@@ -58,11 +83,15 @@ export default {
 };
 </script>
 
-<style scoped>
-.stock-details {
-  padding: 20px 30px 30px 30px;
+<style>
+.p-details {
+  padding: 20px 30px;
   border-color: #e2e7ed;
   margin-top: 50px !important;
   height: auto;
+}
+.view-product-dropdown-list a {
+  color: #606266;
+  text-decoration: none;
 }
 </style>

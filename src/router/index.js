@@ -7,6 +7,7 @@ import Dashboard from "../modules/dashboard/dashboard.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/common/addProduct.vue";
 import Products from "../modules/inventory/products/products";
+import EditProduct from "../modules/inventory/products/components/editProduct";
 import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
@@ -61,6 +62,11 @@ const routes = [
     path: "/inventory/add-product",
     name: "AddProducts",
     component: AddProduct,
+  },
+  {
+    path: "/inventory/edit-product",
+    name: "EditProduct",
+    component: EditProduct,
   },
   {
     path: "/inventory/import-products",

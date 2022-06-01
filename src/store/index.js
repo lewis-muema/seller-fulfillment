@@ -44,7 +44,25 @@ export default createStore({
                   product_variant_currency: "KES",
                   product_variant_unit_price: 400,
                   product_variant_quantity: 30,
-                  product_variant_quantity_type: "KILOGRAM",
+                  product_variant_quantity_type: "ml",
+                  product_variant_image_link:
+                    "https://m.media-amazon.com/images/SLawerR.jpg",
+                  product_variant_expiry_date: 123456789,
+                  product_variant_stock_levels: {
+                    available: 3,
+                    quantity_in_inventory: 1,
+                    quantity_in_sales_orders: 0,
+                  },
+                },
+                {
+                  business_id: "B_ASD123",
+                  product_id: "P_ASD123",
+                  product_variant_id: "PV_ASD123",
+                  product_variant_description: "Fortified Cup",
+                  product_variant_currency: "KES",
+                  product_variant_unit_price: 400,
+                  product_variant_quantity: 130,
+                  product_variant_quantity_type: "ml",
                   product_variant_image_link:
                     "https://m.media-amazon.com/images/SLawerR.jpg",
                   product_variant_expiry_date: 123456789,

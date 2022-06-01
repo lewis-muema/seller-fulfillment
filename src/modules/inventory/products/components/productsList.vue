@@ -38,7 +38,12 @@
             <td>5 in Stock</td>
             <td>
               <router-link
-                :to="{ name: 'View Product' }"
+                :to="{
+                  name: 'View Product',
+                  params: {
+                    pVariants: JSON.stringify(product.product_variants),
+                  },
+                }"
                 class="view-product-link"
                 >View</router-link
               >

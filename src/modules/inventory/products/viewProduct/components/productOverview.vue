@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ variants }} -->
   <div class="">
     <div class="mb-3">
       <span>
@@ -23,13 +24,65 @@
       <p>Total stock available: 56</p>
     </div>
     <v-table>
-      <table-header :header="tableHeaders" />
+      <table-header
+        :header="productVariants.length ? tableHeaders2 : tableHeaders"
+      />
       <tbody>
-        <tr v-for="stock in stockSummary" :key="stock.id">
-          <td>{{ stock.fulfillmentCenter }}</td>
-          <td>{{ stock.available }}</td>
-          <td>{{ stock.committed }}</td>
-          <td>{{ stock.incoming }}</td>
+        <tr v-for="(variant, index) in variants" :key="index">
+          <td>
+            {{ productVariants.length ? `image` : variant.fulfillmentCenter }}
+          </td>
+          <td v-if="productVariants.length">
+            <v-list-item lines="two">
+              <v-list-item-header>
+                <v-list-item-title
+                  >{{ variant.product_variant_quantity }}
+                  {{ variant.product_variant_quantity_type }}</v-list-item-title
+                >
+                <v-list-item-subtitle>
+                  {{ variant.product_variant_currency }}
+                  {{ variant.product_variant_unit_price }}
+                </v-list-item-subtitle>
+              </v-list-item-header>
+            </v-list-item>
+          </td>
+          <td>
+            {{
+              productVariants.length
+                ? variant.product_variant_stock_levels.available
+                : variant.available
+            }}
+          </td>
+          <td>
+            {{
+              productVariants.length
+                ? variant.product_variant_stock_levels.quantity_in_inventory
+                : variant.committed
+            }}
+          </td>
+          <td>
+            {{
+              productVariants.length
+                ? variant.product_variant_stock_levels.quantity_in_sales_orders
+                : variant.incoming
+            }}
+          </td>
+          <td v-if="productVariants.length">
+            <p class="add-product-options" @click="showProductVariants = true">
+              View
+            </p>
+            <product-variants
+              @close="showProductVariants = false"
+              :visible="showProductVariants"
+              :incoming="
+                variant.product_variant_stock_levels.quantity_in_inventory
+              "
+              :available="variant.product_variant_stock_levels.available"
+              :committed="
+                variant.product_variant_stock_levels.quantity_in_sales_orders
+              "
+            />
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -38,17 +91,28 @@
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
+import productVariants from "@/modules/inventory/products/viewProduct/components/productVariants";
 export default {
-  components: { tableHeader },
+  components: { tableHeader, productVariants },
+  props: ["productVariants"],
   data() {
     return {
+      showProductVariants: false,
       tableHeaders: [
         "Fulfillment Center",
         "Available",
         "Committed",
         "Incoming",
       ],
-      stockSummary: [
+      tableHeaders2: [
+        "Image",
+        "Product Option",
+        "Available",
+        "Committed",
+        "Incoming",
+        "",
+      ],
+      pSummary: [
         {
           fulfillmentCenter: "Marsabit Plaza",
           available: "23",
@@ -57,6 +121,14 @@ export default {
         },
       ],
     };
+  },
+
+  computed: {
+    variants() {
+      const res = JSON.parse(JSON.stringify(this.productVariants));
+      console.log("res1", res);
+      return res.length ? this.productVariants : this.pSummary;
+    },
   },
 };
 </script>

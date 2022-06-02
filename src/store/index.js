@@ -21,7 +21,7 @@ export default createStore({
             {
               business_id: "B_ASD123",
               product_id: "P_ASD1234",
-              product_name: "Ceramic Cup",
+              product_name: "Shea Butter",
               product_description: "Hand made ceramic cups",
               sales_channel_collections: [
                 {

@@ -1,45 +1,69 @@
 <template>
   <div class="import-products-container">
-    <v-col cols="6" class="mx-auto">
-      <v-card variant="outlined" class="desktop-import-card">
-        <div class="d-flex desktop-header-title mt-2 mb-2">
-          <router-link to="auth/sign-up">
-            <i class="mdi mdi-arrow-left" aria-hidden="true"></i
-          ></router-link>
+    <v-row>
+      <v-col cols="6">
+        <v-card variant="outlined" class="desktop-import-card">
+          <div class="d-flex desktop-header-title mb-2">
+            <i
+              class="mdi mdi-arrow-left"
+              aria-hidden="true"
+              @click="$router.back()"
+            ></i>
 
-          <v-card-title class="text-center">Import Products </v-card-title>
-        </div>
-        <div class="" v-if="progressBar">
-          <el-progress :percentage="100" :stroke-width="12" color="#324BA8" />
-        </div>
-        <div v-else>
-          <p>Download our CSV template and add your product details</p>
-          <div class="drag-files-box">
-            <p>
-              Drag file here or
-              <span class="click-browse">click browse</span> to upload
-            </p>
-            <p class="csv">.csv, xls and .xlsx accepted</p>
+            <v-card-title class="text-center">Import Product </v-card-title>
           </div>
-        </div>
-        <button
-          type="submit"
-          :class="
-            progressBar
-              ? 'btn btn-primary upload-file-button-progress'
-              : 'btn btn-primary upload-file-button'
-          "
-          @click="uploadFile"
-        >
-          Upload
-        </button>
-      </v-card>
-    </v-col>
+          <div class="d-flex progress-bar-container" v-if="progressBar">
+            <v-icon class="mdi-file mt-3">mdi mdi-file</v-icon>
+            <div>
+              Product list
+              <v-progress-linear
+                class="import-products-progess-bar"
+                :model-value="100"
+                color="#324ba8"
+                rounded
+                height="10"
+              ></v-progress-linear>
+            </div>
+          </div>
+          <div v-else>
+            <p>
+              To upload your products,
+              <a href="" class="download-template-text">download our template</a
+              >, add your details and upload the file.
+            </p>
+            <div class="drag-files-box">
+              <p>
+                Drag file here or
+                <span class="click-browse"><a href="">click browse</a></span> to
+                upload
+              </p>
+              <p class="csv">.csv, xls and .xlsx accepted</p>
+            </div>
+          </div>
+          <button
+            type="submit"
+            :class="
+              progressBar
+                ? 'btn btn-primary upload-file-button-progress'
+                : 'btn btn-primary upload-file-button'
+            "
+            @click="uploadFile"
+          >
+            Upload
+          </button>
+        </v-card>
+      </v-col>
+      <v-col cols="5">
+        <import-product-tips />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+import importProductTips from "@/modules/inventory/components/importProductTips";
 export default {
+  components: { importProductTips },
   data() {
     return {
       progressBar: false,
@@ -51,7 +75,6 @@ export default {
   },
   methods: {
     uploadFile() {
-      console.log("clicked");
       this.progressBar = true;
     },
   },
@@ -62,13 +85,12 @@ export default {
 .desktop-import-card {
   border-color: #e2e7ed;
   height: 100%;
-  margin-top: 50px;
-  padding-left: 50px;
+  margin: 50px 0px 0px 50px;
+  padding: 10px 50px 0px 50px;
 }
 .drag-files-box {
-  height: 300px !important;
+  height: 250px !important;
   width: auto;
-  margin-right: 50px;
   border: 1px dashed grey;
   display: flex;
   flex-direction: column;
@@ -88,7 +110,21 @@ export default {
 .csv {
   color: #909399;
 }
-.el-progress {
-  margin-top: 30%;
+.mdi-file {
+  color: #324ba8;
+}
+.click-browse > a {
+  color: #324ba8 !important;
+  text-decoration: none;
+}
+.download-template-text {
+  color: #324ba8 !important;
+  font-weight: 400;
+}
+.progress-bar-container {
+  margin-top: 30% !important;
+}
+.import-products-progess-bar {
+  width: 50vh !important;
 }
 </style>

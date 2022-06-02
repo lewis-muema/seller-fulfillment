@@ -12,6 +12,7 @@
                 >
                 <div>
                   <input
+                    v-model="productOption.name"
                     type="text"
                     class="form-control"
                     placeholder="E.g Red, black, size XL, M"
@@ -22,7 +23,12 @@
               <div class="mb-2">
                 <label for="price" class="form-label">Price</label>
                 <div>
-                  <input type="text" class="form-control" placeholder="KES" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="KES"
+                    v-model="productOption.price"
+                  />
                 </div>
               </div>
               <div class="row mb-5">
@@ -30,14 +36,24 @@
                   >Weight or the volume of the product</label
                 >
                 <div class="col-8">
-                  <input type="text" class="form-control" placeholder="0.0" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="0.0"
+                    v-model="productOption.weight"
+                  />
                 </div>
                 <div class="col-4">
                   <input type="text" class="form-control" placeholder="gms" />
                 </div>
               </div>
               <div class="d-grid">
-                <button class="btn btn-primary mb-3">Add Product Option</button>
+                <button
+                  class="btn btn-primary mb-3"
+                  @click="addProductOption()"
+                >
+                  Add Product Option
+                </button>
               </div>
               <p class="text-center mb-5 add-another-option">
                 Save and add another one
@@ -61,7 +77,11 @@ export default {
   props: ["visible"],
   data() {
     return {
-      dialog: false,
+      productOption: {
+        name: "",
+        price: "",
+        weight: "",
+      },
     };
   },
   computed: {
@@ -74,6 +94,13 @@ export default {
           this.$emit("close");
         }
       },
+    },
+  },
+  methods: {
+    addProductOption() {
+      console.log("in child", this.productOption);
+      this.$emit("addOptions", this.productOption);
+      this.$emit("close");
     },
   },
 };

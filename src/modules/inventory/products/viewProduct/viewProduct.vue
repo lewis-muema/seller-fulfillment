@@ -26,7 +26,7 @@
                   <router-link
                     :to="{
                       name: 'EditProduct',
-                      params: { pV: JSON.stringify(productVariants) },
+                      params: { pV: JSON.stringify(product.product_variants) },
                     }"
                     >Edit</router-link
                   >
@@ -38,16 +38,10 @@
             </div>
           </div>
           <product-details-tabs v-if="stockSelectedTab === 'Overview'">
-            <product-overview
-              :productVariants="productVariants"
-              v-if="productVariants"
-            />
+            <product-overview :product="product" />
           </product-details-tabs>
           <product-details-tabs v-if="stockSelectedTab === 'History'">
-            <product-history
-              :productVariants="productVariants"
-              v-if="productVariants"
-            />
+            <product-history :product="product" />
           </product-details-tabs>
         </v-card>
       </v-col>
@@ -64,14 +58,14 @@ export default {
   components: { productDetailsTabs, productOverview, productHistory },
   data() {
     return {
-      productVariants: [],
-      ttt: "",
+      product: [],
     };
   },
   mounted() {
     this.$store.commit("setComponent", this.$t("common.viewProduct"));
-    if (this.$route.params.pVariants) {
-      this.productVariants = JSON.parse(this.$route.params.pVariants);
+    console.log("from view product", this.$route.params.product);
+    if (this.$route.params.product !== "undefined") {
+      this.product = JSON.parse(this.$route.params.product);
     }
   },
   computed: {

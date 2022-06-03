@@ -145,7 +145,7 @@ export default {
         duration: 0,
         type: "success",
       });
-      this.$route.push({ name: "Products" });
+      this.$router.push({ name: "Products" });
     },
   },
 };

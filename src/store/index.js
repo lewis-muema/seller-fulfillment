@@ -22,13 +22,17 @@ export default createStore({
               business_id: "B_ASD123",
               product_id: "P_ASD1234",
               product_name: "Shea Butter",
-              product_description: "Hand made ceramic cups",
+              product_description: "Smooth shear butter",
               sales_channel_collections: [
                 {
                   collection_id: "string",
                   collection_name: "string",
                 },
               ],
+
+              available: "23",
+              committed: "23",
+              incoming: "4",
             },
             {
               business_id: "B_ASD123",
@@ -79,6 +83,9 @@ export default createStore({
                   collection_name: "string",
                 },
               ],
+              available: "23",
+              committed: "25",
+              incoming: "7",
             },
           ],
         },

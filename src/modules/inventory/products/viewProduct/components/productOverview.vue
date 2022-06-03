@@ -4,12 +4,12 @@
     <div class="mb-3">
       <span>
         <img src="" alt="img" />
-        Shea Butter
+        {{ product.product_name }}
       </span>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">Description</p>
-      <p>Legit butter</p>
+      <p>{{ product.product_description }}</p>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">Price</p>
@@ -25,14 +25,14 @@
     </div>
     <v-table>
       <table-header
-        :header="productVariants.length ? tableHeaders2 : tableHeaders"
+        :header="product.product_variants ? tableHeaders2 : tableHeaders"
       />
       <tbody>
         <tr v-for="(variant, index) in variants" :key="index">
           <td>
-            {{ productVariants.length ? `image` : variant.fulfillmentCenter }}
+            {{ product.product_variants ? `image` : variant.fulfillmentCenter }}
           </td>
-          <td v-if="productVariants.length">
+          <td v-if="product.product_variants">
             <v-list-item lines="two">
               <v-list-item-header>
                 <v-list-item-title
@@ -48,26 +48,26 @@
           </td>
           <td>
             {{
-              productVariants.length
+              product.product_variants
                 ? variant.product_variant_stock_levels.available
                 : variant.available
             }}
           </td>
           <td>
             {{
-              productVariants.length
+              product.product_variants
                 ? variant.product_variant_stock_levels.quantity_in_inventory
                 : variant.committed
             }}
           </td>
           <td>
             {{
-              productVariants.length
+              product.product_variants
                 ? variant.product_variant_stock_levels.quantity_in_sales_orders
                 : variant.incoming
             }}
           </td>
-          <td v-if="productVariants.length">
+          <td v-if="product.product_variants">
             <p class="add-product-options" @click="showProductVariants = true">
               View
             </p>
@@ -94,7 +94,7 @@ import tableHeader from "@/modules/inventory/tables/tableHeader";
 import productVariants from "@/modules/inventory/products/viewProduct/components/productVariants";
 export default {
   components: { tableHeader, productVariants },
-  props: ["productVariants"],
+  props: ["product"],
   data() {
     return {
       showProductVariants: false,
@@ -125,9 +125,9 @@ export default {
 
   computed: {
     variants() {
-      const res = JSON.parse(JSON.stringify(this.productVariants));
-      console.log("res1", res);
-      return res.length ? this.productVariants : this.pSummary;
+      const res = this.product.product_variants;
+      console.log("res1", this.product);
+      return res ? this.product.product_variants : this.pSummary;
     },
   },
 };

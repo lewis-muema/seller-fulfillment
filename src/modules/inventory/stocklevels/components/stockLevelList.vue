@@ -7,7 +7,7 @@
           prepend-inner-icon="mdi-magnify"
           label="Search"
           variant="outlined"
-          placeholder="Search Product and product options"
+          placeholder="Search Product"
         ></v-text-field>
       </div>
 
@@ -35,7 +35,9 @@
                 </v-list-item-header>
               </v-list-item>
             </td>
-            <td>5 in Stock</td>
+            <td>{{ product.available }}</td>
+            <td>{{ product.committed }}</td>
+            <td>{{ product.incoming }}</td>
             <td>
               <router-link
                 :to="{
@@ -57,19 +59,20 @@
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
-import { mapGetters } from "vuex";
 export default {
-  components: { tableHeader },
+  props: ["products"],
   data() {
     return {
-      headers: ["Product", "Available inventory", "Actions"],
+      headers: ["Product", "Available", "Committed", "Incoming", "Actions"],
     };
   },
+  components: {
+    tableHeader,
+  },
+  mounted() {
+    this.$store.commit("setComponent", this.$t("common.stocks"));
+  },
   computed: {
-    ...mapGetters(["getProductLists"]),
-    products() {
-      return this.getProductLists.data.products;
-    },
     tableHeaders() {
       return this.headers;
     },
@@ -77,28 +80,4 @@ export default {
 };
 </script>
 
-<style>
-.desktop-product-details {
-  border-color: #e2e7ed;
-}
-.products-search {
-  width: 30%;
-  zoom: 85%;
-  margin: 25px 25px 0px 20px;
-}
-.product-image-container {
-  border: 1px solid;
-  border-color: #dcdfe6;
-  height: 45px;
-  width: 45px;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 30px;
-}
-.view-product-link {
-  color: #324ba8;
-  text-decoration: none;
-}
-</style>
+<style scoped></style>

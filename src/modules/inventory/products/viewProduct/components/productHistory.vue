@@ -3,10 +3,10 @@
     <div class="mb-3">
       <span>
         <img src="" alt="img" />
-        Shea Butter
+        {{ product.product_name }}
       </span>
       <select
-        v-if="productVariants.length"
+        v-if="product.product_variants"
         class="form-select product-options-select"
         aria-label="Default select example"
       >
@@ -31,19 +31,21 @@
     </div>
     <v-table v-if="activityHistory">
       <table-header
-        :header="productVariants.length ? tableHeaders2 : tableHeaders"
+        :header="product.product_variants ? tableHeaders2 : tableHeaders"
       />
       <tbody>
         <tr v-for="(activity, index) in activityHistory" :key="index">
           <td>
-            {{ productVariants.length ? "23/2/2022 12:00 pm" : activity.date }}
+            {{
+              product.product_variants ? "23/2/2022 12:00 pm" : activity.date
+            }}
           </td>
-          <td v-if="productVariants.length">
+          <td v-if="product.product_variants">
             {{ activity.product_variant_quantity }} ml
           </td>
           <td>
             {{
-              productVariants.length
+              product.product_variants
                 ? "3 items sent to James doe"
                 : activity.activity
             }}
@@ -65,7 +67,7 @@
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 export default {
   components: { tableHeader },
-  props: ["productVariants"],
+  props: ["product"],
   data() {
     return {
       tableHeaders: ["Date", "Activity", ""],
@@ -84,8 +86,8 @@ export default {
   },
   computed: {
     activityHistory() {
-      const res = JSON.parse(JSON.stringify(this.productVariants));
-      return res.length ? this.productVariants : this.activities;
+      const res = this.product.product_variants;
+      return res ? this.product.product_variants : this.activities;
     },
   },
 };

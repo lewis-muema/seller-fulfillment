@@ -45,8 +45,9 @@
           {{ tab.label }}
         </div>
         <v-badge
-          color="#FBDF9A"
-          text-color="#7F3B02"
+          v-if="tab.label != 'All'"
+          :color="tab.label === 'Low Stock' ? '#FBDF9A' : '#FBDECF'"
+          :text-color="tab.label === 'Low Stock' ? '#7F3B02' : '#9B101C'"
           content="23"
           inline
         ></v-badge>
@@ -74,6 +75,10 @@ export default {
           label: "All",
         },
         {
+          label: "Low Stock",
+          content: "23",
+        },
+        {
           label: "Out of Stock",
           content: "23",
         },
@@ -97,7 +102,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 10% 12%;
+  grid-template-columns: 8% 12% 12%;
   margin: 30px;
 }
 .desktop-product-tab {

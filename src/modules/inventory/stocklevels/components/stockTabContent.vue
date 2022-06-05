@@ -12,6 +12,9 @@ import tabs from "@/modules/inventory/components/tabs";
 import stockLevelList from "@/modules/inventory/stocklevels/components/stockLevelList";
 export default {
   components: { tabs, stockLevelList },
+  data() {
+    return {};
+  },
   computed: {
     ...mapGetters(["getInventorySelectedTab", "getProductLists"]),
     stockTabs() {
@@ -20,10 +23,16 @@ export default {
     productLists() {
       return this.getProductLists.data.products;
     },
+    outOfStock() {
+      const results = Object.keys(this.productLists).map((productList) => {
+        this.productLists[productList].available === 0;
+      });
+      return results;
+    },
     products() {
       let result =
         this.getInventorySelectedTab === "Out of Stock"
-          ? this.productLists
+          ? ""
           : this.productLists;
       return result;
     },

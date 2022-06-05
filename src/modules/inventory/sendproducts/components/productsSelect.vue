@@ -4,12 +4,18 @@
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
-            <span>Select product</span>
-            <span>
-              <router-link to="/inventory/add-product/" class="add-new-product"
-                >add a new product</router-link
-              >
-            </span>
+            <div class="enter-quantity-container desktop-header-title d-flex">
+              <i
+                class="mdi mdi-arrow-left"
+                aria-hidden="true"
+                @click="$router.back()"
+              ></i>
+              <v-card-title class="text-center"> Select Products</v-card-title>
+            </div>
+            <router-link to="/inventory/add-product/" class="add-new-product">
+              <v-icon>mdi mdi-plus</v-icon>
+              add a new product
+            </router-link>
           </div>
           <div class="search-input">
             <div class="form-input-group">
@@ -23,19 +29,20 @@
           </div>
           <hr />
           <el-table
-            ref="multipleTableRef"
-            :data="tableData"
+            ref="multipleTable"
+            :data="products"
             style="width: 100%"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55" />
-            <el-table-column label="Name" property="name" show-overflow-tooltip>
-            </el-table-column>
+            <el-table-column type="selection" width="55"> </el-table-column>
+
             <el-table-column
-              property="price"
-              label="Price"
+              label="Name"
+              property="product_name"
               show-overflow-tooltip
-            />
+            >
+            </el-table-column>
+            <el-table-column property="available" label="Available inventory" />
           </el-table>
         </v-card>
       </v-col>
@@ -53,6 +60,41 @@ export default {
   components: { itemsSelected },
   data() {
     return {
+      headers: [" test", "ttest", "ttest"],
+      tableData2: [
+        {
+          id: 1,
+          date: "2016-05-02",
+          name: "wangxiaohu",
+        },
+        {
+          id: 2,
+          date: "2016-05-04",
+          name: "wangxiaohu",
+        },
+        {
+          id: 3,
+          date: "2016-05-01",
+          name: "wangxiaohu",
+          children: [
+            {
+              id: 31,
+              date: "2016-05-01",
+              name: "wangxiaohu",
+            },
+            {
+              id: 32,
+              date: "2016-05-01",
+              name: "wangxiaohu",
+            },
+          ],
+        },
+        {
+          id: 4,
+          date: "2016-05-03",
+          name: "wangxiaohu",
+        },
+      ],
       tableData: [
         {
           name: "Fossil men’s watch",
@@ -88,9 +130,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getSelectedProducts"]),
+    ...mapGetters(["getSelectedProducts", "getProductLists"]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
+    },
+    products() {
+      return this.getProductLists.data.products;
     },
   },
 };
@@ -127,5 +172,6 @@ export default {
   float: right !important;
   text-decoration: none;
   color: #324ba8;
+  margin-top: -40px;
 }
 </style>

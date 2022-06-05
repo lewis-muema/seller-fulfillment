@@ -3,11 +3,13 @@
     <v-row>
       <v-col cols="7">
         <v-card variant="outlined" class="send-inventory-checkout-card">
-          <div class="enter-quantity-container desktop-header-title d-flex">
-            <router-link to="/">
-              <i class="mdi mdi-arrow-left" aria-hidden="true"></i
-            ></router-link>
-            <v-card-title class="text-center"> Checkout </v-card-title>
+          <div class="enter-quantity-container desktop-header-title d-flex p-3">
+            <i
+              class="mdi mdi-arrow-left"
+              aria-hidden="true"
+              @click="$router.back()"
+            ></i>
+            <v-card-title class="text-center">Checkout</v-card-title>
           </div>
           <div>
             <form>
@@ -37,11 +39,14 @@
                   >
                   <vue-tel-input v-bind="sendyPhoneProps"></vue-tel-input>
                 </div>
-                <p>add another phone number</p>
+                <span class="add-phone-number"
+                  ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon
+                  >Add another phone number</span
+                >
               </div>
               <div>
                 <span>Pickup Fee</span>
-                <span>KES 0</span>
+                <span class="checkout-kes">KES 0</span>
               </div>
               <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
                 <router-link to="/" class="btn btn-primary"
@@ -82,5 +87,15 @@ export default {
 }
 .send-inventory-checkout-container {
   padding: 0px 50px;
+}
+.add-phone-number-icon {
+  font-size: 12px;
+}
+.add-phone-number,
+.add-phone-number-icon {
+  color: #324ba8;
+}
+.checkout-kes {
+  float: right;
 }
 </style>

@@ -33,6 +33,26 @@ export default createStore({
               available: "23",
               committed: "23",
               incoming: "4",
+              product_currency: "KES",
+              price: 450,
+            },
+            {
+              business_id: "B_ASD123",
+              product_id: "P_ASD1234",
+              product_name: "Leather Bags",
+              product_description: "Good quality Leather Bags",
+              sales_channel_collections: [
+                {
+                  collection_id: "string",
+                  collection_name: "string",
+                },
+              ],
+
+              available: "0",
+              committed: "0",
+              incoming: "0",
+              product_currency: "KES",
+              price: 450,
             },
             {
               business_id: "B_ASD123",
@@ -86,6 +106,8 @@ export default createStore({
               available: "23",
               committed: "25",
               incoming: "7",
+              product_currency: "KES",
+              product_price: 450,
             },
           ],
         },

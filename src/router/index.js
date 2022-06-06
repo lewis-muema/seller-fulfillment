@@ -6,18 +6,20 @@ import Dashboard from "../modules/dashboard/dashboard.vue";
 import Products from "../modules/inventory/products.vue";
 import StockLevels from "../modules/inventory/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendProducts.vue";
-import Customers from "../modules/deliveries/customers.vue";
-import Tracking from "../modules/deliveries/tracking.vue";
-import Sendy from "../modules/deliveries/sendy.vue";
-import Statements from "../modules/payments/statements.vue";
-import Invoices from "../modules/payments/invoices.vue";
-import ManageUsers from "../modules/settings/manageUsers.vue";
-import PaymentOptions from "../modules/settings/paymentOptions.vue";
-import Profile from "../modules/settings/profile.vue";
-import viewInvoice from "../modules/payments/viewInvoice.vue";
-import addUser from "../modules/settings/components/addUser.vue";
-import userPermissions from "../modules/settings/components/userPermissions.vue";
+import Customers from "../modules/deliveries/customers/customers.vue";
+import Tracking from "../modules/deliveries/tracking/tracking.vue";
+import Sendy from "../modules/deliveries/sendy/sendy.vue";
+import Statements from "../modules/payments/statements/statements.vue";
+import Invoices from "../modules/payments/invoices/invoices.vue";
+import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
+import PaymentOptions from "../modules/settings/paymentOptions/paymentOptions.vue";
+import Profile from "../modules/settings/profile/profile.vue";
+import viewInvoice from "../modules/payments/invoices/components/viewInvoice.vue";
+import addUser from "../modules/settings/manageUsers/components/addUser.vue";
+import userPermissions from "../modules/settings/manageUsers/components/userPermissions.vue";
 import invite from "../modules/external/invite.vue";
+import editUser from "../modules/settings/manageUsers/components/editUser.vue";
+import activityLog from "../modules/settings/activityLog/activityLog.vue";
 
 const routes = [
   {
@@ -96,6 +98,11 @@ const routes = [
     component: addUser,
   },
   {
+    path: "/settings/edit-user",
+    name: "Edit User",
+    component: editUser,
+  },
+  {
     path: "/settings/user-permissions",
     name: "User Permissions",
     component: userPermissions,
@@ -109,6 +116,11 @@ const routes = [
     path: "/settings/manage-users",
     name: "Manage Users",
     component: ManageUsers,
+  },
+  {
+    path: "/settings/activity-log",
+    name: "Activity Log",
+    component: activityLog,
   },
   {
     path: "/external/invite",

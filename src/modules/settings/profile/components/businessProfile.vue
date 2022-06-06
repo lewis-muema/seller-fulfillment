@@ -116,6 +116,7 @@ export default {
 .businessProfile-label {
   font-size: 14px;
   font-weight: 500;
+  margin-bottom: 10px;
 }
 .businessProfile-field {
   zoom: 90%;

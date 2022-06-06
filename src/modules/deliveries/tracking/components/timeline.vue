@@ -93,7 +93,7 @@
 
 <script>
 import moment from "moment";
-import statusMixin from "../../../mixins/status_mixin";
+import statusMixin from "../../../../mixins/status_mixin";
 
 export default {
   mixins: [statusMixin],
@@ -105,7 +105,7 @@ export default {
       timeline: [],
       activeEvent: "",
       activeIndex: 0,
-      overlay: true,
+      overlay: false,
       attempts: [
         {
           attempt: "Attempt 1",

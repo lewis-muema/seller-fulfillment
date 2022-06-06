@@ -14,7 +14,25 @@
         :placeholder="$t('payments.to')"
       />
       <i class="mdi mdi-magnify paymnets-info-bar-search"></i>
-      <div />
+      <div>
+        <v-menu transition="slide-y-transition" anchor="bottom center">
+          <template v-slot:activator="{ props }">
+            <v-btn class="statements-actions-btn" v-bind="props">
+              {{ $t("payments.download") }}
+            </v-btn>
+          </template>
+          <v-list class="users-actions-popup">
+            <v-list-item
+              v-for="(action, i) in $store.getters.getDownloadActions"
+              :key="i"
+            >
+              <v-list-item-title>
+                {{ $t(action.label) }}
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </div>
     <div>
       <div class="invoices-table">
@@ -116,12 +134,6 @@ export default {
       from: "",
       to: "",
     };
-  },
-  mounted() {
-    this.$store.commit("setComponent", this.$t("common.invoices"));
-    setTimeout(() => {
-      this.$store.commit("setLoader", "");
-    }, 3000);
   },
 };
 </script>

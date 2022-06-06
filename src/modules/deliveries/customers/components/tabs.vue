@@ -105,6 +105,7 @@ export default {
 .customers-orders-tab {
   display: flex;
   height: 40px;
+  margin-top: auto;
 }
 .active-orders-tab {
   color: #324ba8 !important;

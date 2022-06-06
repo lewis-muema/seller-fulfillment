@@ -8,6 +8,8 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 // import { ApmVuePlugin } from "@elastic/apm-rum-vue";
 import {
   faSpinner,

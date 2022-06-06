@@ -23,6 +23,9 @@ export default {
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },
+  setPickupInfo(state, val) {
+    state.pickupInfo = val;
+  },
   setProducts(state, val) {
     state.products = val;
   },
@@ -52,5 +55,14 @@ export default {
   },
   setDefaultLanguage(state, val) {
     state.defaultLanguage = val;
+  },
+  setDownloadActions(state, val) {
+    state.downloadActions = val;
+  },
+  setDeliveryActions(state, val) {
+    state.deliveryActions = val;
+  },
+  setActivityLog(state, val) {
+    state.activityLog = val;
   },
 };

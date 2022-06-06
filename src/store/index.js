@@ -18,9 +18,68 @@ export default createStore({
         "/auth/otp",
         "/external/invite",
       ],
+      downloadActions: [
+        {
+          label: "Excel",
+        },
+        {
+          label: "PDF",
+        },
+      ],
+      deliveryActions: [
+        {
+          label: "deliveries.getDeliveryCode",
+          trigger: false,
+        },
+        {
+          label: "deliveries.rescheduleOrder",
+          trigger: false,
+        },
+        {
+          label: "deliveries.cancelOrder",
+          trigger: false,
+        },
+      ],
       tab: "All",
       loader: "loading-text",
       overlay: false,
+      activityLog: [
+        {
+          date: "Thur, 1st May 2022   17:06",
+          user: "James Doe",
+          action: "Changed the price of Shea butter from KES 500 to KES350",
+        },
+        {
+          date: "Thur, 1st May 2022   15:06",
+          user: "Mary Monroe",
+          action: "Added a new product called Mango Butter",
+        },
+        {
+          date: "Thur, 1st May 2022   13:06",
+          user: "James Doe",
+          action: "Changed the price of Shea butter from KES 500 to KES350",
+        },
+        {
+          date: "Thur, 1st May 2022   12:06",
+          user: "James Doe",
+          action: "Sent a delivery of Shea Butter to Moses Doe",
+        },
+        {
+          date: "Thur, 1st May 2022   11:06",
+          user: "James Doe",
+          action: "Changed the price of Shea butter from KES 500 to KES350",
+        },
+        {
+          date: "Thur, 1st May 2022   10:06",
+          user: "James Doe",
+          action: "Changed the price of Shea butter from KES 500 to KES350",
+        },
+        {
+          date: "Thur, 1st May 2022   09:06",
+          user: "James Doe",
+          action: "Changed the price of Shea butter from KES 500 to KES350",
+        },
+      ],
       users: [
         {
           name: "James Doe",
@@ -30,11 +89,39 @@ export default createStore({
           actions: [
             {
               label: "settings.editUser",
-              link: "/edit-user/",
+              link: "/settings/edit-user/",
+              trigger: "",
             },
             {
               label: "settings.deactivateUser",
-              link: "/deactivate-user/",
+              link: "/settings/deactivate-user/",
+              trigger: "",
+            },
+            {
+              label: "settings.resendEmail",
+              link: "",
+              trigger: "resend",
+            },
+            {
+              label: "settings.modifyPermissions",
+              link: "/settings/user-permissions",
+              trigger: "",
+            },
+          ],
+        },
+        {
+          name: "Jane Doe",
+          phoneNumber: "+254712634737",
+          emailAddress: "James1@smartcollections.com",
+          status: "Active",
+          actions: [
+            {
+              label: "settings.editUser",
+              link: "/settings/edit-user/",
+            },
+            {
+              label: "settings.deactivateUser",
+              link: "/settings/deactivate-user/",
             },
             {
               label: "settings.modifyPermissions",
@@ -43,18 +130,18 @@ export default createStore({
           ],
         },
         {
-          name: "James Doe",
+          name: "Martin Doe",
           phoneNumber: "+254712634737",
-          emailAddress: "James@smartcollections.com",
+          emailAddress: "James2@smartcollections.com",
           status: "Active",
           actions: [
             {
               label: "settings.editUser",
-              link: "/edit-user/",
+              link: "/settings/edit-user/",
             },
             {
               label: "settings.deactivateUser",
-              link: "/deactivate-user/",
+              link: "/settings/deactivate-user/",
             },
             {
               label: "settings.modifyPermissions",
@@ -63,18 +150,18 @@ export default createStore({
           ],
         },
         {
-          name: "James Doe",
+          name: "Cuz Doe",
           phoneNumber: "+254712634737",
-          emailAddress: "James@smartcollections.com",
+          emailAddress: "James3@smartcollections.com",
           status: "Active",
           actions: [
             {
               label: "settings.editUser",
-              link: "/edit-user/",
+              link: "/settings/edit-user/",
             },
             {
               label: "settings.deactivateUser",
-              link: "/deactivate-user/",
+              link: "/settings/deactivate-user/",
             },
             {
               label: "settings.modifyPermissions",
@@ -83,38 +170,18 @@ export default createStore({
           ],
         },
         {
-          name: "James Doe",
+          name: "Shyla Doe",
           phoneNumber: "+254712634737",
-          emailAddress: "James@smartcollections.com",
+          emailAddress: "James4@smartcollections.com",
           status: "Active",
           actions: [
             {
               label: "settings.editUser",
-              link: "/edit-user/",
+              link: "/settings/edit-user/",
             },
             {
               label: "settings.deactivateUser",
-              link: "/deactivate-user/",
-            },
-            {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
-            },
-          ],
-        },
-        {
-          name: "James Doe",
-          phoneNumber: "+254712634737",
-          emailAddress: "James@smartcollections.com",
-          status: "Active",
-          actions: [
-            {
-              label: "settings.editUser",
-              link: "/edit-user/",
-            },
-            {
-              label: "settings.deactivateUser",
-              link: "/deactivate-user/",
+              link: "/settings/deactivate-user/",
             },
             {
               label: "settings.modifyPermissions",
@@ -207,7 +274,8 @@ export default createStore({
       totalDue: "KES 54",
       statements: [
         {
-          date: "Today",
+          date: "Friday, 19th Jan 2022",
+          amount: "",
           items: [
             {
               icon: "mdi-truck-outline",
@@ -240,6 +308,7 @@ export default createStore({
         },
         {
           date: "Thursday, 18th Jan 2022",
+          amount: "Kes 1,200",
           items: [
             {
               icon: "mdi-cash-multiple",
@@ -272,6 +341,55 @@ export default createStore({
         },
         {
           date: "Monday, 15th Jan 2022",
+          amount: "Kes 1,200",
+          items: [
+            {
+              icon: "mdi-cash-multiple",
+              description: "Payment for 2 orders",
+              items: "Shea Butter & 3 other items",
+              date: "7/7/2022 11:12 AM",
+              status: "Paid",
+              class: "paid",
+              price: "+ KES 340",
+            },
+            {
+              icon: "mdi-truck-outline",
+              description: "Delivery to James",
+              items: "Shea Butter & 3 other items",
+              date: "7/7/2022 11:12 AM",
+              status: "Paid",
+              class: "paid",
+              price: "- KES 300",
+            },
+          ],
+        },
+        {
+          date: "Monday, 15th Jan 2022",
+          amount: "Kes 1,200",
+          items: [
+            {
+              icon: "mdi-cash-multiple",
+              description: "Payment for 2 orders",
+              items: "Shea Butter & 3 other items",
+              date: "7/7/2022 11:12 AM",
+              status: "Paid",
+              class: "paid",
+              price: "+ KES 340",
+            },
+            {
+              icon: "mdi-truck-outline",
+              description: "Delivery to James",
+              items: "Shea Butter & 3 other items",
+              date: "7/7/2022 11:12 AM",
+              status: "Paid",
+              class: "paid",
+              price: "- KES 300",
+            },
+          ],
+        },
+        {
+          date: "Monday, 15th Jan 2022",
+          amount: "Kes 1,200",
           items: [
             {
               icon: "mdi-cash-multiple",
@@ -300,6 +418,11 @@ export default createStore({
         phoneNumber: "+254712344444",
         instructions: "Leave the package at the door",
         payment: "Mpesa",
+      },
+      pickupInfo: {
+        location: "Windsor Heights",
+        phoneNumber: "+254712344000",
+        instructions: "Come to Windsor",
       },
       products: {
         name: "Shea Butter and 2 other items",
@@ -458,8 +581,7 @@ export default createStore({
           partner_contact_information: null,
           products: [
             {
-              product_name:
-                "Black timberland boots. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue eu lacus elementum fringilla. Quisque elementum ex eget lacus hendrerit mattis.",
+              product_name: "Black timberland boots.",
               product_variant_description: "Black timberland boots",
               product_unit_price: 66.0,
               product_unit_currency: "KES",
@@ -468,8 +590,7 @@ export default createStore({
               product_unit_count: 2,
             },
             {
-              product_name:
-                "Black timberland boots. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue eu lacus elementum fringilla. Quisque elementum ex eget lacus hendrerit mattis.",
+              product_name: "Black timberland boots.",
               product_variant_description: "Option 1",
               product_unit_price: 300.0,
               product_unit_currency: "KES",

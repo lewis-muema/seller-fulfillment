@@ -11,6 +11,7 @@ export default {
   getOrderStatuses: (state) => state.orderStatuses,
   getDeliveries: (state) => state.deliveries,
   getDeliveryInfo: (state) => state.deliveryInfo,
+  getPickupInfo: (state) => state.pickupInfo,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
   getStatements: (state) => state.statements,
@@ -21,4 +22,7 @@ export default {
   getUsers: (state) => state.users,
   getLanguages: (state) => state.languages,
   getDefaultLanguage: (state) => state.defaultLanguage,
+  getDownloadActions: (state) => state.downloadActions,
+  getDeliveryActions: (state) => state.deliveryActions,
+  getActivityLog: (state) => state.activityLog,
 };

@@ -27,5 +27,13 @@
   "details": "Details",
   "paymentDetails": "Payment details",
   "datePaid": "Date paid",
-  "amountPaid": "Amount paid"
+  "amountPaid": "Amount paid",
+  "billingCycle": "Billing cycle",
+  "completedOrders": "completed orders",
+  "noTransactionsYet": "No transactions yet",
+  "trackTransactions": "You’ll be able to track transactions & payments here",
+  "download": "Download",
+  "pleaseMakePayment": "Please make payment",
+  "pleaseMakeYourPayment": "Please make your payment of {amount} for {total} completed deliveries to continue placing deliveries to your customers.",
+  "makePayment": "Make Payment"
 }

@@ -31,6 +31,7 @@
   "editUser": "Edit user",
   "deactivateUser": "Deactivate user",
   "modifyPermissions": "Modify permissions",
+  "editPermissions": "Edit Permissions",
   "back": "Back",
   "addAUser": "Add a user",
   "userRole": "User role",
@@ -50,5 +51,18 @@
   "invoice": "Invoice",
   "settings": "Settings",
   "paymentOptions": "Payment options",
-  "manageUsers": "Manage users"
+  "manageUsers": "Manage users",
+  "downloadInvoice": "Download Invoice",
+  "userAddedSuccessfully": "User added successfully",
+  "addedSuccessfully": "{name} has been added successfully. An email with a link to accept invitation has been sent to them.",
+  "okay": "Okay",
+  "anEmailToAcceptInvitation": "An email to accept invitation was sent to {email}",
+  "userDidn’tReceiveEmail": "User didn’t receive email?",
+  "areYouSureYouWantToResend": "Are you sure you want to resend the email invitation?",
+  "edit": "edit",
+  "yesResendInvite": "Yes, resend invite",
+  "resendEmail": "Resend email",
+  "filterByDateRange": "Filter by date range",
+  "date": "Date",
+  "action": "Action"
 }

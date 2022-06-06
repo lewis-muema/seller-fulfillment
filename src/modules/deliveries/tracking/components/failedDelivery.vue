@@ -25,7 +25,7 @@
 export default {
   methods: {
     showTimepicker() {
-      this.$store.commit("setOverlay", true);
+      this.$store.commit("setOverlay", { index: 1, status: true });
     },
   },
 };
@@ -52,6 +52,7 @@ export default {
 }
 .delivery-failed-button-container {
   margin: auto 15px;
+  margin-left: auto;
 }
 .delivery-failed-button {
   height: 40px !important;

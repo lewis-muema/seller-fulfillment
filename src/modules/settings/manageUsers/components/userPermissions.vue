@@ -85,7 +85,7 @@
             color="#324BA8"
           ></v-checkbox>
           <v-btn class="userPermisssions-save">
-            {{ $t("settings.addUser") }}
+            {{ $t("settings.editPermissions") }}
           </v-btn>
         </div>
       </div>

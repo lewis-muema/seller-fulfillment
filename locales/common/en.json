@@ -24,5 +24,6 @@
   "notifications": "Notifications",
   "trackCustomerDelivery": "Track delivery to customer",
   "deliveriesToCustomers": "Deliveries to the customer",
-  "deliveriesToSendy": "Deliveries to Sendy"
+  "deliveriesToSendy": "Deliveries to Sendy",
+  "activityLog": "Activity Log"
 }

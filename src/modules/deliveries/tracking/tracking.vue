@@ -9,6 +9,25 @@
         <span :class="$store.getters.getLoader">
           {{ $t("deliveries.orderNo") }} {{ orderNo }}
         </span>
+        <span>
+          <v-menu transition="slide-y-transition" anchor="bottom center">
+            <template v-slot:activator="{ props }">
+              <v-btn class="tracking-order-actions-btn" v-bind="props">
+                {{ $t("deliveries.actions") }}
+              </v-btn>
+            </template>
+            <v-list class="users-actions-popup">
+              <v-list-item
+                v-for="(action, i) in $store.getters.getDeliveryActions"
+                :key="i"
+              >
+                <v-list-item-title @click="overlayStatus(i, true)">
+                  {{ $t(action.label) }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </span>
       </p>
       <p class="tracking-order-time-est">
         <span :class="$store.getters.getLoader">
@@ -26,31 +45,7 @@
         <products />
       </div>
     </div>
-    <v-overlay v-model="overlay" class="align-center justify-center">
-      <div class="tracking-reschedule-container">
-        <div class="tracking-reschedule-title-section">
-          <p class="tracking-reschedule-title-label">
-            {{ $t("deliveries.pickATime") }}
-          </p>
-          <i
-            @click="overlay = false"
-            class="mdi mdi-close tracking-reschedule-title-close"
-          ></i>
-        </div>
-        <datepicker
-          :disabled-dates="{
-            to: new Date(Date.now() - 1000 * 60 * 60 * 24 * 0),
-            from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
-          }"
-          v-model="date"
-          :inline="true"
-          :prevent-disable-date-selection="true"
-        ></datepicker>
-        <v-btn class="tracking-reschedule-submit-button">
-          {{ $t("deliveries.submit") }}
-        </v-btn>
-      </div>
-    </v-overlay>
+    <overlays :overlayVal="overlay" />
   </div>
 </template>
 
@@ -59,7 +54,7 @@ import timeline from "./components/timeline.vue";
 import deliveryInfo from "./components/deliveryInfo.vue";
 import products from "./components/products.vue";
 import failedDelivery from "./components/failedDelivery.vue";
-import Datepicker from "vuejs3-datepicker";
+import overlays from "./components/overlays.vue";
 
 export default {
   components: {
@@ -67,31 +62,45 @@ export default {
     deliveryInfo,
     products,
     failedDelivery,
-    Datepicker,
+    overlays,
   },
   data() {
     return {
       orderNo: "AQW4567787",
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
-      date: new Date(),
     };
   },
   watch: {
     "$store.state.overlay": function (val) {
-      this.overlay = val;
-    },
-    overlay(val) {
-      this.$store.commit("setOverlay", val);
+      this.overlayStatus(val.index, val.status);
     },
   },
   mounted() {
-    this.$store.commit(
-      "setComponent",
-      this.$t("deliveries.trackDeliveryToCustomer")
-    );
+    if (this.$router.options.history.state.back === "/deliveries/sendy") {
+      this.$store.commit(
+        "setComponent",
+        this.$t("deliveries.trackDeliveryToSendy")
+      );
+    }
+    if (this.$router.options.history.state.back === "/deliveries/customer") {
+      this.$store.commit(
+        "setComponent",
+        this.$t("deliveries.trackDeliveryToCustomer")
+      );
+    }
   },
-  methods: {},
+  methods: {
+    overlayStatus(index, status) {
+      this.actions = this.$store.getters.getDeliveryActions;
+      this.actions.forEach((row) => {
+        row.trigger = false;
+      });
+      this.actions[index].trigger = status;
+      this.$store.commit("setDeliveryActions", this.actions);
+      this.overlay = status;
+    },
+  },
 };
 </script>
 
@@ -127,39 +136,5 @@ export default {
 .cell:not(.blank):not(.disabled).month:hover,
 .cell:not(.blank):not(.disabled).year:hover {
   border: 1px solid #324ba8 !important;
-}
-.tracking-reschedule-container {
-  background: white;
-  display: flex;
-  flex-direction: column;
-  padding: 40px;
-}
-.vuejs3-datepicker div:first-child {
-  display: none !important;
-}
-.tracking-reschedule-title-section {
-  margin-bottom: 20px;
-  display: flex;
-}
-.tracking-reschedule-title-label {
-  font-size: 15px;
-  width: 60%;
-}
-.tracking-reschedule-title-close {
-  font-size: 20px;
-  margin-left: auto;
-  cursor: pointer;
-}
-.tracking-reschedule-submit-button {
-  margin-top: 40px;
-  width: 150px;
-  text-transform: capitalize;
-  letter-spacing: 0px;
-  color: white !important;
-  background: #324ba8;
-  margin-left: auto;
-}
-.vuejs3-datepicker__calendar {
-  box-shadow: none !important;
 }
 </style>

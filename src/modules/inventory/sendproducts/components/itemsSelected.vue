@@ -7,8 +7,7 @@
       <div class="items-selected-container">
         <p>
           {{
-            getRoute === "/inventory/send-inventory/step/products-sendy" ||
-            getRoute === "/inventory/send-inventory/step/products-customer"
+            getRoute === "ProductsToSendy" || getRoute === "ProductsToCustomer"
               ? `${itemsSelectedCount}
           items Selected`
               : `${itemsAddedCount} items Added`
@@ -17,8 +16,7 @@
         <router-link
           :to="{ name: 'Add Quantity' }"
           v-if="
-            getRoute === '/inventory/send-inventory/step/products-sendy' ||
-            getRoute === '/inventory/send-inventory/step/products-customer'
+            getRoute === 'ProductsToSendy' || getRoute === 'ProductsToCustomer'
           "
         >
           <button type="submit" class="btn btn-primary">
@@ -40,7 +38,7 @@ export default {
   props: ["itemsSelectedCount", "itemsAddedCount"],
   computed: {
     getRoute() {
-      return this.$route.path;
+      return this.$route.name;
     },
   },
 };

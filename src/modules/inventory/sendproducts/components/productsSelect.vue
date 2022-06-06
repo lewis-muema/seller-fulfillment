@@ -60,41 +60,6 @@ export default {
   components: { itemsSelected },
   data() {
     return {
-      headers: [" test", "ttest", "ttest"],
-      tableData2: [
-        {
-          id: 1,
-          date: "2016-05-02",
-          name: "wangxiaohu",
-        },
-        {
-          id: 2,
-          date: "2016-05-04",
-          name: "wangxiaohu",
-        },
-        {
-          id: 3,
-          date: "2016-05-01",
-          name: "wangxiaohu",
-          children: [
-            {
-              id: 31,
-              date: "2016-05-01",
-              name: "wangxiaohu",
-            },
-            {
-              id: 32,
-              date: "2016-05-01",
-              name: "wangxiaohu",
-            },
-          ],
-        },
-        {
-          id: 4,
-          date: "2016-05-03",
-          name: "wangxiaohu",
-        },
-      ],
       tableData: [
         {
           name: "Fossil men’s watch",
@@ -122,6 +87,14 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.$store.commit(
+      "setComponent",
+      this.$route.name === "ProductsToSendy"
+        ? this.$t("common.sendInventoryToSendy")
+        : this.$t("common.sendDeliveryToCustomer")
+    );
   },
   methods: {
     ...mapMutations(["setSelectedProducts"]),

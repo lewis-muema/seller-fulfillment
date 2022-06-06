@@ -27,13 +27,16 @@
       </v-list>
       <div>
         <p class="pl-2">18 items added</p>
+        <total-amount />
       </div>
     </v-card>
   </div>
 </template>
 
 <script>
+import totalAmount from "@/modules/inventory/sendproducts/components/totalAmount";
 export default {
+  components: { totalAmount },
   data() {
     return {
       productSummary: [

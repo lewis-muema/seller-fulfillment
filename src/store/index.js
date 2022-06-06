@@ -14,6 +14,7 @@ export default createStore({
       inventorySelectedTab: "All",
       stockSelectedTab: "Overview",
       selectedProducts: [],
+      sendProductsRoute: "",
       productLists: {
         message: "product.list.success",
         data: {
@@ -34,7 +35,7 @@ export default createStore({
               committed: "23",
               incoming: "4",
               product_currency: "KES",
-              price: 450,
+              product_price: 450,
             },
             {
               business_id: "B_ASD123",
@@ -52,7 +53,7 @@ export default createStore({
               committed: "0",
               incoming: "0",
               product_currency: "KES",
-              price: 450,
+              product_price: 450,
             },
             {
               business_id: "B_ASD123",

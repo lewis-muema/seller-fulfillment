@@ -23,4 +23,7 @@ export default {
   setSelectedProducts(state, val) {
     state.selectedProducts = val;
   },
+  setSendProductsRoute(state, val) {
+    state.sendProductsRoute = val;
+  },
 };

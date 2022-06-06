@@ -7,4 +7,5 @@ export default {
   getStockSelectedTab: (state) => state.stockSelectedTab,
   getProductLists: (state) => state.productLists,
   getSelectedProducts: (state) => state.selectedProducts,
+  getSendProductsRoute: (state) => state.sendProductsRoute,
 };

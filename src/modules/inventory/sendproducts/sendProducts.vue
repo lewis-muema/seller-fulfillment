@@ -29,15 +29,19 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   mounted() {
     this.$store.commit("setComponent", this.$t("common.sendInventory"));
   },
   methods: {
+    ...mapMutations(["setSendProductsRoute"]),
     deliverToCustomer() {
+      this.setSendProductsRoute("ProductsToCustomer");
       this.$router.push({ name: "ProductsToCustomer" });
     },
     deliverToSendy() {
+      this.setSendProductsRoute("ProductsToSendy");
       this.$router.push({ name: "ProductsToSendy" });
     },
   },

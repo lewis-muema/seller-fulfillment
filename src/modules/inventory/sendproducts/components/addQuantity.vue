@@ -13,7 +13,13 @@
           </div>
           <div class="products-selected-summary">
             <v-table>
-              <table-header :header="tableHeaders" />
+              <table-header
+                :header="
+                  getRouteName === 'ProductsToSendy'
+                    ? tableHeaders
+                    : tableHeaders2
+                "
+              />
               <tbody>
                 <tr
                   v-for="(selectedProduct, index) in selectedProductsSummary"
@@ -29,6 +35,11 @@
                   <td>
                     {{ selectedProduct.product_currency }}
                     {{ selectedProduct.product_price }}
+                  </td>
+                  <td v-if="getRouteName === 'ProductsToCustomer'">
+                    <div class="available-units">
+                      {{ selectedProduct.available }}
+                    </div>
                   </td>
                   <td class="">
                     <label>Qty</label>
@@ -62,12 +73,22 @@ export default {
     return {
       itemsAddedCount: 0,
       tableHeaders: ["", "Product", "Price", "Quantity to send"],
+      tableHeaders2: [
+        "",
+        "Product",
+        "Price",
+        "Available units",
+        "Quantity to send",
+      ],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedProducts"]),
+    ...mapGetters(["getSelectedProducts", "getSendProductsRoute"]),
     selectedProductsSummary() {
       return this.getSelectedProducts;
+    },
+    getRouteName() {
+      return this.getSendProductsRoute;
     },
   },
 };
@@ -79,5 +100,14 @@ export default {
 }
 .enter-quantity-input td > .form-control {
   width: 50% !important;
+}
+.available-units {
+  border: 1px;
+  background-color: #f0f3f7;
+  width: 40px;
+  border-radius: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

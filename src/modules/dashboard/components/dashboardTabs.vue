@@ -8,7 +8,11 @@
         :key="tab.label"
         :label="tab.label"
       >
-        <div class="dashboard-deliveries-tab-section" @click="setTab(tab)">
+        <div
+          class="dashboard-deliveries-tab-section"
+          @click="setTab(tab)"
+          :class="activeTab ? 'active' : ''"
+        >
           {{ tab.label }}
         </div>
         <v-badge
@@ -28,6 +32,7 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      currentTab: 0,
       tabs: [
         {
           label: "To your Customers",
@@ -89,7 +94,7 @@ export default {
   display: flex;
   height: 40px;
 }
-.activeTab {
+.active {
   color: #324ba8 !important;
   border-bottom: 2px solid #324ba8 !important;
 }

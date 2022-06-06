@@ -34,6 +34,9 @@
                 <li class="view-product-dropdown-list">
                   <router-link to="/">Archive</router-link>
                 </li>
+                <li class="view-product-dropdown-list">
+                  <router-link to="/">Add product options</router-link>
+                </li>
               </ul>
             </div>
           </div>

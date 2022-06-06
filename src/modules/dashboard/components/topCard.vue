@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="">
-      <h5>Welcome Irene</h5>
+      <h5>Welcome, Irene! 🎉</h5>
       <p>Here's what's happening to your account today.</p>
     </span>
     <v-row class="desktop-dashboard-upper-content">

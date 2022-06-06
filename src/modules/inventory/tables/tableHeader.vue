@@ -14,7 +14,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .table-headers {
   font-size: 15px !important;
   font-weight: 400;

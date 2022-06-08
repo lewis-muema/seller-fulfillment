@@ -126,7 +126,6 @@ export default {
   computed: {
     variants() {
       const res = this.product.product_variants;
-      console.log("res1", this.product);
       return res ? this.product.product_variants : this.pSummary;
     },
   },

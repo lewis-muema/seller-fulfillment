@@ -116,7 +116,6 @@
 </template>
 
 <script>
-import cccc from "../../../countries.js";
 export default {
   data() {
     return {
@@ -201,7 +200,6 @@ export default {
   methods: {
     continueSignUp() {
       this.continueSignup = false;
-      console.log("here", cccc);
     },
   },
 };

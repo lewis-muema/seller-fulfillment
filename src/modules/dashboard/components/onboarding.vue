@@ -154,7 +154,6 @@ export default {
   methods: {
     completeSteps() {
       this.activeStep += 1;
-      console.log("a", this.activeStep);
     },
   },
   computed: {},

@@ -11,13 +11,15 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 // import { ApmVuePlugin } from "@elastic/apm-rum-vue";
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
+import "vue-tel-input/dist/vue-tel-input.css";
 import {
   faSpinner,
   faThumbsUp,
   faThumbsDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import VueTelInput from "vue3-tel-input";
 import "vue3-tel-input/dist/vue3-tel-input.css";

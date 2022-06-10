@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="ml-5">
+    <v-container class="onboarding-container">
       <span class="mt-3 ml-5">
         <h5>Welcome, Irene! 🎉</h5>
         <p>Complete the steps below to fulfilling your first order</p>
@@ -206,5 +206,8 @@ export default {
 }
 .activestep {
   background-color: #324ba8;
+}
+.onboarding-container {
+  max-width: 100%;
 }
 </style>

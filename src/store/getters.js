@@ -25,4 +25,10 @@ export default {
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,
   getActivityLog: (state) => state.activityLog,
+  getDashboardSelectedTab: (state) => state.dashboardSelectedTab,
+  getInventorySelectedTab: (state) => state.inventorySelectedTab,
+  getStockSelectedTab: (state) => state.stockSelectedTab,
+  getProductLists: (state) => state.productLists,
+  getSelectedProducts: (state) => state.selectedProducts,
+  getSendProductsRoute: (state) => state.sendProductsRoute,
 };

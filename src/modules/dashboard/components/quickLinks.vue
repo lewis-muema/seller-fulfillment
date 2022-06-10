@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="color: #303133">Quick Links</div>
+    <div style="color: #303133">{{ $t("dashboard.quickLinks") }}</div>
     <v-card
       class="mt-3 desktop-quick-links-card q"
       variant="outlined"

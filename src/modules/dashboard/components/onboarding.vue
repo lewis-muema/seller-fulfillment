@@ -2,8 +2,8 @@
   <div>
     <v-container class="onboarding-container">
       <span class="mt-3 ml-5">
-        <h5>Welcome, Irene! 🎉</h5>
-        <p>Complete the steps below to fulfilling your first order</p>
+        <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+        <p>{{ $t("dashboard.completeSteps") }}</p>
       </span>
       <v-row>
         <v-col cols="8" class="desktop-dashboard-content">
@@ -33,9 +33,6 @@
                         >{{ i + 1 }}</span
                       >
                     </v-avatar>
-                    <!-- <v-icon class="desktop-content-icon">
-                      {{ content.icon }}</v-icon
-                    > -->
                     <v-list-item-header>
                       <v-list-item-title>
                         <div class="desktop-content-title">
@@ -57,18 +54,11 @@
               </v-list>
             </div>
           </v-card>
-          <!-- <button
-            class="btn btn-primary btn-sm"
-            @click="completeSteps()"
-            v-if="activeStep < totalSteps"
-          >
-            Complete Steps
-          </button> -->
         </v-col>
         <v-col cols="3" class="desktop-dashboard-content mt-3">
           <v-card variant="outlined" class="c">
             <v-list>
-              <p class="ml-3">Get more out of Sendy fulfillment</p>
+              <p class="ml-3">{{ $t("dashboard.getMoreoutOfSendy") }}</p>
               <v-list-item
                 v-for="(link, i) in dashboardLinks"
                 :key="i"
@@ -98,6 +88,7 @@
 export default {
   data() {
     return {
+      name: "Irene",
       checkbox: true,
       activeStep: 0,
       totalSteps: 4,

@@ -2,26 +2,28 @@
   <div class="text-center">
     <v-dialog v-model="show">
       <v-card class="popup-card">
-        <v-card-title>Add Product option</v-card-title>
+        <v-card-title>{{ $t("inventory.addProductOption") }}</v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="6">
               <div class="mb-2">
-                <label for="productName" class="form-label"
-                  >Name of the Option</label
-                >
+                <label for="productName" class="form-label">{{
+                  $t("inventory.nameOfOption")
+                }}</label>
                 <div>
                   <input
                     v-model="productOption.name"
                     type="text"
                     class="form-control"
-                    placeholder="E.g Red, black, size XL, M"
+                    :placeholder="$t('inventory.eg')"
                   />
                 </div>
               </div>
 
               <div class="mb-2">
-                <label for="price" class="form-label">Price</label>
+                <label for="price" class="form-label">{{
+                  $t("inventory.price")
+                }}</label>
                 <div>
                   <input
                     type="text"
@@ -32,9 +34,9 @@
                 </div>
               </div>
               <div class="row mb-5">
-                <label for="price" class="form-label"
-                  >Weight or the volume of the product</label
-                >
+                <label for="price" class="form-label">{{
+                  $t("inventory.weight")
+                }}</label>
                 <div class="col-8">
                   <input
                     type="text"
@@ -52,17 +54,17 @@
                   class="btn btn-primary mb-3"
                   @click="addProductOption()"
                 >
-                  Add Product Option
+                  {{ $t("inventory.addProductOption") }}
                 </button>
               </div>
               <p class="text-center mb-5 add-another-option">
-                Save and add another one
+                {{ $t("inventory.saveAnother") }}
               </p>
             </v-col>
             <v-col cols="6">
               <div class="product-option-img">
                 <i class="mdi mdi-upload" aria-hidden="true"></i>
-                <span class="upload">Upload</span>
+                <span class="upload">{{ $t("inventory.upload") }}</span>
               </div>
             </v-col>
           </v-row>

@@ -1,16 +1,22 @@
 <template>
   <div>
     <v-card variant="outlined" class="import-product-tips-card">
-      <h5>Tips</h5>
+      <h5>{{ $t("inventory.tips") }}</h5>
       <ul>
         <li>
-          <a href="" class="download-csv-link">Download our CSV template</a>
+          <a href="" class="download-csv-link">{{
+            $t("inventory.downloadCSV")
+          }}</a>
         </li>
-        <li>Fill in the fields</li>
-        <li>For images column, paste the url link to the product</li>
-        <li>Save and upload the file</li>
-        Learn more about
-        <a href="" class="upload-products-text">uploading products</a>
+        <li>{{ $t("inventory.fillFields") }}</li>
+        <li>{{ $t("inventory.pasteUrl") }}</li>
+        <li>{{ $t("inventory.saveFile") }}</li>
+        {{
+          $t("inventory.learnMore")
+        }}
+        <a href="" class="upload-products-text">
+          {{ $t("inventory.uploadProducts") }}</a
+        >
       </ul>
     </v-card>
   </div>

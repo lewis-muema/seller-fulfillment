@@ -10,7 +10,9 @@
               @click="$router.back()"
             ></i>
 
-            <v-card-title class="text-center">Product Details </v-card-title>
+            <v-card-title class="text-center"
+              >{{ $t("inventory.productDetails") }}
+            </v-card-title>
             <div class="dropdown actions-dropdown mt-2">
               <button
                 class="btn dropdown-toggle"
@@ -19,7 +21,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Actions
+                {{ $t("inventory.actions") }}
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li class="view-product-dropdown-list">
@@ -28,14 +30,18 @@
                       name: 'EditProduct',
                       params: { pV: JSON.stringify(product.product_variants) },
                     }"
-                    >Edit</router-link
+                    >{{ $t("inventory.edit") }}</router-link
                   >
                 </li>
                 <li class="view-product-dropdown-list">
-                  <router-link to="/">Archive</router-link>
+                  <router-link to="/">{{
+                    $t("inventory.archive")
+                  }}</router-link>
                 </li>
                 <li class="view-product-dropdown-list">
-                  <router-link to="/">Add product options</router-link>
+                  <router-link to="/">{{
+                    $t("inventory.addProductOption")
+                  }}</router-link>
                 </li>
               </ul>
             </div>

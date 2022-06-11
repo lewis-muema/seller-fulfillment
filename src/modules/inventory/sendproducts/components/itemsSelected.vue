@@ -20,12 +20,14 @@
           "
         >
           <button type="submit" class="btn btn-primary">
-            Continue with {{ itemsSelectedCount }} items Selected
+            {{ $t("inventory.continueWith") }}{{ itemsSelectedCount }}
+            {{ $t("inventory.itemsSelected") }}
           </button>
         </router-link>
         <router-link :to="{ name: 'Checkout' }" v-else>
           <button type="submit" class="btn btn-primary">
-            Continue with {{ itemsAddedCount }} items Added
+            {{ $t("inventory.continueWith") }}{{ itemsAddedCount
+            }}{{ $t("inventory.itemsAdded") }}
           </button>
         </router-link>
       </div></v-card

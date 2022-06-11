@@ -1,5 +1,4 @@
 <template>
-  <!-- {{ variants }} -->
   <div class="">
     <div class="mb-3">
       <span>
@@ -8,19 +7,19 @@
       </span>
     </div>
     <div class="product-details-content mb-3">
-      <p class="product-header">Description</p>
+      <p class="product-header">{{ $t("inventory.desc") }}</p>
       <p>{{ product.product_description }}</p>
     </div>
     <div class="product-details-content mb-3">
-      <p class="product-header">Price</p>
+      <p class="product-header">{{ $t("inventory.price") }}</p>
       <p>400</p>
     </div>
     <div class="product-details-content mb-3">
-      <p class="product-header">The weight or capacity of the product</p>
+      <p class="product-header">{{ $t("inventory.weight") }}</p>
       <p>500ml</p>
     </div>
     <div class="product-details-content mb-3">
-      <p class="product-header">Inventory Summary</p>
+      <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
       <p>Total stock available: 56</p>
     </div>
     <v-table>
@@ -69,7 +68,7 @@
           </td>
           <td v-if="product.product_variants">
             <p class="add-product-options" @click="showProductVariants = true">
-              View
+              {{ $t("inventory.view") }}
             </p>
             <product-variants
               @close="showProductVariants = false"

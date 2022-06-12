@@ -56,17 +56,18 @@
               ></textarea>
             </div>
           </div>
-          <div>
+          <hr class="mt-3" />
+          <div class="mt-3">
             <p>{{ $t("inventory.payment") }}</p>
             <span class="payment-method">
-              <v-icon>mdi-credit-card-outline</v-icon
+              <v-icon class="pr-3">mdi-credit-card-outline</v-icon
               >{{ $t("inventory.paymentMethod") }}</span
             >
             <span>
               <v-icon class="payment-method-icon">mdi-chevron-right</v-icon>
             </span>
           </div>
-          <div>
+          <div class="mt-3">
             <span>{{ $t("inventory.amountToPay") }}</span>
             <span class="checkout-amount">KES 566</span>
           </div>

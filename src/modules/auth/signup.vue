@@ -33,15 +33,20 @@
               />
             </div>
           </div>
-          <select class="form-select mb-3">
-            <option selected v-for="country in countries" :key="country">
-              <h1 class="country-flag">
-                <b>{{ country.emoji }}</b>
-              </h1>
-              &nbsp;
-              <span class="country-name">{{ country.name }}</span>
-            </option>
-          </select>
+          <div>
+            <label for="businessEmail" class="form-label">{{
+              $t("auth.countryOfOperation")
+            }}</label>
+            <select class="form-select mb-3">
+              <option selected v-for="country in countries" :key="country">
+                <h1 class="country-flag">
+                  <b>{{ country.emoji }}</b>
+                </h1>
+                &nbsp;
+                <span class="country-name">{{ country.name }}</span>
+              </option>
+            </select>
+          </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
               class="btn btn-primary b"
@@ -56,7 +61,7 @@
               {{ $t("auth.signupWithGoogle") }}
             </button>
           </div>
-          <p class="desktop-login-link">
+          <p class="desktop-login-link login-link-text">
             {{ $t("auth.haveAnAccount") }}
             <router-link to="/auth/sign-in">
               {{ $t("auth.login") }}</router-link
@@ -115,7 +120,7 @@
               $t("auth.signUp")
             }}</router-link>
           </div>
-          <p class="desktop-login-link">
+          <p class="desktop-login-link terms-link-text">
             {{ $t("auth.bySigningUp") }}
             <router-link to="/auth/sign-in">
               {{ $t("auth.termsAndConditions") }}</router-link
@@ -220,6 +225,13 @@ export default {
 <style>
 form {
   padding: 0px 50px;
+}
+.login-link-text > a {
+  color: #324ba8 !important;
+}
+.terms-link-text > a {
+  color: #324ba8 !important;
+  text-decoration: none;
 }
 .v-card-text {
   opacity: unset;

@@ -47,7 +47,7 @@
             >{{ $t("inventory.addAnotherPhoneNo") }}</span
           >
 
-          <div>
+          <div class="mt-5">
             <span>{{ $t("inventory.pickupFee") }}</span>
             <span class="checkout-amount">KES 0</span>
           </div>

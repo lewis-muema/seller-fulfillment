@@ -117,4 +117,7 @@ export default {
 .signup-link-text {
   margin-bottom: 80px;
 }
+.signup-link-text > a {
+  color: #324ba8;
+}
 </style>

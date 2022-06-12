@@ -5,6 +5,7 @@
     "businessName" :"Business name",
     "businessEmailAddress" :"Business email address",
     "enterBusinessEmailAddress" :"Enter business email address",
+    "countryOfOperation": "Country of operation",
     "continue": "Continue",
     "or": "or",
     "signupWithGoogle": "Sign Up with Google",

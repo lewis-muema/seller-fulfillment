@@ -20,7 +20,7 @@
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
-      <p>Total stock available: 56</p>
+      <p>{{ $t("inventory.totalStockAvailable") }}: 56</p>
     </div>
     <v-table>
       <table-header

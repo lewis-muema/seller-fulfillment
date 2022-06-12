@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="products.length">
-      <v-card class="m-3 desktop-product-details" variant="outlined">
+      <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
           <v-text-field
             color="#324BA8"

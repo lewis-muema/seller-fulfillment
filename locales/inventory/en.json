@@ -84,9 +84,6 @@
     "fulfillmentFee":"Fulfillment Fee",
     "toDo":"What do you want to do?",
     "deliverToCustomer":"Deliver to Customer",
-    "deliverToSendy":"Send inventory to Sendy"
-
-
-
-
+    "deliverToSendy":"Send inventory to Sendy",
+    "totalStockAvailable":"Total stock available"
 }

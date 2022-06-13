@@ -10,12 +10,14 @@
               @click="$router.back()"
             ></i>
 
-            <v-card-title class="text-center">Import Product </v-card-title>
+            <v-card-title class="text-center"
+              >{{ $t("inventory.importProducts") }}
+            </v-card-title>
           </div>
           <div class="d-flex progress-bar-container" v-if="progressBar">
             <v-icon class="mdi-file mt-3">mdi mdi-file</v-icon>
             <div>
-              Product list
+              {{ $t("inventory.productList") }}
               <v-progress-linear
                 class="import-products-progess-bar"
                 :model-value="100"
@@ -27,17 +29,21 @@
           </div>
           <div v-else>
             <p>
-              To upload your products,
-              <a href="" class="download-template-text">download our template</a
-              >, add your details and upload the file.
+              {{ $t("inventory.toUploadProducts") }}
+              <a href="" class="download-template-text">{{
+                $t("inventory.downloadTemplate")
+              }}</a
+              >{{ $t("inventory.addDetails") }}
             </p>
             <div class="drag-files-box">
               <p>
-                Drag file here or
-                <span class="click-browse"><a href="">click browse</a></span> to
-                upload
+                {{ $t("inventory.dragFiles") }}
+                <span class="click-browse"
+                  ><a href="">{{ $t("inventory.clickBrowse") }}</a></span
+                >
+                {{ $t("inventory.toUpload") }}
               </p>
-              <p class="csv">.csv, xls and .xlsx accepted</p>
+              <p class="csv">{{ $t("inventory.csv") }}</p>
             </div>
           </div>
           <button
@@ -49,7 +55,7 @@
             "
             @click="uploadFile"
           >
-            Upload
+            {{ $t("inventory.upload") }}
           </button>
         </v-card>
       </v-col>

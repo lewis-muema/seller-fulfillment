@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="stock-levels-container">
     <stock-tab-content />
   </div>
 </template>
@@ -11,4 +11,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.stock-levels-container {
+  margin: 0px 30px;
+}
+</style>

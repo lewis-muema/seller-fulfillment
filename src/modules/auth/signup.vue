@@ -4,11 +4,13 @@
       <v-icon>format_quote</v-icon>
       <div class="desktop-sign-up" v-if="continueSignup">
         <v-card-title class="text-center">
-          Sign up for Sendy Fulfilment
+          {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
         <v-card-text class="pt-5">
           <div class="mb-3">
-            <label for="businessName" class="form-label">Business name</label>
+            <label for="businessName" class="form-label">{{
+              $t("auth.businessName")
+            }}</label>
             <div class="form-input-group">
               <i class="mdi mdi-store-outline"></i>
               <input
@@ -19,44 +21,51 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="businessEmail" class="form-label"
-              >Business email address</label
-            >
+            <label for="businessEmail" class="form-label">{{
+              $t("auth.businessEmailAddress")
+            }}</label>
             <div class="form-input-group">
               <i class="mdi mdi-email-outline"></i>
               <input
                 type="email"
                 class="form-control"
-                placeholder="Enter business email address"
+                :placeholder="$t('auth.enterBusinessEmailAddress')"
               />
             </div>
           </div>
-          <select class="form-select mb-3">
-            <option selected v-for="country in countries" :key="country">
-              <h1 class="country-flag">
-                <b>{{ country.emoji }}</b>
-              </h1>
-              &nbsp;
-              <span class="country-name">{{ country.name }}</span>
-            </option>
-          </select>
+          <div>
+            <label for="businessEmail" class="form-label">{{
+              $t("auth.countryOfOperation")
+            }}</label>
+            <select class="form-select mb-3">
+              <option selected v-for="country in countries" :key="country">
+                <h1 class="country-flag">
+                  <b>{{ country.emoji }}</b>
+                </h1>
+                &nbsp;
+                <span class="country-name">{{ country.name }}</span>
+              </option>
+            </select>
+          </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
               class="btn btn-primary b"
               type="button"
               @click="continueSignUp"
             >
-              Continue
+              {{ $t("auth.continue") }}
             </button>
             <div class="text-center text-grey">or</div>
             <button class="btn btn-primary default-btn" type="button">
               <i class="mdi mdi-google"></i>
-              Sign up with Google
+              {{ $t("auth.signupWithGoogle") }}
             </button>
           </div>
-          <p class="desktop-login-link">
-            Already have an account?
-            <router-link to="/auth/sign-in"> Login</router-link>
+          <p class="desktop-login-link login-link-text">
+            {{ $t("auth.haveAnAccount") }}
+            <router-link to="/auth/sign-in">
+              {{ $t("auth.login") }}</router-link
+            >
           </p>
         </v-card-text>
       </div>
@@ -68,22 +77,28 @@
             @click="$router.back()"
           ></i>
 
-          <v-card-title class="text-center"> Complete Sign up </v-card-title>
+          <v-card-title class="text-center">
+            {{ $t("auth.completeSignUp") }}
+          </v-card-title>
         </div>
         <v-card-text>
           <div class="mb-3">
-            <label for="yourName" class="form-label">Your name</label>
+            <label for="yourName" class="form-label">
+              {{ $t("auth.yourName") }}</label
+            >
             <div class="form-input-group">
               <i class="mdi mdi-account-circle" aria-hidden="true"></i>
               <input
                 type="text"
                 class="form-control"
-                placeholder="Enter your personal name"
+                :placeholder="$t('auth.enterYourPersonalName')"
               />
             </div>
           </div>
           <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone number</label>
+            <label for="phoneNumber" class="form-label">{{
+              $t("auth.phoneNumber")
+            }}</label>
             <vue-tel-input
               v-model="phone"
               v-bind="sendyPhoneProps"
@@ -91,9 +106,9 @@
             ></vue-tel-input>
           </div>
           <div class="mb-3">
-            <label for="industry" class="form-label"
-              >Industry of your business</label
-            >
+            <label for="industry" class="form-label">{{
+              $t("auth.industryOfBusiness")
+            }}</label>
             <select class="form-select" aria-label="Default select example">
               <option selected>Select</option>
               <option value="1">Clothing</option>
@@ -101,13 +116,15 @@
             </select>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/auth/otp" class="btn btn-primary"
-              >SignUp</router-link
-            >
+            <router-link to="/auth/otp" class="btn btn-primary">{{
+              $t("auth.signUp")
+            }}</router-link>
           </div>
-          <p class="desktop-login-link">
-            By signing up you agree to the
-            <router-link to="/auth/sign-in"> terms and conditions</router-link>
+          <p class="desktop-login-link terms-link-text">
+            {{ $t("auth.bySigningUp") }}
+            <router-link to="/auth/sign-in">
+              {{ $t("auth.termsAndConditions") }}</router-link
+            >
           </p>
         </v-card-text>
       </div>
@@ -208,6 +225,13 @@ export default {
 <style>
 form {
   padding: 0px 50px;
+}
+.login-link-text > a {
+  color: #324ba8 !important;
+}
+.terms-link-text > a {
+  color: #324ba8 !important;
+  text-decoration: none;
 }
 .v-card-text {
   opacity: unset;

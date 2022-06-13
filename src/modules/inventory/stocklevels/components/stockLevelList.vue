@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="m-3 desktop-product-details" variant="outlined">
+    <v-card class="desktop-product-details" variant="outlined">
       <div class="products-search">
         <v-text-field
           color="#324BA8"
@@ -50,7 +50,7 @@
                   },
                 }"
                 class="view-product-link"
-                >View</router-link
+                >{{ $t("inventory.view") }}</router-link
               >
             </td>
           </tr>

@@ -11,8 +11,12 @@
                   : "Products"
               }}
             </th>
-            <th class="text-left table-headers">Progress</th>
-            <th class="text-left table-headers">Action</th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.progress") }}
+            </th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.action") }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -75,38 +79,9 @@
       </v-table>
       <div class="show-more-deliveries-link">
         <router-link to="/" class="show-more-deliveries-link"
-          >Show more deliveries<v-icon>mdi mdi-arrow-right</v-icon></router-link
+          >{{ $t("dashboard.showMoreDeliveries")
+          }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
         >
-      </div>
-    </div>
-
-    <div v-else>
-      <div
-        class="send-inventory-to-sendy-container"
-        v-if="getSelectedTab === 'To your Customers'"
-      >
-        <v-icon class="dashboard-links-icon send-products-icon"
-          >mdi mdi-truck</v-icon
-        >
-        <p>Send inventory to sendy and track the progress here</p>
-        <div class="send-inventory-to-sendy-link">
-          <router-link to="/"
-            >Deliver to a customer
-            <v-icon>mdi mdi-arrow-right</v-icon></router-link
-          >
-        </div>
-      </div>
-      <div class="send-inventory-to-sendy-container" v-else>
-        <v-icon class="dashboard-links-icon send-products-icon"
-          >mdi mdi-warehouse</v-icon
-        >
-        <p>Send inventory to sendy and track the progress here</p>
-        <div class="send-inventory-to-sendy-link">
-          <router-link to="/"
-            >Send inventory to Sendy
-            <v-icon>mdi mdi-arrow-right</v-icon></router-link
-          >
-        </div>
       </div>
     </div>
   </div>

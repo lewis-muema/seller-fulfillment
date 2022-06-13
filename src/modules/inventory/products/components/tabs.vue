@@ -29,14 +29,15 @@
           <router-link
             to="/inventory/import-products"
             class="import-products-link"
-            >Upload products</router-link
           >
+            {{ $t("inventory.uploadProduct") }}
+          </router-link>
         </button>
 
         <button class="btn btn-primary">
           <i class="mdi mdi-plus"></i>
-          <router-link to="/inventory/add-product" class="add-products-link"
-            >Add Products</router-link
+          <router-link to="/inventory/add-product" class="add-products-link">
+            {{ $t("inventory.addProducts") }}</router-link
           >
         </button>
       </div>

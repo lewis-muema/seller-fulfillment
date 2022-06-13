@@ -10,7 +10,9 @@
               @click="$router.back()"
             ></i>
 
-            <v-card-title class="text-center">Product Details </v-card-title>
+            <v-card-title class="text-center"
+              >{{ $t("inventory.productDetails") }}
+            </v-card-title>
             <div class="dropdown actions-dropdown mt-2">
               <v-menu transition="slide-y-transition" anchor="bottom center">
                 <template v-slot:activator="{ props }">
@@ -19,7 +21,7 @@
                     append-icon="mdi-menu-down"
                     v-bind="props"
                   >
-                    Actions
+                    {{ $t("inventory.actions") }}
                   </v-btn>
                 </template>
                 <v-list class="users-actions-popup">

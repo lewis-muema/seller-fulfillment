@@ -5,18 +5,18 @@
         <span>
           <v-list-item lines="two">
             <v-list-item-header>
-              <v-list-item-title>Shear Butter</v-list-item-title>
-              <v-list-item-subtitle> 250ml </v-list-item-subtitle>
+              <v-list-item-title>{{ name }}</v-list-item-title>
+              <v-list-item-subtitle> {{ quantity }}} </v-list-item-subtitle>
             </v-list-item-header>
           </v-list-item>
         </span>
         <v-table>
           <thead>
             <tr>
-              <th>Fulfillment Center</th>
-              <th>Available</th>
-              <th>Committed</th>
-              <th>incoming</th>
+              <th>{{ $t("inventory.fulfillmentCenter") }}</th>
+              <th>{{ $t("inventory.available") }}</th>
+              <th>{{ $t("inventory.committed") }}</th>
+              <th>{{ $t("inventory.Incoming") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +50,8 @@ export default {
   props: ["visible", "available", "committed", "incoming", "productName"],
   data() {
     return {
+      name: "Shear Butter",
+      quantity: "250ml",
       dialog: false,
     };
   },

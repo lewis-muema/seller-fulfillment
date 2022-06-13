@@ -19,9 +19,13 @@
             alt="logo"
           />
           <carousel :items-to-show="1" :autoplay="2000">
-            <slide v-for="slide in slides" :key="slide.title" class="f mt-3">
+            <slide
+              v-for="slide in slides"
+              :key="slide.title"
+              class="slider mt-3"
+            >
               <i class="mdi mdi-format-quote-close desktop-auth-icon"></i>
-              <div class="a">{{ slide.content }}</div>
+              <div class="slider-content">{{ slide.content }}</div>
               <br />
               <div class="d-flex">
                 <v-avatar>
@@ -30,7 +34,7 @@
                     alt="John"
                   />
                 </v-avatar>
-                <div class="x">
+                <div class="testimonal-container">
                   <div class="testimonial-name">{{ slide.name }}</div>
                   <div>{{ slide.businessName }}</div>
                 </div>
@@ -56,10 +60,12 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                English
+                {{ $t("auth.english") }}
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">French</a></li>
+                <li>
+                  <a class="dropdown-item" href="#">{{ $t("auth.french") }}</a>
+                </li>
               </ul>
             </div>
             <router-view></router-view>
@@ -114,17 +120,17 @@ export default {
 .auth-sendy-logo {
   width: 90px;
 }
-.f {
+.slider {
   flex-direction: column !important;
 }
-.a {
+.slider-content {
   text-align: left !important;
   font-size: 18px;
 }
 .carousel {
   margin-top: 10%;
 }
-.x {
+.testimonal-container {
   text-align: left !important;
   padding-left: 20px;
 }

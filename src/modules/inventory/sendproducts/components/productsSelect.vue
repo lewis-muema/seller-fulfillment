@@ -10,11 +10,13 @@
                 aria-hidden="true"
                 @click="pickScreen()"
               ></i>
-              <v-card-title class="text-center"> Select Products</v-card-title>
+              <v-card-title class="text-center">
+                {{ $t("inventory.selectProducts") }}
+              </v-card-title>
             </div>
             <router-link to="/inventory/add-product/" class="add-new-product">
               <v-icon>mdi mdi-plus</v-icon>
-              Add a new product
+              {{ $t("inventory.addNewProduct") }}
             </router-link>
           </div>
           <div class="search-input">
@@ -32,8 +34,10 @@
             <thead>
               <tr>
                 <th>
-                  <span>Name</span
-                  ><span class="product-select-units">Available Inventory</span>
+                  <span>{{ $t("settings.name") }}</span
+                  ><span class="product-select-units">
+                    {{ $t("inventory.availableInventory") }}
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -146,14 +150,15 @@
         >
           <div class="items-selected-container">
             <p>
-              {{ `${itemsSelectedCount} items Selected` }}
+              {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
             </p>
             <button
               type="submit"
               @click="addProductStep(1)"
               class="btn btn-primary"
             >
-              Continue with {{ itemsSelectedCount }} items Added
+              {{ $t("inventory.continueWith") }} {{ itemsSelectedCount }}
+              {{ $t("inventory.itemsAdded") }}
             </button>
           </div></v-card
         >
@@ -194,7 +199,7 @@ export default {
       } else {
         ElNotification({
           title: "",
-          message: "Please select a product so as to move to the next step",
+          message: this.$t("inventory.pleaseSelectAProduct"),
           type: "error",
         });
       }

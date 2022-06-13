@@ -2,10 +2,11 @@
   <div>
     <v-card variant="outlined" class="product-summary-card">
       <div class="p-3">
-        <span class="product-summary-title">Summary</span>
+        <span class="product-summary-title">{{ $t("inventory.summary") }}</span>
         <span class="product-summary-edit" @click="addProductStep(1)"
-          ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>Edit</span
-        >
+          ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>
+          {{ $t("inventory.edit") }}
+        </span>
       </div>
       <v-list
         class="product-summary-list-item"

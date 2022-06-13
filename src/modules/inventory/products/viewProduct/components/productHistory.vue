@@ -84,7 +84,9 @@
     </v-table>
     <div v-else class="no-activity-container">
       <v-icon class="history-back-icon">mdi mdi-history</v-icon>
-      <p>No activity at the moment</p>
+      <p>
+        {{ $t("inventory.noActivity") }}
+      </p>
     </div>
   </div>
 </template>

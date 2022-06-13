@@ -9,7 +9,9 @@
               aria-hidden="true"
               @click="addProductStep(0)"
             ></i>
-            <v-card-title class="text-center">Enter Quantity</v-card-title>
+            <v-card-title class="text-center">
+              {{ $t("inventory.enterQuantity") }}
+            </v-card-title>
           </div>
           <div class="products-selected-summary">
             <v-table>
@@ -92,7 +94,7 @@
                     </div>
                   </td>
                   <td class="">
-                    <label>Qty</label>
+                    <label>{{ $t("inventory.qty") }}</label>
                     <input
                       type="number"
                       class="form-control"
@@ -115,14 +117,15 @@
         >
           <div class="items-selected-container">
             <p>
-              {{ `${totalProducts} items Added` }}
+              {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
             </p>
             <button
               type="submit"
               @click="addProductStep(2)"
               class="btn btn-primary"
             >
-              Continue with {{ totalProducts }} items Added
+              {{ $t("inventory.continueWith") }} {{ totalProducts }}
+              {{ $t("inventory.itemsAdded") }}
             </button>
           </div></v-card
         >
@@ -178,7 +181,7 @@ export default {
       } else {
         ElNotification({
           title: "",
-          message: "Please enter quantity of products to continue",
+          message: this.$t("inventory.pleaseEnterQuantity"),
           type: "error",
         });
       }

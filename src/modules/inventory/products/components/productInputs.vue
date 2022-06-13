@@ -3,41 +3,43 @@
     <v-row>
       <v-col cols="">
         <div class="mb-2">
-          <label for="productName" class="form-label"
-            >Name of the Product</label
+          <label for="productName" class="form-label">
+            {{ $t("inventory.nameOfProduct") }}</label
           >
           <div>
             <input
               type="text"
               class="form-control"
               v-model="name"
-              placeholder="Enter name of the Product"
+              :placeholder="$t('inventory.enterNameOfProduct')"
               :disabled="action === 'editProduct'"
             />
           </div>
         </div>
         <div class="mb-2">
-          <label for="productName" class="form-label">Price</label>
+          <label for="productName" class="form-label">
+            {{ $t("inventory.price") }}</label
+          >
           <div>
             <input
               type="text"
               class="form-control"
               v-model="price"
-              placeholder="Price of the product"
+              :placeholder="$t('inventory.priceOfTheProduct')"
             />
           </div>
         </div>
         <div class="mb-2">
-          <label for="productName" class="form-label"
-            >Weight or the capacity of the product</label
-          >
+          <label for="productName" class="form-label">
+            {{ $t("inventory.weight") }}
+          </label>
           <div class="edit-product-weight">
             <div class="edit-product-weight-left">
               <input
                 type="text"
                 class="form-control"
                 v-model="weight"
-                placeholder="Enter weight"
+                :placeholder="$t('inventory.enterWeight')"
               />
             </div>
             <div class="edit-product-weight-right">
@@ -51,22 +53,24 @@
           </div>
         </div>
         <div class="mb-2">
-          <label for="price" class="form-label">Description(optional)</label>
+          <label for="price" class="form-label">
+            {{ $t("inventory.description") }}</label
+          >
           <div>
             <textarea
               class="form-control"
               id=""
               rows="3"
               v-model="description"
-              placeholder="Enter description of the product"
+              :placeholder="$t('inventory.productDescription')"
             ></textarea>
           </div>
         </div>
         <div class="desktop-product-options-container mt-3 mb-3">
           <div class="desktop-product-options-content">
-            <p class="optional-text">Product options (optional)</p>
+            <p class="optional-text">{{ $t("inventory.productOptions") }}</p>
             <p class="add-product-sizes">
-              Add options if this product comes in different sizes or colours
+              {{ $t("inventory.addOptions") }}
             </p>
             <div v-if="productVariants.length">
               <v-list-item
@@ -111,7 +115,7 @@
             </div>
             <div class="add-product-options">
               <p class="add-product-options" @click="showAddOption()">
-                Add product options
+                {{ $t("inventory.addProductOptions") }}
               </p>
               <img
                 v-if="productVariants.length === 0"
@@ -131,12 +135,12 @@
         </div>
         <div class="d-grid">
           <button class="btn btn-primary mt-2 btn-long" @click="addProduct()">
-            Save Changes
+            {{ $t("inventory.saveChanges") }}
           </button>
         </div>
       </v-col>
       <v-col cols="6">
-        <p class="ml-5">Image (optional)</p>
+        <p class="ml-5">{{ $t("inventory.image") }}</p>
         <div class="img-container" @click="pickImg()">
           <input
             type="file"
@@ -152,7 +156,7 @@
           <img class="upload-img" v-if="image" :src="image" alt="" />
           <span v-else class="upload">
             <i class="mdi mdi-upload" aria-hidden="true"></i>
-            Upload
+            {{ $t("inventory.upload") }}
           </span>
         </div>
       </v-col>

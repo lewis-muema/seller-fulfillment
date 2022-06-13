@@ -2,30 +2,33 @@
   <div class="text-center">
     <v-dialog v-model="show">
       <v-card class="popup-card">
-        <v-card-title
-          >Add Product option
+        <v-card-title>
+          {{ $t("inventory.addProductOption") }}
           <span class="add-products-options-close" @click="$emit('close')"
-            ><i class="mdi mdi-close"></i></span
-        ></v-card-title>
+            ><i class="mdi mdi-close"></i
+          ></span>
+        </v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="6">
               <div class="mb-2">
-                <label for="productName" class="form-label"
-                  >Name of the Option</label
-                >
+                <label for="productName" class="form-label">{{
+                  $t("inventory.nameOfOption")
+                }}</label>
                 <div>
                   <input
                     v-model="productOption.name"
                     type="text"
                     class="form-control"
-                    placeholder="E.g Red, black, size XL, M"
+                    :placeholder="$t('inventory.eg')"
                   />
                 </div>
               </div>
 
               <div class="row mb-2">
-                <label for="price" class="form-label">Price</label>
+                <label for="price" class="form-label">{{
+                  $t("inventory.price")
+                }}</label>
                 <div class="col-7">
                   <input
                     type="number"
@@ -44,9 +47,9 @@
                 </div>
               </div>
               <div class="row mb-5">
-                <label for="price" class="form-label"
-                  >Weight or the volume of the product</label
-                >
+                <label for="price" class="form-label">
+                  {{ $t("inventory.weight") }}
+                </label>
                 <div class="col-7">
                   <input
                     type="number"
@@ -77,7 +80,7 @@
                   @click="saveAndAddProductOption()"
                   class="text-center mb-5 add-another-option"
                 >
-                  Save and add another one
+                  {{ $t("inventory.addProductOption") }}
                 </p>
               </div>
               <div v-else>
@@ -86,7 +89,7 @@
                     class="btn btn-primary mb-3"
                     @click="saveProductOption()"
                   >
-                    Save Product Option
+                    {{ $t("inventory.saveAnother") }}
                   </button>
                 </div>
               </div>
@@ -107,7 +110,7 @@
                 <img class="upload-img" v-if="image" :src="image" alt="" />
                 <span v-else class="upload">
                   <i class="mdi mdi-upload" aria-hidden="true"></i>
-                  Upload
+                  {{ $t("inventory.upload") }}
                 </span>
               </div>
             </v-col>

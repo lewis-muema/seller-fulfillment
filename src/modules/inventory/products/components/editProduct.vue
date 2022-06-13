@@ -10,7 +10,9 @@
               @click="$router.back()"
             ></i>
 
-            <v-card-title class="text-center">Edit Product </v-card-title>
+            <v-card-title class="text-center">{{
+              $t("inventory.editProduct")
+            }}</v-card-title>
           </div>
           <productInputs action="editProduct" />
         </v-card>

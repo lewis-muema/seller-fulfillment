@@ -1,96 +1,88 @@
 <template>
-  <div>
-    <v-container class="ml-5">
-      <span class="mt-3 ml-5">
-        <h5>Welcome, Irene! 🎉</h5>
-        <p>Complete the steps below to fulfilling your first order</p>
-      </span>
-      <v-row>
-        <v-col cols="8" class="desktop-dashboard-content">
-          <v-card
-            tile
-            variant="outlined"
-            class="mt-3 mx-auto"
-            v-for="(content, i) in dashboardContent"
-            :key="i"
-          >
-            <div class="desktop-dashboard-list">
-              <v-list density="compact">
-                <v-list-item>
-                  <div class="d-flex">
-                    <v-avatar
-                      size="25"
-                      class="desktop-content-icon"
+  <div class="onboarding-container">
+    <div class="welcome-text">
+      <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+      <p>{{ $t("dashboard.completeSteps") }}</p>
+    </div>
+    <v-row>
+      <v-col cols="9" class="desktop-dashboard-content">
+        <v-card
+          tile
+          variant="outlined"
+          class="mt-3 mx-auto"
+          v-for="(content, i) in dashboardContent"
+          :key="i"
+        >
+          <div class="desktop-dashboard-list">
+            <v-list density="compact">
+              <v-list-item>
+                <div class="d-flex">
+                  <v-avatar
+                    size="25"
+                    class="desktop-content-icon"
+                    :class="{
+                      'desktop-content-icon-active': i === activeStep,
+                    }"
+                  >
+                    <span
+                      class="white--text onboarding-steps"
                       :class="{
-                        'desktop-content-icon-active': i === activeStep,
+                        'onboarding-steps-active': i === activeStep,
                       }"
+                      >{{ i + 1 }}</span
                     >
-                      <span
-                        class="white--text onboarding-steps"
-                        :class="{
-                          'onboarding-steps-active': i === activeStep,
-                        }"
-                        >{{ i + 1 }}</span
-                      >
-                    </v-avatar>
-                    <!-- <v-icon class="desktop-content-icon">
-                      {{ content.icon }}</v-icon
-                    > -->
-                    <v-list-item-header>
-                      <v-list-item-title>
-                        <div class="desktop-content-title">
-                          {{ content.title }}
-                        </div>
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="mt-1">{{
-                        content.text
-                      }}</v-list-item-subtitle>
-                      <button
-                        type="submit"
-                        class="btn btn-primary desktop-content-button"
-                      >
-                        {{ content.button }}
-                      </button>
-                    </v-list-item-header>
-                  </div>
-                </v-list-item>
-              </v-list>
-            </div>
-          </v-card>
-          <!-- <button
-            class="btn btn-primary btn-sm"
-            @click="completeSteps()"
-            v-if="activeStep < totalSteps"
-          >
-            Complete Steps
-          </button> -->
-        </v-col>
-        <v-col cols="3" class="desktop-dashboard-content mt-3">
-          <v-card variant="outlined" class="c">
-            <v-list>
-              <p class="ml-3">Get more out of Sendy fulfillment</p>
-              <v-list-item
-                v-for="(link, i) in dashboardLinks"
-                :key="i"
-                two-line
-              >
-                <v-list-item-avatar>
-                  <v-icon class="dashboard-links-icon mr-5">{{
-                    link.icon
-                  }}</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-header>
-                  <v-list-item-title class="desktop-dashboard-link-title">{{
-                    link.title
-                  }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ link.name }}</v-list-item-subtitle>
-                </v-list-item-header>
+                  </v-avatar>
+                  <v-list-item-header>
+                    <v-list-item-title>
+                      <div class="desktop-content-title">
+                        {{ content.title }}
+                      </div>
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="mt-1">{{
+                      content.text
+                    }}</v-list-item-subtitle>
+                    <button
+                      type="submit"
+                      class="btn btn-primary desktop-content-button"
+                    >
+                      {{ content.button }}
+                    </button>
+                  </v-list-item-header>
+                </div>
               </v-list-item>
             </v-list>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+          </div>
+        </v-card>
+      </v-col>
+      <v-col cols="3" class="desktop-dashboard-content mt-3">
+        <v-card variant="outlined">
+          <p class="ml-3 mt-3">{{ $t("dashboard.getMoreoutOfSendy") }}</p>
+          <v-list v-for="(link, i) in dashboardLinks" :key="i">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-icon class="dashboard-links-icon mr-5">{{
+                  link.icon
+                }}</v-icon>
+              </v-list-item-avatar>
+              <v-list-item-header>
+                <v-list-item-title class="desktop-dashboard-link-title">{{
+                  link.title
+                }}</v-list-item-title>
+                <v-list-item-subtitle>{{ link.name }}</v-list-item-subtitle>
+              </v-list-item-header>
+            </v-list-item>
+            <v-divider
+              class="mt-1"
+              :class="
+                link.title === 'Meet us in person'
+                  ? 'v-divider-last-item'
+                  : 'v-divider-height'
+              "
+            ></v-divider>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -98,6 +90,7 @@
 export default {
   data() {
     return {
+      name: "Irene",
       checkbox: true,
       activeStep: 0,
       totalSteps: 4,
@@ -206,5 +199,12 @@ export default {
 }
 .activestep {
   background-color: #324ba8;
+}
+.onboarding-container {
+  max-width: 100%;
+  margin: 0px 30px;
+}
+.welcome-text {
+  margin-top: 40px;
 }
 </style>

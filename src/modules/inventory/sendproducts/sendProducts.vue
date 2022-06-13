@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="this.step === 0">
-      <span class="send-products-header-text text-center"
-        >What do you want to do?</span
-      >
+      <span class="send-products-header-text text-center">
+        {{ $t("inventory.toDo") }}
+      </span>
       <div class="send-products-container">
         <div @click="deliverToCustomer" class="send-products-content">
           <v-card class="send-products-card" variant="outlined">
@@ -11,7 +11,7 @@
               <v-icon class="dashboard-links-icon send-products-icon"
                 >mdi mdi-truck</v-icon
               >
-              <p class="mt-4">Deliver to Customer</p>
+              <p class="mt-4">{{ $t("inventory.deliverToCustomer") }}</p>
             </div>
           </v-card>
         </div>
@@ -21,7 +21,7 @@
               <v-icon class="dashboard-links-icon send-products-icon"
                 >mdi mdi-warehouse</v-icon
               >
-              <p class="mt-4">Send inventory to Sendy</p>
+              <p class="mt-4">{{ $t("inventory.deliverToSendy") }}</p>
             </div>
           </v-card>
         </div>

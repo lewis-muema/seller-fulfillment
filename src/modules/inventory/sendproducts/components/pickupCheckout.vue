@@ -5,7 +5,7 @@
         <i
           class="mdi mdi-arrow-left"
           aria-hidden="true"
-          @click="$router.back()"
+          @click="addProductStep(1)"
         ></i>
         <v-card-title class="text-center">Checkout</v-card-title>
       </div>
@@ -57,7 +57,16 @@
 </template>
 
 <script>
-export default {};
+import { mapMutations } from "vuex";
+
+export default {
+  methods: {
+    ...mapMutations(["setProductStep"]),
+    addProductStep(val) {
+      this.setProductStep(val);
+    },
+  },
+};
 </script>
 
 <style>

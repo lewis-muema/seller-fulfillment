@@ -6,7 +6,10 @@
       </p>
       <div class="add-products-card-container">
         <v-card class="mr-3" variant="outlined">
-          <v-list-item two-line>
+          <v-list-item
+            two-line
+            @click="$router.push('/inventory/import-products')"
+          >
             <v-list-item-avatar>
               <v-icon class="dashboard-links-icon mr-5">mdi mdi-upload</v-icon>
             </v-list-item-avatar>
@@ -19,7 +22,7 @@
           </v-list-item>
         </v-card>
         <v-card variant="outlined">
-          <v-list-item two-line>
+          <v-list-item two-line @click="$router.push('/inventory/add-product')">
             <v-list-item-avatar>
               <v-icon class="dashboard-links-icon mr-5">mdi mdi-plus</v-icon>
             </v-list-item-avatar>

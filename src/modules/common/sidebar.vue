@@ -229,6 +229,7 @@ export default {
 }
 .desktop-sidebar-items {
   margin-top: 20px;
+  box-shadow: none !important;
 }
 .desktop-sendy-logo {
   width: 90px;

@@ -83,4 +83,7 @@ export default {
   setSendProductsRoute(state, val) {
     state.sendProductsRoute = val;
   },
+  setProductStep(state, val) {
+    state.productStep = val;
+  },
 };

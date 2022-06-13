@@ -3,7 +3,11 @@
   <div class="">
     <div class="mb-3">
       <span>
-        <img src="" alt="img" />
+        <img
+          :src="product.product_link"
+          alt="img"
+          class="product-details-img"
+        />
         {{ product.product_name }}
       </span>
     </div>
@@ -30,7 +34,16 @@
       <tbody>
         <tr v-for="(variant, index) in variants" :key="index">
           <td>
-            {{ product.product_variants ? `image` : variant.fulfillmentCenter }}
+            <div v-if="product.product_variants">
+              <img
+                :src="variant.product_variant_image_link"
+                alt="img"
+                class="product-details-img"
+              />
+            </div>
+            <div v-else>
+              {{ variant.fulfillmentCenter }}
+            </div>
           </td>
           <td v-if="product.product_variants">
             <v-list-item lines="two">
@@ -99,18 +112,50 @@ export default {
     return {
       showProductVariants: false,
       tableHeaders: [
-        "Fulfillment Center",
-        "Available",
-        "Committed",
-        "Incoming",
+        {
+          title: "Fulfillment Center",
+          description: "",
+        },
+        {
+          title: "Available",
+          description:
+            "Available: Products that are at the fulfillment centre and the seller can place a request on",
+        },
+        {
+          title: "Committed",
+          description:
+            "Committed: Products that the user has placed a delivery request on but have not yet been delivered to the user, also includes items under failed deliveries",
+        },
+        {
+          title: "Incoming",
+          description:
+            "Incoming: Products that the user has placed a consignment request for but have not yet been approved at the warehouse",
+        },
       ],
       tableHeaders2: [
-        "Image",
-        "Product Option",
-        "Available",
-        "Committed",
-        "Incoming",
-        "",
+        {
+          title: "Image",
+          description: "",
+        },
+        {
+          title: "Image",
+          description: "",
+        },
+        {
+          title: "Product Option",
+          description:
+            "Available: Products that are at the fulfillment centre and the seller can place a request on",
+        },
+        {
+          title: "Committed",
+          description:
+            "Committed: Products that the user has placed a delivery request on but have not yet been delivered to the user, also includes items under failed deliveries",
+        },
+        {
+          title: "Incoming",
+          description:
+            "Incoming: Products that the user has placed a consignment request for but have not yet been approved at the warehouse",
+        },
       ],
       pSummary: [
         {
@@ -151,5 +196,9 @@ export default {
 .product-header {
   color: #606266;
   font-size: 13px;
+}
+.product-details-img {
+  height: 40px;
+  margin-right: 10px;
 }
 </style>

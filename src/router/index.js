@@ -19,16 +19,12 @@ import invite from "../modules/external/invite.vue";
 import editUser from "../modules/settings/manageUsers/components/editUser.vue";
 import activityLog from "../modules/settings/activityLog/activityLog.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
-import AddProduct from "../modules/common/addProduct.vue";
+import AddProduct from "../modules/inventory/products/components/addProduct.vue";
 import Products from "../modules/inventory/products/products";
 import EditProduct from "../modules/inventory/products/components/editProduct";
 import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
-import Import from "../modules/inventory/components/import";
+import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
-import Stepper from "../modules/inventory/sendproducts/components/stepper";
-import ProductsSelect from "../modules/inventory/sendproducts/components/productsSelect";
-import AddQuantity from "../modules/inventory/sendproducts/components/addQuantity";
-import Checkout from "../modules/inventory/sendproducts/components/checkout";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
 
 const routes = [
@@ -93,33 +89,6 @@ const routes = [
     path: "/inventory/view-product",
     name: "View Product",
     component: ViewProduct,
-  },
-  {
-    path: "/inventory/send-inventory/step",
-    name: "Stepper",
-    component: Stepper,
-    children: [
-      {
-        path: "products-customer",
-        name: "ProductsToCustomer",
-        component: ProductsSelect,
-      },
-      {
-        path: "products-sendy",
-        name: "ProductsToSendy",
-        component: ProductsSelect,
-      },
-      {
-        path: "add-quantity",
-        name: "Add Quantity",
-        component: AddQuantity,
-      },
-      {
-        path: "checkout",
-        name: "Checkout",
-        component: Checkout,
-      },
-    ],
   },
   {
     path: "/inventory/send-inventory",

@@ -31,4 +31,5 @@ export default {
   getProductLists: (state) => state.productLists,
   getSelectedProducts: (state) => state.selectedProducts,
   getSendProductsRoute: (state) => state.sendProductsRoute,
+  getProductStep: (state) => state.productStep,
 };

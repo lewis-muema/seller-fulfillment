@@ -17,12 +17,16 @@
                     class="mr-3 desktop-dashboard-icon"
                   ></v-icon>
                   <v-list-item-header>
-                    <v-list-item-title class="count">{{
-                      order.count
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      order.orderStatus
-                    }}</v-list-item-subtitle>
+                    <v-list-item-title class="count">
+                      <span :class="$store.getters.getLoader">
+                        {{ order.count }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span :class="$store.getters.getLoader">
+                        {{ order.orderStatus }}
+                      </span>
+                    </v-list-item-subtitle>
                   </v-list-item-header>
                   <v-divider
                     :class="

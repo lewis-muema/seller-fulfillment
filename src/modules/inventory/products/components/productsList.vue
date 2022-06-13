@@ -19,24 +19,35 @@
               <td>
                 <v-list-item lines="two">
                   <v-list-item-avatar class="product-image-container">
-                    <!-- <img src="../../../../assets/shearButter.jpg" /> -->
-                    <v-icon class="">mdi mdi-image</v-icon>
+                    <img
+                      :src="product.product_link"
+                      alt="img"
+                      class="product-img"
+                    />
                   </v-list-item-avatar>
                   <v-list-item-header>
-                    <v-list-item-title>{{
-                      product.product_name
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle
-                      >{{
-                        product.product_variants
-                          ? `${product.product_variants.length} product options`
-                          : ""
-                      }}
+                    <v-list-item-title>
+                      <span :class="$store.getters.getLoader">
+                        {{ product.product_name }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span :class="$store.getters.getLoader">
+                        {{
+                          product.product_variants
+                            ? `${product.product_variants.length} product options`
+                            : ""
+                        }}
+                      </span>
                     </v-list-item-subtitle>
                   </v-list-item-header>
                 </v-list-item>
               </td>
-              <td>5 in Stock</td>
+              <td>
+                <span :class="$store.getters.getLoader">
+                  {{ product.available }} in Stock
+                </span>
+              </td>
               <td>
                 <router-link
                   :to="{
@@ -46,7 +57,10 @@
                     },
                   }"
                   class="view-product-link"
-                  >View</router-link
+                >
+                  <span :class="$store.getters.getLoader"
+                    >View</span
+                  ></router-link
                 >
               </td>
             </tr>
@@ -68,7 +82,7 @@
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: { tableHeader, addProductsCard },
   data() {
@@ -84,6 +98,14 @@ export default {
     tableHeaders() {
       return this.headers;
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.setLoader();
+    }, 1000);
+  },
+  methods: {
+    ...mapMutations(["setLoader"]),
   },
 };
 </script>
@@ -111,5 +133,8 @@ export default {
 .view-product-link {
   color: #324ba8;
   text-decoration: none;
+}
+.product-img {
+  width: 40px;
 }
 </style>

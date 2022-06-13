@@ -14,6 +14,12 @@
             :class="activeTab === tab.label ? 'active' : ''"
           >
             {{ tab.label }}
+            <v-badge
+              color="#D3DDF6"
+              text-color="#324BA8"
+              :content="tab.content"
+              inline
+            ></v-badge>
           </div>
         </div>
       </div>
@@ -23,7 +29,7 @@
           <router-link
             to="/inventory/import-products"
             class="import-products-link"
-            >Import Product</router-link
+            >Upload products</router-link
           >
         </button>
 
@@ -51,14 +57,13 @@
           :class="activeTab === tab.label ? 'active' : ''"
         >
           {{ tab.label }}
+          <v-badge
+            :color="tab.bgColor"
+            :text-color="tab.color"
+            :content="tab.content"
+            inline
+          ></v-badge>
         </div>
-        <v-badge
-          v-if="tab.label != 'All'"
-          :color="tab.label === 'Low Stock' ? '#FBDF9A' : '#FBDECF'"
-          :text-color="tab.label === 'Low Stock' ? '#7F3B02' : '#9B101C'"
-          content="23"
-          inline
-        ></v-badge>
       </div>
     </div>
     <slot></slot>
@@ -73,22 +78,31 @@ export default {
       productTabs: [
         {
           label: "All",
+          content: 67,
         },
         {
           label: "Archived",
+          content: 10,
         },
       ],
       stockLevelTabs: [
         {
           label: "All",
+          content: "67",
+          color: "#324BA8",
+          bgColor: "#D3DDF6",
         },
         {
           label: "Low Stock",
           content: "23",
+          color: "#7F3B02",
+          bgColor: "#FBDF9A",
         },
         {
           label: "Out of Stock",
           content: "23",
+          color: "#9B101C",
+          bgColor: "#FBDECF",
         },
       ],
     };
@@ -114,7 +128,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 8% 12% 12%;
+  grid-template-columns: 10% 12% 12%;
   margin: 30px;
 }
 .desktop-product-tab {
@@ -128,6 +142,7 @@ export default {
   color: #606266;
   font-size: 15px;
   font-weight: 500;
+  padding: 5px 10px;
 }
 button {
   align-items: center;

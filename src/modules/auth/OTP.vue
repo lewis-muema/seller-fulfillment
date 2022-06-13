@@ -64,8 +64,8 @@ export default {};
   padding: 0.75rem 0.75rem !important;
 }
 .desktop-header-title .mdi-arrow-left {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 100%;
   color: #5f6368;
   font-size: 30px;
 }

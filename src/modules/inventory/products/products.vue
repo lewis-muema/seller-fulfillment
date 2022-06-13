@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import tabs from "@/modules/inventory/components/tabs.vue";
+import tabs from "@/modules/inventory/products/components/tabs.vue";
 import productsList from "@/modules/inventory/products/components/productsList";
 export default {
   components: { tabs, productsList },

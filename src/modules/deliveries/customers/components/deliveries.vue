@@ -1,6 +1,9 @@
 <template>
   <div class="deliveries-container">
-    <div v-if="$store.getters.getDeliveries.length > 0">
+    <div
+      class="deliveries-container-inner"
+      v-if="$store.getters.getDeliveries.length > 0"
+    >
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
           <v-text-field
@@ -219,5 +222,8 @@ export default {
 }
 .deliveries-date-label {
   font-size: 14px;
+}
+.deliveries-container-inner {
+  width: 100%;
 }
 </style>

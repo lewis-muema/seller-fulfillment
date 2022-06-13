@@ -218,8 +218,8 @@ export default {
   font-weight: 500;
 }
 .header-section-right {
-  display: grid;
-  grid-template-columns: 55% 15% 10% 20%;
+  display: flex;
+  justify-content: flex-end;
 }
 .notification-bell {
   font-size: 25px;
@@ -229,6 +229,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0px 15px;
 }
 .header-shortcuts-button {
   text-transform: capitalize;

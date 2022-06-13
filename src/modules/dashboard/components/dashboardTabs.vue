@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="desktop-dashboard-tab">
     <p>{{ $t("dashboard.ongoingDeliveries") }}</p>
     <div class="desktop-dashboard-tab-container">
       <div
@@ -14,13 +14,13 @@
           :class="activeTab === tab.label ? 'active' : ''"
         >
           {{ tab.label }}
+          <v-badge
+            color="#FBDF9A"
+            text-color="#7F3B02"
+            :content="tab.content"
+            inline
+          ></v-badge>
         </div>
-        <v-badge
-          color="#FBDF9A"
-          text-color="#7F3B02"
-          :content="tab.content"
-          inline
-        ></v-badge>
       </div>
     </div>
     <slot></slot>
@@ -30,17 +30,18 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 export default {
+  props: ["sendyCount", "customerCount"],
   data() {
     return {
       currentTab: 0,
       tabs: [
         {
           label: "To your Customers",
-          content: "23",
+          content: this.customerCount,
         },
         {
           label: "To Sendy",
-          content: "23",
+          content: this.sendyCount,
         },
       ],
       deliveries: [
@@ -59,9 +60,13 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setDashboardSelectedTab"]),
+    ...mapMutations(["setDashboardSelectedTab", "setLoader"]),
     setTab(tab) {
       this.setDashboardSelectedTab(tab.label);
+      this.setLoader("loading-text");
+      setTimeout(() => {
+        this.setLoader("");
+      }, 1000);
     },
   },
   computed: {
@@ -84,11 +89,15 @@ export default {
   color: #909399;
   font-size: 14px;
   font-weight: 500;
+  padding: 5px 10px;
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: 25% 25%;
+  grid-template-columns: 20% 20%;
   border-bottom: 1px solid #e2e7ed;
+}
+.desktop-dashboard-tab {
+  height: 100%;
 }
 .dashboard-deliveries-tab {
   display: flex;

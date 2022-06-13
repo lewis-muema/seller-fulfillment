@@ -2,7 +2,11 @@
   <div class="">
     <div class="mb-3">
       <span>
-        <img src="" alt="img" />
+        <img
+          :src="product.product_link"
+          alt="img"
+          class="product-details-img"
+        />
         {{ product.product_name }}
       </span>
     </div>
@@ -29,7 +33,16 @@
       <tbody>
         <tr v-for="(variant, index) in variants" :key="index">
           <td>
-            {{ product.product_variants ? `image` : variant.fulfillmentCenter }}
+            <div v-if="product.product_variants">
+              <img
+                :src="variant.product_variant_image_link"
+                alt="img"
+                class="product-details-img"
+              />
+            </div>
+            <div v-else>
+              {{ variant.fulfillmentCenter }}
+            </div>
           </td>
           <td v-if="product.product_variants">
             <v-list-item lines="two">
@@ -98,18 +111,44 @@ export default {
     return {
       showProductVariants: false,
       tableHeaders: [
-        "Fulfillment Center",
-        "Available",
-        "Committed",
-        "Incoming",
+        {
+          title: this.$t("inventory.fulfillmentCenter"),
+          description: "",
+        },
+        {
+          title: this.$t("inventory.available"),
+          description: this.$t("inventory.availableProducts"),
+        },
+        {
+          title: this.$t("inventory.committed"),
+          description: this.$t("inventory.CommittedProducts"),
+        },
+        {
+          title: this.$t("inventory.incoming"),
+          description: this.$t("inventory.IncomingProducts"),
+        },
       ],
       tableHeaders2: [
-        "Image",
-        "Product Option",
-        "Available",
-        "Committed",
-        "Incoming",
-        "",
+        {
+          title: this.$t("inventory.img"),
+          description: "",
+        },
+        {
+          title: this.$t("inventory.img"),
+          description: "",
+        },
+        {
+          title: this.$t("inventory.productOption"),
+          description: this.$t("inventory.availableProducts"),
+        },
+        {
+          title: "Committed",
+          description: this.$t("inventory.CommittedProducts"),
+        },
+        {
+          title: "Incoming",
+          description: this.$t("inventory.IncomingProducts"),
+        },
       ],
       pSummary: [
         {
@@ -150,5 +189,9 @@ export default {
 .product-header {
   color: #606266;
   font-size: 13px;
+}
+.product-details-img {
+  height: 40px;
+  margin-right: 10px;
 }
 </style>

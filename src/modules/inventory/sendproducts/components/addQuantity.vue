@@ -7,9 +7,11 @@
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="$router.back()"
+              @click="addProductStep(0)"
             ></i>
-            <v-card-title class="text-center">Enter Quantity</v-card-title>
+            <v-card-title class="text-center">
+              {{ $t("inventory.enterQuantity") }}
+            </v-card-title>
           </div>
           <div class="products-selected-summary">
             <v-table>
@@ -27,14 +29,64 @@
                   class="enter-quantity-input"
                 >
                   <td>
-                    <v-icon> mdi mdi-window-close </v-icon>
+                    <v-icon
+                      class="product-select-remove-product"
+                      @click="removeProductOption(index)"
+                    >
+                      mdi mdi-window-close
+                    </v-icon>
                   </td>
                   <td style="width: 300px">
-                    {{ selectedProduct.product_name }}
+                    <div class="product-select-product-column">
+                      <img
+                        v-if="selectedProduct.selectedOption"
+                        :src="
+                          selectedProduct.selectedOption
+                            .product_variant_image_link
+                        "
+                        alt=""
+                        class="product-select-img"
+                      />
+                      <img
+                        v-else
+                        :src="selectedProduct.product_link"
+                        alt=""
+                        class="product-select-img"
+                      />
+                      <div>
+                        <p class="product-select-product-name">
+                          {{ selectedProduct.product_name }}
+                        </p>
+                        <p
+                          v-if="selectedProduct.selectedOption"
+                          class="product-select-product-option"
+                        >
+                          {{
+                            selectedProduct.selectedOption
+                              .product_variant_quantity
+                          }}
+                          {{
+                            selectedProduct.selectedOption
+                              .product_variant_quantity_type
+                          }}
+                        </p>
+                      </div>
+                    </div>
                   </td>
                   <td>
-                    {{ selectedProduct.product_currency }}
-                    {{ selectedProduct.product_price }}
+                    <div v-if="selectedProduct.selectedOption">
+                      {{
+                        selectedProduct.selectedOption.product_variant_currency
+                      }}
+                      {{
+                        selectedProduct.selectedOption
+                          .product_variant_unit_price
+                      }}
+                    </div>
+                    <div v-else>
+                      {{ selectedProduct.product_currency }}
+                      {{ selectedProduct.product_price }}
+                    </div>
                   </td>
                   <td v-if="getRouteName === 'ProductsToCustomer'">
                     <div class="available-units">
@@ -42,11 +94,13 @@
                     </div>
                   </td>
                   <td class="">
-                    <label>Qty</label>
+                    <label>{{ $t("inventory.qty") }}</label>
                     <input
                       type="number"
                       class="form-control"
+                      v-model="selectedProduct.quantity"
                       placeholder="0.0"
+                      @change="addQuantity(index, $event)"
                       required
                     />
                   </td>
@@ -57,28 +111,52 @@
         </v-card>
       </v-col>
       <v-col cols="4">
-        <items-selected :itemsAddedCount="itemsAddedCount" />
+        <v-card
+          variant="outlined"
+          class="desktop-select-products-card items-selected-card"
+        >
+          <div class="items-selected-container">
+            <p>
+              {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
+            </p>
+            <button
+              type="submit"
+              @click="addProductStep(2)"
+              class="btn btn-primary"
+            >
+              {{ $t("inventory.continueWith") }} {{ totalProducts }}
+              {{ $t("inventory.itemsAdded") }}
+            </button>
+          </div></v-card
+        >
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
-import itemsSelected from "./itemsSelected";
+import { ElNotification } from "element-plus";
+
 export default {
-  components: { tableHeader, itemsSelected },
+  components: { tableHeader },
   data() {
     return {
-      itemsAddedCount: 0,
-      tableHeaders: ["", "Product", "Price", "Quantity to send"],
+      quantities: [],
+      quantity: 1,
+      tableHeaders: [
+        "",
+        this.$t("inventory.product"),
+        this.$t("inventory.price"),
+        this.$t("inventory.quantityToSend"),
+      ],
       tableHeaders2: [
         "",
-        "Product",
-        "Price",
-        "Available units",
-        "Quantity to send",
+        this.$t("inventory.product"),
+        this.$t("inventory.price"),
+        this.$t("inventory.availableUnits"),
+        this.$t("inventory.quantityToSend"),
       ],
     };
   },
@@ -90,11 +168,57 @@ export default {
     getRouteName() {
       return this.getSendProductsRoute;
     },
+    totalProducts() {
+      let total = 0;
+      this.getSelectedProducts.forEach((row) => {
+        if (row.quantity) {
+          total = parseInt(row.quantity) + total;
+        }
+      });
+      return total;
+    },
+  },
+  methods: {
+    ...mapMutations(["setProductStep", "setSelectedProducts"]),
+    addProductStep(val) {
+      if ((this.totalProducts > 0 && val === 2) || val === 0) {
+        this.setProductStep(val);
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("inventory.pleaseEnterQuantity"),
+          type: "error",
+        });
+      }
+    },
+    addQuantity(val, event) {
+      const products = this.getSelectedProducts;
+      let newProduct = {};
+      Object.keys(products[val]).forEach((row) => {
+        newProduct[row] = products[val][row];
+      });
+      newProduct.quantity = event.target.value;
+      products[val] = newProduct;
+      this.setSelectedProducts(products);
+    },
+    removeProductOption(index) {
+      const products = this.getSelectedProducts;
+      products.splice(index, 1);
+      this.setSelectedProducts(products);
+    },
   },
 };
 </script>
 
 <style>
+.items-selected-container {
+  margin: 30px 20px 30px;
+}
+
+.items-selected-card {
+  margin-right: 50px;
+  margin-left: 0 !important;
+}
 .enter-quantity-input td {
   height: 85px !important;
 }
@@ -109,5 +233,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.product-select-product-name {
+  margin-bottom: 0px;
+}
+.product-select-product-option {
+  color: #606266;
+  margin-bottom: 0px;
+}
+.product-select-product-column {
+  display: flex;
+  align-items: center;
+}
+.product-select-remove-product {
+  color: #909399;
+  cursor: pointer;
 }
 </style>

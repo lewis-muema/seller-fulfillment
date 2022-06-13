@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import importProductTips from "@/modules/inventory/components/importProductTips";
+import importProductTips from "./importProductTips";
 export default {
   components: { importProductTips },
   data() {

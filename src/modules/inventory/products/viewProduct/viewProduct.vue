@@ -14,36 +14,24 @@
               >{{ $t("inventory.productDetails") }}
             </v-card-title>
             <div class="dropdown actions-dropdown mt-2">
-              <button
-                class="btn dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {{ $t("inventory.actions") }}
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li class="view-product-dropdown-list">
-                  <router-link
-                    :to="{
-                      name: 'EditProduct',
-                      params: { pV: JSON.stringify(product.product_variants) },
-                    }"
-                    >{{ $t("inventory.edit") }}</router-link
+              <v-menu transition="slide-y-transition" anchor="bottom center">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    class="product-details-actions-btn"
+                    append-icon="mdi-menu-down"
+                    v-bind="props"
                   >
-                </li>
-                <li class="view-product-dropdown-list">
-                  <router-link to="/">{{
-                    $t("inventory.archive")
-                  }}</router-link>
-                </li>
-                <li class="view-product-dropdown-list">
-                  <router-link to="/">{{
-                    $t("inventory.addProductOption")
-                  }}</router-link>
-                </li>
-              </ul>
+                    {{ $t("inventory.actions") }}
+                  </v-btn>
+                </template>
+                <v-list class="users-actions-popup">
+                  <v-list-item v-for="(action, i) in actions" :key="i">
+                    <v-list-item-title @click="trigger(action)">
+                      {{ action.label }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </div>
           </div>
           <product-details-tabs v-if="stockSelectedTab === 'Overview'">
@@ -67,12 +55,25 @@ export default {
   components: { productDetailsTabs, productOverview, productHistory },
   data() {
     return {
+      actions: [
+        {
+          label: this.$t("inventory.edit"),
+          link: "/inventory/edit-product",
+        },
+        {
+          label: this.$t("inventory.archive"),
+          link: "",
+        },
+        {
+          label: this.$t("inventory.addProductOptions"),
+          link: "",
+        },
+      ],
       product: [],
     };
   },
   mounted() {
     this.$store.commit("setComponent", this.$t("common.viewProduct"));
-    console.log("from view product", this.$route.params.product);
     if (this.$route.params.product !== undefined) {
       this.product = JSON.parse(this.$route.params.product);
     }
@@ -81,6 +82,13 @@ export default {
     ...mapGetters(["getStockSelectedTab"]),
     stockSelectedTab() {
       return this.getStockSelectedTab;
+    },
+  },
+  methods: {
+    trigger(action) {
+      if (action.link) {
+        this.$router.push(action.link);
+      }
     },
   },
 };
@@ -96,5 +104,11 @@ export default {
 .view-product-dropdown-list a {
   color: #606266;
   text-decoration: none;
+}
+.product-details-actions-btn {
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: #606266 !important;
+  font-weight: 300;
 }
 </style>

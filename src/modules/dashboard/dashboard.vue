@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import quickLinks from "@/modules/dashboard/components/quickLinks";
 import dashboardTabsContent from "@/modules/dashboard/components/dashboardTabsContent";
 import topCard from "@/modules/dashboard/components/topCard";
@@ -24,7 +25,13 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.dashboard"));
+    this.setComponent(this.$t("common.dashboard"));
+    setTimeout(() => {
+      this.setLoader("");
+    }, 1000);
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader"]),
   },
 };
 </script>

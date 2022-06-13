@@ -3,12 +3,20 @@
     <v-card
       variant="outlined"
       class="desktop-dashboard-upper-card pa-5"
-      height="500"
+      height="600"
     >
-      <dashboard-tabs v-if="dashboardTabs === 'To your Customers'">
+      <dashboard-tabs
+        :customerCount="deliveriesToCustomer.length"
+        :sendyCount="deliveriesToSendy.length"
+        v-if="dashboardTabs === 'To your Customers'"
+      >
         <deliveries :deliveries="deliveries" :selectedTab="dashboardTabs" />
       </dashboard-tabs>
-      <dashboard-tabs v-else>
+      <dashboard-tabs
+        :customerCount="deliveriesToCustomer.length"
+        :sendyCount="deliveriesToSendy.length"
+        v-else
+      >
         <deliveries :deliveries="deliveries" :selectedTab="dashboardTabs"
       /></dashboard-tabs>
     </v-card>

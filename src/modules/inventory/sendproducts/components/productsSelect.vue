@@ -10,13 +10,11 @@
                 aria-hidden="true"
                 @click="$router.back()"
               ></i>
-              <v-card-title class="text-center">
-                {{ $t("inventory.selectProducts") }}</v-card-title
-              >
+              <v-card-title class="text-center"> Select Products</v-card-title>
             </div>
             <router-link to="/inventory/add-product/" class="add-new-product">
               <v-icon>mdi mdi-plus</v-icon>
-              {{ $t("inventory.addNewProduct") }}
+              add a new product
             </router-link>
           </div>
           <div class="search-input">
@@ -25,7 +23,7 @@
               <input
                 type="text"
                 class="form-control"
-                :placeholder="$t('inventory.searchProduct')"
+                placeholder="Search for product"
               />
             </div>
           </div>

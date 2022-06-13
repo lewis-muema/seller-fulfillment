@@ -1,8 +1,8 @@
 <template>
   <div>
-    <span class="send-products-header-text text-center">{{
-      $t("inventory.toDo")
-    }}</span>
+    <span class="send-products-header-text text-center"
+      >What do you want to do?</span
+    >
     <div class="send-products-container">
       <div @click="deliverToCustomer" class="send-products-content">
         <v-card class="send-products-card" variant="outlined">
@@ -10,7 +10,7 @@
             <v-icon class="dashboard-links-icon send-products-icon"
               >mdi mdi-truck</v-icon
             >
-            <p class="mt-4">{{ $t("inventory.deliverToCustomer") }}</p>
+            <p class="mt-4">Deliver to Customer</p>
           </div>
         </v-card>
       </div>
@@ -20,7 +20,7 @@
             <v-icon class="dashboard-links-icon send-products-icon"
               >mdi mdi-warehouse</v-icon
             >
-            <p class="mt-4">{{ $t("inventory.deliverToSendy") }}</p>
+            <p class="mt-4">Send inventory to Sendy</p>
           </div>
         </v-card>
       </div>
@@ -83,8 +83,4 @@ export default {
   justify-content: center;
   margin: 80px 0;
 }
-/* .send-products-container a {
-  text-decoration: none !important;
-  color: #303133 !important;
-} */
 </style>

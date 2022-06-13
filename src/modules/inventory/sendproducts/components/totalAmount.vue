@@ -1,28 +1,26 @@
 <template>
   <div class="" v-if="getRoute === 'ProductsToCustomer'">
     <div class="promo-code-text">
-      <router-link to="/">{{ $t("inventory.applyPromoCode") }}</router-link>
+      <router-link to="/">Apply promo code</router-link>
     </div>
 
     <v-list-item>
       <v-list-item-header class="d-flex total-amount-content">
-        <v-list-item-title>{{ $t("inventory.totalValue") }}</v-list-item-title>
+        <v-list-item-title>Total value of products</v-list-item-title>
         <v-list-item-title>KES 4500</v-list-item-title>
       </v-list-item-header>
     </v-list-item>
     <hr />
     <v-list-item>
       <v-list-item-header class="d-flex total-amount-content">
-        <v-list-item-title>{{
-          $t("inventory.fulfillmentFee")
-        }}</v-list-item-title>
+        <v-list-item-title>Fulfillment Fee</v-list-item-title>
         <v-list-item-title>KES 500</v-list-item-title>
       </v-list-item-header>
     </v-list-item>
     <hr />
     <v-list-item>
       <v-list-item-header class="d-flex total-amount-content">
-        <v-list-item-title>{{ $t("inventory.amountToPay") }}</v-list-item-title>
+        <v-list-item-title>Amount to Pay</v-list-item-title>
         <v-list-item-title>KES 500</v-list-item-title>
       </v-list-item-header>
     </v-list-item>

@@ -145,13 +145,18 @@ export default {
     return {
       quantities: [],
       quantity: 1,
-      tableHeaders: ["", "Product", "Price", "Quantity to send"],
+      tableHeaders: [
+        "",
+        this.$t("inventory.product"),
+        this.$t("inventory.price"),
+        this.$t("inventory.quantityToSend"),
+      ],
       tableHeaders2: [
         "",
-        "Product",
-        "Price",
-        "Available units",
-        "Quantity to send",
+        this.$t("inventory.product"),
+        this.$t("inventory.price"),
+        this.$t("inventory.availableUnits"),
+        this.$t("inventory.quantityToSend"),
       ],
     };
   },

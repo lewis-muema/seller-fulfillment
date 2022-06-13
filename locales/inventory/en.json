@@ -40,6 +40,7 @@
   "addProductOption": "Add product option",
   "nameOfOption":"Name of the Option",
   "saveChanges": "Save Changes",
+  "img": "Image",
   "image":"Image (optional)",
   "eg":"E.g Red, black, size XL, M",
   "saveAnother":"Save and add another one",
@@ -92,5 +93,12 @@
   "totalStockAvailable":"Total stock available",
   "availableInventory": "Available Inventory",
   "pleaseSelectAProduct": "Please select a product so as to move to the next step",
-  "pleaseEnterQuantity": "Please enter quantity of products to continue"
+  "pleaseEnterQuantity": "Please enter quantity of products to continue",
+  "availableProducts": "Available: Products that are at the fulfillment centre and the seller can place a request on",
+  "CommittedProducts": "Committed: Products that the user has placed a delivery request on but have not yet been delivered to the user, also includes items under failed deliveries",
+  "IncomingProducts": "Incoming: Products that the user has placed a consignment request for but have not yet been approved at the warehouse",
+  "productOption": "Product Option",
+  "product": "Product",
+  "quantityToSend": "Quantity to send",
+  "availableUnits": "Available units"
 }

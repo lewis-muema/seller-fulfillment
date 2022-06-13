@@ -9,7 +9,9 @@
               aria-hidden="true"
               @click="$router.back()"
             ></i>
-            <v-card-title class="text-center">Add Product </v-card-title>
+            <v-card-title class="text-center">
+              {{ $t("inventory.addProducts") }}
+            </v-card-title>
           </div>
           <productInputs action="addProduct" />
         </v-card>

@@ -57,15 +57,15 @@ export default {
     return {
       actions: [
         {
-          label: "Edit",
+          label: this.$t("inventory.edit"),
           link: "/inventory/edit-product",
         },
         {
-          label: "Archive",
+          label: this.$t("inventory.archive"),
           link: "",
         },
         {
-          label: "Add product options",
+          label: this.$t("inventory.addProductOptions"),
           link: "",
         },
       ],

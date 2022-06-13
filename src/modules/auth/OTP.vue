@@ -9,15 +9,15 @@
             @click="$router.back()"
           ></i>
           <v-card-title class="text-center">
-            Verify Email address
+            {{ $t("auth.verifyEmailaddress") }}
           </v-card-title>
         </div>
         <v-card-text class="otp-card">
           <p>
-            Enter the code sent to your email
-            <span class="otp-email">jamesmoves@gmail.com</span>
+            {{ $t("auth.enterCodeSentToEmail") }}
+            <span class="otp-email">{{ email }}</span>
           </p>
-          <p>Enter code</p>
+          <p>{{ $t("auth.enterCode") }}</p>
           <div
             class="d-flex justify-content-center align-items-center container"
           >
@@ -34,13 +34,13 @@
             </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/onboarding" class="btn btn-primary"
-              >Confirm Code</router-link
-            >
+            <router-link to="/onboarding" class="btn btn-primary">{{
+              $t("auth.confirmCode")
+            }}</router-link>
           </div>
           <span class=""
             ><p class="mt-4 text-center text-grey">
-              Resend code in 120 seconds
+              {{ $t("auth.resendCode") }}
             </p></span
           >
         </v-card-text>
@@ -50,7 +50,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      email: "jamesmoves@gmail.com",
+    };
+  },
+};
 </script>
 
 <style>
@@ -64,8 +70,8 @@ export default {};
   padding: 0.75rem 0.75rem !important;
 }
 .desktop-header-title .mdi-arrow-left {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 100%;
   color: #5f6368;
   font-size: 30px;
 }

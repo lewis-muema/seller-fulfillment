@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="deliveries.length">
+  <div class="deliveries-container">
+    <div class="deliveries-container-inner" v-if="deliveries.length">
       <v-table class="">
         <thead>
           <tr>
@@ -11,8 +11,12 @@
                   : "Products"
               }}
             </th>
-            <th class="text-left table-headers">Progress</th>
-            <th class="text-left table-headers">Action</th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.progress") }}
+            </th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.action") }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -20,26 +24,37 @@
             <td>
               <v-list-item lines="two">
                 <v-list-item-header>
-                  <v-list-item-title>{{
-                    getSelectedTab === "To your Customers"
-                      ? delivery.customerName
-                      : delivery.productName
-                  }}</v-list-item-title>
+                  <v-list-item-title>
+                    <span :class="$store.getters.getLoader">
+                      {{
+                        getSelectedTab === "To your Customers"
+                          ? delivery.customerName
+                          : delivery.productName
+                      }}
+                    </span>
+                  </v-list-item-title>
                   <v-list-item-subtitle
                     class="dashboard-customer-delivery-location"
-                    >{{
-                      getSelectedTab === "To your Customers"
-                        ? delivery.customerDeliveryLocation
-                        : "other items"
-                    }}</v-list-item-subtitle
                   >
+                    <span :class="$store.getters.getLoader"
+                      >{{
+                        getSelectedTab === "To your Customers"
+                          ? delivery.customerDeliveryLocation
+                          : "other items"
+                      }}
+                    </span>
+                  </v-list-item-subtitle>
                 </v-list-item-header>
               </v-list-item>
             </td>
             <td>
               <v-list-item lines="two">
                 <v-list-item-header>
-                  <v-list-item-title>{{ delivery.progress }}</v-list-item-title>
+                  <v-list-item-title>
+                    <span :class="$store.getters.getLoader">
+                      {{ delivery.progress }}
+                    </span>
+                  </v-list-item-title>
                   <v-progress-linear
                     :model-value="delivery.step"
                     :color="delivery.color"
@@ -51,30 +66,21 @@
             </td>
             <td>
               <router-link
-                to="/inventory/product-details"
+                to="/deliveries/tracking"
                 class="dashboard-track-order"
-                >{{ delivery.action }}</router-link
               >
+                <span :class="$store.getters.getLoader">
+                  {{ delivery.action }}
+                </span>
+              </router-link>
             </td>
           </tr>
         </tbody>
       </v-table>
       <div class="show-more-deliveries-link">
         <router-link to="/" class="show-more-deliveries-link"
-          >Show more deliveries<v-icon>mdi mdi-arrow-right</v-icon></router-link
-        >
-      </div>
-    </div>
-
-    <div v-else class="send-inventory-to-sendy-container">
-      <v-icon class="dashboard-links-icon send-products-icon"
-        >mdi mdi-truck</v-icon
-      >
-      <p>Send inventory to sendy and track the progress here</p>
-      <div class="send-inventory-to-sendy-link">
-        <router-link to="/"
-          >Send inventory to Sendy
-          <v-icon>mdi mdi-arrow-right</v-icon></router-link
+          >{{ $t("dashboard.showMoreDeliveries")
+          }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
         >
       </div>
     </div>
@@ -111,6 +117,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px;
 }
 .show-more-deliveries-link a {
   color: #324ba8;
@@ -124,10 +131,18 @@ export default {
   flex-direction: column;
   justify-content: center !important;
   align-items: center;
-  margin-top: 20%;
 }
 .send-inventory-to-sendy-link a {
   color: #324ba8;
   text-decoration: none;
+}
+.deliveries-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80%;
+}
+.deliveries-container-inner {
+  width: 100%;
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
   <div>
     <span class="">
-      <h5>Welcome, Irene! 🎉</h5>
-      <p>Here's what's happening to your account today.</p>
+      <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+      <p>{{ $t("dashboard.whatsHappening") }}</p>
     </span>
     <v-row class="desktop-dashboard-upper-content">
       <v-col cols="11">
         <v-card variant="outlined" class="desktop-dashboard-upper-card">
           <v-row>
             <v-col cols="12" md="3" v-for="(order, i) in orders" :key="i">
-              <v-list lines="two">
+              <v-list class="dashboard-cards" lines="two">
                 <v-list-item>
                   <v-icon
                     :icon="order.icon"
@@ -17,12 +17,16 @@
                     class="mr-3 desktop-dashboard-icon"
                   ></v-icon>
                   <v-list-item-header>
-                    <v-list-item-title class="count">{{
-                      order.count
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      order.orderStatus
-                    }}</v-list-item-subtitle>
+                    <v-list-item-title class="count">
+                      <span :class="$store.getters.getLoader">
+                        {{ order.count }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span :class="$store.getters.getLoader">
+                        {{ order.orderStatus }}
+                      </span>
+                    </v-list-item-subtitle>
                   </v-list-item-header>
                   <v-divider
                     :class="
@@ -46,6 +50,7 @@
 export default {
   data() {
     return {
+      name: "Irene",
       orders: [
         {
           icon: "mdi mdi-truck",
@@ -104,5 +109,8 @@ export default {
 .v-divider-last-item {
   height: 40px !important;
   color: transparent !important;
+}
+.dashboard-cards {
+  box-shadow: none !important;
 }
 </style>

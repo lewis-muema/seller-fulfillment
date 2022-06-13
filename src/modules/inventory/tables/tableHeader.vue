@@ -2,7 +2,18 @@
   <thead>
     <tr>
       <th v-for="(header, index) in header" :key="index" class="table-headers">
-        {{ header }}
+        {{ header.title }}
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          :content="header.description"
+          placement="top"
+        >
+          <i
+            v-if="header.description"
+            class="mdi mdi-information-outline product-info"
+          ></i>
+        </el-tooltip>
       </th>
     </tr>
   </thead>
@@ -18,5 +29,9 @@ export default {
 .table-headers {
   font-size: 15px !important;
   font-weight: 400;
+}
+.product-info {
+  color: #324ba8;
+  cursor: pointer;
 }
 </style>

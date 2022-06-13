@@ -13,11 +13,13 @@ export default createStore({
       languages: ["English", "French"],
       defaultLanguage: "English",
       external: [
+        "/auth/",
         "/auth/sign-in",
         "/auth/sign-up",
         "/auth/otp",
         "/external/invite",
       ],
+      productStep: 0,
       downloadActions: [
         {
           label: "Excel",
@@ -1586,7 +1588,8 @@ export default createStore({
                   collection_name: "string",
                 },
               ],
-
+              product_link:
+                "https://images.sendyit.com/fulfilment/seller/shea.png",
               available: "23",
               committed: "23",
               incoming: "4",
@@ -1604,7 +1607,8 @@ export default createStore({
                   collection_name: "string",
                 },
               ],
-
+              product_link:
+                "https://images.sendyit.com/fulfilment/seller/shea.png",
               available: "0",
               committed: "0",
               incoming: "0",
@@ -1616,6 +1620,8 @@ export default createStore({
               product_id: "P_ASD1234",
               product_name: "Ceramic Cup",
               product_description: "Hand made ceramic cups",
+              product_link:
+                "https://images.sendyit.com/fulfilment/seller/shea.png",
               product_variants: [
                 {
                   business_id: "B_ASD123",
@@ -1627,7 +1633,7 @@ export default createStore({
                   product_variant_quantity: 30,
                   product_variant_quantity_type: "ml",
                   product_variant_image_link:
-                    "https://m.media-amazon.com/images/SLawerR.jpg",
+                    "https://images.sendyit.com/fulfilment/seller/shirts.png",
                   product_variant_expiry_date: 123456789,
                   product_variant_stock_levels: {
                     available: 3,
@@ -1645,7 +1651,7 @@ export default createStore({
                   product_variant_quantity: 130,
                   product_variant_quantity_type: "ml",
                   product_variant_image_link:
-                    "https://m.media-amazon.com/images/SLawerR.jpg",
+                    "https://images.sendyit.com/fulfilment/seller/shirts.png",
                   product_variant_expiry_date: 123456789,
                   product_variant_stock_levels: {
                     available: 3,

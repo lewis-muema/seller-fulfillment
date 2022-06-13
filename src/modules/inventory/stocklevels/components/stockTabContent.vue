@@ -8,7 +8,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import tabs from "@/modules/inventory/components/tabs";
+import tabs from "@/modules/inventory/products/components/tabs.vue";
 import stockLevelList from "@/modules/inventory/stocklevels/components/stockLevelList";
 export default {
   components: { tabs, stockLevelList },

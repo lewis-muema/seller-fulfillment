@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="products.length">
-      <v-card class="m-3 desktop-product-details" variant="outlined">
+      <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
           <v-text-field
             color="#324BA8"
@@ -46,15 +46,17 @@
                     },
                   }"
                   class="view-product-link"
-                  >View</router-link
+                >
+                  {{ $t("inventory.view") }}</router-link
                 >
               </td>
             </tr>
           </tbody>
         </v-table>
         <div class="show-more-deliveries-link mb-3">
-          <router-link to="/" class="show-more-deliveries-link"
-            >Load more<v-icon>mdi mdi-arrow-right</v-icon></router-link
+          <router-link to="/" class="show-more-deliveries-link">
+            {{ $t("inventory.loadMore")
+            }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
           >
         </div>
       </v-card>

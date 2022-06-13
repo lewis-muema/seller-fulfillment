@@ -11,8 +11,12 @@
                   : "Products"
               }}
             </th>
-            <th class="text-left table-headers">Progress</th>
-            <th class="text-left table-headers">Action</th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.progress") }}
+            </th>
+            <th class="text-left table-headers">
+              {{ $t("dashboard.action") }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -61,7 +65,8 @@
       </v-table>
       <div class="show-more-deliveries-link">
         <router-link to="/" class="show-more-deliveries-link"
-          >Show more deliveries<v-icon>mdi mdi-arrow-right</v-icon></router-link
+          >{{ $t("dashboard.showMoreDeliveries")
+          }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
         >
       </div>
     </div>
@@ -70,10 +75,10 @@
       <v-icon class="dashboard-links-icon send-products-icon"
         >mdi mdi-truck</v-icon
       >
-      <p>Send inventory to sendy and track the progress here</p>
+      <p>{{ $t("dashboard.sendInventoryToSendy") }}</p>
       <div class="send-inventory-to-sendy-link">
         <router-link to="/"
-          >Send inventory to Sendy
+          >{{ $t("dashboard.sendInventory") }}
           <v-icon>mdi mdi-arrow-right</v-icon></router-link
         >
       </div>

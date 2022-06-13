@@ -13,6 +13,7 @@ export default createStore({
       languages: ["English", "French"],
       defaultLanguage: "English",
       external: [
+        "/auth/",
         "/auth/sign-in",
         "/auth/sign-up",
         "/auth/otp",

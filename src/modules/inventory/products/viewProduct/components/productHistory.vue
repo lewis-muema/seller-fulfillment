@@ -10,7 +10,7 @@
         class="form-select product-options-select"
         aria-label="Default select example"
       >
-        <option selected>All Product options</option>
+        <option selected>{{ $t("inventory.allProductOptions") }}</option>
         <option value="1">
           <v-list-item lines="two">
             <v-list-item-header>
@@ -58,7 +58,9 @@
     </v-table>
     <div v-else class="no-activity-container">
       <v-icon class="history-back-icon">mdi mdi-history</v-icon>
-      <p>No activity at the moment</p>
+      <p>
+        {{ $t("inventory.noActivity") }}
+      </p>
     </div>
   </div>
 </template>

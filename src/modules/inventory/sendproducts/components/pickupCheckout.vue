@@ -7,48 +7,54 @@
           aria-hidden="true"
           @click="$router.back()"
         ></i>
-        <v-card-title class="text-center">Checkout</v-card-title>
+        <v-card-title class="text-center">
+          {{ $t("inventory.checkout") }}</v-card-title
+        >
       </div>
       <div>
         <form>
           <div class="mb-3">
-            <label for="yourName" class="form-label">Pickup Location</label>
+            <label for="yourName" class="form-label">{{
+              $t("inventory.pickupLocation")
+            }}</label>
             <input
               type="text"
               class="form-control"
-              placeholder="Enter your pickup location"
+              :placeholder="$t('inventory.enterPickupLocation')"
             />
           </div>
           <div class="mb-3">
-            <label for="price" class="form-label"
-              >Pick up instrictions(optional)</label
-            >
+            <label for="price" class="form-label">{{
+              $t("inventory.pickupInstructions")
+            }}</label>
             <div>
               <textarea
                 class="form-control"
                 id=""
                 rows="3"
-                placeholder="Enter instructions for the driver picking your products"
+                :placeholder="$t('inventory.enterPickupInstructions')"
               ></textarea>
             </div>
           </div>
           <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone number</label>
+            <label for="phoneNumber" class="form-label">{{
+              $t("inventory.phoneNo")
+            }}</label>
             <vue-tel-input v-bind="sendyPhoneProps"></vue-tel-input>
           </div>
           <span class="add-phone-number"
-            ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>Add
-            another phone number</span
+            ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon
+            >{{ $t("inventory.addAnotherPhoneNo") }}</span
           >
 
-          <div>
-            <span>Pickup Fee</span>
+          <div class="mt-5">
+            <span>{{ $t("inventory.pickupFee") }}</span>
             <span class="checkout-amount">KES 0</span>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
-            <router-link to="/" class="btn btn-primary"
-              >Submit Order</router-link
-            >
+            <router-link to="/" class="btn btn-primary">{{
+              $t("inventory.submitOrder")
+            }}</router-link>
           </div>
         </form>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="product-overall-container">
     <tabs>
       <products-list />
     </tabs>
@@ -17,4 +17,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.product-overall-container {
+  margin: 0px 30px;
+}
+</style>

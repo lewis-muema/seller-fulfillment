@@ -10,43 +10,68 @@
               @click="$router.back()"
             ></i>
 
-            <v-card-title class="text-center">Edit Product </v-card-title>
+            <v-card-title class="text-center">{{
+              $t("inventory.editProduct")
+            }}</v-card-title>
           </div>
           <v-row>
             <v-col cols="">
               <div class="mb-2">
-                <label for="productName" class="form-label"
-                  >Name of the Product</label
-                >
+                <label for="productName" class="form-label">{{
+                  $t("inventory.nameOfProduct")
+                }}</label>
                 <div>
                   <input
                     type="text"
                     class="form-control"
                     value="Shear Butter"
-                    placeholder="Enter name of the Product"
+                    :placeholder="$t('inventory.enterNameOfProduct')"
                     disabled
                   />
                 </div>
               </div>
+
               <div class="mb-2">
-                <label for="price" class="form-label"
-                  >Description(optional)</label
-                >
+                <label for="price" class="form-label">{{
+                  $t("inventory.price")
+                }}</label>
+                <div>
+                  <input type="text" class="form-control" placeholder="KES" />
+                </div>
+              </div>
+              <div class="row mb-2">
+                <label for="price" class="form-label">{{
+                  $t("inventory.weight")
+                }}</label>
+                <div class="col-8">
+                  <input type="text" class="form-control" placeholder="0.0" />
+                </div>
+                <div class="col-4">
+                  <select class="form-select">
+                    <option selected>gms</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-2">
+                <label for="price" class="form-label">{{
+                  $t("inventory.description")
+                }}</label>
                 <div>
                   <textarea
                     class="form-control"
                     id=""
                     rows="3"
-                    placeholder="Enter description of the product"
+                    :placeholder="$t('inventory.productDescription')"
                   ></textarea>
                 </div>
               </div>
               <div class="desktop-product-options-container mt-3 mb-3">
                 <div class="desktop-product-options-content">
-                  <p class="optional-text">Product options (optional)</p>
+                  <p class="optional-text">
+                    {{ $t("inventory.productOptions") }}
+                  </p>
                   <p class="add-product-sizes">
-                    Add options if this product comes in different sizes or
-                    colours
+                    {{ $t("inventory.addOptions") }}
                   </p>
                   <div v-if="productVariants.length">
                     <v-list-item
@@ -60,7 +85,7 @@
                         </v-icon>
                       </v-list-item-avatar>
                       <v-list-item-header>
-                        <v-list-item-title>Shear Butter</v-list-item-title>
+                        <v-list-item-title>{{ name }}</v-list-item-title>
                         <v-list-item-subtitle>
                           {{ variant.product_variant_quantity }} ml
                         </v-list-item-subtitle>
@@ -74,7 +99,7 @@
                     class="add-product-options"
                     @click="showProductOptions = true"
                   >
-                    Add product options
+                    {{ $t("inventory.addProductOptions") }}
                   </p>
                   <product-options
                     :visible="showProductOptions"
@@ -83,16 +108,16 @@
                 </div>
               </div>
               <div class="d-grid">
-                <button class="btn btn-primary mt-2 btn-long">
-                  Save Changes
+                <button class="btn btn-primary mt-2 btn-long mb-2">
+                  {{ $t("inventory.saveChanges") }}
                 </button>
               </div>
             </v-col>
             <v-col cols="6">
-              <p class="ml-5">Image (optional)</p>
+              <p class="ml-5">{{ $t("inventory.image") }}</p>
               <div class="img-container">
                 <i class="mdi mdi-upload" aria-hidden="true"></i>
-                <span class="upload">Upload</span>
+                <span class="upload">{{ $t("inventory.upload") }}</span>
               </div>
             </v-col>
           </v-row>
@@ -110,6 +135,7 @@ export default {
   },
   data() {
     return {
+      name: "Shea Butter",
       productVariants: "",
       showProductOptions: false,
     };
@@ -118,7 +144,6 @@ export default {
     this.$store.commit("setComponent", this.$t("common.productDetails"));
     if (this.$route.params.pV) {
       this.productVariants = JSON.parse(this.$route.params.pV);
-      console.log("from edit", this.productVariants);
     }
   },
   computed: {

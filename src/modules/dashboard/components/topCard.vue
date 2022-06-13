@@ -1,8 +1,8 @@
 <template>
   <div>
     <span class="">
-      <h5>Welcome, Irene! 🎉</h5>
-      <p>Here's what's happening to your account today.</p>
+      <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+      <p>{{ $t("dashboard.whatsHappening") }}</p>
     </span>
     <v-row class="desktop-dashboard-upper-content">
       <v-col cols="11">
@@ -46,6 +46,7 @@
 export default {
   data() {
     return {
+      name: "Irene",
       orders: [
         {
           icon: "mdi mdi-truck",

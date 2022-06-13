@@ -7,74 +7,70 @@
           aria-hidden="true"
           @click="$router.back()"
         ></i>
-        <v-card-title class="text-center">{{
-          $t("inventory.checkout")
-        }}</v-card-title>
+        <v-card-title class="text-center">Checkout</v-card-title>
       </div>
       <div>
         <form>
           <div class="mb-2">
-            <label for="yourName" class="form-label">{{
-              $t("inventory.nameOfCustomer")
-            }}</label>
+            <label for="yourName" class="form-label"
+              >Name of the Customer</label
+            >
             <input
               type="text"
               class="form-control"
-              :placeholder="$t('inventory.enterNameOfCustomer')"
+              placeholder="Enter name of customer"
             />
           </div>
           <div class="mb-2">
-            <label for="yourName" class="form-label">{{
-              $t("inventory.locationOfCustomer")
-            }}</label>
+            <label for="yourName" class="form-label"
+              >Location of the customer</label
+            >
             <input
               type="text"
               class="form-control"
-              :placeholder="$t('inventory.searchDeliveryLocation')"
+              placeholder="Search delivery location"
             />
           </div>
           <div class="mb-2">
-            <label for="phoneNumber" class="form-label">{{
-              $t("inventory.phoneNo")
-            }}</label>
+            <label for="phoneNumber" class="form-label">Phone number</label>
             <vue-tel-input v-bind="sendyPhoneProps"></vue-tel-input>
           </div>
           <span class="add-phone-number mb-3"
-            ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
-            {{ $t("inventory.addAnotherPhoneNo") }}</span
+            ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon> Add
+            another phone number</span
           >
           <div class="mb-2">
-            <label for="price" class="form-label">{{
-              $t("inventory.deliveryInstructions")
-            }}</label>
+            <label for="price" class="form-label"
+              >Delivery instructions(optional)</label
+            >
             <div>
               <textarea
                 class="form-control"
                 id=""
                 rows="2"
-                :placeholder="$t('inventory.enterDeliveryInstructions')"
+                placeholder="Enter instructions for the delivery partner"
               ></textarea>
             </div>
           </div>
           <hr class="mt-3" />
           <div class="mt-3">
-            <p>{{ $t("inventory.payment") }}</p>
+            <p>Payment</p>
             <span class="payment-method">
-              <v-icon class="pr-3">mdi-credit-card-outline</v-icon
-              >{{ $t("inventory.paymentMethod") }}</span
+              <v-icon class="pr-3">mdi-credit-card-outline</v-icon>Select
+              Payment method</span
             >
             <span>
               <v-icon class="payment-method-icon">mdi-chevron-right</v-icon>
             </span>
           </div>
           <div class="mt-3">
-            <span>{{ $t("inventory.amountToPay") }}</span>
+            <span>Amount to Pay</span>
             <span class="checkout-amount">KES 566</span>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-3">
-            <router-link to="/" class="btn btn-primary">{{
-              $t("inventory.submitOrder")
-            }}</router-link>
+            <router-link to="/" class="btn btn-primary"
+              >Submit Order</router-link
+            >
           </div>
         </form>
       </div>

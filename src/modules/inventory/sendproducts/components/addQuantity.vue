@@ -9,9 +9,7 @@
               aria-hidden="true"
               @click="$router.back()"
             ></i>
-            <v-card-title class="text-center">{{
-              $t("inventory.enterQuantity")
-            }}</v-card-title>
+            <v-card-title class="text-center">Enter Quantity</v-card-title>
           </div>
           <div class="products-selected-summary">
             <v-table>
@@ -44,7 +42,7 @@
                     </div>
                   </td>
                   <td class="">
-                    <label>{{ $t("inventory.qty") }}</label>
+                    <label>Qty</label>
                     <input
                       type="number"
                       class="form-control"

@@ -68,6 +68,8 @@
 
 <script>
 import importProductTips from "./importProductTips";
+import { mapMutations } from "vuex";
+
 export default {
   components: { importProductTips },
   data() {
@@ -77,9 +79,10 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.import"));
+    this.setComponent(this.$t("common.import"));
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     uploadFile() {
       this.progressBar = true;
     },

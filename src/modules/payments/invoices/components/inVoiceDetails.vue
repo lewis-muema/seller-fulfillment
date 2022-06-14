@@ -2,46 +2,46 @@
   <div class="invoices-details-container">
     <div>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.billedFrom") }}
         </span>
       </p>
       <p v-for="(item, i) in billedFrom" :key="i">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ item }}
         </span>
       </p>
     </div>
     <div>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.billedTo") }}
         </span>
       </p>
       <p v-for="(item, i) in billedTo" :key="i">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ item }}
         </span>
       </p>
     </div>
     <div>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.invoiceDetails") }}
         </span>
       </p>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.invoiceNumber") }}: {{ invoiceDetails.invoiceNumber }}
         </span>
       </p>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.dateSent") }}: {{ invoiceDetails.dateSent }}
         </span>
       </p>
       <p>
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.dueDate") }}: {{ invoiceDetails.dueDate }}
         </span>
       </p>
@@ -50,7 +50,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
   data() {
     return {
       billedFrom: [
@@ -80,5 +85,6 @@ export default {
   line-height: 25px;
   border: 1px solid #e2e7ed;
   border-radius: 10px;
+  background: white;
 }
 </style>

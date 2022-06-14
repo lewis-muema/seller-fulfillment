@@ -6,14 +6,11 @@
         @click="$router.go(-1)"
       ></i>
       <p class="invoices-title">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.invoice") }} {{ invoice }}
         </span>
       </p>
-      <span
-        v-if="!$store.getters.getLoader"
-        :class="`invoices-${status}-status`"
-      >
+      <span v-if="!getLoader" :class="`invoices-${status}-status`">
         {{ status }}
       </span>
       <v-btn class="invoices-download-btn">
@@ -30,12 +27,16 @@
 import invoiceDetails from "./inVoiceDetails.vue";
 import invoinceContent from "./invoiceContent.vue";
 import transationHistory from "./transactionHistory.vue";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
     invoiceDetails,
     invoinceContent,
     transationHistory,
+  },
+  computed: {
+    ...mapGetters(["getLoader"]),
   },
   data() {
     return {
@@ -44,10 +45,13 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("payments.viewInvoice"));
+    this.setComponent(this.$t("payments.viewInvoice"));
     setTimeout(() => {
-      this.$store.commit("setLoader", "");
+      this.setLoader("");
     }, 3000);
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>
@@ -90,5 +94,6 @@ export default {
   text-transform: inherit;
   letter-spacing: 0px;
   font-size: 16px;
+  box-shadow: none !important;
 }
 </style>

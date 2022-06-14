@@ -22,15 +22,19 @@
 
 <script>
 import productInputs from "../components/productInputs.vue";
+import { mapMutations } from "vuex";
+
 export default {
   components: { productInputs },
   data() {
     return {};
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.addProduct"));
+    this.setComponent(this.$t("common.addProduct"));
   },
-  methods: {},
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+  },
 };
 </script>
 

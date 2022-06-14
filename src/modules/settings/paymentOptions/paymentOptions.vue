@@ -3,9 +3,14 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.paymentOptions"));
+    this.setComponent(this.$t("common.paymentOptions"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

@@ -100,5 +100,9 @@
   "productOption": "Product Option",
   "product": "Product",
   "quantityToSend": "Quantity to send",
-  "availableUnits": "Available units"
+  "availableUnits": "Available units",
+  "units": "units",
+  "editPrice": "Edit price",
+  "updatePrice": "Update price",
+  "pleaseNoteThatThePrice": "Please note that the price change will only be applied to this order."
 }

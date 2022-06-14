@@ -6,22 +6,30 @@
         @click="$router.go(-1)"
       ></i>
       <p class="tracking-order-title">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("deliveries.orderNo") }} {{ orderNo }}
         </span>
         <span>
           <v-menu transition="slide-y-transition" anchor="bottom center">
             <template v-slot:activator="{ props }">
-              <v-btn class="tracking-order-actions-btn" v-bind="props">
+              <v-btn
+                class="tracking-order-actions-btn"
+                append-icon="mdi-chevron-down"
+                v-bind="props"
+              >
                 {{ $t("deliveries.actions") }}
               </v-btn>
             </template>
             <v-list class="users-actions-popup">
-              <v-list-item
-                v-for="(action, i) in $store.getters.getDeliveryActions"
-                :key="i"
-              >
-                <v-list-item-title @click="overlayStatus(i, true)">
+              <v-list-item v-for="(action, i) in getDeliveryActions" :key="i">
+                <v-list-item-title
+                  @click="
+                    setOverlayStatus({
+                      overlay: true,
+                      popup: action.popup,
+                    })
+                  "
+                >
                   {{ $t(action.label) }}
                 </v-list-item-title>
               </v-list-item>
@@ -30,12 +38,14 @@
         </span>
       </p>
       <p class="tracking-order-time-est">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("deliveries.timeOfArrival") }} {{ timeOfArrival }}
         </span>
       </p>
     </div>
-    <failed-delivery />
+    <div class="tracking-order-failed-delivery">
+      <failed-delivery />
+    </div>
     <div class="tracking-section-container">
       <div>
         <timeline />
@@ -45,7 +55,6 @@
         <products />
       </div>
     </div>
-    <overlays :overlayVal="overlay" />
   </div>
 </template>
 
@@ -54,7 +63,7 @@ import timeline from "./components/timeline.vue";
 import deliveryInfo from "./components/deliveryInfo.vue";
 import products from "./components/products.vue";
 import failedDelivery from "./components/failedDelivery.vue";
-import overlays from "./components/overlays.vue";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
@@ -62,7 +71,6 @@ export default {
     deliveryInfo,
     products,
     failedDelivery,
-    overlays,
   },
   data() {
     return {
@@ -71,35 +79,24 @@ export default {
       overlay: false,
     };
   },
-  watch: {
-    "$store.state.overlay": function (val) {
-      this.overlayStatus(val.index, val.status);
-    },
+  computed: {
+    ...mapGetters(["getLoader", "getDeliveryActions"]),
   },
   mounted() {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
-      this.$store.commit(
-        "setComponent",
-        this.$t("deliveries.trackDeliveryToSendy")
-      );
+      this.setComponent(this.$t("deliveries.trackDeliveryToSendy"));
     }
     if (this.$router.options.history.state.back === "/deliveries/customer") {
-      this.$store.commit(
-        "setComponent",
-        this.$t("deliveries.trackDeliveryToCustomer")
-      );
+      this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
     }
   },
   methods: {
-    overlayStatus(index, status) {
-      this.actions = this.$store.getters.getDeliveryActions;
-      this.actions.forEach((row) => {
-        row.trigger = false;
-      });
-      this.actions[index].trigger = status;
-      this.$store.commit("setDeliveryActions", this.actions);
-      this.overlay = status;
-    },
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setOverlayStatus",
+    ]),
   },
 };
 </script>
@@ -136,5 +133,8 @@ export default {
 .cell:not(.blank):not(.disabled).month:hover,
 .cell:not(.blank):not(.disabled).year:hover {
   border: 1px solid #324ba8 !important;
+}
+.tracking-order-failed-delivery {
+  margin: 0px 40px;
 }
 </style>

@@ -10,6 +10,7 @@
 import viewUser from "./components/viewUser.vue";
 import users from "./components/users.vue";
 import userAdded from "./components/userAdded.vue";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: { viewUser, users, userAdded },
@@ -21,15 +22,17 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getUsers"]),
     userRow() {
-      return this.$store.getters.getUsers[this.index];
+      return this.getUsers[this.index];
     },
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.manageUsers"));
-    this.$store.commit("setLoader", "");
+    this.setComponent(this.$t("common.manageUsers"));
+    this.setLoader("");
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     viewUser(index) {
       this.index = index;
       this.viewUsers = true;

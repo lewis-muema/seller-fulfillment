@@ -175,6 +175,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -183,8 +185,9 @@ export default {
   },
   computed: {
     route() {
-      return this.$store.getters.getComponent;
+      return this.getComponent;
     },
+    ...mapGetters(["getComponent"]),
   },
   mounted() {},
   methods: {

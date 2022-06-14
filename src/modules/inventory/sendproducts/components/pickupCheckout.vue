@@ -85,6 +85,7 @@ export default {
 .send-inventory-checkout-card {
   border-color: #e2e7ed;
   margin-left: 15%;
+  background: white;
 }
 .add-phone-number-icon {
   font-size: 12px;

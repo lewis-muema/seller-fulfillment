@@ -6,7 +6,7 @@
           <span>
             <i class="mdi mdi-cash-multiple statements-top-bar-cash-icon"></i>
           </span>
-          <span :class="$store.getters.getLoader">
+          <span :class="getLoader">
             <b>{{ amount }}</b> {{ $t("payments.youWillBeCharged") }}
           </span>
         </p>
@@ -17,16 +17,22 @@
       </div>
     </div>
     <make-payment v-else />
-    <statement-list />
+    <div class="container-border">
+      <statement-list />
+    </div>
   </div>
 </template>
 
 <script>
 import makePayment from "./components/makePayment.vue";
 import statementList from "./components/statementList.vue";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: { makePayment, statementList },
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
   data() {
     return {
       orders: "3",
@@ -36,11 +42,14 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.statements"));
+    this.setComponent(this.$t("common.statements"));
     setTimeout(() => {
-      this.$store.commit("setLoader", "");
+      this.setLoader("");
       document.querySelector(".v-expansion-panel-title").click();
-    }, 3000);
+    }, 1000);
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

@@ -16,6 +16,7 @@
 <script>
 import sidebar from "../../modules/common/sidebar.vue";
 import headers from "../../modules/common/headers.vue";
+import { mapGetters } from "vuex";
 
 export default {
   title: "Seller Fulfilment",
@@ -25,8 +26,9 @@ export default {
     headers,
   },
   computed: {
+    ...mapGetters(["getExternal"]),
     external() {
-      if (this.$store.getters.getExternal.includes(this.$route.path)) {
+      if (this.getExternal.includes(this.$route.path)) {
         return true;
       }
       return false;

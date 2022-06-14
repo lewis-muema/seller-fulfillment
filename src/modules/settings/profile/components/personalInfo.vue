@@ -9,7 +9,7 @@
       v-model="firstName"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="last-name" class="personalInfo-label">
       {{ $t("settings.lastName") }}
@@ -20,7 +20,7 @@
       v-model="lastName"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="email-address" class="personalInfo-label">
       {{ $t("settings.emailAddress") }}
@@ -32,7 +32,7 @@
       variant="outlined"
       disabled
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="phone-number" class="personalInfo-label">
       {{ $t("settings.yourPhoneNumber") }}
@@ -74,8 +74,12 @@ export default {
 .personalInfo-field {
   zoom: 90%;
 }
+.personalInfo-field .v-input__control {
+  background: white;
+}
 .personalInfo-phone {
   height: 50px;
+  background: white;
 }
 .personalInfo-save {
   width: 100%;

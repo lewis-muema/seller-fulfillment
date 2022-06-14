@@ -51,8 +51,8 @@ import ProductsSelect from "./components/productsSelect.vue";
 import AddQuantity from "./components/addQuantity.vue";
 import Checkout from "./components/checkout";
 import { ref } from "vue";
-
 import { mapMutations } from "vuex";
+
 export default {
   components: { ProductsSelect, AddQuantity, Checkout },
   data() {
@@ -68,10 +68,10 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.sendInventory"));
+    this.setComponent(this.$t("common.sendInventory"));
   },
   methods: {
-    ...mapMutations(["setSendProductsRoute"]),
+    ...mapMutations(["setSendProductsRoute", "setComponent"]),
     deliverToCustomer() {
       this.setSendProductsRoute("ProductsToCustomer");
       this.step = 1;
@@ -84,7 +84,7 @@ export default {
     },
     resetScreen() {
       this.step = 0;
-      this.$store.commit("setComponent", this.$t("common.sendInventory"));
+      this.setComponent(this.$t("common.sendInventory"));
     },
   },
 };
@@ -104,6 +104,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: white;
 }
 .send-products-content {
   cursor: pointer;

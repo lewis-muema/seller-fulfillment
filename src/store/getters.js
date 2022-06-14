@@ -33,4 +33,6 @@ export default {
   getSendProductsRoute: (state) => state.sendProductsRoute,
   getProductStep: (state) => state.productStep,
   getOverlayStatus: (state) => state.overlayStatus,
+  getSendyPhoneProps: (state) => state.sendyPhoneProps,
+  getVueTelInputProps: (state) => state.vueTelInputProps,
 };

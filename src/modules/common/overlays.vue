@@ -279,6 +279,79 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="popup === 'fees'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("inventory.fulfillmentFeeCalculation") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'fees')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <div class="fees-row fees-divider">
+          <span>
+            {{ $t("inventory.totalValue") }}
+          </span>
+          <span class="fees-left-override"> {{ currency }} {{ amount }} </span>
+        </div>
+        <div class="fees-row fees-bold">
+          {{ $t("inventory.fees") }}
+        </div>
+        <div class="fees-row">
+          <span>
+            <div>{{ $t("inventory.50K") }}</div>
+            <div class="fees-subtitle">{{ $t("inventory.5%") }}</div>
+          </span>
+          <span class="fees-left-override"> {{ newPrice }} </span>
+        </div>
+        <div class="fees-row fees-divider fee-padding-bottom">
+          <span>
+            <div>{{ $t("inventory.deliveryFee") }}</div>
+            <div class="fees-subtitle">{{ $t("inventory.charged") }}</div>
+          </span>
+          <span class="fees-left-override"> {{ newPrice }} </span>
+        </div>
+        <div class="fees-row fees-bold fees-divider">
+          <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
+          <span class="fees-left-override">{{ currency }} {{ amount }}</span>
+        </div>
+        <p class="fee-margin-top pricing-docs-link">
+          {{ $t("inventory.learnMoreAboutOurPricing") }}
+          <i class="mdi mdi-chevron-right"></i>
+        </p>
+      </div>
+    </div>
+    <div v-if="popup === 'promo'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("inventory.applyPromoCode") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'promo')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <label for="enter-promo" class="edit-info-label">
+          {{ $t("inventory.enterPromoCode") }}
+        </label>
+        <v-text-field
+          class="businessProfile-field"
+          id="enter-promo"
+          v-model="promoCode"
+          variant="outlined"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+      </div>
+      <div>
+        <v-btn class="edit-info-submit-button margin-override">
+          {{ $t("inventory.applyPromoCode") }}
+        </v-btn>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -306,6 +379,7 @@ export default {
       currency: "KES",
       name: "Judy",
       orders: 3,
+      promoCode: "",
       newPrice: "KES 450",
       date: new Date(),
       cancelReasons: [
@@ -453,5 +527,37 @@ export default {
 }
 .margin-override {
   margin: 0px !important;
+}
+.fees-left-override {
+  float: right;
+  margin-left: auto;
+}
+.fees-row {
+  display: flex;
+  height: 70px;
+  align-items: center;
+}
+.fee-margin-top {
+  margin-top: 40px;
+}
+.fee-padding-bottom {
+  padding-bottom: 40px;
+}
+.fees-bold {
+  font-weight: 500;
+}
+.fees-subtitle {
+  font-size: 12px;
+  color: #606266;
+}
+.fees-divider {
+  border-bottom: 1px solid #e2e7ed;
+}
+.pricing-docs-link {
+  color: #324ba8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
 }
 </style>

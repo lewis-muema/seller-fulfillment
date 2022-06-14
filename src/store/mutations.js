@@ -89,4 +89,10 @@ export default {
   setOverlayStatus(state, val) {
     state.overlayStatus = val;
   },
+  setSendyPhoneProps(state, val) {
+    state.sendyPhoneProps = val;
+  },
+  setVueTelInputProps(state, val) {
+    state.vueTelInputProps = val;
+  },
 };

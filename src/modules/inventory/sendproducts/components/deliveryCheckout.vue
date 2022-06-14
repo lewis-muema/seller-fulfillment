@@ -37,7 +37,7 @@
             <label for="phoneNumber" class="form-label">
               {{ $t("inventory.phoneNo") }}
             </label>
-            <vue-tel-input v-bind="sendyPhoneProps"></vue-tel-input>
+            <vue-tel-input v-bind="getSendyPhoneProps"></vue-tel-input>
           </div>
           <span class="add-phone-number mb-3"
             ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -91,6 +91,9 @@ export default {
       amount: 566,
       currency: "KES",
     };
+  },
+  computed: {
+    ...mapGetters(["getSendyPhoneProps"]),
   },
   methods: {
     ...mapMutations(["setProductStep"]),

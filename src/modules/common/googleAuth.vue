@@ -1,13 +1,6 @@
 <template>
   <div>
-    <div id="g_id_onload" :data-client_id="googleClientId"></div>
-    <div
-      class="g_id_signin"
-      data-size="large"
-      data-text="signup_with"
-      data-type="standard"
-      data-width="100"
-    ></div>
+    <div id="google-signin-btn"></div>
   </div>
 </template>
 
@@ -22,7 +15,12 @@ export default {
     },
   },
   mounted() {
-    this.initGA();
+    this.initiateGA(this.googleClientId);
+  },
+  methods: {
+    handleCredentialResponse(response) {
+      console.log(response);
+    },
   },
 };
 </script>

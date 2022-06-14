@@ -86,4 +86,7 @@ export default {
   setProductStep(state, val) {
     state.productStep = val;
   },
+  setUserData(state, val) {
+    state.userData = val;
+  },
 };

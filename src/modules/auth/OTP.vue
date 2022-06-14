@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/onboarding" class="btn btn-primary">{{
+            <router-link to="/auth/complete-setup" class="btn btn-primary">{{
               $t("auth.confirmCode")
             }}</router-link>
           </div>

@@ -52,7 +52,7 @@
           class="flex-grow-0 flex-shrink-1"
         >
           <v-card class="mx-auto mt-5" width="80%">
-            <div class="dropdown language-dropdown">
+            <!-- <div class="dropdown language-dropdown">
               <button
                 class="btn dropdown-toggle"
                 type="button"
@@ -67,6 +67,14 @@
                   <a class="dropdown-item" href="#">{{ $t("auth.french") }}</a>
                 </li>
               </ul>
+            </div> -->
+            <div class="edit-product-weight-right">
+              <v-select
+                class="edit-product-weight-field"
+                :items="languages"
+                v-model="language"
+                outlined
+              ></v-select>
             </div>
             <router-view></router-view>
           </v-card>
@@ -86,6 +94,9 @@ export default {
     Pagination,
   },
   data: () => ({
+    languages: ["English", "French"],
+    language: "English",
+    region: "",
     slides: [
       {
         content:

@@ -1,18 +1,12 @@
 <template>
   <div>
-    <div id="g_id_onload" :data-client_id="googleClientId"></div>
-    <div
-      class="g_id_signin"
-      data-size="large"
-      data-text="signup_with"
-      data-type="standard"
-      data-width="100"
-    ></div>
+    <div id="google-signin-btn"></div>
   </div>
 </template>
 
 <script>
 import googleAuthInit from "../../mixins/google-auth";
+import jwt_decode from "jwt-decode";
 
 export default {
   mixins: [googleAuthInit],
@@ -22,7 +16,14 @@ export default {
     },
   },
   mounted() {
-    this.initGA();
+    this.initiateGA(this.googleClientId);
+  },
+  methods: {
+    handleCredentialResponse(response) {
+      let userData = jwt_decode(response.credential);
+      this.$emit("userData", userData);
+      console.log(userData);
+    },
   },
 };
 </script>

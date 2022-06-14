@@ -8,12 +8,16 @@
 <script>
 import Tabs from "./components/tabs.vue";
 import Deliveries from "./components/deliveries.vue";
+import { mapMutations } from "vuex";
 
 export default {
   components: { Tabs, Deliveries },
   data: () => ({}),
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.deliveriesToCustomers"));
+    this.setComponent(this.$t("common.deliveriesToCustomers"));
+  },
+  methods: {
+    ...mapMutations(["setComponent"]),
   },
 };
 </script>

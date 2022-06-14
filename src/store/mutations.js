@@ -86,4 +86,7 @@ export default {
   setProductStep(state, val) {
     state.productStep = val;
   },
+  setOverlayStatus(state, val) {
+    state.overlayStatus = val;
+  },
 };

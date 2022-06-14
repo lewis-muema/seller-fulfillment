@@ -9,10 +9,15 @@
 <script>
 import tabs from "@/modules/inventory/products/components/tabs.vue";
 import productsList from "@/modules/inventory/products/components/productsList";
+import { mapMutations } from "vuex";
+
 export default {
   components: { tabs, productsList },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.products"));
+    this.setComponent(this.$t("common.products"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

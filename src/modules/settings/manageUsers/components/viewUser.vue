@@ -95,7 +95,7 @@
             </p>
             <p class="resend-invite-description">
               <span>{{ userRow.emailAddress }}</span>
-              <span class="products-edit" :class="$store.getters.getLoader">
+              <span class="products-edit" :class="getLoader">
                 <i class="mdi mdi-pencil"></i>
                 {{ $t("settings.edit") }}
               </span>
@@ -111,12 +111,17 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props: {
     userRow: {
       type: Object,
       required: true,
     },
+  },
+  computed: {
+    ...mapGetters(["getLoader"]),
   },
   data() {
     return {
@@ -146,6 +151,7 @@ export default {
   padding: 30px;
   border-radius: 5px;
   margin-top: 60px;
+  background: white;
 }
 .view-users-details-actions {
   margin-left: auto;
@@ -181,6 +187,7 @@ export default {
   padding: 15px;
   border: 2px solid #9b101c;
   border-radius: 5px;
+  background: white;
 }
 .view-users-details-panel-banner-icon {
   font-size: 30px;

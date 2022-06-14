@@ -6,11 +6,15 @@
 
 <script>
 import logs from "./components/logs.vue";
+import { mapMutations } from "vuex";
 
 export default {
   components: { logs },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.activityLog"));
+    this.setComponent(this.$t("common.activityLog"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

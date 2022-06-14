@@ -32,16 +32,23 @@ export default createStore({
         {
           label: "deliveries.getDeliveryCode",
           trigger: false,
+          popup: "deliveryCode",
         },
         {
           label: "deliveries.rescheduleOrder",
           trigger: false,
+          popup: "reschedule",
         },
         {
           label: "deliveries.cancelOrder",
           trigger: false,
+          popup: "cancel",
         },
       ],
+      overlayStatus: {
+        overlay: false,
+        popup: "",
+      },
       tab: "All",
       loader: "loading-text",
       overlay: false,

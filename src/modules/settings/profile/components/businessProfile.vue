@@ -9,7 +9,7 @@
       v-model="businessName"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="industry" class="businessProfile-label">
       {{ $t("settings.industry") }}
@@ -31,7 +31,7 @@
       :label="$t('settings.enterTaxIdentificationNumber')"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="physical-address" class="businessProfile-label">
       {{ $t("settings.defaultPhysicalAddress") }}
@@ -54,7 +54,7 @@
       :label="$t('settings.enterInstagramUrl')"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="facebookPage" class="businessProfile-label">
       {{ $t("settings.facebookPage") }}
@@ -66,7 +66,7 @@
       :label="$t('settings.enterFacebookPageUrl')"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <label for="website" class="businessProfile-label">
       {{ $t("settings.website") }}
@@ -78,7 +78,7 @@
       :label="$t('settings.enterWebsiteLink')"
       variant="outlined"
       clearable
-      clear-icon="mdi-cancel"
+      clear-icon="mdi-close"
     ></v-text-field>
     <v-btn class="businessProfile-save">
       {{ $t("settings.saveChanges") }}
@@ -121,8 +121,12 @@ export default {
 .businessProfile-field {
   zoom: 90%;
 }
+.businessProfile-field .v-input__control {
+  background: white;
+}
 .businessProfile-phone {
   height: 50px;
+  background: white;
 }
 .businessProfile-save {
   width: 100%;

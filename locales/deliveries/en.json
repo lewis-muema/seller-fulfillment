@@ -63,6 +63,7 @@
   "weTriedToReachYourCustomer": "We tried to reach your customer to deliver their items, but we couldn’t reach them. We will attempt delivery again on Thur, 28th April or you can reschedule delivery to a time that works ",
   "rescheduleDelivery": "Reschedule delivery",
   "deliveryAttempt":"Delivery attempted",
+  "weAttemptedToPickUpYourItems": "We attempted to pick up your items",
   "pickATime": "Pick a date that works for your customer",
   "submit": "Submit Changes",
   "attempts": "attempts",
@@ -77,5 +78,7 @@
   "whyCancel": "Why do you want to cancel this order?",
   "orderIsNotReady": "My order is not ready",
   "wrongLocation": "Wrong location",
-  "duplicateOrder": "Duplicate order"
+  "duplicateOrder": "Duplicate order",
+  "editDeliveryInfo": "Edit delivery info",
+  "enterInstructionsForTheDeliveryPartner": "Enter instructions for the delivery partner"
 }

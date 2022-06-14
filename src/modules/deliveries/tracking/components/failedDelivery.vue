@@ -3,12 +3,12 @@
     <i class="mdi mdi-alert-circle-outline failed-delivery-warning-icon"></i>
     <div>
       <p class="delivery-failed-title">
-        <span :class="$store.getters.getLoader">
-          {{ $t("deliveries.deliveryAttempt") }}
+        <span :class="getLoader">
+          {{ $t("deliveries.weAttemptedToPickUpYourItems") }}
         </span>
       </p>
       <p class="delivery-failed-description">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("deliveries.weTriedToReachYourCustomer") }}
         </span>
       </p>
@@ -22,10 +22,19 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
     showTimepicker() {
-      this.$store.commit("setOverlay", { index: 1, status: true });
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "reschedule",
+      });
     },
   },
 };
@@ -37,8 +46,8 @@ export default {
   border: 1px solid #9b101c;
   padding: 12px;
   border-radius: 10px;
-  margin: 30px 70px;
-  width: 87%;
+  margin: 30px;
+  width: 92%;
 }
 .failed-delivery-warning-icon {
   color: #9b101c;
@@ -64,5 +73,6 @@ export default {
 }
 .delivery-failed-description {
   font-size: 16px;
+  width: 90%;
 }
 </style>

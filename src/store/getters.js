@@ -32,4 +32,5 @@ export default {
   getSelectedProducts: (state) => state.selectedProducts,
   getSendProductsRoute: (state) => state.sendProductsRoute,
   getProductStep: (state) => state.productStep,
+  getOverlayStatus: (state) => state.overlayStatus,
 };

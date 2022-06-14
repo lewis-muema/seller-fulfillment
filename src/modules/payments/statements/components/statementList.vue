@@ -1,31 +1,32 @@
 <template>
   <div>
-    <div class="statements-info-bar-container">
-      <el-date-picker
-        class="statements-info-bar-filter-from"
-        v-model="from"
-        type="date"
-        :placeholder="$t('payments.from')"
-      />
-      <el-date-picker
-        class="statements-info-bar-filter-to"
-        v-model="to"
-        type="date"
-        :placeholder="$t('payments.to')"
-      />
-      <i class="mdi mdi-magnify paymnets-info-bar-search"></i>
-      <div>
+    <div class="statements-info-bar-container-list">
+      <div class="statement-info-bar-filter">
+        <label for="range" class="deliveries-date-label">
+          {{ $t("deliveries.filterByCompletionDate") }}
+        </label>
+        <el-date-picker
+          class="deliveries-date-picker"
+          id="range"
+          v-model="range"
+          type="daterange"
+          :start-placeholder="$t('deliveries.startDate')"
+          :end-placeholder="$t('deliveries.endDate')"
+        />
+      </div>
+      <div class="statement-info-bar-download">
         <v-menu transition="slide-y-transition" anchor="bottom center">
           <template v-slot:activator="{ props }">
-            <v-btn class="statements-actions-btn" v-bind="props">
+            <v-btn
+              class="statements-actions-btn"
+              append-icon="mdi-chevron-down"
+              v-bind="props"
+            >
               {{ $t("payments.download") }}
             </v-btn>
           </template>
           <v-list class="users-actions-popup">
-            <v-list-item
-              v-for="(action, i) in $store.getters.getDownloadActions"
-              :key="i"
-            >
+            <v-list-item v-for="(action, i) in getDownloadActions" :key="i">
               <v-list-item-title>
                 {{ $t(action.label) }}
               </v-list-item-title>
@@ -34,20 +35,17 @@
         </v-menu>
       </div>
     </div>
-    <div v-if="$store.getters.getStatements.length > 0">
+    <div v-if="getStatements.length > 0">
       <v-expansion-panels multiple class="statements-expansion-panel">
-        <v-expansion-panel
-          v-for="(item, i) in $store.getters.getStatements"
-          :key="i"
-        >
+        <v-expansion-panel v-for="(item, i) in getStatements" :key="i">
           <v-expansion-panel-title>
             <div class="statements-expansion-title">
-              <p :class="$store.getters.getLoader">
+              <p :class="getLoader">
                 {{ item.date }}
               </p>
               <p
                 class="statements-expansion-title-bottom-row"
-                :class="$store.getters.getLoader"
+                :class="getLoader"
               >
                 <span
                   v-if="item.amount"
@@ -71,34 +69,28 @@
                   class="statements-table-row"
                 >
                   <td class="statements-table-icon-row">
-                    <span
-                      v-if="$store.getters.getLoader"
-                      :class="$store.getters.getLoader"
-                    >
+                    <span v-if="getLoader" :class="getLoader">
                       {{ row.icon }}
                     </span>
                     <i v-else :class="`mdi ${row.icon}`"></i>
                   </td>
                   <td class="statements-table-description-row">
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{ row.description }}
                     </span>
                   </td>
                   <td class="statements-table-item-row">
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{ row.items }}
                     </span>
                   </td>
                   <td class="statements-table-date-row">
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{ row.date }}
                     </span>
                   </td>
                   <td class="statements-table-status-row">
-                    <span
-                      v-if="$store.getters.getLoader"
-                      :class="$store.getters.getLoader"
-                    >
+                    <span v-if="getLoader" :class="getLoader">
                       {{ row.class }}
                     </span>
                     <span v-else :class="`statements-${row.class}-status`">
@@ -106,7 +98,7 @@
                     >
                   </td>
                   <td class="statements-table-price-row">
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{ row.price }}
                     </span>
                   </td>
@@ -136,20 +128,26 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       from: "",
       to: "",
+      range: "",
     };
+  },
+  computed: {
+    ...mapGetters(["getLoader", "getDownloadActions", "getStatements"]),
   },
 };
 </script>
 
 <style>
-.statements-info-bar-container {
+.statements-info-bar-container-list {
   display: grid;
-  grid-template-columns: 15% 15% 5% 65%;
+  grid-template-columns: 30% 70%;
 }
 .statements-info-bar-filter-from,
 .statements-info-bar-filter-to {
@@ -218,6 +216,7 @@ export default {
 }
 .statements-expansion-title {
   text-align: left;
+  margin: 15px;
 }
 .statements-expansion-title-bottom-row {
   color: #606266;
@@ -228,8 +227,8 @@ export default {
   margin-right: 15px;
 }
 .statements-expansion-panel {
-  width: 95%;
-  margin-top: 30px;
+  width: calc(100% - 60px);
+  margin: 30px;
 }
 .statements-empty-title {
   font-weight: 600;
@@ -241,6 +240,21 @@ export default {
 }
 .statements-actions-btn {
   float: right;
-  margin-right: 8%;
+  margin-right: 30px;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  width: 140px;
+  box-shadow: none !important;
+  border: 1px solid #dcdfe6;
+  color: #303133 !important;
+  height: 50px !important;
+}
+.statement-info-bar-filter {
+  padding-left: 30px;
+}
+.statement-info-bar-download {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 </style>

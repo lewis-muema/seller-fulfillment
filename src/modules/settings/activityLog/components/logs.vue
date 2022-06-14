@@ -3,7 +3,7 @@
     <div class="activity-log-container-top">
       <el-select v-model="user" class="m-2" placeholder="All users">
         <el-option
-          v-for="(user, i) in $store.getters.getUsers"
+          v-for="(user, i) in getUsers"
           :key="i"
           :label="user.name"
           :value="user.emailAddress"
@@ -28,39 +28,33 @@
         <thead>
           <tr>
             <th class="text-left users-name-head">
-              <span :class="$store.getters.getLoader">{{
-                $t("settings.date")
-              }}</span>
+              <span :class="getLoader">{{ $t("settings.date") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("settings.user")
-              }}</span>
+              <span :class="getLoader">{{ $t("settings.user") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("settings.action")
-              }}</span>
+              <span :class="getLoader">{{ $t("settings.action") }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
             class="activity-log-column"
-            v-for="(log, i) in $store.getters.getActivityLog"
+            v-for="(log, i) in getActivityLog"
             :key="i"
             @click="viewUser(i)"
           >
             <td class="users-name-row users-name-head">
-              <span :class="$store.getters.getLoader">{{ log.date }}</span>
+              <span :class="getLoader">{{ log.date }}</span>
             </td>
             <td class="users-number-row">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ log.user }}
               </span>
             </td>
             <td class="users-email-row">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ log.action }}
               </span>
             </td>
@@ -72,6 +66,8 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -79,8 +75,14 @@ export default {
       range: "",
     };
   },
+  computed: {
+    ...mapGetters(["getUsers", "getLoader", "getActivityLog"]),
+  },
   mounted() {
-    this.$store.commit("setLoader", "");
+    this.setLoader("");
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>
@@ -93,6 +95,7 @@ export default {
   padding-top: 20px;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
+  background: white;
 }
 .activity-log-container-top {
   height: 90px;

@@ -19,7 +19,7 @@
           v-model="name"
           variant="outlined"
           clearable
-          clear-icon="mdi-cancel"
+          clear-icon="mdi-close"
         ></v-text-field>
         <label for="phone" class="edit-user-label">
           {{ $t("settings.phoneNumber") }}
@@ -41,7 +41,7 @@
           variant="outlined"
           disabled
           clearable
-          clear-icon="mdi-cancel"
+          clear-icon="mdi-close"
         ></v-text-field>
         <v-btn class="edit-user-save">
           {{ $t("deliveries.submit") }}
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -63,7 +65,10 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("settings.addAUser"));
+    this.setComponent(this.$t("settings.addAUser"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

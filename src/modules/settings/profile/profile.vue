@@ -35,6 +35,7 @@
 import personalInfo from "./components/personalInfo.vue";
 import businessProfile from "./components/businessProfile.vue";
 import changeLanguage from "./components/changeLanguage.vue";
+import { mapMutations } from "vuex";
 
 export default {
   components: { personalInfo, businessProfile, changeLanguage },
@@ -44,7 +45,10 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.profile"));
+    this.setComponent(this.$t("common.profile"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>
@@ -73,5 +77,6 @@ export default {
 .profile-active-nav {
   border: 1px solid #dcdfe6;
   border-right: 5px solid #324ba8;
+  background: #dcdfe6;
 }
 </style>

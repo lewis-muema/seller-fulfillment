@@ -1,6 +1,6 @@
 <template>
   <div class="header-container">
-    <div class="header-section-left">{{ $store.getters.getComponent }}</div>
+    <div class="header-section-left">{{ getComponent }}</div>
     <div class="header-section-right">
       <div></div>
       <div class="header-button-section">
@@ -122,6 +122,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -193,6 +195,9 @@ export default {
       rail: false,
     };
   },
+  computed: {
+    ...mapGetters(["getComponent"]),
+  },
   methods: {
     showLangs(lang) {
       this.lang = lang.title;
@@ -211,6 +216,7 @@ export default {
   grid-template-columns: auto auto;
   height: 60px;
   border-bottom: 1px solid #dededead;
+  background: white;
 }
 .header-section-left {
   margin: auto 30px;

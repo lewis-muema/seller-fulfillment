@@ -1,77 +1,49 @@
 <template>
   <div class="products-container">
     <p class="products-title">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("deliveries.products") }}
       </span>
-      <span class="products-edit" :class="$store.getters.getLoader">
+      <span class="products-edit" :class="getLoader">
         <i class="mdi mdi-pencil"></i>
         {{ $t("deliveries.edit") }}
       </span>
     </p>
     <p class="products-data">
-      <span :class="$store.getters.getLoader">
-        {{ $store.getters.getProducts.name }}
+      <span :class="getLoader">
+        {{ getProducts.name }}
       </span>
     </p>
     <p class="products-view">
-      <span :class="$store.getters.getLoader" @click="viewProducts = true">
+      <span
+        :class="getLoader"
+        @click="
+          setOverlayStatus({
+            overlay: true,
+            popup: 'viewProducts',
+          })
+        "
+      >
         {{ $t("deliveries.viewProducts") }}
       </span>
     </p>
-    <v-overlay v-model="viewProducts" class="align-center justify-center">
-      <div class="view-products-container">
-        <div class="view-products-section">
-          <p class="view-products-label">
-            {{ $t("deliveries.products") }}
-          </p>
-          <i
-            @click="viewProducts = false"
-            class="mdi mdi-close view-products-close"
-          ></i>
-        </div>
-        <div
-          v-for="(product, i) in $store.getters.getData.data.products"
-          :key="i"
-        >
-          <div class="view-products-row-top">
-            <v-badge
-              color="#324BA8"
-              text-color="white"
-              max="10"
-              :content="`${product.product_unit_count}`"
-            >
-              <img
-                :src="product.product_image_link"
-                class="view-products-img"
-                alt=""
-              />
-            </v-badge>
-            <div class="view-products-row-top-left">
-              <div class="view-products-row-top-name">
-                {{ product.product_name }}
-              </div>
-              <div class="view-products-row-top-variant">
-                {{ product.product_variant_description }}
-              </div>
-            </div>
-            <p class="view-products-row-top-right">
-              {{ product.product_unit_currency }}
-              {{ product.product_unit_price }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </v-overlay>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       viewProducts: false,
     };
+  },
+  computed: {
+    ...mapGetters(["getLoader", "getProducts"]),
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
   },
 };
 </script>
@@ -86,6 +58,7 @@ export default {
   margin-bottom: 25px;
   line-height: 25px;
   font-size: 14px;
+  background: white;
 }
 .products-title {
   font-size: 16px;
@@ -123,7 +96,7 @@ export default {
   display: flex;
 }
 .view-products-label {
-  font-size: 16px;
+  font-size: 20px;
   width: 60%;
   font-weight: 500;
 }

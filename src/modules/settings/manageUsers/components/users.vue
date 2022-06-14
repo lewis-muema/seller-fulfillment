@@ -24,57 +24,46 @@
           <thead>
             <tr>
               <th class="text-left users-name-head">
-                <span :class="$store.getters.getLoader">{{
-                  $t("settings.name")
-                }}</span>
+                <span :class="getLoader">{{ $t("settings.name") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("settings.phoneNumber")
-                }}</span>
+                <span :class="getLoader">{{ $t("settings.phoneNumber") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
+                <span :class="getLoader">{{
                   $t("settings.emailAddress")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("settings.status")
-                }}</span>
+                <span :class="getLoader">{{ $t("settings.status") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("settings.actions")
-                }}</span>
+                <span :class="getLoader">{{ $t("settings.actions") }}</span>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
               class="users-table-column"
-              v-for="(user, i) in $store.getters.getUsers"
+              v-for="(user, i) in getUsers"
               :key="i"
               @click="viewUser(i)"
             >
               <td class="users-name-row users-name-head">
-                <span :class="$store.getters.getLoader">{{ user.name }}</span>
+                <span :class="getLoader">{{ user.name }}</span>
               </td>
               <td class="users-number-row">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ user.phoneNumber }}
                 </span>
               </td>
               <td class="users-email-row">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ user.emailAddress }}
                 </span>
               </td>
               <td class="users-status-row">
-                <span
-                  v-if="$store.getters.getLoader"
-                  :class="$store.getters.getLoader"
-                >
+                <span v-if="getLoader" :class="getLoader">
                   {{ user.status }}
                 </span>
                 <span v-else :class="`users-${user.status}-status`">
@@ -104,7 +93,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["getLoader", "getUsers"]),
+  },
   methods: {
     viewUser(i) {
       this.$emit("viewUser", i);
@@ -143,6 +137,7 @@ export default {
   margin: 30px;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
+  background: white;
 }
 .users-name-head {
   padding-left: 60px !important;

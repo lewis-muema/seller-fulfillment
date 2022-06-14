@@ -47,6 +47,7 @@ export default {
 .desktop-quick-links-card {
   border-color: #e2e7ed;
   height: 48px;
+  background: white;
 }
 .desktop-quick-links-icon {
   height: 16px;

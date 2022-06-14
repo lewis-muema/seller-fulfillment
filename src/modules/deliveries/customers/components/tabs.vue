@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   props: {
     parent: {
@@ -90,12 +92,14 @@ export default {
   }),
   computed: {
     activeTab() {
-      return this.$store.getters.getTab;
+      return this.getTab;
     },
+    ...mapGetters(["getTab"]),
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     passActiveTab(tab) {
-      this.$store.commit("setTab", tab);
+      this.setTab(tab);
     },
   },
 };

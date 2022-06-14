@@ -50,7 +50,7 @@
 import productDetailsTabs from "@/modules/inventory/products/viewProduct/components/productDetailsTabs";
 import productOverview from "@/modules/inventory/products/viewProduct/components/productOverview";
 import productHistory from "@/modules/inventory/products/viewProduct/components/productHistory";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: { productDetailsTabs, productOverview, productHistory },
   data() {
@@ -73,7 +73,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.viewProduct"));
+    this.setComponent(this.$t("common.viewProduct"));
     if (this.$route.params.product !== undefined) {
       this.product = JSON.parse(this.$route.params.product);
     }
@@ -85,6 +85,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     trigger(action) {
       if (action.link) {
         this.$router.push(action.link);
@@ -100,6 +101,7 @@ export default {
   border-color: #e2e7ed;
   margin-top: 50px !important;
   height: auto;
+  background: white;
 }
 .view-product-dropdown-list a {
   color: #606266;

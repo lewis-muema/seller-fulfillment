@@ -87,6 +87,18 @@
                       {{ selectedProduct.product_currency }}
                       {{ selectedProduct.product_price }}
                     </div>
+                    <div
+                      @click="
+                        setOverlayStatus({
+                          overlay: true,
+                          popup: 'editPrice',
+                        })
+                      "
+                      class="add-quantity-price-tag"
+                    >
+                      <i class="mdi mdi-tag-multiple"></i>
+                      {{ $t("inventory.editPrice") }}
+                    </div>
                   </td>
                   <td v-if="getRouteName === 'ProductsToCustomer'">
                     <div class="available-units">
@@ -179,7 +191,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setProductStep", "setSelectedProducts"]),
+    ...mapMutations([
+      "setProductStep",
+      "setSelectedProducts",
+      "setOverlayStatus",
+    ]),
     addProductStep(val) {
       if ((this.totalProducts > 0 && val === 2) || val === 0) {
         this.setProductStep(val);
@@ -213,6 +229,7 @@ export default {
 <style>
 .items-selected-container {
   margin: 30px 20px 30px;
+  background: white;
 }
 
 .items-selected-card {
@@ -246,6 +263,10 @@ export default {
   align-items: center;
 }
 .product-select-remove-product {
+  color: #909399;
+  cursor: pointer;
+}
+.add-quantity-price-tag {
   color: #909399;
   cursor: pointer;
 }

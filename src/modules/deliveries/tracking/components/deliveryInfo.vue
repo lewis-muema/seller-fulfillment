@@ -1,7 +1,7 @@
 <template>
   <div class="delivery-info-container">
     <p class="delivery-info-title">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{
           parent === "sendy"
             ? $t("deliveries.pickupInfo")
@@ -10,15 +10,15 @@
       </span>
       <span
         class="delivery-info-edit"
-        @click="editInfo = true"
-        :class="$store.getters.getLoader"
+        @click="overlayStatus(true)"
+        :class="getLoader"
       >
         <i class="mdi mdi-pencil"></i>
         {{ $t("deliveries.edit") }}
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{
           parent === "sendy"
             ? $t("deliveries.pickUpLocation")
@@ -27,16 +27,12 @@
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="$store.getters.getLoader">
-        {{
-          parent === "sendy"
-            ? $store.getters.getPickupInfo.location
-            : $store.getters.getDeliveryInfo.name
-        }}
+      <span :class="getLoader">
+        {{ parent === "sendy" ? getPickupInfo.location : getDeliveryInfo.name }}
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{
           parent === "sendy"
             ? $t("deliveries.pickUpInstructions")
@@ -45,114 +41,69 @@
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{
           parent === "sendy"
-            ? $store.getters.getPickupInfo.instructions
-            : $store.getters.getDeliveryInfo.location
+            ? getPickupInfo.instructions
+            : getDeliveryInfo.location
         }}
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("deliveries.phoneNumber") }}
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{
           parent === "sendy"
-            ? $store.getters.getPickupInfo.phoneNumber
-            : $store.getters.getDeliveryInfo.phoneNumber
+            ? getPickupInfo.phoneNumber
+            : getDeliveryInfo.phoneNumber
         }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-label">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("deliveries.instructions") }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-data">
-      <span :class="$store.getters.getLoader">
-        {{ $store.getters.getDeliveryInfo.instructions }}
+      <span :class="getLoader">
+        {{ getDeliveryInfo.instructions }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-label">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("deliveries.paymentMethod") }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-data">
-      <span :class="$store.getters.getLoader">
-        {{ $store.getters.getDeliveryInfo.payment }}
+      <span :class="getLoader">
+        {{ getDeliveryInfo.payment }}
       </span>
     </p>
-    <v-overlay v-model="editInfo" class="align-center justify-center">
-      <div class="view-products-container">
-        <div class="view-products-section">
-          <p class="view-products-label">
-            {{ $t("deliveries.editPickUpInfo") }}
-          </p>
-          <i
-            @click="editInfo = false"
-            class="mdi mdi-close view-products-close"
-          ></i>
-        </div>
-        <label for="pick-up" class="edit-info-label">
-          {{ $t("deliveries.pickUpLocation") }}
-        </label>
-        <GMapAutocomplete
-          id="pick-up"
-          class="businessProfile-address"
-          :placeholder="$t('settings.searchLocation')"
-          @place_changed="setPlace"
-        >
-        </GMapAutocomplete>
-        <label for="instructions" class="edit-info-label">
-          {{ $t("deliveries.pickUpInstructionsOptional") }}
-        </label>
-        <textarea
-          name=""
-          :placeholder="$t('deliveries.enterInstructions')"
-          class="edit-info-instructions"
-          id="instructions"
-          cols="30"
-          rows="5"
-        ></textarea>
-        <label for="phone-number" class="edit-info-label">
-          {{ $t("deliveries.pickUpInstructionsOptional") }}
-        </label>
-        <vue-tel-input
-          class="invite-phone"
-          id="phone-number"
-          v-model="phone"
-          mode="international"
-        ></vue-tel-input>
-        <p class="edit-info-add-phone">
-          <i class="mdi mdi-plus"></i>
-          {{ $t("deliveries.addAnotherPhoneNumber") }}
-        </p>
-        <v-btn class="edit-info-submit-button">
-          {{ $t("deliveries.submit") }}
-        </v-btn>
-      </div>
-    </v-overlay>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       parent: "",
+      overlay: false,
       editInfo: false,
-      phone: "",
     };
+  },
+  computed: {
+    ...mapGetters(["getLoader", "getDeliveryInfo", "getPickupInfo"]),
   },
   mounted() {
     setTimeout(() => {
-      this.$store.commit("setLoader", "");
-    }, 3000);
+      this.setLoader("");
+    }, 1000);
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.parent = "sendy";
     } else {
@@ -160,8 +111,24 @@ export default {
     }
   },
   methods: {
-    setPlace(path) {
-      console.log(path);
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setOverlayStatus",
+    ]),
+    overlayStatus(overlay) {
+      if (parent === "sendy") {
+        this.setOverlayStatus({
+          overlay,
+          popup: "pickupInfo",
+        });
+      } else {
+        this.setOverlayStatus({
+          overlay,
+          popup: "deliveryInfo",
+        });
+      }
     },
   },
 };
@@ -177,6 +144,7 @@ export default {
   margin-bottom: 25px;
   line-height: 25px;
   font-size: 14px;
+  background: white;
 }
 .delivery-info-title {
   font-size: 16px;
@@ -200,6 +168,7 @@ export default {
 }
 .edit-info-label {
   font-size: 14px;
+  font-weight: 500;
 }
 .edit-info-instructions {
   border: 1px solid #c0c4cc;
@@ -209,10 +178,11 @@ export default {
   margin-bottom: 30px;
 }
 .edit-info-add-phone {
-  color: #606266;
+  color: #324ba8;
   font-size: 14px;
   margin: 10px 0px;
   cursor: pointer;
+  font-weight: 500;
 }
 .edit-info-submit-button {
   margin-top: 40px;

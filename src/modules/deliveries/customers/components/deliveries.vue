@@ -1,9 +1,6 @@
 <template>
   <div class="deliveries-container">
-    <div
-      class="deliveries-container-inner"
-      v-if="$store.getters.getDeliveries.length > 0"
-    >
+    <div class="deliveries-container-inner" v-if="getDeliveries.length > 0">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
           <v-text-field
@@ -33,41 +30,33 @@
           <thead>
             <tr>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("deliveries.products")
-                }}</span>
+                <span :class="getLoader">{{ $t("deliveries.products") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("deliveries.progress")
-                }}</span>
+                <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
+                <span :class="getLoader">{{
                   $t("deliveries.deliveryDate")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("deliveries.actions")
-                }}</span>
+                <span :class="getLoader">{{ $t("deliveries.actions") }}</span>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
               class="deliveries-table-column"
-              v-for="(item, i) in $store.getters.getDeliveries"
+              v-for="(item, i) in getDeliveries"
               :key="i"
             >
               <td class="deliveries-product-row">
-                <span :class="$store.getters.getLoader">{{
-                  item.products
-                }}</span>
+                <span :class="getLoader">{{ item.products }}</span>
               </td>
               <td class="deliveries-progress-row">
                 <p class="deliveries-progress-row-top">
-                  <span :class="$store.getters.getLoader">
+                  <span :class="getLoader">
                     {{ item.progress.status }}
                   </span>
                 </p>
@@ -80,12 +69,12 @@
               </td>
               <td class="deliveries-date-row">
                 <p class="deliveries-date-row-top">
-                  <span :class="$store.getters.getLoader">
+                  <span :class="getLoader">
                     {{ item.deliveryDate.date }}
                   </span>
                 </p>
                 <p class="deliveries-date-row-bottom">
-                  <span :class="$store.getters.getLoader">
+                  <span :class="getLoader">
                     {{ item.deliveryDate.time }}
                   </span>
                 </p>
@@ -95,7 +84,7 @@
                   class="deliveries-action-row-top"
                   @click="navigate(item.actions.link)"
                 >
-                  <span :class="$store.getters.getLoader">
+                  <span :class="getLoader">
                     {{ item.actions.title }}
                   </span>
                 </p>
@@ -124,6 +113,8 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   data: () => ({
     deliveries: [],
@@ -131,10 +122,14 @@ export default {
   }),
   mounted() {
     setTimeout(() => {
-      this.$store.commit("setLoader", "");
+      this.setLoader("");
     }, 3000);
   },
+  computed: {
+    ...mapGetters(["getDeliveries", "getLoader"]),
+  },
   methods: {
+    ...mapMutations(["setComponent", "setLoader"]),
     navigate(route) {
       this.$router.push(route);
     },
@@ -225,5 +220,6 @@ export default {
 }
 .deliveries-container-inner {
   width: 100%;
+  background: white;
 }
 </style>

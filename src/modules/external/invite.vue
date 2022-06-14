@@ -10,7 +10,7 @@
     <div class="invite-fields-container">
       <v-select
         class="invite-lang-field"
-        :items="$store.getters.getLanguages"
+        :items="getLanguages"
         v-model="defaultLanguage"
         outlined
       ></v-select>
@@ -27,7 +27,7 @@
         :label="$t('external.nameOfBusiness')"
         variant="outlined"
         clearable
-        clear-icon="mdi-cancel"
+        clear-icon="mdi-close"
       ></v-text-field>
       <label for="email-address" class="invite-label">
         {{ $t("external.emailAddress") }}
@@ -38,7 +38,7 @@
         v-model="emailAddress"
         variant="outlined"
         clearable
-        clear-icon="mdi-cancel"
+        clear-icon="mdi-close"
       ></v-text-field>
       <label for="phone-number" class="invite-label">
         {{ $t("external.phoneNumber") }}
@@ -62,13 +62,15 @@
 
 <script>
 import googleAuth from "../common/googleAuth.vue";
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   components: {
     googleAuth,
   },
   watch: {
     defaultLanguage(val) {
-      this.$store.commit("setDefaultLanguage", val);
+      this.setDefaultLanguage(val);
     },
   },
   data() {
@@ -82,8 +84,14 @@ export default {
       phone: "",
     };
   },
+  computed: {
+    ...mapGetters(["getDefaultLanguage", "getLanguages"]),
+  },
   mounted() {
-    this.defaultLanguage = this.$store.getters.getDefaultLanguage;
+    this.defaultLanguage = this.getDefaultLanguage;
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setDefaultLanguage"]),
   },
 };
 </script>

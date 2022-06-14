@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="invoice-content-title">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("payments.invoiceContent") }}
       </span>
     </p>
@@ -10,75 +10,59 @@
         <thead>
           <tr>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("payments.customerInfo")
-              }}</span>
+              <span :class="getLoader">{{ $t("payments.customerInfo") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("payments.products")
-              }}</span>
+              <span :class="getLoader">{{ $t("payments.products") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("payments.dateCompleted")
-              }}</span>
+              <span :class="getLoader">{{ $t("payments.dateCompleted") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
+              <span :class="getLoader">{{
                 $t("payments.costOfProducts")
               }}</span>
             </th>
             <th class="text-left">
-              <span
-                class="invoices-price-col"
-                :class="$store.getters.getLoader"
-                >{{ $t("payments.fulfilmentPrice") }}</span
-              >
+              <span class="invoices-price-col" :class="getLoader">{{
+                $t("payments.fulfilmentPrice")
+              }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="(invoice, x) in $store.getters.getInvoiceContent"
+            v-for="(invoice, x) in getInvoiceContent"
             :key="x"
             class="invoices-table-row"
           >
             <td class="invoices-table-col">
               <p>
-                <span
-                  class="invoices-table-customer-info"
-                  :class="$store.getters.getLoader"
-                >
+                <span class="invoices-table-customer-info" :class="getLoader">
                   {{ invoice.customerInfo.customer }}
                 </span>
               </p>
-              <p>
-                <span :class="$store.getters.getLoader">
+              <p class="invoice-subtitle">
+                <span :class="getLoader">
                   {{ invoice.customerInfo.location }}
                 </span>
               </p>
             </td>
             <td class="invoices-table-col">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ invoice.products }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ invoice.dateCompleted }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span :class="$store.getters.getLoader">
-                {{ invoice.costOfProducts }}</span
-              >
+              <span :class="getLoader"> {{ invoice.costOfProducts }}</span>
             </td>
             <td class="invoices-table-col">
-              <span
-                class="invoices-price-col"
-                :class="$store.getters.getLoader"
-              >
+              <span class="invoices-price-col" :class="getLoader">
                 {{ invoice.fulfilmentPrice }}
               </span>
             </td>
@@ -86,8 +70,8 @@
         </tbody>
       </v-table>
       <div class="invoice-content-total-due">
-        <span :class="$store.getters.getLoader">
-          {{ $t("payments.totalDue") }}: {{ $store.getters.getTotalDue }}
+        <span :class="getLoader">
+          {{ $t("payments.totalDue") }}: {{ getTotalDue }}
         </span>
       </div>
     </div>
@@ -95,7 +79,13 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  computed: {
+    ...mapGetters(["getTotalDue", "getLoader", "getInvoiceContent"]),
+  },
+};
 </script>
 
 <style>
@@ -103,6 +93,7 @@ export default {};
   margin: 30px;
   padding: 35px;
   border: 1px solid #e2e7ed;
+  background: white;
   border-radius: 10px;
 }
 .invoice-content-title {
@@ -118,5 +109,8 @@ export default {};
 }
 .invoices-table-customer-info {
   color: #324ba8;
+}
+.invoice-subtitle {
+  margin: 0px;
 }
 </style>

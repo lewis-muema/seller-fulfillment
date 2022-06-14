@@ -61,14 +61,12 @@
                         alt=""
                         class="product-select-img"
                       />
-                      <span :class="$store.getters.getLoader">
+                      <span :class="getLoader">
                         {{ product.product_name }}
                       </span>
                     </span>
-                    <span
-                      :class="$store.getters.getLoader"
-                      class="product-select-units"
-                      >{{ product.available }} units</span
+                    <span :class="getLoader" class="product-select-units"
+                      >{{ product.available }} {{ $t("inventory.units") }}</span
                     >
                   </div>
                 </td>
@@ -90,13 +88,11 @@
                             alt=""
                             class="product-select-img"
                           />
-                          <span :class="$store.getters.getLoader">
+                          <span :class="getLoader">
                             {{ product.product_name }}
                           </span>
                         </span>
-                        <span
-                          :class="$store.getters.getLoader"
-                          class="product-select-units"
+                        <span :class="getLoader" class="product-select-units"
                           >{{ product.available }} units</span
                         >
                       </v-expansion-panel-title>
@@ -125,9 +121,7 @@
                             >{{ option.product_variant_quantity }}
                             {{ option.product_variant_quantity_type }}</span
                           >
-                          <span
-                            :class="$store.getters.getLoader"
-                            class="product-select-units"
+                          <span :class="getLoader" class="product-select-units"
                             >{{
                               option.product_variant_stock_levels.available
                             }}
@@ -180,8 +174,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit(
-      "setComponent",
+    this.setComponent(
       this.getSendProductsRoute === "ProductsToSendy"
         ? this.$t("common.sendInventoryToSendy")
         : this.$t("common.sendDeliveryToCustomer")
@@ -192,7 +185,12 @@ export default {
     this.productMapping();
   },
   methods: {
-    ...mapMutations(["setSelectedProducts", "setLoader", "setProductStep"]),
+    ...mapMutations([
+      "setSelectedProducts",
+      "setLoader",
+      "setProductStep",
+      "setComponent",
+    ]),
     addProductStep(val) {
       if (this.getSelectedProducts.length > 0) {
         this.setProductStep(val);
@@ -268,6 +266,7 @@ export default {
       "getSelectedProducts",
       "getProductLists",
       "getSendProductsRoute",
+      "getLoader",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
@@ -283,6 +282,7 @@ export default {
 .desktop-select-products-card {
   border-color: #e2e7ed;
   margin-left: 50px;
+  background: white;
 }
 .el-table {
   color: #303133 !important;

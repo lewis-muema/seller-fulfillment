@@ -34,4 +34,16 @@ export default {
   font-size: 14px !important;
   cursor: pointer;
 }
+.v-main__wrap {
+  background: #fcfdff;
+}
+.container-border {
+  border: 1px solid #e2e7ed;
+  margin-left: 30px;
+  margin-right: 40px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 20px 0px;
+  background: white;
+}
 </style>

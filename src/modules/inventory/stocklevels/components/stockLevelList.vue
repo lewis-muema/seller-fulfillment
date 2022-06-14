@@ -10,7 +10,6 @@
           placeholder="Search Product"
         ></v-text-field>
       </div>
-
       <v-table class="" v-if="products.length > 0">
         <table-header :header="tableHeaders" />
         <tbody>
@@ -19,28 +18,44 @@
               <v-list-item lines="two">
                 <v-list-item-avatar class="product-image-container">
                   <img
-                    src="https://images.sendyit.com/fulfilment/seller/shea.png"
+                    :src="product.product_link"
                     alt="img"
                     class="product-img"
                   />
                 </v-list-item-avatar>
                 <v-list-item-header>
-                  <v-list-item-title>{{
-                    product.product_name
-                  }}</v-list-item-title>
-                  <v-list-item-subtitle
-                    >{{
-                      product.product_variants
-                        ? `${product.product_variants.length} product options`
-                        : ""
-                    }}
+                  <v-list-item-title>
+                    <span :class="getLoader">
+                      {{ product.product_name }}
+                    </span>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span :class="getLoader">
+                      {{
+                        product.product_variants
+                          ? `${product.product_variants.length} product options`
+                          : ""
+                      }}
+                    </span>
                   </v-list-item-subtitle>
                 </v-list-item-header>
               </v-list-item>
             </td>
-            <td>{{ product.available }}</td>
-            <td>{{ product.committed }}</td>
-            <td>{{ product.incoming }}</td>
+            <td>
+              <span :class="getLoader">
+                {{ product.available }}
+              </span>
+            </td>
+            <td>
+              <span :class="getLoader">
+                {{ product.committed }}
+              </span>
+            </td>
+            <td>
+              <span :class="getLoader">
+                {{ product.incoming }}
+              </span>
+            </td>
             <td>
               <router-link
                 :to="{
@@ -81,6 +96,8 @@
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   props: ["products"],
   data() {
@@ -113,12 +130,19 @@ export default {
     tableHeader,
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.stocks"));
+    this.setComponent(this.$t("common.stocks"));
+    setTimeout(() => {
+      this.setLoader("");
+    }, 1000);
   },
   computed: {
+    ...mapGetters(["getLoader"]),
     tableHeaders() {
       return this.headers;
     },
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>

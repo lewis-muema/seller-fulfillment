@@ -1,14 +1,14 @@
 <template>
-  <div class="failed-delivery-container">
-    <i class="mdi mdi-alert-circle-outline failed-delivery-warning-icon"></i>
+  <div class="make-payment-container">
+    <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{ $t("payments.pleaseMakePayment") }}
         </span>
       </p>
       <p class="make-payment-description">
-        <span :class="$store.getters.getLoader">
+        <span :class="getLoader">
           {{
             $t("payments.pleaseMakeYourPayment", {
               amount: "KES 780",
@@ -19,7 +19,7 @@
       </p>
     </div>
     <div class="make-payment-button-container">
-      <v-btn @click="showTimepicker()" class="make-payment-button">
+      <v-btn @click="showPendingPaymnets()" class="make-payment-button">
         {{ $t("payments.makePayment") }}
       </v-btn>
     </div>
@@ -27,25 +27,35 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
   methods: {
-    showTimepicker() {
-      this.$store.commit("setOverlay", { index: 1, status: true });
+    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
+    showPendingPaymnets() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "payments",
+      });
     },
   },
 };
 </script>
 
 <style>
-.failed-delivery-container {
+.make-payment-container {
   display: flex;
   border: 1px solid #9b101c;
   padding: 12px;
   border-radius: 10px;
   margin: 30px;
   width: 95%;
+  background: white;
 }
-.failed-delivery-warning-icon {
+.make-payment-warning-icon {
   color: #9b101c;
   margin: 0px 30px;
   font-size: 25px;

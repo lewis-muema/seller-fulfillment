@@ -3,7 +3,7 @@ import Auth from "../modules/auth/auth.vue";
 import SignIn from "../modules/auth/signin.vue";
 import SignUp from "../modules/auth/signup.vue";
 import OTP from "../modules/auth/OTP.vue";
-import CompleteSetup from "../modules/auth/completeSetup";
+import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
@@ -50,9 +50,9 @@ const routes = [
         component: OTP,
       },
       {
-        path: "complete-setup",
-        name: "CompleteSetup",
-        component: CompleteSetup,
+        path: "complete-signup",
+        name: "CompleteSignup",
+        component: CompleteSignup,
       },
     ],
   },

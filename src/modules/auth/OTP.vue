@@ -33,9 +33,9 @@
             <div v-if="v$.otp.$error" class="error-msg">
               Otp input is required
             </div>
-            <div class="wrong-otp-class error-msg" v-if="!correctOTP">
+            <!-- <div class="wrong-otp-class error-msg" v-if="correctOTP">
               The code you entered is incorrect
-            </div>
+            </div> -->
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
@@ -118,7 +118,7 @@ export default {
         this.correctOTP = true;
         this.clearInput();
         this.loading = false;
-        this.$router.push("/auth/complete-setup");
+        this.$router.push("/auth/complete-signup");
       }
       this.loading = false;
     },

@@ -33,4 +33,6 @@ export default {
   getSendProductsRoute: (state) => state.sendProductsRoute,
   getProductStep: (state) => state.productStep,
   getUserData: (state) => state.userData,
+  getGoogleUserData: (state) => state.googleUserData,
+  getIndustries: (state) => state.industries,
 };

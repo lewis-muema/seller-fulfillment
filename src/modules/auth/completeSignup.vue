@@ -1,0 +1,185 @@
+<template>
+  <div>
+    Full name {{ params }}
+    <form action="" @submit.prevent>
+      <div class="desktop-sign-up">
+        <div class="desktop-header-title d-flex">
+          <i
+            class="mdi mdi-arrow-left"
+            aria-hidden="true"
+            @click="$router.back()"
+          ></i>
+          <v-card-title class="text-center">
+            {{ $t("auth.completeSignUp") }}
+          </v-card-title>
+        </div>
+        <v-card-text class="pt-5">
+          <div class="mb-3">
+            <label for="yourName" class="form-label">
+              {{ $t("auth.yourName") }}</label
+            >
+            <div class="form-input-group">
+              <i class="mdi mdi-account-circle" aria-hidden="true"></i>
+              <input
+                v-model="params.personalName"
+                type="text"
+                class="form-control"
+                :placeholder="$t('auth.enterYourPersonalName')"
+              />
+              <div v-if="v$.params.personalName.$error" class="error-msg">
+                Your name is required
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">{{
+              $t("auth.phoneNumber")
+            }}</label>
+            <vue-tel-input v-model="params.phoneNo"></vue-tel-input>
+            <div v-if="v$.params.phoneNo.$error" class="error-msg">
+              Phone number is required
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="industry" class="form-label">{{
+              $t("auth.industryOfBusiness")
+            }}</label>
+            <select class="form-select" @change="selectIndustryId($event)">
+              <option
+                v-for="industry in supportedIndustries"
+                :key="industry.industry_id"
+                :value="industry.industry_id"
+              >
+                {{ industry.name }}
+              </option>
+            </select>
+          </div>
+          <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
+            <button
+              class="btn btn-primary b"
+              type="submit"
+              @click="completeSignUp"
+              v-loading="loading"
+              :class="loading ? 'disabled' : ''"
+            >
+              {{ $t("auth.signUp") }}
+            </button>
+          </div>
+        </v-card-text>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
+  data() {
+    return {
+      loading: false,
+      test: "",
+      params: {
+        personalName: "",
+        phoneNo: "",
+        industryOfBusiness: "",
+        firstName: "",
+        lastName: "",
+      },
+    };
+  },
+  validations() {
+    return {
+      params: {
+        personalName: { required },
+        phoneNo: { required },
+        industryOfBusiness: { required },
+      },
+    };
+  },
+  async mounted() {
+    await this.industryList();
+  },
+  watch: {
+    fullname(value) {
+      this.params["personalName"] = value;
+    },
+    firstName(value) {
+      this.params["firstName"] = value;
+    },
+    lastName(value) {
+      this.params["lastName"] = value;
+    },
+  },
+  computed: {
+    ...mapGetters(["getGoogleUserData", "getIndustries", "getUserData"]),
+    fullname() {
+      return this.getGoogleUserData.name;
+    },
+    businessId() {
+      return this.getUserData.business.business_id;
+    },
+    firstName() {
+      return this.params["personalName"].split(" ")[0];
+    },
+    lastName() {
+      return this.params["personalName"].split(" ")[1];
+    },
+    supportedIndustries() {
+      return this.getIndustries.industries;
+    },
+  },
+  methods: {
+    ...mapActions(["businessUserDetails", "industries"]),
+    selectIndustryId(event) {
+      this.params.industryOfBusiness = event.target.value;
+    },
+    async industryList() {
+      const fullPayload = {
+        app: process.env.SELLER_FULFILLMENT_SERVER,
+        endpoint: `seller/${this.businessId}/industries`,
+      };
+      const data = await this.industries(fullPayload);
+      if (data.errors.length === 0) {
+        return data;
+      }
+    },
+    async completeSignUp() {
+      console.log("clicked");
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+      this.loading = true;
+      const payload = {
+        business: {
+          business_id: this.businessId,
+          business_industry_id: this.params.industryOfBusiness,
+        },
+        user: {
+          first_name: this.firstName,
+          last_name: this.lastName,
+          phone_number: this.params.phoneNo,
+        },
+      };
+      console.log(payload);
+      const fullPayload = {
+        app: process.env.SELLER_FULFILLMENT_SERVER,
+        values: payload,
+        endpoint: "seller/business/signup/update",
+      };
+      const data = await this.businessUserDetails(fullPayload);
+      if (data.status === 200) {
+        this.loading = false;
+        this.$router.push("/onboarding");
+      }
+    },
+  },
+};
+</script>
+
+<style scoped></style>

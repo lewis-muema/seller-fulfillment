@@ -92,4 +92,13 @@ export default {
   setConfirmedUser(state, val) {
     state.confirmedUser = val;
   },
+  setBusinessUserDetails(state, val) {
+    state.businessUserDetails = val;
+  },
+  setGoogleUserData(state, val) {
+    state.googleUserData = val;
+  },
+  setIndustries(state, val) {
+    state.industries = val;
+  },
 };

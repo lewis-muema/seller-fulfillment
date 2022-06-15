@@ -17,11 +17,14 @@ export default createStore({
         "/auth/sign-in",
         "/auth/sign-up",
         "/auth/otp",
-        "/auth/complete-setup",
+        "/auth/complete-signup",
         "/external/invite",
       ],
       userData: {},
       confirmedUser: {},
+      businessUserDetails: {},
+      googleUserData: {},
+      industries: {},
       productStep: 0,
       downloadActions: [
         {

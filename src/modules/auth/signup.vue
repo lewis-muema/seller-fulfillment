@@ -1,7 +1,6 @@
 <template>
   <div>
     <form action="" @submit.prevent>
-      <v-icon>format_quote</v-icon>
       <div class="desktop-sign-up">
         <v-card-title class="text-center">
           {{ $t("auth.signupSendyFulfillment") }}
@@ -77,10 +76,10 @@
               v-loading="loading"
               :class="loading ? 'disabled' : ''"
             >
-              {{ $t("auth.signUp") }}
+              {{ $t("auth.continue") }}
             </button>
             <div class="text-center text-grey">or</div>
-            <google-auth @userData="userData" />
+            <google-auth @googleUserData="googleUserData" />
           </div>
           <p class="desktop-login-link login-link-text">
             {{ $t("auth.haveAnAccount") }}
@@ -96,7 +95,7 @@
 
 <script>
 import googleAuth from "@/modules/common/googleAuth";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 export default {
@@ -121,30 +120,6 @@ export default {
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
         },
       ],
-
-      sendyPhoneProps: {
-        mode: "international",
-        defaultCountry: "ke",
-        preferredCountries: ["ke", "ug", "tz"],
-      },
-      vueTelInputProps: {
-        disabledFetchingCountry: false,
-        disabled: false,
-        disabledFormatting: false,
-        placeholder: "Enter phone number",
-        required: false,
-        enabledCountryCode: false,
-        enabledFlags: true,
-        autocomplete: "off",
-        name: "telephone",
-        maxLen: 25,
-        dropdownOptions: {
-          disabledDialCode: false,
-        },
-        inputOptions: {
-          showDialCode: false,
-        },
-      },
       signUpInputs: {
         businessName: "",
         businessEmail: "",
@@ -162,10 +137,22 @@ export default {
     };
   },
   mounted() {},
+  watch: {
+    businessEmail(value) {
+      this.signUpInputs["businessEmail"] = value;
+    },
+  },
+  computed: {
+    ...mapGetters(["getGoogleUserData"]),
+    businessEmail() {
+      return this.getGoogleUserData.email;
+    },
+  },
   methods: {
     ...mapActions(["signupUser"]),
-    userData(value) {
-      this.signUpInputs.businessEmail = value.email;
+    ...mapMutations(["setGoogleUserData"]),
+    googleUserData(value) {
+      this.setGoogleUserData(value);
     },
     async submitForm() {
       this.v$.$validate();

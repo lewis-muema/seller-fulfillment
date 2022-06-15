@@ -20,8 +20,8 @@ export default {
   },
   methods: {
     handleCredentialResponse(response) {
-      let userData = jwt_decode(response.credential);
-      this.$emit("userData", userData);
+      let googleUserData = jwt_decode(response.credential);
+      this.$emit("googleUserData", googleUserData);
     },
   },
 };

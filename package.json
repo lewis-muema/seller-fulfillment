@@ -46,6 +46,7 @@
     "vue-tel-input": "^6.0.0-beta.7",
     "vue3-carousel": "^0.1.40",
     "vue3-google-map": "^0.8.3",
+    "vue3-otp-input": "^0.3.6",
     "vue3-tel-input": "^1.0.4",
     "vuejs3-datepicker": "^1.0.5",
     "vuetify": "^3.0.0-alpha.0",

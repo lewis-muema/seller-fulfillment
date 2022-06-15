@@ -21,6 +21,7 @@ export default createStore({
         "/external/invite",
       ],
       userData: {},
+      confirmedUser: {},
       productStep: 0,
       downloadActions: [
         {

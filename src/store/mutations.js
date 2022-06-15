@@ -89,4 +89,7 @@ export default {
   setUserData(state, val) {
     state.userData = val;
   },
+  setConfirmedUser(state, val) {
+    state.confirmedUser = val;
+  },
 };

@@ -3,13 +3,7 @@
     <div v-if="products.length">
       <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
-          <v-text-field
-            color="#324BA8"
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            variant="outlined"
-            placeholder="Search Product and product options"
-          ></v-text-field>
+          <searchAlgolia />
         </div>
 
         <v-table class="">
@@ -83,9 +77,10 @@
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-  components: { tableHeader, addProductsCard },
+  components: { tableHeader, addProductsCard, searchAlgolia },
   data() {
     return {
       headers: ["Product", "Available inventory", "Actions"],

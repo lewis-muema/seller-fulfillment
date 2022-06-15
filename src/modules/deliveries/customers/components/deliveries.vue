@@ -3,13 +3,7 @@
     <div class="deliveries-container-inner" v-if="getDeliveries.length > 0">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
-          <v-text-field
-            color="#324BA8"
-            prepend-inner-icon="mdi-magnify"
-            :label="$t('deliveries.searchDelivery')"
-            variant="outlined"
-            :placeholder="$t('deliveries.searchDelivery')"
-          ></v-text-field>
+          <searchAlgolia />
         </div>
         <div class="deliveries-date-range">
           <label for="range" class="deliveries-date-label">
@@ -114,8 +108,10 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
+  components: { searchAlgolia },
   data: () => ({
     deliveries: [],
     range: "",

@@ -20,14 +20,7 @@
             </router-link>
           </div>
           <div class="search-input">
-            <div class="form-input-group">
-              <i class="mdi mdi-magnify search-icon"></i>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search for product"
-              />
-            </div>
+            <searchAlgolia />
           </div>
           <hr />
           <v-table>
@@ -164,9 +157,10 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { ElNotification } from "element-plus";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
-  components: {},
+  components: { searchAlgolia },
   data() {
     return {
       products: [],

@@ -104,5 +104,15 @@
   "units": "units",
   "editPrice": "Edit price",
   "updatePrice": "Update price",
-  "pleaseNoteThatThePrice": "Please note that the price change will only be applied to this order."
+  "pleaseNoteThatThePrice": "Please note that the price change will only be applied to this order.",
+  "fees": "Fees",
+  "discount": "Discount",
+  "fulfillmentFeeCalculation": "Fulfillment fee calculation",
+  "50K": "KES 0-KES 50,000",
+  "5%": "5% service fee",
+  "deliveryFee": "Delivery fee",
+  "charged": "Charged for 1 to 10 items",
+  "totalFulfillmentFee": "Total fulfillment fee",
+  "learnMoreAboutOurPricing": "Learn more about our pricing",
+  "enterPromoCode": "Enter promo code"
 }

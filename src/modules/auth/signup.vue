@@ -101,8 +101,8 @@
             }}</label>
             <vue-tel-input
               v-model="phone"
-              v-bind="sendyPhoneProps"
-              :input-options="vueTelInputProps"
+              v-bind="getSendyPhoneProps"
+              :input-options="getVueTelInputProps"
             ></vue-tel-input>
           </div>
           <div class="mb-3">
@@ -133,6 +133,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -189,30 +191,10 @@ export default {
       ],
       region: "",
       continueSignup: true,
-      sendyPhoneProps: {
-        mode: "international",
-        defaultCountry: "ke",
-        preferredCountries: ["ke", "ug", "tz"],
-      },
-      vueTelInputProps: {
-        disabledFetchingCountry: false,
-        disabled: false,
-        disabledFormatting: false,
-        placeholder: "Enter phone number",
-        required: false,
-        enabledCountryCode: false,
-        enabledFlags: true,
-        autocomplete: "off",
-        name: "telephone",
-        maxLen: 25,
-        dropdownOptions: {
-          disabledDialCode: false,
-        },
-        inputOptions: {
-          showDialCode: false,
-        },
-      },
     };
+  },
+  computed: {
+    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
   },
   methods: {
     continueSignUp() {

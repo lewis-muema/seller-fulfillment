@@ -10,7 +10,12 @@ const googleAuthInit = {
         });
         google.accounts.id.renderButton(
           document.getElementById("google-signin-btn"),
-          { theme: "outline", size: "large" }
+          {
+            theme: "outline",
+            size: "large",
+            width: "350",
+            logo_alignment: "center",
+          }
         );
         google.accounts.id.prompt();
       };

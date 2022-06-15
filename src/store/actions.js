@@ -40,8 +40,9 @@ export default {
   async signupUser({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPost", payload);
-      commit("setUserData", res.data);
-      return res.data;
+      console.log("from actions", res);
+      commit("setUserData", res.data.data);
+      return res;
     } catch (error) {
       return error.response;
     }

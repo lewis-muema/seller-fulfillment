@@ -6,7 +6,6 @@
         <v-card-title class="text-center">
           {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
-        {{ signUpInputs }}
         <v-card-text class="pt-5">
           <div class="mb-3">
             <label for="businessName" class="form-label">{{
@@ -56,13 +55,10 @@
                 :label="item.country"
                 :value="item.country"
               >
-                <span style="float: left; font-size: 23px; padding-right: 10px">
+                <span class="country-image-container">
                   <img :src="item.image" class="country-image" />
                 </span>
-                <span
-                  style="color: var(--el-text-color-secondary); font-size: 13px"
-                  >{{ item.country }}</span
-                >
+                <span class="country-container">{{ item.country }}</span>
               </el-option>
             </el-select>
 
@@ -79,6 +75,7 @@
               type="submit"
               @click="submitForm"
               v-loading="loading"
+              :class="loading ? 'disabled' : ''"
             >
               {{ $t("auth.signUp") }}
             </button>
@@ -111,17 +108,15 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       countries: [
         {
           country: "KENYA",
-          flag: "🇰🇪",
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg",
         },
         {
           country: "UGANDA",
-          flag: "🇺🇬",
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
         },
@@ -177,6 +172,7 @@ export default {
       if (this.v$.$errors.length > 0) {
         return;
       }
+      this.loading = true;
       const payload = {
         business: {
           business_name: this.signUpInputs.businessName,
@@ -191,7 +187,11 @@ export default {
         endpoint: "seller/business/signup",
       };
       const data = await this.signupUser(fullPayload);
-      console.log("data", data);
+      if (data.status === 200) {
+        this.loading = false;
+        this.$router.push("/auth/otp");
+      }
+      this.loading = false;
     },
   },
 };
@@ -294,7 +294,19 @@ h1 {
 .el-select {
   display: block !important;
 }
+.country-image-container {
+  float: left;
+  font-size: 23px;
+  padding-right: 10px;
+}
+.country-container {
+  font-size: 13px;
+}
 .error-msg {
   color: #9b101c;
+}
+.el-loading-mask {
+  background-color: #324ba8 !important;
+  opacity: 0.6;
 }
 </style>

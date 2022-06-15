@@ -22,7 +22,6 @@ export default {
     handleCredentialResponse(response) {
       let userData = jwt_decode(response.credential);
       this.$emit("userData", userData);
-      console.log(userData);
     },
   },
 };

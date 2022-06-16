@@ -2,8 +2,8 @@ image: node:14.18.1
 
 variables:
   IMAGE_BASE_NAME: ${CI_REGISTRY}/seller-fulfillment
-  STAGING_IMAGE: $CI_REGISTRY/seller-fulfillment:latest_$CI_COMMIT_SHORT_SHA
-  
+  DEV_LATEST: $CI_REGISTRY/seller-fulfillment:latest
+  PROD_LATEST: $CI_REGISTRY/seller-fulfillment:prod
 stages:
   - lint
   - test
@@ -42,13 +42,32 @@ docker_build:
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]
       then 
-        echo "Setup prod docker builds here!"
+        IMAGE_TAG=prod_$(date +%Y-%m-%d-%H-%M)
+        IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
+        docker build -t $IMAGE_NAME -t $PROD_LATEST
+          --build-arg VUE_APP_GOOGLE_API_KEY="AIzaSyBr3G1ZoEidlWAw_NOO11NZsVidPuF6zeo"
+          --build-arg VUE_APP_GOOGLE_API_KEY_TEST="AIzaSyC4UV3vk4qedVcCXDdpY7ZBNb4IQAM4vY8"
+          --build-arg VUE_APP_GOOGLE_CLIENT_ID="724697801657-96bbmn0plsro60t4rg2eekvnbfrfnqvb.apps.googleusercontent.com"
+          --build-arg VUE_APP_VAPIDKEY="BGNlgSsJAfNM7suOwAm0LyVX7H5GCB9lUosFfOQy99Qrhr7fpPGE2xd5h7qekXL0WYwIf2K26CCMz3wWMiG49jY"
+          --build-arg VUE_APP_ALGOLIA_APP_ID="YGZO0B7NVS"
+          --build-arg VUE_APP_ALGOLIA_API_KEY="d19d556ce4b0b3897d5c8956e43428c2"
+          --build-arg VUE_APP_ALGOLIA_INDEX_NAME="production_fulfillment"  .
+        docker push $IMAGE_NAME 
+        docker push $PROD_LATEST
       elif [ "$CI_COMMIT_REF_NAME" == "staging" ]
       then 
         IMAGE_TAG=dev_$(date +%Y-%m-%d-%H-%M)
         IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
-        docker build -t $IMAGE_NAME -t $STAGING_IMAGE .
-        docker push $STAGING_IMAGE
+        docker build -t $IMAGE_NAME -t $DEV_LATEST  
+          --build-arg VUE_APP_GOOGLE_API_KEY="AIzaSyBr3G1ZoEidlWAw_NOO11NZsVidPuF6zeo"
+          --build-arg VUE_APP_GOOGLE_API_KEY_TEST="AIzaSyC4UV3vk4qedVcCXDdpY7ZBNb4IQAM4vY8"
+          --build-arg VUE_APP_GOOGLE_CLIENT_ID="724697801657-96bbmn0plsro60t4rg2eekvnbfrfnqvb.apps.googleusercontent.com"
+          --build-arg VUE_APP_VAPIDKEY="BGNlgSsJAfNM7suOwAm0LyVX7H5GCB9lUosFfOQy99Qrhr7fpPGE2xd5h7qekXL0WYwIf2K26CCMz3wWMiG49jY"
+          --build-arg VUE_APP_ALGOLIA_APP_ID="YGZO0B7NVS"
+          --build-arg VUE_APP_ALGOLIA_API_KEY="d19d556ce4b0b3897d5c8956e43428c2"
+          --build-arg VUE_APP_ALGOLIA_INDEX_NAME="staging_fulfillment"  .
+        docker push $DEV_LATEST
+        docker push $IMAGE_NAME
       else
         export IMAGE_NAME="sendy-docker-local.jfrog.io/seller-fulfillment:$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')_$(date +%Y-%m-%d-%H-%M)"
         docker build -t $IMAGE_NAME . 
@@ -59,14 +78,6 @@ docker_build:
     - master
     - /^feature*.*$/
 
-deploy:staging:
-  stage: deploy
-  tags:
-    - shell
-  script:
-    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy seller-fulfillment seller-fulfillment=${STAGING_IMAGE}"
-  only:
-    - staging
 
 create-preview-env:
   stage: deploy

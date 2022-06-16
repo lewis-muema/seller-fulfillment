@@ -69,7 +69,7 @@
         color="#324BA8"
         text-color="white"
         size="default"
-        >{{ $t("deliveries.deliverToACustomer") }}</v-btn
+        >{{ $t("deliveries.inventoryToSendy") }}</v-btn
       >
     </div>
   </div>

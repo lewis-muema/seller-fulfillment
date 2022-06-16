@@ -158,17 +158,35 @@ export default {
       quantities: [],
       quantity: 1,
       tableHeaders: [
-        "",
-        this.$t("inventory.product"),
-        this.$t("inventory.price"),
-        this.$t("inventory.quantityToSend"),
+        {
+          title: "",
+        },
+        {
+          title: this.$t("inventory.product"),
+        },
+        {
+          title: this.$t("inventory.price"),
+        },
+        {
+          title: this.$t("inventory.quantityToSend"),
+        },
       ],
       tableHeaders2: [
-        "",
-        this.$t("inventory.product"),
-        this.$t("inventory.price"),
-        this.$t("inventory.availableUnits"),
-        this.$t("inventory.quantityToSend"),
+        {
+          title: "",
+        },
+        {
+          title: this.$t("inventory.product"),
+        },
+        {
+          title: this.$t("inventory.price"),
+        },
+        {
+          title: this.$t("inventory.availableUnits"),
+        },
+        {
+          title: this.$t("inventory.quantityToSend"),
+        },
       ],
     };
   },

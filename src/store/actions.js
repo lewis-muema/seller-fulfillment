@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 
 export default {
-  requestAxiosPost(_, payload) {
+  requestAxiosPost({ commit }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
       },
     };
     return new Promise((resolve) => {
@@ -19,10 +21,11 @@ export default {
         });
     });
   },
-  requestAxiosGet(_, payload) {
+  requestAxiosGet({ commit }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
       },
     };
     return new Promise((resolve) => {
@@ -37,10 +40,11 @@ export default {
         });
     });
   },
-  requestAxiosPut(_, payload) {
+  requestAxiosPut({ commit }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
       },
     };
     return new Promise((resolve) => {
@@ -51,6 +55,25 @@ export default {
         })
         .catch((error) => {
           resolve(error.response);
+          return false;
+        });
+    });
+  },
+  requestAxiosPatch({ commit }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .patch(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
           return false;
         });
     });

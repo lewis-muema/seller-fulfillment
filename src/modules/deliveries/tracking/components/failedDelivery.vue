@@ -9,7 +9,13 @@
       </p>
       <p class="delivery-failed-description">
         <span :class="getLoader">
-          {{ $t("deliveries.weTriedToReachYourCustomer") }}
+          {{
+            $t("deliveries.weTriedToReachYourCustomer", {
+              date: formatDate(
+                getOrderTimelines[getOrderTimelines.length - 1].event_date
+              ),
+            })
+          }}
         </span>
       </p>
     </div>
@@ -23,10 +29,11 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters(["getLoader", "getOrderTimelines"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
@@ -35,6 +42,10 @@ export default {
         overlay: true,
         popup: "reschedule",
       });
+    },
+    formatDate(date) {
+      const finalDate = moment(date).add(1, "days");
+      return moment(finalDate).format("ddd, Do MMMM");
     },
   },
 };

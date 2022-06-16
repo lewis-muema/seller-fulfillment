@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import moment from "moment";
 import VueGoogleMaps from "@fawmi/vue-google-maps";
+import { initializeApp } from "firebase/app";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
@@ -27,6 +28,21 @@ const VueTelInputOptions = {
   mode: "international",
   onlyCountries: ["NG", "KE", "UG", "TZ", "CI"],
 };
+
+initializeApp({
+  apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
+  authDomain: "sendy-fulfilment.firebaseapp.com",
+  projectId: "sendy-fulfilment",
+  storageBucket: "sendy-fulfilment.appspot.com",
+  messagingSenderId: "724697801657",
+  appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
+  measurementId: "G-J8KW3YLS1N",
+});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/firebase-messaging-sw.js");
+  });
+}
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 loadFonts();

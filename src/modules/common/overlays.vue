@@ -162,31 +162,31 @@
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
-      <div v-for="(product, i) in getData.data.products" :key="i">
+      <div v-for="(product, i) in getOrderTrackingData.order.products" :key="i">
         <div class="view-products-row-top">
           <v-badge
             color="#324BA8"
             text-color="white"
             max="10"
-            :content="`${product.product_unit_count}`"
+            :content="`${product.received_quantity}`"
           >
             <img
-              :src="product.product_image_link"
+              :src="product.product_variant_image_link"
               class="view-products-img"
               alt=""
             />
           </v-badge>
           <div class="view-products-row-top-left">
             <div class="view-products-row-top-name">
-              {{ product.product_name }}
-            </div>
-            <div class="view-products-row-top-variant">
               {{ product.product_variant_description }}
             </div>
+            <!-- <div class="view-products-row-top-variant">
+              {{ product.product_variant_description }}
+            </div> -->
           </div>
           <p class="view-products-row-top-right">
-            {{ product.product_unit_currency }}
-            {{ product.product_unit_price }}
+            {{ product.currency }}
+            {{ product.unit_price }}
           </p>
         </div>
       </div>
@@ -201,17 +201,17 @@
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
-      <div v-for="(attempt, i) in attempts" :key="i">
+      <div v-for="(attempt, i) in getDeliveryAttempts" :key="i">
         <div class="timeline-failed-attempt-row-top">
           <p class="timeline-failed-attempt-row-top-left">
-            {{ attempt.attempt }}
+            {{ $t("deliveries.attempt") }} {{ attempt.attempt_index }}
           </p>
           <p class="timeline-failed-attempt-row-top-right">
-            {{ attempt.time }}
+            {{ formatTime(attempt.attempt_date) }}
           </p>
         </div>
         <p class="timeline-failed-attempt-row-bottom">
-          {{ attempt.reason }}
+          {{ attempt.failure_reason }}
         </p>
       </div>
     </div>
@@ -358,6 +358,7 @@
 <script>
 import Datepicker from "vuejs3-datepicker";
 import { mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   props: ["overlayVal", "editInfo"],
@@ -369,7 +370,7 @@ export default {
   },
   components: { Datepicker },
   computed: {
-    ...mapGetters(["getData"]),
+    ...mapGetters(["getData", "getDeliveryAttempts", "getOrderTrackingData"]),
   },
   data() {
     return {
@@ -396,23 +397,6 @@ export default {
           value: "",
         },
       ],
-      attempts: [
-        {
-          attempt: "Attempt 1",
-          time: "6th Jan 10:23 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Attempt 2",
-          time: "6th Jan 11:42 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Final Attempt",
-          time: "6th Jan 3:42 am",
-          reason: "Damaged goods",
-        },
-      ],
       phone: "",
       customerName: "",
     };
@@ -428,6 +412,9 @@ export default {
     redirect(status, popup, link) {
       this.overlayStatusSet(status, popup);
       this.$router.push(link);
+    },
+    formatTime(time) {
+      return moment(time).format("Do MMM h:mm a");
     },
   },
 };

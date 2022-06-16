@@ -113,7 +113,7 @@ const routes = [
     component: Sendy,
   },
   {
-    path: "/deliveries/tracking",
+    path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
   },

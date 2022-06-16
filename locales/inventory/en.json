@@ -92,6 +92,7 @@
   "deliverToSendy":"Send inventory to Sendy",
   "totalStockAvailable":"Total stock available",
   "availableInventory": "Available Inventory",
+  "availableProduct": "Available products",
   "pleaseSelectAProduct": "Please select a product so as to move to the next step",
   "pleaseEnterQuantity": "Please enter quantity of products to continue",
   "availableProducts": "Available: Products that are at the fulfillment centre and the seller can place a request on",
@@ -114,5 +115,8 @@
   "charged": "Charged for 1 to 10 items",
   "totalFulfillmentFee": "Total fulfillment fee",
   "learnMoreAboutOurPricing": "Learn more about our pricing",
-  "enterPromoCode": "Enter promo code"
+  "enterPromoCode": "Enter promo code",
+  "date": "Date",
+  "activity": "Activity",
+  "producTOptions": "Product options"
 }

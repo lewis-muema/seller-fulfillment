@@ -86,6 +86,9 @@ export default {
     Pagination,
   },
   data: () => ({
+    languages: ["English", "French"],
+    language: "English",
+    region: "",
     slides: [
       {
         content:

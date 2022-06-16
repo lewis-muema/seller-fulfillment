@@ -78,4 +78,41 @@ export default {
         });
     });
   },
+
+  async signupUser({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      commit("setUserData", res.data.data);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async confirmUser({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      commit("setConfirmedUser", res.data);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async businessUserDetails({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPut", payload);
+      commit("setBusinessUserDetails", res.data);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async industries({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosGet", payload);
+      commit("setIndustries", res.data.data);
+      return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

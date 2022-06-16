@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form action="">
+    <form action="" @submit.prevent>
       <div>
         <div class="desktop-header-title d-flex">
           <i
@@ -15,28 +15,35 @@
         <v-card-text class="otp-card">
           <p>
             {{ $t("auth.enterCodeSentToEmail") }}
-            <span class="otp-email">{{ email }}</span>
+            <span class="otp-email">{{ userEmail }}</span>
           </p>
           <p>{{ $t("auth.enterCode") }}</p>
-          <div
-            class="d-flex justify-content-center align-items-center container"
-          >
-            <div class="">
-              <div class="d-flex flex-row desktop-otp-inputs">
-                <input type="text" class="form-control" autofocus="" /><input
-                  type="text"
-                  class="form-control"
-                /><input type="text" class="form-control" /><input
-                  type="text"
-                  class="form-control"
-                />
-              </div>
+          <div>
+            <div style="display: flex; flex-direction: row">
+              <v-otp-input
+                :class="v$.otp.$error ? 'otp-error-msg' : ''"
+                ref="otpInput"
+                input-classes="otp-input"
+                :num-inputs="4"
+                :should-auto-focus="true"
+                :is-input-num="true"
+                @on-complete="handleOnComplete"
+              />
+            </div>
+            <div v-if="v$.otp.$error" class="error-msg">
+              {{ $t("auth.OTPRequired") }}
             </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/onboarding" class="btn btn-primary">{{
-              $t("auth.confirmCode")
-            }}</router-link>
+            <button
+              class="btn btn-primary"
+              type="submmit"
+              @click="confirmOTP()"
+              v-loading="loading"
+              :class="loading ? 'disabled' : ''"
+            >
+              {{ $t("auth.confirmCode") }}
+            </button>
           </div>
           <span class=""
             ><p class="mt-4 text-center text-grey">
@@ -50,11 +57,68 @@
 </template>
 
 <script>
+import VOtpInput from "vue3-otp-input";
+import { mapActions, mapGetters } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 export default {
+  components: { VOtpInput },
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
-      email: "jamesmoves@gmail.com",
+      loading: false,
+      correctOTP: false,
+      otp: "",
     };
+  },
+  validations() {
+    return {
+      otp: { required },
+    };
+  },
+  computed: {
+    ...mapGetters(["getUserData"]),
+    userEmail() {
+      return this.getUserData.business.business_email;
+    },
+    businessId() {
+      return this.getUserData.business.business_id;
+    },
+  },
+  methods: {
+    ...mapActions(["confirmUser"]),
+    handleOnComplete(value) {
+      this.otp = parseInt(value);
+    },
+    clearInput() {
+      this.$refs.otpInput.clearInput();
+    },
+    async confirmOTP() {
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+      this.loading = true;
+      const payload = {
+        business_id: this.businessId,
+        code: this.otp,
+      };
+      const fullPayload = {
+        app: process.env.SELLER_FULFILLMENT_SERVER,
+        values: payload,
+        endpoint: "seller/business/signup/confirm",
+      };
+      const data = await this.confirmUser(fullPayload);
+      if (data.status === 200) {
+        this.correctOTP = true;
+        this.clearInput();
+        this.loading = false;
+        this.$router.push("/auth/complete-signup");
+      }
+      this.loading = false;
+    },
   },
 };
 </script>
@@ -80,5 +144,24 @@ export default {
 }
 .otp-card span {
   font-weight: 500;
+}
+.otp-input {
+  width: 60px;
+  height: 50px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.otp-input::-webkit-inner-spin-button,
+.otp-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.otp-error-msg {
+  border-color: #9b101c;
 }
 </style>

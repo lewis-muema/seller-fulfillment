@@ -19,7 +19,7 @@
                 placeholder="Enter name of business"
               />
               <div v-if="v$.signUpInputs.businessName.$error" class="error-msg">
-                Business name is required
+                {{ $t("auth.businessNameRequired") }}
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@
                 v-if="v$.signUpInputs.businessEmail.$error"
                 class="error-msg"
               >
-                Business email is required
+                {{ $t("auth.businessEmailRequired") }}
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
               v-if="v$.signUpInputs.countryOfOperation.$error"
               class="error-msg"
             >
-              Country is required
+              {{ $t("auth.countryRequired") }}
             </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">

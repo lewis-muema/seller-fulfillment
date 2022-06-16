@@ -31,11 +31,8 @@
               />
             </div>
             <div v-if="v$.otp.$error" class="error-msg">
-              Otp input is required
+              {{ $t("auth.OTPRequired") }}
             </div>
-            <!-- <div class="wrong-otp-class error-msg" v-if="correctOTP">
-              The code you entered is incorrect
-            </div> -->
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button

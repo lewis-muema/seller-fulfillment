@@ -68,14 +68,6 @@
                 </li>
               </ul>
             </div>
-            <!-- <div class="edit-product-weight-right">
-              <v-select
-                class="edit-product-weight-field"
-                :items="languages"
-                v-model="language"
-                outlined
-              ></v-select>
-            </div> -->
             <router-view></router-view>
           </v-card>
         </v-col>

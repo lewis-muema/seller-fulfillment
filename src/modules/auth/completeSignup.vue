@@ -1,6 +1,5 @@
 <template>
   <div>
-    Full name {{ params }}
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
         <div class="desktop-header-title d-flex">
@@ -27,7 +26,7 @@
                 :placeholder="$t('auth.enterYourPersonalName')"
               />
               <div v-if="v$.params.personalName.$error" class="error-msg">
-                Your name is required
+                {{ $t("auth.nameRequired") }}
               </div>
             </div>
           </div>
@@ -37,7 +36,7 @@
             }}</label>
             <vue-tel-input v-model="params.phoneNo"></vue-tel-input>
             <div v-if="v$.params.phoneNo.$error" class="error-msg">
-              Phone number is required
+              {{ $t("auth.phoneRequired") }}
             </div>
           </div>
           <div class="mb-3">
@@ -149,7 +148,6 @@ export default {
       }
     },
     async completeSignUp() {
-      console.log("clicked");
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
         return;
@@ -166,7 +164,6 @@ export default {
           phone_number: this.params.phoneNo,
         },
       };
-      console.log(payload);
       const fullPayload = {
         app: process.env.SELLER_FULFILLMENT_SERVER,
         values: payload,

@@ -86,7 +86,6 @@ export default {
   async industries({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosGet", payload);
-      console.log("from acttions", res.data);
       commit("setIndustries", res.data.data);
       return res.data;
     } catch (error) {

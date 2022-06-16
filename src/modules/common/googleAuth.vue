@@ -6,6 +6,7 @@
 
 <script>
 import googleAuthInit from "../../mixins/google-auth";
+import jwt_decode from "jwt-decode";
 
 export default {
   mixins: [googleAuthInit],
@@ -19,7 +20,8 @@ export default {
   },
   methods: {
     handleCredentialResponse(response) {
-      console.log(response);
+      let googleUserData = jwt_decode(response.credential);
+      this.$emit("googleUserData", googleUserData);
     },
   },
 };

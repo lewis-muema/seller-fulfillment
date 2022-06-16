@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import auth from "../modules/auth/auth.vue";
-import signIn from "../modules/auth/signin.vue";
-import signUp from "../modules/auth/signup.vue";
+import Auth from "../modules/auth/auth.vue";
+import SignIn from "../modules/auth/signin.vue";
+import SignUp from "../modules/auth/signup.vue";
 import OTP from "../modules/auth/OTP.vue";
+import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
@@ -32,22 +33,27 @@ const routes = [
   {
     path: "/auth/",
     name: "Auth",
-    component: auth,
+    component: Auth,
     children: [
       {
         path: "sign-in",
         name: "SignIn",
-        component: signIn,
+        component: SignIn,
       },
       {
         path: "sign-up",
         name: "SignUP",
-        component: signUp,
+        component: SignUp,
       },
       {
         path: "otp",
         name: "OTP",
         component: OTP,
+      },
+      {
+        path: "complete-signup",
+        name: "CompleteSignup",
+        component: CompleteSignup,
       },
     ],
   },

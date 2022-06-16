@@ -11,4 +11,6 @@ module.exports = {
   ELASTIC_APM_SERVER_URL: '"https://apm.sendyit.com:443"',
   ELASTIC_APM_ENVIRONMENT: '"production"',
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: '"https://auth.sendyit.com"',
+  SELLER_FULFILLMENT_SERVER:
+    "https://fulfillment-biz-logic-service-dev.sendyit.com/v1/",
 };

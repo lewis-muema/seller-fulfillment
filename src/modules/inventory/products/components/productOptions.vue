@@ -223,9 +223,8 @@ export default {
     },
     infoNotification() {
       ElNotification({
-        title: "Insufficient Information",
-        message:
-          "Please fill in all fields and make sure product image is uploaded",
+        title: this.$t("deliveries.insufficientInformation"),
+        message: this.$t("deliveries.pleaseFillInAllFields"),
         type: "warning",
       });
     },

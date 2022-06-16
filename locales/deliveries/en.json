@@ -84,5 +84,15 @@
   "customerInfo": "Customer info",
   "trackOrder": "Track order",
   "otherItems": "and {count} other items",
-  "attempt": "Attempt"
+  "attempt": "Attempt",
+  "insufficientInformation": "Insufficient Information",
+  "pleaseFillInAllFields": "Please fill in all fields and make sure product image is uploaded",
+  "cosignmentEditedSuccessfully": "Cosignment edited successfully",
+  "deliveryEditedSuccessfully": "Delivery edited successfully",
+  "cosignmentEditingFailed": "Cosignment editing failed",
+  "deliveryEditingFailed": "Delivery editing failed",
+  "deliveryRescheduledSuccessfully": "Delivery rescheduled successfully",
+  "deliveryReschedulingFailed": "Delivery rescheduling failed",
+  "deliveryCancelledSuccessfully": "Delivery cancelled successfully",
+  "deliveryCancellingFailed": "Delivery cancelling failed"
 }

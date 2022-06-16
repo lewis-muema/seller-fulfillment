@@ -19,7 +19,11 @@
         :inline="true"
         :prevent-disable-date-selection="true"
       ></datepicker>
-      <v-btn class="tracking-reschedule-submit-button">
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        v-loading="buttonLoader"
+        @click="reschedule()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
@@ -33,19 +37,23 @@
           class="mdi mdi-close tracking-reschedule-title-close"
         ></i>
       </div>
-      <v-radio-group v-model="radioGroup">
+      <v-radio-group v-model="cancelReason">
         <v-radio
           v-for="(reason, x) in cancelReasons"
           :key="x"
           :label="$t(reason.label)"
-          :value="reason.value"
+          :value="$t(reason.value)"
         ></v-radio>
       </v-radio-group>
-      <v-btn class="tracking-cancel-button">
+      <v-btn
+        class="tracking-cancel-button"
+        v-loading="buttonLoader"
+        @click="cancel()"
+      >
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
     </div>
-    <div v-if="popup === 'deliveryInfo'" class="view-products-container">
+    <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editPickUpInfo") }}
@@ -61,8 +69,9 @@
       <GMapAutocomplete
         id="pick-up"
         class="businessProfile-address"
+        :value="location"
         :placeholder="$t('settings.searchLocation')"
-        @place_changed="setPlace"
+        @place_changed="setPickUp"
       >
       </GMapAutocomplete>
       <label for="instructions" class="edit-info-label">
@@ -72,6 +81,7 @@
         name=""
         :placeholder="$t('deliveries.enterInstructions')"
         class="edit-info-instructions"
+        v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
@@ -85,15 +95,33 @@
         v-model="phone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone">
+      <label
+        for="phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("deliveries.pickUpInstructionsOptional") }}
+      </label>
+      <vue-tel-input
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
         <i class="mdi mdi-plus"></i>
         {{ $t("deliveries.addAnotherPhoneNumber") }}
       </p>
-      <v-btn class="edit-info-submit-button">
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitConsignment()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
-    <div v-if="popup === 'pickupInfo'" class="view-products-container">
+    <div v-if="popup === 'deliveryInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editDeliveryInfo") }}
@@ -120,8 +148,9 @@
       <GMapAutocomplete
         id="location"
         class="businessProfile-address"
+        :value="location"
         :placeholder="$t('settings.searchLocation')"
-        @place_changed="setPlace"
+        @place_changed="setLocation"
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
@@ -133,7 +162,21 @@
         v-model="phone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone">
+      <label
+        for="sec-phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("deliveries.pickUpInstructionsOptional") }}
+      </label>
+      <vue-tel-input
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="sec-phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
         <i class="mdi mdi-plus"></i>
         {{ $t("deliveries.addAnotherPhoneNumber") }}
       </p>
@@ -144,11 +187,16 @@
         name=""
         :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
         class="edit-info-instructions"
+        v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
       ></textarea>
-      <v-btn class="edit-info-submit-button">
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitDelivery()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
@@ -357,15 +405,23 @@
 
 <script>
 import Datepicker from "vuejs3-datepicker";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import { ElNotification } from "element-plus";
 import moment from "moment";
 
 export default {
   props: ["overlayVal", "editInfo"],
   watch: {
     "$store.state.overlayStatus": function (val) {
+      this.secondaryPhoneStatus = false;
       this.overlay = val.overlay;
       this.popup = val.popup;
+    },
+    "$store.state.orderTrackingData": function orderTrackingData(val) {
+      this.customerName = val.order.destination.name;
+      this.location = val.order.destination.delivery_location.description;
+      this.phone = val.order.destination.phone_number;
+      this.instructions = val.order.destination.delivery_instructions;
     },
   },
   components: { Datepicker },
@@ -383,31 +439,214 @@ export default {
       promoCode: "",
       newPrice: "KES 450",
       date: new Date(),
+      location: "",
+      locationData: {},
+      instructions: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
-          value: "",
+          value: "deliveries.orderIsNotReady",
         },
         {
           label: "deliveries.wrongLocation",
-          value: "",
+          value: "deliveries.wrongLocation",
         },
         {
           label: "deliveries.duplicateOrder",
-          value: "",
+          value: "deliveries.duplicateOrder",
         },
       ],
+      cancelReason: "",
       phone: "",
       customerName: "",
+      buttonLoader: false,
+      secPhone: "",
+      secondaryPhoneStatus: false,
     };
   },
   methods: {
+    ...mapActions(["requestAxiosPut"]),
     overlayStatusSet(overlay, popup) {
+      this.secondaryPhoneStatus = false;
       this.overlay = overlay;
       this.popup = popup;
     },
-    setPlace(path) {
-      console.log(path);
+    setPickUp(path) {
+      this.locationData = path;
+      this.location = document.querySelector("#pick-up").value;
+    },
+    setLocation(path) {
+      this.locationData = path;
+      this.location = document.querySelector("#location").value;
+    },
+    submitConsignment() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      const order = this.getOrderTrackingData.order;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
+        values: {
+          products: order.products,
+          destination: {
+            name: this.customerName,
+            phone_number: order.destination.phone_number,
+            delivery_location: {
+              description: this.location
+                ? this.location
+                : order.destination.delivery_location.description,
+              longitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lng()
+                : order.destination.delivery_location.longitude,
+              latitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lat()
+                : order.destination.delivery_location.latitude,
+            },
+            house_location: order.destination.house_location,
+            delivery_instructions: order.destination.delivery_instructions,
+          },
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.cosignmentEditedSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "pickupInfo");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.cosignmentEditingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    submitDelivery() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      const order = this.getOrderTrackingData.order;
+      const meansOfPayment =
+        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
+        values: {
+          means_of_payment: {
+            means_of_payment_type: meansOfPayment.means_of_payment_type,
+            means_of_payment_identifier: meansOfPayment.means_of_payment_id,
+            participant_type: meansOfPayment.participant_type,
+            participant_id: meansOfPayment.participant_id,
+            meta_data: meansOfPayment.meta_data,
+          },
+          products: order.products,
+          destination: {
+            name: order.destination.name,
+            phone_number: order.destination.phone_number,
+            delivery_location: {
+              description: this.location
+                ? this.location
+                : order.destination.delivery_location.description,
+              longitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lng()
+                : order.destination.delivery_location.longitude,
+              latitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lat()
+                : order.destination.delivery_location.latitude,
+            },
+            house_location: order.destination.house_location,
+            delivery_instructions: order.destination.delivery_instructions,
+          },
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryEditedSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "deliveryInfo");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryEditingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    reschedule() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/reschedule`,
+        values: {
+          proposed_scheduled_date: new Date(this.date).valueOf(),
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryRescheduledSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "reschedule");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryReschedulingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    cancel() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/cancel`,
+        values: {
+          cancellation_reason: this.cancelReason,
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "reschedule");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryCancellingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
     },
     redirect(status, popup, link) {
       this.overlayStatusSet(status, popup);

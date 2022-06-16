@@ -98,4 +98,7 @@ export default {
   padding: 20px 0px;
   background: white;
 }
+.pac-container {
+  z-index: 10000 !important;
+}
 </style>

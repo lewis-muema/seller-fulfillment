@@ -53,7 +53,7 @@
               ? getOrderTrackingData.order.destination.delivery_instructions
               : "N/A"
             : getOrderTrackingData.order.destination.delivery_location
-                .delivery_location
+                .description
         }}
       </span>
     </p>
@@ -131,7 +131,7 @@ export default {
       "setOverlayStatus",
     ]),
     overlayStatus(overlay) {
-      if (parent === "sendy") {
+      if (this.parent === "sendy") {
         this.setOverlayStatus({
           overlay,
           popup: "pickupInfo",

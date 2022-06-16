@@ -168,6 +168,7 @@
 import productOptions from "@/modules/inventory/products/components/productOptions";
 import upload_img from "../../../../mixins/upload_img";
 import { ElNotification } from "element-plus";
+import { mapMutations } from "vuex";
 
 export default {
   components: {
@@ -190,7 +191,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.productDetails"));
+    this.setComponent(this.$t("common.productDetails"));
     this.initiateS3();
     if (this.$route.params.pV) {
       this.productVariants = JSON.parse(this.$route.params.pV);
@@ -207,6 +208,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     pickImg() {
       document.querySelector("#upload-img").click();
     },

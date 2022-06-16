@@ -1,31 +1,32 @@
 <template>
-  <div>
-    <div class="invoices-info-bar-container">
-      <el-date-picker
-        class="invoices-info-bar-filter-from"
-        v-model="from"
-        type="date"
-        :placeholder="$t('payments.from')"
-      />
-      <el-date-picker
-        class="invoices-info-bar-filter-to"
-        v-model="to"
-        type="date"
-        :placeholder="$t('payments.to')"
-      />
-      <i class="mdi mdi-magnify paymnets-info-bar-search"></i>
-      <div>
+  <div class="invoices-container">
+    <div class="statements-info-bar-container-list">
+      <div class="statement-info-bar-filter">
+        <label for="range" class="deliveries-date-label">
+          {{ $t("deliveries.filterByCompletionDate") }}
+        </label>
+        <el-date-picker
+          class="deliveries-date-picker"
+          id="range"
+          v-model="range"
+          type="daterange"
+          :start-placeholder="$t('deliveries.startDate')"
+          :end-placeholder="$t('deliveries.endDate')"
+        />
+      </div>
+      <div class="statement-info-bar-download">
         <v-menu transition="slide-y-transition" anchor="bottom center">
           <template v-slot:activator="{ props }">
-            <v-btn class="statements-actions-btn" v-bind="props">
+            <v-btn
+              class="statements-actions-btn"
+              append-icon="mdi-chevron-down"
+              v-bind="props"
+            >
               {{ $t("payments.download") }}
             </v-btn>
           </template>
           <v-list class="users-actions-popup">
-            <v-list-item
-              v-for="(action, i) in $store.getters.getDownloadActions"
-              :key="i"
-            >
+            <v-list-item v-for="(action, i) in getDownloadActions" :key="i">
               <v-list-item-title>
                 {{ $t(action.label) }}
               </v-list-item-title>
@@ -40,63 +41,50 @@
           <thead>
             <tr>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
+                <span :class="getLoader" class="first-col-padding">{{
                   $t("payments.invoiceNumber")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("payments.deliveries")
-                }}</span>
+                <span :class="getLoader">{{ $t("payments.deliveries") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("payments.amount")
-                }}</span>
+                <span :class="getLoader">{{ $t("payments.amount") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("payments.status")
-                }}</span>
+                <span :class="getLoader">{{ $t("payments.status") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("payments.dateSent")
-                }}</span>
+                <span :class="getLoader">{{ $t("payments.dateSent") }}</span>
               </th>
               <th class="text-left">
-                <span :class="$store.getters.getLoader">{{
-                  $t("payments.action")
-                }}</span>
+                <span :class="getLoader">{{ $t("payments.action") }}</span>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="(invoice, x) in $store.getters.getInvoices"
+              v-for="(invoice, x) in getInvoices"
               :key="x"
               class="invoices-table-row"
             >
               <td class="invoices-table-col">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader" class="first-col-padding">
                   {{ invoice.number }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ invoice.deliveries }} {{ $t("payments.deliveries") }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ invoice.amount }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span
-                  v-if="$store.getters.getLoader"
-                  :class="$store.getters.getLoader"
-                >
+                <span v-if="getLoader" :class="getLoader">
                   {{ invoice.status }}
                 </span>
                 <span v-else :class="`invoices-${invoice.status}-status`">
@@ -104,14 +92,14 @@
                 >
               </td>
               <td class="invoices-table-col">
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ invoice.dateSent }}
                 </span>
               </td>
               <td class="invoices-table-col-last">
                 <span
                   class="invoices-view-col"
-                  :class="$store.getters.getLoader"
+                  :class="getLoader"
                   @click="$router.push(invoice.link)"
                 >
                   {{ invoice.action }}
@@ -126,13 +114,19 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["getLoader", "getInvoices", "getDownloadActions"]),
+  },
   data() {
     return {
       orders: "3",
       amount: "KES 750",
       from: "",
       to: "",
+      range: "",
     };
   },
 };
@@ -164,7 +158,7 @@ export default {
   cursor: pointer;
 }
 .invoices-table {
-  margin: 20px;
+  margin: 20px 0px;
 }
 .invoices-table-row {
   height: 60px;
@@ -174,6 +168,8 @@ export default {
 }
 .invoices-table-col {
   width: 17%;
+  height: 80px !important;
+  align-items: center;
 }
 .invoices-table-col-last {
   width: 15%;
@@ -193,5 +189,12 @@ export default {
 .invoices-view-col {
   color: #324ba8;
   cursor: pointer;
+}
+.invoices-container {
+  padding-top: 30px;
+  background: white;
+}
+.first-col-padding {
+  padding-left: 20px;
 }
 </style>

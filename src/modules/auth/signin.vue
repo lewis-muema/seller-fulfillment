@@ -53,8 +53,8 @@
               }}</label>
               <vue-tel-input
                 v-model="phone"
-                v-bind="sendyPhoneProps"
-                :input-options="vueTelInputProps"
+                v-bind="getSendyPhoneProps"
+                :input-options="getVueTelInputProps"
               ></vue-tel-input>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto pt-3">
@@ -92,11 +92,16 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       emailLogin: true,
     };
+  },
+  computed: {
+    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
   },
   methods: {
     phoneNumberLogin() {

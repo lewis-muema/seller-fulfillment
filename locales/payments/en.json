@@ -35,5 +35,12 @@
   "download": "Download",
   "pleaseMakePayment": "Please make payment",
   "pleaseMakeYourPayment": "Please make your payment of {amount} for {total} completed deliveries to continue placing deliveries to your customers.",
-  "makePayment": "Make Payment"
+  "makePayment": "Make Payment",
+  "pendingPayment": "Pending Payment",
+  "hiPleaseMakeYourPayment": "Hi {name}, please make your payment of",
+  "forCompletedOrders": "for {orders} compeleted deliveries to continue placing deliveries to your customers.",
+  "orderSummary": "Order summary",
+  "showMore": "Show more",
+  "amountToPay": "Amount to Pay",
+  "continueToMakePayment": "Continue to make payment"
 }

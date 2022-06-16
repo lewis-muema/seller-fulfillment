@@ -94,6 +94,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -109,7 +111,10 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("settings.addAUser"));
+    this.setComponent(this.$t("settings.addAUser"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>
@@ -121,6 +126,7 @@ export default {
   padding: 3% 5%;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
+  background: white;
 }
 .userPermisssions-label {
   font-size: 14px;

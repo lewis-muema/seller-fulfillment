@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="transaction-history-content-title">
-      <span :class="$store.getters.getLoader">
+      <span :class="getLoader">
         {{ $t("payments.transactionHistory") }}
       </span>
     </p>
@@ -10,69 +10,60 @@
         <thead>
           <tr>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("payments.details")
-              }}</span>
+              <span :class="getLoader">{{ $t("payments.details") }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
+              <span :class="getLoader">{{
                 $t("payments.paymentDetails")
               }}</span>
             </th>
             <th class="text-left">
-              <span :class="$store.getters.getLoader">{{
-                $t("payments.datePaid")
-              }}</span>
+              <span :class="getLoader">{{ $t("payments.datePaid") }}</span>
             </th>
             <th class="text-left">
-              <span
-                class="invoices-price-col"
-                :class="$store.getters.getLoader"
-                >{{ $t("payments.amountPaid") }}</span
-              >
+              <span class="invoices-price-col" :class="getLoader">{{
+                $t("payments.amountPaid")
+              }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="(invoice, x) in $store.getters.getTransationHistory"
+            v-for="(invoice, x) in getTransationHistory"
             :key="x"
             class="invoices-table-row"
           >
             <td class="invoices-table-col">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 <i
-                  v-if="!$store.getters.getLoader"
+                  v-if="!getLoader"
                   class="transaction-history-details-icon"
                   :class="`mdi ${invoice.details.icon}`"
                 ></i>
               </span>
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ invoice.details.description }}
               </span>
             </td>
             <td class="invoices-table-col">
               <p>
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ invoice.paymentDetails }}
                 </span>
               </p>
-              <p>
-                <span :class="$store.getters.getLoader">
+              <p class="invoice-subtitle">
+                <span :class="getLoader">
                   {{ invoice.code }}
                 </span>
               </p>
             </td>
             <td class="invoices-table-col">
-              <span :class="$store.getters.getLoader">
+              <span :class="getLoader">
                 {{ invoice.datePaid }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span
-                class="invoices-price-col"
-                :class="$store.getters.getLoader"
-              >
+              <span class="invoices-price-col" :class="getLoader">
                 {{ invoice.amountPaid }}
               </span>
             </td>
@@ -84,7 +75,13 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  computed: {
+    ...mapGetters(["getLoader", "getTransationHistory"]),
+  },
+};
 </script>
 
 <style>
@@ -93,6 +90,7 @@ export default {};
   padding: 35px;
   border: 1px solid #e2e7ed;
   border-radius: 10px;
+  background: white;
 }
 .transaction-history-content-title {
   margin-left: 30px;

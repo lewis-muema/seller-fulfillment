@@ -25,7 +25,7 @@
               <v-list-item lines="two">
                 <v-list-item-header>
                   <v-list-item-title>
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{
                         getSelectedTab === "To your Customers"
                           ? delivery.customerName
@@ -36,7 +36,7 @@
                   <v-list-item-subtitle
                     class="dashboard-customer-delivery-location"
                   >
-                    <span :class="$store.getters.getLoader"
+                    <span :class="getLoader"
                       >{{
                         getSelectedTab === "To your Customers"
                           ? delivery.customerDeliveryLocation
@@ -51,7 +51,7 @@
               <v-list-item lines="two">
                 <v-list-item-header>
                   <v-list-item-title>
-                    <span :class="$store.getters.getLoader">
+                    <span :class="getLoader">
                       {{ delivery.progress }}
                     </span>
                   </v-list-item-title>
@@ -69,7 +69,7 @@
                 to="/deliveries/tracking"
                 class="dashboard-track-order"
               >
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ delivery.action }}
                 </span>
               </router-link>
@@ -95,7 +95,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["getDashboardSelectedTab"]),
+    ...mapGetters(["getDashboardSelectedTab", "getLoader"]),
     getSelectedTab() {
       return this.selectedTab;
     },

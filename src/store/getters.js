@@ -35,4 +35,7 @@ export default {
   getUserData: (state) => state.userData,
   getGoogleUserData: (state) => state.googleUserData,
   getIndustries: (state) => state.industries,
+  getOverlayStatus: (state) => state.overlayStatus,
+  getSendyPhoneProps: (state) => state.sendyPhoneProps,
+  getVueTelInputProps: (state) => state.vueTelInputProps,
 };

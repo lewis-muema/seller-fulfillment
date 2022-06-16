@@ -6,7 +6,7 @@
         <delivery-checkout v-if="to === 'customer'" />
       </v-col>
       <v-col cols="4">
-        <products-summary />
+        <products-summary :to="to" />
       </v-col>
     </v-row>
   </div>
@@ -20,13 +20,7 @@ import productsSummary from "./productsSummary";
 export default {
   components: { productsSummary, pickupCheckout, deliveryCheckout },
   data() {
-    return {
-      sendyPhoneProps: {
-        mode: "international",
-        defaultCountry: "ke",
-        preferredCountries: ["ke", "ug", "tz"],
-      },
-    };
+    return {};
   },
   props: ["to"],
   computed: {

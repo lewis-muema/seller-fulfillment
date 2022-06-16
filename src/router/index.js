@@ -27,6 +27,7 @@ import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 
 const routes = [
   {
@@ -130,6 +131,11 @@ const routes = [
     path: "/payments/view-invoice",
     name: "View Invoice",
     component: viewInvoice,
+  },
+  {
+    path: "/payments/payment-summary",
+    name: "Payment Summary",
+    component: paymentSummary,
   },
   {
     path: "/settings/profile",

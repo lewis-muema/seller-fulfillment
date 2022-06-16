@@ -27,12 +27,12 @@
                   </v-list-item-avatar>
                   <v-list-item-header>
                     <v-list-item-title>
-                      <span :class="$store.getters.getLoader">
+                      <span :class="getLoader">
                         {{ product.product_name }}
                       </span>
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      <span :class="$store.getters.getLoader">
+                      <span :class="getLoader">
                         {{
                           product.product_variants
                             ? `${product.product_variants.length} product options`
@@ -44,7 +44,7 @@
                 </v-list-item>
               </td>
               <td>
-                <span :class="$store.getters.getLoader">
+                <span :class="getLoader">
                   {{ product.available }} in Stock
                 </span>
               </td>
@@ -58,7 +58,7 @@
                   }"
                   class="view-product-link"
                 >
-                  <span :class="$store.getters.getLoader"
+                  <span :class="getLoader"
                     >{{ $t("inventory.view") }}
                   </span></router-link
                 >
@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getProductLists"]),
+    ...mapGetters(["getProductLists", "getLoader"]),
     products() {
       return this.getProductLists.data.products;
     },
@@ -114,6 +114,7 @@ export default {
 <style>
 .desktop-product-details {
   border-color: #e2e7ed;
+  background: white;
 }
 .products-search {
   width: 30%;

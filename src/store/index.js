@@ -34,20 +34,50 @@ export default createStore({
           label: "PDF",
         },
       ],
+      sendyPhoneProps: {
+        mode: "international",
+        defaultCountry: "ke",
+        preferredCountries: ["ke", "ug", "tz"],
+      },
+      vueTelInputProps: {
+        disabledFetchingCountry: false,
+        disabled: false,
+        disabledFormatting: false,
+        placeholder: "Enter phone number",
+        required: false,
+        enabledCountryCode: false,
+        enabledFlags: true,
+        autocomplete: "off",
+        name: "telephone",
+        maxLen: 25,
+        dropdownOptions: {
+          disabledDialCode: false,
+        },
+        inputOptions: {
+          showDialCode: false,
+        },
+      },
       deliveryActions: [
         {
           label: "deliveries.getDeliveryCode",
           trigger: false,
+          popup: "deliveryCode",
         },
         {
           label: "deliveries.rescheduleOrder",
           trigger: false,
+          popup: "reschedule",
         },
         {
           label: "deliveries.cancelOrder",
           trigger: false,
+          popup: "cancel",
         },
       ],
+      overlayStatus: {
+        overlay: false,
+        popup: "",
+      },
       tab: "All",
       loader: "loading-text",
       overlay: false,

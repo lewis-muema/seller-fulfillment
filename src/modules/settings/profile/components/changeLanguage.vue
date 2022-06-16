@@ -6,7 +6,7 @@
     <v-select
       class="changeLanguage-field"
       id="languages"
-      :items="$store.getters.getLanguages"
+      :items="getLanguages"
       v-model="defaultLanguage"
       outlined
     ></v-select>
@@ -17,11 +17,16 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   watch: {
     defaultLanguage(val) {
-      this.$store.commit("setDefaultLanguage", val);
+      this.setDefaultLanguage(val);
     },
+  },
+  computed: {
+    ...mapGetters(["getLanguages", "getDefaultLanguage"]),
   },
   data() {
     return {
@@ -29,7 +34,10 @@ export default {
     };
   },
   mounted() {
-    this.defaultLanguage = this.$store.getters.getDefaultLanguage;
+    this.defaultLanguage = this.getDefaultLanguage;
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setDefaultLanguage"]),
   },
 };
 </script>
@@ -57,6 +65,7 @@ export default {
 .changeLanguage-field .v-input__control {
   border: 1px solid #c5c5c5;
   border-radius: 5px;
+  background: white;
   --v-input-padding-top: 10px;
 }
 </style>

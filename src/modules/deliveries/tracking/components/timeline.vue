@@ -26,10 +26,10 @@
                 : ''
             "
           >
-            <span :class="$store.getters.getLoader">
+            <span :class="getLoader">
               {{
                 formatEventName(
-                  $t(`${$store.getters.getOrderEvents[activity.title]}`, {
+                  $t(`${getOrderEvents[activity.title]}`, {
                     Date: activity.date,
                   })
                 )
@@ -52,9 +52,14 @@
           <div
             v-if="activity.event_code === 'event.delivery.failed'"
             class="timeline-delivery-attempts"
-            @click="overlay = true"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: 'attempts',
+              })
+            "
           >
-            <span :class="$store.getters.getLoader">
+            <span :class="getLoader">
               2 {{ $t("deliveries.attempts") }}
               <i class="mdi mdi-chevron-right"></i>
             </span>
@@ -62,38 +67,13 @@
         </el-timeline-item>
       </el-timeline>
     </div>
-    <v-overlay v-model="overlay" class="align-center justify-center">
-      <div class="timeline-failed-attempt-container">
-        <div class="timeline-failed-attempt-section">
-          <p class="timeline-failed-attempt-label">
-            {{ $t("deliveries.attemptsAndReasons") }}
-          </p>
-          <i
-            @click="overlay = false"
-            class="mdi mdi-close timeline-failed-attempt-close"
-          ></i>
-        </div>
-        <div v-for="(attempt, i) in attempts" :key="i">
-          <div class="timeline-failed-attempt-row-top">
-            <p class="timeline-failed-attempt-row-top-left">
-              {{ attempt.attempt }}
-            </p>
-            <p class="timeline-failed-attempt-row-top-right">
-              {{ attempt.time }}
-            </p>
-          </div>
-          <p class="timeline-failed-attempt-row-bottom">
-            {{ attempt.reason }}
-          </p>
-        </div>
-      </div>
-    </v-overlay>
   </div>
 </template>
 
 <script>
 import moment from "moment";
 import statusMixin from "../../../../mixins/status_mixin";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   mixins: [statusMixin],
@@ -106,69 +86,59 @@ export default {
       activeEvent: "",
       activeIndex: 0,
       overlay: false,
-      attempts: [
-        {
-          attempt: "Attempt 1",
-          time: "6th Jan 10:23 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Attempt 2",
-          time: "6th Jan 11:42 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Final Attempt",
-          time: "6th Jan 3:42 am",
-          reason: "Damaged goods",
-        },
-      ],
     };
+  },
+  computed: {
+    ...mapGetters([
+      "getLoader",
+      "getOrderEvents",
+      "getData",
+      "getOrderStatuses",
+      "getRescheduledOrderTimelines",
+      "getOrderTimelines",
+    ]),
   },
   mounted() {
     this.sortTimelineEvents();
   },
   methods: {
+    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
     formatEventName(name) {
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
     sortTimelineEvents() {
-      const timeline = this.$store.getters.getData.data.event_time_line;
+      const timeline = this.getData.data.event_time_line;
       const activeEvent = timeline[timeline.length - 1].event_code;
-      this.activeIndex = this.$store.getters.getOrderStatuses.findIndex(
+      this.activeIndex = this.getOrderStatuses.findIndex(
         (evt) => evt === activeEvent
       );
       this.activities = this.filteredEventTimelineV2();
-      this.rider = this.$store.getters.getData.data.partner_contact_information;
+      this.rider = this.getData.data.partner_contact_information;
     },
     failedRescheduledStatus() {
-      const rescheduled =
-        this.$store.getters.getData.data.event_time_line.filter((event) =>
-          this.getStatus([13, 14, 15]).includes(event.event_code)
-        );
-      const failed = this.$store.getters.getData.data.event_time_line.filter(
-        (event) => this.getStatus([12]).includes(event.event_code)
+      const rescheduled = this.getData.data.event_time_line.filter((event) =>
+        this.getStatus([13, 14, 15]).includes(event.event_code)
+      );
+      const failed = this.getData.data.event_time_line.filter((event) =>
+        this.getStatus([12]).includes(event.event_code)
       );
       return rescheduled.length > 0 && failed.length > 0;
     },
     filteredEventTimelineV2() {
       const events = [];
       const timelines = this.failedRescheduledStatus()
-        ? this.$store.getters.getRescheduledOrderTimelines
-        : this.$store.getters.getOrderTimelines;
+        ? this.getRescheduledOrderTimelines
+        : this.getOrderTimelines;
       timelines.forEach((row, index) => {
         if (this.activeIndex === index) {
           row.steps.forEach((step, i) => {
-            const evts =
-              this.$store.getters.getData.data.event_time_line.filter(
-                (timeline) =>
-                  timeline.event_code ===
-                  this.$store.getters.getOrderStatuses[step]
-              );
+            const evts = this.getData.data.event_time_line.filter(
+              (timeline) => timeline.event_code === this.getOrderStatuses[step]
+            );
             const evtDate =
               evts.length > 0 ? evts[evts.length - 1].event_date : "";
             events.push({
-              event_code: this.$store.getters.getOrderStatuses[step],
+              event_code: this.getOrderStatuses[step],
               index,
               active: row.colors[i] === "#324ba8",
               title: row.titles[i],
@@ -190,14 +160,14 @@ export default {
           return moment(timeline).format(date.format);
         }
         if (date.type === "scheduled") {
-          return moment(
-            this.$store.getters.getData.data.scheduled_delivery_date
-          ).format(date.format);
+          return moment(this.getData.data.scheduled_delivery_date).format(
+            date.format
+          );
         }
         if (date.type === "completed") {
-          return moment(
-            this.$store.getters.getData.data.order_completion_date
-          ).format(date.format);
+          return moment(this.getData.data.order_completion_date).format(
+            date.format
+          );
         }
         if (date.type === "today") {
           return this.$t("timeline.today");
@@ -221,6 +191,7 @@ export default {
   margin-left: 70px;
   padding: 20px;
   border-radius: 10px;
+  background: white;
 }
 .el-timeline-item-desktop {
   padding-right: 40%;

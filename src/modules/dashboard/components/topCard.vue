@@ -18,12 +18,12 @@
                   ></v-icon>
                   <v-list-item-header>
                     <v-list-item-title class="count">
-                      <span :class="$store.getters.getLoader">
+                      <span :class="getLoader">
                         {{ order.count }}
                       </span>
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      <span :class="$store.getters.getLoader">
+                      <span :class="getLoader">
                         {{ order.orderStatus }}
                       </span>
                     </v-list-item-subtitle>
@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -79,6 +81,9 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
 };
 </script>
 
@@ -87,6 +92,7 @@ export default {
   border-color: #e2e7ed;
   height: auto;
   padding-left: 25px;
+  background: white;
 }
 .desktop-dashboard-icon {
   background: #f1f2f4;

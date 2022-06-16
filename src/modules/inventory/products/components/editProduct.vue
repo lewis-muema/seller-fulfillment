@@ -23,6 +23,8 @@
 
 <script>
 import productInputs from "../components/productInputs.vue";
+import { mapMutations } from "vuex";
+
 export default {
   components: {
     productInputs,
@@ -31,10 +33,12 @@ export default {
     return {};
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.editProduct"));
+    this.setComponent(this.$t("common.editProduct"));
   },
   computed: {},
-  methods: {},
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+  },
 };
 </script>
 

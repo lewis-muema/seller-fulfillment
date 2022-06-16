@@ -63,14 +63,20 @@
           </v-list-item-header>
         </v-list-item>
       </v-list>
+      <div v-if="to === 'customer'">
+        <totalAmount />
+      </div>
     </v-card>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import totalAmount from "./totalAmount.vue";
+
 export default {
-  components: {},
+  props: ["to"],
+  components: { totalAmount },
   data() {
     return {};
   },

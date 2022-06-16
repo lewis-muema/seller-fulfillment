@@ -16,7 +16,7 @@
           v-model="name"
           variant="outlined"
           clearable
-          clear-icon="mdi-cancel"
+          clear-icon="mdi-close"
         ></v-text-field>
         <label for="email-address" class="addUser-label">
           {{ $t("settings.emailAddress") }}
@@ -28,7 +28,7 @@
           v-model="emailAddress"
           variant="outlined"
           clearable
-          clear-icon="mdi-cancel"
+          clear-icon="mdi-close"
         ></v-text-field>
         <label for="user-role" class="addUser-label">
           {{ $t("settings.userRole") }}
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -60,7 +62,10 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("settings.addAUser"));
+    this.setComponent(this.$t("settings.addAUser"));
+  },
+  methods: {
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
   },
 };
 </script>
@@ -72,6 +77,7 @@ export default {
   padding: 3% 5%;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
+  background: white;
 }
 .addUser-label {
   font-size: 14px;

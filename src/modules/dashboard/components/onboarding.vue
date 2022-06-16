@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -97,54 +99,55 @@ export default {
       dashboardContent: [
         {
           step: 1,
-          title: "Account Created",
+          title: this.$t("dashboard.accountCreated"),
           text: "",
           button: "",
           icon: "mdi-check-circle",
         },
         {
           step: 2,
-          title: "Add your Products",
-          text: "Add or import the list of products that you will be fulfilling",
-          button: "Add Products",
+          title: this.$t("dashboard.addYourProducts"),
+          text: this.$t("dashboard.addOrImport"),
+          button: this.$t("dashboard.addProducts"),
           icon: "mdi-check-circle",
         },
         {
-          title: "Send us your inventory",
-          text: "Send us the products that you want us to deliver to your customers",
-          button: "Send inventory",
+          title: this.$t("dashboard.sendUsYourInventory"),
+          text: this.$t("dashboard.sendUsTheProducts"),
+          button: this.$t("dashboard.sendTheInventory"),
           icon: "mdi-check-circle",
         },
         {
-          title: "Deliver to Customer",
-          text: "Send a delivery to your customer",
-          button: "Deliver to a customer",
+          title: this.$t("dashboard.deliverToCustomer"),
+          text: this.$t("dashboard.sendADelivery"),
+          button: this.$t("dashboard.deliverToACustomer"),
           icon: "mdi-check-circle",
         },
       ],
       dashboardLinks: [
         {
-          title: "Need help?",
-          name: `Book a time with one of our fulfillment Specialist`,
+          title: this.$t("dashboard.needHelp"),
+          name: this.$t("dashboard.bookATime"),
           icon: "mdi-face-agent",
         },
         {
-          title: "Watch tutorial",
-          name: "Learn how to send us your inventory",
+          title: this.$t("dashboard.watchTutorial"),
+          name: this.$t("dashboard.learnHowToSend"),
           icon: "mdi-play-box-multiple",
         },
         {
-          title: "Meet us in person",
-          name: "Attend one of our upcoming events",
+          title: this.$t("dashboard.meetUsInPerson"),
+          name: this.$t("dashboard.attendOneOfOurUpcomingEvents"),
           icon: "mdi-calendar-week-begin",
         },
       ],
     };
   },
   mounted() {
-    this.$store.commit("setComponent", this.$t("common.getStarted"));
+    this.setComponent(this.$t("common.getStarted"));
   },
   methods: {
+    ...mapMutations(["setComponent"]),
     completeSteps() {
       this.activeStep += 1;
     },

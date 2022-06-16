@@ -39,4 +39,6 @@ export default {
   getSendyPhoneProps: (state) => state.sendyPhoneProps,
   getVueTelInputProps: (state) => state.vueTelInputProps,
   getErrors: (state) => state.errors,
+  getLoginData: (state) => state.loginData,
+  getOTPRedirectUrl: (state) => state.OTPRedirectUrl,
 };

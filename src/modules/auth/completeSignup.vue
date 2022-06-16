@@ -74,10 +74,12 @@
 import { mapGetters, mapActions } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import industryList from "@/mixins/industry_list";
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
+  mixins: [industryList],
   data() {
     return {
       loading: false,
@@ -136,16 +138,6 @@ export default {
     ...mapActions(["businessUserDetails", "industries"]),
     selectIndustryId(event) {
       this.params.industryOfBusiness = event.target.value;
-    },
-    async industryList() {
-      const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
-        endpoint: `seller/${this.businessId}/industries`,
-      };
-      const data = await this.industries(fullPayload);
-      if (data.errors.length === 0) {
-        return data;
-      }
     },
     async completeSignUp() {
       this.v$.$validate();

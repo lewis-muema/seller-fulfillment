@@ -73,9 +73,30 @@ export default {
       return error.response;
     }
   },
+  async loginUser({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      commit("setLoginData", res.data.data);
+      return res;
+    } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
+      return error.response;
+    }
+  },
+  async attemptLogin({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      commit("setSession", res.data.data);
+      return res;
+    } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
+      return error.response;
+    }
+  },
   async confirmUser({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPost", payload);
+      console.log("confirm user", res);
       commit("setConfirmedUser", res.data);
       return res;
     } catch (error) {

@@ -79,7 +79,7 @@
               {{ $t("auth.continue") }}
             </button>
             <div class="text-center text-grey">or</div>
-            <google-auth @googleUserData="googleUserData" />
+            <google-auth />
           </div>
           <p class="desktop-login-link login-link-text">
             {{ $t("auth.haveAnAccount") }}
@@ -144,17 +144,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getGoogleUserData", "getErrors"]),
+    ...mapGetters(["getErrors", "getGoogleUserData"]),
     businessEmail() {
       return this.getGoogleUserData.email;
     },
   },
   methods: {
     ...mapActions(["signupUser"]),
-    ...mapMutations(["setGoogleUserData"]),
-    googleUserData(value) {
-      this.setGoogleUserData(value);
-    },
+    ...mapMutations(["setOTPRedirectUrl"]),
     async submitForm() {
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
@@ -178,6 +175,7 @@ export default {
         const data = await this.signupUser(fullPayload);
         if (data.status === 200) {
           this.loading = false;
+          this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
         }
         this.loading = false;
@@ -202,9 +200,15 @@ form {
 .login-link-text > a {
   color: #324ba8 !important;
 }
+.terms-link-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .terms-link-text > a {
   color: #324ba8 !important;
   text-decoration: none;
+  align-items: center;
 }
 .v-card-text {
   opacity: unset;

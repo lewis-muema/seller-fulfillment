@@ -58,7 +58,7 @@
 
 <script>
 import VOtpInput from "vue3-otp-input";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 export default {
@@ -79,16 +79,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserData"]),
+    ...mapGetters(["getUserData", "getLoginData", "getOTPRedirectUrl"]),
     userEmail() {
-      return this.getUserData.business.business_email;
+      return this.getOTPRedirectUrl === "otp/signIn"
+        ? this.getLoginData.email
+        : this.getUserData.business.business_email;
     },
     businessId() {
-      return this.getUserData.business.business_id;
+      return this.getOTPRedirectUrl === "otp/signIn"
+        ? this.getLoginData.business_id
+        : this.getUserData.business.business_id;
     },
   },
   methods: {
-    ...mapActions(["confirmUser"]),
+    ...mapActions(["confirmUser", "attemptLogin"]),
+    ...mapMutations(["setAccessToken", "setRefreshToken"]),
     handleOnComplete(value) {
       this.otp = parseInt(value);
     },
@@ -108,16 +113,31 @@ export default {
       const fullPayload = {
         app: process.env.SELLER_FULFILLMENT_SERVER,
         values: payload,
-        endpoint: "seller/business/signup/confirm",
+        endpoint:
+          this.getOTPRedirectUrl === "otp/signIn"
+            ? "seller/business/signin/confirm"
+            : "seller/business/signup/confirm",
       };
-      const data = await this.confirmUser(fullPayload);
-      if (data.status === 200) {
-        this.correctOTP = true;
-        this.clearInput();
+      try {
+        const data = await this.attemptLogin(fullPayload);
+        if (data.status === 200) {
+          this.correctOTP = true;
+          const accessToken = data.data.access_token;
+          const refreshToken = data.data.refresh_token;
+          this.setAccessToken(accessToken);
+          this.setRefreshToken(refreshToken);
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+          this.clearInput();
+          this.loading = false;
+          this.getOTPRedirectUrl === "otp/signIn"
+            ? this.$router.push("/")
+            : this.$router.push("/auth/complete-signup");
+        }
         this.loading = false;
-        this.$router.push("/auth/complete-signup");
+      } catch (error) {
+        console.log(error);
       }
-      this.loading = false;
     },
   },
 };

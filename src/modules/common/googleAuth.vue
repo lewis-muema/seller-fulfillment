@@ -7,6 +7,7 @@
 <script>
 import googleAuthInit from "../../mixins/google-auth";
 import jwt_decode from "jwt-decode";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [googleAuthInit],
@@ -16,12 +17,15 @@ export default {
     },
   },
   mounted() {
+    // this.initGA();
     this.initiateGA(this.googleClientId);
   },
   methods: {
+    ...mapMutations(["setGoogleUserData"]),
     handleCredentialResponse(response) {
       let googleUserData = jwt_decode(response.credential);
-      this.$emit("googleUserData", googleUserData);
+      this.setGoogleUserData(googleUserData);
+      this.$router.push("/auth/confirm-info");
     },
   },
 };

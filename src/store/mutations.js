@@ -113,4 +113,16 @@ export default {
   setErrors(state, val) {
     state.errors = val;
   },
+  setLoginData(state, val) {
+    state.loginData = val;
+  },
+  setOTPRedirectUrl(state, val) {
+    state.OTPRedirectUrl = val;
+  },
+  setAccessToken(state, val) {
+    state.accessToken = val;
+  },
+  setRefreshToken(state, val) {
+    state.refreshToken = val;
+  },
 };

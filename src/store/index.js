@@ -18,6 +18,8 @@ export default createStore({
         "/auth/sign-up",
         "/auth/otp",
         "/auth/complete-signup",
+        "/auth/complete-google-signup",
+        "/auth/confirm-info",
         "/external/invite",
       ],
       userData: {},
@@ -26,6 +28,10 @@ export default createStore({
       googleUserData: {},
       industries: {},
       errors: {},
+      loginData: {},
+      OTPRedirectUrl: "",
+      accessToken: "",
+      refreshToken: "",
       productStep: 0,
       downloadActions: [
         {

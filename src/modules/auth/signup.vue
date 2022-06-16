@@ -96,6 +96,7 @@
 <script>
 import googleAuth from "@/modules/common/googleAuth";
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 export default {
@@ -143,7 +144,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getGoogleUserData"]),
+    ...mapGetters(["getGoogleUserData", "getErrors"]),
     businessEmail() {
       return this.getGoogleUserData.email;
     },
@@ -173,12 +174,22 @@ export default {
         values: payload,
         endpoint: "seller/business/signup",
       };
-      const data = await this.signupUser(fullPayload);
-      if (data.status === 200) {
+      try {
+        const data = await this.signupUser(fullPayload);
+        if (data.status === 200) {
+          this.loading = false;
+          this.$router.push("/auth/otp");
+        }
         this.loading = false;
-        this.$router.push("/auth/otp");
+      } catch (err) {
+        ElNotification({
+          title: this.getErrors.message,
+          message: "",
+          duration: 0,
+          type: "error",
+        });
+        this.loading = false;
       }
-      this.loading = false;
     },
   },
 };

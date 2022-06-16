@@ -110,4 +110,7 @@ export default {
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
   },
+  setErrors(state, val) {
+    state.errors = val;
+  },
 };

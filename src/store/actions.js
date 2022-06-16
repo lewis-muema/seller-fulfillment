@@ -7,14 +7,14 @@ export default {
         "Content-Type": "application/json",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .post(`${payload.app}${payload.endpoint}`, payload.values, config)
         .then((response) => {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          reject(error.response);
           return false;
         });
     });
@@ -55,6 +55,13 @@ export default {
         });
     });
   },
+  setErrorAction({ commit }, payload) {
+    let errors = {};
+    payload.forEach((el) => {
+      errors["message"] = el.message;
+    });
+    commit("setErrors", errors);
+  },
 
   async signupUser({ dispatch, commit }, payload) {
     try {
@@ -62,6 +69,7 @@ export default {
       commit("setUserData", res.data.data);
       return res;
     } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
       return error.response;
     }
   },

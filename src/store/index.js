@@ -25,6 +25,7 @@ export default createStore({
       businessUserDetails: {},
       googleUserData: {},
       industries: {},
+      errors: {},
       productStep: 0,
       downloadActions: [
         {

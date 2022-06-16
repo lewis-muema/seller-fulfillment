@@ -35,4 +35,8 @@ export default {
   getOverlayStatus: (state) => state.overlayStatus,
   getSendyPhoneProps: (state) => state.sendyPhoneProps,
   getVueTelInputProps: (state) => state.vueTelInputProps,
+  getTabStatus: (state) => state.tabStatus,
+  getOrderTrackingData: (state) => state.orderTrackingData,
+  getTimelineIcons: (state) => state.timelineIcons,
+  getDeliveryAttempts: (state) => state.deliveryAttempts,
 };

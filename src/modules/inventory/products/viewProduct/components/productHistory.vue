@@ -100,8 +100,31 @@ export default {
     return {
       variantSelected: "All product options",
       variantsToggle: false,
-      tableHeaders: ["Date", "Activity", ""],
-      tableHeaders2: ["Date", "Product options", "Activity", ""],
+      tableHeaders: [
+        {
+          title: this.$t("inventory.date"),
+        },
+        {
+          title: this.$t("inventory.activity"),
+        },
+        {
+          title: "",
+        },
+      ],
+      tableHeaders2: [
+        {
+          title: this.$t("inventory.date"),
+        },
+        {
+          title: this.$t("inventory.producTOptions"),
+        },
+        {
+          title: this.$t("inventory.activity"),
+        },
+        {
+          title: "",
+        },
+      ],
       activities: [
         {
           date: "23/2/2022 12:00 pm",

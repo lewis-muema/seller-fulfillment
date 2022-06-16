@@ -83,7 +83,17 @@ export default {
   components: { tableHeader, addProductsCard, searchAlgolia },
   data() {
     return {
-      headers: ["Product", "Available inventory", "Actions"],
+      headers: [
+        {
+          title: this.$t("inventory.product"),
+        },
+        {
+          title: this.$t("inventory.availableProduct"),
+        },
+        {
+          title: this.$t("inventory.actions"),
+        },
+      ],
     };
   },
   computed: {

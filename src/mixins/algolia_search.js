@@ -4,9 +4,9 @@ const algoliaInit = {
     initiateAlgolia(item) {
       const algoliasearch = require("algoliasearch");
 
-      const ALGOLIA_APP_ID = process.env.VUE_APP_ALGOLIA_APP_ID;
-      const ALGOLIA_API_KEY = process.env.VUE_APP_ALGOLIA_API_KEY;
-      const ALGOLIA_INDEX_NAME = process.env.VUE_APP_ALGOLIA_INDEX_NAME;
+      const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
+      const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY;
+      const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME;
 
       const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 
@@ -16,7 +16,7 @@ const algoliaInit = {
       });
       index
         .search(item, {
-          filters: "objectID:ecommerce-sample-data-980",
+          filters: "objectID:ecommerce-sample-data-1542",
         })
         .then((objects) => this.algoliaResults(objects))
         .catch();

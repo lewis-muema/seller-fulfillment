@@ -4,6 +4,7 @@
       <th v-for="(header, index) in header" :key="index" class="table-headers">
         {{ header.title }}
         <el-tooltip
+          v-if="header.description"
           class="box-item"
           effect="light"
           :content="header.description"

@@ -6,9 +6,15 @@ module.exports = {
   GOOGLE_API_KEY_TEST: "AIzaSyC4UV3vk4qedVcCXDdpY7ZBNb4IQAM4vY8",
   GOOGLE_CLIENT_ID:
     "724697801657-96bbmn0plsro60t4rg2eekvnbfrfnqvb.apps.googleusercontent.com",
+  VAPIDKEY:
+    "BGNlgSsJAfNM7suOwAm0LyVX7H5GCB9lUosFfOQy99Qrhr7fpPGE2xd5h7qekXL0WYwIf2K26CCMz3wWMiG49jY",
   ELASTIC_APM_SERVICE_NAME: "seller-web-app",
   ELASTIC_APM_SERVICE_VERSION: "1.0.0",
   ELASTIC_APM_SERVER_URL: "https://staging-elk.sendyit.com:8200",
   ELASTIC_APM_ENVIRONMENT: "testing",
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: "https://authtest.sendyit.com",
+  ALGOLIA_APP_ID: "YGZO0B7NVS",
+  ALGOLIA_API_KEY: "d19d556ce4b0b3897d5c8956e43428c2",
+  ALGOLIA_INDEX_NAME: "staging_fulfillment",
+  FULFILMENT_SERVER: "https://authtest.sendyit.com/fulfilment/v1/",
 };

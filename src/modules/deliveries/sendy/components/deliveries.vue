@@ -24,9 +24,7 @@
           <thead>
             <tr>
               <th class="text-left">
-                <span :class="getLoader">{{
-                  $t("deliveries.customerInfo")
-                }}</span>
+                <span :class="getLoader">{{ $t("deliveries.products") }}</span>
               </th>
               <th class="text-left">
                 <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
@@ -50,14 +48,7 @@
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
                   <span :class="getLoader">
-                    {{ formatName(item.destination.name) }}
-                  </span>
-                </div>
-                <div class="deliveries-location-row">
-                  <span :class="getLoader">
-                    {{
-                      formatName(item.destination.delivery_location.description)
-                    }}
+                    {{ formatProducts(item.products) }}
                   </span>
                 </div>
               </td>
@@ -189,7 +180,7 @@ export default {
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/deliveries${this.params}`,
+        endpoint: `seller/${userDetails.business_id}/consignments${this.params}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -203,6 +194,13 @@ export default {
     deliveryTime(date) {
       const finalTime = moment(date).add(2, "hours");
       return `${moment(date).format("ha")} - ${moment(finalTime).format("ha")}`;
+    },
+    formatProducts(products) {
+      return `${products[0].product_variant_description} ${
+        products.length > 1
+          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+          : ""
+      }`;
     },
     formatName(name) {
       const nameArr = name.split(" ");

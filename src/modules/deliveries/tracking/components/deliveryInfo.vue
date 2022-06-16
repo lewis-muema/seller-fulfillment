@@ -28,7 +28,12 @@
     </p>
     <p class="delivery-info-data">
       <span :class="getLoader">
-        {{ parent === "sendy" ? getPickupInfo.location : getDeliveryInfo.name }}
+        {{
+          parent === "sendy"
+            ? getOrderTrackingData.order.destination.delivery_location
+                .description
+            : getOrderTrackingData.order.destination.name
+        }}
       </span>
     </p>
     <p class="delivery-info-label">
@@ -44,8 +49,11 @@
       <span :class="getLoader">
         {{
           parent === "sendy"
-            ? getPickupInfo.instructions
-            : getDeliveryInfo.location
+            ? getOrderTrackingData.order.destination.delivery_instructions
+              ? getOrderTrackingData.order.destination.delivery_instructions
+              : "N/A"
+            : getOrderTrackingData.order.destination.delivery_location
+                .delivery_location
         }}
       </span>
     </p>
@@ -56,11 +64,7 @@
     </p>
     <p class="delivery-info-data">
       <span :class="getLoader">
-        {{
-          parent === "sendy"
-            ? getPickupInfo.phoneNumber
-            : getDeliveryInfo.phoneNumber
-        }}
+        {{ getOrderTrackingData.order.destination.phone_number }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-label">
@@ -70,7 +74,11 @@
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-data">
       <span :class="getLoader">
-        {{ getDeliveryInfo.instructions }}
+        {{
+          getOrderTrackingData.order.destination.delivery_instructions
+            ? getOrderTrackingData.order.destination.delivery_instructions
+            : "N/A"
+        }}
       </span>
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-label">
@@ -80,7 +88,10 @@
     </p>
     <p v-if="parent === 'customer'" class="delivery-info-data">
       <span :class="getLoader">
-        {{ getDeliveryInfo.payment }}
+        {{
+          getOrderTrackingData.order.fulfilment_cost_means_of_payment
+            .means_of_payment_type
+        }}
       </span>
     </p>
   </div>
@@ -98,12 +109,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getLoader", "getDeliveryInfo", "getPickupInfo"]),
+    ...mapGetters([
+      "getLoader",
+      "getDeliveryInfo",
+      "getPickupInfo",
+      "getOrderTrackingData",
+    ]),
   },
   mounted() {
-    setTimeout(() => {
-      this.setLoader("");
-    }, 1000);
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.parent = "sendy";
     } else {

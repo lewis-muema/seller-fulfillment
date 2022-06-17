@@ -119,7 +119,10 @@ export default {
             : "seller/business/signup/confirm",
       };
       try {
-        const data = await this.attemptLogin(fullPayload);
+        const data =
+          this.getOTPRedirectUrl === "otp/signIn"
+            ? await this.attemptLogin(fullPayload)
+            : await this.confirmUser(fullPayload);
         if (data.status === 200) {
           this.correctOTP = true;
           const accessToken = data.data.access_token;

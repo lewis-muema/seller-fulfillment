@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import Auth from "../modules/auth/auth.vue";
 import SignIn from "../modules/auth/signin.vue";
 import SignUp from "../modules/auth/signup.vue";
-import ConfirmGoogleInfo from "../modules/auth/confirmGoogleInfo";
-import CompleteGoogleSignup from "../modules/auth/completeGoogleSignup";
 import OTP from "../modules/auth/OTP.vue";
 import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
@@ -56,16 +54,6 @@ const routes = [
         path: "complete-signup",
         name: "CompleteSignup",
         component: CompleteSignup,
-      },
-      {
-        path: "complete-google-signup",
-        name: "CompleteGoogleSignup",
-        component: CompleteGoogleSignup,
-      },
-      {
-        path: "confirm-info",
-        name: "ConfirmGoogleInfo",
-        component: ConfirmGoogleInfo,
       },
     ],
   },

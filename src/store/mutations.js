@@ -98,6 +98,9 @@ export default {
   setGoogleUserData(state, val) {
     state.googleUserData = val;
   },
+  setGoogleConfirmData(state, val) {
+    state.googleConfirmData = val;
+  },
   setIndustries(state, val) {
     state.industries = val;
   },
@@ -124,5 +127,8 @@ export default {
   },
   setRefreshToken(state, val) {
     state.refreshToken = val;
+  },
+  setsignUpwithGoogle(state, val) {
+    state.signUpwithGoogle = val;
   },
 };

@@ -36,8 +36,8 @@
               >
                 {{ $t("auth.continueWithEmailAddress") }}
               </button>
-              <div class="text-center text-grey">or</div>
-              <button
+              <!-- <div class="text-center text-grey">or</div> -->
+              <!-- <button
                 class="btn btn-primary default-btn"
                 type="button"
                 @click="phoneNumberLogin"
@@ -45,14 +45,9 @@
               >
                 <i class="mdi mdi-phone"></i>
                 {{ $t("auth.loginWithPhoneNumber") }}
-              </button>
-              <button
-                class="btn btn-primary default-btn mt-3"
-                type="button"
-                style="height: 46px"
-              >
-                {{ $t("auth.loginWithGoogle") }}
-              </button>
+              </button> -->
+
+              <!-- <google-auth /> -->
             </div>
           </v-card-text>
         </div>
@@ -81,14 +76,7 @@
                 <i class="mdi mdi-email-outline"></i>
                 {{ $t("auth.loginWithEmailAddress") }}
               </button>
-              <button
-                class="btn btn-primary default-btn mt-3"
-                type="button"
-                style="height: 46px"
-              >
-                <i class="mdi mdi-google"></i>
-                {{ $t("auth.loginWithGoogle") }}
-              </button>
+              <!-- <google-auth /> -->
             </div>
           </v-card-text>
         </div>
@@ -105,6 +93,7 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+// import googleAuth from "@/modules/common/googleAuth";
 
 export default {
   setup() {

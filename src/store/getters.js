@@ -41,4 +41,5 @@ export default {
   getErrors: (state) => state.errors,
   getLoginData: (state) => state.loginData,
   getOTPRedirectUrl: (state) => state.OTPRedirectUrl,
+  getsignUpwithGoogle: (state) => state.signUpwithGoogle,
 };

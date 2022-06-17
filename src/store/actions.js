@@ -83,10 +83,10 @@ export default {
       return error.response;
     }
   },
-  async attemptLogin({ dispatch, commit }, payload) {
+  async attemptLogin({ dispatch }, payload) {
     try {
       const res = await dispatch("requestAxiosPost", payload);
-      commit("setSession", res.data.data);
+      console.log(res);
       return res;
     } catch (error) {
       await dispatch("setErrorAction", error.data.errors);
@@ -106,6 +106,7 @@ export default {
   async businessUserDetails({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPut", payload);
+      console.log(res);
       commit("setBusinessUserDetails", res.data);
       return res;
     } catch (error) {

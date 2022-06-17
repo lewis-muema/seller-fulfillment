@@ -2,6 +2,7 @@
     "english": "English",
     "french": "French",
     "signupSendyFulfillment" :"Sign up for Sendy Fulfilment",
+    "businessInfo": "Enter business Information",
     "businessName" :"Business name",
     "businessNameRequired":" Business name is required",
     "businessEmailRequired":" Business email is required",

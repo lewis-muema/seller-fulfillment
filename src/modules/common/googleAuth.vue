@@ -17,15 +17,14 @@ export default {
     },
   },
   mounted() {
-    // this.initGA();
     this.initiateGA(this.googleClientId);
   },
   methods: {
-    ...mapMutations(["setGoogleUserData"]),
+    ...mapMutations(["setGoogleUserData", "setsignUpwithGoogle"]),
     handleCredentialResponse(response) {
       let googleUserData = jwt_decode(response.credential);
+      this.setsignUpwithGoogle(true);
       this.setGoogleUserData(googleUserData);
-      this.$router.push("/auth/confirm-info");
     },
   },
 };

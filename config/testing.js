@@ -12,4 +12,6 @@ module.exports = {
   ELASTIC_APM_ENVIRONMENT: "testing",
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: "https://authtest.sendyit.com",
   SELLER_FULFILLMENT_SERVER: "https://authtest.sendyit.com/fulfilment/v1/",
+  SELLER_FULFILLMENT_SERVER2:
+    "https://fulfillment-biz-logic-service-dev.sendyit.com/v1",
 };

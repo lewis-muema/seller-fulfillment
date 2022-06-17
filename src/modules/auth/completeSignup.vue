@@ -1,5 +1,8 @@
 <template>
   <div>
+    {{ params }}
+    {{ firstName }}
+    {{ lastName }}
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
         <div class="desktop-header-title d-flex">
@@ -64,6 +67,12 @@
               {{ $t("auth.signUp") }}
             </button>
           </div>
+          <p class="terms-link-text">
+            {{ $t("auth.bySigningUp") }}
+            <router-link to="/auth/sign-in">
+              {{ $t("auth.termsAndConditions") }}</router-link
+            >
+          </p>
         </v-card-text>
       </div>
     </form>
@@ -106,9 +115,6 @@ export default {
     await this.industryList();
   },
   watch: {
-    fullname(value) {
-      this.params["personalName"] = value;
-    },
     firstName(value) {
       this.params["firstName"] = value;
     },
@@ -118,9 +124,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getGoogleUserData", "getIndustries", "getUserData"]),
-    fullname() {
-      return this.getGoogleUserData.name;
-    },
     businessId() {
       return this.getUserData.business.business_id;
     },
@@ -162,6 +165,7 @@ export default {
         endpoint: "seller/business/signup/update",
       };
       const data = await this.businessUserDetails(fullPayload);
+      console.log("data", data);
       if (data.status === 200) {
         this.loading = false;
         this.$router.push("/onboarding");

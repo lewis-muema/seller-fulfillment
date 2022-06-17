@@ -131,4 +131,7 @@ export default {
   setsignUpwithGoogle(state, val) {
     state.signUpwithGoogle = val;
   },
+  setSession(state, val) {
+    state.session = val;
+  },
 };

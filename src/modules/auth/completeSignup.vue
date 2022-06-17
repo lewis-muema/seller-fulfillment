@@ -1,8 +1,5 @@
 <template>
   <div>
-    {{ params }}
-    {{ firstName }}
-    {{ lastName }}
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
         <div class="desktop-header-title d-flex">

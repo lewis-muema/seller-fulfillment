@@ -1,6 +1,20 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 export default {
+  async initializeAuth({ commit }) {
+    const token = localStorage.getItem("accessToken");
+    console.log("token", token);
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (token !== null && token !== "") {
+      const userData = jwt_decode(token);
+      commit("setSession", userData);
+    }
+    commit("setAccessToken", token);
+    commit("setRefreshToken", refreshToken);
+  },
+
   requestAxiosPost(_, payload) {
     const config = {
       headers: {
@@ -43,14 +57,14 @@ export default {
         "Content-Type": "application/json",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .put(`${payload.app}${payload.endpoint}`, payload.values, config)
         .then((response) => {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          reject(error.response);
           return false;
         });
     });

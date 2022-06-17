@@ -42,4 +42,5 @@ export default {
   getLoginData: (state) => state.loginData,
   getOTPRedirectUrl: (state) => state.OTPRedirectUrl,
   getsignUpwithGoogle: (state) => state.signUpwithGoogle,
+  isAuthenticated: (state) => state.accessToken !== null,
 };

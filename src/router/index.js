@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
 import Auth from "../modules/auth/auth.vue";
 import SignIn from "../modules/auth/signin.vue";
 import SignUp from "../modules/auth/signup.vue";
@@ -61,11 +62,17 @@ const routes = [
     path: "/",
     name: "Dashboard",
     component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/onboarding",
     name: "Onboarding",
     component: Onboarding,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/inventory/add-product",
@@ -182,6 +189,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    store.dispatch("initializeAuth");
+    if (!store.getters.isAuthenticated) {
+      console.log(store.getters.isAuthenticated);
+      next("/auth/sign-in");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

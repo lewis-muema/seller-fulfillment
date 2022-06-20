@@ -232,26 +232,30 @@ export default {
     },
     selectPaymentMethod() {
       const buPayload = {
-        user_id: 1,
-        entity_id: 6,
-        currency: "KES",
-        country_code: "KE",
-        amount: "1",
+        user_id: "B-XSJ-2753",
+        entity_id: "6",
+        currency: "NGN",
+        country_code: "NG",
+        amount: "1000",
+        phonenumber: "2349038092663",
         success_callback_url: "",
         fail_callback_url: "",
-        txref: this.txref,
+        txref: "TEST-TRANSACTION_142",
         bulk: false,
-        paybill_no: "4444444",
-        email: "johndoe@gmail.com",
+        paybill_no: "888888",
+        email: "joyce@sendyit.com",
         authToken: "",
-        firstname: "John",
-        lastname: "doe",
+        firstname: "victor",
+        lastname: "Misiko",
         payment_options: "",
-        company_code: "FFKE",
+        company_code: "FFNG",
         locale: "en",
+        resolve_payment_message:
+          "We are unable to process your transaction. Your card has insufficient funds.",
+        failedReferences: [],
       };
 
-      this.$paymentInit(buPayload, "choose-payment-checkout");
+      this.$paymentInit(buPayload, "choose-payment");
     },
   },
 };

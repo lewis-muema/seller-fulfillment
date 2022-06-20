@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
@@ -18,6 +19,7 @@ export default {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -32,10 +34,11 @@ export default {
         });
     });
   },
-  requestAxiosGet(_, payload) {
+  requestAxiosGet({ commit }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
       },
     };
     return new Promise((resolve) => {
@@ -50,10 +53,13 @@ export default {
         });
     });
   },
-  async requestAxiosPut({ dispatch }, payload) {
-    const { fileUpload } = payload;
-
-    const config = await dispatch("custom_headers", fileUpload);
+  requestAxiosPut({ commit }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+      },
+    };
     return new Promise((resolve, reject) => {
       axios
         .put(`${payload.app}${payload.endpoint}`, payload.values, config)
@@ -88,6 +94,25 @@ export default {
       errors["message"] = el.message;
     });
     commit("setErrors", errors);
+  },
+  requestAxiosPatch({ commit }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .patch(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+          return false;
+        });
+    });
   },
 
   async signupUser({ dispatch, commit }, payload) {

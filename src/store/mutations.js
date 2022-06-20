@@ -134,4 +134,19 @@ export default {
   setSession(state, val) {
     state.session = val;
   },
+  setTabStatus(state, val) {
+    state.tabStatus = val;
+  },
+  setOrderTrackingData(state, val) {
+    state.orderTrackingData = val;
+  },
+  setTimelineIcons(state, val) {
+    state.timelineIcons = val;
+  },
+  setOrderTimelines(state, val) {
+    state.orderTimelines = val;
+  },
+  setDeliveryAttempts(state, val) {
+    state.deliveryAttempts = val;
+  },
 };

@@ -112,7 +112,7 @@ export default {
         code: this.otp,
       };
       const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
+        app: process.env.FULFILMENT_SERVER,
         values: payload,
         endpoint:
           this.getOTPRedirectUrl === "otp/signIn"

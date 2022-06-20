@@ -7,7 +7,8 @@
       ></i>
       <p class="tracking-order-title">
         <span :class="getLoader">
-          {{ $t("deliveries.orderNo") }} {{ orderNo }}
+          {{ $t("deliveries.orderNo") }}
+          {{ getOrderTrackingData.order.order_id }}
         </span>
         <span>
           <v-menu transition="slide-y-transition" anchor="bottom center">
@@ -39,12 +40,13 @@
       </p>
       <p class="tracking-order-time-est">
         <span :class="getLoader">
-          {{ $t("deliveries.timeOfArrival") }} {{ timeOfArrival }}
+          {{ $t("deliveries.timeOfArrival") }}
+          {{ formatDate(getOrderTrackingData.scheduled_date) }}
         </span>
       </p>
     </div>
     <div class="tracking-order-failed-delivery">
-      <failed-delivery />
+      <failed-delivery v-if="failedStatus" />
     </div>
     <div class="tracking-section-container">
       <div>
@@ -59,11 +61,12 @@
 </template>
 
 <script>
+import moment from "moment";
 import timeline from "./components/timeline.vue";
 import deliveryInfo from "./components/deliveryInfo.vue";
 import products from "./components/products.vue";
 import failedDelivery from "./components/failedDelivery.vue";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -77,18 +80,32 @@ export default {
       orderNo: "AQW4567787",
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
+      parent: "",
+      failedStatus: false,
     };
   },
+  watch: {
+    "$store.state.orderTimelines": function orderTimelines(val) {
+      if (val[val.length - 1].event_code === "EVENT_DELIVERY_FAILED") {
+        this.failedStatus = true;
+      } else {
+        this.failedStatus = false;
+      }
+    },
+  },
   computed: {
-    ...mapGetters(["getLoader", "getDeliveryActions"]),
+    ...mapGetters(["getLoader", "getDeliveryActions", "getOrderTrackingData"]),
   },
   mounted() {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.setComponent(this.$t("deliveries.trackDeliveryToSendy"));
+      this.parent = "sendy";
     }
     if (this.$router.options.history.state.back === "/deliveries/customer") {
       this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
+      this.parent = "customer";
     }
+    this.fetchOrder();
   },
   methods: {
     ...mapMutations([
@@ -96,7 +113,29 @@ export default {
       "setLoader",
       "setTab",
       "setOverlayStatus",
+      "setOrderTrackingData",
     ]),
+    ...mapActions(["requestAxiosGet"]),
+    fetchOrder() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/${
+          parent === "sendy" ? "consignments" : "deliveries"
+        }/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setOrderTrackingData(response.data.data);
+        }
+      });
+    },
+    formatDate(date) {
+      const finalTime = moment(date).add(2, "hours");
+      return `${moment(date).format("dddd, do MMM")} ${moment(date).format(
+        "ha"
+      )} - ${moment(finalTime).format("ha")}`;
+    },
   },
 };
 </script>

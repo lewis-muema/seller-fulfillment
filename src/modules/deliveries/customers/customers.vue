@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Tabs parent="customer" />
+    <Tabs />
     <Deliveries />
   </div>
 </template>

@@ -44,4 +44,8 @@ export default {
   getsignUpwithGoogle: (state) => state.signUpwithGoogle,
   getSession: (state) => state.session,
   isAuthenticated: (state) => state.accessToken !== null,
+  getTabStatus: (state) => state.tabStatus,
+  getOrderTrackingData: (state) => state.orderTrackingData,
+  getTimelineIcons: (state) => state.timelineIcons,
+  getDeliveryAttempts: (state) => state.deliveryAttempts,
 };

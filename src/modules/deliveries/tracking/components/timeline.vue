@@ -7,50 +7,39 @@
       <el-timeline>
         <el-timeline-item
           class="el-timeline-item-desktop"
-          v-for="(activity, index) in activities"
+          v-for="(activity, index) in getOrderTimelines"
           :key="index"
-          :icon="activity.icon"
+          :icon="
+            activity.event_code === 'EVENT_DELIVERY_FAILED'
+              ? closeIcon
+              : getTimelineIcons[activity.event_tense].icon
+          "
           :type="activity.type"
-          :color="activity.color"
+          :color="
+            activity.event_code === 'EVENT_DELIVERY_FAILED'
+              ? '#9b101c'
+              : getTimelineIcons[activity.event_tense].color
+          "
           :size="activity.size"
-          :class="activity.iconClass"
+          :hollow="getTimelineIcons[activity.event_tense].hollow"
+          :class="getTimelineIcons[activity.event_tense].iconClass"
         >
           <span
             :class="
-              activity.active
-                ? 'active-timeline-text'
-                : activity.event_code === 'event.delivery.failed'
+              activity.event_code === 'EVENT_DELIVERY_FAILED'
                 ? 'failed-delivery-timeline-text'
-                : activity.title === 18 && !activity.active
-                ? 'inactive-timeline-text'
-                : ''
+                : `${activity.event_tense}-timeline-text`
             "
           >
             <span :class="getLoader">
-              {{
-                formatEventName(
-                  $t(`${getOrderEvents[activity.title]}`, {
-                    Date: activity.date,
-                  })
-                )
-              }}
+              {{ activity.translated_event_code }}
             </span>
           </span>
-          <div v-if="activity.showDriver" class="timeline-rider">
-            <div class="timeline-rider-thumbnail-container">
-              <i class="el-icon-user timeline-rider-thumbnail"></i>
-            </div>
-            <div v-if="rider">
-              <p class="timeline-rider-details">{{ rider.name }}</p>
-              <p class="timeline-rider-details">{{ rider.vendor_type }}</p>
-              <p class="timeline-rider-details">
-                {{ rider.vehicle_identifier }}
-              </p>
-              <p class="timeline-rider-details">{{ rider.phone_number }}</p>
-            </div>
-          </div>
           <div
-            v-if="activity.event_code === 'event.delivery.failed'"
+            v-if="
+              getDeliveryAttempts.length > 0 &&
+              activity.event_code === 'EVENT_DELIVERY_FAILED'
+            "
             class="timeline-delivery-attempts"
             @click="
               setOverlayStatus({
@@ -60,7 +49,7 @@
             "
           >
             <span :class="getLoader">
-              2 {{ $t("deliveries.attempts") }}
+              {{ getDeliveryAttempts.length }} {{ $t("deliveries.attempts") }}
               <i class="mdi mdi-chevron-right"></i>
             </span>
           </div>
@@ -72,8 +61,10 @@
 
 <script>
 import moment from "moment";
+import { shallowRef } from "vue";
 import statusMixin from "../../../../mixins/status_mixin";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { Close } from "@element-plus/icons-vue";
 
 export default {
   mixins: [statusMixin],
@@ -86,6 +77,7 @@ export default {
       activeEvent: "",
       activeIndex: 0,
       overlay: false,
+      closeIcon: shallowRef(Close),
     };
   },
   computed: {
@@ -96,84 +88,57 @@ export default {
       "getOrderStatuses",
       "getRescheduledOrderTimelines",
       "getOrderTimelines",
+      "getTimelineIcons",
+      "getDeliveryAttempts",
     ]),
   },
-  mounted() {
-    this.sortTimelineEvents();
+  watch: {
+    "$store.state.orderTrackingData": function orderTrackingData() {
+      this.fetchOrder();
+    },
   },
+  mounted() {},
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setOverlayStatus",
+      "setOrderTimelines",
+      "setDeliveryAttempts",
+    ]),
+    ...mapActions(["requestAxiosGet"]),
     formatEventName(name) {
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
-    sortTimelineEvents() {
-      const timeline = this.getData.data.event_time_line;
-      const activeEvent = timeline[timeline.length - 1].event_code;
-      this.activeIndex = this.getOrderStatuses.findIndex(
-        (evt) => evt === activeEvent
-      );
-      this.activities = this.filteredEventTimelineV2();
-      this.rider = this.getData.data.partner_contact_information;
-    },
-    failedRescheduledStatus() {
-      const rescheduled = this.getData.data.event_time_line.filter((event) =>
-        this.getStatus([13, 14, 15]).includes(event.event_code)
-      );
-      const failed = this.getData.data.event_time_line.filter((event) =>
-        this.getStatus([12]).includes(event.event_code)
-      );
-      return rescheduled.length > 0 && failed.length > 0;
-    },
-    filteredEventTimelineV2() {
-      const events = [];
-      const timelines = this.failedRescheduledStatus()
-        ? this.getRescheduledOrderTimelines
-        : this.getOrderTimelines;
-      timelines.forEach((row, index) => {
-        if (this.activeIndex === index) {
-          row.steps.forEach((step, i) => {
-            const evts = this.getData.data.event_time_line.filter(
-              (timeline) => timeline.event_code === this.getOrderStatuses[step]
-            );
-            const evtDate =
-              evts.length > 0 ? evts[evts.length - 1].event_date : "";
-            events.push({
-              event_code: this.getOrderStatuses[step],
-              index,
-              active: row.colors[i] === "#324ba8",
-              title: row.titles[i],
-              color: row.colors[i],
-              icon: row.icons[i],
-              iconClass: row.iconClass[i],
-              date: this.formatEventDate(row.dates[i], evtDate),
-              showDriver: row.showDriver[i],
-              showReschedule: row.showReschedule[i],
-            });
-          });
+    fetchOrder() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setOrderTimelines(response.data.data.events);
+          const events = response.data.data.events;
+          if (
+            events[events.length - 1].event_code === "EVENT_DELIVERY_FAILED"
+          ) {
+            this.fetchAttempts();
+          }
         }
       });
-      return events;
     },
-    formatEventDate(date, timeline) {
-      if (date.status) {
-        if (date.type === "timeline") {
-          return moment(timeline).format(date.format);
+    fetchAttempts() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `/seller/${userDetails.business_id}/failed-attempts/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliveryAttempts(response.data.data["failed-attempts"]);
         }
-        if (date.type === "scheduled") {
-          return moment(this.getData.data.scheduled_delivery_date).format(
-            date.format
-          );
-        }
-        if (date.type === "completed") {
-          return moment(this.getData.data.order_completion_date).format(
-            date.format
-          );
-        }
-        if (date.type === "today") {
-          return this.$t("timeline.today");
-        }
-      }
-      return "";
+      });
     },
     formatDate(date) {
       return moment(date).format("ddd, MMM Do");
@@ -282,7 +247,10 @@ export default {
 .trigger-button {
   margin-left: 20px;
 }
-.active-timeline-text {
+.past-timeline-text {
+  color: #303133;
+}
+.present-timeline-text {
   color: #324ba8;
   font-weight: 700;
 }
@@ -338,7 +306,7 @@ export default {
   font-size: 15px;
   margin-right: 5px;
 }
-.inactive-timeline-text {
+.future-timeline-text {
   color: #909399;
 }
 @keyframes pulse-blue {

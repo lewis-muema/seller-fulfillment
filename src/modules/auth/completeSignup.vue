@@ -158,7 +158,7 @@ export default {
         },
       };
       const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
+        app: process.env.FULFILMENT_SERVER,
         values: payload,
         endpoint: "seller/business/signup/update",
       };

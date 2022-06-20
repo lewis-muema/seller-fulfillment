@@ -79,11 +79,11 @@ export default {
       productTabs: [
         {
           label: "All",
-          content: 67,
+          content: "67",
         },
         {
           label: "Archived",
-          content: 10,
+          content: "10",
         },
       ],
       stockLevelTabs: [

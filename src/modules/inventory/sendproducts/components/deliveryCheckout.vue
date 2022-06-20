@@ -236,7 +236,7 @@ export default {
         entity_id: 6,
         currency: "KES",
         country_code: "KE",
-        amount: "100",
+        amount: "1",
         success_callback_url: "",
         fail_callback_url: "",
         txref: this.txref,
@@ -251,7 +251,7 @@ export default {
         locale: "en",
       };
 
-      this.$paymentInit(buPayload, "choose-payment");
+      this.$paymentInit(buPayload, "choose-payment-checkout");
     },
   },
 };

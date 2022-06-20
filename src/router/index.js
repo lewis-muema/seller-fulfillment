@@ -67,6 +67,14 @@ const routes = [
     },
   },
   {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/onboarding",
     name: "Onboarding",
     component: Onboarding,
@@ -191,15 +199,34 @@ const router = createRouter({
   routes,
 });
 
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     store.dispatch("initializeAuth");
+//     if (!store.getters.isAuthenticated) {
+//       console.log("here");
+//       console.log(store.getters.isAuthenticated);
+//       next("/auth/sign-in");
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    store.dispatch("initializeAuth");
-    if (!store.getters.isAuthenticated) {
+    store.dispatch("initAuth");
+    if (store.getters.isAuthenticated) {
       console.log(store.getters.isAuthenticated);
-      next("/auth/sign-in");
-    } else {
+      if (to.path === "/") {
+        next("/dashboard");
+        return;
+      }
       next();
+      return;
     }
+    next("/auth/sign-in");
   } else {
     next();
   }

@@ -2,7 +2,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 export default {
-  async initializeAuth({ commit }) {
+  async initAuth({ commit }) {
     const token = localStorage.getItem("accessToken");
     console.log("token", token);
     const refreshToken = localStorage.getItem("refreshToken");
@@ -15,12 +15,10 @@ export default {
     commit("setRefreshToken", refreshToken);
   },
 
-  requestAxiosPost(_, payload) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+  async requestAxiosPost({ dispatch }, payload) {
+    const { fileUpload } = payload;
+
+    const config = await dispatch("custom_headers", fileUpload);
     return new Promise((resolve, reject) => {
       axios
         .post(`${payload.app}${payload.endpoint}`, payload.values, config)
@@ -51,12 +49,10 @@ export default {
         });
     });
   },
-  requestAxiosPut(_, payload) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+  async requestAxiosPut({ dispatch }, payload) {
+    const { fileUpload } = payload;
+
+    const config = await dispatch("custom_headers", fileUpload);
     return new Promise((resolve, reject) => {
       axios
         .put(`${payload.app}${payload.endpoint}`, payload.values, config)
@@ -69,6 +65,22 @@ export default {
         });
     });
   },
+  async custom_headers({ state }, fileUpload) {
+    const authToken = !state.accessToken
+      ? localStorage.getItem("accessToken")
+      : state.accessToken;
+
+    const param = {
+      headers: {
+        "Content-Type": fileUpload ? "multipart/form-data" : "application/json",
+        Accept: "application/json",
+        Authorization: authToken,
+      },
+    };
+
+    return param;
+  },
+
   setErrorAction({ commit }, payload) {
     let errors = {};
     payload.forEach((el) => {
@@ -100,7 +112,6 @@ export default {
   async attemptLogin({ dispatch }, payload) {
     try {
       const res = await dispatch("requestAxiosPost", payload);
-      console.log(res);
       return res;
     } catch (error) {
       await dispatch("setErrorAction", error.data.errors);
@@ -110,7 +121,6 @@ export default {
   async confirmUser({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPost", payload);
-      console.log("confirm user", res);
       commit("setConfirmedUser", res.data);
       return res;
     } catch (error) {
@@ -120,7 +130,6 @@ export default {
   async businessUserDetails({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPut", payload);
-      console.log(res);
       commit("setBusinessUserDetails", res.data);
       return res;
     } catch (error) {

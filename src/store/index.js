@@ -28,9 +28,10 @@ export default createStore({
       errors: {},
       loginData: {},
       googleConfirmData: {},
+      session: {},
       signUpwithGoogle: false,
       OTPRedirectUrl: "",
-      accessToken: "",
+      accessToken: localStorage.getItem("accessToken"),
       refreshToken: "",
       productStep: 0,
       downloadActions: [

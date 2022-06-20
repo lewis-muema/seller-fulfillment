@@ -98,6 +98,9 @@ export default {
   setGoogleUserData(state, val) {
     state.googleUserData = val;
   },
+  setGoogleConfirmData(state, val) {
+    state.googleConfirmData = val;
+  },
   setIndustries(state, val) {
     state.industries = val;
   },
@@ -109,6 +112,27 @@ export default {
   },
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
+  },
+  setErrors(state, val) {
+    state.errors = val;
+  },
+  setLoginData(state, val) {
+    state.loginData = val;
+  },
+  setOTPRedirectUrl(state, val) {
+    state.OTPRedirectUrl = val;
+  },
+  setAccessToken(state, val) {
+    state.accessToken = val;
+  },
+  setRefreshToken(state, val) {
+    state.refreshToken = val;
+  },
+  setsignUpwithGoogle(state, val) {
+    state.signUpwithGoogle = val;
+  },
+  setSession(state, val) {
+    state.session = val;
   },
   setTabStatus(state, val) {
     state.tabStatus = val;

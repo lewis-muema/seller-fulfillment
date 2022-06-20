@@ -44,6 +44,7 @@
               $t("auth.industryOfBusiness")
             }}</label>
             <select class="form-select" @change="selectIndustryId($event)">
+              <option selected>Select</option>
               <option
                 v-for="industry in supportedIndustries"
                 :key="industry.industry_id"
@@ -64,6 +65,12 @@
               {{ $t("auth.signUp") }}
             </button>
           </div>
+          <p class="terms-link-text">
+            {{ $t("auth.bySigningUp") }}
+            <router-link to="/auth/sign-in">
+              {{ $t("auth.termsAndConditions") }}</router-link
+            >
+          </p>
         </v-card-text>
       </div>
     </form>
@@ -74,10 +81,12 @@
 import { mapGetters, mapActions } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import industryList from "@/mixins/industry_list";
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
+  mixins: [industryList],
   data() {
     return {
       loading: false,
@@ -104,9 +113,6 @@ export default {
     await this.industryList();
   },
   watch: {
-    fullname(value) {
-      this.params["personalName"] = value;
-    },
     firstName(value) {
       this.params["firstName"] = value;
     },
@@ -116,9 +122,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getGoogleUserData", "getIndustries", "getUserData"]),
-    fullname() {
-      return this.getGoogleUserData.name;
-    },
     businessId() {
       return this.getUserData.business.business_id;
     },
@@ -136,16 +139,6 @@ export default {
     ...mapActions(["businessUserDetails", "industries"]),
     selectIndustryId(event) {
       this.params.industryOfBusiness = event.target.value;
-    },
-    async industryList() {
-      const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
-        endpoint: `seller/${this.businessId}/industries`,
-      };
-      const data = await this.industries(fullPayload);
-      if (data.errors.length === 0) {
-        return data;
-      }
     },
     async completeSignUp() {
       this.v$.$validate();
@@ -165,7 +158,7 @@ export default {
         },
       };
       const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
+        app: process.env.FULFILMENT_SERVER,
         values: payload,
         endpoint: "seller/business/signup/update",
       };

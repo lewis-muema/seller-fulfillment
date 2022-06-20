@@ -13,12 +13,12 @@
             <div class="form-input-group">
               <i class="mdi mdi-store-outline"></i>
               <input
-                v-model="signUpInputs.businessName"
+                v-model="params.businessName"
                 type="text"
                 class="form-control"
                 placeholder="Enter name of business"
               />
-              <div v-if="v$.signUpInputs.businessName.$error" class="error-msg">
+              <div v-if="v$.params.businessName.$error" class="error-msg">
                 {{ $t("auth.businessNameRequired") }}
               </div>
             </div>
@@ -30,15 +30,12 @@
             <div class="form-input-group">
               <i class="mdi mdi-email-outline"></i>
               <input
-                v-model="signUpInputs.businessEmail"
+                v-model="params.businessEmail"
                 type="email"
                 class="form-control"
                 :placeholder="$t('auth.enterBusinessEmailAddress')"
               />
-              <div
-                v-if="v$.signUpInputs.businessEmail.$error"
-                class="error-msg"
-              >
+              <div v-if="v$.params.businessEmail.$error" class="error-msg">
                 {{ $t("auth.businessEmailRequired") }}
               </div>
             </div>
@@ -47,7 +44,7 @@
             <label for="businessEmail" class="form-label">{{
               $t("auth.countryOfOperation")
             }}</label>
-            <el-select v-model="signUpInputs.countryOfOperation">
+            <el-select v-model="params.countryOfOperation">
               <el-option
                 v-for="item in countries"
                 :key="item.value"
@@ -61,10 +58,7 @@
               </el-option>
             </el-select>
 
-            <div
-              v-if="v$.signUpInputs.countryOfOperation.$error"
-              class="error-msg"
-            >
+            <div v-if="v$.params.countryOfOperation.$error" class="error-msg">
               {{ $t("auth.countryRequired") }}
             </div>
           </div>
@@ -78,8 +72,8 @@
             >
               {{ $t("auth.continue") }}
             </button>
-            <div class="text-center text-grey">or</div>
-            <google-auth @googleUserData="googleUserData" />
+            <!-- <div class="text-center text-grey">or</div> -->
+            <!-- <google-auth  /> -->
           </div>
           <p class="desktop-login-link login-link-text">
             {{ $t("auth.haveAnAccount") }}
@@ -94,14 +88,12 @@
 </template>
 
 <script>
-import googleAuth from "@/modules/common/googleAuth";
+// import googleAuth from "@/modules/common/googleAuth";
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 export default {
-  components: {
-    googleAuth,
-  },
   setup() {
     return { v$: useVuelidate() };
   },
@@ -120,7 +112,7 @@ export default {
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
         },
       ],
-      signUpInputs: {
+      params: {
         businessName: "",
         businessEmail: "",
         countryOfOperation: "",
@@ -129,7 +121,7 @@ export default {
   },
   validations() {
     return {
-      signUpInputs: {
+      params: {
         businessName: { required },
         businessEmail: { required },
         countryOfOperation: { required },
@@ -137,22 +129,15 @@ export default {
     };
   },
   mounted() {},
-  watch: {
-    businessEmail(value) {
-      this.signUpInputs["businessEmail"] = value;
-    },
-  },
+  watch: {},
   computed: {
-    ...mapGetters(["getGoogleUserData"]),
-    businessEmail() {
-      return this.getGoogleUserData.email;
-    },
+    ...mapGetters(["getErrors", "getGoogleUserData"]),
   },
   methods: {
     ...mapActions(["signupUser"]),
-    ...mapMutations(["setGoogleUserData"]),
-    googleUserData(value) {
-      this.setGoogleUserData(value);
+    ...mapMutations(["setOTPRedirectUrl"]),
+    retrieveGoogleData(value) {
+      console.log(value);
     },
     async submitForm() {
       this.v$.$validate();
@@ -162,23 +147,34 @@ export default {
       this.loading = true;
       const payload = {
         business: {
-          business_name: this.signUpInputs.businessName,
-          business_email: this.signUpInputs.businessEmail,
-          country: this.signUpInputs.countryOfOperation,
+          business_name: this.params.businessName,
+          business_email: this.params.businessEmail,
+          country: this.params.countryOfOperation,
         },
       };
 
       const fullPayload = {
-        app: process.env.SELLER_FULFILLMENT_SERVER,
+        app: process.env.FULFILMENT_SERVER,
         values: payload,
         endpoint: "seller/business/signup",
       };
-      const data = await this.signupUser(fullPayload);
-      if (data.status === 200) {
+      try {
+        const data = await this.signupUser(fullPayload);
+        if (data.status === 200) {
+          this.loading = false;
+          this.setOTPRedirectUrl("otp/signUp");
+          this.$router.push("/auth/otp");
+        }
         this.loading = false;
-        this.$router.push("/auth/otp");
+      } catch (err) {
+        ElNotification({
+          title: this.getErrors.message,
+          message: "",
+          duration: 0,
+          type: "error",
+        });
+        this.loading = false;
       }
-      this.loading = false;
     },
   },
 };
@@ -191,9 +187,15 @@ form {
 .login-link-text > a {
   color: #324ba8 !important;
 }
+.terms-link-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .terms-link-text > a {
   color: #324ba8 !important;
   text-decoration: none;
+  align-items: center;
 }
 .v-card-text {
   opacity: unset;

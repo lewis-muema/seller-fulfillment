@@ -23,7 +23,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.6",
     "@mdi/font": "5.9.55",
     "@popperjs/core": "^2.11.5",
-    "@sendyit/pay": "^0.1.7",
+    "@sendyit/pay": "^0.1.8",
     "@vuelidate/core": "^2.0.0-alpha.41",
     "@vuelidate/validators": "^2.0.0-alpha.29",
     "algoliasearch": "^4.13.1",

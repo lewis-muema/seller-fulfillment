@@ -162,7 +162,6 @@ export default {
         endpoint: "seller/business/signup/update",
       };
       const data = await this.businessUserDetails(fullPayload);
-      console.log("data", data);
       if (data.status === 200) {
         this.loading = false;
         this.$router.push("/onboarding");

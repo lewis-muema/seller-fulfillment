@@ -6,7 +6,6 @@ const industryList = {
         endpoint: `seller/${this.businessId}/industries`,
       };
       const data = await this.industries(fullPayload);
-      console.log(data);
       if (data.errors.length === 0) {
         return data;
       }

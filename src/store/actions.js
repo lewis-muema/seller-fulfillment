@@ -2,9 +2,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 export default {
-  async initAuth({ commit }) {
+  async initializeAuth({ commit }) {
     const token = localStorage.getItem("accessToken");
-    console.log("token", token);
     const refreshToken = localStorage.getItem("refreshToken");
 
     if (token !== null && token !== "") {

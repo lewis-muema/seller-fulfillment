@@ -30,12 +30,6 @@ const VueTelInputOptions = {
   onlyCountries: ["NG", "KE", "UG", "TZ", "CI"],
 };
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/firebase-messaging-sw.js");
-  });
-}
-
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 loadFonts();
 createApp(App)

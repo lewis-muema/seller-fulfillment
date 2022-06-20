@@ -73,6 +73,7 @@
   "enterDeliveryInstructions": "Enter instructions for the delivery partner",
   "payment": "Payment",
   "paymentMethod":"Select Payment method",
+  "changePayment": "Change default payment method",
   "amountToPay":"Amount to Pay",
   "submitOrder":"Submit Order",
   "continueWith":"Continue with",
@@ -132,5 +133,7 @@
   "productArchivedSuccessfully": "Product archived successfully",
   "productUnarchivedSuccessfully": "Product unarchived successfully",
   "consignmentCreatedSuccessfully": "Consignment created successfully",
-  "consignmentCreationFailed": "Consignment creation failed"
+  "consignmentCreationFailed": "Consignment creation failed",
+  "deliveryCreatedSuccessfully": "Delivery created successfully",
+  "deliveryCreationFailed": "Delivery creation failed"
 }

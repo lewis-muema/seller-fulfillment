@@ -146,4 +146,7 @@ export default {
   setParent(state, val) {
     state.parent = val;
   },
+  setPaymentMethods(state, val) {
+    state.paymnetMethods = val;
+  },
 };

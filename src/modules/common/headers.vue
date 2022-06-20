@@ -273,7 +273,6 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
-          window.dispatchEvent(new CustomEvent("register-fcm"));
           this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
         }
       });

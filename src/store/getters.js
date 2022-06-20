@@ -49,4 +49,5 @@ export default {
   getUserDetails: (state) => state.userDetails,
   getNotifications: (state) => state.notifications,
   getParent: (state) => state.parent,
+  getPaymnetMethods: (state) => state.paymnetMethods,
 };

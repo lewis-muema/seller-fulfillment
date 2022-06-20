@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import "element-plus/dist/index.css";
 import VueTelInput from "vue-tel-input";
 import "vue-tel-input/dist/vue-tel-input.css";
+import payments from "@sendyit/pay";
 
 const VueTelInputOptions = {
   mode: "international",
@@ -65,4 +66,13 @@ createApp(App)
     },
   })
   .use(i18n)
+  .use(payments, {
+    store,
+    router,
+    config: {
+      BASE_URL: process.env.VUE_APP_BASE_URL,
+      VGS_VAULT_ID: process.env.VUE_APP_VGS_VAULT_ID,
+      VGS_ENVIRONMENT: process.env.VUE_APP_VGS_ENVIRONMENT,
+    },
+  })
   .mount("#app");

@@ -14,10 +14,12 @@ export default {
     commit("setRefreshToken", refreshToken);
   },
 
-  async requestAxiosPost({ dispatch }, payload) {
-    const { fileUpload } = payload;
-
-    const config = await dispatch("custom_headers", fileUpload);
+  async requestAxiosPost(_, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     return new Promise((resolve, reject) => {
       axios
         .post(`${payload.app}${payload.endpoint}`, payload.values, config)

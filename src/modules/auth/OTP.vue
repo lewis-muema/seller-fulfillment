@@ -28,6 +28,7 @@
                 :should-auto-focus="true"
                 :is-input-num="true"
                 @on-complete="handleOnComplete"
+                :separator="false"
               />
             </div>
             <div v-if="v$.otp.$error" class="error-msg">
@@ -123,7 +124,8 @@ export default {
           this.getOTPRedirectUrl === "otp/signIn"
             ? await this.attemptLogin(fullPayload)
             : await this.confirmUser(fullPayload);
-        if (data.status === 200) {
+
+        if (data.data.data !== null) {
           this.correctOTP = true;
           const accessToken = data.data.access_token;
           const refreshToken = data.data.refresh_token;

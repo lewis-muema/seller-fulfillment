@@ -44,6 +44,7 @@
               $t("auth.industryOfBusiness")
             }}</label>
             <select class="form-select" @change="selectIndustryId($event)">
+              <option selected>Select</option>
               <option
                 v-for="industry in supportedIndustries"
                 :key="industry.industry_id"

@@ -15,13 +15,24 @@ export default {
     commit("setRefreshToken", refreshToken);
   },
 
-  async requestAxiosPost(_, payload) {
-    const config = {
+  async custom_headers({ state }, fileUpload) {
+    const authToken = localStorage.getItem("accessToken")
+      ? localStorage.getItem("accessToken")
+      : "";
+    const param = {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        "Content-Type": fileUpload ? "multipart/form-data" : "application/json",
+        Accept: "application/json",
+        Authorization: authToken,
       },
     };
+
+    return param;
+  },
+
+  async requestAxiosPost({ dispatch }, payload) {
+    const { fileUpload } = payload;
+    const config = await dispatch("custom_headers", fileUpload);
     return new Promise((resolve, reject) => {
       axios
         .post(`${payload.app}${payload.endpoint}`, payload.values, config)
@@ -34,13 +45,9 @@ export default {
         });
     });
   },
-  requestAxiosGet({ commit }, payload) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
-      },
-    };
+  async requestAxiosGet({ commit, dispatch }, payload) {
+    const { fileUpload } = payload;
+    const config = await dispatch("custom_headers", fileUpload);
     return new Promise((resolve) => {
       axios
         .get(`${payload.app}${payload.endpoint}`, config)
@@ -53,13 +60,9 @@ export default {
         });
     });
   },
-  requestAxiosPut({ commit }, payload) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
-      },
-    };
+  async requestAxiosPut({ dispatch, commit }, payload) {
+    const { fileUpload } = payload;
+    const config = await dispatch("custom_headers", fileUpload);
     return new Promise((resolve, reject) => {
       axios
         .put(`${payload.app}${payload.endpoint}`, payload.values, config)
@@ -72,22 +75,6 @@ export default {
         });
     });
   },
-  async custom_headers({ state }, fileUpload) {
-    const authToken = state.accessToken
-      ? localStorage.getItem("accessToken")
-      : state.accessToken;
-
-    const param = {
-      headers: {
-        "Content-Type": fileUpload ? "multipart/form-data" : "application/json",
-        Accept: "application/json",
-        Authorization: authToken,
-      },
-    };
-
-    return param;
-  },
-
   setErrorAction({ commit }, payload) {
     let errors = {};
     payload.forEach((el) => {

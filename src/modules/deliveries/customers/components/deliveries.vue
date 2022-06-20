@@ -303,6 +303,7 @@ export default {
 .deliveries-container-inner {
   width: 100%;
   background: white;
+  margin-bottom: auto;
 }
 .deliveries-location-row {
   font-size: 14px;

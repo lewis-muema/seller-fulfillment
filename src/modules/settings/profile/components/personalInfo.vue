@@ -8,6 +8,7 @@
       id="first-name"
       v-model="firstName"
       variant="outlined"
+      :disabled="buttonLoader"
       clearable
       clear-icon="mdi-close"
     ></v-text-field>
@@ -19,6 +20,7 @@
       id="last-name"
       v-model="lastName"
       variant="outlined"
+      :disabled="buttonLoader"
       clearable
       clear-icon="mdi-close"
     ></v-text-field>
@@ -41,23 +43,103 @@
       class="personalInfo-phone"
       id="phone-number"
       v-model="phone"
+      :disabled="buttonLoader"
       mode="international"
     ></vue-tel-input>
-    <v-btn class="personalInfo-save">
+    <v-btn
+      class="personalInfo-save"
+      v-loading="buttonLoader"
+      @click="updateUserDetails()"
+    >
       {{ $t("settings.saveChanges") }}
     </v-btn>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { ElNotification } from "element-plus";
+
 export default {
   data() {
     return {
-      firstName: "James",
-      lastName: "Doe",
-      emailAddress: "Jamesjoe@gmail.com",
-      phone: "+254709779779",
+      firstName: "",
+      lastName: "",
+      emailAddress: "",
+      phone: "",
+      buttonLoader: false,
     };
+  },
+  computed: {
+    ...mapGetters(["getUserDetails"]),
+  },
+  mounted() {
+    this.getUsersDetails();
+  },
+  methods: {
+    ...mapMutations(["setUserDetails"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
+    getUsersDetails() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.buttonLoader = true;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/user`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.buttonLoader = false;
+          this.setUserDetails(response.data.data.user);
+          this.setUsersDetails();
+        }
+      });
+    },
+    setUsersDetails() {
+      this.firstName = this.getUserDetails.first_name;
+      this.lastName = this.getUserDetails.last_name;
+      this.emailAddress = this.getUserDetails.email;
+      this.phone = this.getUserDetails.phone_number;
+    },
+    updateUserDetails() {
+      if (this.firstName && this.lastName && this.phone && this.emailAddress) {
+        this.buttonLoader = true;
+        const userDetails = JSON.parse(localStorage.userDetails).data;
+        this.requestAxiosPut({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${userDetails.business_id}/user`,
+          values: {
+            user_id: this.getUserDetails.user_id,
+            first_name: this.firstName,
+            last_name: this.lastName,
+            phone_number: this.phone,
+            email: this.emailAddress,
+            tax_identification_number: "",
+          },
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            this.setUserDetails(response.data.data.user);
+            this.setUsersDetails();
+            ElNotification({
+              title: this.$t("settings.userDetailsUpdatedSuccessfully"),
+              message: "",
+              type: "success",
+            });
+          } else {
+            ElNotification({
+              title: this.$t("settings.userDetailsUpdateFailed"),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.pleaseFillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
   },
 };
 </script>

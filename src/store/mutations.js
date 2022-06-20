@@ -125,4 +125,25 @@ export default {
   setDeliveryAttempts(state, val) {
     state.deliveryAttempts = val;
   },
+  setProduct(state, val) {
+    state.product = val;
+  },
+  setAddProductStatus(state, val) {
+    state.addProductStatus = val;
+  },
+  setFulfillmentFees(state, val) {
+    state.fulfillmentFees = val;
+  },
+  setBusinessDetails(state, val) {
+    state.businessDetails = val;
+  },
+  setUserDetails(state, val) {
+    state.userDetails = val;
+  },
+  setNotifications(state, val) {
+    state.notifications = val;
+  },
+  setParent(state, val) {
+    state.parent = val;
+  },
 };

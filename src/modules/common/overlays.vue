@@ -342,28 +342,33 @@
           <span>
             {{ $t("inventory.totalValue") }}
           </span>
-          <span class="fees-left-override"> {{ currency }} {{ amount }} </span>
+          <span class="fees-left-override">
+            {{ getFulfillmentFees.currency }}
+            {{ getFulfillmentFees.total_product_value }}
+          </span>
         </div>
-        <div class="fees-row fees-bold">
+        <div class="fees-row fees-bold fees-title">
           {{ $t("inventory.fees") }}
         </div>
-        <div class="fees-row">
+        <div
+          v-for="(promos, i) in getFulfillmentFees.promotion_adjustments"
+          :key="i"
+          class="fees-row"
+        >
           <span>
-            <div>{{ $t("inventory.50K") }}</div>
-            <div class="fees-subtitle">{{ $t("inventory.5%") }}</div>
+            <div>{{ promos.adjustment_description }}</div>
+            <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
           </span>
-          <span class="fees-left-override"> {{ newPrice }} </span>
-        </div>
-        <div class="fees-row fees-divider fee-padding-bottom">
-          <span>
-            <div>{{ $t("inventory.deliveryFee") }}</div>
-            <div class="fees-subtitle">{{ $t("inventory.charged") }}</div>
+          <span class="fees-left-override">
+            {{ getFulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
-          <span class="fees-left-override"> {{ newPrice }} </span>
         </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
-          <span class="fees-left-override">{{ currency }} {{ amount }}</span>
+          <span class="fees-left-override"
+            >{{ getFulfillmentFees.currency }}
+            {{ getFulfillmentFees.calculated_fee }}</span
+          >
         </div>
         <p class="fee-margin-top pricing-docs-link">
           {{ $t("inventory.learnMoreAboutOurPricing") }}
@@ -400,6 +405,20 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="popup === 'code'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("deliveries.deliveryCode") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'code')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="delivery-code">
+        {{ getOrderTrackingData.order.confirmation_pin }}
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -426,7 +445,13 @@ export default {
   },
   components: { Datepicker },
   computed: {
-    ...mapGetters(["getData", "getDeliveryAttempts", "getOrderTrackingData"]),
+    ...mapGetters([
+      "getData",
+      "getDeliveryAttempts",
+      "getOrderTrackingData",
+      "getFulfillmentFees",
+      "getParent",
+    ]),
   },
   data() {
     return {
@@ -622,7 +647,9 @@ export default {
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/cancel`,
+        endpoint: `seller/${userDetails.business_id}/${
+          this.getParent === "sendy" ? "consignments" : "deliveries"
+        }/${this.getOrderTrackingData.order.order_id}/cancel`,
         values: {
           cancellation_reason: this.cancelReason,
         },
@@ -785,5 +812,17 @@ export default {
   display: flex;
   align-items: center;
   font-size: 15px;
+}
+.fees-title {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+.delivery-code {
+  font-size: 40px;
+  font-weight: 500;
+  color: #324ba8;
+  text-align: center;
+  margin: 30px;
 }
 </style>

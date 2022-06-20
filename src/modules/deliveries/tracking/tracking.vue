@@ -22,7 +22,7 @@
               </v-btn>
             </template>
             <v-list class="users-actions-popup">
-              <v-list-item v-for="(action, i) in getDeliveryActions" :key="i">
+              <v-list-item v-for="(action, i) in deliveryActions" :key="i">
                 <v-list-item-title
                   @click="
                     setOverlayStatus({
@@ -80,7 +80,6 @@ export default {
       orderNo: "AQW4567787",
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
-      parent: "",
       failedStatus: false,
     };
   },
@@ -92,18 +91,40 @@ export default {
         this.failedStatus = false;
       }
     },
+    "$store.state.parent": function parentVal(val) {
+      this.rescheduleStatus(val);
+      if (val === "sendy") {
+        this.setComponent(this.$t("deliveries.trackDeliveryToSendy"));
+      } else if (val === "customer") {
+        this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
+      }
+    },
   },
   computed: {
-    ...mapGetters(["getLoader", "getDeliveryActions", "getOrderTrackingData"]),
+    ...mapGetters([
+      "getLoader",
+      "getDeliveryActions",
+      "getOrderTrackingData",
+      "getParent",
+    ]),
+    deliveryActions() {
+      const actions = [];
+      this.getDeliveryActions.forEach((row) => {
+        if (row.show) {
+          actions.push(row);
+        }
+      });
+      return actions;
+    },
   },
   mounted() {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
-      this.setComponent(this.$t("deliveries.trackDeliveryToSendy"));
-      this.parent = "sendy";
+      this.setParent("sendy");
+      this.rescheduleStatus(false);
     }
     if (this.$router.options.history.state.back === "/deliveries/customer") {
-      this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
-      this.parent = "customer";
+      this.setParent("customer");
+      this.rescheduleStatus(true);
     }
     this.fetchOrder();
   },
@@ -114,6 +135,8 @@ export default {
       "setTab",
       "setOverlayStatus",
       "setOrderTrackingData",
+      "setParent",
+      "setDeliveryActions",
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchOrder() {
@@ -122,7 +145,7 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${userDetails.business_id}/${
-          parent === "sendy" ? "consignments" : "deliveries"
+          this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {
         if (response.status === 200) {
@@ -130,9 +153,14 @@ export default {
         }
       });
     },
+    rescheduleStatus(val) {
+      let actions = this.getDeliveryActions;
+      actions[1].show = val === "customer";
+      this.setDeliveryActions(actions);
+    },
     formatDate(date) {
       const finalTime = moment(date).add(2, "hours");
-      return `${moment(date).format("dddd, do MMM")} ${moment(date).format(
+      return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
         "ha"
       )} - ${moment(finalTime).format("ha")}`;
     },

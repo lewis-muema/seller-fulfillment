@@ -105,6 +105,7 @@ export default {
       "setOverlayStatus",
       "setOrderTimelines",
       "setDeliveryAttempts",
+      "setParent",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatEventName(name) {
@@ -125,6 +126,13 @@ export default {
             events[events.length - 1].event_code === "EVENT_DELIVERY_FAILED"
           ) {
             this.fetchAttempts();
+          }
+          if (this.getOrderTimelines[0].event_code.includes("EVENT_DELIVERY")) {
+            this.setParent("customer");
+          } else if (
+            this.getOrderTimelines[0].event_code.includes("EVENT_PICKUP")
+          ) {
+            this.setParent("sendy");
           }
         }
       });

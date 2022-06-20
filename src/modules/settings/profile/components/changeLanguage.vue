@@ -3,21 +3,33 @@
     <label for="languages" class="changeLanguage-label">
       {{ $t("settings.changePreferredLanguage") }}
     </label>
-    <v-select
-      class="changeLanguage-field"
-      id="languages"
-      :items="getLanguages"
+    <el-select
+      class="mb-6 business-details-industry"
+      :disabled="buttonLoader"
+      id="industry"
       v-model="defaultLanguage"
-      outlined
-    ></v-select>
-    <v-btn class="changeLanguage-save">
+    >
+      <el-option
+        v-for="lang in getLanguages"
+        :key="lang.name"
+        :label="lang.name"
+        :value="lang.tag"
+      >
+      </el-option>
+    </el-select>
+    <v-btn
+      class="changeLanguage-save"
+      v-loading="buttonLoader"
+      @click="saveLanguage()"
+    >
       {{ $t("settings.saveChanges") }}
     </v-btn>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   watch: {
@@ -26,18 +38,94 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getLanguages", "getDefaultLanguage"]),
+    ...mapGetters(["getLanguages", "getDefaultLanguage", "getBusinessDetails"]),
   },
   data() {
     return {
-      defaultLanguage: "English",
+      defaultLanguage: "en",
+      buttonLoader: false,
     };
   },
   mounted() {
-    this.defaultLanguage = this.getDefaultLanguage;
+    this.listLanguages();
+    this.getBusinesssDetails();
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setDefaultLanguage"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setDefaultLanguage",
+      "setLanguages",
+      "setBusinessDetails",
+    ]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
+    listLanguages() {
+      this.buttonLoader = true;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/business/signup/languages`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.buttonLoader = false;
+          this.setLanguages(response.data.data.languages);
+        }
+      });
+    },
+    getBusinesssDetails() {
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.buttonLoader = true;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/business`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.buttonLoader = false;
+          this.setBusinessDetails(response.data.data.business);
+          this.defaultLanguage = this.getBusinessDetails.language;
+        }
+      });
+    },
+    saveLanguage() {
+      this.buttonLoader = true;
+      const userDetails = JSON.parse(localStorage.userDetails).data;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${userDetails.business_id}/business`,
+        values: {
+          business_id: this.getBusinessDetails.business_id,
+          business_name: this.getBusinessDetails.business_name,
+          business_industry_id:
+            this.getBusinessDetails.business_industry.industry_id,
+          business_tax_identification_number:
+            this.getBusinessDetails.business_tax_identification_number,
+          business_default_address:
+            this.getBusinessDetails.business_default_address,
+          business_instagram_page:
+            this.getBusinessDetails.business_instagram_page,
+          business_website: this.getBusinessDetails.business_website,
+          business_facebook_page:
+            this.getBusinessDetails.business_facebook_page,
+          business_language: this.defaultLanguage,
+        },
+      }).then((response) => {
+        this.buttonLoader = false;
+        if (response.status === 200) {
+          this.setBusinessDetails(response.data.data.business);
+          this.defaultLanguage = this.getBusinessDetails.language;
+          ElNotification({
+            title: this.$t("settings.languageUpdatedSuccessfully"),
+            message: "",
+            type: "success",
+          });
+        } else {
+          ElNotification({
+            title: this.$t("settings.languageUpdateFailed"),
+            message: "",
+            type: "error",
+          });
+        }
+      });
+    },
   },
 };
 </script>

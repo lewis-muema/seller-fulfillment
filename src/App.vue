@@ -8,6 +8,7 @@
 
 <script>
 import Canvas from "./components/canvas.vue";
+import { mapGetters } from "vuex";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
@@ -16,7 +17,11 @@ export default {
   data: () => ({
     //
   }),
+  computed: {
+    ...mapGetters(["getUserDetails"]),
+  },
   created() {
+    const userDetails = JSON.parse(localStorage.userDetails).data;
     window.addEventListener("register-fcm", () => {
       try {
         const messaging = getMessaging();
@@ -31,35 +36,17 @@ export default {
               : deviceId;
             this.$store.dispatch("requestAxiosPut", {
               app: process.env.FULFILMENT_SERVER,
-              endpoint: `buyer/orders/${this.$store.getters.getData.data.order_id}/fcm`,
+              endpoint: `seller/${userDetails.business_id}/user/fcm`,
               values: {
                 token: currentToken,
                 device_id: localStorage.deviceId,
+                user_id: this.getUserDetails.user_id,
               },
             });
           }
         });
         onMessage(messaging, (payload) => {
-          this.sendSegmentEvents({
-            event: "Trigger for User",
-            data: {
-              userId: this.$store.getters.getData.data.destination.name,
-              // eslint-disable-next-line max-len
-              trigger: payload.notification.body,
-            },
-          });
-          this.$store
-            .dispatch("requestAxiosGet", {
-              app: process.env.FULFILMENT_SERVER,
-              endpoint: `buyer/orders/${this.$route.params.deliveryId}`,
-            })
-            .then((response) => {
-              this.$store.commit("setData", response.data);
-              this.$store.commit(
-                "setDeliveryStatus",
-                response.data.data.order_event_status
-              );
-            });
+          console.log(payload);
         });
       } catch (error) {
         // ...
@@ -100,5 +87,16 @@ export default {
 }
 .pac-container {
   z-index: 10000 !important;
+}
+.el-select-dropdown__item {
+  display: flex;
+  align-items: center;
+  height: 60px !important;
+}
+.el-select-dropdown__item.selected {
+  color: #324ba8 !important;
+}
+.el-input__inner {
+  color: black !important;
 }
 </style>

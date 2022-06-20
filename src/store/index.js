@@ -11,7 +11,13 @@ export default createStore({
     return {
       mobile: false,
       component: "",
-      languages: ["English", "French"],
+      languages: [
+        {
+          name: "English",
+          tag: "en",
+        },
+      ],
+      parent: "",
       defaultLanguage: "English",
       external: [
         "/auth/",
@@ -28,6 +34,7 @@ export default createStore({
       industries: {},
       productStep: 0,
       tabStatus: "",
+      addProductStatus: false,
       downloadActions: [
         {
           label: "Excel",
@@ -137,17 +144,20 @@ export default createStore({
         {
           label: "deliveries.getDeliveryCode",
           trigger: false,
-          popup: "deliveryCode",
+          popup: "code",
+          show: true,
         },
         {
           label: "deliveries.rescheduleOrder",
           trigger: false,
           popup: "reschedule",
+          show: true,
         },
         {
           label: "deliveries.cancelOrder",
           trigger: false,
           popup: "cancel",
+          show: true,
         },
       ],
       overlayStatus: {
@@ -846,108 +856,187 @@ export default createStore({
       stockSelectedTab: "Overview",
       selectedProducts: [],
       sendProductsRoute: "",
-      productLists: {
-        message: "product.list.success",
-        data: {
-          products: [
+      product: {
+        product_id: "P-KXG-2261",
+        objectID: "P-KXG-2261",
+        product_name: "G pen",
+        product_description: "vaporizer",
+        product_main_color: null,
+        product_archived: false,
+        business_id: "B-XGS-1542",
+        product_collection: {
+          collection_id: "PC-KST-8857",
+          collection_name: null,
+        },
+        sales_channel_collections: null,
+        product_variants: [
+          {
+            product_variant_id: "PV-JMU-7623",
+            business_id: "B-XGS-1542",
+            product_id: "P-KXG-2261",
+            product_variant_description: "G pen",
+            product_variant_currency: "KES",
+            product_variant_unit_price: 50,
+            product_variant_image_link:
+              "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-XGS-1542_1644567355056_image_picker3925527011753456914.jpg",
+            product_variant_expiry_date: null,
+            product_variant_quantity: 500,
+            product_variant_quantity_type: "GRAM",
+            product_variant_stock_levels: {
+              available: 0,
+              quantity_in_inventory: 0,
+              quantity_in_sales_orders: 1,
+              quantity_held_in_fulfilment_requests: 0,
+              last_updated_date: 1655449379000,
+            },
+            product_variant_archived: false,
+          },
+        ],
+      },
+      productLists: [
+        {
+          product_id: "P-KXG-2261",
+          objectID: "P-KXG-2261",
+          product_name: "G pen",
+          product_description: "vaporizer",
+          product_main_color: null,
+          product_archived: false,
+          business_id: "B-XGS-1542",
+          product_collection: {
+            collection_id: "PC-KST-8857",
+            collection_name: null,
+          },
+          sales_channel_collections: null,
+          product_variants: [
             {
-              business_id: "B_ASD123",
-              product_id: "P_ASD1234",
-              product_name: "Shea Butter",
-              product_description: "Smooth shear butter",
-              sales_channel_collections: [
-                {
-                  collection_id: "string",
-                  collection_name: "string",
-                },
-              ],
-              product_link:
-                "https://images.sendyit.com/fulfilment/seller/shea.png",
-              available: "23",
-              committed: "23",
-              incoming: "4",
-              product_currency: "KES",
-              product_price: 450,
+              product_variant_id: "PV-JMU-7623",
+              business_id: "B-XGS-1542",
+              product_id: "P-KXG-2261",
+              product_variant_description: "G pen",
+              product_variant_currency: "KES",
+              product_variant_unit_price: 50,
+              product_variant_image_link:
+                "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-XGS-1542_1644567355056_image_picker3925527011753456914.jpg",
+              product_variant_expiry_date: null,
+              product_variant_quantity: 500,
+              product_variant_quantity_type: "GRAM",
+              product_variant_stock_levels: {
+                available: 0,
+                quantity_in_inventory: 0,
+                quantity_in_sales_orders: 1,
+                quantity_held_in_fulfilment_requests: 0,
+                last_updated_date: 1655391003000,
+              },
+              product_variant_archived: false,
+            },
+          ],
+        },
+        {
+          product_id: "P-KXG-2261",
+          objectID: "P-KXG-2261",
+          product_name: "G pen",
+          product_description: "vaporizer",
+          product_main_color: null,
+          product_archived: false,
+          business_id: "B-XGS-1542",
+          product_collection: {
+            collection_id: "PC-KST-8857",
+            collection_name: null,
+          },
+          sales_channel_collections: null,
+          product_variants: [
+            {
+              product_variant_id: "PV-JMU-7623",
+              business_id: "B-XGS-1542",
+              product_id: "P-KXG-2261",
+              product_variant_description: "G pen",
+              product_variant_currency: "KES",
+              product_variant_unit_price: 50,
+              product_variant_image_link:
+                "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-XGS-1542_1644567355056_image_picker3925527011753456914.jpg",
+              product_variant_expiry_date: null,
+              product_variant_quantity: 500,
+              product_variant_quantity_type: "GRAM",
+              product_variant_stock_levels: {
+                available: 0,
+                quantity_in_inventory: 0,
+                quantity_in_sales_orders: 1,
+                quantity_held_in_fulfilment_requests: 0,
+                last_updated_date: 1655391003000,
+              },
+              product_variant_archived: false,
+            },
+          ],
+        },
+      ],
+      fulfillmentFees: {
+        total_product_value: 500,
+        pre_adjustments_calculated_fee: 50,
+        calculated_fee: 50,
+        rate: 0.13,
+        currency: "KES",
+        order_type: "DELIVERY",
+        promotion_session_id: "b368d75c-8538-4017-a531-d189347a70ca",
+        promotion_adjustments: [
+          {
+            adjustment_type: "COST_OF_FULFILMENT",
+            adjustment_description: "KES 0.0 - KES 300.0",
+            adjustment_subtitle: "12.0% service fee",
+            adjustment_value: 36,
+          },
+          {
+            adjustment_type: "COST_OF_FULFILMENT",
+            adjustment_description: "KES 300.0 - KES 500.0",
+            adjustment_subtitle: "7.0% service fee",
+            adjustment_value: 14,
+          },
+        ],
+        promotion_notifications: [],
+      },
+      userDetails: {
+        email: "lewis@sendyit.com",
+        first_name: "Lewis",
+        last_name: "Muema",
+        phone_number: "+254795510441",
+        user_id: "U-LSH-5086",
+      },
+      businessDetails: {
+        business_id: "B-XGS-1542",
+        business_name: "skwodi ltd",
+        business_industry: {
+          name: "Appliances",
+          industry_id: "IN-LUM-6392",
+          country: "KENYA",
+          fulfillment_rate: 0.13,
+        },
+        business_tax_identification_number: null,
+        business_default_address: null,
+        business_instagram_page: null,
+        business_website: null,
+        business_facebook_page: null,
+        terms_of_service_accepted: true,
+        country: "KENYA",
+        country_code: "KE",
+        company_code: "FFKE",
+        currency: "KES",
+        language: "en",
+        settings: {
+          payments_enabled: true,
+          payment_methods: [
+            {
+              paymentType: "MPESA",
+              payment_method: "MPESA",
+              sendy_payment_method_id: 1,
             },
             {
-              business_id: "B_ASD123",
-              product_id: "P_ASD1234",
-              product_name: "Leather Bags",
-              product_description: "Good quality Leather Bags",
-              sales_channel_collections: [
-                {
-                  collection_id: "string",
-                  collection_name: "string",
-                },
-              ],
-              product_link:
-                "https://images.sendyit.com/fulfilment/seller/shea.png",
-              available: "0",
-              committed: "0",
-              incoming: "0",
-              product_currency: "KES",
-              product_price: 450,
-            },
-            {
-              business_id: "B_ASD123",
-              product_id: "P_ASD1234",
-              product_name: "Ceramic Cup",
-              product_description: "Hand made ceramic cups",
-              product_link:
-                "https://images.sendyit.com/fulfilment/seller/shea.png",
-              product_variants: [
-                {
-                  business_id: "B_ASD123",
-                  product_id: "P_ASD123",
-                  product_variant_id: "PV_ASD123",
-                  product_variant_description: "Fortified Cup",
-                  product_variant_currency: "KES",
-                  product_variant_unit_price: 400,
-                  product_variant_quantity: 30,
-                  product_variant_quantity_type: "ml",
-                  product_variant_image_link:
-                    "https://images.sendyit.com/fulfilment/seller/shirts.png",
-                  product_variant_expiry_date: 123456789,
-                  product_variant_stock_levels: {
-                    available: 3,
-                    quantity_in_inventory: 1,
-                    quantity_in_sales_orders: 0,
-                  },
-                },
-                {
-                  business_id: "B_ASD123",
-                  product_id: "P_ASD123",
-                  product_variant_id: "PV_ASD123",
-                  product_variant_description: "Fortified Cup",
-                  product_variant_currency: "KES",
-                  product_variant_unit_price: 400,
-                  product_variant_quantity: 130,
-                  product_variant_quantity_type: "ml",
-                  product_variant_image_link:
-                    "https://images.sendyit.com/fulfilment/seller/shirts.png",
-                  product_variant_expiry_date: 123456789,
-                  product_variant_stock_levels: {
-                    available: 3,
-                    quantity_in_inventory: 0,
-                    quantity_in_sales_orders: 0,
-                  },
-                },
-              ],
-              sales_channel_collections: [
-                {
-                  collection_id: "string",
-                  collection_name: "string",
-                },
-              ],
-              available: "23",
-              committed: "25",
-              incoming: "7",
-              product_currency: "KES",
-              product_price: 450,
+              paymentType: "CARD",
+              payment_method: "CARD",
+              sendy_payment_method_id: 2,
             },
           ],
         },
       },
+      notifications: [],
     };
   },
   actions,

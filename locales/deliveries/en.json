@@ -60,6 +60,7 @@
   "pickUpInstructionsOptional": "Pick up instructions (optional)",
   "enterInstructions": "Enter instructions for the delivery partner",
   "addAnotherPhoneNumber": "Add another phone number",
+  "removePhoneNumber": "Remove phone number",
   "weTriedToReachYourCustomer": "We tried to reach your customer to deliver their items, but we couldn’t reach them. We will attempt delivery again on {date} or you can reschedule delivery to a time that works ",
   "rescheduleDelivery": "Reschedule delivery",
   "deliveryAttempt":"Delivery attempted",
@@ -94,5 +95,7 @@
   "deliveryRescheduledSuccessfully": "Delivery rescheduled successfully",
   "deliveryReschedulingFailed": "Delivery rescheduling failed",
   "deliveryCancelledSuccessfully": "Delivery cancelled successfully",
-  "deliveryCancellingFailed": "Delivery cancelling failed"
+  "deliveryCancellingFailed": "Delivery cancelling failed",
+  "deliveryCode": "Delivery Code",
+  "enterInstructionsForTheDriverPickingYourProducts": "Enter instructions for the driver picking your products"
 }

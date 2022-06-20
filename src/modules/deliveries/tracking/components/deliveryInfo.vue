@@ -3,7 +3,7 @@
     <p class="delivery-info-title">
       <span :class="getLoader">
         {{
-          parent === "sendy"
+          getParent === "sendy"
             ? $t("deliveries.pickupInfo")
             : $t("deliveries.deliveryInfo")
         }}
@@ -20,7 +20,7 @@
     <p class="delivery-info-label">
       <span :class="getLoader">
         {{
-          parent === "sendy"
+          getParent === "sendy"
             ? $t("deliveries.pickUpLocation")
             : $t("deliveries.nameOfCustomer")
         }}
@@ -29,7 +29,7 @@
     <p class="delivery-info-data">
       <span :class="getLoader">
         {{
-          parent === "sendy"
+          getParent === "sendy"
             ? getOrderTrackingData.order.destination.delivery_location
                 .description
             : getOrderTrackingData.order.destination.name
@@ -39,7 +39,7 @@
     <p class="delivery-info-label">
       <span :class="getLoader">
         {{
-          parent === "sendy"
+          getParent === "sendy"
             ? $t("deliveries.pickUpInstructions")
             : $t("deliveries.deliveryLocation")
         }}
@@ -48,7 +48,7 @@
     <p class="delivery-info-data">
       <span :class="getLoader">
         {{
-          parent === "sendy"
+          getParent === "sendy"
             ? getOrderTrackingData.order.destination.delivery_instructions
               ? getOrderTrackingData.order.destination.delivery_instructions
               : "N/A"
@@ -67,12 +67,12 @@
         {{ getOrderTrackingData.order.destination.phone_number }}
       </span>
     </p>
-    <p v-if="parent === 'customer'" class="delivery-info-label">
+    <p v-if="getParent === 'customer'" class="delivery-info-label">
       <span :class="getLoader">
         {{ $t("deliveries.instructions") }}
       </span>
     </p>
-    <p v-if="parent === 'customer'" class="delivery-info-data">
+    <p v-if="getParent === 'customer'" class="delivery-info-data">
       <span :class="getLoader">
         {{
           getOrderTrackingData.order.destination.delivery_instructions
@@ -81,12 +81,12 @@
         }}
       </span>
     </p>
-    <p v-if="parent === 'customer'" class="delivery-info-label">
+    <p v-if="getParent === 'customer'" class="delivery-info-label">
       <span :class="getLoader">
         {{ $t("deliveries.paymentMethod") }}
       </span>
     </p>
-    <p v-if="parent === 'customer'" class="delivery-info-data">
+    <p v-if="getParent === 'customer'" class="delivery-info-data">
       <span :class="getLoader">
         {{
           getOrderTrackingData.order.fulfilment_cost_means_of_payment
@@ -103,7 +103,6 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      parent: "",
       overlay: false,
       editInfo: false,
     };
@@ -114,24 +113,20 @@ export default {
       "getDeliveryInfo",
       "getPickupInfo",
       "getOrderTrackingData",
+      "getParent",
     ]),
   },
-  mounted() {
-    if (this.$router.options.history.state.back === "/deliveries/sendy") {
-      this.parent = "sendy";
-    } else {
-      this.parent = "customer";
-    }
-  },
+  mounted() {},
   methods: {
     ...mapMutations([
       "setComponent",
       "setLoader",
       "setTab",
       "setOverlayStatus",
+      "setParent",
     ]),
     overlayStatus(overlay) {
-      if (this.parent === "sendy") {
+      if (this.getParent === "sendy") {
         this.setOverlayStatus({
           overlay,
           popup: "pickupInfo",

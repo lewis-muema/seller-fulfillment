@@ -67,7 +67,7 @@ export default {
     });
   },
   async custom_headers({ state }, fileUpload) {
-    const authToken = !state.accessToken
+    const authToken = state.accessToken
       ? localStorage.getItem("accessToken")
       : state.accessToken;
 

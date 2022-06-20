@@ -59,13 +59,15 @@
           <hr class="mt-3" />
           <div class="mt-3">
             <p>{{ $t("inventory.payment") }}</p>
-            <span class="payment-method">
-              <v-icon class="pr-3"> mdi-credit-card-outline </v-icon>
-              {{ $t("inventory.paymentMethod") }}
-            </span>
-            <span>
-              <v-icon class="payment-method-icon">mdi-chevron-right</v-icon>
-            </span>
+            <div @click="selectPaymentMethod">
+              <span class="payment-method">
+                <v-icon class="pr-3"> mdi-credit-card-outline </v-icon>
+                {{ $t("inventory.paymentMethod") }}
+              </span>
+              <span>
+                <v-icon class="payment-method-icon">mdi-chevron-right</v-icon>
+              </span>
+            </div>
           </div>
           <div class="mt-3">
             <span>{{ $t("inventory.amountToPay") }}</span>
@@ -97,8 +99,32 @@ export default {
   },
   methods: {
     ...mapMutations(["setProductStep"]),
+    ...mapGetters(["getUserData"]),
     addProductStep(val) {
       this.setProductStep(val);
+    },
+    selectPaymentMethod() {
+      const buPayload = {
+        user_id: 1,
+        entity_id: 6,
+        currency: "KES",
+        country_code: "KE",
+        amount: "100",
+        success_callback_url: "",
+        fail_callback_url: "",
+        txref: this.txref,
+        bulk: false,
+        paybill_no: "4444444",
+        email: "johndoe@gmail.com",
+        authToken: "",
+        firstname: "John",
+        lastname: "doe",
+        payment_options: "",
+        company_code: "FFKE",
+        locale: "en",
+      };
+
+      this.$paymentInit(buPayload, "choose-payment");
     },
   },
 };

@@ -4,8 +4,8 @@ import * as payments from "../payments/fr.json";
 import * as settings from "../settings/fr.json";
 import * as external from "../external/fr.json";
 import * as inventory from "../inventory/fr.json";
-import * as auth from "../auth/en.json";
-import * as dashboard from "../dashboard/en.json";
+import * as auth from "../auth/fr.json";
+import * as dashboard from "../dashboard/fr.json";
 
 const translations = {
   common: common.default,

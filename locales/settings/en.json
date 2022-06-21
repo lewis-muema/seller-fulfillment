@@ -64,5 +64,11 @@
   "resendEmail": "Resend email",
   "filterByDateRange": "Filter by date range",
   "date": "Date",
-  "action": "Action"
+  "action": "Action",
+  "userDetailsUpdatedSuccessfully": "User details updated successfully",
+  "userDetailsUpdateFailed": "User details update failed",
+  "businessDetailsUpdatedSuccessfully": "Business details updated successfully",
+  "businessDetailsUpdateFailed": "Business details update failed",
+  "languageUpdatedSuccessfully": "Language updated successfully",
+  "languageUpdateFailed": "Language update failed"
 }

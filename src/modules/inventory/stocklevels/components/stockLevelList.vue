@@ -2,58 +2,20 @@
   <div>
     <v-card class="desktop-product-details" variant="outlined">
       <div class="products-search">
-        <v-menu
-          transition="slide-y-transition"
-          anchor="bottom center"
-          v-model="searchToggle"
-        >
-          <template v-slot:activator="{ props }">
-            <v-text-field
-              color="#324BA8"
-              v-bind="props"
-              prepend-inner-icon="mdi-magnify"
-              clearable
-              :label="$t('deliveries.searchDelivery')"
-              variant="outlined"
-              v-model="searchParam"
-              @click:clear="clearItems()"
-              :placeholder="$t('deliveries.searchDelivery')"
-            ></v-text-field>
-          </template>
-          <v-list class="header-list-popup">
-            <v-list-item v-for="(item, i) in searchItems" :key="i">
-              <v-list-item-title>
-                <div class="search-item-flex">
-                  <div class="search-items-image-container">
-                    <img
-                      class="search-items-image"
-                      :src="item.image"
-                      alt="product-image"
-                    />
-                  </div>
-                  <div>
-                    <div class="search-item-row">
-                      <div class="search-item-name">{{ item.brand }}</div>
-                      <div class="search-item-description">
-                        {{ item.description }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <searchAlgolia />
       </div>
-      <v-table class="" v-if="products.length > 0">
+      <v-table class="" v-if="getProductLists.length > 0">
         <table-header :header="tableHeaders" />
         <tbody>
-          <tr v-for="(product, index) in products" :key="index">
+          <tr v-for="(product, index) in getProductLists" :key="index">
             <td>
               <v-list-item lines="two">
                 <v-list-item-avatar class="product-image-container">
                   <img
-                    :src="product.product_link"
+                    :src="
+                      product.product_variants[0].product_variant_image_link
+                    "
+                    v-if="!getLoader"
                     alt="img"
                     class="product-img"
                   />
@@ -68,7 +30,9 @@
                     <span :class="getLoader">
                       {{
                         product.product_variants
-                          ? `${product.product_variants.length} product options`
+                          ? `${product.product_variants.length} ${$t(
+                              "inventory.producTOptions"
+                            )}`
                           : ""
                       }}
                     </span>
@@ -78,27 +42,37 @@
             </td>
             <td>
               <span :class="getLoader">
-                {{ product.available }}
+                {{
+                  product.product_variants[0].product_variant_stock_levels
+                    ? product.product_variants[0].product_variant_stock_levels
+                        .available
+                    : "-"
+                }}
               </span>
             </td>
             <td>
               <span :class="getLoader">
-                {{ product.committed }}
+                {{
+                  product.product_variants[0].product_variant_stock_levels
+                    ? product.product_variants[0].product_variant_stock_levels
+                        .quantity_in_inventory
+                    : "-"
+                }}
               </span>
             </td>
             <td>
               <span :class="getLoader">
-                {{ product.incoming }}
+                {{
+                  product.product_variants[0].product_variant_stock_levels
+                    ? product.product_variants[0].product_variant_stock_levels
+                        .quantity_in_sales_orders
+                    : "-"
+                }}
               </span>
             </td>
             <td>
               <router-link
-                :to="{
-                  name: 'View Product',
-                  params: {
-                    product: JSON.stringify(product),
-                  },
-                }"
+                :to="`/inventory/view-product/${product.product_id}`"
                 class="view-product-link"
                 >{{ $t("inventory.view") }}</router-link
               >
@@ -131,18 +105,14 @@
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
-import { mapMutations, mapGetters } from "vuex";
-import algoliaSearch from "../../../../mixins/algolia_search";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
-  props: ["products"],
-  mixins: [algoliaSearch],
+  components: { searchAlgolia, tableHeader },
   data() {
     return {
-      searchObject: {},
-      searchItems: [],
-      searchParam: "",
-      searchToggle: false,
+      placeholder: [],
       headers: [
         {
           title: this.$t("inventory.product"),
@@ -165,39 +135,61 @@ export default {
           description: "",
         },
       ],
+      params: "",
     };
   },
   watch: {
     searchParam(val) {
       this.initiateAlgolia(val);
     },
-  },
-  components: {
-    tableHeader,
+    "$store.state.inventorySelectedTab": function inventorySelectedTab(val) {
+      this.setProductLists(this.placeholder);
+      this.setParams(val);
+      this.fetchProducts();
+    },
   },
   mounted() {
     this.setComponent(this.$t("common.stocks"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 1000);
+    this.placeholder = this.getProductLists;
+    this.setParams(this.getInventorySelectedTab);
+    this.fetchProducts();
   },
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters([
+      "getLoader",
+      "getProductLists",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+    ]),
     tableHeaders() {
       return this.headers;
     },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
-    algoliaResults(object) {
-      this.searchToggle = true;
-      this.searchObject = object;
-      this.searchItems = object.hits;
+    ...mapMutations(["setComponent", "setLoader", "setTab", "setProductLists"]),
+    ...mapActions(["requestAxiosGet"]),
+    setParams(val) {
+      if (val === this.$t("inventory.outOfStock")) {
+        this.params = "?max=2";
+      }
+      if (val === this.$t("inventory.lowStock")) {
+        this.params = "?max=1";
+      }
+      if (val === this.$t("inventory.all")) {
+        this.params = "";
+      }
     },
-    clearItems() {
-      this.searchToggle = false;
-      this.searchObject = {};
-      this.searchItems = [];
+    fetchProducts() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setProductLists(response.data.data.products);
+        }
+      });
     },
   },
 };

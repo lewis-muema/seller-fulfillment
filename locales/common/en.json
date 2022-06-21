@@ -33,5 +33,11 @@
   "trackCustomerDelivery": "Track delivery to customer",
   "deliveriesToCustomers": "Deliveries to the customer",
   "deliveriesToSendy": "Deliveries to Sendy",
-  "activityLog": "Activity Log"
+  "activityLog": "Activity Log",
+  "inventoryToSendy": "Inventory to Sendy",
+  "language": "Language",
+  "seeProfile": "See profile",
+  "logOut": "Log Out",
+  "trackDelivery": "Track delivery",
+  "restockInventory": "Restock inventory"
 }

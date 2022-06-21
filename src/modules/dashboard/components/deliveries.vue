@@ -1,6 +1,6 @@
 <template>
   <div class="deliveries-container">
-    <div class="deliveries-container-inner" v-if="deliveries.length">
+    <div class="deliveries-container-inner" v-if="getDeliveries.length">
       <v-table class="">
         <thead>
           <tr>
@@ -20,44 +20,47 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(delivery, index) in deliveries" :key="index">
+          <tr v-for="(item, index) in getDeliveries" :key="index">
             <td>
-              <v-list-item lines="two">
+              <v-list-item class="dashboard-customer-columns" lines="two">
                 <v-list-item-header>
                   <v-list-item-title>
                     <span :class="getLoader">
                       {{
                         getSelectedTab === "To your Customers"
-                          ? delivery.customerName
-                          : delivery.productName
+                          ? formatName(item.destination.name)
+                          : formatProducts(item.products)
                       }}
                     </span>
                   </v-list-item-title>
                   <v-list-item-subtitle
                     class="dashboard-customer-delivery-location"
+                    v-if="getSelectedTab === 'To your Customers'"
                   >
-                    <span :class="getLoader"
-                      >{{
-                        getSelectedTab === "To your Customers"
-                          ? delivery.customerDeliveryLocation
-                          : "other items"
-                      }}
-                    </span>
+                    <div class="dashboard-customer-delivery-location-inner">
+                      <span :class="getLoader">
+                        {{
+                          formatName(
+                            item.destination.delivery_location.description
+                          )
+                        }}
+                      </span>
+                    </div>
                   </v-list-item-subtitle>
                 </v-list-item-header>
               </v-list-item>
             </td>
             <td>
-              <v-list-item lines="two">
+              <v-list-item class="dashboard-customer-columns" lines="two">
                 <v-list-item-header>
                   <v-list-item-title>
                     <span :class="getLoader">
-                      {{ delivery.progress }}
+                      {{ formatStatus(item.order_event_status) }}
                     </span>
                   </v-list-item-title>
                   <v-progress-linear
-                    :model-value="delivery.step"
-                    :color="delivery.color"
+                    :model-value="30"
+                    color="#324BA8"
                     rounded
                     height="7"
                   ></v-progress-linear>
@@ -66,11 +69,11 @@
             </td>
             <td>
               <router-link
-                to="/deliveries/tracking"
+                :to="`/deliveries/tracking/${item.order_id}`"
                 class="dashboard-track-order"
               >
                 <span :class="getLoader">
-                  {{ delivery.action }}
+                  {{ $t("deliveries.trackOrder") }}
                 </span>
               </router-link>
             </td>
@@ -78,7 +81,13 @@
         </tbody>
       </v-table>
       <div class="show-more-deliveries-link">
-        <router-link to="/" class="show-more-deliveries-link"
+        <router-link
+          :to="
+            getSelectedTab === 'To your Customers'
+              ? '/deliveries/customer'
+              : '/deliveries/sendy'
+          "
+          class="show-more-deliveries-link"
           >{{ $t("dashboard.showMoreDeliveries")
           }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
         >
@@ -88,16 +97,80 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import moment from "moment";
+
 export default {
   props: ["deliveries", "selectedTab"],
   data() {
-    return {};
+    return {
+      placeholders: [],
+      params: "?max=5",
+    };
   },
   computed: {
-    ...mapGetters(["getDashboardSelectedTab", "getLoader"]),
+    ...mapGetters([
+      "getDashboardSelectedTab",
+      "getLoader",
+      "getDeliveries",
+      "getStorageUserDetails",
+    ]),
     getSelectedTab() {
       return this.selectedTab;
+    },
+  },
+  watch: {
+    selectedTab() {
+      this.fetchOrders();
+    },
+  },
+  mounted() {
+    this.placeholders = this.getDeliveries;
+    this.fetchOrders();
+  },
+  methods: {
+    ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
+    ...mapMutations(["setComponent", "setLoader", "setDeliveries"]),
+    fetchOrders() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+          this.getSelectedTab === "To your Customers"
+            ? "deliveries"
+            : "consignments"
+        }${this.params}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliveries(response.data.data.orders);
+        }
+        this.setLoader("");
+      });
+    },
+    deliveryDate(date) {
+      return moment(date).format("MMM M/D/YYYY");
+    },
+    deliveryTime(date) {
+      const finalTime = moment(date).add(2, "hours");
+      return `${moment(date).format("ha")} - ${moment(finalTime).format("ha")}`;
+    },
+    formatName(name) {
+      const nameArr = name.split(" ");
+      nameArr.forEach((name, i) => {
+        nameArr[i] = name.charAt(0).toUpperCase() + name.slice(1);
+      });
+      return nameArr.join(" ");
+    },
+    formatProducts(products) {
+      return `${products[0].product_variant_description} ${
+        products.length > 1
+          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+          : ""
+      }`;
+    },
+    formatStatus(status) {
+      const fullStatus = status.replaceAll(".", " ");
+      return fullStatus.charAt(0).toUpperCase() + fullStatus.slice(1);
     },
   },
 };
@@ -144,5 +217,15 @@ export default {
 }
 .deliveries-container-inner {
   width: 100%;
+  margin-bottom: auto;
+}
+.dashboard-customer-delivery-location-inner {
+  white-space: nowrap;
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dashboard-customer-columns {
+  padding: 15px 0px;
 }
 </style>

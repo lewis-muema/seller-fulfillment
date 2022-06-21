@@ -42,6 +42,7 @@
     "enterCodeSentToEmail": "Enter the code sent to your email",
     "enterCode":"Enter code",
     "confirmCode": "Confirm Code",
-    "resendCode": "Resend code in 120 seconds"
+    "resendCode": "Resend code in 120 seconds",
+    "invalidToken": "Your token may be invalid or expired"
     
 }

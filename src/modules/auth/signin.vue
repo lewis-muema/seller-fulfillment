@@ -1,7 +1,7 @@
 <template>
   <div>
     <form action="" @submit.prevent>
-      <div class="">
+      <div class="sign-in-card">
         <v-card-title class="text-center">
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
@@ -36,7 +36,7 @@
               >
                 {{ $t("auth.continueWithEmailAddress") }}
               </button>
-              <!-- <div class="text-center text-grey">or</div> -->
+              <div class="text-center text-grey">or</div>
               <!-- <button
                 class="btn btn-primary default-btn"
                 type="button"
@@ -118,6 +118,9 @@ export default {
   computed: {
     ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
   },
+  mounted() {
+    localStorage.clear();
+  },
   methods: {
     ...mapActions(["loginUser"]),
     ...mapMutations(["setOTPRedirectUrl"]),
@@ -143,6 +146,7 @@ export default {
       try {
         const data = await this.loginUser(fullPayload);
         if (data.status === 200) {
+          localStorage.userDetails = JSON.stringify(data.data);
           this.loading = false;
           this.setOTPRedirectUrl("otp/signIn");
           this.$router.push("/auth/otp");
@@ -166,5 +170,8 @@ export default {
 }
 .signup-link-text > a {
   color: #324ba8;
+}
+.sign-in-card {
+  padding: 0px 40px;
 }
 </style>

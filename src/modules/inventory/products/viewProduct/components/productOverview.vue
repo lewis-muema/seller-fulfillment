@@ -3,30 +3,52 @@
     <div class="mb-3">
       <span>
         <img
-          :src="product.product_link"
+          :src="product.product_variants[0].product_variant_image_link"
+          v-if="!getLoader"
           alt="img"
           class="product-details-img"
         />
-        {{ product.product_name }}
+        <span :class="getLoader">
+          {{ product.product_name }}
+        </span>
       </span>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.desc") }}</p>
-      <p>{{ product.product_description }}</p>
+      <p>
+        <span :class="getLoader">
+          {{ product.product_description }}
+        </span>
+      </p>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.price") }}</p>
-      <p>400</p>
+      <p>
+        <span :class="getLoader">
+          {{ product.product_variants[0].product_variant_currency }}
+          {{ product.product_variants[0].product_variant_unit_price }}
+        </span>
+      </p>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.weight") }}</p>
-      <p>500ml</p>
+      <p>
+        <span :class="getLoader">
+          {{ product.product_variants[0].product_variant_quantity }}
+          {{ product.product_variants[0].product_variant_quantity_type }}
+        </span>
+      </p>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
-      <p>{{ $t("inventory.totalStockAvailable") }}: 56</p>
+      <p>
+        <span :class="getLoader">
+          {{ $t("inventory.totalStockAvailable") }}:
+          {{ product.product_variants.length }}
+        </span>
+      </p>
     </div>
-    <v-table>
+    <v-table v-if="product.product_variants">
       <table-header
         :header="product.product_variants ? tableHeaders2 : tableHeaders"
       />
@@ -36,6 +58,7 @@
             <div v-if="product.product_variants">
               <img
                 :src="variant.product_variant_image_link"
+                v-if="!getLoader"
                 alt="img"
                 class="product-details-img"
               />
@@ -47,42 +70,50 @@
           <td v-if="product.product_variants">
             <v-list-item lines="two">
               <v-list-item-header>
-                <v-list-item-title
-                  >{{ variant.product_variant_quantity }}
-                  {{ variant.product_variant_quantity_type }}</v-list-item-title
+                <v-list-item-title>
+                  <span :class="getLoader">
+                    {{ variant.product_variant_quantity }}
+                    {{ variant.product_variant_quantity_type }}
+                  </span></v-list-item-title
                 >
                 <v-list-item-subtitle>
-                  {{ variant.product_variant_currency }}
-                  {{ variant.product_variant_unit_price }}
+                  <span :class="getLoader">
+                    {{ variant.product_variant_currency }}
+                    {{ variant.product_variant_unit_price }}
+                  </span>
                 </v-list-item-subtitle>
               </v-list-item-header>
             </v-list-item>
           </td>
           <td>
-            {{
-              product.product_variants
-                ? variant.product_variant_stock_levels.available
-                : variant.available
-            }}
+            <span :class="getLoader">
+              {{
+                variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.available
+                  : "-"
+              }}
+            </span>
           </td>
           <td>
-            {{
-              product.product_variants
-                ? variant.product_variant_stock_levels.quantity_in_inventory
-                : variant.committed
-            }}
+            <span :class="getLoader">
+              {{
+                variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.quantity_in_inventory
+                  : "-"
+              }}
+            </span>
           </td>
           <td>
-            {{
-              product.product_variants
-                ? variant.product_variant_stock_levels.quantity_in_sales_orders
-                : variant.incoming
-            }}
+            <span :class="getLoader">
+              {{
+                variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels
+                      .quantity_in_sales_orders
+                  : "-"
+              }}
+            </span>
           </td>
-          <td v-if="product.product_variants">
-            <p class="add-product-options" @click="showProductVariants = true">
-              {{ $t("inventory.view") }}
-            </p>
+          <!-- <td v-if="product.product_variants">
             <product-variants
               @close="showProductVariants = false"
               :visible="showProductVariants"
@@ -94,7 +125,7 @@
                 variant.product_variant_stock_levels.quantity_in_sales_orders
               "
             />
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </v-table>
@@ -102,11 +133,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import productVariants from "@/modules/inventory/products/viewProduct/components/productVariants";
 export default {
+  // eslint-disable-next-line vue/no-unused-components
   components: { tableHeader, productVariants },
-  props: ["product"],
   data() {
     return {
       showProductVariants: false,
@@ -134,7 +166,7 @@ export default {
           description: "",
         },
         {
-          title: this.$t("inventory.img"),
+          title: this.$t("inventory.option"),
           description: "",
         },
         {
@@ -162,9 +194,18 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["getProduct", "getLoader"]),
     variants() {
-      const res = this.product.product_variants;
-      return res ? this.product.product_variants : this.pSummary;
+      const res = [];
+      this.product.product_variants.forEach((row) => {
+        if (!row.product_variant_archived) {
+          res.push(row);
+        }
+      });
+      return res;
+    },
+    product() {
+      return this.getProduct;
     },
   },
 };

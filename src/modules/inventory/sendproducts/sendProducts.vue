@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div v-if="this.step === 0">
+    <div v-if="!$route.params.path">
       <span class="send-products-header-text text-center">
         {{ $t("inventory.toDo") }}
       </span>
       <div class="send-products-container">
-        <div @click="deliverToCustomer" class="send-products-content">
+        <div
+          @click="redirect(`${customerRoute}/select-products`, customerHeader)"
+          class="send-products-content"
+        >
           <v-card class="send-products-card" variant="outlined">
             <div class="text-center">
               <v-icon class="dashboard-links-icon send-products-icon"
@@ -15,7 +18,10 @@
             </div>
           </v-card>
         </div>
-        <div @click="deliverToSendy" class="send-products-content">
+        <div
+          @click="redirect(`${sendyRoute}/select-products`, sendyHeader)"
+          class="send-products-content"
+        >
           <v-card variant="outlined">
             <div class="text-center">
               <v-icon class="dashboard-links-icon send-products-icon"
@@ -30,7 +36,7 @@
     <div v-else>
       <v-row>
         <v-col cols="6" class="mx-auto mt-4 mb-3">
-          <el-steps :active="active" finish-status="success">
+          <el-steps :active="step" finish-status="success">
             <el-step title="Select Products"></el-step>
             <el-step title="Add Quantity"></el-step>
             <el-step title="Checkout"></el-step>
@@ -38,9 +44,12 @@
         </v-col>
       </v-row>
       <div>
-        <ProductsSelect @pickScreen="resetScreen()" v-if="active === 0" />
-        <AddQuantity v-if="active === 1" />
-        <Checkout :to="to" v-if="active === 2" />
+        <ProductsSelect
+          @pickScreen="redirect(mainRoute, mainHeader)"
+          v-if="$route.params.page === 'select-products'"
+        />
+        <AddQuantity v-if="$route.params.page === 'add-quantity'" />
+        <Checkout v-if="$route.params.page === 'checkout'" />
       </div>
     </div>
   </div>
@@ -50,41 +59,60 @@
 import ProductsSelect from "./components/productsSelect.vue";
 import AddQuantity from "./components/addQuantity.vue";
 import Checkout from "./components/checkout";
-import { ref } from "vue";
 import { mapMutations } from "vuex";
 
 export default {
   components: { ProductsSelect, AddQuantity, Checkout },
   data() {
     return {
-      active: ref(0),
-      step: 0,
-      to: "",
+      customerRoute: "/inventory/send-inventory/customer",
+      sendyRoute: "/inventory/send-inventory/sendy",
+      mainRoute: "/inventory/send-inventory",
+      customerHeader: this.$t("common.sendDeliveryToCustomer"),
+      sendyHeader: this.$t("common.sendInventoryToSendy"),
+      mainHeader: this.$t("common.sendInventory"),
     };
   },
+  computed: {
+    step() {
+      if (this.$route.params.page === "add-quantity") {
+        return 1;
+      } else if (this.$route.params.page === "checkout") {
+        return 2;
+      }
+      return 0;
+    },
+  },
   watch: {
-    "$store.state.productStep": function (val) {
-      this.active = ref(val);
+    $route() {
+      if (this.$route.params.path === "customer") {
+        this.redirect(this.customerRoute, this.customerHeader);
+      } else if (this.$route.params.path === "sendy") {
+        this.redirect(this.sendyRoute, this.sendyHeader);
+      } else if (this.$route.params.path === "") {
+        this.redirect(this.mainRoute, this.mainHeader);
+      }
     },
   },
   mounted() {
     this.setComponent(this.$t("common.sendInventory"));
+    if (this.$route.params.path === "customer") {
+      this.redirect(this.customerRoute, this.customerHeader);
+    } else if (this.$route.params.path === "sendy") {
+      this.redirect(this.sendyRoute, this.sendyHeader);
+    } else if (this.$route.params.path === "") {
+      this.redirect(this.mainRoute, this.mainHeader);
+    }
   },
   methods: {
     ...mapMutations(["setSendProductsRoute", "setComponent"]),
-    deliverToCustomer() {
-      this.setSendProductsRoute("ProductsToCustomer");
-      this.step = 1;
-      this.to = "customer";
-    },
-    deliverToSendy() {
-      this.setSendProductsRoute("ProductsToSendy");
-      this.step = 1;
-      this.to = "sendy";
-    },
-    resetScreen() {
-      this.step = 0;
-      this.setComponent(this.$t("common.sendInventory"));
+    redirect(route, header) {
+      this.$router.push(
+        `${route}${this.$route.params.page ? "/" : ""}${
+          this.$route.params.page
+        }`
+      );
+      this.setComponent(header);
     },
   },
 };

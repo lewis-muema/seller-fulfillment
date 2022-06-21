@@ -48,4 +48,13 @@ export default {
   getOrderTrackingData: (state) => state.orderTrackingData,
   getTimelineIcons: (state) => state.timelineIcons,
   getDeliveryAttempts: (state) => state.deliveryAttempts,
+  getProduct: (state) => state.product,
+  getAddProductStatus: (state) => state.addProductStatus,
+  getFulfillmentFees: (state) => state.fulfillmentFees,
+  getBusinessDetails: (state) => state.businessDetails,
+  getUserDetails: (state) => state.userDetails,
+  getNotifications: (state) => state.notifications,
+  getParent: (state) => state.parent,
+  getPaymnetMethods: (state) => state.paymnetMethods,
+  getStorageUserDetails: (state) => state.storageUserDetails,
 };

@@ -22,7 +22,10 @@
           </template>
           <v-list class="header-list-popup">
             <v-list-item v-for="(shrt, i) in shortcuts" :key="i">
-              <v-list-item-title>
+              <v-list-item-title
+                @click="$router.push(shrt.url)"
+                class="header-list-item"
+              >
                 <i :class="`header-shortcut-icon mdi ${shrt.icon}`" />
                 {{ shrt.title }}</v-list-item-title
               >
@@ -41,7 +44,7 @@
               color="#324BA8"
               text-color="white"
               max="10"
-              :content="`${notifications.length}`"
+              :content="`${getNotifications.length}`"
             >
               <i
                 class="mdi mdi-bell-outline notification-bell"
@@ -53,20 +56,23 @@
             <p class="header-notification-list-title">
               {{ $t("common.notifications") }}
             </p>
-            <v-list-item v-for="(not, i) in notifications" :key="i">
+            <v-list-item v-for="(not, i) in getNotifications" :key="i">
               <v-list-item-title>
                 <div class="header-notification-flex">
                   <div class="header-notifications-icon">
-                    <i :class="`mdi ${not.icon}`"></i>
+                    <i :class="`mdi ${getIcon(not)}`"></i>
                   </div>
                   <div>
                     <div class="header-notification-text">
-                      {{ not.content }}
+                      {{ not.message }}
                     </div>
-                    <div class="header-notification-action">
-                      {{ not.action }}
+                    <div
+                      class="header-notification-action"
+                      @click="redirect(not)"
+                    >
+                      {{ getAction(not) }}
                     </div>
-                    <div>{{ not.period }}</div>
+                    <div>{{ formatPeriod(not) }}</div>
                   </div>
                 </div>
               </v-list-item-title>
@@ -88,9 +94,9 @@
               append-icon="mdi-menu-down"
             >
               <div class="header-profile-pic">
-                {{ this.profileName.charAt(0) }}
+                {{ profile[0].item.charAt(0) }}
               </div>
-              {{ profileName }}
+              {{ profile[0].item }}
             </v-btn>
           </template>
           <v-list class="header-profile-popup">
@@ -122,7 +128,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import moment from "moment";
 
 export default {
   data() {
@@ -137,55 +144,29 @@ export default {
         {
           title: this.$t("common.deliverToCustomer"),
           icon: "mdi-truck-outline",
-          url: "en",
+          url: "/inventory/send-inventory/customer/select-products",
         },
         {
-          title: this.$t("common.sendToFC"),
+          title: this.$t("common.inventoryToSendy"),
           icon: "mdi-warehouse",
-          url: "fr",
-        },
-        {
-          title: this.$t("common.addProducts"),
-          icon: "mdi-plus",
-          url: "fr",
-        },
-      ],
-      notifications: [
-        {
-          content: "Your delivery to Windsor Heights is on the way.",
-          action: "Track delivery",
-          period: "3 min ago",
-          icon: "mdi-truck-outline",
-        },
-        {
-          content: "Shea butter is running out of stock. Please restock soon.",
-          action: "Restock inventory",
-          period: "2 days ago",
-          icon: "mdi-store-outline",
-        },
-        {
-          content:
-            "Yellow butter and 3 other items have been received at the fulfilment centre",
-          action: "",
-          period: "1 week ago",
-          icon: "mdi-warehouse",
+          url: "/inventory/send-inventory/sendy/select-products",
         },
       ],
       profile: [
         {
-          item: "Irene Jane",
-          actionLabel: "See profile",
-          route: "/settings/profile",
+          item: "",
+          actionLabel: this.$t("common.seeProfile"),
+          route: "/settings/profile/personal-info",
           icon: "",
         },
         {
-          item: "Language: English",
+          item: "",
           actionLabel: "",
-          route: "/settings/profile",
+          route: "/settings/profile/change-language",
           icon: "mdi-chevron-right",
         },
         {
-          item: "Log Out",
+          item: this.$t("common.logOut"),
           actionLabel: "",
           route: "/auth/sign-in",
           icon: "",
@@ -196,15 +177,114 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getComponent"]),
+    ...mapGetters([
+      "getComponent",
+      "getBusinessDetails",
+      "getUserDetails",
+      "getLanguages",
+      "getNotifications",
+      "getStorageUserDetails",
+    ]),
+    languageName() {
+      let lang = "";
+      this.getLanguages.forEach((row) => {
+        if (row.tag === this.getBusinessDetails.language) {
+          lang = row.name;
+        }
+      });
+      return lang;
+    },
+  },
+  watch: {
+    "$store.state.businessDetails": function businessDetails() {
+      this.profile[1].item = `${this.$t("common.language")}: ${
+        this.languageName
+      }`;
+    },
+    "$store.state.userDetails": function businessDetails() {
+      this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
+    },
+  },
+  mounted() {
+    this.listLanguages();
+    this.listUsersDetails();
+    this.listNotifications();
   },
   methods: {
-    showLangs(lang) {
-      this.lang = lang.title;
-      this.menu = false;
-      window.dispatchEvent(
-        new CustomEvent("language-changed", { detail: lang.locale })
-      );
+    ...mapMutations([
+      "setBusinessDetails",
+      "setUserDetails",
+      "setLanguages",
+      "setNotifications",
+    ]),
+    ...mapActions(["requestAxiosGet"]),
+    getIcon(notification) {
+      if (notification.title === "Order Received") {
+        return "mdi-warehouse";
+      }
+      return "mdi-truck-outline";
+    },
+    getAction(notification) {
+      if (notification.title === "Order Received") {
+        return this.$t("common.trackDelivery");
+      }
+      return "";
+    },
+    formatPeriod(notification) {
+      return moment(notification).fromNow();
+    },
+    redirect(notification) {
+      this.notificationToggle = false;
+      if (notification.title === "Order Received") {
+        this.$router.push(
+          `/deliveries/tracking/${notification.entity_identifier}`
+        );
+      }
+    },
+    listBusinessDetails() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setBusinessDetails(response.data.data.business);
+          this.profile[1].item = `${this.$t("common.language")}: ${
+            this.languageName
+          }`;
+        }
+      });
+    },
+    listLanguages() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/business/signup/languages`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setLanguages(response.data.data.languages);
+          this.listBusinessDetails();
+        }
+      });
+    },
+    listUsersDetails() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/user`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setUserDetails(response.data.data.user);
+          this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
+        }
+      });
+    },
+    listNotifications() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setNotifications(response.data.data.notifications);
+        }
+      });
     },
   },
 };
@@ -270,7 +350,8 @@ export default {
   border-bottom: 1px solid #d8d8d8;
 }
 .header-shortcut-icon {
-  font-size: 15px;
+  margin-right: 6px;
+  font-size: 16px !important;
 }
 .header-notification-list-title {
   margin: 5px 15px;
@@ -303,5 +384,8 @@ export default {
   margin-top: -5px;
   color: #606266;
   font-size: 12px;
+}
+.header-list-item {
+  font-weight: 500 !important;
 }
 </style>

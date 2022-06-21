@@ -90,6 +90,7 @@ export default {
       "getOrderTimelines",
       "getTimelineIcons",
       "getDeliveryAttempts",
+      "getStorageUserDetails",
     ]),
   },
   watch: {
@@ -105,17 +106,17 @@ export default {
       "setOverlayStatus",
       "setOrderTimelines",
       "setDeliveryAttempts",
+      "setParent",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatEventName(name) {
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
     fetchOrder() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -126,14 +127,20 @@ export default {
           ) {
             this.fetchAttempts();
           }
+          if (this.getOrderTimelines[0].event_code.includes("EVENT_DELIVERY")) {
+            this.setParent("customer");
+          } else if (
+            this.getOrderTimelines[0].event_code.includes("EVENT_PICKUP")
+          ) {
+            this.setParent("sendy");
+          }
         }
       });
     },
     fetchAttempts() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `/seller/${userDetails.business_id}/failed-attempts/${this.$route.params.order_id}`,
+        endpoint: `/seller/${this.getStorageUserDetails.business_id}/failed-attempts/${this.$route.params.order_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setDeliveryAttempts(response.data.data["failed-attempts"]);

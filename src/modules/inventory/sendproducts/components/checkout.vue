@@ -2,11 +2,11 @@
   <div class="send-inventory-checkout-container">
     <v-row>
       <v-col cols="7">
-        <pickup-checkout v-if="to === 'sendy'" />
-        <delivery-checkout v-if="to === 'customer'" />
+        <pickup-checkout v-if="$route.params.path === 'sendy'" />
+        <delivery-checkout v-if="$route.params.path === 'customer'" />
       </v-col>
       <v-col cols="4">
-        <products-summary :to="to" />
+        <products-summary />
       </v-col>
     </v-row>
   </div>
@@ -22,7 +22,6 @@ export default {
   data() {
     return {};
   },
-  props: ["to"],
   computed: {
     ...mapGetters(["getSendProductsRoute"]),
     getRoute() {

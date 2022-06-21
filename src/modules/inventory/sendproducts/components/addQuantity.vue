@@ -7,7 +7,11 @@
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="addProductStep(0)"
+              @click="
+                $router.push(
+                  `/inventory/send-inventory/${$route.params.path}/select-products`
+                )
+              "
             ></i>
             <v-card-title class="text-center">
               {{ $t("inventory.enterQuantity") }}
@@ -17,9 +21,7 @@
             <v-table>
               <table-header
                 :header="
-                  getRouteName === 'ProductsToSendy'
-                    ? tableHeaders
-                    : tableHeaders2
+                  $route.params.path === 'sendy' ? tableHeaders : tableHeaders2
                 "
               />
               <tbody>
@@ -100,9 +102,12 @@
                       {{ $t("inventory.editPrice") }}
                     </div>
                   </td>
-                  <td v-if="getRouteName === 'ProductsToCustomer'">
+                  <td v-if="$route.params.path === 'customer'">
                     <div class="available-units">
-                      {{ selectedProduct.available }}
+                      {{
+                        selectedProduct.selectedOption
+                          .product_variant_stock_levels.available
+                      }}
                     </div>
                   </td>
                   <td class="">
@@ -133,7 +138,7 @@
             </p>
             <button
               type="submit"
-              @click="addProductStep(2)"
+              @click="addProductStep()"
               class="btn btn-primary"
             >
               {{ $t("inventory.continueWith") }} {{ totalProducts }}
@@ -191,12 +196,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedProducts", "getSendProductsRoute"]),
+    ...mapGetters(["getSelectedProducts"]),
     selectedProductsSummary() {
       return this.getSelectedProducts;
-    },
-    getRouteName() {
-      return this.getSendProductsRoute;
     },
     totalProducts() {
       let total = 0;
@@ -214,9 +216,11 @@ export default {
       "setSelectedProducts",
       "setOverlayStatus",
     ]),
-    addProductStep(val) {
-      if ((this.totalProducts > 0 && val === 2) || val === 0) {
-        this.setProductStep(val);
+    addProductStep() {
+      if (this.totalProducts > 0) {
+        this.$router.push(
+          `/inventory/send-inventory/${this.$route.params.path}/checkout`
+        );
       } else {
         ElNotification({
           title: "",

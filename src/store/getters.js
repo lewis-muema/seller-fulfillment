@@ -56,4 +56,5 @@ export default {
   getNotifications: (state) => state.notifications,
   getParent: (state) => state.parent,
   getPaymnetMethods: (state) => state.paymnetMethods,
+  getStorageUserDetails: (state) => state.storageUserDetails,
 };

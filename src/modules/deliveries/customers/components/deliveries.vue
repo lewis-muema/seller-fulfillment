@@ -165,7 +165,12 @@ export default {
     this.fetchOrders();
   },
   computed: {
-    ...mapGetters(["getDeliveries", "getLoader", "getTabStatus"]),
+    ...mapGetters([
+      "getDeliveries",
+      "getLoader",
+      "getTabStatus",
+      "getStorageUserDetails",
+    ]),
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
@@ -185,11 +190,10 @@ export default {
       this.params = `${range}${status && range ? "&" : ""}${status}`;
     },
     fetchOrders() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/deliveries${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries${this.params}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {

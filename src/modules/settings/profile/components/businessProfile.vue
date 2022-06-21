@@ -125,7 +125,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getBusinessDetails", "getIndustries"]),
+    ...mapGetters([
+      "getBusinessDetails",
+      "getIndustries",
+      "getStorageUserDetails",
+    ]),
   },
   mounted() {
     this.getBusinesssDetails();
@@ -139,11 +143,10 @@ export default {
       this.location = document.querySelector("#physical-address").value;
     },
     getBusinesssDetails() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.buttonLoader = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/business`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
       }).then((response) => {
         if (response.status === 200) {
           this.buttonLoader = false;
@@ -166,10 +169,9 @@ export default {
         : "";
     },
     listIndustries() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/industries`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/industries`,
       }).then((response) => {
         if (response.status === 200) {
           this.setIndustries(response.data.data.industries);
@@ -179,10 +181,9 @@ export default {
     updateBusinessDetails() {
       if (this.businessName && this.TIN && this.industryItem && this.location) {
         this.buttonLoader = true;
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.requestAxiosPut({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/business`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
           values: {
             business_id: this.getBusinessDetails.business_id,
             business_name: this.businessName,

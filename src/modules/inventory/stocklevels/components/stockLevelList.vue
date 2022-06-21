@@ -155,7 +155,12 @@ export default {
     this.fetchProducts();
   },
   computed: {
-    ...mapGetters(["getLoader", "getProductLists", "getInventorySelectedTab"]),
+    ...mapGetters([
+      "getLoader",
+      "getProductLists",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+    ]),
     tableHeaders() {
       return this.headers;
     },
@@ -175,11 +180,10 @@ export default {
       }
     },
     fetchProducts() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {

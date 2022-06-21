@@ -182,7 +182,12 @@ export default {
     this.setAddProductStatus(false);
   },
   computed: {
-    ...mapGetters(["getProduct", "getLoader", "getAddProductStatus"]),
+    ...mapGetters([
+      "getProduct",
+      "getLoader",
+      "getAddProductStatus",
+      "getStorageUserDetails",
+    ]),
     variants() {
       const res = [];
       this.getProduct.product_variants.forEach((row) => {
@@ -231,11 +236,10 @@ export default {
           product_description: this.productDescription,
           product_variants: this.productVariants,
         };
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.buttonLoader = true;
         this.requestAxiosPut({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/products/${this.getProduct.product_id}`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.getProduct.product_id}`,
           values: product,
         }).then((response) => {
           this.buttonLoader = false;
@@ -271,11 +275,10 @@ export default {
           product_description: this.productDescription,
           product_variants: this.productVariants,
         };
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/products`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
           values: product,
         }).then((response) => {
           this.buttonLoader = false;

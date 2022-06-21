@@ -2,10 +2,10 @@
   <div>
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
-        <v-card-title class="text-center">
+        <v-card-title class="text-center sign-up-title">
           {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
-        <v-card-text class="pt-5">
+        <v-card-text class="pt-3">
           <div class="mb-3">
             <label for="businessName" class="form-label">{{
               $t("auth.businessName")
@@ -299,5 +299,9 @@ h1 {
 .el-loading-mask {
   background-color: #324ba8 !important;
   opacity: 0.6;
+}
+.desktop-sign-up {
+  padding: 0px 40px;
+  margin: 20px 0px;
 }
 </style>

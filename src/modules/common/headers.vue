@@ -183,6 +183,7 @@ export default {
       "getUserDetails",
       "getLanguages",
       "getNotifications",
+      "getStorageUserDetails",
     ]),
     languageName() {
       let lang = "";
@@ -241,10 +242,9 @@ export default {
       }
     },
     listBusinessDetails() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/business`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
       }).then((response) => {
         if (response.status === 200) {
           this.setBusinessDetails(response.data.data.business);
@@ -266,10 +266,9 @@ export default {
       });
     },
     listUsersDetails() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/user`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/user`,
       }).then((response) => {
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
@@ -278,10 +277,9 @@ export default {
       });
     },
     listNotifications() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/notifications`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
       }).then((response) => {
         if (response.status === 200) {
           this.setNotifications(response.data.data.notifications);

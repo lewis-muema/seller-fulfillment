@@ -223,11 +223,10 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchProducts() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -306,7 +305,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getSelectedProducts", "getProductLists", "getLoader"]),
+    ...mapGetters([
+      "getSelectedProducts",
+      "getProductLists",
+      "getLoader",
+      "getStorageUserDetails",
+    ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
     },

@@ -87,7 +87,7 @@
         rows="5"
       ></textarea>
       <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         class="invite-phone"
@@ -100,7 +100,7 @@
         v-if="secondaryPhoneStatus"
         class="edit-info-label"
       >
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         v-if="secondaryPhoneStatus"
@@ -154,7 +154,7 @@
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         class="invite-phone"
@@ -167,7 +167,7 @@
         v-if="secondaryPhoneStatus"
         class="edit-info-label"
       >
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         v-if="secondaryPhoneStatus"
@@ -424,7 +424,7 @@
 
 <script>
 import Datepicker from "vuejs3-datepicker";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import moment from "moment";
 
@@ -441,6 +441,7 @@ export default {
       this.location = val.order.destination.delivery_location.description;
       this.phone = val.order.destination.phone_number;
       this.instructions = val.order.destination.delivery_instructions;
+      this.date = new Date(val.order.scheduled_date);
     },
   },
   components: { Datepicker },
@@ -451,6 +452,7 @@ export default {
       "getOrderTrackingData",
       "getFulfillmentFees",
       "getParent",
+      "getStorageUserDetails",
     ]),
   },
   data() {
@@ -490,7 +492,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["requestAxiosPut"]),
+    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    ...mapMutations(["setLoader", "setOrderTrackingData"]),
     overlayStatusSet(overlay, popup) {
       this.secondaryPhoneStatus = false;
       this.overlay = overlay;
@@ -505,17 +508,18 @@ export default {
       this.location = document.querySelector("#location").value;
     },
     submitConsignment() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
         values: {
           products: order.products,
           destination: {
-            name: this.customerName,
-            phone_number: order.destination.phone_number,
+            name: order.destination.name,
+            phone_number: this.phone
+              ? this.phone
+              : order.destination.phone_number,
             delivery_location: {
               description: this.location
                 ? this.location
@@ -528,7 +532,9 @@ export default {
                 : order.destination.delivery_location.latitude,
             },
             house_location: order.destination.house_location,
-            delivery_instructions: order.destination.delivery_instructions,
+            delivery_instructions: this.instructions
+              ? this.instructions
+              : order.destination.delivery_instructions,
           },
         },
       }).then((response) => {
@@ -541,7 +547,7 @@ export default {
           this.overlayStatusSet(false, "pickupInfo");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.$router.go(0);
+            this.fetchOrder();
           }, 1000);
         } else {
           ElNotification({
@@ -554,14 +560,13 @@ export default {
       });
     },
     submitDelivery() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       const order = this.getOrderTrackingData.order;
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
         values: {
           means_of_payment: {
             means_of_payment_type: meansOfPayment.means_of_payment_type,
@@ -572,8 +577,12 @@ export default {
           },
           products: order.products,
           destination: {
-            name: order.destination.name,
-            phone_number: order.destination.phone_number,
+            name: this.customerName
+              ? this.customerName
+              : order.destination.name,
+            phone_number: this.phone
+              ? this.phone
+              : order.destination.phone_number,
             delivery_location: {
               description: this.location
                 ? this.location
@@ -586,7 +595,9 @@ export default {
                 : order.destination.delivery_location.latitude,
             },
             house_location: order.destination.house_location,
-            delivery_instructions: order.destination.delivery_instructions,
+            delivery_instructions: this.instructions
+              ? this.instructions
+              : order.destination.delivery_instructions,
           },
         },
       }).then((response) => {
@@ -599,7 +610,7 @@ export default {
           this.overlayStatusSet(false, "deliveryInfo");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.$router.go(0);
+            this.fetchOrder();
           }, 1000);
         } else {
           ElNotification({
@@ -612,11 +623,10 @@ export default {
       });
     },
     reschedule() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/reschedule`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/reschedule`,
         values: {
           proposed_scheduled_date: new Date(this.date).valueOf(),
         },
@@ -630,7 +640,7 @@ export default {
           this.overlayStatusSet(false, "reschedule");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.$router.go(0);
+            this.fetchOrder();
           }, 1000);
         } else {
           ElNotification({
@@ -643,11 +653,10 @@ export default {
       });
     },
     cancel() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/${
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
           this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.getOrderTrackingData.order.order_id}/cancel`,
         values: {
@@ -663,7 +672,7 @@ export default {
           this.overlayStatusSet(false, "reschedule");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.$router.go(0);
+            this.fetchOrder();
           }, 1000);
         } else {
           ElNotification({
@@ -672,6 +681,19 @@ export default {
             type: "error",
           });
           this.buttonLoader = false;
+        }
+      });
+    },
+    fetchOrder() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+          this.getParent === "sendy" ? "consignments" : "deliveries"
+        }/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setOrderTrackingData(response.data.data);
         }
       });
     },

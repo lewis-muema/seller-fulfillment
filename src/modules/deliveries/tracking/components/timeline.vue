@@ -90,6 +90,7 @@ export default {
       "getOrderTimelines",
       "getTimelineIcons",
       "getDeliveryAttempts",
+      "getStorageUserDetails",
     ]),
   },
   watch: {
@@ -112,11 +113,10 @@ export default {
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
     fetchOrder() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -138,10 +138,9 @@ export default {
       });
     },
     fetchAttempts() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `/seller/${userDetails.business_id}/failed-attempts/${this.$route.params.order_id}`,
+        endpoint: `/seller/${this.getStorageUserDetails.business_id}/failed-attempts/${this.$route.params.order_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setDeliveryAttempts(response.data.data["failed-attempts"]);

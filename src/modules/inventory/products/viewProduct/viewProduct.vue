@@ -117,6 +117,7 @@ export default {
       "setTab",
       "setProduct",
       "setAddProductStatus",
+      "getStorageUserDetails",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     trigger(action) {
@@ -131,11 +132,10 @@ export default {
       this.setAddProductStatus(true);
     },
     fetchProduct() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products/${this.$route.params.product}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -146,11 +146,10 @@ export default {
       });
     },
     archive() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products/${this.$route.params.product}/archive`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/archive`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -164,11 +163,10 @@ export default {
       });
     },
     unarchive() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products/${this.$route.params.product}/unarchive`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/unarchive`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {

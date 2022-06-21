@@ -71,7 +71,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserDetails"]),
+    ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
   },
   mounted() {
     this.getUsersDetails();
@@ -80,11 +80,10 @@ export default {
     ...mapMutations(["setUserDetails"]),
     ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     getUsersDetails() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.buttonLoader = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/user`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/user`,
       }).then((response) => {
         if (response.status === 200) {
           this.buttonLoader = false;
@@ -102,10 +101,9 @@ export default {
     updateUserDetails() {
       if (this.firstName && this.lastName && this.phone && this.emailAddress) {
         this.buttonLoader = true;
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.requestAxiosPut({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/user`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/user`,
           values: {
             user_id: this.getUserDetails.user_id,
             first_name: this.firstName,

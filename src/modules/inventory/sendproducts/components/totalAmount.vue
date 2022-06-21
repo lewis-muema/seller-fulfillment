@@ -82,7 +82,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSendProductsRoute", "getLoader", "getFulfillmentFees"]),
+    ...mapGetters([
+      "getSendProductsRoute",
+      "getLoader",
+      "getFulfillmentFees",
+      "getStorageUserDetails",
+    ]),
     getRoute() {
       return this.getSendProductsRoute;
     },
@@ -111,11 +116,10 @@ export default {
     ...mapMutations(["setOverlayStatus", "setLoader", "setFulfillmentFees"]),
     ...mapActions(["requestAxiosPost"]),
     calculateFee() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/orders/calculate-fee`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
         values: this.productPayload,
       }).then((response) => {
         this.setLoader("");

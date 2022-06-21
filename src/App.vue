@@ -23,12 +23,19 @@ export default {
       if (to.path === "/") {
         this.firebase();
       }
+      if (!localStorage.userDetails) {
+        this.$router.push("/auth/sign-in");
+      }
     },
   },
   computed: {
-    ...mapGetters(["getUserDetails"]),
+    ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
   },
-  created() {},
+  created() {
+    if (!localStorage.userDetails) {
+      this.$router.push("/auth/sign-in");
+    }
+  },
   methods: {
     firebase() {
       initializeApp({
@@ -40,7 +47,6 @@ export default {
         appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
         measurementId: "G-J8KW3YLS1N",
       });
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       try {
         const messaging = getMessaging();
         getToken(messaging, {
@@ -58,7 +64,7 @@ export default {
               : deviceId;
             this.$store.dispatch("requestAxiosPut", {
               app: process.env.FULFILMENT_SERVER,
-              endpoint: `seller/${userDetails.business_id}/user/fcm`,
+              endpoint: `seller/${this.getStorageUserDetails.business_id}/user/fcm`,
               values: {
                 token: currentToken,
                 device_id: localStorage.deviceId,
@@ -121,7 +127,11 @@ export default {
 .el-input__inner {
   color: black !important;
 }
-input {
-  border: 0px !important;
+.el-loading-spinner {
+  top: 10% !important;
+  width: 30px !important;
+  text-align: center;
+  position: relative !important;
+  margin: auto !important;
 }
 </style>

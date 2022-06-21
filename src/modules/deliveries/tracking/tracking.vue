@@ -106,6 +106,7 @@ export default {
       "getDeliveryActions",
       "getOrderTrackingData",
       "getParent",
+      "getStorageUserDetails",
     ]),
     deliveryActions() {
       const actions = [];
@@ -120,11 +121,11 @@ export default {
   mounted() {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.setParent("sendy");
-      this.rescheduleStatus(false);
+      this.rescheduleStatus("sendy");
     }
     if (this.$router.options.history.state.back === "/deliveries/customer") {
       this.setParent("customer");
-      this.rescheduleStatus(true);
+      this.rescheduleStatus("customer");
     }
     this.fetchOrder();
   },
@@ -140,11 +141,10 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchOrder() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/${
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
           this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {

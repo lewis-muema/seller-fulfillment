@@ -1,7 +1,7 @@
 <template>
   <div>
     <form action="" @submit.prevent>
-      <div class="">
+      <div class="sign-in-card">
         <v-card-title class="text-center">
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
@@ -36,7 +36,7 @@
               >
                 {{ $t("auth.continueWithEmailAddress") }}
               </button>
-              <!-- <div class="text-center text-grey">or</div> -->
+              <div class="text-center text-grey">or</div>
               <!-- <button
                 class="btn btn-primary default-btn"
                 type="button"
@@ -170,5 +170,8 @@ export default {
 }
 .signup-link-text > a {
   color: #324ba8;
+}
+.sign-in-card {
+  padding: 0px 40px;
 }
 </style>

@@ -2,6 +2,7 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import router from "../router";
+import { ElNotification } from "element-plus";
 
 export default {
   async initializeAuth({ commit }) {
@@ -31,6 +32,7 @@ export default {
         })
         .catch((error) => {
           dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
@@ -42,7 +44,7 @@ export default {
         Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .get(`${payload.app}${payload.endpoint}`, config)
         .then((response) => {
@@ -50,6 +52,7 @@ export default {
         })
         .catch((error) => {
           dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
@@ -69,6 +72,7 @@ export default {
         })
         .catch((error) => {
           dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
@@ -89,15 +93,26 @@ export default {
         })
         .catch((error) => {
           dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
   },
 
   handleErrors(_, error) {
-    if (error.response.status) {
+    if (error.response.status === 403) {
       router.push("/auth/sign-in");
       router.go(0);
+    }
+    if (
+      error.response.status === 500 &&
+      router.currentRoute.value.path ===
+        "/inventory/send-inventory/customer/checkout"
+    ) {
+      router.push("/inventory/send-inventory/customer/select-products");
+    }
+    if (error.response.status === 502) {
+      console.log(error);
     }
   },
 

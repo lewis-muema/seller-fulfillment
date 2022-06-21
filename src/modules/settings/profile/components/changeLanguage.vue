@@ -38,7 +38,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getLanguages", "getDefaultLanguage", "getBusinessDetails"]),
+    ...mapGetters([
+      "getLanguages",
+      "getDefaultLanguage",
+      "getBusinessDetails",
+      "getStorageUserDetails",
+    ]),
   },
   data() {
     return {
@@ -72,11 +77,10 @@ export default {
       });
     },
     getBusinesssDetails() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.buttonLoader = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/business`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
       }).then((response) => {
         if (response.status === 200) {
           this.buttonLoader = false;
@@ -87,10 +91,9 @@ export default {
     },
     saveLanguage() {
       this.buttonLoader = true;
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/business`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
         values: {
           business_id: this.getBusinessDetails.business_id,
           business_name: this.getBusinessDetails.business_name,

@@ -109,7 +109,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getDashboardSelectedTab", "getLoader", "getDeliveries"]),
+    ...mapGetters([
+      "getDashboardSelectedTab",
+      "getLoader",
+      "getDeliveries",
+      "getStorageUserDetails",
+    ]),
     getSelectedTab() {
       return this.selectedTab;
     },
@@ -127,11 +132,10 @@ export default {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     ...mapMutations(["setComponent", "setLoader", "setDeliveries"]),
     fetchOrders() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/${
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
           this.getSelectedTab === "To your Customers"
             ? "deliveries"
             : "consignments"

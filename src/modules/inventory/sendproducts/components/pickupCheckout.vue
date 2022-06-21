@@ -115,9 +115,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSendyPhoneProps", "getSelectedProducts"]),
+    ...mapGetters([
+      "getSendyPhoneProps",
+      "getSelectedProducts",
+      "getStorageUserDetails",
+    ]),
     checkoutPayload() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       const products = [];
       this.getSelectedProducts.forEach((row) => {
         products.push({
@@ -132,7 +135,7 @@ export default {
         card_id: "",
         products,
         destination: {
-          name: userDetails.business_name,
+          name: this.getStorageUserDetails.business_name,
           phone_number: this.phone,
           delivery_location: {
             description: this.location,
@@ -158,11 +161,10 @@ export default {
     },
     createConsignment() {
       if (this.phone && this.location && this.getSelectedProducts.length) {
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/consignments`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments`,
           values: this.checkoutPayload,
         }).then((response) => {
           this.buttonLoader = false;

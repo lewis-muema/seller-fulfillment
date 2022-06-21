@@ -173,4 +173,7 @@ export default {
   setPaymentMethods(state, val) {
     state.paymnetMethods = val;
   },
+  setStorageUserDetails(state, val) {
+    state.storageUserDetails = val;
+  },
 };

@@ -20,12 +20,12 @@
           </label>
           <input
             type="text"
-            class="form-control"
+            class="form-control checkout-input"
             v-model="name"
             :placeholder="$t('inventory.enterNameOfCustomer')"
           />
         </div>
-        <div class="mb-4">
+        <div class="">
           <label for="location" class="form-label">
             {{ $t("inventory.locationOfCustomer") }}
           </label>
@@ -38,12 +38,13 @@
           >
           </GMapAutocomplete>
         </div>
-        <div class="mb-2">
+        <div class="mb-2 checkout-phone">
           <label for="phoneNumber" class="form-label">
             {{ $t("inventory.phoneNo") }}
           </label>
           <vue-tel-input
             v-model="phone"
+            class="checkout-input"
             id="phoneNumber"
             v-bind="getSendyPhoneProps"
           ></vue-tel-input>
@@ -54,6 +55,7 @@
           </label>
           <vue-tel-input
             v-model="secPhone"
+            class="checkout-input"
             id="phoneNumber"
             v-bind="getSendyPhoneProps"
           ></vue-tel-input>
@@ -91,7 +93,7 @@
         <hr class="mt-3" />
         <div class="mt-3">
           <p>{{ $t("inventory.payment") }}</p>
-          <div @click="selectPaymentMethod">
+          <div @click="selectPaymentMethod" class="payment-default-trigger">
             <span class="payment-method">
               <v-icon class="pr-3"> mdi-credit-card-outline </v-icon>
               {{ $t("inventory.changePayment") }}
@@ -163,6 +165,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getPaymnetMethods",
+      "getStorageUserDetails",
     ]),
     defaultPaymentMethod() {
       const method = [];
@@ -241,11 +244,10 @@ export default {
         this.location &&
         this.getSelectedProducts.length
       ) {
-        const userDetails = JSON.parse(localStorage.userDetails).data;
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${userDetails.business_id}/deliveries`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries`,
           values: this.checkoutPayload,
         }).then((response) => {
           this.buttonLoader = false;
@@ -281,7 +283,7 @@ export default {
         amount: "",
         success_callback_url: "",
         fail_callback_url: "",
-        txref: this.txref,
+        txref: "",
         bulk: false,
         paybill_no: "",
         email: this.getUserDetails.email,
@@ -320,5 +322,14 @@ export default {
 }
 .payment-default-right {
   margin-left: auto;
+}
+.payment-default-trigger {
+  cursor: pointer;
+}
+.checkout-phone {
+  margin-top: -10px;
+}
+.checkout-input {
+  height: 50px;
 }
 </style>

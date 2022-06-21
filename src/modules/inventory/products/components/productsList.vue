@@ -104,7 +104,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getProductLists", "getLoader", "getInventorySelectedTab"]),
+    ...mapGetters([
+      "getProductLists",
+      "getLoader",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+    ]),
     tableHeaders() {
       return this.headers;
     },
@@ -123,11 +128,10 @@ export default {
     ...mapMutations(["setLoader", "setProductLists"]),
     ...mapActions(["requestAxiosGet"]),
     fetchProducts() {
-      const userDetails = JSON.parse(localStorage.userDetails).data;
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${userDetails.business_id}/products${
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
           this.getInventorySelectedTab === this.$t("inventory.archived")
             ? "/archived"
             : ""

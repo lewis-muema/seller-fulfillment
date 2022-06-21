@@ -17,7 +17,7 @@
           <v-badge
             color="#FBDF9A"
             text-color="#7F3B02"
-            :content="tab.content"
+            :content="`${tab.content}`"
             inline
           ></v-badge>
         </div>
@@ -30,18 +30,17 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 export default {
-  props: ["sendyCount", "customerCount"],
   data() {
     return {
       currentTab: 0,
       tabs: [
         {
           label: "To your Customers",
-          content: this.customerCount,
+          content: "-",
         },
         {
           label: "To Sendy",
-          content: this.sendyCount,
+          content: "-",
         },
       ],
       deliveries: [
@@ -63,10 +62,6 @@ export default {
     ...mapMutations(["setDashboardSelectedTab", "setLoader"]),
     setTab(tab) {
       this.setDashboardSelectedTab(tab.label);
-      this.setLoader("loading-text");
-      setTimeout(() => {
-        this.setLoader("");
-      }, 1000);
     },
   },
   computed: {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <form action="" @submit.prevent>
-      <div>
+      <div class="desktop-sign-up">
         <div class="desktop-header-title d-flex">
           <i
             class="mdi mdi-arrow-left"
@@ -17,7 +17,7 @@
             {{ $t("auth.enterCodeSentToEmail") }}
             <span class="otp-email">{{ userEmail }}</span>
           </p>
-          <p>{{ $t("auth.enterCode") }}</p>
+          <p class="mt-12">{{ $t("auth.enterCode") }}</p>
           <div>
             <div style="display: flex; flex-direction: row">
               <v-otp-input
@@ -28,7 +28,7 @@
                 :should-auto-focus="true"
                 :is-input-num="true"
                 @on-complete="handleOnComplete"
-                :separator="false"
+                separator=""
               />
             </div>
             <div v-if="v$.otp.$error" class="error-msg">
@@ -46,11 +46,6 @@
               {{ $t("auth.confirmCode") }}
             </button>
           </div>
-          <span class=""
-            ><p class="mt-4 text-center text-grey">
-              {{ $t("auth.resendCode") }}
-            </p></span
-          >
         </v-card-text>
       </div>
     </form>
@@ -61,6 +56,7 @@
 import VOtpInput from "vue3-otp-input";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
+import { ElNotification } from "element-plus";
 import { required } from "@vuelidate/validators";
 export default {
   components: { VOtpInput },
@@ -84,13 +80,23 @@ export default {
     userEmail() {
       return this.getOTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.email
-        : this.getUserData.business.business_email;
+        : this.businessEmail;
     },
     businessId() {
       return this.getOTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.business_id
-        : this.getUserData.business.business_id;
+        : this.businessEmail;
     },
+    businessEmail() {
+      return this.getUserData.business
+        ? this.getUserData.business.business_email
+        : "";
+    },
+  },
+  mounted() {
+    if (!this.getOTPRedirectUrl) {
+      this.$router.go(-1);
+    }
   },
   methods: {
     ...mapActions(["confirmUser", "attemptLogin"]),
@@ -125,6 +131,13 @@ export default {
             ? await this.attemptLogin(fullPayload)
             : await this.confirmUser(fullPayload);
 
+        if (data.data.message === "login.fail") {
+          ElNotification({
+            title: "",
+            message: this.$t("auth.invalidToken"),
+            type: "error",
+          });
+        }
         if (data.data.data !== null) {
           this.correctOTP = true;
           const accessToken = data.data.access_token;
@@ -171,10 +184,12 @@ export default {
   font-weight: 500;
 }
 .otp-input {
-  width: 60px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   padding: 5px;
-  margin: 0 10px;
+  margin-left: 0px;
+  margin-right: 25px;
+  margin-bottom: 50px;
   font-size: 20px;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.3);

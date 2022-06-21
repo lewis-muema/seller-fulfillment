@@ -100,12 +100,12 @@ const routes = [
     component: StockLevels,
   },
   {
-    path: "/inventory/view-product",
+    path: "/inventory/view-product/:product?",
     name: "View Product",
     component: ViewProduct,
   },
   {
-    path: "/inventory/send-inventory",
+    path: "/inventory/send-inventory/:path?/:page?",
     name: "Send Inventory",
     component: SendProducts,
   },
@@ -145,7 +145,7 @@ const routes = [
     component: paymentSummary,
   },
   {
-    path: "/settings/profile",
+    path: "/settings/profile/:page?",
     name: "Profile",
     component: Profile,
   },

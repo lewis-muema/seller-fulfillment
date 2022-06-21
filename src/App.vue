@@ -8,6 +8,8 @@
 
 <script>
 import Canvas from "./components/canvas.vue";
+import { mapGetters } from "vuex";
+import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
@@ -16,55 +18,68 @@ export default {
   data: () => ({
     //
   }),
+  watch: {
+    $route(to) {
+      if (to.path === "/") {
+        this.firebase();
+      }
+      if (!localStorage.userDetails) {
+        this.$router.push("/auth/sign-in");
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
+  },
   created() {
-    window.addEventListener("register-fcm", () => {
+    if (!localStorage.userDetails) {
+      this.$router.push("/auth/sign-in");
+    }
+  },
+  methods: {
+    firebase() {
+      initializeApp({
+        apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
+        authDomain: "sendy-fulfilment.firebaseapp.com",
+        projectId: "sendy-fulfilment",
+        storageBucket: "sendy-fulfilment.appspot.com",
+        messagingSenderId: "724697801657",
+        appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
+        measurementId: "G-J8KW3YLS1N",
+      });
       try {
         const messaging = getMessaging();
         getToken(messaging, {
           vapidKey: process.env.VAPIDKEY,
         }).then((currentToken) => {
           if (currentToken) {
-            // ...
+            if ("serviceWorker" in navigator) {
+              window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/firebase-messaging-sw.js");
+              });
+            }
             const deviceId = Math.floor(new Date().getTime());
             localStorage.deviceId = localStorage.deviceId
               ? localStorage.deviceId
               : deviceId;
             this.$store.dispatch("requestAxiosPut", {
               app: process.env.FULFILMENT_SERVER,
-              endpoint: `buyer/orders/${this.$store.getters.getData.data.order_id}/fcm`,
+              endpoint: `seller/${this.getStorageUserDetails.business_id}/user/fcm`,
               values: {
                 token: currentToken,
                 device_id: localStorage.deviceId,
+                user_id: this.getUserDetails.user_id,
               },
             });
           }
         });
         onMessage(messaging, (payload) => {
-          this.sendSegmentEvents({
-            event: "Trigger for User",
-            data: {
-              userId: this.$store.getters.getData.data.destination.name,
-              // eslint-disable-next-line max-len
-              trigger: payload.notification.body,
-            },
-          });
-          this.$store
-            .dispatch("requestAxiosGet", {
-              app: process.env.FULFILMENT_SERVER,
-              endpoint: `buyer/orders/${this.$route.params.deliveryId}`,
-            })
-            .then((response) => {
-              this.$store.commit("setData", response.data);
-              this.$store.commit(
-                "setDeliveryStatus",
-                response.data.data.order_event_status
-              );
-            });
+          console.log(payload);
         });
       } catch (error) {
         // ...
       }
-    });
+    },
   },
 };
 </script>
@@ -97,5 +112,26 @@ export default {
   margin-bottom: 20px;
   padding: 20px 0px;
   background: white;
+}
+.pac-container {
+  z-index: 10000 !important;
+}
+.el-select-dropdown__item {
+  display: flex;
+  align-items: center;
+  height: 60px !important;
+}
+.el-select-dropdown__item.selected {
+  color: #324ba8 !important;
+}
+.el-input__inner {
+  color: black !important;
+}
+.el-loading-spinner {
+  top: 10% !important;
+  width: 30px !important;
+  text-align: center;
+  position: relative !important;
+  margin: auto !important;
 }
 </style>

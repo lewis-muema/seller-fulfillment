@@ -1,5 +1,6 @@
 import { createI18n } from "vue-i18n";
 import axios from "axios";
+import moment from "moment";
 
 function loadLocaleMessages() {
   const locales = require.context(
@@ -17,6 +18,19 @@ function loadLocaleMessages() {
     }
   });
   return messages;
+}
+
+const i18n = createI18n({
+  locale: "en",
+  fallbackLocale: "en",
+  messages: loadLocaleMessages(),
+});
+
+function changeLanguage() {
+  window.addEventListener("language-changed", (event) => {
+    i18n.locale = event.detail;
+    moment.locale(event.detail);
+  });
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -52,8 +66,6 @@ function ipLookUp() {
     .catch((error) => error);
 }
 
-export default createI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: loadLocaleMessages(),
-});
+changeLanguage();
+
+export default i18n;

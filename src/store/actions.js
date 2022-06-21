@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import router from "../router";
+import { ElNotification } from "element-plus";
 
 export default {
   async initializeAuth({ commit }) {
@@ -15,11 +17,11 @@ export default {
     commit("setRefreshToken", refreshToken);
   },
 
-  async requestAxiosPost(_, payload) {
+  requestAxiosPost({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -29,35 +31,37 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          reject(error.response);
+          dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
   },
-  requestAxiosGet({ commit }, payload) {
+  requestAxiosGet({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .get(`${payload.app}${payload.endpoint}`, config)
         .then((response) => {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
   },
-  requestAxiosPut({ commit }, payload) {
+  requestAxiosPut({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -67,11 +71,51 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          reject(error.response);
+          dispatch("handleErrors", error);
+          resolve(error);
           return false;
         });
     });
   },
+
+  requestAxiosPatch({ dispatch }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .patch(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch("handleErrors", error);
+          resolve(error);
+          return false;
+        });
+    });
+  },
+
+  handleErrors(_, error) {
+    if (error.response.status === 403) {
+      router.push("/auth/sign-in");
+      router.go(0);
+    }
+    if (
+      error.response.status === 500 &&
+      router.currentRoute.value.path ===
+        "/inventory/send-inventory/customer/checkout"
+    ) {
+      router.push("/inventory/send-inventory/customer/select-products");
+    }
+    if (error.response.status === 502) {
+      console.log(error);
+    }
+  },
+
   async custom_headers({ state }, fileUpload) {
     const authToken = state.accessToken
       ? localStorage.getItem("accessToken")
@@ -94,25 +138,6 @@ export default {
       errors["message"] = el.message;
     });
     commit("setErrors", errors);
-  },
-  requestAxiosPatch({ commit }, payload) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
-      },
-    };
-    return new Promise((resolve, reject) => {
-      axios
-        .patch(`${payload.app}${payload.endpoint}`, payload.values, config)
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-          return false;
-        });
-    });
   },
 
   async signupUser({ dispatch, commit }, payload) {

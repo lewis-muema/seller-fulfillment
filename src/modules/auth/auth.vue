@@ -52,22 +52,20 @@
           class="flex-grow-0 flex-shrink-1"
         >
           <v-card class="mx-auto mt-5" width="80%">
-            <div class="dropdown language-dropdown">
-              <button
-                class="btn dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+            <el-select
+              class="sign-in-language-select"
+              id="industry"
+              v-model="defaultLanguage"
+              @change="changeLanguage()"
+            >
+              <el-option
+                v-for="lang in getLanguages"
+                :key="lang.name"
+                :label="lang.name"
+                :value="lang.tag"
               >
-                {{ $t("auth.english") }}
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
-                  <a class="dropdown-item" href="#">{{ $t("auth.french") }}</a>
-                </li>
-              </ul>
-            </div>
+              </el-option>
+            </el-select>
             <router-view></router-view>
           </v-card>
         </v-col>
@@ -79,6 +77,8 @@
 <script>
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination } from "vue3-carousel";
+import { mapGetters } from "vuex";
+
 export default {
   components: {
     Carousel,
@@ -88,6 +88,7 @@ export default {
   data: () => ({
     languages: ["English", "French"],
     language: "English",
+    defaultLanguage: "en",
     region: "",
     slides: [
       {
@@ -106,6 +107,16 @@ export default {
       },
     ],
   }),
+  computed: {
+    ...mapGetters(["getLanguages"]),
+  },
+  methods: {
+    changeLanguage() {
+      window.dispatchEvent(
+        new CustomEvent("language-changed", { detail: this.defaultLanguage })
+      );
+    },
+  },
 };
 </script>
 
@@ -166,5 +177,11 @@ export default {
 ol,
 ul {
   padding: 0px !important;
+}
+.sign-in-language-select {
+  width: 100px;
+  margin-left: auto;
+  margin-right: 55px;
+  margin-top: 40px;
 }
 </style>

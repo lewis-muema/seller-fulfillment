@@ -92,13 +92,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 export default {
   components: { tableHeader },
-  props: ["product"],
   data() {
     return {
-      variantSelected: "All product options",
+      variantSelected: this.$t("inventory.allProductOptions"),
       variantsToggle: false,
       tableHeaders: [
         {
@@ -140,9 +140,13 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getProduct"]),
     activityHistory() {
       const res = this.product.product_variants;
       return res ? this.product.product_variants : this.activities;
+    },
+    product() {
+      return this.getProduct;
     },
   },
 };

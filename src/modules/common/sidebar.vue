@@ -134,7 +134,7 @@
           </template>
           <v-list-item
             :title="$t('common.profile')"
-            @click="$router.push('/settings/profile')"
+            @click="$router.push('/settings/profile/personal-info')"
             class="desktop-sidebar-sub-menu"
             :active="route === $t('common.profile')"
             :append-icon="

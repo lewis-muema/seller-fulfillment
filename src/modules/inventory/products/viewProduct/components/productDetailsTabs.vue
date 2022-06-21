@@ -29,9 +29,9 @@ export default {
         {
           label: "Overview",
         },
-        {
-          label: "History",
-        },
+        // {
+        //   label: "History",
+        // },
       ],
     };
   },

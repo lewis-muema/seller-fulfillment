@@ -26,9 +26,6 @@ export default {
   },
   mounted() {
     this.setComponent(this.$t("common.dashboard"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 1000);
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader"]),

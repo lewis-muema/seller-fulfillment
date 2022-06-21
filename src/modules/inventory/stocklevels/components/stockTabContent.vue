@@ -1,7 +1,7 @@
 <template>
   <div>
     <tabs>
-      <stock-level-list :products="products" />
+      <stock-level-list />
     </tabs>
   </div>
 </template>

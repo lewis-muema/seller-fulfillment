@@ -1,31 +1,45 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+import router from "../router";
 
 export default {
-  requestAxiosPost({ commit }, payload) {
+  async initializeAuth({ commit }) {
+    const token = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (token !== null && token !== "") {
+      const userData = jwt_decode(token);
+      commit("setSession", userData);
+    }
+    commit("setAccessToken", token);
+    commit("setRefreshToken", refreshToken);
+  },
+
+  requestAxiosPost({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .post(`${payload.app}${payload.endpoint}`, payload.values, config)
         .then((response) => {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          dispatch("handleErrors", error);
           return false;
         });
     });
   },
-  requestAxiosGet({ commit }, payload) {
+  requestAxiosGet({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
     return new Promise((resolve) => {
@@ -35,35 +49,36 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          dispatch("handleErrors", error);
           return false;
         });
     });
   },
-  requestAxiosPut({ commit }, payload) {
+  requestAxiosPut({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .put(`${payload.app}${payload.endpoint}`, payload.values, config)
         .then((response) => {
           resolve(response);
         })
         .catch((error) => {
-          resolve(error.response);
+          dispatch("handleErrors", error);
           return false;
         });
     });
   },
-  requestAxiosPatch({ commit }, payload) {
+
+  requestAxiosPatch({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.token ? JSON.parse(localStorage.token) : "",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -73,10 +88,41 @@ export default {
           resolve(response);
         })
         .catch((error) => {
-          reject(error);
+          dispatch("handleErrors", error);
           return false;
         });
     });
+  },
+
+  handleErrors(_, error) {
+    if (error.response.status) {
+      router.push("/auth/sign-in");
+      router.go(0);
+    }
+  },
+
+  async custom_headers({ state }, fileUpload) {
+    const authToken = state.accessToken
+      ? localStorage.getItem("accessToken")
+      : state.accessToken;
+
+    const param = {
+      headers: {
+        "Content-Type": fileUpload ? "multipart/form-data" : "application/json",
+        Accept: "application/json",
+        Authorization: authToken,
+      },
+    };
+
+    return param;
+  },
+
+  setErrorAction({ commit }, payload) {
+    let errors = {};
+    payload.forEach((el) => {
+      errors["message"] = el.message;
+    });
+    commit("setErrors", errors);
   },
 
   async signupUser({ dispatch, commit }, payload) {
@@ -85,6 +131,26 @@ export default {
       commit("setUserData", res.data.data);
       return res;
     } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
+      return error.response;
+    }
+  },
+  async loginUser({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      commit("setLoginData", res.data.data);
+      return res;
+    } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
+      return error.response;
+    }
+  },
+  async attemptLogin({ dispatch }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      return res;
+    } catch (error) {
+      await dispatch("setErrorAction", error.data.errors);
       return error.response;
     }
   },

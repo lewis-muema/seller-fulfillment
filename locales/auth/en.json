@@ -23,7 +23,8 @@
     "login": "Login",
     "completeSignUp" : "Complete Sign up",
     "yourName" : "Your name",
-    "enterYourPersonalName" : "Enter your personal name",
+    "enterYourFirstName" : "Enter your first name",
+    "enterYourLastName" : "Enter your last name",
     "phoneNumber": "Phone number",
     "industryOfBusiness": "Industry of your business",
     "signUp": "Sign Up",
@@ -43,6 +44,9 @@
     "enterCode":"Enter code",
     "confirmCode": "Confirm Code",
     "resendCode": "Resend code in 120 seconds",
-    "invalidToken": "Your token may be invalid or expired"
+    "invalidToken": "Your token may be invalid or expired",
+    "failedToCreateAccount": "Failed to create account",
+    "firstName": "First name",
+    "lastName": "Last name"
     
 }

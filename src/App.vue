@@ -20,8 +20,12 @@ export default {
   }),
   watch: {
     $route() {
-      if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
-        this.$router.push("/auth/sign-in");
+      if (
+        !localStorage.userDetails &&
+        this.$route.path !== "/auth/sign-up" &&
+        this.$route.path !== "/auth/otp"
+      ) {
+        // this.$router.push("/auth/sign-in");
       }
     },
   },
@@ -29,7 +33,11 @@ export default {
     ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
   },
   created() {
-    if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
+    if (
+      !localStorage.userDetails &&
+      this.$route.path !== "/auth/sign-up" &&
+      this.$route.path !== "/auth/otp"
+    ) {
       this.$router.push("/auth/sign-in");
     }
     window.addEventListener("register-fcm", () => {

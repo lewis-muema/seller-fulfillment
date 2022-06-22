@@ -15,17 +15,34 @@
         <v-card-text class="pt-5">
           <div class="mb-3">
             <label for="yourName" class="form-label">
-              {{ $t("auth.yourName") }}</label
+              {{ $t("auth.firstName") }}</label
             >
             <div class="form-input-group">
               <i class="mdi mdi-account-circle" aria-hidden="true"></i>
               <input
-                v-model="params.personalName"
+                v-model="params.firstName"
                 type="text"
                 class="form-control"
-                :placeholder="$t('auth.enterYourPersonalName')"
+                :placeholder="$t('auth.enterYourFirstName')"
               />
-              <div v-if="v$.params.personalName.$error" class="error-msg">
+              <div v-if="v$.params.firstName.$error" class="error-msg">
+                {{ $t("auth.nameRequired") }}
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="yourName" class="form-label">
+              {{ $t("auth.lastName") }}</label
+            >
+            <div class="form-input-group">
+              <i class="mdi mdi-account-circle" aria-hidden="true"></i>
+              <input
+                v-model="params.lastName"
+                type="text"
+                class="form-control"
+                :placeholder="$t('auth.enterYourLastName')"
+              />
+              <div v-if="v$.params.lastName.$error" class="error-msg">
                 {{ $t("auth.nameRequired") }}
               </div>
             </div>
@@ -106,7 +123,8 @@ export default {
   validations() {
     return {
       params: {
-        personalName: { required },
+        firstName: { required },
+        lastName: { required },
         phoneNo: { required },
         industryOfBusiness: { required },
       },
@@ -115,24 +133,10 @@ export default {
   async mounted() {
     await this.industryList();
   },
-  watch: {
-    firstName(value) {
-      this.params["firstName"] = value;
-    },
-    lastName(value) {
-      this.params["lastName"] = value;
-    },
-  },
   computed: {
     ...mapGetters(["getGoogleUserData", "getIndustries", "getUserData"]),
     businessId() {
       return this.getUserData.business.business_id;
-    },
-    firstName() {
-      return this.params["personalName"].split(" ")[0];
-    },
-    lastName() {
-      return this.params["personalName"].split(" ")[1];
     },
     supportedIndustries() {
       return this.getIndustries.industries;
@@ -155,8 +159,8 @@ export default {
           business_industry_id: this.params.industryOfBusiness,
         },
         user: {
-          first_name: this.firstName,
-          last_name: this.lastName,
+          first_name: this.params.firstName,
+          last_name: this.params.lastName,
           phone_number: this.params.phoneNo,
         },
       };
@@ -168,7 +172,7 @@ export default {
       const data = await this.businessUserDetails(fullPayload);
       if (data.status === 200) {
         this.loading = false;
-        this.$router.push("/onboarding");
+        this.$router.push("/");
       }
     },
   },

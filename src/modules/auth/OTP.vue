@@ -85,7 +85,7 @@ export default {
     businessId() {
       return this.getOTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.business_id
-        : this.businessEmail;
+        : this.getUserData.business.business_id;
     },
     businessEmail() {
       return this.getUserData.business
@@ -151,10 +151,20 @@ export default {
           this.getOTPRedirectUrl === "otp/signIn"
             ? this.$router.push("/")
             : this.$router.push("/auth/complete-signup");
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("auth.failedToCreateAccount"),
+            type: "error",
+          });
         }
         this.loading = false;
       } catch (error) {
-        console.log(error);
+        ElNotification({
+          title: "",
+          message: this.$t("auth.failedToCreateAccount"),
+          type: "error",
+        });
       }
     },
   },

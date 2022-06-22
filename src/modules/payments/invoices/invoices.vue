@@ -15,9 +15,6 @@ export default {
   },
   mounted() {
     this.setComponent(this.$t("common.invoices"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 3000);
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

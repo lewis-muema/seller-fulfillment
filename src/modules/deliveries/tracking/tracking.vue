@@ -99,6 +99,9 @@ export default {
         this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
       }
     },
+    "$route.params.order_id": function orderId() {
+      this.fetchOrder();
+    },
   },
   computed: {
     ...mapGetters([

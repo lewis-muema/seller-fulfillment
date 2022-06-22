@@ -43,7 +43,7 @@
             <v-badge
               color="#324BA8"
               text-color="white"
-              max="10"
+              max=""
               :content="`${getNotifications.length}`"
             >
               <i
@@ -68,9 +68,9 @@
                     </div>
                     <div
                       class="header-notification-action"
-                      @click="redirect(not)"
+                      @click="$router.push(getAction(not).link)"
                     >
-                      {{ getAction(not) }}
+                      {{ getAction(not).label }}
                     </div>
                     <div>{{ formatPeriod(not) }}</div>
                   </div>
@@ -194,6 +194,15 @@ export default {
       });
       return lang;
     },
+    filteredNotifications() {
+      const notifications = [];
+      this.getNotifications.forEach((row) => {
+        if (!row.archived) {
+          notifications.push(row);
+        }
+      });
+      return notifications;
+    },
   },
   watch: {
     "$store.state.businessDetails": function businessDetails() {
@@ -219,27 +228,46 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     getIcon(notification) {
-      if (notification.title === "Order Received") {
+      if (
+        notification.message.includes(
+          "driver has reached the fulfillment centre"
+        )
+      ) {
         return "mdi-warehouse";
+      }
+      if (notification.entity_type === "PAYMENT") {
+        return "mdi-cash-multiple";
       }
       return "mdi-truck-outline";
     },
     getAction(notification) {
-      if (notification.title === "Order Received") {
-        return this.$t("common.trackDelivery");
+      if (
+        notification.entity_type === "ORDER" &&
+        ![
+          "Successful Delivery",
+          "Order Rescheduled",
+          "Failed Delivery",
+        ].includes(notification.title) &&
+        notification.entity_identifier &&
+        !notification.message.includes(
+          "driver has reached the fulfillment centre"
+        )
+      ) {
+        return {
+          label: this.$t("common.trackDelivery"),
+          link: `/deliveries/tracking/${notification.entity_identifier}`,
+        };
+      }
+      if (notification.message.includes("Please make payment")) {
+        return {
+          label: this.$t("payments.makePayment"),
+          link: "/payments/billings",
+        };
       }
       return "";
     },
     formatPeriod(notification) {
       return moment(notification).fromNow();
-    },
-    redirect(notification) {
-      this.notificationToggle = false;
-      if (notification.title === "Order Received") {
-        this.$router.push(
-          `/deliveries/tracking/${notification.entity_identifier}`
-        );
-      }
     },
     listBusinessDetails() {
       this.requestAxiosGet({
@@ -272,6 +300,7 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
+          window.dispatchEvent(new CustomEvent("register-fcm"));
           this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
         }
       });

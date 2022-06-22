@@ -19,10 +19,7 @@ export default {
     //
   }),
   watch: {
-    $route(to) {
-      if (to.path === "/") {
-        this.firebase();
-      }
+    $route() {
       if (!localStorage.userDetails) {
         this.$router.push("/auth/sign-in");
       }
@@ -35,6 +32,9 @@ export default {
     if (!localStorage.userDetails) {
       this.$router.push("/auth/sign-in");
     }
+    window.addEventListener("register-fcm", () => {
+      this.firebase();
+    });
   },
   methods: {
     firebase() {
@@ -47,27 +47,31 @@ export default {
         appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
         measurementId: "G-J8KW3YLS1N",
       });
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        });
+      }
       try {
         const messaging = getMessaging();
         getToken(messaging, {
           vapidKey: process.env.VAPIDKEY,
         }).then((currentToken) => {
           if (currentToken) {
-            if ("serviceWorker" in navigator) {
-              window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/firebase-messaging-sw.js");
-              });
-            }
             const deviceId = Math.floor(new Date().getTime());
-            localStorage.deviceId = localStorage.deviceId
-              ? localStorage.deviceId
-              : deviceId;
+            let device = "";
+            if (this.getCookie("deviceId")) {
+              device = this.getCookie("deviceId");
+            } else {
+              this.setCookie("deviceId", deviceId, 365);
+              device = this.getCookie("deviceId");
+            }
             this.$store.dispatch("requestAxiosPut", {
               app: process.env.FULFILMENT_SERVER,
               endpoint: `seller/${this.getStorageUserDetails.business_id}/user/fcm`,
               values: {
                 token: currentToken,
-                device_id: localStorage.deviceId,
+                device_id: device,
                 user_id: this.getUserDetails.user_id,
               },
             });
@@ -79,6 +83,26 @@ export default {
       } catch (error) {
         // ...
       }
+    },
+    setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    },
+    getCookie(cname) {
+      let name = cname + "=";
+      let ca = document.cookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
     },
   },
 };

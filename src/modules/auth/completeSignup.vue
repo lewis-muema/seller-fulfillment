@@ -53,6 +53,9 @@
                 {{ industry.name }}
               </option>
             </select>
+            <div v-if="v$.params.industryOfBusiness.$error" class="error-msg">
+              {{ $t("auth.industryOfBusinessRequired") }}
+            </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
             <button

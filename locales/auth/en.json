@@ -10,6 +10,7 @@
     "OTPRequired": "Otp input is required",
     "nameRequired": "Your name is required",
     "phoneRequired": "Phone number is required",
+    "industryOfBusinessRequired": "Industry of business required",
     "businessEmailAddress" :"Business email address",
     "enterBusinessEmailAddress" :"Enter business email address",
     "countryOfOperation": "Country of operation",

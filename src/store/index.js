@@ -1024,7 +1024,10 @@ export default createStore({
         phone_number: "+25470000000",
         user_id: "U-LSH-0000",
       },
-      storageUserDetails: JSON.parse(localStorage.userDetails).data,
+      storageUserDetails:
+        localStorage.userDetails !== undefined
+          ? JSON.parse(localStorage.userDetails).data
+          : "",
       businessDetails: {
         business_id: "B-XGS-0000",
         business_name: "Some Business",

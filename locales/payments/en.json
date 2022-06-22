@@ -42,5 +42,6 @@
   "orderSummary": "Order summary",
   "showMore": "Show more",
   "amountToPay": "Amount to Pay",
-  "continueToMakePayment": "Continue to make payment"
+  "continueToMakePayment": "Continue to make payment",
+  "none": "None"
 }

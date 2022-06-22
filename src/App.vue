@@ -20,7 +20,7 @@ export default {
   }),
   watch: {
     $route() {
-      if (!localStorage.userDetails) {
+      if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
         this.$router.push("/auth/sign-in");
       }
     },
@@ -29,7 +29,7 @@ export default {
     ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
   },
   created() {
-    if (!localStorage.userDetails) {
+    if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
       this.$router.push("/auth/sign-in");
     }
     window.addEventListener("register-fcm", () => {

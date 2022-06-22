@@ -10,7 +10,9 @@
           <span :class="getLoader">
             <b
               >{{ getBusinessDetails.currency }}
-              {{ activeCycle.billable_amount }}</b
+              {{
+                activeCycle.billable_amount ? activeCycle.billable_amount : 0
+              }}</b
             >
             {{ $t("payments.youWillBeCharged") }} {{ activeCycleTime }}
           </span>
@@ -20,7 +22,11 @@
       <div :class="getLoader">
         <span>
           {{ $t("payments.billingCycle") }}:
-          {{ activeCycle.cycle_interval_type }}
+          {{
+            activeCycle.cycle_interval_type
+              ? activeCycle.cycle_interval_type
+              : $t("payments.none")
+          }}
         </span>
       </div>
     </div>
@@ -67,7 +73,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("common.statements"));
+    this.setComponent(this.$t("common.billings"));
     this.listBillingCycles();
   },
   methods: {

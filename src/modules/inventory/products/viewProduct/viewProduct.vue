@@ -96,7 +96,11 @@ export default {
     this.fetchProduct();
   },
   computed: {
-    ...mapGetters(["getStockSelectedTab", "getProduct"]),
+    ...mapGetters([
+      "getStockSelectedTab",
+      "getProduct",
+      "getStorageUserDetails",
+    ]),
     stockSelectedTab() {
       return this.getStockSelectedTab;
     },
@@ -117,7 +121,6 @@ export default {
       "setTab",
       "setProduct",
       "setAddProductStatus",
-      "getStorageUserDetails",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     trigger(action) {

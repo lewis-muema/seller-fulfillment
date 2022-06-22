@@ -10,7 +10,7 @@ import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Statements from "../modules/payments/statements/statements.vue";
-import Invoices from "../modules/payments/invoices/invoices.vue";
+// import Invoices from "../modules/payments/invoices/invoices.vue";
 import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
 import PaymentOptions from "../modules/settings/paymentOptions/paymentOptions.vue";
 import Profile from "../modules/settings/profile/profile.vue";
@@ -125,17 +125,17 @@ const routes = [
     component: Tracking,
   },
   {
-    path: "/payments/statements",
-    name: "Statements",
+    path: "/payments/billings",
+    name: "Billings",
     component: Statements,
   },
+  // {
+  //   path: "/payments/invoices",
+  //   name: "Invoices",
+  //   component: Invoices,
+  // },
   {
-    path: "/payments/invoices",
-    name: "Invoices",
-    component: Invoices,
-  },
-  {
-    path: "/payments/view-invoice",
+    path: "/payments/view-invoice/:invoice_id?",
     name: "View Invoice",
     component: viewInvoice,
   },

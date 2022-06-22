@@ -15,7 +15,7 @@
         />
       </div>
       <div class="statement-info-bar-download">
-        <v-menu transition="slide-y-transition" anchor="bottom center">
+        <!-- <v-menu transition="slide-y-transition" anchor="bottom center">
           <template v-slot:activator="{ props }">
             <v-btn
               class="statements-actions-btn"
@@ -32,29 +32,31 @@
               </v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-menu>
+        </v-menu> -->
       </div>
     </div>
-    <div v-if="getStatements.length > 0">
+    <div v-if="getBillingCycles.length > 0">
       <v-expansion-panels multiple class="statements-expansion-panel">
-        <v-expansion-panel v-for="(item, i) in getStatements" :key="i">
+        <v-expansion-panel
+          v-for="(cycle, i) in getBillingCycles"
+          :key="i"
+          @click="expandCycle(cycle, i)"
+        >
           <v-expansion-panel-title>
             <div class="statements-expansion-title">
               <p :class="getLoader">
-                {{ item.date }}
+                {{ formatDate(cycle.billing_cycle_start_date) }}
               </p>
               <p
                 class="statements-expansion-title-bottom-row"
                 :class="getLoader"
               >
-                <span
-                  v-if="item.amount"
-                  class="statements-expansion-title-amount"
-                >
-                  {{ item.amount }}
+                <span class="statements-expansion-title-amount">
+                  {{ getBusinessDetails.currency }}
+                  {{ Math.round(cycle.billable_amount * 100) / 100 }}
                 </span>
                 <span>
-                  {{ item.items.length }} {{ $t("payments.completedOrders") }}
+                  {{ cycle.order_count }} {{ $t("payments.completedOrders") }}
                 </span>
               </p>
             </div>
@@ -64,42 +66,48 @@
               <thead></thead>
               <tbody>
                 <tr
-                  v-for="(row, x) in item.items"
+                  v-for="(row, x) in cycle.lineItems"
                   :key="x"
                   class="statements-table-row"
                 >
                   <td class="statements-table-icon-row">
-                    <span v-if="getLoader" :class="getLoader">
-                      {{ row.icon }}
+                    <span v-if="cycle.loading" :class="cycle.loading">
+                      {{ row.amount }}
                     </span>
-                    <i v-else :class="`mdi ${row.icon}`"></i>
+                    <i v-else :class="`mdi ${getIcon(row)}`"></i>
                   </td>
                   <td class="statements-table-description-row">
-                    <span :class="getLoader">
-                      {{ row.description }}
+                    <span
+                      :class="cycle.loading"
+                      @click="
+                        $router.push(`/deliveries/tracking/${row.resource_id}`)
+                      "
+                    >
+                      {{ row.line_item_title }}
                     </span>
                   </td>
                   <td class="statements-table-item-row">
-                    <span :class="getLoader">
-                      {{ row.items }}
+                    <span :class="cycle.loading">
+                      {{ row.line_item_subtitle }}
                     </span>
                   </td>
                   <td class="statements-table-date-row">
-                    <span :class="getLoader">
-                      {{ row.date }}
+                    <span :class="cycle.loading">
+                      {{ formatLineItemDate(row.created_date) }}
                     </span>
                   </td>
                   <td class="statements-table-status-row">
-                    <span v-if="getLoader" :class="getLoader">
-                      {{ row.class }}
+                    <span v-if="cycle.loading" :class="cycle.loading">
+                      {{ cycle.paid_status }}
                     </span>
-                    <span v-else :class="`statements-${row.class}-status`">
-                      {{ row.status }}</span
+                    <span v-else :class="paidClass(cycle)">
+                      {{ cycle.paid_status }}</span
                     >
                   </td>
                   <td class="statements-table-price-row">
-                    <span :class="getLoader">
-                      {{ row.price }}
+                    <span :class="cycle.loading">
+                      - {{ getBusinessDetails.currency }}
+                      {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
                 </tr>
@@ -128,7 +136,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import moment from "moment";
 
 export default {
   data() {
@@ -139,7 +148,55 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getLoader", "getDownloadActions", "getStatements"]),
+    ...mapGetters([
+      "getLoader",
+      "getDownloadActions",
+      "getStatements",
+      "getBillingCycles",
+      "getBusinessDetails",
+      "getStorageUserDetails",
+      "getLineItems",
+    ]),
+  },
+  methods: {
+    ...mapActions(["requestAxiosGet"]),
+    ...mapMutations(["setBillingCycles"]),
+    formatDate(date) {
+      return moment(date).format("dddd, Do MMM YYYY");
+    },
+    expandCycle(cycle, i) {
+      const dummyLineItems = this.getBillingCycles;
+      dummyLineItems[i].lineItems = this.getLineItems;
+      dummyLineItems[i].loading = "loading-text";
+      this.setBillingCycles(dummyLineItems);
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${cycle.billing_cycle_instance_id}/lineitems`,
+      }).then((response) => {
+        if (response.status === 200) {
+          const billingcycles = this.getBillingCycles;
+          billingcycles[i].lineItems =
+            response.data.data.billing_cycle_line_items;
+          billingcycles[i].loading = "";
+          this.setBillingCycles(billingcycles);
+        }
+      });
+    },
+    formatLineItemDate(date) {
+      return moment(date).format("D/MM/YYYY hh:mm a");
+    },
+    getIcon(row) {
+      if (row.line_item_title === "Delivery to Sendy") {
+        return "mdi-warehouse";
+      }
+      return "mdi-truck-outline";
+    },
+    paidClass(cycle) {
+      if (cycle.paid_status === "PAID") {
+        return "statements-paid-status";
+      }
+      return "statements-pending-status";
+    },
   },
 };
 </script>
@@ -179,6 +236,7 @@ export default {
   width: 20%;
   border-bottom: none !important;
   color: #324ba8;
+  cursor: pointer;
 }
 .statements-table-item-row {
   width: 20%;

@@ -56,5 +56,9 @@ export default {
   getNotifications: (state) => state.notifications,
   getParent: (state) => state.parent,
   getPaymnetMethods: (state) => state.paymnetMethods,
-  getStorageUserDetails: (state) => state.storageUserDetails,
+  getStorageUserDetails: (state) =>
+    state.bizDetails ? state.bizDetails : JSON.parse(state.storageUserDetails),
+  getBillingCycles: (state) => state.billingCycles,
+  getLineItems: (state) => state.lineItems,
+  getInvoice: (state) => state.invoice,
 };

@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     ...mapActions(["loginUser"]),
-    ...mapMutations(["setOTPRedirectUrl"]),
+    ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
     phoneNumberLogin() {
       this.emailLogin = false;
     },
@@ -146,7 +146,8 @@ export default {
       try {
         const data = await this.loginUser(fullPayload);
         if (data.status === 200) {
-          localStorage.userDetails = JSON.stringify(data.data);
+          this.setBizDetails(data.data.data);
+          localStorage.userDetails = JSON.stringify(data.data.data);
           this.loading = false;
           this.setOTPRedirectUrl("otp/signIn");
           this.$router.push("/auth/otp");

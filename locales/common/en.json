@@ -39,5 +39,6 @@
   "seeProfile": "See profile",
   "logOut": "Log Out",
   "trackDelivery": "Track delivery",
-  "restockInventory": "Restock inventory"
+  "restockInventory": "Restock inventory",
+  "billings": "Billings"
 }

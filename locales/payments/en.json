@@ -1,7 +1,7 @@
 {
   "orders": "orders",
   "completedToday": "completed today",
-  "youWillBeCharged": "Will be charged at 8 PM tonight",
+  "youWillBeCharged": "will be charged",
   "from": "From",
   "to": "To",
   "invoiceNumber": "Invoice Number",

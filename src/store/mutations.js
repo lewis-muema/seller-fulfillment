@@ -176,4 +176,16 @@ export default {
   setStorageUserDetails(state, val) {
     state.storageUserDetails = val;
   },
+  setBizDetails(state, val) {
+    state.bizDetails = val;
+  },
+  setBillingCycles(state, val) {
+    state.billingCycles = val;
+  },
+  setlineItems(state, val) {
+    state.lineItems = val;
+  },
+  setInvoice(state, val) {
+    state.invoice = val;
+  },
 };

@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN echo $DOCKER_ENV
+RUN echo "$DOCKER_ENV"
 
 RUN if [ "$DOCKER_ENV" = "testing" ]; \
         then npm run staging; \

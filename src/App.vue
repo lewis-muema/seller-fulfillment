@@ -54,7 +54,6 @@ export default {
     },
   },
   created() {
-    console.log(process.env.ENV);
     if (
       !localStorage.userDetails &&
       this.$route.path !== "/auth/sign-up" &&

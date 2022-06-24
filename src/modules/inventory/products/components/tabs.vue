@@ -24,13 +24,13 @@
         </div>
       </div>
       <div class="product-buttons-container">
-        <button
+        <!-- <button
           class="btn btn-primary mr-4 products-buttons-section"
           @click="$router.push('/inventory/import-products')"
         >
           <i class="mdi mdi-upload"></i>
           {{ $t("inventory.uploadProduct") }}
-        </button>
+        </button> -->
 
         <button
           class="btn btn-primary upload-buttons-section"
@@ -108,7 +108,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getInventorySelectedTab", "getProductLists"]),
+    ...mapGetters([
+      "getInventorySelectedTab",
+      "getProductLists",
+      "getStockStatistics",
+    ]),
     getRoute() {
       return this.$route.path;
     },
@@ -118,16 +122,34 @@ export default {
     getTotalProducts() {
       return this.getProductLists.length;
     },
-    getTotalArchived() {
-      return this.getProductLists.length;
-    },
   },
   watch: {
     "$store.state.loader": function loader(val) {
       this.productTabs[0].content =
-        val === "" ? `${this.getTotalProducts}` : "-";
+        val === "" && this.getInventorySelectedTab === this.$t("inventory.all")
+          ? `${this.getTotalProducts}`
+          : "-";
       this.productTabs[1].content =
-        val === "" ? `${this.getTotalArchived}` : "-";
+        val === "" &&
+        this.getInventorySelectedTab === this.$t("inventory.archived")
+          ? `${this.getTotalProducts}`
+          : "-";
+      this.stockLevelTabs[0].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? (
+              this.getStockStatistics.available_products +
+              this.getStockStatistics.low_stock_products +
+              this.getStockStatistics.out_of_stock_products
+            ).toString()
+          : "-";
+      this.stockLevelTabs[1].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? this.getStockStatistics.low_stock_products.toString()
+          : "-";
+      this.stockLevelTabs[2].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? this.getStockStatistics.out_of_stock_products.toString()
+          : "-";
     },
   },
   methods: {

@@ -18,7 +18,7 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <carousel :items-to-show="1" :autoplay="2000">
+          <carousel :items-to-show="1" :autoplay="3000" :wrapAround="true">
             <slide
               v-for="slide in slides"
               :key="slide.title"
@@ -28,15 +28,17 @@
               <div class="slider-content">{{ slide.content }}</div>
               <br />
               <div class="d-flex">
-                <v-avatar>
+                <v-avatar class="testimonial-img-container">
                   <img
-                    src="https://cdn.vuetifyjs.com/images/john.jpg"
+                    class="testimonial-img"
+                    v-if="slide.profilePhoto"
+                    :src="slide.profilePhoto"
                     alt="John"
                   />
                 </v-avatar>
                 <div class="testimonal-container">
                   <div class="testimonial-name">{{ slide.name }}</div>
-                  <div>{{ slide.businessName }}</div>
+                  <div>{{ slide.position }}, {{ slide.businessName }}</div>
                 </div>
               </div>
             </slide>
@@ -90,25 +92,45 @@ export default {
     language: "English",
     defaultLanguage: "en",
     region: "",
-    slides: [
-      {
-        content:
-          "Sendy is such a game changer for my business, it takes away the stress of delivery. My life has never been this easy. I recommend this solution to anyone running an online store.",
-        name: "Jane Mully",
-        businessName: "Business owner, Smart Collections",
-        profilePhoto: "",
-      },
-      {
-        content:
-          "Sendy is such a game changer for my business, it takes away the stress of delivery. My life has never been this easy. I recommend this solution to anyone running an online store.",
-        name: "Jane Mully",
-        businessName: "Business owner, Smart Collections",
-        profilePhoto: "",
-      },
-    ],
+    slides: [],
   }),
   computed: {
     ...mapGetters(["getLanguages"]),
+  },
+  mounted() {
+    this.slides = [
+      {
+        name: this.$t("auth.priscillaNjenga"),
+        content: this.$t("auth.withinTheFirstMonth"),
+        position: this.$t("auth.CEORoyalBrekkersLtd"),
+        businessName: this.$t("auth.mohawk"),
+        profilePhoto:
+          "https://images.sendyit.com/fulfilment/seller/MohawkKombucha.jpg",
+      },
+      {
+        name: this.$t("auth.FelixAsenji"),
+        content: this.$t("auth.ourSalesIncreased"),
+        position: this.$t("auth.CEOKenyaPapayaProducts"),
+        businessName: this.$t("auth.deinaProducts"),
+        profilePhoto:
+          "https://images.sendyit.com/fulfilment/seller/DeinaProducts.jpg",
+      },
+      {
+        name: this.$t("auth.AliceMaina"),
+        content: this.$t("auth.weAreNowAbleToDeliver"),
+        position: this.$t("auth.digitalSalesRepStorymojaPublishers"),
+        businessName: this.$t("auth.storymojaPublishers"),
+        profilePhoto:
+          "https://images.sendyit.com/fulfilment/seller/StorymojaPublishers.jpg",
+      },
+      {
+        name: this.$t("auth.HellenGathegia"),
+        content: this.$t("auth.forAnyoneDoingOnlineBusiness"),
+        position: this.$t("auth.FounderSafeCosmetics"),
+        businessName: this.$t("auth.safeCosmetics"),
+        profilePhoto: "",
+      },
+    ];
   },
   methods: {
     changeLanguage() {
@@ -183,5 +205,18 @@ ul {
   margin-left: auto;
   margin-right: 55px;
   margin-top: 40px;
+}
+.testimonial-img-container {
+  width: 60px !important;
+  height: 60px !important;
+}
+.testimonial-img {
+  width: 100%;
+}
+.carousel__pagination-button {
+  background-color: #d1ddf8 !important;
+}
+.carousel__pagination-button--active {
+  background-color: #324ba8 !important;
 }
 </style>

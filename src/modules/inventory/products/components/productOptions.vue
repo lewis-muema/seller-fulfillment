@@ -131,7 +131,7 @@ export default {
   data() {
     return {
       productOption: {
-        business_id: JSON.parse(localStorage.userDetails).data.business_id,
+        business_id: "",
         product_id: "",
         product_variant_archived: false,
         product_variant_currency: "KES",
@@ -165,7 +165,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getProduct"]),
+    ...mapGetters(["getProduct", "getStorageUserDetails"]),
     show: {
       get() {
         return this.visible;
@@ -192,6 +192,7 @@ export default {
   },
   mounted() {
     this.productOption.product_id = this.getProduct.product_id;
+    this.productOption.business_id = this.getStorageUserDetails.business_id;
   },
   methods: {
     ...mapMutations(["setAddProductStatus"]),
@@ -227,7 +228,7 @@ export default {
     resetInputs() {
       this.image = "";
       this.productOption = {
-        business_id: JSON.parse(localStorage.userDetails).data.business_id,
+        business_id: this.getStorageUserDetails.business_id,
         product_id: this.getProduct.product_id,
         product_variant_archived: false,
         product_variant_currency: "KES",

@@ -3,7 +3,7 @@
     <div v-if="getProductLists.length">
       <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
-          <searchAlgolia />
+          <searchAlgolia type="product" />
         </div>
 
         <v-table class="">

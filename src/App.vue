@@ -8,7 +8,7 @@
 
 <script>
 import Canvas from "./components/canvas.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
@@ -20,23 +20,62 @@ export default {
   }),
   watch: {
     $route() {
-      if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
+      if (
+        this.$route.path !== "/auth/sign-up" &&
+        this.$route.path !== "/auth/otp" &&
+        this.onboardingStatus &&
+        typeof localStorage.userDetails === "string"
+      ) {
+        this.getOnboardingStatus();
+      }
+      if (
+        !localStorage.userDetails &&
+        this.$route.path !== "/auth/sign-up" &&
+        this.$route.path !== "/auth/otp"
+      ) {
         this.$router.push("/auth/sign-in");
       }
     },
   },
   computed: {
-    ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
+    ...mapGetters([
+      "getUserDetails",
+      "getStorageUserDetails",
+      "getAchievements",
+    ]),
+    onboardingStatus() {
+      if (
+        Object.values(this.getAchievements).includes(false) ||
+        Object.values(this.getAchievements).length === 0
+      ) {
+        return true;
+      }
+      return false;
+    },
   },
   created() {
-    if (!localStorage.userDetails && this.$route.path !== "/auth/sign-up") {
+    if (
+      !localStorage.userDetails &&
+      this.$route.path !== "/auth/sign-up" &&
+      this.$route.path !== "/auth/otp"
+    ) {
       this.$router.push("/auth/sign-in");
+    }
+    if (
+      this.$route.path !== "/auth/sign-up" &&
+      this.$route.path !== "/auth/otp" &&
+      this.onboardingStatus &&
+      typeof localStorage.userDetails === "string"
+    ) {
+      this.getOnboardingStatus();
     }
     window.addEventListener("register-fcm", () => {
       this.firebase();
     });
   },
   methods: {
+    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    ...mapMutations(["setNotifications", "setAchievements"]),
     firebase() {
       initializeApp({
         apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
@@ -66,7 +105,7 @@ export default {
               this.setCookie("deviceId", deviceId, 365);
               device = this.getCookie("deviceId");
             }
-            this.$store.dispatch("requestAxiosPut", {
+            this.requestAxiosPut({
               app: process.env.FULFILMENT_SERVER,
               endpoint: `seller/${this.getStorageUserDetails.business_id}/user/fcm`,
               values: {
@@ -78,11 +117,30 @@ export default {
           }
         });
         onMessage(messaging, (payload) => {
-          console.log(payload);
+          this.listNotifications(payload);
         });
       } catch (error) {
         // ...
       }
+    },
+    listNotifications() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setNotifications(response.data.data.notifications);
+        }
+      });
+    },
+    getOnboardingStatus() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `/seller/${this.getStorageUserDetails.business_id}/onboarding/achievements`,
+      }).then((response) => {
+        response.data.data.achievements.account_created = true;
+        this.setAchievements(response.data.data.achievements);
+      });
     },
     setCookie(cname, cvalue, exdays) {
       const d = new Date();
@@ -157,5 +215,8 @@ export default {
   text-align: center;
   position: relative !important;
   margin: auto !important;
+}
+.v-text-field__prefix {
+  margin-left: 15px;
 }
 </style>

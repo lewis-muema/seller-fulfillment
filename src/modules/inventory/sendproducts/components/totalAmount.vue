@@ -66,6 +66,19 @@
           {{ getFulfillmentFees.calculated_fee }}</span
         >
       </div>
+      <div
+        class="promo-code-card"
+        v-for="(notification, i) in getFulfillmentFees.promotion_notifications"
+        :key="i"
+      >
+        <div class="promo-code-card-description">
+          {{ notification.notificationDescription }}
+        </div>
+        <i
+          class="mdi mdi-close promo-code-card-close"
+          @click="removePromoCode()"
+        ></i>
+      </div>
     </div>
   </div>
 </template>
@@ -81,12 +94,18 @@ export default {
       amount2: 500,
     };
   },
+  watch: {
+    "$store.state.promoCode": function promoCode() {
+      this.calculateFee();
+    },
+  },
   computed: {
     ...mapGetters([
       "getSendProductsRoute",
       "getLoader",
       "getFulfillmentFees",
       "getStorageUserDetails",
+      "getPromoCode",
     ]),
     getRoute() {
       return this.getSendProductsRoute;
@@ -106,6 +125,7 @@ export default {
         order_type:
           this.$route.params.path === "customer" ? "DELIVERY" : "PICKUP",
         products,
+        coupon_code: this.getPromoCode ? this.getPromoCode : null,
       };
     },
   },
@@ -113,7 +133,12 @@ export default {
     this.calculateFee();
   },
   methods: {
-    ...mapMutations(["setOverlayStatus", "setLoader", "setFulfillmentFees"]),
+    ...mapMutations([
+      "setOverlayStatus",
+      "setLoader",
+      "setFulfillmentFees",
+      "setPromoCode",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     calculateFee() {
       this.setLoader("loading-text");
@@ -127,6 +152,9 @@ export default {
           this.setFulfillmentFees(response.data.data);
         }
       });
+    },
+    removePromoCode() {
+      this.setPromoCode("");
     },
   },
 };
@@ -171,6 +199,22 @@ export default {
   color: #324ba8;
   font-weight: 500;
   border-bottom: 2px solid #324ba8;
+  cursor: pointer;
+}
+.promo-code-card {
+  background: #b8f5a8;
+  color: #064a23;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+.promo-code-card-description {
+  margin: auto;
+}
+.promo-code-card-close {
+  margin-left: -30px;
+  margin-right: 10px;
   cursor: pointer;
 }
 </style>

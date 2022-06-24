@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     ...mapActions(["signupUser"]),
-    ...mapMutations(["setOTPRedirectUrl"]),
+    ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
     retrieveGoogleData(value) {
       console.log(value);
     },
@@ -163,6 +163,8 @@ export default {
       try {
         const data = await this.signupUser(fullPayload);
         if (data.status === 200) {
+          this.setBizDetails(data.data.data.business);
+          localStorage.userDetails = JSON.stringify(data.data.data.business);
           this.loading = false;
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
@@ -170,9 +172,8 @@ export default {
         this.loading = false;
       } catch (err) {
         ElNotification({
-          title: this.getErrors.message,
+          title: this.getErrors.message.replaceAll(".", " "),
           message: "",
-          duration: 0,
           type: "error",
         });
         this.loading = false;

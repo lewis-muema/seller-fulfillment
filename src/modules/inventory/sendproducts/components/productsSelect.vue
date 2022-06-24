@@ -20,10 +20,10 @@
             </router-link>
           </div>
           <div class="search-input">
-            <searchAlgolia />
+            <searchAlgolia type="product" />
           </div>
           <hr />
-          <v-table>
+          <v-table v-if="products.length > 0">
             <thead>
               <tr>
                 <th>
@@ -74,7 +74,9 @@
                     <span :class="getLoader" class="product-select-units"
                       >{{
                         product.product_variants[0].product_variant_stock_levels
-                          .available
+                          ? product.product_variants[0]
+                              .product_variant_stock_levels.available
+                          : "-"
                       }}
                       {{ $t("inventory.units") }}</span
                     >
@@ -163,6 +165,28 @@
               </tr>
             </tbody>
           </v-table>
+          <div class="deliveries-empty" v-else>
+            <div>
+              <img
+                src="https://images.sendyit.com/fulfilment/seller/track.png"
+                alt=""
+                class="deliveries-empty-img"
+              />
+            </div>
+            <p class="deliveries-empty-title">
+              {{ $t("inventory.youveNotAddedAnyProductYet") }}
+            </p>
+            <p class="deliveries-empty-subtitle">
+              {{ $t("inventory.addProductsToSend") }}
+            </p>
+            <v-btn
+              class="deliveries-btn"
+              @click="$router.push('/inventory/add-product')"
+              size="default"
+            >
+              {{ $t("inventory.addProducts") }}
+            </v-btn>
+          </div>
         </v-card>
       </v-col>
       <v-col cols="4">
@@ -408,5 +432,9 @@ export default {
   margin-top: 10px;
   font-size: 12px;
   color: #606266;
+}
+.deliveries-empty-subtitle {
+  color: #606266;
+  font-size: 15px;
 }
 </style>

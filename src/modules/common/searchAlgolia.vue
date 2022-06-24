@@ -10,29 +10,101 @@
         v-bind="props"
         prepend-inner-icon="mdi-magnify"
         clearable
-        :label="$t('deliveries.searchDelivery')"
+        :label="
+          type === 'product'
+            ? $t('deliveries.searchProducts')
+            : $t('deliveries.searchDelivery')
+        "
         variant="outlined"
         v-model="searchParam"
         @click:clear="clearItems()"
-        :placeholder="$t('deliveries.searchDelivery')"
+        :placeholder="
+          type === 'product'
+            ? $t('deliveries.searchProducts')
+            : $t('deliveries.searchDelivery')
+        "
       ></v-text-field>
     </template>
-    <v-list class="header-list-popup">
+    <v-list class="header-list-popup" v-if="type === 'product'">
       <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title>
+        <v-list-item-title
+          @click="$router.push(`/inventory/view-product/${item.product_id}`)"
+        >
           <div class="search-item-flex">
             <div class="search-items-image-container">
               <img
                 class="search-items-image"
-                :src="item.image"
+                :src="item.product_variants[0].product_variant_image_link"
                 alt="product-image"
               />
             </div>
             <div>
               <div class="search-item-row">
-                <div class="search-item-name">{{ item.brand }}</div>
+                <div class="search-item-name">{{ item.product_name }}</div>
                 <div class="search-item-description">
-                  {{ item.description }}
+                  {{ item.product_description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
+    <v-list class="header-list-popup" v-else>
+      <v-list-item v-for="(item, i) in searchItems" :key="i">
+        <v-list-item-title
+          @click="$router.push(`/deliveries/tracking/${item.order_id}`)"
+        >
+          <div class="search-item-flex">
+            <div>
+              <div class="search-item-row">
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderNumber") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_id }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.name") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.destination.name }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.phone") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.destination.phone_number }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.location") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.destination.delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderStatus") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_status.replaceAll("_", " ") }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.products") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ formatProducts(item.products) }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -47,6 +119,7 @@
 import algoliaSearch from "../../mixins/algolia_search";
 
 export default {
+  props: ["type"],
   mixins: [algoliaSearch],
   data: () => ({
     deliveries: [],
@@ -58,7 +131,7 @@ export default {
   }),
   watch: {
     searchParam(val) {
-      this.initiateAlgolia(val);
+      this.initiateAlgolia(val, this.type);
     },
   },
   methods: {
@@ -71,6 +144,15 @@ export default {
       this.searchToggle = false;
       this.searchObject = {};
       this.searchItems = [];
+    },
+    formatProducts(products) {
+      let productsList = "";
+      products.forEach((product) => {
+        productsList = `${productsList}${productsList === "" ? "" : ","} ${
+          product.product_variant_description
+        }`;
+      });
+      return productsList;
     },
   },
 };

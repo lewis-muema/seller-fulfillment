@@ -276,12 +276,29 @@
       <div class="make-payment-lower-section">
         <i class="mdi mdi-alert-outline make-payment-alert-icon"></i>
         <p class="make-payment-description">
-          {{ $t("payments.hiPleaseMakeYourPayment", { name }) }}
-          <span class="make-payment-amount">{{ currency }} {{ amount }}</span>
-          {{ $t("payments.forCompletedOrders", { orders }) }}
+          {{
+            $t("payments.hiPleaseMakeYourPayment", {
+              name: `${getUserDetails.first_name} ${getUserDetails.last_name}`,
+            })
+          }}
+          <span class="make-payment-amount"
+            >{{ getBusinessDetails.currency }}
+            {{ getActivePayment.amount_to_charge }}</span
+          >
+          {{
+            $t("payments.forCompletedOrders", {
+              orders: getActivePayment.order_count,
+            })
+          }}
         </p>
         <v-btn
-          @click="redirect(false, 'payments', '/payments/payment-summary')"
+          @click="
+            redirect(
+              false,
+              'payments',
+              `/payments/payment-summary/${getActivePayment.billing_cycle_instance_id}`
+            )
+          "
           class="edit-info-submit-button"
         >
           {{ $t("payments.makePayment") }}
@@ -317,12 +334,16 @@
           id="update-price"
           v-model="newPrice"
           variant="outlined"
+          :prefix="newCurrency"
           clearable
           clear-icon="mdi-close"
         ></v-text-field>
       </div>
       <div>
-        <v-btn class="edit-info-submit-button margin-override">
+        <v-btn
+          @click="updatePrice()"
+          class="edit-info-submit-button margin-override"
+        >
           {{ $t("inventory.updatePrice") }}
         </v-btn>
       </div>
@@ -400,7 +421,10 @@
         ></v-text-field>
       </div>
       <div>
-        <v-btn class="edit-info-submit-button margin-override">
+        <v-btn
+          @click="enterPromoCode()"
+          class="edit-info-submit-button margin-override"
+        >
           {{ $t("inventory.applyPromoCode") }}
         </v-btn>
       </div>
@@ -435,6 +459,16 @@ export default {
       this.secondaryPhoneStatus = false;
       this.overlay = val.overlay;
       this.popup = val.popup;
+      this.newCurrency =
+        val.popup === "editPrice"
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_currency
+          : "";
+      this.newPrice =
+        val.popup === "editPrice"
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_unit_price
+          : "";
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
       this.customerName = val.order.destination.name;
@@ -453,6 +487,11 @@ export default {
       "getFulfillmentFees",
       "getParent",
       "getStorageUserDetails",
+      "getEditedPriceIndex",
+      "getSelectedProducts",
+      "getActivePayment",
+      "getBusinessDetails",
+      "getUserDetails",
     ]),
   },
   data() {
@@ -464,7 +503,8 @@ export default {
       name: "Judy",
       orders: 3,
       promoCode: "",
-      newPrice: "KES 450",
+      newPrice: "",
+      newCurrency: "",
       date: new Date(),
       location: "",
       locationData: {},
@@ -493,7 +533,7 @@ export default {
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
-    ...mapMutations(["setLoader", "setOrderTrackingData"]),
+    ...mapMutations(["setLoader", "setOrderTrackingData", "setPromoCode"]),
     overlayStatusSet(overlay, popup) {
       this.secondaryPhoneStatus = false;
       this.overlay = overlay;
@@ -703,6 +743,17 @@ export default {
     },
     formatTime(time) {
       return moment(time).format("Do MMM h:mm a");
+    },
+    updatePrice() {
+      this.getSelectedProducts[
+        this.getEditedPriceIndex
+      ].selectedOption.product_variant_unit_price = this.newPrice;
+      this.overlayStatusSet(false, "editPrice");
+    },
+    enterPromoCode() {
+      this.setPromoCode(this.promoCode);
+      this.promoCode = "";
+      this.overlayStatusSet(false, "promo");
     },
   },
 };

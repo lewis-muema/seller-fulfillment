@@ -44,7 +44,7 @@
               color="#324BA8"
               text-color="white"
               max=""
-              :content="`${getNotifications.length}`"
+              :content="`${filteredNotifications.length}`"
             >
               <i
                 class="mdi mdi-bell-outline notification-bell"
@@ -56,7 +56,7 @@
             <p class="header-notification-list-title">
               {{ $t("common.notifications") }}
             </p>
-            <v-list-item v-for="(not, i) in getNotifications" :key="i">
+            <v-list-item v-for="(not, i) in filteredNotifications" :key="i">
               <v-list-item-title>
                 <div class="header-notification-flex">
                   <div class="header-notifications-icon">
@@ -64,19 +64,36 @@
                   </div>
                   <div>
                     <div class="header-notification-text">
-                      {{ not.message }}
+                      <span :class="notificationLoader">
+                        {{ not.message }}
+                      </span>
                     </div>
                     <div
                       class="header-notification-action"
                       @click="$router.push(getAction(not).link)"
                     >
-                      {{ getAction(not).label }}
+                      <span :class="notificationLoader">
+                        {{ getAction(not).label }}
+                      </span>
                     </div>
-                    <div>{{ formatPeriod(not) }}</div>
+                    <div>
+                      <span :class="notificationLoader">
+                        {{ formatPeriod(not) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <i
+                      class="mdi mdi-close"
+                      @click="archiveNotifications(not.id)"
+                    ></i>
                   </div>
                 </div>
               </v-list-item-title>
             </v-list-item>
+            <p class="notification-clear" @click="archiveAllNotifications()">
+              {{ $t("dashboard.clearAll") }}
+            </p>
           </v-list>
         </v-menu>
       </div>
@@ -174,6 +191,7 @@ export default {
       ],
       lang: "English",
       rail: false,
+      notificationLoader: "",
     };
   },
   computed: {
@@ -226,7 +244,7 @@ export default {
       "setLanguages",
       "setNotifications",
     ]),
-    ...mapActions(["requestAxiosGet"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPatch", "requestAxiosPut"]),
     getIcon(notification) {
       if (
         notification.message.includes(
@@ -306,12 +324,36 @@ export default {
       });
     },
     listNotifications() {
+      this.notificationLoader = "loading-text";
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
       }).then((response) => {
         if (response.status === 200) {
           this.setNotifications(response.data.data.notifications);
+          this.notificationLoader = "";
+        }
+      });
+    },
+    archiveNotifications(notificationId) {
+      this.notificationLoader = "loading-text";
+      this.requestAxiosPatch({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications/${notificationId}/archive`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.listNotifications();
+        }
+      });
+    },
+    archiveAllNotifications() {
+      this.notificationLoader = "loading-text";
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications/archive`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.listNotifications();
         }
       });
     },
@@ -416,5 +458,12 @@ export default {
 }
 .header-list-item {
   font-weight: 500 !important;
+}
+.notification-clear {
+  font-weight: 500;
+  cursor: pointer;
+  color: #324ba8;
+  float: right;
+  margin: 16px;
 }
 </style>

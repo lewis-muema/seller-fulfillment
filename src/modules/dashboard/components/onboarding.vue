@@ -1,7 +1,14 @@
 <template>
   <div class="onboarding-container">
     <div class="welcome-text">
-      <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+      <h5>
+        {{
+          $t("dashboard.welcome", {
+            name: `${getUserDetails.first_name}`,
+          })
+        }}
+        🎉
+      </h5>
       <p>{{ $t("dashboard.completeSteps") }}</p>
     </div>
     <v-row>
@@ -14,43 +21,49 @@
           :key="i"
         >
           <div class="desktop-dashboard-list">
-            <v-list density="compact">
-              <v-list-item>
-                <div class="d-flex">
-                  <v-avatar
-                    size="25"
-                    class="desktop-content-icon"
-                    :class="{
-                      'desktop-content-icon-active': i === activeStep,
-                    }"
-                  >
-                    <span
-                      class="white--text onboarding-steps"
-                      :class="{
-                        'onboarding-steps-active': i === activeStep,
-                      }"
-                      >{{ i + 1 }}</span
-                    >
-                  </v-avatar>
-                  <v-list-item-header>
-                    <v-list-item-title>
-                      <div class="desktop-content-title">
-                        {{ content.title }}
-                      </div>
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="mt-1">{{
-                      content.text
-                    }}</v-list-item-subtitle>
-                    <button
-                      type="submit"
-                      class="btn btn-primary desktop-content-button"
-                    >
-                      {{ content.button }}
-                    </button>
-                  </v-list-item-header>
-                </div>
-              </v-list-item>
-            </v-list>
+            <div class="d-flex">
+              <i
+                v-if="getAchievements[content.key]"
+                class="step-check-icon"
+                :class="`mdi ${content.icon}`"
+              ></i>
+              <v-avatar
+                size="25"
+                class="desktop-content-icon"
+                v-else
+                :class="{
+                  'desktop-content-icon-active': i === activeStep,
+                }"
+              >
+                <span
+                  class="white--text onboarding-steps"
+                  :class="{
+                    'onboarding-steps-active': i === activeStep,
+                  }"
+                  >{{ i + 1 }}</span
+                >
+              </v-avatar>
+              <v-list-item-header>
+                <v-list-item-title>
+                  <div class="desktop-content-title">
+                    {{ content.title }}
+                  </div>
+                </v-list-item-title>
+                <v-list-item-subtitle
+                  v-if="!getAchievements[content.key]"
+                  class="mt-1"
+                  >{{ content.text }}</v-list-item-subtitle
+                >
+                <button
+                  v-if="!getAchievements[content.key] && activeStep === i"
+                  type="submit"
+                  class="btn btn-primary desktop-content-button"
+                  @click="$router.push(content.link)"
+                >
+                  {{ content.button }}
+                </button>
+              </v-list-item-header>
+            </div>
           </div>
         </v-card>
       </v-col>
@@ -87,14 +100,13 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   data() {
     return {
       name: "Irene",
       checkbox: true,
-      activeStep: 0,
       totalSteps: 4,
       dashboardContent: [
         {
@@ -103,6 +115,7 @@ export default {
           text: "",
           button: "",
           icon: "mdi-check-circle",
+          key: "account_created",
         },
         {
           step: 2,
@@ -110,18 +123,24 @@ export default {
           text: this.$t("dashboard.addOrImport"),
           button: this.$t("dashboard.addProducts"),
           icon: "mdi-check-circle",
+          key: "added_at_least_one_product",
+          link: "/inventory/add-product",
         },
         {
           title: this.$t("dashboard.sendUsYourInventory"),
           text: this.$t("dashboard.sendUsTheProducts"),
           button: this.$t("dashboard.sendTheInventory"),
           icon: "mdi-check-circle",
+          key: "created_at_least_one_pickup_order",
+          link: "/inventory/send-inventory/sendy/select-products",
         },
         {
           title: this.$t("dashboard.deliverToCustomer"),
           text: this.$t("dashboard.sendADelivery"),
           button: this.$t("dashboard.deliverToACustomer"),
           icon: "mdi-check-circle",
+          key: "created_at_least_one_delivery_order",
+          link: "/inventory/send-inventory/customer/select-products",
         },
       ],
       dashboardLinks: [
@@ -143,6 +162,18 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["getUserDetails", "getAchievements"]),
+    activeStep() {
+      let step = 0;
+      this.dashboardContent.forEach((row, i) => {
+        if (this.getAchievements[row.key]) {
+          step = i + 1;
+        }
+      });
+      return step;
+    },
+  },
   mounted() {
     this.setComponent(this.$t("common.getStarted"));
   },
@@ -152,7 +183,6 @@ export default {
       this.activeStep += 1;
     },
   },
-  computed: {},
 };
 </script>
 
@@ -192,7 +222,8 @@ export default {
   font-weight: 500;
 }
 .desktop-dashboard-list {
-  margin: 10px 10px;
+  margin: 30px 40px;
+  background: white;
 }
 .onboarding-steps {
   font-size: 14px !important;
@@ -209,5 +240,11 @@ export default {
 }
 .welcome-text {
   margin-top: 40px;
+}
+.step-check-icon {
+  font-size: 30px;
+  color: #116f28;
+  margin-top: -10px;
+  margin-right: 10px;
 }
 </style>

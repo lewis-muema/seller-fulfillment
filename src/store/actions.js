@@ -99,7 +99,8 @@ export default {
     });
   },
 
-  handleErrors(_, error) {
+  handleErrors({ dispatch }, error) {
+    dispatch("setErrorAction", error.response.data.errors);
     if (error.response.status === 403) {
       router.push("/auth/sign-in");
       router.go(0);
@@ -146,7 +147,6 @@ export default {
       commit("setUserData", res.data.data);
       return res;
     } catch (error) {
-      await dispatch("setErrorAction", error.data.errors);
       return error.response;
     }
   },
@@ -156,7 +156,6 @@ export default {
       commit("setLoginData", res.data.data);
       return res;
     } catch (error) {
-      await dispatch("setErrorAction", error.data.errors);
       return error.response;
     }
   },
@@ -165,7 +164,6 @@ export default {
       const res = await dispatch("requestAxiosPost", payload);
       return res;
     } catch (error) {
-      await dispatch("setErrorAction", error.data.errors);
       return error.response;
     }
   },

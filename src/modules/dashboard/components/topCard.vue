@@ -1,7 +1,14 @@
 <template>
   <div>
     <span class="">
-      <h5>{{ $t("dashboard.welcome", { name: name }) }} 🎉</h5>
+      <h5>
+        {{
+          $t("dashboard.welcome", {
+            name: `${getUserDetails.first_name}`,
+          })
+        }}
+        🎉
+      </h5>
       <p>{{ $t("dashboard.whatsHappening") }}</p>
     </span>
     <v-row class="desktop-dashboard-upper-content">
@@ -56,7 +63,7 @@ export default {
       orders: [
         {
           icon: "mdi mdi-truck",
-          count: "3",
+          count: "0",
           orderStatus: "Ongoing orders",
           color: "#5287EE",
         },
@@ -79,11 +86,51 @@ export default {
           color: "#CC6100",
         },
       ],
+      ongoing: "",
     };
   },
-  computed: {
-    ...mapGetters(["getLoader"]),
+  watch: {
+    "$store.state.loader": function loader(val) {
+      if (val === "") {
+        this.orders[0].count = this.ongoingOrders;
+        this.orders[1].count = this.completedOrders;
+        this.orders[2].count = this.availableStock;
+        this.orders[3].count = this.outOfStock;
+      }
+    },
   },
+  computed: {
+    ...mapGetters([
+      "getLoader",
+      "getUserDetails",
+      "getStockStatistics",
+      "getDeliveriesStatistics",
+      "getConsignmentStatistics",
+    ]),
+    ongoingOrders() {
+      return (
+        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_TRANSIT)
+      );
+    },
+    completedOrders() {
+      return (
+        parseInt(this.getDeliveriesStatistics.ORDER_COMPLETED) +
+        parseInt(this.getConsignmentStatistics.ORDER_COMPLETED)
+      );
+    },
+    availableStock() {
+      return this.getStockStatistics.available_products;
+    },
+    outOfStock() {
+      return this.getStockStatistics.out_of_stock_products;
+    },
+  },
+  mounted() {},
 };
 </script>
 

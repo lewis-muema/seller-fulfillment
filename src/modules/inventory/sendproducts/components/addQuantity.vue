@@ -90,13 +90,9 @@
                       {{ selectedProduct.product_price }}
                     </div>
                     <div
-                      @click="
-                        setOverlayStatus({
-                          overlay: true,
-                          popup: 'editPrice',
-                        })
-                      "
+                      @click="openPricingOverlay(index)"
                       class="add-quantity-price-tag"
+                      v-if="$route.params.path === 'customer'"
                     >
                       <i class="mdi mdi-tag-multiple"></i>
                       {{ $t("inventory.editPrice") }}
@@ -106,7 +102,10 @@
                     <div class="available-units">
                       {{
                         selectedProduct.selectedOption
-                          .product_variant_stock_levels.available
+                          .product_variant_stock_levels
+                          ? selectedProduct.selectedOption
+                              .product_variant_stock_levels.available
+                          : "-"
                       }}
                     </div>
                   </td>
@@ -215,6 +214,7 @@ export default {
       "setProductStep",
       "setSelectedProducts",
       "setOverlayStatus",
+      "setEditedPriceIndex",
     ]),
     addProductStep() {
       if (this.totalProducts > 0) {
@@ -243,6 +243,13 @@ export default {
       const products = this.getSelectedProducts;
       products.splice(index, 1);
       this.setSelectedProducts(products);
+    },
+    openPricingOverlay(index) {
+      this.setEditedPriceIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "editPrice",
+      });
     },
   },
 };

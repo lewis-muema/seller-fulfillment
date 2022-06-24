@@ -11,8 +11,8 @@
         <span :class="getLoader">
           {{
             $t("payments.pleaseMakeYourPayment", {
-              amount: "KES 780",
-              total: 3,
+              amount: `${getBusinessDetails.currency} ${getActivePayment.amount_to_charge}`,
+              total: getActivePayment.order_count,
             })
           }}
         </span>
@@ -31,7 +31,7 @@ import { mapMutations, mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters(["getLoader", "getActivePayment", "getBusinessDetails"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),

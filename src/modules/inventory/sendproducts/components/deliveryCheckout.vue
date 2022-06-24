@@ -166,7 +166,14 @@ export default {
       "getUserDetails",
       "getPaymnetMethods",
       "getStorageUserDetails",
+      "getAchievements",
     ]),
+    onboardingStatus() {
+      if (Object.values(this.getAchievements).includes(false)) {
+        return true;
+      }
+      return false;
+    },
     defaultPaymentMethod() {
       const method = [];
       this.getPaymnetMethods.forEach((row) => {
@@ -207,6 +214,9 @@ export default {
           house_location: "",
           delivery_instructions: this.instructions,
         },
+        promotion_session_id: this.getFulfillmentFees.promotion_session_id
+          ? this.getFulfillmentFees.promotion_session_id
+          : null,
       };
       return payload;
     },
@@ -257,7 +267,11 @@ export default {
               message: "",
               type: "success",
             });
-            this.$router.push("/deliveries/customer");
+            if (this.onboardingStatus) {
+              this.$router.push("/");
+            } else {
+              this.$router.push("/deliveries/customer");
+            }
           } else {
             ElNotification({
               title: this.$t("inventory.deliveryCreationFailed"),
@@ -287,7 +301,7 @@ export default {
         bulk: false,
         paybill_no: "",
         email: this.getUserDetails.email,
-        authToken: localStorage.token,
+        authToken: localStorage.accessToken,
         firstname: this.getUserDetails.first_name,
         lastname: this.getUserDetails.last_name,
         payment_options: "",

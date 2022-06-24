@@ -16,6 +16,7 @@ module.exports = {
   ALGOLIA_APP_ID: "YGZO0B7NVS",
   ALGOLIA_API_KEY: "d19d556ce4b0b3897d5c8956e43428c2",
   ALGOLIA_INDEX_NAME: "dev_fulfilment",
+  ALGOLIA_INDEX_NAME_ORDERS: "production_fulfillment_orders",
   FULFILMENT_SERVER: "https://auth.sendyit.com/fulfilment/v1/",
   VUE_APP_BASE_URL: "https://payment-gateway-dev.sendyit.com/payment-gateway",
   VUE_APP_VGS_VAULT_ID: "tnt4d8qyodm",

@@ -61,4 +61,13 @@ export default {
   getBillingCycles: (state) => state.billingCycles,
   getLineItems: (state) => state.lineItems,
   getInvoice: (state) => state.invoice,
+  getEditedPriceIndex: (state) => state.editedPriceIndex,
+  getPromoCode: (state) => state.promoCode,
+  getActivePayment: (state) => state.activePayment,
+  getCycleLineItems: (state) => state.cycleLineItems,
+  getAchievements: (state) => state.achievements,
+  getStockStatistics: (state) => state.stockStatistics,
+  getDeliveriesStatistics: (state) => state.deliveriesStatistics,
+  getConsignmentStatistics: (state) => state.consignmentStatistics,
+  getSettings: (state) => state.settings,
 };

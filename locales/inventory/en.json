@@ -135,5 +135,7 @@
   "consignmentCreatedSuccessfully": "Consignment created successfully",
   "consignmentCreationFailed": "Consignment creation failed",
   "deliveryCreatedSuccessfully": "Delivery created successfully",
-  "deliveryCreationFailed": "Delivery creation failed"
+  "deliveryCreationFailed": "Delivery creation failed",
+  "youveNotAddedAnyProductYet": "You’ve not added any product yet",
+  "addProductsToSend": "Add products to send"
 }

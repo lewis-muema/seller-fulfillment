@@ -187,7 +187,14 @@ export default {
       "getLoader",
       "getAddProductStatus",
       "getStorageUserDetails",
+      "getAchievements",
     ]),
+    onboardingStatus() {
+      if (Object.values(this.getAchievements).includes(false)) {
+        return true;
+      }
+      return false;
+    },
     variants() {
       const res = [];
       this.getProduct.product_variants.forEach((row) => {
@@ -256,7 +263,7 @@ export default {
             ElNotification({
               title: this.$t("inventory.productSavingFailed"),
               message: "",
-              type: "success",
+              type: "error",
             });
           }
         });
@@ -288,12 +295,16 @@ export default {
               message: "",
               type: "success",
             });
-            this.$router.push(`/inventory/products`);
+            if (this.onboardingStatus) {
+              this.$router.push("/");
+            } else {
+              this.$router.push(`/inventory/products`);
+            }
           } else {
             ElNotification({
               title: this.$t("inventory.productSavingFailed"),
               message: "",
-              type: "success",
+              type: "error",
             });
           }
         });

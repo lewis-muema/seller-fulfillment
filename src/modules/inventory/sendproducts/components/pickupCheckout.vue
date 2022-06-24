@@ -119,7 +119,14 @@ export default {
       "getSendyPhoneProps",
       "getSelectedProducts",
       "getStorageUserDetails",
+      "getAchievements",
     ]),
+    onboardingStatus() {
+      if (Object.values(this.getAchievements).includes(false)) {
+        return true;
+      }
+      return false;
+    },
     checkoutPayload() {
       const products = [];
       this.getSelectedProducts.forEach((row) => {
@@ -174,12 +181,16 @@ export default {
               message: "",
               type: "success",
             });
-            this.$router.push("/deliveries/sendy");
+            if (this.onboardingStatus) {
+              this.$router.push("/");
+            } else {
+              this.$router.push("/deliveries/sendy");
+            }
           } else {
             ElNotification({
               title: this.$t("inventory.consignmentCreationFailed"),
               message: "",
-              type: "success",
+              type: "error",
             });
           }
         });

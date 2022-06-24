@@ -93,6 +93,25 @@
         >
       </div>
     </div>
+    <div class="deliveries-empty" v-else>
+      <div>
+        <img
+          src="https://images.sendyit.com/fulfilment/seller/track.png"
+          alt=""
+          class="deliveries-empty-img"
+        />
+      </div>
+      <p class="deliveries-empty-title">
+        {{ $t("deliveries.noDeliveriesToTrack") }}
+      </p>
+      <v-btn class="deliveries-btn" @click="redirect()" size="default">
+        {{
+          getSelectedTab === "To your Customers"
+            ? $t("deliveries.deliverToACustomer")
+            : $t("deliveries.deliverToSendy")
+        }}
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -171,6 +190,13 @@ export default {
     formatStatus(status) {
       const fullStatus = status.replaceAll(".", " ");
       return fullStatus.charAt(0).toUpperCase() + fullStatus.slice(1);
+    },
+    redirect() {
+      this.$router.push(
+        `/inventory/send-inventory/${
+          this.getSelectedTab === "To your Customers" ? "customer" : "sendy"
+        }/select-products?`
+      );
     },
   },
 };

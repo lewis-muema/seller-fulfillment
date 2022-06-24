@@ -3,7 +3,7 @@
     <div class="deliveries-container-inner">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
-          <searchAlgolia />
+          <searchAlgolia type="product" />
         </div>
         <div class="deliveries-date-range">
           <label for="range" class="deliveries-date-label">
@@ -102,8 +102,14 @@
         <p class="deliveries-empty-title">
           {{ $t("deliveries.noDeliveriesToTrack") }}
         </p>
-        <v-btn class="deliveries-btn" size="default">
-          {{ $t("deliveries.deliverToACustomer") }}
+        <v-btn
+          class="deliveries-btn"
+          @click="
+            $router.push('/inventory/send-inventory/sendy/select-products')
+          "
+          size="default"
+        >
+          {{ $t("deliveries.deliverToSendy") }}
         </v-btn>
       </div>
     </div>
@@ -153,6 +159,7 @@ export default {
   },
   mounted() {
     this.placeholders = this.getDeliveries;
+    this.getPickUpStats();
     this.fetchOrders();
   },
   computed: {
@@ -165,7 +172,12 @@ export default {
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
-    ...mapMutations(["setComponent", "setLoader", "setDeliveries"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setDeliveries",
+      "setConsignmentStatistics",
+    ]),
     navigate(route) {
       this.$router.push(route);
     },
@@ -189,6 +201,18 @@ export default {
         this.setLoader("");
         if (response.status === 200) {
           this.setDeliveries(response.data.data.orders);
+        }
+      });
+    },
+    getPickUpStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setConsignmentStatistics(
+            response.data.data.grouped_by_status_count
+          );
         }
       });
     },

@@ -47,8 +47,9 @@ docker_build:
       then 
         IMAGE_TAG=dev_$(date +%Y-%m-%d-%H-%M)
         IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
-        docker build -t $IMAGE_NAME -t $STAGING_IMAGE .
+        docker build --build-arg ENV="testing" -t $IMAGE_NAME -t $STAGING_IMAGE .
         docker push $STAGING_IMAGE
+        docker push $IMAGE_NAME
       else
         export IMAGE_NAME="sendy-docker-local.jfrog.io/seller-fulfillment:$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')_$(date +%Y-%m-%d-%H-%M)"
         docker build -t $IMAGE_NAME . 

@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+ARG ENV=$ENV
+
 RUN if [ "$ENV" = "testing" ]; \
         then npm run staging; \
         elif [ "$ENV" = "beta" ]; \

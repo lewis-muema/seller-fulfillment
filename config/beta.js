@@ -16,6 +16,7 @@ module.exports = {
   ALGOLIA_APP_ID: "YGZO0B7NVS",
   ALGOLIA_API_KEY: "d19d556ce4b0b3897d5c8956e43428c2",
   ALGOLIA_INDEX_NAME: "production_fulfillment",
+  ALGOLIA_INDEX_NAME_ORDERS: "production_fulfillment_orders",
   FULFILMENT_SERVER: "https://auth.sendyit.com/fulfilment/v1/",
   SELLER_FULFILLMENT_SERVER:
     "https://fulfillment-biz-logic-service-dev.sendyit.com/v1/",

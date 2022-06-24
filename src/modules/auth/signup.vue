@@ -172,9 +172,8 @@ export default {
         this.loading = false;
       } catch (err) {
         ElNotification({
-          title: this.getErrors.message,
+          title: this.getErrors.message.replaceAll(".", " "),
           message: "",
-          duration: 0,
           type: "error",
         });
         this.loading = false;

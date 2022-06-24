@@ -4,10 +4,6 @@
       <span :class="getLoader">
         {{ $t("deliveries.products") }}
       </span>
-      <span class="products-edit" :class="getLoader">
-        <i class="mdi mdi-pencil"></i>
-        {{ $t("deliveries.edit") }}
-      </span>
     </p>
     <p class="products-data">
       <span :class="getLoader">

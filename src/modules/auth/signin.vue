@@ -93,6 +93,7 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import { ElNotification } from "element-plus";
 // import googleAuth from "@/modules/common/googleAuth";
 
 export default {
@@ -116,7 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
+    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps", "getErrors"]),
   },
   mounted() {
     localStorage.clear();
@@ -154,7 +155,12 @@ export default {
         }
         this.loading = false;
       } catch (error) {
-        console.log(error);
+        this.loading = false;
+        ElNotification({
+          title: this.getErrors.message.replaceAll(".", " "),
+          message: "",
+          type: "error",
+        });
       }
     },
   },

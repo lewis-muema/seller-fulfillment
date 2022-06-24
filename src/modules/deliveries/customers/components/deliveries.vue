@@ -3,7 +3,7 @@
     <div class="deliveries-container-inner">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
-          <searchAlgolia />
+          <searchAlgolia type="delivery" />
         </div>
         <div class="deliveries-date-range">
           <label for="range" class="deliveries-date-label">
@@ -111,7 +111,13 @@
         <p class="deliveries-empty-title">
           {{ $t("deliveries.noDeliveriesToTrack") }}
         </p>
-        <v-btn class="deliveries-btn" size="default">
+        <v-btn
+          class="deliveries-btn"
+          @click="
+            $router.push('/inventory/send-inventory/customer/select-products')
+          "
+          size="default"
+        >
           {{ $t("deliveries.deliverToACustomer") }}
         </v-btn>
       </div>
@@ -163,6 +169,7 @@ export default {
   mounted() {
     this.placeholders = this.getDeliveries;
     this.fetchOrders();
+    this.getDeliveryStats();
   },
   computed: {
     ...mapGetters([
@@ -170,11 +177,17 @@ export default {
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
+      "getTab",
     ]),
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
-    ...mapMutations(["setComponent", "setLoader", "setDeliveries"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setDeliveries",
+      "setDeliveriesStatistics",
+    ]),
     navigate(route) {
       this.$router.push(route);
     },
@@ -198,6 +211,18 @@ export default {
         this.setLoader("");
         if (response.status === 200) {
           this.setDeliveries(response.data.data.orders);
+        }
+      });
+    },
+    getDeliveryStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliveriesStatistics(
+            response.data.data.grouped_by_status_count
+          );
         }
       });
     },

@@ -188,4 +188,31 @@ export default {
   setInvoice(state, val) {
     state.invoice = val;
   },
+  setEditedPriceIndex(state, val) {
+    state.editedPriceIndex = val;
+  },
+  setPromoCode(state, val) {
+    state.promoCode = val;
+  },
+  setActivePayment(state, val) {
+    state.activePayment = val;
+  },
+  setCycleLineItems(state, val) {
+    state.cycleLineItems = val;
+  },
+  setAchievements(state, val) {
+    state.achievements = val;
+  },
+  setStockStatistics(state, val) {
+    state.stockStatistics = val;
+  },
+  setDeliveriesStatistics(state, val) {
+    state.deliveriesStatistics = val;
+  },
+  setConsignmentStatistics(state, val) {
+    state.consignmentStatistics = val;
+  },
+  setSettings(state, val) {
+    state.settings = val;
+  },
 };

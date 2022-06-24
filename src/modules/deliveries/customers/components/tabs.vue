@@ -11,15 +11,13 @@
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'Pending' ? 'active-orders-tab' : ''"
-        @click="
-          passActiveTab('Pending', 'ORDER_RECEIVED&status=ORDER_IN_PROCESSING')
-        "
+        @click="passActiveTab('Pending', 'ORDER_IN_PROCESSING')"
       >
         {{ $t("deliveries.pending") }}
         <v-badge
           color="#FBDF9A"
           text-color="#7F3B02"
-          content="-"
+          :content="pending"
           inline
         ></v-badge>
       </div>
@@ -32,7 +30,7 @@
         <v-badge
           color="#B8F5A8"
           text-color="#7F3B02"
-          content="-"
+          :content="transit"
           inline
         ></v-badge>
       </div>
@@ -45,7 +43,7 @@
         <v-badge
           color="#9B101C"
           text-color="white"
-          content="-"
+          :content="failed"
           inline
         ></v-badge>
       </div>
@@ -58,7 +56,7 @@
         <v-badge
           color="#324BA8"
           text-color="white"
-          content="-"
+          :content="completed"
           inline
         ></v-badge>
       </div>
@@ -84,12 +82,30 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
+    pending: "-",
+    transit: "-",
+    failed: "-",
+    completed: "-",
   }),
+  watch: {
+    "$store.state.loader": function loader() {
+      this.pending = (
+        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
+      ).toString();
+      this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString();
+      this.failed = this.getDeliveriesStatistics.ORDER_FAILED.toString();
+      this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED.toString();
+    },
+  },
+  mounted() {
+    this.setTab("All");
+  },
   computed: {
     activeTab() {
       return this.getTab;
     },
-    ...mapGetters(["getTab"]),
+    ...mapGetters(["getTab", "getDeliveriesStatistics"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setTabStatus"]),

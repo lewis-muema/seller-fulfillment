@@ -4,8 +4,10 @@
   "failed": "Failed",
   "completed": "Completed",
   "deliverToACustomer": "Deliver to a customer",
+  "deliverToSendy": "Deliver to Sendy",
   "inventoryToSendy": "Send Inventory to Sendy",
-  "searchDelivery": "Search using name or phone number",
+  "searchDelivery": "Search Deliveries",
+  "searchProducts": "Search Products",
   "products": "Products",
   "progress": "Progress",
   "deliveryDate": "Delivery date",
@@ -97,5 +99,10 @@
   "deliveryCancelledSuccessfully": "Delivery cancelled successfully",
   "deliveryCancellingFailed": "Delivery cancelling failed",
   "deliveryCode": "Delivery Code",
-  "enterInstructionsForTheDriverPickingYourProducts": "Enter instructions for the driver picking your products"
+  "enterInstructionsForTheDriverPickingYourProducts": "Enter instructions for the driver picking your products",
+  "orderNumber": "Order Number",
+  "orderStatus": "Order Status",
+  "name": "Name",
+  "phone": "Phone",
+  "location": "Location"
 }

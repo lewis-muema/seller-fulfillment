@@ -140,7 +140,7 @@ const routes = [
     component: viewInvoice,
   },
   {
-    path: "/payments/payment-summary",
+    path: "/payments/payment-summary/:cycle_id?",
     name: "Payment Summary",
     component: paymentSummary,
   },

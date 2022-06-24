@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import moment from "moment";
 import VueGoogleMaps from "@fawmi/vue-google-maps";
+// import { initializeApp } from "firebase/app";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
@@ -13,7 +14,6 @@ import "bootstrap";
 // import { ApmVuePlugin } from "@elastic/apm-rum-vue";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import "vue-tel-input/dist/vue-tel-input.css";
 import {
   faSpinner,
   faThumbsUp,
@@ -21,8 +21,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import "element-plus/dist/index.css";
-import VueTelInput from "vue3-tel-input";
-import "vue3-tel-input/dist/vue3-tel-input.css";
+import VueTelInput from "vue-tel-input";
+import "vue-tel-input/dist/vue-tel-input.css";
+import payments from "@sendyit/pay";
 
 const VueTelInputOptions = {
   mode: "international",
@@ -59,4 +60,13 @@ createApp(App)
     },
   })
   .use(i18n)
+  .use(payments, {
+    store,
+    router,
+    config: {
+      BASE_URL: process.env.VUE_APP_BASE_URL,
+      VGS_VAULT_ID: process.env.VUE_APP_VGS_VAULT_ID,
+      VGS_ENVIRONMENT: process.env.VUE_APP_VGS_ENVIRONMENT,
+    },
+  })
   .mount("#app");

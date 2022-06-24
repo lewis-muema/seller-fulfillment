@@ -8,7 +8,7 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="pickScreen()"
+                @click="$router.push('/inventory/send-inventory')"
               ></i>
               <v-card-title class="text-center">
                 {{ $t("inventory.selectProducts") }}
@@ -20,17 +20,10 @@
             </router-link>
           </div>
           <div class="search-input">
-            <div class="form-input-group">
-              <i class="mdi mdi-magnify search-icon"></i>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search for product"
-              />
-            </div>
+            <searchAlgolia type="product" />
           </div>
           <hr />
-          <v-table>
+          <v-table v-if="products.length > 0">
             <thead>
               <tr>
                 <th>
@@ -43,21 +36,34 @@
             </thead>
             <tbody>
               <tr v-for="(product, i) in products" :key="i">
-                <td v-if="!product.product_variants">
+                <td v-if="product.product_variants.length === 1">
                   <div class="product-select-column">
                     <input
                       type="checkbox"
                       class="product-select-checkbox"
                       @click="
                         product.status
-                          ? removeProduct(product, i)
-                          : addProduct(product, i)
+                          ? removeProduct(
+                              product,
+                              i,
+                              product.product_variants[0],
+                              0
+                            )
+                          : addProduct(
+                              product,
+                              i,
+                              product.product_variants[0],
+                              0
+                            )
                       "
                       :checked="product.status"
                     />
                     <span>
                       <img
-                        :src="product.product_link"
+                        :src="
+                          product.product_variants[0].product_variant_image_link
+                        "
+                        v-if="!getLoader"
                         alt=""
                         class="product-select-img"
                       />
@@ -66,7 +72,13 @@
                       </span>
                     </span>
                     <span :class="getLoader" class="product-select-units"
-                      >{{ product.available }} {{ $t("inventory.units") }}</span
+                      >{{
+                        product.product_variants[0].product_variant_stock_levels
+                          ? product.product_variants[0]
+                              .product_variant_stock_levels.available
+                          : "-"
+                      }}
+                      {{ $t("inventory.units") }}</span
                     >
                   </div>
                 </td>
@@ -82,18 +94,36 @@
                             class="mdi mdi-chevron-down product-select-chevron"
                           ></i>
                         </span>
-                        <span>
+                        <span class="d-flex">
                           <img
-                            :src="product.product_link"
+                            :src="
+                              product.product_variants[0]
+                                .product_variant_image_link
+                            "
+                            v-if="!getLoader"
                             alt=""
                             class="product-select-img"
                           />
-                          <span :class="getLoader">
-                            {{ product.product_name }}
+                          <span class="product-select-expansion-title">
+                            <div>
+                              <span :class="getLoader">
+                                {{ product.product_name }}
+                              </span>
+                            </div>
+                            <div class="product-select-expansion-description">
+                              <span :class="getLoader">
+                                {{ product.product_variants.length }}
+                                {{ $t("inventory.producTOptions") }}
+                              </span>
+                            </div>
                           </span>
                         </span>
                         <span :class="getLoader" class="product-select-units"
-                          >{{ product.available }} units</span
+                          >{{
+                            product.product_variants[0]
+                              .product_variant_stock_levels.available
+                          }}
+                          {{ $t("inventory.units") }}</span
                         >
                       </v-expansion-panel-title>
                       <v-expansion-panel-text class="product-select-panel-text">
@@ -117,7 +147,7 @@
                             alt=""
                             class="product-select-img"
                           />
-                          <span
+                          <span :class="getLoader"
                             >{{ option.product_variant_quantity }}
                             {{ option.product_variant_quantity_type }}</span
                           >
@@ -125,7 +155,7 @@
                             >{{
                               option.product_variant_stock_levels.available
                             }}
-                            units</span
+                            {{ $t("inventory.units") }}</span
                           >
                         </div>
                       </v-expansion-panel-text>
@@ -135,6 +165,28 @@
               </tr>
             </tbody>
           </v-table>
+          <div class="deliveries-empty" v-else>
+            <div>
+              <img
+                src="https://images.sendyit.com/fulfilment/seller/track.png"
+                alt=""
+                class="deliveries-empty-img"
+              />
+            </div>
+            <p class="deliveries-empty-title">
+              {{ $t("inventory.youveNotAddedAnyProductYet") }}
+            </p>
+            <p class="deliveries-empty-subtitle">
+              {{ $t("inventory.addProductsToSend") }}
+            </p>
+            <v-btn
+              class="deliveries-btn"
+              @click="$router.push('/inventory/add-product')"
+              size="default"
+            >
+              {{ $t("inventory.addProducts") }}
+            </v-btn>
+          </div>
         </v-card>
       </v-col>
       <v-col cols="4">
@@ -148,7 +200,7 @@
             </p>
             <button
               type="submit"
-              @click="addProductStep(1)"
+              @click="addProductStep()"
               class="btn btn-primary"
             >
               {{ $t("inventory.continueWith") }} {{ itemsSelectedCount }}
@@ -162,27 +214,28 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
-  components: {},
+  components: { searchAlgolia },
   data() {
     return {
       products: [],
       selectedProducts: [],
+      placeholder: [],
     };
   },
   mounted() {
     this.setComponent(
-      this.getSendProductsRoute === "ProductsToSendy"
+      this.$route.params.path === "sendy"
         ? this.$t("common.sendInventoryToSendy")
         : this.$t("common.sendDeliveryToCustomer")
     );
-    setTimeout(() => {
-      this.setLoader();
-    }, 1000);
+    this.placeholder = this.getProductLists;
     this.productMapping();
+    this.fetchProducts();
   },
   methods: {
     ...mapMutations([
@@ -190,10 +243,27 @@ export default {
       "setLoader",
       "setProductStep",
       "setComponent",
+      "setProductLists",
     ]),
-    addProductStep(val) {
+    ...mapActions(["requestAxiosGet"]),
+    fetchProducts() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setProductLists(response.data.data.products);
+          this.productMapping();
+        }
+      });
+    },
+    addProductStep() {
       if (this.getSelectedProducts.length > 0) {
-        this.setProductStep(val);
+        this.$router.push(
+          `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
+        );
       } else {
         ElNotification({
           title: "",
@@ -257,22 +327,19 @@ export default {
         }
       });
     },
-    pickScreen() {
-      this.$emit("pickScreen", 0);
-    },
   },
   computed: {
     ...mapGetters([
       "getSelectedProducts",
       "getProductLists",
-      "getSendProductsRoute",
       "getLoader",
+      "getStorageUserDetails",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
     },
     getProducts() {
-      return this.getProductLists.data.products;
+      return this.getProductLists;
     },
   },
 };
@@ -355,5 +422,19 @@ export default {
 }
 .product-select-panel-text .v-expansion-panel-text__wrapper {
   padding: 0px 15px;
+}
+.product-select-expansion-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.product-select-expansion-description {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #606266;
+}
+.deliveries-empty-subtitle {
+  color: #606266;
+  font-size: 15px;
 }
 </style>

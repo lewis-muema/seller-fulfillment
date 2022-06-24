@@ -9,9 +9,9 @@
     >
       <span class="d-flex quick-links">
         <v-icon class="desktop-quick-links-icon">{{ link.icon }}</v-icon>
-        <router-link :to="{ name: `${link.path}` }" class="router">{{
-          link.name
-        }}</router-link>
+        <div class="router" @click="$router.push(link.path)">
+          {{ link.name }}
+        </div>
       </span>
     </v-card>
   </div>
@@ -24,18 +24,18 @@ export default {
       quickLinks: [
         {
           icon: "mdi-truck",
-          name: "Deliver to a customer",
-          path: "To Customers",
+          name: this.$t("common.deliverToCustomer"),
+          path: "/inventory/send-inventory/customer/select-products",
         },
         {
           icon: "mdi-home-city",
-          name: "Send inventory to Sendy",
-          path: "To Sendy",
+          name: this.$t("common.sendInventoryToSendy"),
+          path: "/inventory/send-inventory/sendy/select-products",
         },
         {
           icon: "mdi-plus-thick",
-          name: "Add Products",
-          path: "AddProducts",
+          name: this.$t("common.addProducts"),
+          path: "/inventory/add-product",
         },
       ],
     };
@@ -67,5 +67,6 @@ export default {
   color: #324ba8;
   font-size: 13px;
   font-weight: 500;
+  cursor: pointer;
 }
 </style>

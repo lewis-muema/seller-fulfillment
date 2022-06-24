@@ -70,39 +70,46 @@
             >
               <td class="invoices-table-col">
                 <span :class="getLoader" class="first-col-padding">
-                  {{ invoice.number }}
+                  {{ invoice.invoice_id }}
                 </span>
               </td>
               <td class="invoices-table-col">
                 <span :class="getLoader">
-                  {{ invoice.deliveries }} {{ $t("payments.deliveries") }}
+                  {{ invoice.order_id }}
                 </span>
               </td>
               <td class="invoices-table-col">
                 <span :class="getLoader">
-                  {{ invoice.amount }}
+                  {{ invoice.currency }} {{ invoice.amount }}
                 </span>
               </td>
               <td class="invoices-table-col">
                 <span v-if="getLoader" :class="getLoader">
-                  {{ invoice.status }}
+                  {{ invoice.invoice_status }}
                 </span>
-                <span v-else :class="`invoices-${invoice.status}-status`">
-                  {{ invoice.status }}</span
+                <span
+                  v-else
+                  :class="`invoices-${invoiceClassStatus(
+                    invoice.invoice_status
+                  )}-status`"
+                >
+                  {{ invoiceStatus(invoice.invoice_status) }}</span
                 >
               </td>
               <td class="invoices-table-col">
                 <span :class="getLoader">
-                  {{ invoice.dateSent }}
+                  {{ formatInvoiceDate(invoice.created_date) }}
                 </span>
               </td>
               <td class="invoices-table-col-last">
                 <span
                   class="invoices-view-col"
                   :class="getLoader"
-                  @click="$router.push(invoice.link)"
+                  @click="
+                    $router.push(`/payments/view-invoice/${invoice.invoice_id}`)
+                  "
                 >
-                  {{ invoice.action }}
+                  {{ $t("inventory.view") }}
                 </span>
               </td>
             </tr>
@@ -114,11 +121,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import moment from "moment";
 
 export default {
   computed: {
-    ...mapGetters(["getLoader", "getInvoices", "getDownloadActions"]),
+    ...mapGetters([
+      "getLoader",
+      "getInvoices",
+      "getDownloadActions",
+      "getStorageUserDetails",
+      "getBusinessDetails",
+      "getBillingCycles",
+    ]),
   },
   data() {
     return {
@@ -128,6 +143,40 @@ export default {
       to: "",
       range: "",
     };
+  },
+  mounted() {
+    this.listInvoices();
+  },
+  methods: {
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setBillingCycles",
+      "setInvoices",
+    ]),
+    ...mapActions(["requestAxiosGet"]),
+    listInvoices() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/invoices`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setInvoices(response.data.data.invoices);
+          this.setLoader("");
+        }
+      });
+    },
+    formatInvoiceDate(date) {
+      return moment(date).format("D/MM/YYYY hh:mm a");
+    },
+    invoiceStatus(invoiceStatus) {
+      return invoiceStatus.replaceAll("_", " ").toLowerCase();
+    },
+    invoiceClassStatus(invoiceStatus) {
+      return invoiceStatus.replaceAll("_", "").toLowerCase();
+    },
   },
 };
 </script>
@@ -174,17 +223,19 @@ export default {
 .invoices-table-col-last {
   width: 15%;
 }
-.invoices-Pending-status {
+.invoices-paymentpendingchargeattempt-status {
   background: #fbdf9a;
   padding: 2px 20px;
   border-radius: 10px;
   color: #7f3b02;
+  white-space: nowrap;
 }
-.invoices-Paid-status {
+.invoices-paymentsuccess-status {
   background: #b8f5a8;
   padding: 2px 20px;
   border-radius: 10px;
   color: #064a23;
+  white-space: nowrap;
 }
 .invoices-view-col {
   color: #324ba8;

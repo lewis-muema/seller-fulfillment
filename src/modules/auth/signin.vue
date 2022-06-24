@@ -1,7 +1,7 @@
 <template>
   <div>
-    <form action="">
-      <div class="">
+    <form action="" @submit.prevent>
+      <div class="sign-in-card">
         <v-card-title class="text-center">
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
@@ -15,18 +15,29 @@
               <div class="form-input-group">
                 <i class="mdi mdi-email-outline"></i>
                 <input
+                  v-model="params.emailAddress"
                   type="email"
                   class="form-control"
                   :placeholder="$t('auth.enterBusinessEmailAddress')"
                 />
+                <div v-if="v$.params.emailAddress.$error" class="error-msg">
+                  {{ $t("auth.businessEmailRequired") }}
+                </div>
               </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto pt-3">
-              <router-link to="/auth/otp" class="btn btn-primary">{{
-                $t("auth.continueWithEmailAddress")
-              }}</router-link>
-              <div class="text-center text-grey">or</div>
               <button
+                type="submit"
+                class="btn btn-primary"
+                @click="emailLLogin"
+                v-loading="loading"
+                :class="loading ? 'disabled' : ''"
+                style="height: 46px"
+              >
+                {{ $t("auth.continueWithEmailAddress") }}
+              </button>
+              <div class="text-center text-grey">or</div>
+              <!-- <button
                 class="btn btn-primary default-btn"
                 type="button"
                 @click="phoneNumberLogin"
@@ -34,14 +45,9 @@
               >
                 <i class="mdi mdi-phone"></i>
                 {{ $t("auth.loginWithPhoneNumber") }}
-              </button>
-              <button
-                class="btn btn-primary default-btn mt-3"
-                type="button"
-                style="height: 46px"
-              >
-                {{ $t("auth.loginWithGoogle") }}
-              </button>
+              </button> -->
+
+              <!-- <google-auth /> -->
             </div>
           </v-card-text>
         </div>
@@ -64,21 +70,13 @@
               <div class="text-center text-grey">{{ $t("auth.or") }}</div>
               <button
                 class="btn btn-primary default-btn"
-                type="button"
+                type="submit"
                 @click="emailAddressLogin"
-                style="height: 46px"
               >
                 <i class="mdi mdi-email-outline"></i>
                 {{ $t("auth.loginWithEmailAddress") }}
               </button>
-              <button
-                class="btn btn-primary default-btn mt-3"
-                type="button"
-                style="height: 46px"
-              >
-                <i class="mdi mdi-google"></i>
-                {{ $t("auth.loginWithGoogle") }}
-              </button>
+              <!-- <google-auth /> -->
             </div>
           </v-card-text>
         </div>
@@ -92,23 +90,78 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import { ElNotification } from "element-plus";
+// import googleAuth from "@/modules/common/googleAuth";
 
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
+      loading: false,
       emailLogin: true,
+      params: {
+        emailAddress: "",
+      },
+    };
+  },
+  validations() {
+    return {
+      params: {
+        emailAddress: { required },
+      },
     };
   },
   computed: {
-    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
+    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps", "getErrors"]),
+  },
+  mounted() {
+    localStorage.clear();
   },
   methods: {
+    ...mapActions(["loginUser"]),
+    ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
     phoneNumberLogin() {
       this.emailLogin = false;
     },
-    emailAddressLogin() {
+    async emailLLogin() {
       this.emailLogin = true;
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+      this.loading = true;
+      const payload = {
+        email: this.params.emailAddress,
+      };
+
+      const fullPayload = {
+        app: process.env.FULFILMENT_SERVER,
+        values: payload,
+        endpoint: "seller/business/signin",
+      };
+      try {
+        const data = await this.loginUser(fullPayload);
+        if (data.status === 200) {
+          this.setBizDetails(data.data.data);
+          localStorage.userDetails = JSON.stringify(data.data.data);
+          this.loading = false;
+          this.setOTPRedirectUrl("otp/signIn");
+          this.$router.push("/auth/otp");
+        }
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+        ElNotification({
+          title: this.getErrors.message.replaceAll(".", " "),
+          message: "",
+          type: "error",
+        });
+      }
     },
   },
 };
@@ -124,5 +177,8 @@ export default {
 }
 .signup-link-text > a {
   color: #324ba8;
+}
+.sign-in-card {
+  padding: 0px 40px;
 }
 </style>

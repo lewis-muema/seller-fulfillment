@@ -19,7 +19,11 @@
         :inline="true"
         :prevent-disable-date-selection="true"
       ></datepicker>
-      <v-btn class="tracking-reschedule-submit-button">
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        v-loading="buttonLoader"
+        @click="reschedule()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
@@ -33,19 +37,23 @@
           class="mdi mdi-close tracking-reschedule-title-close"
         ></i>
       </div>
-      <v-radio-group v-model="radioGroup">
+      <v-radio-group v-model="cancelReason">
         <v-radio
           v-for="(reason, x) in cancelReasons"
           :key="x"
           :label="$t(reason.label)"
-          :value="reason.value"
+          :value="$t(reason.value)"
         ></v-radio>
       </v-radio-group>
-      <v-btn class="tracking-cancel-button">
+      <v-btn
+        class="tracking-cancel-button"
+        v-loading="buttonLoader"
+        @click="cancel()"
+      >
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
     </div>
-    <div v-if="popup === 'deliveryInfo'" class="view-products-container">
+    <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editPickUpInfo") }}
@@ -61,8 +69,9 @@
       <GMapAutocomplete
         id="pick-up"
         class="businessProfile-address"
+        :value="location"
         :placeholder="$t('settings.searchLocation')"
-        @place_changed="setPlace"
+        @place_changed="setPickUp"
       >
       </GMapAutocomplete>
       <label for="instructions" class="edit-info-label">
@@ -72,12 +81,13 @@
         name=""
         :placeholder="$t('deliveries.enterInstructions')"
         class="edit-info-instructions"
+        v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
       ></textarea>
       <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         class="invite-phone"
@@ -85,15 +95,33 @@
         v-model="phone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone">
+      <label
+        for="phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("deliveries.phoneNumber") }}
+      </label>
+      <vue-tel-input
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
         <i class="mdi mdi-plus"></i>
         {{ $t("deliveries.addAnotherPhoneNumber") }}
       </p>
-      <v-btn class="edit-info-submit-button">
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitConsignment()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
-    <div v-if="popup === 'pickupInfo'" class="view-products-container">
+    <div v-if="popup === 'deliveryInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editDeliveryInfo") }}
@@ -120,12 +148,13 @@
       <GMapAutocomplete
         id="location"
         class="businessProfile-address"
+        :value="location"
         :placeholder="$t('settings.searchLocation')"
-        @place_changed="setPlace"
+        @place_changed="setLocation"
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.pickUpInstructionsOptional") }}
+        {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
         class="invite-phone"
@@ -133,7 +162,21 @@
         v-model="phone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone">
+      <label
+        for="sec-phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("deliveries.phoneNumber") }}
+      </label>
+      <vue-tel-input
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="sec-phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
         <i class="mdi mdi-plus"></i>
         {{ $t("deliveries.addAnotherPhoneNumber") }}
       </p>
@@ -144,11 +187,16 @@
         name=""
         :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
         class="edit-info-instructions"
+        v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
       ></textarea>
-      <v-btn class="edit-info-submit-button">
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitDelivery()"
+      >
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
@@ -162,31 +210,31 @@
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
-      <div v-for="(product, i) in getData.data.products" :key="i">
+      <div v-for="(product, i) in getOrderTrackingData.order.products" :key="i">
         <div class="view-products-row-top">
           <v-badge
             color="#324BA8"
             text-color="white"
             max="10"
-            :content="`${product.product_unit_count}`"
+            :content="`${product.received_quantity}`"
           >
             <img
-              :src="product.product_image_link"
+              :src="product.product_variant_image_link"
               class="view-products-img"
               alt=""
             />
           </v-badge>
           <div class="view-products-row-top-left">
             <div class="view-products-row-top-name">
-              {{ product.product_name }}
-            </div>
-            <div class="view-products-row-top-variant">
               {{ product.product_variant_description }}
             </div>
+            <!-- <div class="view-products-row-top-variant">
+              {{ product.product_variant_description }}
+            </div> -->
           </div>
           <p class="view-products-row-top-right">
-            {{ product.product_unit_currency }}
-            {{ product.product_unit_price }}
+            {{ product.currency }}
+            {{ product.unit_price }}
           </p>
         </div>
       </div>
@@ -201,17 +249,17 @@
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
-      <div v-for="(attempt, i) in attempts" :key="i">
+      <div v-for="(attempt, i) in getDeliveryAttempts" :key="i">
         <div class="timeline-failed-attempt-row-top">
           <p class="timeline-failed-attempt-row-top-left">
-            {{ attempt.attempt }}
+            {{ $t("deliveries.attempt") }} {{ attempt.attempt_index }}
           </p>
           <p class="timeline-failed-attempt-row-top-right">
-            {{ attempt.time }}
+            {{ formatTime(attempt.attempt_date) }}
           </p>
         </div>
         <p class="timeline-failed-attempt-row-bottom">
-          {{ attempt.reason }}
+          {{ attempt.failure_reason }}
         </p>
       </div>
     </div>
@@ -228,12 +276,29 @@
       <div class="make-payment-lower-section">
         <i class="mdi mdi-alert-outline make-payment-alert-icon"></i>
         <p class="make-payment-description">
-          {{ $t("payments.hiPleaseMakeYourPayment", { name }) }}
-          <span class="make-payment-amount">{{ currency }} {{ amount }}</span>
-          {{ $t("payments.forCompletedOrders", { orders }) }}
+          {{
+            $t("payments.hiPleaseMakeYourPayment", {
+              name: `${getUserDetails.first_name} ${getUserDetails.last_name}`,
+            })
+          }}
+          <span class="make-payment-amount"
+            >{{ getBusinessDetails.currency }}
+            {{ getActivePayment.amount_to_charge }}</span
+          >
+          {{
+            $t("payments.forCompletedOrders", {
+              orders: getActivePayment.order_count,
+            })
+          }}
         </p>
         <v-btn
-          @click="redirect(false, 'payments', '/payments/payment-summary')"
+          @click="
+            redirect(
+              false,
+              'payments',
+              `/payments/payment-summary/${getActivePayment.billing_cycle_instance_id}`
+            )
+          "
           class="edit-info-submit-button"
         >
           {{ $t("payments.makePayment") }}
@@ -269,12 +334,16 @@
           id="update-price"
           v-model="newPrice"
           variant="outlined"
+          :prefix="newCurrency"
           clearable
           clear-icon="mdi-close"
         ></v-text-field>
       </div>
       <div>
-        <v-btn class="edit-info-submit-button margin-override">
+        <v-btn
+          @click="updatePrice()"
+          class="edit-info-submit-button margin-override"
+        >
           {{ $t("inventory.updatePrice") }}
         </v-btn>
       </div>
@@ -294,28 +363,33 @@
           <span>
             {{ $t("inventory.totalValue") }}
           </span>
-          <span class="fees-left-override"> {{ currency }} {{ amount }} </span>
+          <span class="fees-left-override">
+            {{ getFulfillmentFees.currency }}
+            {{ getFulfillmentFees.total_product_value }}
+          </span>
         </div>
-        <div class="fees-row fees-bold">
+        <div class="fees-row fees-bold fees-title">
           {{ $t("inventory.fees") }}
         </div>
-        <div class="fees-row">
+        <div
+          v-for="(promos, i) in getFulfillmentFees.promotion_adjustments"
+          :key="i"
+          class="fees-row"
+        >
           <span>
-            <div>{{ $t("inventory.50K") }}</div>
-            <div class="fees-subtitle">{{ $t("inventory.5%") }}</div>
+            <div>{{ promos.adjustment_description }}</div>
+            <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
           </span>
-          <span class="fees-left-override"> {{ newPrice }} </span>
-        </div>
-        <div class="fees-row fees-divider fee-padding-bottom">
-          <span>
-            <div>{{ $t("inventory.deliveryFee") }}</div>
-            <div class="fees-subtitle">{{ $t("inventory.charged") }}</div>
+          <span class="fees-left-override">
+            {{ getFulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
-          <span class="fees-left-override"> {{ newPrice }} </span>
         </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
-          <span class="fees-left-override">{{ currency }} {{ amount }}</span>
+          <span class="fees-left-override"
+            >{{ getFulfillmentFees.currency }}
+            {{ getFulfillmentFees.calculated_fee }}</span
+          >
         </div>
         <p class="fee-margin-top pricing-docs-link">
           {{ $t("inventory.learnMoreAboutOurPricing") }}
@@ -347,9 +421,26 @@
         ></v-text-field>
       </div>
       <div>
-        <v-btn class="edit-info-submit-button margin-override">
+        <v-btn
+          @click="enterPromoCode()"
+          class="edit-info-submit-button margin-override"
+        >
           {{ $t("inventory.applyPromoCode") }}
         </v-btn>
+      </div>
+    </div>
+    <div v-if="popup === 'code'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("deliveries.deliveryCode") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'code')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="delivery-code">
+        {{ getOrderTrackingData.order.confirmation_pin }}
       </div>
     </div>
   </v-overlay>
@@ -357,19 +448,51 @@
 
 <script>
 import Datepicker from "vuejs3-datepicker";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import { ElNotification } from "element-plus";
+import moment from "moment";
 
 export default {
   props: ["overlayVal", "editInfo"],
   watch: {
     "$store.state.overlayStatus": function (val) {
+      this.secondaryPhoneStatus = false;
       this.overlay = val.overlay;
       this.popup = val.popup;
+      this.newCurrency =
+        val.popup === "editPrice"
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_currency
+          : "";
+      this.newPrice =
+        val.popup === "editPrice"
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_unit_price
+          : "";
+    },
+    "$store.state.orderTrackingData": function orderTrackingData(val) {
+      this.customerName = val.order.destination.name;
+      this.location = val.order.destination.delivery_location.description;
+      this.phone = val.order.destination.phone_number;
+      this.instructions = val.order.destination.delivery_instructions;
+      this.date = new Date(val.order.scheduled_date);
     },
   },
   components: { Datepicker },
   computed: {
-    ...mapGetters(["getData"]),
+    ...mapGetters([
+      "getData",
+      "getDeliveryAttempts",
+      "getOrderTrackingData",
+      "getFulfillmentFees",
+      "getParent",
+      "getStorageUserDetails",
+      "getEditedPriceIndex",
+      "getSelectedProducts",
+      "getActivePayment",
+      "getBusinessDetails",
+      "getUserDetails",
+    ]),
   },
   data() {
     return {
@@ -380,54 +503,257 @@ export default {
       name: "Judy",
       orders: 3,
       promoCode: "",
-      newPrice: "KES 450",
+      newPrice: "",
+      newCurrency: "",
       date: new Date(),
+      location: "",
+      locationData: {},
+      instructions: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
-          value: "",
+          value: "deliveries.orderIsNotReady",
         },
         {
           label: "deliveries.wrongLocation",
-          value: "",
+          value: "deliveries.wrongLocation",
         },
         {
           label: "deliveries.duplicateOrder",
-          value: "",
+          value: "deliveries.duplicateOrder",
         },
       ],
-      attempts: [
-        {
-          attempt: "Attempt 1",
-          time: "6th Jan 10:23 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Attempt 2",
-          time: "6th Jan 11:42 am",
-          reason: "Not unavailable",
-        },
-        {
-          attempt: "Final Attempt",
-          time: "6th Jan 3:42 am",
-          reason: "Damaged goods",
-        },
-      ],
+      cancelReason: "",
       phone: "",
       customerName: "",
+      buttonLoader: false,
+      secPhone: "",
+      secondaryPhoneStatus: false,
     };
   },
   methods: {
+    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    ...mapMutations(["setLoader", "setOrderTrackingData", "setPromoCode"]),
     overlayStatusSet(overlay, popup) {
+      this.secondaryPhoneStatus = false;
       this.overlay = overlay;
       this.popup = popup;
     },
-    setPlace(path) {
-      console.log(path);
+    setPickUp(path) {
+      this.locationData = path;
+      this.location = document.querySelector("#pick-up").value;
+    },
+    setLocation(path) {
+      this.locationData = path;
+      this.location = document.querySelector("#location").value;
+    },
+    submitConsignment() {
+      const order = this.getOrderTrackingData.order;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
+        values: {
+          products: order.products,
+          destination: {
+            name: order.destination.name,
+            phone_number: this.phone
+              ? this.phone
+              : order.destination.phone_number,
+            delivery_location: {
+              description: this.location
+                ? this.location
+                : order.destination.delivery_location.description,
+              longitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lng()
+                : order.destination.delivery_location.longitude,
+              latitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lat()
+                : order.destination.delivery_location.latitude,
+            },
+            house_location: order.destination.house_location,
+            delivery_instructions: this.instructions
+              ? this.instructions
+              : order.destination.delivery_instructions,
+          },
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.cosignmentEditedSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "pickupInfo");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.fetchOrder();
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.cosignmentEditingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    submitDelivery() {
+      const order = this.getOrderTrackingData.order;
+      const meansOfPayment =
+        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
+        values: {
+          means_of_payment: {
+            means_of_payment_type: meansOfPayment.means_of_payment_type,
+            means_of_payment_identifier: meansOfPayment.means_of_payment_id,
+            participant_type: meansOfPayment.participant_type,
+            participant_id: meansOfPayment.participant_id,
+            meta_data: meansOfPayment.meta_data,
+          },
+          products: order.products,
+          destination: {
+            name: this.customerName
+              ? this.customerName
+              : order.destination.name,
+            phone_number: this.phone
+              ? this.phone
+              : order.destination.phone_number,
+            delivery_location: {
+              description: this.location
+                ? this.location
+                : order.destination.delivery_location.description,
+              longitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lng()
+                : order.destination.delivery_location.longitude,
+              latitude: this.locationData.geometry
+                ? this.locationData.geometry.location.lat()
+                : order.destination.delivery_location.latitude,
+            },
+            house_location: order.destination.house_location,
+            delivery_instructions: this.instructions
+              ? this.instructions
+              : order.destination.delivery_instructions,
+          },
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryEditedSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "deliveryInfo");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.fetchOrder();
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryEditingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    reschedule() {
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/${this.getOrderTrackingData.order.order_id}/reschedule`,
+        values: {
+          proposed_scheduled_date: new Date(this.date).valueOf(),
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryRescheduledSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "reschedule");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.fetchOrder();
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryReschedulingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    cancel() {
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+          this.getParent === "sendy" ? "consignments" : "deliveries"
+        }/${this.getOrderTrackingData.order.order_id}/cancel`,
+        values: {
+          cancellation_reason: this.cancelReason,
+        },
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "reschedule");
+          this.buttonLoader = false;
+          setTimeout(() => {
+            this.fetchOrder();
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryCancellingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
+    fetchOrder() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+          this.getParent === "sendy" ? "consignments" : "deliveries"
+        }/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setOrderTrackingData(response.data.data);
+        }
+      });
     },
     redirect(status, popup, link) {
       this.overlayStatusSet(status, popup);
       this.$router.push(link);
+    },
+    formatTime(time) {
+      return moment(time).format("Do MMM h:mm a");
+    },
+    updatePrice() {
+      this.getSelectedProducts[
+        this.getEditedPriceIndex
+      ].selectedOption.product_variant_unit_price = this.newPrice;
+      this.overlayStatusSet(false, "editPrice");
+    },
+    enterPromoCode() {
+      this.setPromoCode(this.promoCode);
+      this.promoCode = "";
+      this.overlayStatusSet(false, "promo");
     },
   },
 };
@@ -559,5 +885,17 @@ export default {
   display: flex;
   align-items: center;
   font-size: 15px;
+}
+.fees-title {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+.delivery-code {
+  font-size: 40px;
+  font-weight: 500;
+  color: #324ba8;
+  text-align: center;
+  margin: 30px;
 }
 </style>

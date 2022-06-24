@@ -86,6 +86,24 @@ export default {
   setProductStep(state, val) {
     state.productStep = val;
   },
+  setUserData(state, val) {
+    state.userData = val;
+  },
+  setConfirmedUser(state, val) {
+    state.confirmedUser = val;
+  },
+  setBusinessUserDetails(state, val) {
+    state.businessUserDetails = val;
+  },
+  setGoogleUserData(state, val) {
+    state.googleUserData = val;
+  },
+  setGoogleConfirmData(state, val) {
+    state.googleConfirmData = val;
+  },
+  setIndustries(state, val) {
+    state.industries = val;
+  },
   setOverlayStatus(state, val) {
     state.overlayStatus = val;
   },
@@ -94,5 +112,107 @@ export default {
   },
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
+  },
+  setErrors(state, val) {
+    state.errors = val;
+  },
+  setLoginData(state, val) {
+    state.loginData = val;
+  },
+  setOTPRedirectUrl(state, val) {
+    state.OTPRedirectUrl = val;
+  },
+  setAccessToken(state, val) {
+    state.accessToken = val;
+  },
+  setRefreshToken(state, val) {
+    state.refreshToken = val;
+  },
+  setsignUpwithGoogle(state, val) {
+    state.signUpwithGoogle = val;
+  },
+  setSession(state, val) {
+    state.session = val;
+  },
+  setTabStatus(state, val) {
+    state.tabStatus = val;
+  },
+  setOrderTrackingData(state, val) {
+    state.orderTrackingData = val;
+  },
+  setTimelineIcons(state, val) {
+    state.timelineIcons = val;
+  },
+  setOrderTimelines(state, val) {
+    state.orderTimelines = val;
+  },
+  setDeliveryAttempts(state, val) {
+    state.deliveryAttempts = val;
+  },
+  setProduct(state, val) {
+    state.product = val;
+  },
+  setAddProductStatus(state, val) {
+    state.addProductStatus = val;
+  },
+  setFulfillmentFees(state, val) {
+    state.fulfillmentFees = val;
+  },
+  setBusinessDetails(state, val) {
+    state.businessDetails = val;
+  },
+  setUserDetails(state, val) {
+    state.userDetails = val;
+  },
+  setNotifications(state, val) {
+    state.notifications = val;
+  },
+  setParent(state, val) {
+    state.parent = val;
+  },
+  setPaymentMethods(state, val) {
+    state.paymnetMethods = val;
+  },
+  setStorageUserDetails(state, val) {
+    state.storageUserDetails = val;
+  },
+  setBizDetails(state, val) {
+    state.bizDetails = val;
+  },
+  setBillingCycles(state, val) {
+    state.billingCycles = val;
+  },
+  setlineItems(state, val) {
+    state.lineItems = val;
+  },
+  setInvoice(state, val) {
+    state.invoice = val;
+  },
+  setEditedPriceIndex(state, val) {
+    state.editedPriceIndex = val;
+  },
+  setPromoCode(state, val) {
+    state.promoCode = val;
+  },
+  setActivePayment(state, val) {
+    state.activePayment = val;
+  },
+  setCycleLineItems(state, val) {
+    state.cycleLineItems = val;
+  },
+  setAchievements(state, val) {
+    state.achievements = val;
+  },
+  setStockStatistics(state, val) {
+    state.stockStatistics = val;
+  },
+  setDeliveriesStatistics(state, val) {
+    state.deliveriesStatistics = val;
+  },
+  setConsignmentStatistics(state, val) {
+    state.consignmentStatistics = val;
+  },
+  setSettings(state, val) {
+    state.settings = val;
   },
 };

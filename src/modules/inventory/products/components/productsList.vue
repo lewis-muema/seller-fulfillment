@@ -1,26 +1,23 @@
 <template>
   <div>
-    <div v-if="products.length">
+    <div v-if="getProductLists.length">
       <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
-          <v-text-field
-            color="#324BA8"
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            variant="outlined"
-            placeholder="Search Product and product options"
-          ></v-text-field>
+          <searchAlgolia type="product" />
         </div>
 
         <v-table class="">
           <table-header :header="tableHeaders" />
           <tbody>
-            <tr v-for="(product, index) in products" :key="index">
+            <tr v-for="(product, index) in getProductLists" :key="index">
               <td>
                 <v-list-item lines="two">
                   <v-list-item-avatar class="product-image-container">
                     <img
-                      :src="product.product_link"
+                      :src="
+                        product.product_variants[0].product_variant_image_link
+                      "
+                      v-if="!getLoader"
                       alt="img"
                       class="product-img"
                     />
@@ -35,7 +32,9 @@
                       <span :class="getLoader">
                         {{
                           product.product_variants
-                            ? `${product.product_variants.length} product options`
+                            ? `${product.product_variants.length} ${$t(
+                                "inventory.producTOptions"
+                              )}`
                             : ""
                         }}
                       </span>
@@ -45,17 +44,18 @@
               </td>
               <td>
                 <span :class="getLoader">
-                  {{ product.available }} in Stock
+                  {{
+                    product.product_variants[0].product_variant_stock_levels
+                      ? product.product_variants[0].product_variant_stock_levels
+                          .available
+                      : "-"
+                  }}
+                  {{ $t("inventory.inStock") }}
                 </span>
               </td>
               <td>
                 <router-link
-                  :to="{
-                    name: 'View Product',
-                    params: {
-                      product: JSON.stringify(product),
-                    },
-                  }"
+                  :to="`/inventory/view-product/${product.product_id}`"
                   class="view-product-link"
                 >
                   <span :class="getLoader"
@@ -83,30 +83,66 @@
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
-import { mapGetters, mapMutations } from "vuex";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
-  components: { tableHeader, addProductsCard },
+  components: { tableHeader, addProductsCard, searchAlgolia },
   data() {
     return {
-      headers: ["Product", "Available inventory", "Actions"],
+      headers: [
+        {
+          title: this.$t("inventory.product"),
+        },
+        {
+          title: this.$t("inventory.availableProduct"),
+        },
+        {
+          title: this.$t("inventory.actions"),
+        },
+      ],
+      placeholder: [],
     };
   },
   computed: {
-    ...mapGetters(["getProductLists", "getLoader"]),
-    products() {
-      return this.getProductLists.data.products;
-    },
+    ...mapGetters([
+      "getProductLists",
+      "getLoader",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+    ]),
     tableHeaders() {
       return this.headers;
     },
   },
+  watch: {
+    "$store.state.inventorySelectedTab": function inventorySelectedTab() {
+      this.setProductLists(this.placeholder);
+      this.fetchProducts();
+    },
+  },
   mounted() {
-    setTimeout(() => {
-      this.setLoader();
-    }, 1000);
+    this.placeholder = this.getProductLists;
+    this.fetchProducts();
   },
   methods: {
-    ...mapMutations(["setLoader"]),
+    ...mapMutations(["setLoader", "setProductLists"]),
+    ...mapActions(["requestAxiosGet"]),
+    fetchProducts() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
+          this.getInventorySelectedTab === this.$t("inventory.archived")
+            ? "/archived"
+            : ""
+        }`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setProductLists(response.data.data.products);
+        }
+      });
+    },
   },
 };
 </script>

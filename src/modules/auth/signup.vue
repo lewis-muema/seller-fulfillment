@@ -1,12 +1,11 @@
 <template>
   <div>
-    <form action="">
-      <v-icon>format_quote</v-icon>
-      <div class="desktop-sign-up" v-if="continueSignup">
-        <v-card-title class="text-center">
+    <form action="" @submit.prevent>
+      <div class="desktop-sign-up">
+        <v-card-title class="text-center sign-up-title">
           {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
-        <v-card-text class="pt-5">
+        <v-card-text class="pt-3">
           <div class="mb-3">
             <label for="businessName" class="form-label">{{
               $t("auth.businessName")
@@ -14,10 +13,14 @@
             <div class="form-input-group">
               <i class="mdi mdi-store-outline"></i>
               <input
+                v-model="params.businessName"
                 type="text"
                 class="form-control"
                 placeholder="Enter name of business"
               />
+              <div v-if="v$.params.businessName.$error" class="error-msg">
+                {{ $t("auth.businessNameRequired") }}
+              </div>
             </div>
           </div>
           <div class="mb-3">
@@ -27,39 +30,50 @@
             <div class="form-input-group">
               <i class="mdi mdi-email-outline"></i>
               <input
+                v-model="params.businessEmail"
                 type="email"
                 class="form-control"
                 :placeholder="$t('auth.enterBusinessEmailAddress')"
               />
+              <div v-if="v$.params.businessEmail.$error" class="error-msg">
+                {{ $t("auth.businessEmailRequired") }}
+              </div>
             </div>
           </div>
-          <div>
+          <div class="mb-3">
             <label for="businessEmail" class="form-label">{{
               $t("auth.countryOfOperation")
             }}</label>
-            <select class="form-select mb-3">
-              <option selected v-for="country in countries" :key="country">
-                <h1 class="country-flag">
-                  <b>{{ country.emoji }}</b>
-                </h1>
-                &nbsp;
-                <span class="country-name">{{ country.name }}</span>
-              </option>
-            </select>
+            <el-select v-model="params.countryOfOperation">
+              <el-option
+                v-for="item in countries"
+                :key="item.value"
+                :label="item.country"
+                :value="item.country"
+              >
+                <span class="country-image-container">
+                  <img :src="item.image" class="country-image" />
+                </span>
+                <span class="country-container">{{ item.country }}</span>
+              </el-option>
+            </el-select>
+
+            <div v-if="v$.params.countryOfOperation.$error" class="error-msg">
+              {{ $t("auth.countryRequired") }}
+            </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
               class="btn btn-primary b"
-              type="button"
-              @click="continueSignUp"
+              type="submit"
+              @click="submitForm"
+              v-loading="loading"
+              :class="loading ? 'disabled' : ''"
             >
               {{ $t("auth.continue") }}
             </button>
-            <div class="text-center text-grey">or</div>
-            <button class="btn btn-primary default-btn" type="button">
-              <i class="mdi mdi-google"></i>
-              {{ $t("auth.signupWithGoogle") }}
-            </button>
+            <!-- <div class="text-center text-grey">or</div> -->
+            <!-- <google-auth  /> -->
           </div>
           <p class="desktop-login-link login-link-text">
             {{ $t("auth.haveAnAccount") }}
@@ -69,136 +83,101 @@
           </p>
         </v-card-text>
       </div>
-      <div class="complete-sign-up" v-else>
-        <div class="d-flex desktop-header-title">
-          <i
-            class="mdi mdi-arrow-left"
-            aria-hidden="true"
-            @click="$router.back()"
-          ></i>
-
-          <v-card-title class="text-center">
-            {{ $t("auth.completeSignUp") }}
-          </v-card-title>
-        </div>
-        <v-card-text>
-          <div class="mb-3">
-            <label for="yourName" class="form-label">
-              {{ $t("auth.yourName") }}</label
-            >
-            <div class="form-input-group">
-              <i class="mdi mdi-account-circle" aria-hidden="true"></i>
-              <input
-                type="text"
-                class="form-control"
-                :placeholder="$t('auth.enterYourPersonalName')"
-              />
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="phoneNumber" class="form-label">{{
-              $t("auth.phoneNumber")
-            }}</label>
-            <vue-tel-input
-              v-model="phone"
-              v-bind="getSendyPhoneProps"
-              :input-options="getVueTelInputProps"
-            ></vue-tel-input>
-          </div>
-          <div class="mb-3">
-            <label for="industry" class="form-label">{{
-              $t("auth.industryOfBusiness")
-            }}</label>
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Select</option>
-              <option value="1">Clothing</option>
-              <option value="2">Cosmetics</option>
-            </select>
-          </div>
-          <div class="d-grid gap-2 col-12 mx-auto pt-3">
-            <router-link to="/auth/otp" class="btn btn-primary">{{
-              $t("auth.signUp")
-            }}</router-link>
-          </div>
-          <p class="desktop-login-link terms-link-text">
-            {{ $t("auth.bySigningUp") }}
-            <router-link to="/auth/sign-in">
-              {{ $t("auth.termsAndConditions") }}</router-link
-            >
-          </p>
-        </v-card-text>
-      </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
+// import googleAuth from "@/modules/common/googleAuth";
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
+      loading: false,
       countries: [
         {
-          name: "Kenya",
-          code: "KE",
-          emoji: "🇰🇪",
-          unicode: "U+1F1F0 U+1F1EA",
+          country: "KENYA",
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg",
         },
-
         {
-          name: "Uganda",
-          code: "UG",
-          emoji: "🇺🇬",
-          unicode: "U+1F1FA U+1F1EC",
+          country: "UGANDA",
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
         },
-        {
-          name: "United Nations",
-          code: "UN",
-          emoji: "🇺🇳",
-          unicode: "U+1F1FA U+1F1F3",
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UN.svg",
-        },
-        {
-          name: "United States",
-          code: "US",
-          emoji: "🇺🇸",
-          unicode: "U+1F1FA U+1F1F8",
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/US.svg",
-        },
-        {
-          name: "Uzbekistan",
-          code: "UZ",
-          emoji: "🇺🇿",
-          unicode: "U+1F1FA U+1F1FF",
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UZ.svg",
-        },
-        {
-          name: "South Africa",
-          code: "ZA",
-          emoji: "🇿🇦",
-          unicode: "U+1F1FF U+1F1E6",
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ZA.svg",
-        },
       ],
-      region: "",
-      continueSignup: true,
+      params: {
+        businessName: "",
+        businessEmail: "",
+        countryOfOperation: "",
+      },
     };
   },
+  validations() {
+    return {
+      params: {
+        businessName: { required },
+        businessEmail: { required },
+        countryOfOperation: { required },
+      },
+    };
+  },
+  mounted() {
+    localStorage.clear();
+  },
+  watch: {},
   computed: {
-    ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps"]),
+    ...mapGetters(["getErrors", "getGoogleUserData"]),
   },
   methods: {
-    continueSignUp() {
-      this.continueSignup = false;
+    ...mapActions(["signupUser"]),
+    ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
+    retrieveGoogleData(value) {
+      console.log(value);
+    },
+    async submitForm() {
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+      this.loading = true;
+      const payload = {
+        business: {
+          business_name: this.params.businessName,
+          business_email: this.params.businessEmail,
+          country: this.params.countryOfOperation,
+        },
+      };
+
+      const fullPayload = {
+        app: process.env.FULFILMENT_SERVER,
+        values: payload,
+        endpoint: "seller/business/signup",
+      };
+      try {
+        const data = await this.signupUser(fullPayload);
+        if (data.status === 200) {
+          this.setBizDetails(data.data.data.business);
+          localStorage.userDetails = JSON.stringify(data.data.data.business);
+          this.loading = false;
+          this.setOTPRedirectUrl("otp/signUp");
+          this.$router.push("/auth/otp");
+        }
+        this.loading = false;
+      } catch (err) {
+        ElNotification({
+          title: this.getErrors.message.replaceAll(".", " "),
+          message: "",
+          type: "error",
+        });
+        this.loading = false;
+      }
     },
   },
 };
@@ -211,9 +190,15 @@ form {
 .login-link-text > a {
   color: #324ba8 !important;
 }
+.terms-link-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .terms-link-text > a {
   color: #324ba8 !important;
   text-decoration: none;
+  align-items: center;
 }
 .v-card-text {
   opacity: unset;
@@ -293,5 +278,31 @@ img.emojione {
 }
 h1 {
   font-size: 20px;
+}
+.country-image {
+  height: 20px;
+  width: 20px;
+}
+.el-select {
+  display: block !important;
+}
+.country-image-container {
+  float: left;
+  font-size: 23px;
+  padding-right: 10px;
+}
+.country-container {
+  font-size: 13px;
+}
+.error-msg {
+  color: #9b101c;
+}
+.el-loading-mask {
+  background-color: #324ba8 !important;
+  opacity: 0.6;
+}
+.desktop-sign-up {
+  padding: 0px 40px;
+  margin: 20px 0px;
 }
 </style>

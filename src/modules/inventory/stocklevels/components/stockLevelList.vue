@@ -2,23 +2,20 @@
   <div>
     <v-card class="desktop-product-details" variant="outlined">
       <div class="products-search">
-        <v-text-field
-          color="#324BA8"
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          variant="outlined"
-          placeholder="Search Product"
-        ></v-text-field>
+        <searchAlgolia type="product" />
       </div>
-      <v-table class="" v-if="products.length > 0">
+      <v-table class="" v-if="filteredProducts.length > 0">
         <table-header :header="tableHeaders" />
         <tbody>
-          <tr v-for="(product, index) in products" :key="index">
+          <tr v-for="(product, index) in filteredProducts" :key="index">
             <td>
               <v-list-item lines="two">
                 <v-list-item-avatar class="product-image-container">
                   <img
-                    :src="product.product_link"
+                    :src="
+                      product.product_variants[0].product_variant_image_link
+                    "
+                    v-if="!getLoader"
                     alt="img"
                     class="product-img"
                   />
@@ -33,7 +30,9 @@
                     <span :class="getLoader">
                       {{
                         product.product_variants
-                          ? `${product.product_variants.length} product options`
+                          ? `${product.product_variants.length} ${$t(
+                              "inventory.producTOptions"
+                            )}`
                           : ""
                       }}
                     </span>
@@ -42,28 +41,65 @@
               </v-list-item>
             </td>
             <td>
-              <span :class="getLoader">
-                {{ product.available }}
+              <span
+                :class="
+                  badgeAllocation(
+                    product.product_variants[0].product_variant_stock_levels
+                      .available
+                  )
+                "
+              >
+                <span :class="getLoader">
+                  {{
+                    product.product_variants[0].product_variant_stock_levels
+                      ? product.product_variants[0].product_variant_stock_levels
+                          .available
+                      : "-"
+                  }}
+                </span>
               </span>
             </td>
             <td>
-              <span :class="getLoader">
-                {{ product.committed }}
+              <span
+                :class="
+                  badgeAllocation(
+                    product.product_variants[0].product_variant_stock_levels
+                      .quantity_in_inventory
+                  )
+                "
+              >
+                <span :class="getLoader">
+                  {{
+                    product.product_variants[0].product_variant_stock_levels
+                      ? product.product_variants[0].product_variant_stock_levels
+                          .quantity_in_inventory
+                      : "-"
+                  }}
+                </span>
               </span>
             </td>
             <td>
-              <span :class="getLoader">
-                {{ product.incoming }}
+              <span
+                :class="
+                  badgeAllocation(
+                    product.product_variants[0].product_variant_stock_levels
+                      .quantity_in_sales_orders
+                  )
+                "
+              >
+                <span :class="getLoader">
+                  {{
+                    product.product_variants[0].product_variant_stock_levels
+                      ? product.product_variants[0].product_variant_stock_levels
+                          .quantity_in_sales_orders
+                      : "-"
+                  }}
+                </span>
               </span>
             </td>
             <td>
               <router-link
-                :to="{
-                  name: 'View Product',
-                  params: {
-                    product: JSON.stringify(product),
-                  },
-                }"
+                :to="`/inventory/view-product/${product.product_id}`"
                 class="view-product-link"
                 >{{ $t("inventory.view") }}</router-link
               >
@@ -84,7 +120,9 @@
         </p>
         <v-btn
           class="deliveries-btn"
-          @click="$router.push('/inventory/send-inventory')"
+          @click="
+            $router.push('/inventory/send-inventory/sendy/select-products')
+          "
           size="default"
         >
           {{ $t("inventory.sendInventoryToSendy") }}
@@ -96,12 +134,14 @@
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
-  props: ["products"],
+  components: { searchAlgolia, tableHeader },
   data() {
     return {
+      placeholder: [],
       headers: [
         {
           title: this.$t("inventory.product"),
@@ -124,27 +164,146 @@ export default {
           description: "",
         },
       ],
+      params: "",
     };
   },
-  components: {
-    tableHeader,
+  watch: {
+    searchParam(val) {
+      this.initiateAlgolia(val);
+    },
   },
   mounted() {
     this.setComponent(this.$t("common.stocks"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 1000);
+    this.placeholder = this.getProductLists;
+    this.getStockStats();
+    this.fetchProducts();
+    this.getStockSettings();
   },
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters([
+      "getLoader",
+      "getProductLists",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+      "getSettings",
+    ]),
     tableHeaders() {
       return this.headers;
     },
+    filteredProducts() {
+      if (this.getInventorySelectedTab === this.$t("inventory.outOfStock")) {
+        return this.NoStockProducts;
+      }
+      if (this.getInventorySelectedTab === this.$t("inventory.lowStock")) {
+        return this.lowStockProducts;
+      }
+      return this.getProductLists;
+    },
+    lowStockProducts() {
+      const products = [];
+      this.getProductLists.forEach((row) => {
+        if (
+          row.product_variants[0].product_variant_stock_levels
+            .quantity_in_inventory <=
+            this.getSettings.global_low_stock_threshhold &&
+          row.product_variants[0].product_variant_stock_levels
+            .quantity_in_inventory > 0
+        ) {
+          products.push(row);
+        }
+      });
+      return products;
+    },
+    NoStockProducts() {
+      const products = [];
+      this.getProductLists.forEach((row) => {
+        if (
+          row.product_variants[0].product_variant_stock_levels
+            .quantity_in_inventory === 0
+        ) {
+          products.push(row);
+        }
+      });
+      return products;
+    },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setProductLists",
+      "setStockStatistics",
+      "setSettings",
+    ]),
+    ...mapActions(["requestAxiosGet"]),
+    badgeAllocation(val) {
+      if (val > this.getSettings.global_low_stock_threshhold) {
+        return "available-badge";
+      } else if (
+        val <= this.getSettings.global_low_stock_threshhold &&
+        val > 0
+      ) {
+        return "low-stock-badge";
+      } else if (val === 0) {
+        return "no-stock-badge";
+      }
+    },
+    fetchProducts() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setProductLists(response.data.data.products);
+        }
+      });
+    },
+    getStockSettings() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/settings`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setSettings(response.data.data);
+        }
+      });
+    },
+    getStockStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setStockStatistics(
+            response.data.data.grouped_by_stock_level_count
+          );
+        }
+      });
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.available-badge {
+  background: #f0f3f7;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #303133;
+}
+.low-stock-badge {
+  background: #fdf1cc;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #7f3b02;
+}
+.no-stock-badge {
+  background: #fbdecf;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #9b101c;
+}
+</style>

@@ -12,6 +12,9 @@
 
             <v-card-title class="text-center"
               >{{ $t("inventory.productDetails") }}
+              <span class="archived-badge" v-if="getProduct.product_archived">{{
+                $t("inventory.archived")
+              }}</span>
             </v-card-title>
             <div class="dropdown actions-dropdown mt-2">
               <v-menu transition="slide-y-transition" anchor="bottom center">
@@ -25,8 +28,12 @@
                   </v-btn>
                 </template>
                 <v-list class="users-actions-popup">
-                  <v-list-item v-for="(action, i) in actions" :key="i">
-                    <v-list-item-title @click="trigger(action)">
+                  <v-list-item
+                    v-for="(action, i) in filteredActions"
+                    @click="trigger(action)"
+                    :key="i"
+                  >
+                    <v-list-item-title>
                       {{ action.label }}
                     </v-list-item-title>
                   </v-list-item>
@@ -35,10 +42,10 @@
             </div>
           </div>
           <product-details-tabs v-if="stockSelectedTab === 'Overview'">
-            <product-overview :product="product" />
+            <product-overview />
           </product-details-tabs>
           <product-details-tabs v-if="stockSelectedTab === 'History'">
-            <product-history :product="product" />
+            <product-history />
           </product-details-tabs>
         </v-card>
       </v-col>
@@ -50,7 +57,9 @@
 import productDetailsTabs from "@/modules/inventory/products/viewProduct/components/productDetailsTabs";
 import productOverview from "@/modules/inventory/products/viewProduct/components/productOverview";
 import productHistory from "@/modules/inventory/products/viewProduct/components/productHistory";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import { ElNotification } from "element-plus";
+
 export default {
   components: { productDetailsTabs, productOverview, productHistory },
   data() {
@@ -59,37 +68,119 @@ export default {
         {
           label: this.$t("inventory.edit"),
           link: "/inventory/edit-product",
+          show: true,
         },
         {
           label: this.$t("inventory.archive"),
           link: "",
+          action: "archive",
+          show: true,
+        },
+        {
+          label: this.$t("inventory.unarchive"),
+          link: "",
+          action: "unarchive",
+          show: false,
         },
         {
           label: this.$t("inventory.addProductOptions"),
-          link: "",
+          link: "/inventory/edit-product",
+          action: "addProduct",
+          show: true,
         },
       ],
-      product: [],
     };
   },
   mounted() {
     this.setComponent(this.$t("common.viewProduct"));
-    if (this.$route.params.product !== undefined) {
-      this.product = JSON.parse(this.$route.params.product);
-    }
+    this.fetchProduct();
   },
   computed: {
-    ...mapGetters(["getStockSelectedTab"]),
+    ...mapGetters([
+      "getStockSelectedTab",
+      "getProduct",
+      "getStorageUserDetails",
+    ]),
     stockSelectedTab() {
       return this.getStockSelectedTab;
     },
+    filteredActions() {
+      const filteredActions = [];
+      this.actions.forEach((row) => {
+        if (row.show) {
+          filteredActions.push(row);
+        }
+      });
+      return filteredActions;
+    },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setProduct",
+      "setAddProductStatus",
+    ]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     trigger(action) {
+      if (action.action) {
+        this[action.action]();
+      }
       if (action.link) {
         this.$router.push(action.link);
       }
+    },
+    addProduct() {
+      this.setAddProductStatus(true);
+    },
+    fetchProduct() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setProduct(response.data.data.product);
+          this.actions[1].show = !this.getProduct.product_archived;
+          this.actions[2].show = this.getProduct.product_archived;
+        }
+      });
+    },
+    archive() {
+      this.setLoader("loading-text");
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/archive`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          ElNotification({
+            title: this.$t("inventory.productArchivedSuccessfully"),
+            message: "",
+            type: "success",
+          });
+          this.fetchProduct();
+        }
+      });
+    },
+    unarchive() {
+      this.setLoader("loading-text");
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/unarchive`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          ElNotification({
+            title: this.$t("inventory.productUnarchivedSuccessfully"),
+            message: "",
+            type: "success",
+          });
+          this.fetchProduct();
+        }
+      });
     },
   },
 };
@@ -112,5 +203,13 @@ export default {
   letter-spacing: 0px;
   color: #606266 !important;
   font-weight: 300;
+}
+.archived-badge {
+  background: #9b101c;
+  color: white;
+  padding: 0px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-left: 10px;
 }
 </style>

@@ -15,20 +15,23 @@
     </div>
     <div class="promo-code-container-inner">
       <div class="promo-code-row promo-code-divider">
-        <span>
+        <span :class="getLoader">
           {{ $t("inventory.totalValue") }}
         </span>
-        <span class="promo-code-left-section">
-          {{ currency }} {{ amount }}
+        <span :class="getLoader" class="promo-code-left-section">
+          {{ getFulfillmentFees.currency }}
+          {{ getFulfillmentFees.total_product_value }}
         </span>
       </div>
       <div>
         <div class="promo-code-row promo-code-bold promo-code-margin-top">
-          {{ $t("inventory.fees") }}
+          <span :class="getLoader">{{ $t("inventory.fees") }}</span>
         </div>
         <div class="promo-code-row">
-          <span
-            >{{ $t("inventory.fulfillmentFee") }}
+          <span>
+            <span :class="getLoader">
+              {{ $t("inventory.fulfillmentFee") }}
+            </span>
             <i
               @click="
                 setOverlayStatus({
@@ -36,33 +39,54 @@
                   popup: 'fees',
                 })
               "
+              v-if="!getLoader"
               class="mdi mdi-information"
             ></i
           ></span>
-          <span class="promo-code-left-section"
-            >{{ currency }} {{ amount2 }}</span
+          <span :class="getLoader" class="promo-code-left-section"
+            >{{ getFulfillmentFees.currency }}
+            {{ getFulfillmentFees.pre_adjustments_calculated_fee }}</span
           >
         </div>
         <div class="promo-code-row promo-code-divider">
-          <span>{{ $t("inventory.discount") }}</span>
-          <span class="promo-code-left-section"
-            >{{ currency }} {{ amount2 }}</span
+          <span :class="getLoader">{{ $t("inventory.discount") }}</span>
+          <span :class="getLoader" class="promo-code-left-section"
+            >{{ getFulfillmentFees.currency }}
+            {{
+              getFulfillmentFees.calculated_fee -
+              getFulfillmentFees.pre_adjustments_calculated_fee
+            }}</span
           >
         </div>
       </div>
       <div class="promo-code-row promo-code-bold promo-code-margin-top">
-        <span>{{ $t("inventory.amountToPay") }}</span>
-        <span class="promo-code-left-section"
-          >{{ currency }} {{ amount2 }}</span
+        <span :class="getLoader">{{ $t("inventory.amountToPay") }}</span>
+        <span :class="getLoader" class="promo-code-left-section"
+          >{{ getFulfillmentFees.currency }}
+          {{ getFulfillmentFees.calculated_fee }}</span
         >
+      </div>
+      <div
+        class="promo-code-card"
+        v-for="(notification, i) in getFulfillmentFees.promotion_notifications"
+        :key="i"
+      >
+        <div class="promo-code-card-description">
+          {{ notification.notificationDescription }}
+        </div>
+        <i
+          class="mdi mdi-close promo-code-card-close"
+          @click="removePromoCode()"
+        ></i>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
+  props: ["products"],
   data() {
     return {
       currency: "KES",
@@ -70,14 +94,68 @@ export default {
       amount2: 500,
     };
   },
+  watch: {
+    "$store.state.promoCode": function promoCode() {
+      this.calculateFee();
+    },
+  },
   computed: {
-    ...mapGetters(["getSendProductsRoute"]),
+    ...mapGetters([
+      "getSendProductsRoute",
+      "getLoader",
+      "getFulfillmentFees",
+      "getStorageUserDetails",
+      "getPromoCode",
+    ]),
     getRoute() {
       return this.getSendProductsRoute;
     },
+    productPayload() {
+      const products = [];
+      this.products.forEach((row) => {
+        products.push({
+          product_id: row.product_id,
+          product_variant_id: row.selectedOption.product_variant_id,
+          quantity: row.quantity,
+          currency: row.selectedOption.product_variant_currency,
+          unit_price: row.selectedOption.product_variant_unit_price,
+        });
+      });
+      return {
+        order_type:
+          this.$route.params.path === "customer" ? "DELIVERY" : "PICKUP",
+        products,
+        coupon_code: this.getPromoCode ? this.getPromoCode : null,
+      };
+    },
+  },
+  mounted() {
+    this.calculateFee();
   },
   methods: {
-    ...mapMutations(["setOverlayStatus"]),
+    ...mapMutations([
+      "setOverlayStatus",
+      "setLoader",
+      "setFulfillmentFees",
+      "setPromoCode",
+    ]),
+    ...mapActions(["requestAxiosPost"]),
+    calculateFee() {
+      this.setLoader("loading-text");
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
+        values: this.productPayload,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setFulfillmentFees(response.data.data);
+        }
+      });
+    },
+    removePromoCode() {
+      this.setPromoCode("");
+    },
   },
 };
 </script>
@@ -121,6 +199,22 @@ export default {
   color: #324ba8;
   font-weight: 500;
   border-bottom: 2px solid #324ba8;
+  cursor: pointer;
+}
+.promo-code-card {
+  background: #b8f5a8;
+  color: #064a23;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+.promo-code-card-description {
+  margin: auto;
+}
+.promo-code-card-close {
+  margin-left: -30px;
+  margin-right: 10px;
   cursor: pointer;
 }
 </style>

@@ -4,14 +4,10 @@
       <span :class="getLoader">
         {{ $t("deliveries.products") }}
       </span>
-      <span class="products-edit" :class="getLoader">
-        <i class="mdi mdi-pencil"></i>
-        {{ $t("deliveries.edit") }}
-      </span>
     </p>
     <p class="products-data">
       <span :class="getLoader">
-        {{ getProducts.name }}
+        {{ formatProducts(getOrderTrackingData.order.products) }}
       </span>
     </p>
     <p class="products-view">
@@ -40,10 +36,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getLoader", "getProducts"]),
+    ...mapGetters(["getLoader", "getProducts", "getOrderTrackingData"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
+    formatProducts(products) {
+      return `${products[0].product_variant_description} ${
+        products.length > 1
+          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+          : ""
+      }`;
+    },
   },
 };
 </script>

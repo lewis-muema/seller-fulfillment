@@ -27,7 +27,7 @@
 import invoiceDetails from "./inVoiceDetails.vue";
 import invoinceContent from "./invoiceContent.vue";
 import transationHistory from "./transactionHistory.vue";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -36,7 +36,7 @@ export default {
     transationHistory,
   },
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters(["getLoader", "getStorageUserDetails"]),
   },
   data() {
     return {
@@ -46,12 +46,10 @@ export default {
   },
   mounted() {
     this.setComponent(this.$t("payments.viewInvoice"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 3000);
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations(["setComponent", "setLoader", "setTab", "setInvoice"]),
+    ...mapActions(["requestAxiosGet"]),
   },
 };
 </script>

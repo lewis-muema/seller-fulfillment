@@ -67,10 +67,8 @@
         color="#324BA8"
         text-color="white"
         size="default"
-        @click="
-          $router.push('/inventory/send-inventory/customer/select-products')
-        "
-        >{{ $t("deliveries.deliverToACustomer") }}</v-btn
+        @click="$router.push('/inventory/send-inventory/sendy/select-products')"
+        >{{ $t("deliveries.inventoryToSendy") }}</v-btn
       >
     </div>
   </div>
@@ -90,12 +88,12 @@ export default {
   watch: {
     "$store.state.loader": function loader() {
       this.pending = (
-        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
+        parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
       ).toString();
-      this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString();
-      this.failed = this.getDeliveriesStatistics.ORDER_FAILED.toString();
-      this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED.toString();
+      this.transit = this.getConsignmentStatistics.ORDER_IN_TRANSIT.toString();
+      this.failed = this.getConsignmentStatistics.ORDER_FAILED.toString();
+      this.completed = this.getConsignmentStatistics.ORDER_COMPLETED.toString();
     },
   },
   mounted() {
@@ -105,7 +103,7 @@ export default {
     activeTab() {
       return this.getTab;
     },
-    ...mapGetters(["getTab", "getDeliveriesStatistics"]),
+    ...mapGetters(["getTab", "getConsignmentStatistics"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setTabStatus"]),

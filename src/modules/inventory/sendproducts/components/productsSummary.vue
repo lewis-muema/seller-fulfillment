@@ -3,7 +3,11 @@
     <v-card variant="outlined" class="product-summary-card">
       <div class="p-3">
         <span class="product-summary-title">{{ $t("inventory.summary") }}</span>
-        <span class="product-summary-edit" @click="addProductStep(1)"
+        <span
+          class="product-summary-edit"
+          @click="
+            $router.push('/inventory/send-inventory/customer/add-quantity')
+          "
           ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>
           {{ $t("inventory.edit") }}
         </span>
@@ -63,8 +67,8 @@
           </v-list-item-header>
         </v-list-item>
       </v-list>
-      <div v-if="to === 'customer'">
-        <totalAmount />
+      <div v-if="$route.params.path === 'customer'">
+        <totalAmount :products="getAllProducts" />
       </div>
     </v-card>
   </div>
@@ -75,7 +79,6 @@ import { mapGetters, mapMutations } from "vuex";
 import totalAmount from "./totalAmount.vue";
 
 export default {
-  props: ["to"],
   components: { totalAmount },
   data() {
     return {};

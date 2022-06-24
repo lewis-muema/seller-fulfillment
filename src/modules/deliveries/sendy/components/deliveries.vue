@@ -3,7 +3,7 @@
     <div class="deliveries-container-inner">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
-          <searchAlgolia type="delivery" />
+          <searchAlgolia type="product" />
         </div>
         <div class="deliveries-date-range">
           <label for="range" class="deliveries-date-label">
@@ -24,9 +24,7 @@
           <thead>
             <tr>
               <th class="text-left">
-                <span :class="getLoader">{{
-                  $t("deliveries.customerInfo")
-                }}</span>
+                <span :class="getLoader">{{ $t("deliveries.products") }}</span>
               </th>
               <th class="text-left">
                 <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
@@ -50,14 +48,7 @@
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
                   <span :class="getLoader">
-                    {{ formatName(item.destination.name) }}
-                  </span>
-                </div>
-                <div class="deliveries-location-row">
-                  <span :class="getLoader">
-                    {{
-                      formatName(item.destination.delivery_location.description)
-                    }}
+                    {{ formatProducts(item.products) }}
                   </span>
                 </div>
               </td>
@@ -114,11 +105,11 @@
         <v-btn
           class="deliveries-btn"
           @click="
-            $router.push('/inventory/send-inventory/customer/select-products')
+            $router.push('/inventory/send-inventory/sendy/select-products')
           "
           size="default"
         >
-          {{ $t("deliveries.deliverToACustomer") }}
+          {{ $t("deliveries.deliverToSendy") }}
         </v-btn>
       </div>
     </div>
@@ -168,8 +159,8 @@ export default {
   },
   mounted() {
     this.placeholders = this.getDeliveries;
+    this.getPickUpStats();
     this.fetchOrders();
-    this.getDeliveryStats();
   },
   computed: {
     ...mapGetters([
@@ -177,7 +168,6 @@ export default {
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
-      "getTab",
     ]),
   },
   methods: {
@@ -186,7 +176,7 @@ export default {
       "setComponent",
       "setLoader",
       "setDeliveries",
-      "setDeliveriesStatistics",
+      "setConsignmentStatistics",
     ]),
     navigate(route) {
       this.$router.push(route);
@@ -206,7 +196,7 @@ export default {
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments${this.params}`,
       }).then((response) => {
         this.setLoader("");
         if (response.status === 200) {
@@ -214,13 +204,13 @@ export default {
         }
       });
     },
-    getDeliveryStats() {
+    getPickUpStats() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/statistics`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/statistics`,
       }).then((response) => {
         if (response.status === 200) {
-          this.setDeliveriesStatistics(
+          this.setConsignmentStatistics(
             response.data.data.grouped_by_status_count
           );
         }
@@ -232,6 +222,13 @@ export default {
     deliveryTime(date) {
       const finalTime = moment(date).add(2, "hours");
       return `${moment(date).format("ha")} - ${moment(finalTime).format("ha")}`;
+    },
+    formatProducts(products) {
+      return `${products[0].product_variant_description} ${
+        products.length > 1
+          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+          : ""
+      }`;
     },
     formatName(name) {
       const nameArr = name.split(" ");

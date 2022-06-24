@@ -17,7 +17,7 @@
           <v-badge
             color="#FBDF9A"
             text-color="#7F3B02"
-            :content="tab.content"
+            :content="`${tab.content}`"
             inline
           ></v-badge>
         </div>
@@ -30,18 +30,17 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 export default {
-  props: ["sendyCount", "customerCount"],
   data() {
     return {
       currentTab: 0,
       tabs: [
         {
           label: "To your Customers",
-          content: this.customerCount,
+          content: "-",
         },
         {
           label: "To Sendy",
-          content: this.sendyCount,
+          content: "-",
         },
       ],
       deliveries: [
@@ -63,16 +62,45 @@ export default {
     ...mapMutations(["setDashboardSelectedTab", "setLoader"]),
     setTab(tab) {
       this.setDashboardSelectedTab(tab.label);
-      this.setLoader("loading-text");
-      setTimeout(() => {
-        this.setLoader("");
-      }, 1000);
+    },
+  },
+  watch: {
+    "$store.state.loader": function loader(val) {
+      if (val === "") {
+        this.tabs[0].content = this.ongoingDeliveries;
+        this.tabs[1].content = this.ongoingConsignments;
+      }
     },
   },
   computed: {
-    ...mapGetters(["getDashboardSelectedTab"]),
+    ...mapGetters([
+      "getDashboardSelectedTab",
+      "getStockStatistics",
+      "getDeliveriesStatistics",
+      "getConsignmentStatistics",
+    ]),
     activeTab() {
       return this.getDashboardSelectedTab;
+    },
+    ongoingDeliveries() {
+      return (
+        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getDeliveriesStatistics.ORDER_FAILED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_COMPLETED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_CANCELED)
+      );
+    },
+    ongoingConsignments() {
+      return (
+        parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getConsignmentStatistics.ORDER_FAILED) +
+        parseInt(this.getConsignmentStatistics.ORDER_COMPLETED) +
+        parseInt(this.getConsignmentStatistics.ORDER_CANCELED)
+      );
     },
   },
 };

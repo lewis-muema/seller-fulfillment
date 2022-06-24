@@ -24,21 +24,20 @@
         </div>
       </div>
       <div class="product-buttons-container">
-        <button class="btn btn-primary mr-4 products-buttons-section">
+        <!-- <button
+          class="btn btn-primary mr-4 products-buttons-section"
+          @click="$router.push('/inventory/import-products')"
+        >
           <i class="mdi mdi-upload"></i>
-          <router-link
-            to="/inventory/import-products"
-            class="import-products-link"
-          >
-            {{ $t("inventory.uploadProduct") }}
-          </router-link>
-        </button>
+          {{ $t("inventory.uploadProduct") }}
+        </button> -->
 
-        <button class="btn btn-primary">
+        <button
+          class="btn btn-primary upload-buttons-section"
+          @click="$router.push('/inventory/add-product')"
+        >
           <i class="mdi mdi-plus"></i>
-          <router-link to="/inventory/add-product" class="add-products-link">
-            {{ $t("inventory.addProducts") }}</router-link
-          >
+          {{ $t("inventory.addProducts") }}
         </button>
       </div>
     </div>
@@ -78,30 +77,30 @@ export default {
     return {
       productTabs: [
         {
-          label: "All",
-          content: 67,
+          label: this.$t("inventory.all"),
+          content: "-",
         },
         {
-          label: "Archived",
-          content: 10,
+          label: this.$t("inventory.archived"),
+          content: "-",
         },
       ],
       stockLevelTabs: [
         {
-          label: "All",
-          content: "67",
+          label: this.$t("inventory.all"),
+          content: "-",
           color: "#324BA8",
           bgColor: "#D3DDF6",
         },
         {
-          label: "Low Stock",
-          content: "23",
+          label: this.$t("inventory.lowStock"),
+          content: "-",
           color: "#7F3B02",
           bgColor: "#FBDF9A",
         },
         {
-          label: "Out of Stock",
-          content: "23",
+          label: this.$t("inventory.outOfStock"),
+          content: "-",
           color: "#9B101C",
           bgColor: "#FBDECF",
         },
@@ -109,12 +108,48 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getInventorySelectedTab"]),
+    ...mapGetters([
+      "getInventorySelectedTab",
+      "getProductLists",
+      "getStockStatistics",
+    ]),
     getRoute() {
       return this.$route.path;
     },
     activeTab() {
       return this.getInventorySelectedTab;
+    },
+    getTotalProducts() {
+      return this.getProductLists.length;
+    },
+  },
+  watch: {
+    "$store.state.loader": function loader(val) {
+      this.productTabs[0].content =
+        val === "" && this.getInventorySelectedTab === this.$t("inventory.all")
+          ? `${this.getTotalProducts}`
+          : "-";
+      this.productTabs[1].content =
+        val === "" &&
+        this.getInventorySelectedTab === this.$t("inventory.archived")
+          ? `${this.getTotalProducts}`
+          : "-";
+      this.stockLevelTabs[0].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? (
+              this.getStockStatistics.available_products +
+              this.getStockStatistics.low_stock_products +
+              this.getStockStatistics.out_of_stock_products
+            ).toString()
+          : "-";
+      this.stockLevelTabs[1].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? this.getStockStatistics.low_stock_products.toString()
+          : "-";
+      this.stockLevelTabs[2].content =
+        Object.keys(this.getStockStatistics).length > 0
+          ? this.getStockStatistics.out_of_stock_products.toString()
+          : "-";
     },
   },
   methods: {
@@ -162,6 +197,13 @@ button {
 }
 .products-buttons-section {
   background-color: #ffffff !important;
+  color: #324ba8 !important;
+  font-size: 14px !important;
+}
+.upload-buttons-section {
+  background-color: #324ba8 !important;
+  color: white !important;
+  font-size: 14px !important;
 }
 .products-buttons-section > i,
 .import-products-link {

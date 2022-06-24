@@ -12,40 +12,85 @@
       </div>
       <div class="payment-summary-expansion-section">
         <v-expansion-panels multiple class="payment-summary-expansion-panel">
-          <v-expansion-panel v-for="(summary, i) in paymentSummary" :key="i">
+          <v-expansion-panel v-for="(summary, i) in getCycleLineItems" :key="i">
             <v-expansion-panel-title>
-              <div class="statements-expansion-title">
-                <p :class="getLoader">
-                  {{ summary.description }}
-                </p>
-                <p
-                  class="statements-expansion-title-bottom-row"
-                  :class="getLoader"
-                >
-                  <span>
-                    {{ summary.destination }}
-                  </span>
-                </p>
+              <div class="summary-items-container">
+                <div class="summary-items">
+                  <div>
+                    <p :class="getLoader">
+                      {{ summary.line_item_title }}
+                    </p>
+                    <p
+                      class="statements-expansion-title-bottom-row"
+                      :class="getLoader"
+                    >
+                      <span>
+                        {{ summary.line_item_subtitle }}
+                      </span>
+                    </p>
+                  </div>
+                  <div class="summary-items-right">
+                    <p :class="getLoader">
+                      {{ getBusinessDetails.currency }} {{ summary.amount }}
+                    </p>
+                    <p
+                      class="statements-expansion-title-bottom-row"
+                      :class="getLoader"
+                    >
+                      <span>
+                        {{ formatDate(summary.created_date) }}
+                      </span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </v-expansion-panel-title>
-            <v-expansion-panel-text> </v-expansion-panel-text>
+            <v-expansion-panel-text>
+              <div class="summary-items-container">
+                <div class="summary-items">
+                  <div>
+                    <p :class="getLoader">{{ $t("settings.invoice") }}</p>
+                    <p
+                      class="statements-expansion-title-bottom-row"
+                      :class="getLoader"
+                    >
+                      <span>
+                        {{ summary.line_item_id }}
+                      </span>
+                    </p>
+                  </div>
+                  <div class="summary-items-right mr-8">
+                    <p :class="getLoader">
+                      {{ $t("payments.orderNumber") }}
+                    </p>
+                    <p
+                      class="statements-expansion-title-bottom-row"
+                      :class="getLoader"
+                    >
+                      <span>
+                        {{ summary.resource_id }}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
       <div class="payment-summary-bottom-section">
-        <div class="payment-summary-show-more">
-          <span>
-            {{ $t("payments.showMore") }}
-          </span>
-        </div>
         <div class="payment-summary-amount-section">
           <div>
             <span>{{ $t("payments.amountToPay") }}</span>
-            <span class="payment-summary-amount-val"
-              >{{ currency }} {{ amount }}</span
+            <span class="payment-summary-amount-val" :class="getLoader"
+              >{{ getBusinessDetails.currency }}
+              {{ getActivePayment.amount_to_charge }}</span
             >
           </div>
-          <v-btn class="edit-info-submit-button payment-summary-submit-button">
+          <v-btn
+            @click="selectPaymentMethod"
+            class="edit-info-submit-button payment-summary-submit-button"
+          >
             {{ $t("payments.continueToMakePayment") }}
           </v-btn>
         </div>
@@ -55,63 +100,87 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import moment from "moment";
 
 export default {
   data() {
     return {
       currency: "KES",
       amount: "700",
-      paymentSummary: [
-        {
-          description: "Delivery to James",
-          destination: "Moi Avenue",
-          currency: "KES",
-          amount: "100",
-          time: "12:35 PM",
-        },
-        {
-          description: "Delivery to James",
-          destination: "Moi Avenue",
-          currency: "KES",
-          amount: "100",
-          time: "12:35 PM",
-        },
-        {
-          description: "Delivery to James",
-          destination: "Moi Avenue",
-          currency: "KES",
-          amount: "100",
-          time: "12:35 PM",
-        },
-        {
-          description: "Delivery to James",
-          destination: "Moi Avenue",
-          currency: "KES",
-          amount: "100",
-          time: "12:35 PM",
-        },
-        {
-          description: "Delivery to James",
-          destination: "Moi Avenue",
-          currency: "KES",
-          amount: "100",
-          time: "12:35 PM",
-        },
-      ],
     };
   },
   computed: {
-    ...mapGetters(["getLoader"]),
+    ...mapGetters([
+      "getLoader",
+      "getBillingCycles",
+      "getBusinessDetails",
+      "getStorageUserDetails",
+      "getLineItems",
+      "getCycleLineItems",
+      "getActivePayment",
+      "getUserDetails",
+    ]),
   },
   mounted() {
     this.setComponent(this.$t("payments.makePayment"));
-    setTimeout(() => {
-      this.setLoader("");
-    }, 1000);
+    this.getCycles();
   },
   methods: {
+    ...mapActions(["requestAxiosGet"]),
+    ...mapMutations(["setCycleLineItems", "setActivePayment"]),
+    formatDate(date) {
+      return moment(date).format("h:mm a");
+    },
     ...mapMutations(["setComponent", "setLoader"]),
+    getCycles() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.$route.params.cycle_id}/lineitems`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCycleLineItems(response.data.data.billing_cycle_line_items);
+          this.getActiveCycle();
+        }
+      });
+    },
+    getActiveCycle() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setActivePayment(response.data.data);
+          this.setLoader("");
+        } else {
+          this.$router.push("/");
+        }
+      });
+    },
+    selectPaymentMethod() {
+      const buPayload = {
+        user_id: this.getBusinessDetails.business_id,
+        entity_id: 6,
+        currency: this.getBusinessDetails.currency,
+        country_code: this.getBusinessDetails.country_code,
+        amount: this.getActivePayment.amount_to_charge,
+        success_callback_url: "",
+        fail_callback_url: "",
+        txref: this.getActivePayment.billing_cycle_instance_id,
+        bulk: false,
+        paybill_no: "",
+        email: this.getUserDetails.email,
+        authToken: localStorage.accessToken,
+        firstname: this.getUserDetails.first_name,
+        lastname: this.getUserDetails.last_name,
+        payment_options: "",
+        company_code: this.getBusinessDetails.company_code,
+        locale: this.getBusinessDetails.language,
+      };
+
+      this.$paymentInit(buPayload, "checkout");
+    },
   },
 };
 </script>
@@ -179,5 +248,17 @@ export default {
   width: 100%;
   height: 200px;
   margin-left: -20px;
+}
+.summary-items {
+  display: flex;
+}
+.summary-items-right {
+  margin-left: auto;
+  text-align: right;
+}
+.summary-items-container {
+  text-align: left;
+  margin: 15px;
+  width: 100%;
 }
 </style>

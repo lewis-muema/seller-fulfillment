@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Tabs parent="sendy" />
+    <Tabs />
     <Deliveries />
   </div>
 </template>
 
 <script>
-import Tabs from "../customers/components/tabs.vue";
-import Deliveries from "../customers/components/deliveries.vue";
+import Tabs from "./components/tabs.vue";
+import Deliveries from "./components/deliveries.vue";
 import { mapMutations } from "vuex";
 
 export default {

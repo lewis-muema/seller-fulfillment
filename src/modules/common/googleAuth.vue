@@ -6,6 +6,8 @@
 
 <script>
 import googleAuthInit from "../../mixins/google-auth";
+import jwt_decode from "jwt-decode";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [googleAuthInit],
@@ -18,8 +20,11 @@ export default {
     this.initiateGA(this.googleClientId);
   },
   methods: {
+    ...mapMutations(["setGoogleUserData", "setsignUpwithGoogle"]),
     handleCredentialResponse(response) {
-      console.log(response);
+      let googleUserData = jwt_decode(response.credential);
+      this.setsignUpwithGoogle(true);
+      this.setGoogleUserData(googleUserData);
     },
   },
 };

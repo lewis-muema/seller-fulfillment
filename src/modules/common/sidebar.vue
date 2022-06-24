@@ -102,15 +102,15 @@
             ></v-list-item>
           </template>
           <v-list-item
-            :title="$t('common.statements')"
-            @click="$router.push('/payments/statements')"
+            :title="$t('common.billings')"
+            @click="$router.push('/payments/billings')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('common.statements')"
+            :active="route === $t('common.billings')"
             :append-icon="
-              route === $t('common.statements') ? 'mdi-circle-small' : ''
+              route === $t('common.billings') ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
-          <v-list-item
+          <!-- <v-list-item
             :title="$t('common.invoices')"
             @click="$router.push('/payments/invoices')"
             class="desktop-sidebar-sub-menu"
@@ -118,7 +118,7 @@
             :append-icon="
               route === $t('common.invoices') ? 'mdi-circle-small' : ''
             "
-          ></v-list-item>
+          ></v-list-item> -->
         </v-list-group>
 
         <v-list-group>
@@ -134,7 +134,7 @@
           </template>
           <v-list-item
             :title="$t('common.profile')"
-            @click="$router.push('/settings/profile')"
+            @click="$router.push('/settings/profile/personal-info')"
             class="desktop-sidebar-sub-menu"
             :active="route === $t('common.profile')"
             :append-icon="

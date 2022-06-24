@@ -131,6 +131,7 @@ export default {
 }
 .invite-phone {
   height: 50px;
+  margin-bottom: 15px;
 }
 .invite-save {
   width: 100%;

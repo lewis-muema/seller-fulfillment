@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
-import auth from "../modules/auth/auth.vue";
-import signIn from "../modules/auth/signin.vue";
-import signUp from "../modules/auth/signup.vue";
+import store from "@/store";
+import Auth from "../modules/auth/auth.vue";
+import SignIn from "../modules/auth/signin.vue";
+import SignUp from "../modules/auth/signup.vue";
 import OTP from "../modules/auth/OTP.vue";
+import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Statements from "../modules/payments/statements/statements.vue";
-import Invoices from "../modules/payments/invoices/invoices.vue";
+// import Invoices from "../modules/payments/invoices/invoices.vue";
 import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
 import PaymentOptions from "../modules/settings/paymentOptions/paymentOptions.vue";
 import Profile from "../modules/settings/profile/profile.vue";
@@ -32,22 +34,27 @@ const routes = [
   {
     path: "/auth/",
     name: "Auth",
-    component: auth,
+    component: Auth,
     children: [
       {
         path: "sign-in",
         name: "SignIn",
-        component: signIn,
+        component: SignIn,
       },
       {
         path: "sign-up",
         name: "SignUP",
-        component: signUp,
+        component: SignUp,
       },
       {
         path: "otp",
         name: "OTP",
         component: OTP,
+      },
+      {
+        path: "complete-signup",
+        name: "CompleteSignup",
+        component: CompleteSignup,
       },
     ],
   },
@@ -55,11 +62,17 @@ const routes = [
     path: "/",
     name: "Dashboard",
     component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/onboarding",
     name: "Onboarding",
     component: Onboarding,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/inventory/add-product",
@@ -87,12 +100,12 @@ const routes = [
     component: StockLevels,
   },
   {
-    path: "/inventory/view-product",
+    path: "/inventory/view-product/:product?",
     name: "View Product",
     component: ViewProduct,
   },
   {
-    path: "/inventory/send-inventory",
+    path: "/inventory/send-inventory/:path?/:page?",
     name: "Send Inventory",
     component: SendProducts,
   },
@@ -107,32 +120,32 @@ const routes = [
     component: Sendy,
   },
   {
-    path: "/deliveries/tracking",
+    path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
   },
   {
-    path: "/payments/statements",
-    name: "Statements",
+    path: "/payments/billings",
+    name: "Billings",
     component: Statements,
   },
+  // {
+  //   path: "/payments/invoices",
+  //   name: "Invoices",
+  //   component: Invoices,
+  // },
   {
-    path: "/payments/invoices",
-    name: "Invoices",
-    component: Invoices,
-  },
-  {
-    path: "/payments/view-invoice",
+    path: "/payments/view-invoice/:invoice_id?",
     name: "View Invoice",
     component: viewInvoice,
   },
   {
-    path: "/payments/payment-summary",
+    path: "/payments/payment-summary/:cycle_id?",
     name: "Payment Summary",
     component: paymentSummary,
   },
   {
-    path: "/settings/profile",
+    path: "/settings/profile/:page?",
     name: "Profile",
     component: Profile,
   },
@@ -176,6 +189,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    store.dispatch("initializeAuth");
+    if (!store.getters.isAuthenticated) {
+      next("/auth/sign-in");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -92,16 +92,39 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 export default {
   components: { tableHeader },
-  props: ["product"],
   data() {
     return {
-      variantSelected: "All product options",
+      variantSelected: this.$t("inventory.allProductOptions"),
       variantsToggle: false,
-      tableHeaders: ["Date", "Activity", ""],
-      tableHeaders2: ["Date", "Product options", "Activity", ""],
+      tableHeaders: [
+        {
+          title: this.$t("inventory.date"),
+        },
+        {
+          title: this.$t("inventory.activity"),
+        },
+        {
+          title: "",
+        },
+      ],
+      tableHeaders2: [
+        {
+          title: this.$t("inventory.date"),
+        },
+        {
+          title: this.$t("inventory.producTOptions"),
+        },
+        {
+          title: this.$t("inventory.activity"),
+        },
+        {
+          title: "",
+        },
+      ],
       activities: [
         {
           date: "23/2/2022 12:00 pm",
@@ -117,9 +140,13 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getProduct"]),
     activityHistory() {
       const res = this.product.product_variants;
       return res ? this.product.product_variants : this.activities;
+    },
+    product() {
+      return this.getProduct;
     },
   },
 };

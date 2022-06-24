@@ -17,51 +17,15 @@
           </div>
         </div>
         <div class="mb-2">
-          <label for="productName" class="form-label">
-            {{ $t("inventory.price") }}</label
-          >
-          <div>
-            <input
-              type="text"
-              class="form-control"
-              v-model="price"
-              :placeholder="$t('inventory.priceOfTheProduct')"
-            />
-          </div>
-        </div>
-        <div class="mb-2">
-          <label for="productName" class="form-label">
-            {{ $t("inventory.weight") }}
-          </label>
-          <div class="edit-product-weight">
-            <div class="edit-product-weight-left">
-              <input
-                type="text"
-                class="form-control"
-                v-model="weight"
-                :placeholder="$t('inventory.enterWeight')"
-              />
-            </div>
-            <div class="edit-product-weight-right">
-              <v-select
-                class="edit-product-weight-field"
-                :items="dimensions"
-                v-model="dimension"
-                outlined
-              ></v-select>
-            </div>
-          </div>
-        </div>
-        <div class="mb-2">
-          <label for="price" class="form-label">
+          <label for="desc" class="form-label">
             {{ $t("inventory.description") }}</label
           >
           <div>
             <textarea
               class="form-control"
-              id=""
+              id="desc"
               rows="3"
-              v-model="description"
+              v-model="productDescription"
               :placeholder="$t('inventory.productDescription')"
             ></textarea>
           </div>
@@ -75,24 +39,25 @@
             <div v-if="productVariants.length">
               <v-list-item
                 lines="two"
-                v-for="(variant, index) in variants"
+                v-for="(variant, index) in productVariants"
                 :key="index"
                 class="desktop-product-option-card"
               >
                 <v-list-item-avatar>
                   <img
-                    :src="variant.image"
+                    :src="variant.product_variant_image_link"
                     class="desktop-product-options-img"
                     alt=""
                   />
                 </v-list-item-avatar>
                 <v-list-item-header>
                   <v-list-item-title>
-                    {{ variant.weight }}
-                    {{ variant.dimension }}
+                    {{ variant.product_variant_quantity }}
+                    {{ variant.product_variant_quantity_type }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ variant.currency }} {{ variant.price }}
+                    {{ variant.product_variant_currency }}
+                    {{ variant.product_variant_unit_price }}
                   </v-list-item-subtitle>
                 </v-list-item-header>
                 <v-list-item-avatar end>
@@ -134,7 +99,20 @@
           </div>
         </div>
         <div class="d-grid">
-          <button class="btn btn-primary mt-2 btn-long" @click="addProduct()">
+          <button
+            class="btn btn-primary mt-2 btn-long"
+            v-if="action === 'editProduct'"
+            @click="saveProduct()"
+            v-loading="buttonLoader"
+          >
+            {{ $t("inventory.saveChanges") }}
+          </button>
+          <button
+            class="btn btn-primary mt-2 btn-long"
+            v-else
+            @click="addProduct()"
+            v-loading="buttonLoader"
+          >
             {{ $t("inventory.saveChanges") }}
           </button>
         </div>
@@ -168,7 +146,7 @@
 import productOptions from "@/modules/inventory/products/components/productOptions";
 import upload_img from "../../../../mixins/upload_img";
 import { ElNotification } from "element-plus";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -180,35 +158,61 @@ export default {
     return {
       productVariants: [],
       showProductOptions: false,
-      dimensions: ["gms", "mls", "cm"],
-      dimension: "gms",
       image: "",
-      activeOption: {},
       name: "",
-      price: "",
-      weight: "",
-      description: "",
+      activeOption: {},
+      productDescription: "",
+      buttonLoader: false,
     };
   },
   mounted() {
     this.setComponent(this.$t("common.productDetails"));
     this.initiateS3();
-    if (this.$route.params.pV) {
-      this.productVariants = JSON.parse(this.$route.params.pV);
-    }
     if (this.action === "editProduct") {
-      this.name = "Shea Butter";
-      this.price = "200";
+      this.name = this.getProduct.product_name;
+      this.productDescription = this.getProduct.product_description;
+      if (this.variants.length) {
+        this.image = this.variants[0].product_variant_image_link;
+        this.productVariants = this.variants;
+      }
+      this.showProductOptions = this.getAddProductStatus;
     }
   },
+  unmounted() {
+    this.setAddProductStatus(false);
+  },
   computed: {
+    ...mapGetters([
+      "getProduct",
+      "getLoader",
+      "getAddProductStatus",
+      "getStorageUserDetails",
+      "getAchievements",
+    ]),
+    onboardingStatus() {
+      if (Object.values(this.getAchievements).includes(false)) {
+        return true;
+      }
+      return false;
+    },
     variants() {
-      const res = JSON.parse(JSON.stringify(this.productVariants));
+      const res = [];
+      this.getProduct.product_variants.forEach((row) => {
+        if (!row.product_variant_archived) {
+          res.push(row);
+        }
+      });
       return res;
     },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setAddProductStatus",
+    ]),
+    ...mapActions(["requestAxiosPut", "requestAxiosPost"]),
     pickImg() {
       document.querySelector("#upload-img").click();
     },
@@ -232,14 +236,85 @@ export default {
       this.activeOption = {};
       this.showProductOptions = true;
     },
+    saveProduct() {
+      if (this.name && this.productDescription && this.productVariants.length) {
+        const product = {
+          product_name: this.name,
+          product_description: this.productDescription,
+          product_variants: this.productVariants,
+        };
+        this.buttonLoader = true;
+        this.requestAxiosPut({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.getProduct.product_id}`,
+          values: product,
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            ElNotification({
+              title: this.$t("inventory.productSavedSuccessfully"),
+              message: "",
+              type: "success",
+            });
+            this.$router.push(
+              `/inventory/view-product/${this.getProduct.product_id}`
+            );
+          } else {
+            ElNotification({
+              title: this.$t("inventory.productSavingFailed"),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.pleaseFillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
     addProduct() {
-      ElNotification({
-        title: "Product Saved successfully",
-        message: "",
-        duration: 0,
-        type: "success",
-      });
-      this.$router.push({ name: "Products" });
+      if (this.name && this.productDescription && this.productVariants.length) {
+        const product = {
+          product_name: this.name,
+          product_description: this.productDescription,
+          product_variants: this.productVariants,
+        };
+        this.buttonLoader = true;
+        this.requestAxiosPost({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
+          values: product,
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            ElNotification({
+              title: this.$t("inventory.productSavedSuccessfully"),
+              message: "",
+              type: "success",
+            });
+            if (this.onboardingStatus) {
+              this.$router.push("/");
+            } else {
+              this.$router.push(`/inventory/products`);
+            }
+          } else {
+            ElNotification({
+              title: this.$t("inventory.productSavingFailed"),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.pleaseFillInAllFields"),
+          type: "warning",
+        });
+      }
     },
   },
 };

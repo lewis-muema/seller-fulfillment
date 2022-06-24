@@ -1,7 +1,7 @@
 {
   "orders": "orders",
   "completedToday": "completed today",
-  "youWillBeCharged": "Will be charged at 8 PM tonight",
+  "youWillBeCharged": "will be charged",
   "from": "From",
   "to": "To",
   "invoiceNumber": "Invoice Number",
@@ -42,5 +42,7 @@
   "orderSummary": "Order summary",
   "showMore": "Show more",
   "amountToPay": "Amount to Pay",
-  "continueToMakePayment": "Continue to make payment"
+  "continueToMakePayment": "Continue to make payment",
+  "none": "None",
+  "orderNumber": "Order Number"
 }

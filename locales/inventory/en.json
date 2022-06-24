@@ -137,5 +137,7 @@
   "deliveryCreatedSuccessfully": "Delivery created successfully",
   "deliveryCreationFailed": "Delivery creation failed",
   "youveNotAddedAnyProductYet": "You’ve not added any product yet",
-  "addProductsToSend": "Add products to send"
+  "addProductsToSend": "Add products to send",
+  "overview": "Overview",
+  "history": "History"
 }

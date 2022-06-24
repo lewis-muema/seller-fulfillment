@@ -135,10 +135,12 @@ export default {
 
   setErrorAction({ commit }, payload) {
     let errors = {};
-    payload.forEach((el) => {
-      errors["message"] = el.message;
-    });
-    commit("setErrors", errors);
+    if (payload) {
+      payload.forEach((el) => {
+        errors["message"] = el.message;
+      });
+      commit("setErrors", errors);
+    }
   },
 
   async signupUser({ dispatch, commit }, payload) {

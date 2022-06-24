@@ -59,14 +59,6 @@ docker_build:
     - master
     - /^feature*.*$/
 
-deploy:staging:
-  stage: deploy
-  tags:
-    - shell
-  script:
-    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy seller-fulfillment seller-fulfillment=${STAGING_IMAGE}"
-  only:
-    - staging
 
 create-preview-env:
   stage: deploy

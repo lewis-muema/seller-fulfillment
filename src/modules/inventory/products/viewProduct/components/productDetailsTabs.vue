@@ -27,10 +27,10 @@ export default {
     return {
       tabs: [
         {
-          label: "Overview",
+          label: this.$t("inventory.overview"),
         },
         // {
-        //   label: "History",
+        //   label: this.$t("inventory.history"),
         // },
       ],
     };

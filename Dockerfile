@@ -8,8 +8,12 @@ RUN npm install
 
 COPY . .
 
-RUN  npm run build
-
+RUN if [ "$DOCKER_ENV" = "testing" ]; \
+        then npm run staging; \
+        elif [ "$DOCKER_ENV" = "beta" ]; \
+        then npm run beta; \
+        else npm run build; \
+        fi
 
 #####################
 FROM sendy-docker-local.jfrog.io/nginx:stable-alpine

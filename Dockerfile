@@ -8,9 +8,11 @@ RUN npm install
 
 COPY . .
 
-RUN if [ "$DOCKER_ENV" = "testing" ]; \
+ARG ENV=$ENV
+
+RUN if [ "$ENV" = "testing" ]; \
         then npm run staging; \
-        elif [ "$DOCKER_ENV" = "beta" ]; \
+        elif [ "$ENV" = "beta" ]; \
         then npm run beta; \
         else npm run build; \
         fi

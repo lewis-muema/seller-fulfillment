@@ -82,7 +82,11 @@
               v-loading="loading"
               :class="loading ? 'disabled' : ''"
             >
-              {{ $t("auth.signUp") }}
+              {{
+                getOTPRedirectUrl === "otp/signIn"
+                  ? $t("auth.updateDetails")
+                  : $t("auth.signUp")
+              }}
             </button>
           </div>
           <p class="terms-link-text">
@@ -131,12 +135,35 @@ export default {
     };
   },
   async mounted() {
+    if (!this.getOTPRedirectUrl) {
+      this.$router.go(-2);
+    }
+    if (this.getOTPRedirectUrl === "otp/signIn") {
+      this.firstName = this.getUserDetails.first_name
+        ? this.getUserDetails.first_name
+        : "";
+      this.lastName = this.getUserDetails.last_name
+        ? this.getUserDetails.last_name
+        : "";
+      this.phoneNo = this.getUserDetails.phone_number
+        ? this.getUserDetails.phone_number
+        : "";
+    }
     await this.industryList();
   },
   computed: {
-    ...mapGetters(["getGoogleUserData", "getIndustries", "getUserData"]),
+    ...mapGetters([
+      "getGoogleUserData",
+      "getIndustries",
+      "getUserData",
+      "getOTPRedirectUrl",
+      "getUserDetails",
+      "getLoginData",
+    ]),
     businessId() {
-      return this.getUserData.business.business_id;
+      return this.getUserData.business
+        ? this.getUserData.business.business_id
+        : this.getLoginData.business_id;
     },
     supportedIndustries() {
       return this.getIndustries.industries;

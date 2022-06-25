@@ -255,7 +255,9 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path === "/inventory/stock-levels") {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           this.setProductLists(response.data.data.products);
         }

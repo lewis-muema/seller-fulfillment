@@ -20,6 +20,9 @@ export default {
   setDeliveries(state, val) {
     state.deliveries = val;
   },
+  setConsignments(state, val) {
+    state.consignments = val;
+  },
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },

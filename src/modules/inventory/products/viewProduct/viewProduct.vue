@@ -140,7 +140,9 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path.includes("/inventory/view-product")) {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           this.setProduct(response.data.data.product);
           this.actions[1].show = !this.getProduct.product_archived;
@@ -154,7 +156,9 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/archive`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path.includes("/inventory/view-product")) {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           ElNotification({
             title: this.$t("inventory.productArchivedSuccessfully"),
@@ -171,7 +175,9 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/unarchive`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path.includes("/inventory/view-product")) {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           ElNotification({
             title: this.$t("inventory.productUnarchivedSuccessfully"),

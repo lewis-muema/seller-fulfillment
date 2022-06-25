@@ -4,22 +4,35 @@
     <div class="desktop-dashboard-tab-container">
       <div
         class="dashboard-deliveries-tab"
+        :class="
+          activeTab !== tab.label && getLoader === 'loading-text'
+            ? 'inactive-tab'
+            : 'active-tab'
+        "
         v-for="tab in tabs"
         :key="tab.label"
         :label="tab.label"
       >
         <div
           class="dashboard-deliveries-tab-section"
-          @click="setTab(tab)"
           :class="activeTab === tab.label ? 'active' : ''"
         >
-          {{ tab.label }}
-          <v-badge
-            color="#FBDF9A"
-            text-color="#7F3B02"
-            :content="`${tab.content}`"
-            inline
-          ></v-badge>
+          <span
+            class="d-flex"
+            @click="
+              activeTab !== tab.label && getLoader === 'loading-text'
+                ? nothing()
+                : setTab(tab)
+            "
+          >
+            {{ tab.label }}
+            <v-badge
+              color="#FBDF9A"
+              text-color="#7F3B02"
+              :content="`${tab.content}`"
+              inline
+            ></v-badge>
+          </span>
         </div>
       </div>
     </div>
@@ -63,6 +76,7 @@ export default {
     setTab(tab) {
       this.setDashboardSelectedTab(tab.label);
     },
+    nothing() {},
   },
   watch: {
     "$store.state.loader": function loader(val) {
@@ -78,6 +92,7 @@ export default {
       "getStockStatistics",
       "getDeliveriesStatistics",
       "getConsignmentStatistics",
+      "getLoader",
     ]),
     activeTab() {
       return this.getDashboardSelectedTab;
@@ -113,11 +128,13 @@ export default {
 .dashboard-deliveries-tab-section {
   width: max-content;
   display: flex;
-  cursor: pointer;
   color: #909399;
   font-size: 14px;
   font-weight: 500;
   padding: 5px 10px;
+}
+.dashboard-deliveries-tab-section-inner {
+  cursor: pointer;
 }
 .desktop-dashboard-tab-container {
   display: grid;
@@ -134,5 +151,14 @@ export default {
 .active {
   color: #324ba8 !important;
   border-bottom: 2px solid #324ba8 !important;
+}
+.active-tab {
+  cursor: pointer !important;
+}
+.inactive-tab {
+  cursor: not-allowed !important;
+}
+.inactive-tab-inner {
+  pointer-events: none;
 }
 </style>

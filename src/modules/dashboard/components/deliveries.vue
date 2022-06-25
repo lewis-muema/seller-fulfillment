@@ -1,6 +1,6 @@
 <template>
   <div class="deliveries-container">
-    <div class="deliveries-container-inner" v-if="getDeliveries.length">
+    <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
       <v-table class="">
         <thead>
           <tr>
@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in getDeliveries" :key="index">
+          <tr v-for="(item, index) in filteredDeliveries" :key="index">
             <td>
               <v-list-item class="dashboard-customer-columns" lines="two">
                 <v-list-item-header>
@@ -132,24 +132,44 @@ export default {
       "getDashboardSelectedTab",
       "getLoader",
       "getDeliveries",
+      "getConsignments",
       "getStorageUserDetails",
     ]),
     getSelectedTab() {
       return this.selectedTab;
     },
+    filteredDeliveries() {
+      if (this.getSelectedTab === "To your Customers") {
+        return this.getDeliveries;
+      }
+      return this.getConsignments;
+    },
   },
   watch: {
     selectedTab() {
+      if (this.getSelectedTab === "To your Customers") {
+        this.setDeliveries(this.placeholders);
+      } else {
+        this.setConsignments(this.placeholders);
+      }
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders = this.getDeliveries;
+    this.placeholders =
+      this.getSelectedTab === "To your Customers"
+        ? this.getDeliveries
+        : this.getConsignments;
     this.fetchOrders();
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
-    ...mapMutations(["setComponent", "setLoader", "setDeliveries"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setDeliveries",
+      "setConsignments",
+    ]),
     fetchOrders() {
       this.setLoader("loading-text");
       this.requestAxiosGet({
@@ -161,9 +181,15 @@ export default {
         }${this.params}`,
       }).then((response) => {
         if (response.status === 200) {
-          this.setDeliveries(response.data.data.orders);
+          if (this.getSelectedTab === "To your Customers") {
+            this.setDeliveries(response.data.data.orders);
+          } else {
+            this.setConsignments(response.data.data.orders);
+          }
         }
-        this.setLoader("");
+        if (this.$route.path === "/") {
+          this.setLoader("");
+        }
       });
     },
     deliveryDate(date) {

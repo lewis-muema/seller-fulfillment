@@ -152,7 +152,9 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setActivePayment(response.data.data);
-          this.setLoader("");
+          if (this.$route.path.includes("/payments/payment-summary")) {
+            this.setLoader("");
+          }
         } else {
           this.$router.push("/");
         }

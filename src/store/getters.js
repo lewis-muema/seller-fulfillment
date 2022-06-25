@@ -10,6 +10,7 @@ export default {
   getData: (state) => state.data,
   getOrderStatuses: (state) => state.orderStatuses,
   getDeliveries: (state) => state.deliveries,
+  getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
   getPickupInfo: (state) => state.pickupInfo,
   getProducts: (state) => state.products,

@@ -208,9 +208,11 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries${this.params}`,
       }).then((response) => {
-        this.setLoader("");
         if (response.status === 200) {
           this.setDeliveries(response.data.data.orders);
+        }
+        if (this.$route.path === "/deliveries/customer") {
+          this.setLoader("");
         }
       });
     },

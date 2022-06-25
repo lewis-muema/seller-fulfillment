@@ -137,7 +137,9 @@ export default {
             : ""
         }`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path === "/inventory/products") {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           this.setProductLists(response.data.data.products);
         }

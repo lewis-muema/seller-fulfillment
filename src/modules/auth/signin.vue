@@ -157,7 +157,10 @@ export default {
       } catch (error) {
         this.loading = false;
         ElNotification({
-          title: this.getErrors.message.replaceAll(".", " "),
+          title:
+            this.getErrors.message === "useridentifier.notfound"
+              ? this.$t("auth.userAccountNotFound")
+              : this.getErrors.message.replaceAll(".", " "),
           message: "",
           type: "error",
         });

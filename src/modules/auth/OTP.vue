@@ -99,8 +99,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["confirmUser", "attemptLogin"]),
-    ...mapMutations(["setAccessToken", "setRefreshToken"]),
+    ...mapActions(["confirmUser", "attemptLogin", "requestAxiosGet"]),
+    ...mapMutations([
+      "setAccessToken",
+      "setRefreshToken",
+      "setUserDetails",
+      "setAchievements",
+    ]),
     handleOnComplete(value) {
       this.otp = parseInt(value);
     },
@@ -146,26 +151,53 @@ export default {
           this.setRefreshToken(refreshToken);
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
-          this.clearInput();
-          this.loading = false;
-          this.getOTPRedirectUrl === "otp/signIn"
-            ? this.$router.push("/")
-            : this.$router.push("/auth/complete-signup");
+          this.setAchievements({});
+          this.redirect();
         } else {
           ElNotification({
             title: "",
-            message: this.$t("auth.failedToCreateAccount"),
+            message: this.$t("auth.couldNotVerifyOTP"),
             type: "error",
           });
+          this.loading = false;
         }
-        this.loading = false;
       } catch (error) {
         ElNotification({
           title: "",
-          message: this.$t("auth.failedToCreateAccount"),
+          message: this.$t("auth.couldNotVerifyOTP"),
           type: "error",
         });
       }
+    },
+    redirect() {
+      if (this.getOTPRedirectUrl === "otp/signUp") {
+        this.clearInput();
+        this.loading = false;
+        this.$router.push("/auth/complete-signup");
+      } else {
+        this.getUsersDetails();
+      }
+    },
+    getUsersDetails() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.businessId}/user`,
+      }).then((response) => {
+        this.clearInput();
+        this.loading = false;
+        if (response.status === 200) {
+          this.setUserDetails(response.data.data.user);
+          if (
+            response.data.data.user.first_name &&
+            response.data.data.user.last_name &&
+            response.data.data.user.phone_number
+          ) {
+            this.$router.push("/");
+          } else {
+            this.$router.push("/auth/complete-signup");
+          }
+        }
+      });
     },
   },
 };

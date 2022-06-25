@@ -147,7 +147,12 @@ export default {
         endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
         values: this.productPayload,
       }).then((response) => {
-        this.setLoader("");
+        if (
+          this.$route.path ===
+          `/inventory/send-inventory/${this.$route.params.path}/checkout`
+        ) {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           this.setFulfillmentFees(response.data.data);
         }

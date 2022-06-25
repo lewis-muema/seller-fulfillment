@@ -118,7 +118,9 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
-        this.setLoader("");
+        if (this.$route.path.includes("/deliveries/tracking")) {
+          this.setLoader("");
+        }
         if (response.status === 200) {
           this.setOrderTimelines(response.data.data.events);
           const events = response.data.data.events;

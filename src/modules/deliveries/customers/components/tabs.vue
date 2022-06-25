@@ -4,61 +4,121 @@
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'All' ? 'active-orders-tab' : ''"
-        @click="passActiveTab('All', '')"
       >
-        All
+        <span
+          :class="
+            activeTab !== 'All' && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'All' && getLoader === 'loading-text'
+              ? nothing()
+              : passActiveTab('All', '')
+          "
+        >
+          {{ $t("inventory.all") }}
+        </span>
       </div>
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'Pending' ? 'active-orders-tab' : ''"
-        @click="passActiveTab('Pending', 'ORDER_IN_PROCESSING')"
       >
-        {{ $t("deliveries.pending") }}
-        <v-badge
-          color="#FBDF9A"
-          text-color="#7F3B02"
-          :content="pending"
-          inline
-        ></v-badge>
+        <span
+          :class="
+            activeTab !== 'Pending' && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'Pending' && getLoader === 'loading-text'
+              ? nothing()
+              : passActiveTab('Pending', 'ORDER_IN_PROCESSING')
+          "
+        >
+          {{ $t("deliveries.pending") }}
+          <v-badge
+            color="#FBDF9A"
+            text-color="#7F3B02"
+            :content="pending"
+            inline
+          ></v-badge>
+        </span>
       </div>
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'inTransit' ? 'active-orders-tab' : ''"
-        @click="passActiveTab('inTransit', 'ORDER_IN_TRANSIT')"
       >
-        {{ $t("deliveries.inTransit") }}
-        <v-badge
-          color="#B8F5A8"
-          text-color="#7F3B02"
-          :content="transit"
-          inline
-        ></v-badge>
+        <span
+          :class="
+            activeTab !== 'inTransit' && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'inTransit' && getLoader === 'loading-text'
+              ? nothing()
+              : passActiveTab('inTransit', 'ORDER_IN_TRANSIT')
+          "
+        >
+          {{ $t("deliveries.inTransit") }}
+          <v-badge
+            color="#B8F5A8"
+            text-color="#7F3B02"
+            :content="transit"
+            inline
+          ></v-badge>
+        </span>
       </div>
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'Failed' ? 'active-orders-tab' : ''"
-        @click="passActiveTab('Failed', 'ORDER_FAILED')"
       >
-        {{ $t("deliveries.failed") }}
-        <v-badge
-          color="#9B101C"
-          text-color="white"
-          :content="failed"
-          inline
-        ></v-badge>
+        <span
+          :class="
+            activeTab !== 'Failed' && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'Failed' && getLoader === 'loading-text'
+              ? nothing()
+              : passActiveTab('Failed', 'ORDER_FAILED')
+          "
+        >
+          {{ $t("deliveries.failed") }}
+          <v-badge
+            color="#9B101C"
+            text-color="white"
+            :content="failed"
+            inline
+          ></v-badge>
+        </span>
       </div>
       <div
         class="customers-orders-tab-section"
         :class="activeTab === 'Completed' ? 'active-orders-tab' : ''"
-        @click="passActiveTab('Completed', 'ORDER_COMPLETED')"
       >
-        {{ $t("deliveries.completed") }}
-        <v-badge
-          color="#324BA8"
-          text-color="white"
-          :content="completed"
-          inline
-        ></v-badge>
+        <span
+          :class="
+            activeTab !== 'Completed' && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'Completed' && getLoader === 'loading-text'
+              ? nothing()
+              : passActiveTab('Completed', 'ORDER_COMPLETED')
+          "
+        >
+          {{ $t("deliveries.completed") }}
+          <v-badge
+            color="#324BA8"
+            text-color="white"
+            :content="completed"
+            inline
+          ></v-badge>
+        </span>
       </div>
     </div>
     <div>
@@ -105,7 +165,7 @@ export default {
     activeTab() {
       return this.getTab;
     },
-    ...mapGetters(["getTab", "getDeliveriesStatistics"]),
+    ...mapGetters(["getTab", "getDeliveriesStatistics", "getLoader"]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setTabStatus"]),
@@ -113,6 +173,7 @@ export default {
       this.setTab(tab);
       this.setTabStatus(val);
     },
+    nothing() {},
   },
 };
 </script>
@@ -145,7 +206,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   color: #606266;
   font-size: 14px;
   font-weight: 500;

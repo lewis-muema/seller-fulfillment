@@ -4,22 +4,34 @@
       <div class="desktop-product-tab-container">
         <div
           class="desktop-product-tab"
+          :class="
+            activeTab !== tab.label && getLoader === 'loading-text'
+              ? 'inactive-tab'
+              : 'active-tab'
+          "
           v-for="tab in productTabs"
           :key="tab.label"
           :label="tab.label"
         >
           <div
             class="desktop-product-tab-section"
-            @click="setTab(tab)"
             :class="activeTab === tab.label ? 'active' : ''"
           >
-            {{ tab.label }}
-            <v-badge
-              color="#D3DDF6"
-              text-color="#324BA8"
-              :content="tab.content"
-              inline
-            ></v-badge>
+            <span
+              @click="
+                activeTab !== tab.label && getLoader === 'loading-text'
+                  ? nothing()
+                  : setTab(tab)
+              "
+            >
+              {{ tab.label }}
+              <v-badge
+                color="#D3DDF6"
+                text-color="#324BA8"
+                :content="tab.content"
+                inline
+              ></v-badge>
+            </span>
           </div>
         </div>
       </div>
@@ -47,22 +59,34 @@
     >
       <div
         class="desktop-product-tab"
+        :class="
+          activeTab !== tab.label && getLoader === 'loading-text'
+            ? 'inactive-tab'
+            : 'active-tab'
+        "
         v-for="tab in stockLevelTabs"
         :key="tab.label"
         :label="tab.label"
       >
         <div
           class="desktop-product-tab-section"
-          @click="setTab(tab)"
           :class="activeTab === tab.label ? 'active' : ''"
         >
-          {{ tab.label }}
-          <v-badge
-            :color="tab.bgColor"
-            :text-color="tab.color"
-            :content="tab.content"
-            inline
-          ></v-badge>
+          <span
+            @click="
+              activeTab !== tab.label && getLoader === 'loading-text'
+                ? nothing()
+                : setTab(tab)
+            "
+          >
+            {{ tab.label }}
+            <v-badge
+              :color="tab.bgColor"
+              :text-color="tab.color"
+              :content="tab.content"
+              inline
+            ></v-badge>
+          </span>
         </div>
       </div>
     </div>
@@ -112,6 +136,7 @@ export default {
       "getInventorySelectedTab",
       "getProductLists",
       "getStockStatistics",
+      "getLoader",
     ]),
     getRoute() {
       return this.$route.path;
@@ -157,6 +182,7 @@ export default {
     setTab(tab) {
       this.setInventorySelectedTab(tab.label);
     },
+    nothing() {},
   },
 };
 </script>
@@ -174,11 +200,13 @@ export default {
 }
 .desktop-product-tab-section {
   width: max-content;
-  cursor: pointer;
   color: #606266;
   font-size: 15px;
   font-weight: 500;
   padding: 5px 10px;
+}
+.desktop-product-tab-section-inner {
+  cursor: pointer;
 }
 button {
   align-items: center;

@@ -92,7 +92,9 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setBillingCycles(response.data.data.billing_cycles);
-          this.setLoader("");
+          if (this.$route.path === "/payments/billings") {
+            this.setLoader("");
+          }
         }
       });
     },

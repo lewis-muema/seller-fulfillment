@@ -150,7 +150,7 @@
               route === $t('common.paymentOptions') ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
-          <v-list-item
+          <!-- <v-list-item
             :title="$t('common.manageUsers')"
             @click="$router.push('/settings/manage-users')"
             class="desktop-sidebar-sub-menu"
@@ -167,7 +167,7 @@
             :append-icon="
               route === $t('common.activityLog') ? 'mdi-circle-small' : ''
             "
-          ></v-list-item>
+          ></v-list-item> -->
         </v-list-group>
       </v-list>
     </v-navigation-drawer>

@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <div v-if="getDeliveries.length > 0">
+      <div v-if="getConsignments.length > 0">
         <v-table>
           <thead>
             <tr>
@@ -42,7 +42,7 @@
           <tbody>
             <tr
               class="deliveries-table-column"
-              v-for="(item, i) in getDeliveries"
+              v-for="(item, i) in getConsignments"
               :key="i"
             >
               <td class="deliveries-product-row">
@@ -153,18 +153,18 @@ export default {
       }
     },
     params() {
-      this.setDeliveries(this.placeholders);
+      this.setConsignments(this.placeholders);
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders = this.getDeliveries;
+    this.placeholders = this.getConsignments;
     this.getPickUpStats();
     this.fetchOrders();
   },
   computed: {
     ...mapGetters([
-      "getDeliveries",
+      "getConsignments",
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
@@ -175,7 +175,7 @@ export default {
     ...mapMutations([
       "setComponent",
       "setLoader",
-      "setDeliveries",
+      "setConsignments",
       "setConsignmentStatistics",
     ]),
     navigate(route) {
@@ -198,9 +198,11 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments${this.params}`,
       }).then((response) => {
-        this.setLoader("");
         if (response.status === 200) {
-          this.setDeliveries(response.data.data.orders);
+          this.setConsignments(response.data.data.orders);
+        }
+        if (this.$route.path === "/deliveries/sendy") {
+          this.setLoader("");
         }
       });
     },

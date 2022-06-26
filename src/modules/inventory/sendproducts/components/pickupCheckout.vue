@@ -114,12 +114,27 @@ export default {
       buttonLoader: false,
     };
   },
+  watch: {
+    $route(from, to) {
+      if (to.path.includes("checkout")) {
+        this.setCheckoutDetails({
+          location: this.location,
+          place: this.place,
+          instructions: this.instructions,
+          phone: this.phone,
+          secPhone: this.secPhone,
+          addPhoneStatus: this.addPhoneStatus,
+        });
+      }
+    },
+  },
   computed: {
     ...mapGetters([
       "getSendyPhoneProps",
       "getSelectedProducts",
       "getStorageUserDetails",
       "getAchievements",
+      "getCheckoutDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -144,6 +159,7 @@ export default {
         destination: {
           name: this.getStorageUserDetails.business_name,
           phone_number: this.phone,
+          secondary_phone_number: this.secPhone,
           delivery_location: {
             description: this.location,
             longitude: this.place.geometry.location.lng(),
@@ -156,8 +172,16 @@ export default {
       return payload;
     },
   },
+  mounted() {
+    this.location = this.getCheckoutDetails.location;
+    this.place = this.getCheckoutDetails.place;
+    this.instructions = this.getCheckoutDetails.instructions;
+    this.phone = this.getCheckoutDetails.phone;
+    this.secPhone = this.getCheckoutDetails.secPhone;
+    this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
+  },
   methods: {
-    ...mapMutations(["setProductStep"]),
+    ...mapMutations(["setProductStep", "setCheckoutDetails"]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
       this.setProductStep(val);
@@ -181,6 +205,12 @@ export default {
               message: "",
               type: "success",
             });
+            this.location = "";
+            this.place = "";
+            this.instructions = "";
+            this.phone = "";
+            this.secPhone = "";
+            this.addPhoneStatus = "";
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {

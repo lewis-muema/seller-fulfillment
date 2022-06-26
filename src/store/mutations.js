@@ -218,4 +218,7 @@ export default {
   setSettings(state, val) {
     state.settings = val;
   },
+  setCheckoutDetails(state, val) {
+    state.checkoutDetails = val;
+  },
 };

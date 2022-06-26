@@ -67,6 +67,22 @@
         {{ getOrderTrackingData.order.destination.phone_number }}
       </span>
     </p>
+    <p
+      v-if="getOrderTrackingData.order.destination.secondary_phone_number"
+      class="delivery-info-label"
+    >
+      <span :class="getLoader">
+        {{ $t("deliveries.secondaryPhoneNumber") }}
+      </span>
+    </p>
+    <p
+      v-if="getOrderTrackingData.order.destination.secondary_phone_number"
+      class="delivery-info-data"
+    >
+      <span :class="getLoader">
+        {{ getOrderTrackingData.order.destination.secondary_phone_number }}
+      </span>
+    </p>
     <p v-if="getParent === 'customer'" class="delivery-info-label">
       <span :class="getLoader">
         {{ $t("deliveries.instructions") }}

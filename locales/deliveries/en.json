@@ -104,5 +104,6 @@
   "orderStatus": "Order Status",
   "name": "Name",
   "phone": "Phone",
-  "location": "Location"
+  "location": "Location",
+  "secondaryPhoneNumber": "Secondary phone number"
 }

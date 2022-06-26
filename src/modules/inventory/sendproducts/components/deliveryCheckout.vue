@@ -157,6 +157,21 @@ export default {
       buttonLoader: false,
     };
   },
+  watch: {
+    $route(from, to) {
+      if (to.path.includes("checkout")) {
+        this.setCheckoutDetails({
+          name: this.name,
+          location: this.location,
+          place: this.place,
+          instructions: this.instructions,
+          phone: this.phone,
+          secPhone: this.secPhone,
+          addPhoneStatus: this.addPhoneStatus,
+        });
+      }
+    },
+  },
   computed: {
     ...mapGetters([
       "getSendyPhoneProps",
@@ -167,6 +182,7 @@ export default {
       "getPaymnetMethods",
       "getStorageUserDetails",
       "getAchievements",
+      "getCheckoutDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -206,6 +222,7 @@ export default {
         destination: {
           name: this.name,
           phone_number: this.phone,
+          secondary_phone_number: this.secPhone,
           delivery_location: {
             description: this.location,
             longitude: this.place.geometry.location.lng(),
@@ -223,9 +240,20 @@ export default {
   },
   mounted() {
     this.getDefaultPaymentMethod();
+    this.name = this.getCheckoutDetails.name;
+    this.location = this.getCheckoutDetails.location;
+    this.place = this.getCheckoutDetails.place;
+    this.instructions = this.getCheckoutDetails.instructions;
+    this.phone = this.getCheckoutDetails.phone;
+    this.secPhone = this.getCheckoutDetails.secPhone;
+    this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },
   methods: {
-    ...mapMutations(["setProductStep", "setPaymentMethods"]),
+    ...mapMutations([
+      "setProductStep",
+      "setPaymentMethods",
+      "setCheckoutDetails",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
       this.setProductStep(val);
@@ -267,6 +295,13 @@ export default {
               message: "",
               type: "success",
             });
+            this.name = "";
+            this.location = "";
+            this.place = "";
+            this.instructions = "";
+            this.phone = "";
+            this.secPhone = "";
+            this.addPhoneStatus = "";
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {

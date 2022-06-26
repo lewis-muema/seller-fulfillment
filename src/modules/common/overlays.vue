@@ -109,10 +109,22 @@
         v-model="secPhone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
-        <i class="mdi mdi-plus"></i>
-        {{ $t("deliveries.addAnotherPhoneNumber") }}
-      </p>
+      <div
+        class="add-phone-number mb-4"
+        v-if="!secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+        {{ $t("inventory.addAnotherPhoneNo") }}
+      </div>
+      <div
+        class="add-phone-number mb-4"
+        v-if="secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+        {{ $t("deliveries.removePhoneNumber") }}
+      </div>
       <v-btn
         class="edit-info-submit-button"
         v-loading="buttonLoader"
@@ -176,10 +188,22 @@
         v-model="secPhone"
         mode="international"
       ></vue-tel-input>
-      <p class="edit-info-add-phone" @click="secondaryPhoneStatus = true">
-        <i class="mdi mdi-plus"></i>
-        {{ $t("deliveries.addAnotherPhoneNumber") }}
-      </p>
+      <div
+        class="add-phone-number mb-4"
+        v-if="!secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+        {{ $t("inventory.addAnotherPhoneNo") }}
+      </div>
+      <div
+        class="add-phone-number mb-4"
+        v-if="secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+        {{ $t("deliveries.removePhoneNumber") }}
+      </div>
       <label for="instructions" class="edit-info-label">
         {{ $t("inventory.deliveryInstructions") }}
       </label>
@@ -456,7 +480,6 @@ export default {
   props: ["overlayVal", "editInfo"],
   watch: {
     "$store.state.overlayStatus": function (val) {
-      this.secondaryPhoneStatus = false;
       this.overlay = val.overlay;
       this.popup = val.popup;
       this.newCurrency =
@@ -474,6 +497,10 @@ export default {
       this.customerName = val.order.destination.name;
       this.location = val.order.destination.delivery_location.description;
       this.phone = val.order.destination.phone_number;
+      this.secondaryPhoneStatus =
+        val.order.destination.secondary_phone_number !== null &&
+        val.order.destination.secondary_phone_number !== "";
+      this.secPhone = val.order.destination.secondary_phone_number;
       this.instructions = val.order.destination.delivery_instructions;
       this.date = new Date(val.order.scheduled_date);
     },
@@ -535,7 +562,6 @@ export default {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
     ...mapMutations(["setLoader", "setOrderTrackingData", "setPromoCode"]),
     overlayStatusSet(overlay, popup) {
-      this.secondaryPhoneStatus = false;
       this.overlay = overlay;
       this.popup = popup;
     },
@@ -560,6 +586,9 @@ export default {
             phone_number: this.phone
               ? this.phone
               : order.destination.phone_number,
+            secondary_phone_number: this.secPhone
+              ? this.secPhone
+              : order.destination.secondary_phone_number,
             delivery_location: {
               description: this.location
                 ? this.location
@@ -623,6 +652,9 @@ export default {
             phone_number: this.phone
               ? this.phone
               : order.destination.phone_number,
+            secondary_phone_number: this.secPhone
+              ? this.secPhone
+              : order.destination.secondary_phone_number,
             delivery_location: {
               description: this.location
                 ? this.location

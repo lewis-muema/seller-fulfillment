@@ -171,6 +171,9 @@ export default {
     this.fetchOrders();
     this.getDeliveryStats();
   },
+  beforeUnmount() {
+    this.setDeliveries(this.placeholders);
+  },
   computed: {
     ...mapGetters([
       "getDeliveries",

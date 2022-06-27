@@ -162,6 +162,9 @@ export default {
     this.getPickUpStats();
     this.fetchOrders();
   },
+  beforeUnmount() {
+    this.setConsignments(this.placeholders);
+  },
   computed: {
     ...mapGetters([
       "getConsignments",

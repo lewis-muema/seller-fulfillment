@@ -280,7 +280,8 @@ export default {
         this.name &&
         this.phone &&
         this.location &&
-        this.getSelectedProducts.length
+        this.getSelectedProducts.length &&
+        this.defaultPaymentMethod.length > 0
       ) {
         this.buttonLoader = true;
         this.requestAxiosPost({
@@ -318,7 +319,7 @@ export default {
       } else {
         ElNotification({
           title: this.$t("deliveries.insufficientInformation"),
-          message: this.$t("deliveries.pleaseFillInAllFields"),
+          message: this.$t("deliveries.pleaseFillInAllFieldsDefaultPayment"),
           type: "warning",
         });
       }

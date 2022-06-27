@@ -179,6 +179,9 @@ export default {
     this.fetchProducts();
     this.getStockSettings();
   },
+  beforeUnmount() {
+    this.setProductLists(this.placeholder);
+  },
   computed: {
     ...mapGetters([
       "getLoader",

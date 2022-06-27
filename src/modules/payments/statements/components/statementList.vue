@@ -145,6 +145,7 @@ export default {
       from: "",
       to: "",
       range: "",
+      placeholder: [],
     };
   },
   computed: {
@@ -157,6 +158,12 @@ export default {
       "getStorageUserDetails",
       "getLineItems",
     ]),
+  },
+  mounted() {
+    this.placeholder = this.getBillingCycles;
+  },
+  beforeUnmount() {
+    this.setBillingCycles(this.placeholder);
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),

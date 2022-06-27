@@ -219,4 +219,8 @@ export default {
 .v-text-field__prefix {
   margin-left: 15px;
 }
+.el-date-editor .el-range__close-icon {
+  height: 1rem !important;
+  width: 1rem !important;
+}
 </style>

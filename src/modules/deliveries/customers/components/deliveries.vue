@@ -197,13 +197,15 @@ export default {
     limitParams() {
       return `?lowerLimitDate=${moment(this.range[0]).format(
         "YYYY-MM-DD"
-      )}&?upperLimitDate=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+      )}&upperLimitDate=${moment(this.range[1]).format("YYYY-MM-DD")}`;
     },
     statusParams() {
-      return `?status=${this.getTabStatus}`;
+      return `status=${this.getTabStatus}`;
     },
     allParams(status, range) {
-      this.params = `${range}${status && range ? "&" : ""}${status}`;
+      this.params = `${range}${status && range ? "&" : ""}${
+        range ? "" : "?"
+      }${status}`;
     },
     fetchOrders() {
       this.setLoader("loading-text");

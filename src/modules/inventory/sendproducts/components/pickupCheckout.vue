@@ -227,7 +227,7 @@ export default {
       } else {
         ElNotification({
           title: this.$t("deliveries.insufficientInformation"),
-          message: this.$t("deliveries.pleaseFillInAllFields"),
+          message: this.$t("deliveries.fillInAllFields"),
           type: "warning",
         });
       }

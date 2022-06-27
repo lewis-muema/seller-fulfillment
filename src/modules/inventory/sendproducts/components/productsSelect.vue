@@ -237,6 +237,9 @@ export default {
     this.productMapping();
     this.fetchProducts();
   },
+  beforeUnmount() {
+    this.setProductLists(this.placeholder);
+  },
   methods: {
     ...mapMutations([
       "setSelectedProducts",

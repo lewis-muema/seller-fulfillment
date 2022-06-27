@@ -124,6 +124,9 @@ export default {
     this.placeholder = this.getProductLists;
     this.fetchProducts();
   },
+  beforeUnmount() {
+    this.setProductLists(this.placeholder);
+  },
   methods: {
     ...mapMutations(["setLoader", "setProductLists"]),
     ...mapActions(["requestAxiosGet"]),

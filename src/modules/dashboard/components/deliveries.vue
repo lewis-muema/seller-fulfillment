@@ -162,6 +162,10 @@ export default {
         : this.getConsignments;
     this.fetchOrders();
   },
+  beforeUnmount() {
+    this.setDeliveries(this.placeholders);
+    this.setConsignments(this.placeholders);
+  },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     ...mapMutations([

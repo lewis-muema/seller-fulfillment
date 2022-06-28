@@ -72,4 +72,5 @@ export default {
   getConsignmentStatistics: (state) => state.consignmentStatistics,
   getSettings: (state) => state.settings,
   getCheckoutDetails: (state) => state.checkoutDetails,
+  getCountries: (state) => state.countries,
 };

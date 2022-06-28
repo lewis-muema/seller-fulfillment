@@ -221,4 +221,7 @@ export default {
   setCheckoutDetails(state, val) {
     state.checkoutDetails = val;
   },
+  setCountries(state, val) {
+    state.countries = val;
+  },
 };

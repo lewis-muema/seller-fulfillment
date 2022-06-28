@@ -36,6 +36,7 @@ export default createStore({
       businessUserDetails: {},
       googleUserData: {},
       industries: {},
+      countries: {},
       errors: {},
       loginData: {},
       googleConfirmData: {},

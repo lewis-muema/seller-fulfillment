@@ -141,8 +141,10 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       amount: 566,
@@ -296,13 +298,19 @@ export default {
               message: "",
               type: "success",
             });
-            this.name = "";
-            this.location = "";
-            this.place = "";
-            this.instructions = "";
-            this.phone = "";
-            this.secPhone = "";
-            this.addPhoneStatus = "";
+            this.sendSegmentEvents({
+              event: "Request Delivery to Buyer",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                SKU: this.getSelectedProducts,
+                deliveryLocation: this.location,
+                deliveryRegion: this.place,
+                deliveryFee: `${this.getFulfillmentFees.currency} ${this.getFulfillmentFees.calculated_fee}`,
+                clientType: "web",
+                device: "desktop",
+              },
+            });
+            this.resetInput();
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
@@ -323,6 +331,15 @@ export default {
           type: "warning",
         });
       }
+    },
+    resetInput() {
+      this.name = "";
+      this.location = "";
+      this.place = "";
+      this.instructions = "";
+      this.phone = "";
+      this.secPhone = "";
+      this.addPhoneStatus = "";
     },
     selectPaymentMethod() {
       const buPayload = {

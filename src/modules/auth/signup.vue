@@ -93,21 +93,24 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 import { ElNotification } from "element-plus";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import eventsMixin from "../../mixins/events_mixin";
+
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
+  mixins: [eventsMixin],
   data() {
     return {
       loading: false,
       countries: [
         {
-          country: "KENYA",
+          country: this.$t("auth.kenya"),
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg",
         },
         {
-          country: "UGANDA",
+          country: this.$t("auth.uganda"),
           image:
             "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
         },
@@ -168,6 +171,16 @@ export default {
           this.loading = false;
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
+          this.sendSegmentEvents({
+            event: "Sign up",
+            data: {
+              userId: data.data.data.business.business_id,
+              email: this.params.businessEmail,
+              clientType: "web",
+              device: "desktop",
+              region: this.params.countryOfOperation,
+            },
+          });
         }
         this.loading = false;
       } catch (err) {

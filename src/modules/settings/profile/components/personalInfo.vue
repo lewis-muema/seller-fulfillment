@@ -59,8 +59,10 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       firstName: "",
@@ -75,6 +77,14 @@ export default {
   },
   mounted() {
     this.getUsersDetails();
+    this.sendSegmentEvents({
+      event: "Select Account",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   methods: {
     ...mapMutations(["setUserDetails"]),
@@ -121,6 +131,14 @@ export default {
               title: this.$t("settings.userDetailsUpdatedSuccessfully"),
               message: "",
               type: "success",
+            });
+            this.sendSegmentEvents({
+              event: "Edit Account",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                clientType: "web",
+                device: "desktop",
+              },
             });
           } else {
             ElNotification({

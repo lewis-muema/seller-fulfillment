@@ -217,9 +217,11 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: { searchAlgolia },
+  mixins: [eventsMixin],
   data() {
     return {
       products: [],
@@ -320,6 +322,21 @@ export default {
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
       this.setSelectedProducts(this.selectedProducts);
+      if (this.$route.params.path === "customer") {
+        this.sendSegmentEvents({
+          event: "Product Selection",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: this.products[i].product_id,
+            variant: this.products[i].product_variants[x].product_variant_id,
+            product_collection: this.products[i].product_collection
+              ? this.products[i].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
     removeProduct(product, i, option, x) {
       this.selectedProducts.forEach((row, p) => {
@@ -335,6 +352,21 @@ export default {
           this.selectedProducts.splice(p, 1);
         }
       });
+      if (this.$route.params.path === "customer") {
+        this.sendSegmentEvents({
+          event: "Remove from Product Selection",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: this.products[i].product_id,
+            variant: this.products[i].product_variants[x].product_variant_id,
+            product_collection: this.products[i].product_collection
+              ? this.products[i].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
   },
   computed: {

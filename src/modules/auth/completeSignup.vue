@@ -106,11 +106,13 @@ import { mapGetters, mapActions } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import industryList from "@/mixins/industry_list";
+import eventsMixin from "../../mixins/events_mixin";
+
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
-  mixins: [industryList],
+  mixins: [industryList, eventsMixin],
   data() {
     return {
       loading: false,
@@ -199,6 +201,18 @@ export default {
       const data = await this.businessUserDetails(fullPayload);
       if (data.status === 200) {
         this.loading = false;
+        if (this.getOTPRedirectUrl === "otp/signUp") {
+          this.sendSegmentEvents({
+            event: "Signed Up",
+            data: {
+              userId: this.businessId,
+              email: this.getUserDetails.email,
+              clientType: "web",
+              device: "desktop",
+              industry: this.params.industryOfBusiness,
+            },
+          });
+        }
         this.$router.push("/");
       }
     },

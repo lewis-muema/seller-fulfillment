@@ -106,10 +106,11 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-// eslint-disable-next-line no-unused-vars
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       businessName: "",
@@ -134,6 +135,14 @@ export default {
   mounted() {
     this.getBusinesssDetails();
     this.listIndustries();
+    this.sendSegmentEvents({
+      event: "Select Business Profile",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   methods: {
     ...mapMutations(["setBusinessDetails", "setIndustries"]),
@@ -212,6 +221,14 @@ export default {
               title: this.$t("settings.businessDetailsUpdatedSuccessfully"),
               message: "",
               type: "success",
+            });
+            this.sendSegmentEvents({
+              event: "Edit Business Profile",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                clientType: "web",
+                device: "desktop",
+              },
             });
           } else {
             ElNotification({

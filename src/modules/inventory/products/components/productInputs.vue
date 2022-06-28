@@ -147,13 +147,14 @@ import productOptions from "@/modules/inventory/products/components/productOptio
 import upload_img from "../../../../mixins/upload_img";
 import { ElNotification } from "element-plus";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: {
     productOptions,
   },
   props: ["action"],
-  mixins: [upload_img],
+  mixins: [upload_img, eventsMixin],
   data() {
     return {
       productVariants: [],
@@ -176,6 +177,15 @@ export default {
         this.productVariants = this.variants;
       }
       this.showProductOptions = this.getAddProductStatus;
+      this.sendSegmentEvents({
+        event: "Edit Product",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          SKU: this.getProduct.product_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     }
   },
   unmounted() {
@@ -256,6 +266,15 @@ export default {
               message: "",
               type: "success",
             });
+            this.sendSegmentEvents({
+              event: "Save Product Details Edits",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                SKU: this.getProduct.product_id,
+                clientType: "web",
+                device: "desktop",
+              },
+            });
             this.$router.push(
               `/inventory/view-product/${this.getProduct.product_id}`
             );
@@ -294,6 +313,15 @@ export default {
               title: this.$t("inventory.productSavedSuccessfully"),
               message: "",
               type: "success",
+            });
+            this.sendSegmentEvents({
+              event: "Add New Product",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                variation: this.productVariants,
+                clientType: "web",
+                device: "desktop",
+              },
             });
             if (this.onboardingStatus) {
               this.$router.push("/");

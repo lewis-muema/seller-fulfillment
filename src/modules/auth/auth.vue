@@ -152,6 +152,7 @@ export default {
   align-items: flex-start;
   height: 100vh;
   padding-top: 50px;
+  overflow: scroll !important;
 }
 .auth-sendy-logo {
   width: 90px;

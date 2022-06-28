@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ countDown }}
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
         <v-card-title class="text-center sign-up-title">

@@ -46,6 +46,15 @@
               {{ $t("auth.confirmCode") }}
             </button>
           </div>
+          <div class="resend-code-otp">
+            <p>
+              {{
+                $t("auth.resendCode", {
+                  time: `${countDown}`,
+                })
+              }}
+            </p>
+          </div>
         </v-card-text>
       </div>
     </form>
@@ -65,6 +74,7 @@ export default {
   },
   data() {
     return {
+      countDown: 120,
       loading: false,
       correctOTP: false,
       otp: "",
@@ -74,6 +84,9 @@ export default {
     return {
       otp: { required },
     };
+  },
+  created() {
+    this.countDownTimer();
   },
   computed: {
     ...mapGetters(["getUserData", "getLoginData", "getOTPRedirectUrl"]),
@@ -111,6 +124,14 @@ export default {
     },
     clearInput() {
       this.$refs.otpInput.clearInput();
+    },
+    countDownTimer() {
+      if (this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
+      }
     },
     async confirmOTP() {
       this.v$.$validate();
@@ -245,5 +266,14 @@ export default {
 }
 .otp-error-msg {
   border-color: #9b101c;
+}
+.resend-code-otp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+.resend-code-otp p {
+  color: #606266;
 }
 </style>

@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      countDown: 4,
+      countDown: 120,
       countDownTriggered: false,
       loading: false,
       correctOTP: false,

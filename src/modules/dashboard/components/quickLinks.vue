@@ -10,7 +10,7 @@
       <span class="d-flex quick-links">
         <v-icon class="desktop-quick-links-icon">{{ link.icon }}</v-icon>
         <div class="router" @click="$router.push(link.path)">
-          {{ link.name }}
+          {{ $t(link.name) }}
         </div>
       </span>
     </v-card>
@@ -24,17 +24,17 @@ export default {
       quickLinks: [
         {
           icon: "mdi-truck",
-          name: this.$t("common.deliverToCustomer"),
+          name: "common.deliverToCustomer",
           path: "/inventory/send-inventory/customer/select-products",
         },
         {
           icon: "mdi-home-city",
-          name: this.$t("common.sendInventoryToSendy"),
+          name: "common.sendInventoryToSendy",
           path: "/inventory/send-inventory/sendy/select-products",
         },
         {
           icon: "mdi-plus-thick",
-          name: this.$t("common.addProducts"),
+          name: "common.addProducts",
           path: "/inventory/add-product",
         },
       ],

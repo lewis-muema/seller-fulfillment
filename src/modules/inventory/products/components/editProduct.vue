@@ -33,7 +33,7 @@ export default {
     return {};
   },
   mounted() {
-    this.setComponent(this.$t("common.editProduct"));
+    this.setComponent("common.editProduct");
   },
   computed: {},
   methods: {

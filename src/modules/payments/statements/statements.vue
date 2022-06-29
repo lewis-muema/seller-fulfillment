@@ -82,7 +82,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("common.billings"));
+    this.setComponent("common.billings");
     this.listBillingCycles();
     this.sendSegmentEvents({
       event: "Select Transaction History",

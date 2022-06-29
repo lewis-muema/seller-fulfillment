@@ -19,7 +19,7 @@ export default {
     ...mapGetters(["getStorageUserDetails"]),
   },
   mounted() {
-    this.setComponent(this.$t("common.deliveriesToCustomers"));
+    this.setComponent("common.deliveriesToCustomers");
     this.sendSegmentEvents({
       event: "See on going Deliveries",
       data: {

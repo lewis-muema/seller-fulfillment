@@ -64,7 +64,7 @@
               <td class="deliveries-progress-row">
                 <p class="deliveries-progress-row-top">
                   <span :class="getLoader">
-                    {{ formatStatus(item.order_event_status) }}
+                    {{ formatStatus(item.order_event_status, item) }}
                   </span>
                 </p>
                 <v-progress-linear
@@ -129,9 +129,11 @@
 import moment from "moment";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import eventLabels from "../../../../mixins/event_labels";
 
 export default {
   components: { searchAlgolia },
+  mixins: [eventLabels],
   data: () => ({
     deliveries: [],
     range: "",
@@ -247,9 +249,8 @@ export default {
       });
       return nameArr.join(" ");
     },
-    formatStatus(status) {
-      const fullStatus = status.replaceAll(".", " ");
-      return fullStatus.charAt(0).toUpperCase() + fullStatus.slice(1);
+    formatStatus(status, item) {
+      return this.showEventLabels(status, item);
     },
   },
 };

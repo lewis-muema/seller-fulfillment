@@ -14,7 +14,7 @@ import { mapMutations } from "vuex";
 export default {
   components: { tabs, productsList },
   mounted() {
-    this.setComponent(this.$t("common.products"));
+    this.setComponent("common.products");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

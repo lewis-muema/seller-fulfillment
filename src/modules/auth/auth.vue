@@ -62,9 +62,9 @@
             >
               <el-option
                 v-for="lang in getLanguages"
-                :key="lang.name"
-                :label="lang.name"
-                :value="lang.tag"
+                :key="lang.value"
+                :label="lang.title"
+                :value="lang.value"
               >
               </el-option>
             </el-select>
@@ -79,7 +79,7 @@
 <script>
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination } from "vue3-carousel";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -95,7 +95,7 @@ export default {
     slides: [],
   }),
   computed: {
-    ...mapGetters(["getLanguages"]),
+    ...mapGetters(["getLanguages", "getDefaultLanguage"]),
   },
   mounted() {
     this.slides = [
@@ -131,12 +131,12 @@ export default {
         profilePhoto: "",
       },
     ];
+    this.defaultLanguage = this.getDefaultLanguage;
   },
   methods: {
+    ...mapMutations(["setLanguages", "setDefaultLanguage"]),
     changeLanguage() {
-      window.dispatchEvent(
-        new CustomEvent("language-changed", { detail: this.defaultLanguage })
-      );
+      this.setLanguages(this.defaultLanguage);
     },
   },
 };

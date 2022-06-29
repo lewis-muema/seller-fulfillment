@@ -175,7 +175,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.getStarted"));
+    this.setComponent("common.getStarted");
   },
   methods: {
     ...mapMutations(["setComponent"]),

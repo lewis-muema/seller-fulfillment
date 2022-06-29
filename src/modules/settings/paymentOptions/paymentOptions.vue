@@ -9,7 +9,7 @@ import eventsMixin from "../../../mixins/events_mixin";
 export default {
   mixins: [eventsMixin],
   mounted() {
-    this.setComponent(this.$t("common.paymentOptions"));
+    this.setComponent("common.paymentOptions");
     this.selectPaymentMethod();
     this.sendSegmentEvents({
       event: "Select Payment Methods",

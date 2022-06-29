@@ -11,7 +11,7 @@ import { mapMutations } from "vuex";
 export default {
   components: { logs },
   mounted() {
-    this.setComponent(this.$t("common.activityLog"));
+    this.setComponent("common.activityLog");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

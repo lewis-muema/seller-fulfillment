@@ -94,7 +94,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("common.viewProduct"));
+    this.setComponent("common.viewProduct");
     this.fetchProduct();
   },
   computed: {

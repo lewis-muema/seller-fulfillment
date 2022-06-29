@@ -49,7 +49,7 @@ export default {
     return {};
   },
   mounted() {
-    this.setComponent(this.$t("common.profile"));
+    this.setComponent("common.profile");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

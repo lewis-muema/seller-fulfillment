@@ -196,4 +196,13 @@ export default {
       return error.response;
     }
   },
+  async listCountries({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosGet", payload);
+      commit("setCountries", res.data.data.countries);
+      return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

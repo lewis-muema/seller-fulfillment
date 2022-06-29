@@ -59,9 +59,11 @@ import productOverview from "@/modules/inventory/products/viewProduct/components
 import productHistory from "@/modules/inventory/products/viewProduct/components/productHistory";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: { productDetailsTabs, productOverview, productHistory },
+  mixins: [eventsMixin],
   data() {
     return {
       actions: [
@@ -147,6 +149,15 @@ export default {
           this.setProduct(response.data.data.product);
           this.actions[1].show = !this.getProduct.product_archived;
           this.actions[2].show = this.getProduct.product_archived;
+          this.sendSegmentEvents({
+            event: "View Product",
+            data: {
+              userId: this.getStorageUserDetails.business_id,
+              SKU: response.data.data.product.product_id,
+              clientType: "web",
+              device: "desktop",
+            },
+          });
         }
       });
     },

@@ -70,6 +70,7 @@
         id="pick-up"
         class="businessProfile-address"
         :value="location"
+        :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setPickUp"
       >
@@ -161,6 +162,7 @@
         id="location"
         class="businessProfile-address"
         :value="location"
+        :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setLocation"
       >
@@ -519,6 +521,7 @@ export default {
       "getActivePayment",
       "getBusinessDetails",
       "getUserDetails",
+      "getMapOptions",
     ]),
   },
   data() {

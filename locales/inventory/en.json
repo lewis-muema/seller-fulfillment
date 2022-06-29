@@ -35,7 +35,7 @@
   "desc":"Description",
   "productDescription": "Enter description of the product",
   "productOptions": "Product options (optional)",
-  "addOptions": "Add options if this product comes in different sizes or colours",
+  "addOptions": "Add options if this product comes in different sizes, materials or colours",
   "addProductOptions": "Add product options",
   "addProductOption": "Add product option",
   "nameOfOption":"Name of the Option",
@@ -139,5 +139,9 @@
   "youveNotAddedAnyProductYet": "You’ve not added any product yet",
   "addProductsToSend": "Add products to send",
   "overview": "Overview",
-  "history": "History"
+  "history": "History",
+  "sellingPrice": "Selling price of the product",
+  "enterTheNameOnThePackage": "Enter the name on the package of the product or the main attribute.",
+  "thisHelpsUsToKnow": "This helps us to know the type of vehicle we should send to pick your products.",
+  "aShortDescriptionToHelp": "A short description to help us distinguish your products at the fulfillment centre"
 }

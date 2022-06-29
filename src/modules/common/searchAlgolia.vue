@@ -117,10 +117,12 @@
 
 <script>
 import algoliaSearch from "../../mixins/algolia_search";
+import eventsMixin from "../../mixins/events_mixin";
+import { mapGetters } from "vuex";
 
 export default {
   props: ["type"],
-  mixins: [algoliaSearch],
+  mixins: [algoliaSearch, eventsMixin],
   data: () => ({
     deliveries: [],
     searchObject: {},
@@ -129,6 +131,9 @@ export default {
     searchParam: "",
     searchToggle: false,
   }),
+  computed: {
+    ...mapGetters(["getStorageUserDetails"]),
+  },
   watch: {
     searchParam(val) {
       this.initiateAlgolia(val, this.type);
@@ -139,6 +144,17 @@ export default {
       this.searchToggle = true;
       this.searchObject = object;
       this.searchItems = object.hits;
+      if (this.type === "delivery") {
+        this.sendSegmentEvents({
+          event: "Search Consignment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            searchWord: this.searchParam,
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
     clearItems() {
       this.searchToggle = false;

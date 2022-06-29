@@ -20,6 +20,7 @@
             id="location"
             class="businessProfile-address"
             :value="location"
+            :options="getMapOptions"
             :placeholder="$t('settings.searchLocation')"
             @place_changed="setLocation"
           >
@@ -99,8 +100,10 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       amount: 0,
@@ -135,6 +138,9 @@ export default {
       "getStorageUserDetails",
       "getAchievements",
       "getCheckoutDetails",
+      "getFulfillmentFees",
+      "getMapOptions",
+      "getUserDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -176,7 +182,9 @@ export default {
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
     this.instructions = this.getCheckoutDetails.instructions;
-    this.phone = this.getCheckoutDetails.phone;
+    this.phone = this.getCheckoutDetails.phone
+      ? this.getCheckoutDetails.phone
+      : this.getUserDetails.phone_number;
     this.secPhone = this.getCheckoutDetails.secPhone;
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },
@@ -205,12 +213,18 @@ export default {
               message: "",
               type: "success",
             });
-            this.location = "";
-            this.place = "";
-            this.instructions = "";
-            this.phone = "";
-            this.secPhone = "";
-            this.addPhoneStatus = "";
+            this.sendSegmentEvents({
+              event: "Send Products to Sendy",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                SKU: this.getSelectedProducts,
+                pickUpRegion: this.place,
+                pickUpFee: `${this.getFulfillmentFees.currency} ${this.getFulfillmentFees.calculated_fee}`,
+                clientType: "web",
+                device: "desktop",
+              },
+            });
+            this.resetInputs();
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
@@ -231,6 +245,14 @@ export default {
           type: "warning",
         });
       }
+    },
+    resetInputs() {
+      this.location = "";
+      this.place = "";
+      this.instructions = "";
+      this.phone = "";
+      this.secPhone = "";
+      this.addPhoneStatus = "";
     },
   },
 };

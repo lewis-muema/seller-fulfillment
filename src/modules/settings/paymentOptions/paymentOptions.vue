@@ -4,14 +4,28 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import eventsMixin from "../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   mounted() {
     this.setComponent(this.$t("common.paymentOptions"));
     this.selectPaymentMethod();
+    this.sendSegmentEvents({
+      event: "Select Payment Methods",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   computed: {
-    ...mapGetters(["getBusinessDetails", "getUserDetails"]),
+    ...mapGetters([
+      "getBusinessDetails",
+      "getUserDetails",
+      "getStorageUserDetails",
+    ]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

@@ -29,21 +29,17 @@
                 <label for="price" class="form-label">{{
                   $t("inventory.price")
                 }}</label>
-                <div class="col-7">
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="100"
+                <div class="">
+                  <v-text-field
+                    class="businessProfile-field add-product-variant-price"
+                    id="update-price"
                     v-model="productOption.product_variant_unit_price"
-                  />
-                </div>
-                <div class="col-5">
-                  <v-select
-                    class="edit-product-weight-field"
-                    :items="currencies"
-                    v-model="productOption.product_variant_currency"
-                    outlined
-                  ></v-select>
+                    label="100"
+                    variant="outlined"
+                    :prefix="productOption.product_variant_currency"
+                    clearable
+                    clear-icon="mdi-close"
+                  ></v-text-field>
                 </div>
               </div>
               <div class="row mb-5">
@@ -54,7 +50,7 @@
                   <input
                     type="number"
                     class="form-control"
-                    placeholder="0.0"
+                    placeholder="0"
                     v-model="productOption.product_variant_quantity"
                   />
                 </div>
@@ -63,6 +59,7 @@
                     class="edit-product-weight-field"
                     :items="dimensions"
                     v-model="productOption.product_variant_quantity_type"
+                    item-text
                     outlined
                   ></v-select>
                 </div>
@@ -95,7 +92,11 @@
               </div>
             </v-col>
             <v-col cols="6">
-              <div class="product-option-img" @click="pickImg()">
+              <div
+                class="product-option-img"
+                @click="pickImg()"
+                v-loading="productUploadStatus"
+              >
                 <input
                   type="file"
                   name
@@ -144,10 +145,28 @@ export default {
         product_variant_stock_levels: {},
         product_variant_unit_price: "",
       },
-      dimensions: ["KILOGRAM", "GRAM", "LITRE", "MILLILITRE"],
-      currencies: ["KES", "CI", "UGX"],
+      dimensions: [
+        {
+          title: "kilogram",
+          value: "KILOGRAM",
+        },
+        {
+          title: "gram",
+          value: "GRAM",
+        },
+        {
+          title: "litre",
+          value: "LITRE",
+        },
+        {
+          title: "millilitre",
+          value: "MILLILITRE",
+        },
+      ],
+      currencies: [],
       image: "",
       action: "add",
+      productUploadStatus: false,
     };
   },
   watch: {
@@ -163,9 +182,17 @@ export default {
     show(val) {
       this.setAddProductStatus(val);
     },
+    "$store.state.supportedCountries": function supportedCountries() {
+      this.currencies = this.currencyFilter;
+    },
   },
   computed: {
-    ...mapGetters(["getProduct", "getStorageUserDetails"]),
+    ...mapGetters([
+      "getProduct",
+      "getStorageUserDetails",
+      "getSupportedCountries",
+      "getBusinessDetails",
+    ]),
     show: {
       get() {
         return this.visible;
@@ -175,6 +202,16 @@ export default {
           this.$emit("close");
         }
       },
+    },
+    currencyFilter() {
+      const currencies = [];
+      this.getSupportedCountries.forEach((country) => {
+        currencies.push({
+          title: country.currency.currency_symbol,
+          value: country.currency.currency_id,
+        });
+      });
+      return currencies;
     },
     validateInputs() {
       if (
@@ -193,6 +230,8 @@ export default {
   mounted() {
     this.productOption.product_id = this.getProduct.product_id;
     this.productOption.business_id = this.getStorageUserDetails.business_id;
+    this.productOption.product_variant_currency =
+      this.getBusinessDetails.currency;
   },
   methods: {
     ...mapMutations(["setAddProductStatus"]),
@@ -211,6 +250,7 @@ export default {
       if (this.validateInputs) {
         this.$emit("addOptions", this.productOption);
         this.resetInputs();
+        document.querySelector("#upload-img-card").value = "";
       } else {
         this.infoNotification();
       }
@@ -300,5 +340,11 @@ export default {
 .add-products-options-close {
   margin-left: auto;
   cursor: pointer;
+}
+.add-product-variant-price {
+  height: 70px;
+}
+.product-option-img .el-loading-mask {
+  padding-top: 35%;
 }
 </style>

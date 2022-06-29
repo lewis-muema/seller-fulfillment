@@ -256,7 +256,8 @@ export default {
       let tally = 0;
       product.product_variants.forEach((row) => {
         if (row.product_variant_stock_levels) {
-          tally = row.product_variant_stock_levels.available + tally;
+          tally =
+            row.product_variant_stock_levels.quantity_in_inventory + tally;
         }
       });
       return tally;
@@ -266,7 +267,7 @@ export default {
       product.product_variants.forEach((row) => {
         if (row.product_variant_stock_levels) {
           tally =
-            row.product_variant_stock_levels.quantity_in_inventory + tally;
+            row.product_variant_stock_levels.quantity_in_sales_orders + tally;
         }
       });
       return tally;
@@ -279,7 +280,7 @@ export default {
             row.product_variant_stock_levels.quantity_in_sales_orders + tally;
         }
       });
-      return tally;
+      return "-";
     },
   },
 };

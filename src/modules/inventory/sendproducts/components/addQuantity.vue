@@ -104,7 +104,8 @@
                         selectedProduct.selectedOption
                           .product_variant_stock_levels
                           ? selectedProduct.selectedOption
-                              .product_variant_stock_levels.available
+                              .product_variant_stock_levels
+                              .quantity_in_inventory
                           : "-"
                       }}
                     </div>

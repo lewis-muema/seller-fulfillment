@@ -47,7 +47,7 @@
                   {{
                     product.product_variants[0].product_variant_stock_levels
                       ? product.product_variants[0].product_variant_stock_levels
-                          .available
+                          .quantity_in_inventory
                       : "-"
                   }}
                   {{ $t("inventory.inStock") }}

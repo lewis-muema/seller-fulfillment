@@ -75,7 +75,8 @@
                       >{{
                         product.product_variants[0].product_variant_stock_levels
                           ? product.product_variants[0]
-                              .product_variant_stock_levels.available
+                              .product_variant_stock_levels
+                              .quantity_in_inventory
                           : "-"
                       }}
                       {{ $t("inventory.units") }}</span
@@ -123,7 +124,8 @@
                             product.product_variants[0]
                               .product_variant_stock_levels
                               ? product.product_variants[0]
-                                  .product_variant_stock_levels.available
+                                  .product_variant_stock_levels
+                                  .quantity_in_inventory
                               : "-"
                           }}
                           {{ $t("inventory.units") }}</span
@@ -157,7 +159,8 @@
                           <span :class="getLoader" class="product-select-units"
                             >{{
                               option.product_variant_stock_levels
-                                ? option.product_variant_stock_levels.available
+                                ? option.product_variant_stock_levels
+                                    .quantity_in_inventory
                                 : "-"
                             }}
                             {{ $t("inventory.units") }}</span

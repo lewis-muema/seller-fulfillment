@@ -228,4 +228,7 @@ export default {
   setMapOptions(state, val) {
     state.mapOptions = val;
   },
+  setEventLabels(state, val) {
+    state.eventLabels = val;
+  },
 };

@@ -45,7 +45,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("payments.viewInvoice"));
+    this.setComponent("payments.viewInvoice");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setInvoice"]),

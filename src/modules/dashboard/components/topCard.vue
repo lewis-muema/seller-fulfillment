@@ -31,13 +31,13 @@
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       <span :class="getLoader">
-                        {{ order.orderStatus }}
+                        {{ $t(order.orderStatus) }}
                       </span>
                     </v-list-item-subtitle>
                   </v-list-item-header>
                   <v-divider
                     :class="
-                      order.orderStatus === 'Items out of Stock'
+                      order.orderStatus === 'dashboard.itemsOutOfStock'
                         ? 'v-divider-last-item'
                         : 'v-divider-height'
                     "
@@ -64,25 +64,25 @@ export default {
         {
           icon: "mdi mdi-truck",
           count: "0",
-          orderStatus: "Ongoing orders",
+          orderStatus: "dashboard.ongoingOrders",
           color: "#5287EE",
         },
         {
           icon: "mdi-check-all",
           count: "6",
-          orderStatus: "Completed orders",
+          orderStatus: "dashboard.completedOrders",
           color: "#84CC8C",
         },
         {
           icon: "mdi-home-city",
           count: "32",
-          orderStatus: "Available Stock",
+          orderStatus: "dashboard.availableStock",
           color: "#324BA8",
         },
         {
           icon: "mdi-archive",
           count: "4",
-          orderStatus: "Items out of Stock",
+          orderStatus: "dashboard.itemsOutOfStock",
           color: "#CC6100",
         },
       ],

@@ -28,7 +28,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.manageUsers"));
+    this.setComponent("common.manageUsers");
     this.setLoader("");
   },
   methods: {

@@ -65,7 +65,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("settings.addAUser"));
+    this.setComponent("settings.addAUser");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

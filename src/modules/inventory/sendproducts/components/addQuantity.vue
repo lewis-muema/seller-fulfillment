@@ -169,13 +169,13 @@ export default {
           title: "",
         },
         {
-          title: this.$t("inventory.product"),
+          title: "inventory.product",
         },
         {
-          title: this.$t("inventory.price"),
+          title: "inventory.price",
         },
         {
-          title: this.$t("inventory.quantityToSend"),
+          title: "inventory.quantityToSend",
         },
       ],
       tableHeaders2: [
@@ -183,16 +183,16 @@ export default {
           title: "",
         },
         {
-          title: this.$t("inventory.product"),
+          title: "inventory.product",
         },
         {
-          title: this.$t("inventory.price"),
+          title: "inventory.price",
         },
         {
-          title: this.$t("inventory.availableUnits"),
+          title: "inventory.availableUnits",
         },
         {
-          title: this.$t("inventory.quantityToSend"),
+          title: "inventory.quantityToSend",
         },
       ],
     };

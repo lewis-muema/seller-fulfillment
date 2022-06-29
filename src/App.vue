@@ -38,6 +38,11 @@ export default {
         this.$router.push("/auth/sign-in");
       }
     },
+    "$store.state.defaultLanguage": function language(val) {
+      window.dispatchEvent(
+        new CustomEvent("language-changed", { detail: val })
+      );
+    },
   },
   computed: {
     ...mapGetters([
@@ -85,6 +90,13 @@ export default {
         },
       });
     });
+    if (localStorage.language) {
+      setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent("language-changed", { detail: localStorage.language })
+        );
+      }, 500);
+    }
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),

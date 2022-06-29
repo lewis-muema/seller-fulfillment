@@ -26,5 +26,12 @@
     "learnHowToSend": "Learn how to send us your inventory",
     "meetUsInPerson": "Meet us in person",
     "attendOneOfOurUpcomingEvents": "Attend one of our upcoming events",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "ongoingOrders": "Ongoing orders",
+    "completedOrders": "Completed orders",
+    "availableStock": "Available Stock",
+    "itemsOutOfStock": "Items out of Stock",
+    "toYourCustomers": "To your Customers",
+    "toSendy": "To Sendy"
+
 }

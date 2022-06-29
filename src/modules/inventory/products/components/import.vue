@@ -79,7 +79,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent(this.$t("common.import"));
+    this.setComponent("common.import");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

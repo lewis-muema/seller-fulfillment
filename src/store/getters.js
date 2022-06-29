@@ -74,4 +74,5 @@ export default {
   getCheckoutDetails: (state) => state.checkoutDetails,
   getCountries: (state) => state.countries,
   getMapOptions: (state) => state.mapOptions,
+  getEventLabels: (state) => state.eventLabels,
 };

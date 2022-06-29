@@ -123,7 +123,7 @@ export default {
     ]),
   },
   mounted() {
-    this.setComponent(this.$t("payments.makePayment"));
+    this.setComponent("payments.makePayment");
     this.getCycles();
   },
   methods: {

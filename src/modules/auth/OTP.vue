@@ -49,13 +49,15 @@
           <div class="resend-code-otp-container">
             <button
               class="resend-code-otp"
-              @click="countDownTimer"
-              :disabled="countDownTriggered === true"
+              @click="resendCode()"
+              :disabled="!countDownTriggered"
             >
               {{
-                $t("auth.resendCode", {
-                  time: `${countDown}`,
-                })
+                !countDownTriggered
+                  ? $t("auth.resendCode", {
+                      time: `${countDown}`,
+                    })
+                  : $t("auth.resend")
               }}
             </button>
           </div>
@@ -112,6 +114,7 @@ export default {
     if (!this.getOTPRedirectUrl) {
       this.$router.go(-1);
     }
+    this.countDownTimer();
   },
   methods: {
     ...mapActions([
@@ -135,13 +138,12 @@ export default {
     },
     countDownTimer() {
       if (this.countDown > 0) {
-        this.countDownTriggered = true;
         setTimeout(() => {
           this.countDown -= 1;
           this.countDownTimer();
         }, 1000);
       } else {
-        this.resendCode();
+        this.countDownTriggered = true;
       }
     },
     async resendCode() {
@@ -159,6 +161,14 @@ export default {
           if (data.status === 200) {
             this.setBizDetails(data.data.data);
             localStorage.userDetails = JSON.stringify(data.data.data);
+            ElNotification({
+              title: "",
+              message: this.$t("auth.weHaveSentYouAnotherOTP"),
+              type: "success",
+            });
+            this.countDown = 120;
+            this.countDownTriggered = false;
+            this.countDownTimer();
           }
         } catch (error) {
           console.log(error);

@@ -240,8 +240,8 @@ export default {
   mounted() {
     this.setComponent(
       this.$route.params.path === "sendy"
-        ? this.$t("common.sendInventoryToSendy")
-        : this.$t("common.sendDeliveryToCustomer")
+        ? "common.sendInventoryToSendy"
+        : "common.sendDeliveryToCustomer"
     );
     this.placeholder = this.getProductLists;
     this.productMapping();

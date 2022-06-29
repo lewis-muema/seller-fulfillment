@@ -25,7 +25,7 @@
                 : setTab(tab)
             "
           >
-            {{ tab.label }}
+            {{ $t(tab.label) }}
             <v-badge
               color="#FBDF9A"
               text-color="#7F3B02"
@@ -48,11 +48,11 @@ export default {
       currentTab: 0,
       tabs: [
         {
-          label: "To your Customers",
+          label: "dashboard.toYourCustomers",
           content: "-",
         },
         {
-          label: "To Sendy",
+          label: "dashboard.toSendy",
           content: "-",
         },
       ],

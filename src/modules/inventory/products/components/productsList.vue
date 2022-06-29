@@ -91,13 +91,13 @@ export default {
     return {
       headers: [
         {
-          title: this.$t("inventory.product"),
+          title: "inventory.product",
         },
         {
-          title: this.$t("inventory.availableProduct"),
+          title: "inventory.availableProduct",
         },
         {
-          title: this.$t("inventory.actions"),
+          title: "inventory.actions",
         },
       ],
       placeholder: [],
@@ -135,7 +135,7 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
-          this.getInventorySelectedTab === this.$t("inventory.archived")
+          this.getInventorySelectedTab === "inventory.archived"
             ? "/archived"
             : ""
         }`,

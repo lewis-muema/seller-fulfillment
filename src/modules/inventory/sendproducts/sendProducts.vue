@@ -37,9 +37,9 @@
       <v-row>
         <v-col cols="6" class="mx-auto mt-4 mb-3">
           <el-steps :active="step" finish-status="success">
-            <el-step title="Select Products"></el-step>
-            <el-step title="Add Quantity"></el-step>
-            <el-step title="Checkout"></el-step>
+            <el-step :title="$t('inventory.selectProducts')"></el-step>
+            <el-step :title="$t('inventory.enterQuantity')"></el-step>
+            <el-step :title="$t('inventory.checkout')"></el-step>
           </el-steps>
         </v-col>
       </v-row>
@@ -70,9 +70,9 @@ export default {
       customerRoute: "/inventory/send-inventory/customer",
       sendyRoute: "/inventory/send-inventory/sendy",
       mainRoute: "/inventory/send-inventory",
-      customerHeader: this.$t("common.sendDeliveryToCustomer"),
-      sendyHeader: this.$t("common.sendInventoryToSendy"),
-      mainHeader: this.$t("common.sendInventory"),
+      customerHeader: "common.sendDeliveryToCustomer",
+      sendyHeader: "common.sendInventoryToSendy",
+      mainHeader: "common.sendInventory",
     };
   },
   computed: {
@@ -98,7 +98,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.sendInventory"));
+    this.setComponent("common.sendInventory");
     if (this.$route.params.path === "customer") {
       this.redirect(this.customerRoute, this.customerHeader);
     } else if (this.$route.params.path === "sendy") {

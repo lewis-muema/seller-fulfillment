@@ -112,12 +112,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["confirmUser", "attemptLogin", "requestAxiosGet"]),
+    ...mapActions([
+      "confirmUser",
+      "attemptLogin",
+      "requestAxiosGet",
+      "loginUser",
+    ]),
     ...mapMutations([
       "setAccessToken",
       "setRefreshToken",
       "setUserDetails",
       "setAchievements",
+      "setBizDetails",
     ]),
     handleOnComplete(value) {
       this.otp = parseInt(value);
@@ -131,6 +137,30 @@ export default {
           this.countDown -= 1;
           this.countDownTimer();
         }, 1000);
+      } else {
+        this.resendCode();
+      }
+    },
+    async resendCode() {
+      console.log(this.countDown);
+      const payload = {
+        email: this.userEmail,
+      };
+      if (this.countDown === 0) {
+        try {
+          const fullPayload = {
+            app: process.env.FULFILMENT_SERVER,
+            values: payload,
+            endpoint: "seller/business/signin",
+          };
+          const data = await this.loginUser(fullPayload);
+          if (data.status === 200) {
+            this.setBizDetails(data.data.data);
+            localStorage.userDetails = JSON.stringify(data.data.data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     async confirmOTP() {

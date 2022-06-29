@@ -46,14 +46,18 @@
               {{ $t("auth.confirmCode") }}
             </button>
           </div>
-          <div class="resend-code-otp">
-            <p>
+          <div class="resend-code-otp-container">
+            <button
+              class="resend-code-otp"
+              @click="countDownTimer"
+              :disabled="countDownTriggered === true"
+            >
               {{
                 $t("auth.resendCode", {
                   time: `${countDown}`,
                 })
               }}
-            </p>
+            </button>
           </div>
         </v-card-text>
       </div>
@@ -74,7 +78,8 @@ export default {
   },
   data() {
     return {
-      countDown: 120,
+      countDown: 4,
+      countDownTriggered: false,
       loading: false,
       correctOTP: false,
       otp: "",
@@ -84,9 +89,6 @@ export default {
     return {
       otp: { required },
     };
-  },
-  created() {
-    this.countDownTimer();
   },
   computed: {
     ...mapGetters(["getUserData", "getLoginData", "getOTPRedirectUrl"]),
@@ -133,6 +135,7 @@ export default {
     },
     countDownTimer() {
       if (this.countDown > 0) {
+        this.countDownTriggered = true;
         setTimeout(() => {
           this.countDown -= 1;
           this.countDownTimer();
@@ -142,7 +145,6 @@ export default {
       }
     },
     async resendCode() {
-      console.log(this.countDown);
       const payload = {
         email: this.userEmail,
       };
@@ -297,13 +299,22 @@ export default {
 .otp-error-msg {
   border-color: #9b101c;
 }
-.resend-code-otp {
+.resend-code-otp-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 20px;
 }
-.resend-code-otp p {
-  color: #606266;
+.resend-code-otp {
+  color: #324ba8;
+  cursor: pointer;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  overflow: hidden;
+  outline: none;
+}
+.resend-code-otp:disabled {
+  color: #606266 !important;
 }
 </style>

@@ -41,59 +41,23 @@
               </v-list-item>
             </td>
             <td>
-              <span
-                :class="
-                  badgeAllocation(
-                    product.product_variants[0].product_variant_stock_levels
-                      .available
-                  )
-                "
-              >
+              <span :class="badgeAllocation(availableleTally(product))">
                 <span :class="getLoader">
-                  {{
-                    product.product_variants[0].product_variant_stock_levels
-                      ? product.product_variants[0].product_variant_stock_levels
-                          .available
-                      : "-"
-                  }}
+                  {{ availableleTally(product) }}
                 </span>
               </span>
             </td>
             <td>
-              <span
-                :class="
-                  badgeAllocation(
-                    product.product_variants[0].product_variant_stock_levels
-                      .quantity_in_inventory
-                  )
-                "
-              >
+              <span :class="badgeAllocation(committedTally(product))">
                 <span :class="getLoader">
-                  {{
-                    product.product_variants[0].product_variant_stock_levels
-                      ? product.product_variants[0].product_variant_stock_levels
-                          .quantity_in_inventory
-                      : "-"
-                  }}
+                  {{ committedTally(product) }}
                 </span>
               </span>
             </td>
             <td>
-              <span
-                :class="
-                  badgeAllocation(
-                    product.product_variants[0].product_variant_stock_levels
-                      .quantity_in_sales_orders
-                  )
-                "
-              >
+              <span :class="badgeAllocation(incomingTally(product))">
                 <span :class="getLoader">
-                  {{
-                    product.product_variants[0].product_variant_stock_levels
-                      ? product.product_variants[0].product_variant_stock_levels
-                          .quantity_in_sales_orders
-                      : "-"
-                  }}
+                  {{ incomingTally(product) }}
                 </span>
               </span>
             </td>
@@ -287,6 +251,35 @@ export default {
           );
         }
       });
+    },
+    availableleTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally = row.product_variant_stock_levels.available + tally;
+        }
+      });
+      return tally;
+    },
+    committedTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally =
+            row.product_variant_stock_levels.quantity_in_inventory + tally;
+        }
+      });
+      return tally;
+    },
+    incomingTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally =
+            row.product_variant_stock_levels.quantity_in_sales_orders + tally;
+        }
+      });
+      return tally;
     },
   },
 };

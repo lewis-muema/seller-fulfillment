@@ -33,6 +33,7 @@
             id="location"
             class="businessProfile-address"
             :value="location"
+            :options="getMapOptions"
             :placeholder="$t('settings.searchLocation')"
             @place_changed="setLocation"
           >
@@ -185,6 +186,7 @@ export default {
       "getStorageUserDetails",
       "getAchievements",
       "getCheckoutDetails",
+      "getMapOptions",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {

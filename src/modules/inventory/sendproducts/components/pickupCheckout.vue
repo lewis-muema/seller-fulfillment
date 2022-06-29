@@ -20,6 +20,7 @@
             id="location"
             class="businessProfile-address"
             :value="location"
+            :options="getMapOptions"
             :placeholder="$t('settings.searchLocation')"
             @place_changed="setLocation"
           >
@@ -138,6 +139,8 @@ export default {
       "getAchievements",
       "getCheckoutDetails",
       "getFulfillmentFees",
+      "getMapOptions",
+      "getUserDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -179,7 +182,9 @@ export default {
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
     this.instructions = this.getCheckoutDetails.instructions;
-    this.phone = this.getCheckoutDetails.phone;
+    this.phone = this.getCheckoutDetails.phone
+      ? this.getCheckoutDetails.phone
+      : this.getUserDetails.phone_number;
     this.secPhone = this.getCheckoutDetails.secPhone;
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },

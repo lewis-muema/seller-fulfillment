@@ -4,6 +4,7 @@ let s3 = "";
 const upload = {
   methods: {
     uploadImg(id) {
+      this.productUploadStatus = true;
       const files = document.getElementById(id)["files"];
       if (!files.length) {
         // eslint-disable-next-line no-alert
@@ -31,6 +32,7 @@ const upload = {
             );
           } else {
             this.image = data.Location;
+            this.productUploadStatus = false;
           }
           // eslint-disable-next-line comma-dangle
         }

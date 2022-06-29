@@ -121,7 +121,10 @@
                         <span :class="getLoader" class="product-select-units"
                           >{{
                             product.product_variants[0]
-                              .product_variant_stock_levels.available
+                              .product_variant_stock_levels
+                              ? product.product_variants[0]
+                                  .product_variant_stock_levels.available
+                              : "-"
                           }}
                           {{ $t("inventory.units") }}</span
                         >
@@ -153,7 +156,9 @@
                           >
                           <span :class="getLoader" class="product-select-units"
                             >{{
-                              option.product_variant_stock_levels.available
+                              option.product_variant_stock_levels
+                                ? option.product_variant_stock_levels.available
+                                : "-"
                             }}
                             {{ $t("inventory.units") }}</span
                           >
@@ -293,7 +298,11 @@ export default {
           });
         }
       });
-      if (this.getSelectedProducts.length > 0) {
+      if (
+        this.getSelectedProducts.length > 0 &&
+        this.products[0].product_id !== "P-KXG-0000" &&
+        this.products[0].product_name !== "name"
+      ) {
         this.getSelectedProducts.forEach((row) => {
           this.products[row.productIndex].status = true;
           if (row.selectedOption) {

@@ -108,7 +108,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setSendProductsRoute", "setComponent"]),
+    ...mapMutations([
+      "setSendProductsRoute",
+      "setComponent",
+      "setSelectedProducts",
+    ]),
     redirect(route, header) {
       if (route === `${this.customerRoute}/select-products`) {
         this.sendSegmentEvents({
@@ -128,6 +132,9 @@ export default {
             device: "desktop",
           },
         });
+      }
+      if (this.$route.params.path === "") {
+        this.setSelectedProducts([]);
       }
       this.$router.push(
         `${route}${this.$route.params.page ? "/" : ""}${

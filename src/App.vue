@@ -236,4 +236,7 @@ export default {
   height: 1rem !important;
   width: 1rem !important;
 }
+.v-field__append-inner {
+  padding-top: 5px !important;
+}
 </style>

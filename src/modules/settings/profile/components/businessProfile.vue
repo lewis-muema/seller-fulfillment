@@ -50,6 +50,7 @@
       class="businessProfile-address"
       :placeholder="$t('settings.searchLocation')"
       :value="location"
+      :options="getMapOptions"
       @place_changed="setPlace"
       :disabled="buttonLoader"
     >
@@ -130,6 +131,7 @@ export default {
       "getBusinessDetails",
       "getIndustries",
       "getStorageUserDetails",
+      "getMapOptions",
     ]),
   },
   mounted() {

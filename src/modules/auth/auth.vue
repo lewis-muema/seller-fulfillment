@@ -25,7 +25,7 @@
               class="slider mt-3"
             >
               <i class="mdi mdi-format-quote-close desktop-auth-icon"></i>
-              <div class="slider-content">{{ slide.content }}</div>
+              <div class="slider-content">{{ $t(slide.content) }}</div>
               <br />
               <div class="d-flex">
                 <v-avatar class="testimonial-img-container">
@@ -37,8 +37,10 @@
                   />
                 </v-avatar>
                 <div class="testimonal-container">
-                  <div class="testimonial-name">{{ slide.name }}</div>
-                  <div>{{ slide.position }}, {{ slide.businessName }}</div>
+                  <div class="testimonial-name">{{ $t(slide.name) }}</div>
+                  <div>
+                    {{ $t(slide.position) }}, {{ $t(slide.businessName) }}
+                  </div>
                 </div>
               </div>
             </slide>
@@ -100,34 +102,34 @@ export default {
   mounted() {
     this.slides = [
       {
-        name: this.$t("auth.priscillaNjenga"),
-        content: this.$t("auth.withinTheFirstMonth"),
-        position: this.$t("auth.CEORoyalBrekkersLtd"),
-        businessName: this.$t("auth.mohawk"),
+        name: "auth.priscillaNjenga",
+        content: "auth.withinTheFirstMonth",
+        position: "auth.CEORoyalBrekkersLtd",
+        businessName: "auth.mohawk",
         profilePhoto:
           "https://images.sendyit.com/fulfilment/seller/MohawkKombucha.jpg",
       },
       {
-        name: this.$t("auth.FelixAsenji"),
-        content: this.$t("auth.ourSalesIncreased"),
-        position: this.$t("auth.CEOKenyaPapayaProducts"),
-        businessName: this.$t("auth.deinaProducts"),
+        name: "auth.FelixAsenji",
+        content: "auth.ourSalesIncreased",
+        position: "auth.CEOKenyaPapayaProducts",
+        businessName: "auth.deinaProducts",
         profilePhoto:
           "https://images.sendyit.com/fulfilment/seller/DeinaProducts.jpg",
       },
       {
-        name: this.$t("auth.AliceMaina"),
-        content: this.$t("auth.weAreNowAbleToDeliver"),
-        position: this.$t("auth.digitalSalesRepStorymojaPublishers"),
-        businessName: this.$t("auth.storymojaPublishers"),
+        name: "auth.AliceMaina",
+        content: "auth.weAreNowAbleToDeliver",
+        position: "auth.digitalSalesRepStorymojaPublishers",
+        businessName: "auth.storymojaPublishers",
         profilePhoto:
           "https://images.sendyit.com/fulfilment/seller/StorymojaPublishers.jpg",
       },
       {
-        name: this.$t("auth.HellenGathegia"),
-        content: this.$t("auth.forAnyoneDoingOnlineBusiness"),
-        position: this.$t("auth.FounderSafeCosmetics"),
-        businessName: this.$t("auth.safeCosmetics"),
+        name: "auth.HellenGathegia",
+        content: "auth.forAnyoneDoingOnlineBusiness",
+        position: "auth.FounderSafeCosmetics",
+        businessName: "auth.safeCosmetics",
         profilePhoto: "",
       },
     ];
@@ -136,7 +138,7 @@ export default {
   methods: {
     ...mapMutations(["setLanguages", "setDefaultLanguage"]),
     changeLanguage() {
-      this.setLanguages(this.defaultLanguage);
+      this.setDefaultLanguage(this.defaultLanguage);
     },
   },
 };

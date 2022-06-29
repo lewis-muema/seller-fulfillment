@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="container-border">
-      <statement-list />
+      <statement-list @range="rangeChanged" />
     </div>
   </div>
 </template>
@@ -40,10 +40,12 @@
 import makePayment from "./components/makePayment.vue";
 import statementList from "./components/statementList.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import eventsMixin from "../../../mixins/events_mixin";
 import moment from "moment";
 
 export default {
   components: { makePayment, statementList },
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getLoader",
@@ -51,6 +53,11 @@ export default {
       "getBusinessDetails",
       "getBillingCycles",
     ]),
+    limitParams() {
+      return `?lower_limit_date=${moment(this.range[0]).format(
+        "YYYY-MM-DD"
+      )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+    },
     activeCycle() {
       let active = {};
       this.getBillingCycles.forEach((row) => {
@@ -70,11 +77,21 @@ export default {
       amount: "KES 750",
       billingCycle: "Daily",
       prompt: false,
+      params: "",
+      range: "",
     };
   },
   mounted() {
     this.setComponent(this.$t("common.billings"));
     this.listBillingCycles();
+    this.sendSegmentEvents({
+      event: "Select Transaction History",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   methods: {
     ...mapMutations([
@@ -88,7 +105,7 @@ export default {
       this.setLoader("loading-text");
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles${this.params}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setBillingCycles(response.data.data.billing_cycles);
@@ -97,6 +114,15 @@ export default {
           }
         }
       });
+    },
+    rangeChanged(val) {
+      if (val) {
+        this.range = val;
+        this.params = this.limitParams;
+      } else {
+        this.params = "";
+      }
+      this.listBillingCycles();
     },
   },
 };

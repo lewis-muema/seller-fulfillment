@@ -104,7 +104,8 @@
                         selectedProduct.selectedOption
                           .product_variant_stock_levels
                           ? selectedProduct.selectedOption
-                              .product_variant_stock_levels.available
+                              .product_variant_stock_levels
+                              .quantity_in_inventory
                           : "-"
                       }}
                     </div>
@@ -154,9 +155,11 @@
 import { mapGetters, mapMutations } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: { tableHeader },
+  mixins: [eventsMixin],
   data() {
     return {
       quantities: [],
@@ -195,7 +198,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getSelectedProducts"]),
+    ...mapGetters(["getSelectedProducts", "getStorageUserDetails"]),
     selectedProductsSummary() {
       return this.getSelectedProducts;
     },
@@ -238,6 +241,22 @@ export default {
       newProduct.quantity = event.target.value;
       products[val] = newProduct;
       this.setSelectedProducts(products);
+      if (this.$route.params.path === "customer") {
+        this.sendSegmentEvents({
+          event: "Review Added Items",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: products[val].product_id,
+            variant: products[val].selectedOption.product_variant_id,
+            quantity: event.target.value,
+            product_collection: products[val].product_collection
+              ? products[val].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
     removeProductOption(index) {
       const products = this.getSelectedProducts;

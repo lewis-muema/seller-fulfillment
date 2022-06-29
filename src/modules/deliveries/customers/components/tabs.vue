@@ -33,7 +33,10 @@
           @click="
             activeTab !== 'Pending' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('Pending', 'ORDER_IN_PROCESSING')
+              : passActiveTab(
+                  'Pending',
+                  'ORDER_RECEIVED&status=ORDER_IN_PROCESSING'
+                )
           "
         >
           {{ $t("deliveries.pending") }}

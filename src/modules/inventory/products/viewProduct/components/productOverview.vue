@@ -89,15 +89,6 @@
             <span :class="getLoader">
               {{
                 variant.product_variant_stock_levels
-                  ? variant.product_variant_stock_levels.available
-                  : "-"
-              }}
-            </span>
-          </td>
-          <td>
-            <span :class="getLoader">
-              {{
-                variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels.quantity_in_inventory
                   : "-"
               }}
@@ -109,6 +100,15 @@
                 variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels
                       .quantity_in_sales_orders
+                  : "-"
+              }}
+            </span>
+          </td>
+          <td>
+            <span :class="getLoader">
+              {{
+                false
+                  ? variant.product_variant_stock_level.quantity_in_sales_orders
                   : "-"
               }}
             </span>
@@ -170,15 +170,15 @@ export default {
           description: "",
         },
         {
-          title: this.$t("inventory.productOption"),
+          title: this.$t("inventory.available"),
           description: this.$t("inventory.availableProducts"),
         },
         {
-          title: "Committed",
+          title: this.$t("inventory.committed"),
           description: this.$t("inventory.CommittedProducts"),
         },
         {
-          title: "Incoming",
+          title: this.$t("inventory.incoming"),
           description: this.$t("inventory.IncomingProducts"),
         },
       ],

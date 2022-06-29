@@ -15,6 +15,50 @@
               :disabled="action === 'editProduct'"
             />
           </div>
+          <div class="add-product-helper-text">
+            {{ $t("inventory.enterTheNameOnThePackage") }}
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="price" class="form-label">{{
+            $t("inventory.sellingPrice")
+          }}</label>
+          <div class="">
+            <v-text-field
+              class="businessProfile-field"
+              id="update-price"
+              v-model="productVariants[0].product_variant_unit_price"
+              label="100"
+              variant="outlined"
+              :prefix="productVariants[0].product_variant_currency"
+              clearable
+              clear-icon="mdi-close"
+            ></v-text-field>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="price" class="form-label">
+            {{ $t("inventory.weight") }}
+          </label>
+          <div class="col-8">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="0"
+              v-model="productVariants[0].product_variant_quantity"
+            />
+          </div>
+          <div class="col-4">
+            <v-select
+              class="edit-product-weight-field"
+              :items="dimensions"
+              v-model="productVariants[0].product_variant_quantity_type"
+              outlined
+            ></v-select>
+          </div>
+          <div class="add-product-helper-text">
+            {{ $t("inventory.thisHelpsUsToKnow") }}
+          </div>
         </div>
         <div class="mb-2">
           <label for="desc" class="form-label">
@@ -26,7 +70,7 @@
               id="desc"
               rows="3"
               v-model="productDescription"
-              :placeholder="$t('inventory.productDescription')"
+              :placeholder="$t('inventory.aShortDescriptionToHelp')"
             ></textarea>
           </div>
         </div>
@@ -36,10 +80,10 @@
             <p class="add-product-sizes">
               {{ $t("inventory.addOptions") }}
             </p>
-            <div v-if="productVariants.length">
+            <div v-if="filteredVariants.length">
               <v-list-item
                 lines="two"
-                v-for="(variant, index) in productVariants"
+                v-for="(variant, index) in filteredVariants"
                 :key="index"
                 class="desktop-product-option-card"
               >
@@ -63,7 +107,7 @@
                 <v-list-item-avatar end>
                   <div
                     class="desktop-product-options-icon"
-                    @click="editProductOption(index)"
+                    @click="editProductOption(index + 1)"
                   >
                     <v-icon>mdi mdi-pencil </v-icon>
                   </div>
@@ -71,7 +115,7 @@
                 <v-list-item-avatar end>
                   <div
                     class="desktop-product-options-icon"
-                    @click="deleteProductOption(index)"
+                    @click="deleteProductOption(index + 1)"
                   >
                     <v-icon>mdi mdi-delete-outline </v-icon>
                   </div>
@@ -83,7 +127,7 @@
                 {{ $t("inventory.addProductOptions") }}
               </p>
               <img
-                v-if="productVariants.length === 0"
+                v-if="filteredVariants.length === 0"
                 class="add-product-options-img"
                 src="https://images.sendyit.com/fulfilment/seller/shirts.png"
                 alt=""
@@ -93,6 +137,7 @@
               :option="activeOption"
               :visible="showProductOptions"
               @close="showProductOptions = false"
+              @open="showProductOptions = true"
               @addOptions="addProductOptions"
               @saveOptions="saveProductOptions"
             />
@@ -119,7 +164,11 @@
       </v-col>
       <v-col cols="6">
         <p class="ml-5">{{ $t("inventory.image") }}</p>
-        <div class="img-container" @click="pickImg()">
+        <div
+          class="img-container"
+          @click="pickImg()"
+          v-loading="productUploadStatus"
+        >
           <input
             type="file"
             name
@@ -131,7 +180,12 @@
             style="display: none"
             @change="uploadImg('upload-img', 'edit')"
           />
-          <img class="upload-img" v-if="image" :src="image" alt="" />
+          <img
+            class="upload-img"
+            v-if="productVariants[0].product_variant_image_link"
+            :src="productVariants[0].product_variant_image_link"
+            alt=""
+          />
           <span v-else class="upload">
             <i class="mdi mdi-upload" aria-hidden="true"></i>
             {{ $t("inventory.upload") }}
@@ -147,19 +201,57 @@ import productOptions from "@/modules/inventory/products/components/productOptio
 import upload_img from "../../../../mixins/upload_img";
 import { ElNotification } from "element-plus";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: {
     productOptions,
   },
   props: ["action"],
-  mixins: [upload_img],
+  mixins: [upload_img, eventsMixin],
   data() {
     return {
-      productVariants: [],
+      productVariants: [
+        {
+          business_id: "",
+          product_id: "",
+          product_variant_archived: false,
+          product_variant_currency: "KES",
+          product_variant_description: "",
+          product_variant_expiry_date: null,
+          product_variant_id: "",
+          product_variant_image_link: "",
+          product_variant_quantity: "",
+          product_variant_quantity_type: "GRAM",
+          product_variant_stock_levels: {},
+          product_variant_unit_price: "",
+        },
+      ],
       showProductOptions: false,
       image: "",
       name: "",
+      price: "",
+      quantity: "",
+      productUploadStatus: false,
+      dimensions: [
+        {
+          title: "kilogram",
+          value: "KILOGRAM",
+        },
+        {
+          title: "gram",
+          value: "GRAM",
+        },
+        {
+          title: "litre",
+          value: "LITRE",
+        },
+        {
+          title: "millilitre",
+          value: "MILLILITRE",
+        },
+      ],
+      currencies: [],
       activeOption: {},
       productDescription: "",
       buttonLoader: false,
@@ -168,6 +260,9 @@ export default {
   mounted() {
     this.setComponent(this.$t("common.productDetails"));
     this.initiateS3();
+    this.productVariants[0].product_id = this.getProduct.product_id;
+    this.productVariants[0].business_id =
+      this.getStorageUserDetails.business_id;
     if (this.action === "editProduct") {
       this.name = this.getProduct.product_name;
       this.productDescription = this.getProduct.product_description;
@@ -176,7 +271,26 @@ export default {
         this.productVariants = this.variants;
       }
       this.showProductOptions = this.getAddProductStatus;
+      this.sendSegmentEvents({
+        event: "Edit Product",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          SKU: this.getProduct.product_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     }
+    this.productVariants[0].product_variant_currency =
+      this.getBusinessDetails.currency;
+  },
+  watch: {
+    image() {
+      this.productVariants[0].product_variant_image_link = this.image;
+    },
+    name() {
+      this.productVariants[0].product_variant_description = this.name;
+    },
   },
   unmounted() {
     this.setAddProductStatus(false);
@@ -188,12 +302,33 @@ export default {
       "getAddProductStatus",
       "getStorageUserDetails",
       "getAchievements",
+      "getSupportedCountries",
+      "getBusinessDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
         return true;
       }
       return false;
+    },
+    currencyFilter() {
+      const currencies = [];
+      this.getSupportedCountries.forEach((country) => {
+        currencies.push({
+          title: country.currency.currency_symbol,
+          value: country.currency.currency_id,
+        });
+      });
+      return currencies;
+    },
+    filteredVariants() {
+      const variants = [];
+      this.productVariants.forEach((variant, i) => {
+        if (i > 0) {
+          variants.push(variant);
+        }
+      });
+      return variants;
     },
     variants() {
       const res = [];
@@ -211,10 +346,22 @@ export default {
       "setLoader",
       "setTab",
       "setAddProductStatus",
+      "setSupportedCountries",
     ]),
-    ...mapActions(["requestAxiosPut", "requestAxiosPost"]),
+    ...mapActions(["requestAxiosPut", "requestAxiosPost", "requestAxiosGet"]),
     pickImg() {
       document.querySelector("#upload-img").click();
+    },
+    fetchCountries() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/business/signup/countries`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setSupportedCountries(response.data.data.countries);
+          this.currencies = this.currencyFilter;
+        }
+      });
     },
     addProductOptions(value) {
       this.activeOption = {};
@@ -237,7 +384,14 @@ export default {
       this.showProductOptions = true;
     },
     saveProduct() {
-      if (this.name && this.productDescription && this.productVariants.length) {
+      if (
+        this.name &&
+        this.productVariants[0].product_variant_currency &&
+        this.productVariants[0].product_variant_unit_price &&
+        this.productVariants[0].product_variant_quantity &&
+        this.productVariants[0].product_variant_quantity_type &&
+        this.productVariants[0].product_variant_image_link
+      ) {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
@@ -255,6 +409,15 @@ export default {
               title: this.$t("inventory.productSavedSuccessfully"),
               message: "",
               type: "success",
+            });
+            this.sendSegmentEvents({
+              event: "Save Product Details Edits",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                SKU: this.getProduct.product_id,
+                clientType: "web",
+                device: "desktop",
+              },
             });
             this.$router.push(
               `/inventory/view-product/${this.getProduct.product_id}`
@@ -276,7 +439,14 @@ export default {
       }
     },
     addProduct() {
-      if (this.name && this.productDescription && this.productVariants.length) {
+      if (
+        this.name &&
+        this.productVariants[0].product_variant_currency &&
+        this.productVariants[0].product_variant_unit_price &&
+        this.productVariants[0].product_variant_quantity &&
+        this.productVariants[0].product_variant_quantity_type &&
+        this.productVariants[0].product_variant_image_link
+      ) {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
@@ -294,6 +464,15 @@ export default {
               title: this.$t("inventory.productSavedSuccessfully"),
               message: "",
               type: "success",
+            });
+            this.sendSegmentEvents({
+              event: "Add New Product",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                variation: this.productVariants,
+                clientType: "web",
+                device: "desktop",
+              },
             });
             if (this.onboardingStatus) {
               this.$router.push("/");
@@ -342,8 +521,6 @@ export default {
   display: flex;
 }
 .edit-product-weight-field {
-  width: 90%;
-  margin-left: auto;
   height: 40px;
 }
 .edit-product-weight-field .v-input__control {
@@ -414,5 +591,16 @@ export default {
 }
 label {
   color: #303133;
+}
+.add-product-helper-text {
+  font-size: 12px;
+  margin-top: 10px !important;
+  margin-bottom: 30px !important;
+}
+.v-field--active .v-label.v-field-label {
+  display: none !important;
+}
+.img-container .el-loading-mask {
+  padding-top: 35%;
 }
 </style>

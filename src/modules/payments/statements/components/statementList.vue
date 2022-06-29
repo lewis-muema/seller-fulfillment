@@ -106,7 +106,7 @@
                   </td>
                   <td class="statements-table-price-row">
                     <span :class="cycle.loading">
-                      - {{ getBusinessDetails.currency }}
+                      {{ getBusinessDetails.currency }}
                       {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
@@ -146,6 +146,7 @@ export default {
       to: "",
       range: "",
       placeholder: [],
+      params: "",
     };
   },
   computed: {
@@ -158,6 +159,11 @@ export default {
       "getStorageUserDetails",
       "getLineItems",
     ]),
+  },
+  watch: {
+    range(val) {
+      this.$emit("range", val);
+    },
   },
   mounted() {
     this.placeholder = this.getBillingCycles;

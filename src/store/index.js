@@ -31,6 +31,7 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
       ],
+      supportedCountries: [],
       userData: {},
       confirmedUser: {},
       businessUserDetails: {},
@@ -55,6 +56,18 @@ export default createStore({
           label: "PDF",
         },
       ],
+      mapOptions: {
+        componentRestrictions: {
+          country: ["ke", "ug", "ci", "ng"],
+        },
+        bounds: {
+          north: 35.6,
+          east: 59.4,
+          south: -28.3,
+          west: -19.1,
+        },
+        strictBounds: true,
+      },
       orderTrackingData: {
         order: {
           order_id: "C-JQM-0000",

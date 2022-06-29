@@ -121,7 +121,10 @@
                         <span :class="getLoader" class="product-select-units"
                           >{{
                             product.product_variants[0]
-                              .product_variant_stock_levels.available
+                              .product_variant_stock_levels
+                              ? product.product_variants[0]
+                                  .product_variant_stock_levels.available
+                              : "-"
                           }}
                           {{ $t("inventory.units") }}</span
                         >
@@ -153,7 +156,9 @@
                           >
                           <span :class="getLoader" class="product-select-units"
                             >{{
-                              option.product_variant_stock_levels.available
+                              option.product_variant_stock_levels
+                                ? option.product_variant_stock_levels.available
+                                : "-"
                             }}
                             {{ $t("inventory.units") }}</span
                           >
@@ -217,9 +222,11 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
   components: { searchAlgolia },
+  mixins: [eventsMixin],
   data() {
     return {
       products: [],
@@ -291,7 +298,11 @@ export default {
           });
         }
       });
-      if (this.getSelectedProducts.length > 0) {
+      if (
+        this.getSelectedProducts.length > 0 &&
+        this.products[0].product_id !== "P-KXG-0000" &&
+        this.products[0].product_name !== "name"
+      ) {
         this.getSelectedProducts.forEach((row) => {
           this.products[row.productIndex].status = true;
           if (row.selectedOption) {
@@ -320,6 +331,21 @@ export default {
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
       this.setSelectedProducts(this.selectedProducts);
+      if (this.$route.params.path === "customer") {
+        this.sendSegmentEvents({
+          event: "Product Selection",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: this.products[i].product_id,
+            variant: this.products[i].product_variants[x].product_variant_id,
+            product_collection: this.products[i].product_collection
+              ? this.products[i].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
     removeProduct(product, i, option, x) {
       this.selectedProducts.forEach((row, p) => {
@@ -335,6 +361,21 @@ export default {
           this.selectedProducts.splice(p, 1);
         }
       });
+      if (this.$route.params.path === "customer") {
+        this.sendSegmentEvents({
+          event: "Remove from Product Selection",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: this.products[i].product_id,
+            variant: this.products[i].product_variants[x].product_variant_id,
+            product_collection: this.products[i].product_collection
+              ? this.products[i].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
   },
   computed: {

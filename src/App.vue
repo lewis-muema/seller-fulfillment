@@ -10,11 +10,13 @@
 import Canvas from "./components/canvas.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { initializeApp } from "firebase/app";
+import eventsMixin from "../src/mixins/events_mixin";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
   name: "App",
   components: { Canvas },
+  mixins: [eventsMixin],
   data: () => ({
     //
   }),
@@ -71,6 +73,17 @@ export default {
     }
     window.addEventListener("register-fcm", () => {
       this.firebase();
+    });
+    window.addEventListener("freshchat-loaded", () => {
+      this.sendSegmentEvents({
+        event: "Sendy Support",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     });
   },
   methods: {
@@ -222,5 +235,8 @@ export default {
 .el-date-editor .el-range__close-icon {
   height: 1rem !important;
   width: 1rem !important;
+}
+.v-field__append-inner {
+  padding-top: 5px !important;
 }
 </style>

@@ -170,15 +170,15 @@ export default {
           description: "",
         },
         {
-          title: this.$t("inventory.productOption"),
+          title: this.$t("inventory.available"),
           description: this.$t("inventory.availableProducts"),
         },
         {
-          title: "Committed",
+          title: this.$t("inventory.committed"),
           description: this.$t("inventory.CommittedProducts"),
         },
         {
-          title: "Incoming",
+          title: this.$t("inventory.incoming"),
           description: this.$t("inventory.IncomingProducts"),
         },
       ],

@@ -40,10 +40,12 @@
 import makePayment from "./components/makePayment.vue";
 import statementList from "./components/statementList.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import eventsMixin from "../../../mixins/events_mixin";
 import moment from "moment";
 
 export default {
   components: { makePayment, statementList },
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getLoader",
@@ -82,6 +84,14 @@ export default {
   mounted() {
     this.setComponent(this.$t("common.billings"));
     this.listBillingCycles();
+    this.sendSegmentEvents({
+      event: "Select Transaction History",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   methods: {
     ...mapMutations([

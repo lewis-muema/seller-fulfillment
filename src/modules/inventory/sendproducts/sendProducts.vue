@@ -59,10 +59,12 @@
 import ProductsSelect from "./components/productsSelect.vue";
 import AddQuantity from "./components/addQuantity.vue";
 import Checkout from "./components/checkout";
-import { mapMutations } from "vuex";
+import eventsMixin from "../../../mixins/events_mixin";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: { ProductsSelect, AddQuantity, Checkout },
+  mixins: [eventsMixin],
   data() {
     return {
       customerRoute: "/inventory/send-inventory/customer",
@@ -74,6 +76,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getStorageUserDetails"]),
     step() {
       if (this.$route.params.page === "add-quantity") {
         return 1;
@@ -105,8 +108,34 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setSendProductsRoute", "setComponent"]),
+    ...mapMutations([
+      "setSendProductsRoute",
+      "setComponent",
+      "setSelectedProducts",
+    ]),
     redirect(route, header) {
+      if (route === `${this.customerRoute}/select-products`) {
+        this.sendSegmentEvents({
+          event: "Send to Customer",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      } else if (route === `${this.sendyRoute}/select-products`) {
+        this.sendSegmentEvents({
+          event: "Manage Inventory",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
+      if (this.$route.params.path === "") {
+        this.setSelectedProducts([]);
+      }
       this.$router.push(
         `${route}${this.$route.params.page ? "/" : ""}${
           this.$route.params.page

@@ -3,7 +3,7 @@
     <div class="deliveries-container-inner">
       <div class="deliveries-mid-bar">
         <div class="deliveries-search">
-          <searchAlgolia type="product" />
+          <searchAlgolia type="delivery" />
         </div>
         <div class="deliveries-date-range">
           <label for="range" class="deliveries-date-label">

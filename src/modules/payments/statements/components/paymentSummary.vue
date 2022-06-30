@@ -142,6 +142,9 @@ export default {
         if (response.status === 200) {
           this.setCycleLineItems(response.data.data.billing_cycle_line_items);
           this.getActiveCycle();
+        } else {
+          this.setActivePayment({});
+          this.$router.push("/");
         }
       });
     },
@@ -156,6 +159,7 @@ export default {
             this.setLoader("");
           }
         } else {
+          this.setActivePayment({});
           this.$router.push("/");
         }
       });

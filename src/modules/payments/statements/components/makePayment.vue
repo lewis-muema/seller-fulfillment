@@ -36,10 +36,9 @@ export default {
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
     showPendingPaymnets() {
-      this.setOverlayStatus({
-        overlay: true,
-        popup: "payments",
-      });
+      this.$router.push(
+        `/payments/payment-summary/${this.getActivePayment.billing_cycle_instance_id}`
+      );
     },
   },
 };

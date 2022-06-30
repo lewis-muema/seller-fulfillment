@@ -3,20 +3,22 @@
     <make-payment v-if="prompt" />
     <div class="statements-top-bar-container">
       <div>
-        <p class="statements-top-bar-description">
-          <span>
-            <i class="mdi mdi-cash-multiple statements-top-bar-cash-icon"></i>
-          </span>
-          <span :class="getLoader">
-            <b
-              >{{ getBusinessDetails.currency }}
-              {{
-                activeCycle.billable_amount ? activeCycle.billable_amount : 0
-              }}</b
-            >
-            {{ $t("payments.youWillBeCharged") }} {{ activeCycleTime }}
-          </span>
-        </p>
+        <div v-if="activeCycle.active">
+          <p class="statements-top-bar-description">
+            <span>
+              <i class="mdi mdi-cash-multiple statements-top-bar-cash-icon"></i>
+            </span>
+            <span :class="getLoader">
+              <b
+                >{{ getBusinessDetails.currency }}
+                {{
+                  activeCycle.billable_amount ? activeCycle.billable_amount : 0
+                }}</b
+              >
+              {{ $t("payments.youWillBeCharged") }} {{ activeCycleTime }}
+            </span>
+          </p>
+        </div>
       </div>
       <div />
       <div :class="getLoader">

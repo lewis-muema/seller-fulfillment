@@ -98,16 +98,85 @@
                   </td>
                   <td class="statements-table-status-row">
                     <span v-if="cycle.loading" :class="cycle.loading">
-                      {{ cycle.paid_status }}
+                      {{ billingStatus(cycle.paid_status) }}
                     </span>
                     <span v-else :class="paidClass(cycle)">
-                      {{ cycle.paid_status }}</span
+                      {{ billingStatus(cycle.paid_status) }}</span
                     >
                   </td>
                   <td class="statements-table-price-row">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       {{ Math.round(row.amount * 100) / 100 }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+            <v-table
+              class="mt-5"
+              v-if="cycle.payments && cycle.payments.length > 0"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="text-left">
+                    <span :class="getLoader">{{ $t("payments.details") }}</span>
+                  </th>
+                  <th class="text-left">
+                    <span :class="getLoader">{{
+                      $t("payments.paymentDetails")
+                    }}</span>
+                  </th>
+                  <th class="text-left">
+                    <span :class="getLoader">{{
+                      $t("payments.datePaid")
+                    }}</span>
+                  </th>
+                  <th class="text-left">
+                    <span class="invoices-price-col" :class="getLoader">{{
+                      $t("payments.amountPaid")
+                    }}</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(row, x) in cycle.payments"
+                  :key="x"
+                  class="statements-table-row"
+                >
+                  <td class="statements-table-icon-row">
+                    <span v-if="cycle.loading" :class="cycle.loading">
+                      {{ row.payment_amount }}
+                    </span>
+                    <i v-else :class="`mdi mdi-cash-multiple`"></i>
+                  </td>
+                  <td class="statements-table-item-row">
+                    <span :class="cycle.loading">
+                      {{ row.payment_attempt_transaction_notes }}
+                    </span>
+                  </td>
+                  <td class="statements-table-item-row">
+                    <span :class="cycle.loading">
+                      {{
+                        $t("payments.paidVia", {
+                          method:
+                            row.used_means_of_payment.means_of_payment_type,
+                          code: row.payment_attempt_transaction_id,
+                        })
+                      }}
+                    </span>
+                  </td>
+                  <td class="statements-table-date-row">
+                    <span :class="cycle.loading">
+                      {{ formatLineItemDate(row.payment_attempt_date) }}
+                    </span>
+                  </td>
+                  <td class="statements-table-price-row">
+                    <span :class="cycle.loading" class="payments-amount">
+                      {{ getBusinessDetails.currency }}
+                      {{ Math.round(row.payment_amount * 100) / 100 }}
                     </span>
                   </td>
                 </tr>
@@ -188,6 +257,19 @@ export default {
           const billingcycles = this.getBillingCycles;
           billingcycles[i].lineItems =
             response.data.data.billing_cycle_line_items;
+          this.setBillingCycles(billingcycles);
+          this.getPayments(cycle, i);
+        }
+      });
+    },
+    getPayments(cycle, i) {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${cycle.billing_cycle_instance_id}/paymentattempts`,
+      }).then((response) => {
+        if (response.status === 200) {
+          const billingcycles = this.getBillingCycles;
+          billingcycles[i].payments = response.data.data.payment_attempts;
           billingcycles[i].loading = "";
           this.setBillingCycles(billingcycles);
         }
@@ -195,6 +277,10 @@ export default {
     },
     formatLineItemDate(date) {
       return moment(date).format("D/MM/YYYY hh:mm a");
+    },
+    billingStatus(billing) {
+      const billingStatus = billing.replaceAll("_", " ").toLowerCase();
+      return billingStatus.charAt(0).toUpperCase() + billingStatus.slice(1);
     },
     getIcon(row) {
       if (row.line_item_title === "Delivery to Sendy") {
@@ -204,6 +290,12 @@ export default {
     },
     paidClass(cycle) {
       if (cycle.paid_status === "PAID") {
+        return "statements-paid-status";
+      }
+      return "statements-pending-status";
+    },
+    successClass(cycle) {
+      if (cycle.payment_status === "SUCCESS") {
         return "statements-paid-status";
       }
       return "statements-pending-status";
@@ -325,5 +417,9 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+}
+.payments-amount {
+  float: right;
+  margin-right: 15px;
 }
 </style>

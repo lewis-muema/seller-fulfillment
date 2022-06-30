@@ -79,6 +79,8 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setActivePayment(response.data.data);
+        } else {
+          this.setActivePayment({});
         }
       });
     },

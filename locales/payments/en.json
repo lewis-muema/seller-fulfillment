@@ -44,5 +44,6 @@
   "amountToPay": "Amount to Pay",
   "continueToMakePayment": "Continue to make payment",
   "none": "None",
-  "orderNumber": "Order Number"
+  "orderNumber": "Order Number",
+  "paidVia": "Paid via {method}. Transaction code: {code}"
 }

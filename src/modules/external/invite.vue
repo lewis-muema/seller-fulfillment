@@ -77,7 +77,7 @@ export default {
     return {
       active: "invite",
       lang: false,
-      defaultLanguage: "English",
+      defaultLanguage: "en",
       business: "Smart collections",
       name: "",
       emailAddress: "",

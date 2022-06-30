@@ -56,7 +56,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.dashboard"));
+    this.setComponent("common.dashboard");
     this.getActiveCycle();
     this.getDeliveryStats();
     this.getPickUpStats();

@@ -46,6 +46,21 @@
               {{ $t("auth.confirmCode") }}
             </button>
           </div>
+          <div class="resend-code-otp-container">
+            <button
+              class="resend-code-otp"
+              @click="resendCode()"
+              :disabled="!countDownTriggered"
+            >
+              {{
+                !countDownTriggered
+                  ? $t("auth.resendCode", {
+                      time: `${countDown}`,
+                    })
+                  : $t("auth.resend")
+              }}
+            </button>
+          </div>
         </v-card-text>
       </div>
     </form>
@@ -65,6 +80,8 @@ export default {
   },
   data() {
     return {
+      countDown: 120,
+      countDownTriggered: false,
       loading: false,
       correctOTP: false,
       otp: "",
@@ -76,7 +93,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserData", "getLoginData", "getOTPRedirectUrl"]),
+    ...mapGetters([
+      "getUserData",
+      "getLoginData",
+      "getOTPRedirectUrl",
+      "getBizDetails",
+    ]),
     userEmail() {
       return this.getOTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.email
@@ -94,23 +116,85 @@ export default {
     },
   },
   mounted() {
-    if (!this.getOTPRedirectUrl) {
-      this.$router.go(-1);
+    if (localStorage.userDetails && localStorage.OTPRedirectUrl) {
+      this.setBizDetails(JSON.parse(localStorage.userDetails));
+      this.setOTPRedirectUrl(localStorage.OTPRedirectUrl);
+      this.setUserData({ business: JSON.parse(localStorage.userDetails) });
+      this.setLoginData(JSON.parse(localStorage.userDetails));
+    } else {
+      this.$router.push(
+        this.getOTPRedirectUrl === "otp/signIn"
+          ? "auth/sign-in"
+          : "auth/sign-up"
+      );
     }
+    this.countDownTimer();
   },
   methods: {
-    ...mapActions(["confirmUser", "attemptLogin", "requestAxiosGet"]),
+    ...mapActions([
+      "confirmUser",
+      "attemptLogin",
+      "requestAxiosGet",
+      "loginUser",
+    ]),
     ...mapMutations([
       "setAccessToken",
       "setRefreshToken",
       "setUserDetails",
       "setAchievements",
+      "setBizDetails",
+      "setOTPRedirectUrl",
+      "setUserData",
+      "setLoginData",
     ]),
     handleOnComplete(value) {
       this.otp = parseInt(value);
     },
     clearInput() {
       this.$refs.otpInput.clearInput();
+    },
+    countDownTimer() {
+      if (this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
+      } else {
+        this.countDownTriggered = true;
+      }
+    },
+    async resendCode() {
+      const payload = {
+        email: this.userEmail,
+      };
+      if (this.countDown === 0) {
+        try {
+          const fullPayload = {
+            app: process.env.FULFILMENT_SERVER,
+            values: payload,
+            endpoint: "seller/business/signin",
+          };
+          const data = await this.loginUser(fullPayload);
+          if (data.status === 200) {
+            this.setBizDetails(data.data.data);
+            localStorage.userDetails = JSON.stringify(data.data.data);
+            ElNotification({
+              title: "",
+              message: this.$t("auth.weHaveSentYouAnotherOTP"),
+              type: "success",
+            });
+            this.countDown = 120;
+            this.countDownTriggered = false;
+            this.countDownTimer();
+          }
+        } catch (error) {
+          ElNotification({
+            title: "",
+            message: this.$t("auth.weCouldNotResendYouAnOTP"),
+            type: "success",
+          });
+        }
+      }
     },
     async confirmOTP() {
       this.v$.$validate();
@@ -167,6 +251,7 @@ export default {
           message: this.$t("auth.couldNotVerifyOTP"),
           type: "error",
         });
+        this.loading = false;
       }
     },
     redirect() {
@@ -187,6 +272,7 @@ export default {
         this.loading = false;
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
+          localStorage.user = response.data.data.user;
           if (
             response.data.data.user.first_name &&
             response.data.data.user.last_name &&
@@ -245,5 +331,23 @@ export default {
 }
 .otp-error-msg {
   border-color: #9b101c;
+}
+.resend-code-otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+.resend-code-otp {
+  color: #324ba8;
+  cursor: pointer;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  overflow: hidden;
+  outline: none;
+}
+.resend-code-otp:disabled {
+  color: #606266 !important;
 }
 </style>

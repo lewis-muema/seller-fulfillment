@@ -11,9 +11,9 @@
     >
       <el-option
         v-for="lang in getLanguages"
-        :key="lang.name"
-        :label="lang.name"
-        :value="lang.tag"
+        :key="lang.value"
+        :label="lang.title"
+        :value="lang.value"
       >
       </el-option>
     </el-select>
@@ -34,6 +34,7 @@ import { ElNotification } from "element-plus";
 export default {
   watch: {
     defaultLanguage(val) {
+      localStorage.language = val;
       this.setDefaultLanguage(val);
     },
   },
@@ -72,9 +73,19 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.buttonLoader = false;
-          this.setLanguages(response.data.data.languages);
+          this.setLanguages(this.languageFormat(response.data.data.languages));
         }
       });
+    },
+    languageFormat(languages) {
+      const langs = [];
+      languages.forEach((row) => {
+        langs.push({
+          title: row.name,
+          value: row.tag,
+        });
+      });
+      return langs;
     },
     getBusinesssDetails() {
       this.buttonLoader = true;

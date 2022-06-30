@@ -25,7 +25,7 @@
                 : setTab(tab)
             "
           >
-            {{ tab.label }}
+            {{ $t(tab.label) }}
             <v-badge
               color="#FBDF9A"
               text-color="#7F3B02"
@@ -48,11 +48,11 @@ export default {
       currentTab: 0,
       tabs: [
         {
-          label: "To your Customers",
+          label: "dashboard.toYourCustomers",
           content: "-",
         },
         {
-          label: "To Sendy",
+          label: "dashboard.toSendy",
           content: "-",
         },
       ],
@@ -138,7 +138,7 @@ export default {
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: 20% 20%;
+  grid-template-columns: 190px 190px;
   border-bottom: 1px solid #e2e7ed;
 }
 .desktop-dashboard-tab {

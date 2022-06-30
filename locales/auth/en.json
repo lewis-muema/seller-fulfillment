@@ -43,9 +43,11 @@
     "enterCodeSentToEmail": "Enter the code sent to your email",
     "enterCode":"Enter code",
     "confirmCode": "Confirm Code",
-    "resendCode": "Resend code in 120 seconds",
+    "resendCode": "Resend code in {time} seconds",
+    "resend": "Resend code",
     "invalidToken": "Your token may be invalid or expired",
     "failedToCreateAccount": "Failed to create account",
+    "weHaveSentYouAnotherOTP": "We have sent you another OTP",
     "couldNotVerifyOTP": "Sorry, We could not verify you OTP, Kindly confirm the code and retry",
     "firstName": "First name",
     "lastName": "Last name",
@@ -68,5 +70,6 @@
     "updateDetails": "Update Details",
     "userAccountNotFound": "User account not found",
     "kenya": "KENYA",
-    "uganda": "UGANDA"
+    "uganda": "UGANDA",
+    "weCouldNotResendYouAnOTP": "We could not resend you an OTP, Please retry"
 }

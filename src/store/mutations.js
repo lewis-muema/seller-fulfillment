@@ -221,10 +221,14 @@ export default {
   setCheckoutDetails(state, val) {
     state.checkoutDetails = val;
   },
-  setSupportedCountries(state, val) {
-    state.supportedCountries = val;
+
+  setCountries(state, val) {
+    state.countries = val;
   },
   setMapOptions(state, val) {
     state.mapOptions = val;
+  },
+  setEventLabels(state, val) {
+    state.eventLabels = val;
   },
 };

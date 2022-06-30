@@ -72,6 +72,7 @@ export default {
   getConsignmentStatistics: (state) => state.consignmentStatistics,
   getSettings: (state) => state.settings,
   getCheckoutDetails: (state) => state.checkoutDetails,
-  getSupportedCountries: (state) => state.supportedCountries,
+  getCountries: (state) => state.countries,
   getMapOptions: (state) => state.mapOptions,
+  getEventLabels: (state) => state.eventLabels,
 };

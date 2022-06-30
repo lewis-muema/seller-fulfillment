@@ -14,7 +14,7 @@ export default {
     return {};
   },
   mounted() {
-    this.setComponent(this.$t("common.invoices"));
+    this.setComponent("common.invoices");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

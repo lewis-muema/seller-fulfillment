@@ -6,9 +6,9 @@
           <tr>
             <th class="text-left table-headers">
               {{
-                getSelectedTab === "To your Customers"
-                  ? "Customer info"
-                  : "Products"
+                getSelectedTab === "dashboard.toYourCustomers"
+                  ? $t("deliveries.customerInfo")
+                  : $t("deliveries.products")
               }}
             </th>
             <th class="text-left table-headers">
@@ -27,7 +27,7 @@
                   <v-list-item-title>
                     <span :class="getLoader">
                       {{
-                        getSelectedTab === "To your Customers"
+                        getSelectedTab === "dashboard.toYourCustomers"
                           ? formatName(item.destination.name)
                           : formatProducts(item.products)
                       }}
@@ -35,7 +35,7 @@
                   </v-list-item-title>
                   <v-list-item-subtitle
                     class="dashboard-customer-delivery-location"
-                    v-if="getSelectedTab === 'To your Customers'"
+                    v-if="getSelectedTab === 'dashboard.toYourCustomers'"
                   >
                     <div class="dashboard-customer-delivery-location-inner">
                       <span :class="getLoader">
@@ -55,11 +55,11 @@
                 <v-list-item-header>
                   <v-list-item-title>
                     <span :class="getLoader">
-                      {{ formatStatus(item.order_event_status) }}
+                      {{ formatStatus(item.order_event_status, item) }}
                     </span>
                   </v-list-item-title>
                   <v-progress-linear
-                    :model-value="30"
+                    :model-value="item.delivery_progress_ratio * 100"
                     color="#324BA8"
                     rounded
                     height="7"
@@ -83,7 +83,7 @@
       <div class="show-more-deliveries-link">
         <router-link
           :to="
-            getSelectedTab === 'To your Customers'
+            getSelectedTab === 'dashboard.toYourCustomers'
               ? '/deliveries/customer'
               : '/deliveries/sendy'
           "
@@ -106,7 +106,7 @@
       </p>
       <v-btn class="deliveries-btn" @click="redirect()" size="default">
         {{
-          getSelectedTab === "To your Customers"
+          getSelectedTab === "dashboard.toYourCustomers"
             ? $t("deliveries.deliverToACustomer")
             : $t("deliveries.deliverToSendy")
         }}
@@ -117,13 +117,15 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import eventLabels from "../../../mixins/event_labels";
+import placeholder from "../../../mixins/placeholders";
 import moment from "moment";
 
 export default {
   props: ["deliveries", "selectedTab"],
+  mixins: [eventLabels, placeholder],
   data() {
     return {
-      placeholders: [],
       params: "?max=5",
     };
   },
@@ -139,7 +141,7 @@ export default {
       return this.selectedTab;
     },
     filteredDeliveries() {
-      if (this.getSelectedTab === "To your Customers") {
+      if (this.getSelectedTab === "dashboard.toYourCustomers") {
         return this.getDeliveries;
       }
       return this.getConsignments;
@@ -147,24 +149,21 @@ export default {
   },
   watch: {
     selectedTab() {
-      if (this.getSelectedTab === "To your Customers") {
-        this.setDeliveries(this.placeholders);
+      if (this.getSelectedTab === "dashboard.toYourCustomers") {
+        this.setDeliveries(this.placeHolderDeliveries);
       } else {
-        this.setConsignments(this.placeholders);
+        this.setConsignments(this.placeholderConsignments);
       }
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders =
-      this.getSelectedTab === "To your Customers"
-        ? this.getDeliveries
-        : this.getConsignments;
+    if (this.getSelectedTab === "dashboard.toYourCustomers") {
+      this.setDeliveries(this.placeHolderDeliveries);
+    } else {
+      this.setConsignments(this.placeholderConsignments);
+    }
     this.fetchOrders();
-  },
-  beforeUnmount() {
-    this.setDeliveries(this.placeholders);
-    this.setConsignments(this.placeholders);
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
@@ -179,13 +178,13 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getSelectedTab === "To your Customers"
+          this.getSelectedTab === "dashboard.toYourCustomers"
             ? "deliveries"
             : "consignments"
         }${this.params}`,
       }).then((response) => {
         if (response.status === 200) {
-          if (this.getSelectedTab === "To your Customers") {
+          if (this.getSelectedTab === "dashboard.toYourCustomers") {
             this.setDeliveries(response.data.data.orders);
           } else {
             this.setConsignments(response.data.data.orders);
@@ -217,14 +216,15 @@ export default {
           : ""
       }`;
     },
-    formatStatus(status) {
-      const fullStatus = status.replaceAll(".", " ");
-      return fullStatus.charAt(0).toUpperCase() + fullStatus.slice(1);
+    formatStatus(status, item) {
+      return this.showEventLabels(status, item);
     },
     redirect() {
       this.$router.push(
         `/inventory/send-inventory/${
-          this.getSelectedTab === "To your Customers" ? "customer" : "sendy"
+          this.getSelectedTab === "dashboard.toYourCustomers"
+            ? "customer"
+            : "sendy"
         }/select-products?`
       );
     },

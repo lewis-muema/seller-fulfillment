@@ -64,11 +64,11 @@
               <td class="deliveries-progress-row">
                 <p class="deliveries-progress-row-top">
                   <span :class="getLoader">
-                    {{ formatStatus(item.order_event_status) }}
+                    {{ formatStatus(item.order_event_status, item) }}
                   </span>
                 </p>
                 <v-progress-linear
-                  :model-value="30"
+                  :model-value="item.delivery_progress_ratio * 100"
                   color="#324BA8"
                   height="10"
                   rounded
@@ -129,14 +129,16 @@
 import moment from "moment";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import eventLabels from "../../../../mixins/event_labels";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia },
+  mixins: [eventLabels, placeholder],
   data: () => ({
     deliveries: [],
     range: "",
     params: "",
-    placeholders: [],
   }),
   watch: {
     range(val) {
@@ -162,17 +164,14 @@ export default {
       }
     },
     params() {
-      this.setDeliveries(this.placeholders);
+      this.setDeliveries(this.placeHolderDeliveries);
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders = this.getDeliveries;
+    this.setDeliveries(this.placeHolderDeliveries);
     this.fetchOrders();
     this.getDeliveryStats();
-  },
-  beforeUnmount() {
-    this.setDeliveries(this.placeholders);
   },
   computed: {
     ...mapGetters([
@@ -247,9 +246,8 @@ export default {
       });
       return nameArr.join(" ");
     },
-    formatStatus(status) {
-      const fullStatus = status.replaceAll(".", " ");
-      return fullStatus.charAt(0).toUpperCase() + fullStatus.slice(1);
+    formatStatus(status, item) {
+      return this.showEventLabels(status, item);
     },
   },
 };

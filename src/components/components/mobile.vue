@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>Mobile</div>
+  <div></div>
 </template>
 
 <script>

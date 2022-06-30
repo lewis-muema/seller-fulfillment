@@ -10,19 +10,19 @@ export default createStore({
   state() {
     return {
       mobile: false,
-      component: "",
+      component: "common.dashboard",
       languages: [
         {
-          name: "English",
-          tag: "en",
+          title: "English",
+          value: "en",
         },
         {
-          name: "French",
-          tag: "fr",
+          title: "French",
+          value: "fr",
         },
       ],
       parent: "",
-      defaultLanguage: "English",
+      defaultLanguage: "en",
       external: [
         "/auth/",
         "/auth/sign-in",
@@ -37,6 +37,7 @@ export default createStore({
       businessUserDetails: {},
       googleUserData: {},
       industries: {},
+      countries: {},
       errors: {},
       loginData: {},
       googleConfirmData: {},
@@ -1060,7 +1061,7 @@ export default createStore({
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_ORDER_CREATED",
-          translated_event_code: "Order placed on Friday, Feb 11th",
+          translated_event_code: "summarised.event.pickup.order.created",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1068,7 +1069,7 @@ export default createStore({
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_WAITING_FOR_PARTNER",
-          translated_event_code: "We are finding a driver for your order",
+          translated_event_code: "summarised.event.pickup.waiting.for.partner",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1077,7 +1078,7 @@ export default createStore({
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_PARTNER_ARRIVED_AT_PICKUP_LOCATION",
           translated_event_code:
-            "Your driver has arrived at your pick up location",
+            "summarised.event.pickup.partner.arrived.at.pickup.location",
           notes: "",
           event_tense: "FUTURE",
           metadata: {
@@ -1089,14 +1090,14 @@ export default createStore({
           event_code:
             "EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
           translated_event_code:
-            "Your driver has dropped your products at the Fulfillment Centre",
+            "summarised.event.pickup.partner.submitted.items.at.hub.confirmed.via.code",
           notes: null,
           event_tense: "FUTURE",
           metadata: {},
         },
       ],
-      dashboardSelectedTab: "To your Customers",
-      inventorySelectedTab: "All",
+      dashboardSelectedTab: "dashboard.toYourCustomers",
+      inventorySelectedTab: "inventory.all",
       stockSelectedTab: "Overview",
       selectedProducts: [],
       sendProductsRoute: "",
@@ -1136,6 +1137,69 @@ export default createStore({
             product_variant_archived: false,
           },
         ],
+      },
+      eventLabels: {
+        "event.pickup.order.created": "deliveries.orderPlacedOn",
+        "event.pickup.processing.for.pickup": "deliveries.orderPlacedOn",
+        "event.pickup.waiting.for.partner": "deliveries.weAreFindingADriver",
+        "event.pickup.partner.assigned": "deliveries.weHaveFoundADriver",
+        "event.pickup.partner.enroute.to.pickup.location":
+          "deliveries.yourDriverIsOnTheWay",
+        "event.pickup.partner.arrived.at.pickup.location":
+          "deliveries.yourDriverHasArrivedAtYourPickUpLocation",
+        "event.pickup.partner.pickup.from.seller.confirmed.via.code":
+          "deliveries.yourProductsHaveBeenPicked",
+        "event.pickup.partner.enroute.to.hub":
+          "deliveries.yourProductsAreOnTheWay",
+        "event.pickup.partner.arrived.at.hub":
+          "deliveries.yourDriverHasArrivedAtTheFulfillmentCentre",
+        "event.pickup.partner.submitted.items.at.hub.confirmed.via.code":
+          "deliveries.yourDriverHasDroppedYourProductsAtTheFulfillmentCentre",
+        "event.pickup.hub.items.received.at.hub":
+          "deliveries.yourProductsHaveBeenReceivedAtTheFulfilmentCentre",
+        "event.pickup.order.canceled.by.seller":
+          "deliveries.youHaveCancelledThisOrder",
+        "event.pickup.order.canceled.by.sendy":
+          "deliveries.sendyHasCancelledThisOrder",
+        "event.pickup.rescheduled.by.seller":
+          "deliveries.youHaveRescheduledThisOrder",
+        "event.pickup.rescheduled.by.sendy":
+          "deliveries.sendyHasRescheduledThisOrder",
+        "event.pickup.failed": "deliveries.sendyFailedToPickUpYourProducts",
+        "event.delivery.order.created": "deliveries.orderPlacedOn",
+        "event.delivery.at.hub.processing.for.delivery":
+          "deliveries.orderPlacedOn",
+        "event.delivery.at.hub.waiting.for.partner":
+          "deliveries.preparingDelivery",
+        "event.delivery.at.hub.partner.assigned":
+          "deliveries.yourDeliveryHasBeenPreparedAndAssignedToADriver",
+        "event.delivery.partner.enroute.to.hub":
+          "deliveries.yourDeliveryHasBeenPreparedAndAssignedToADriver",
+        "event.delivery.partner.arrived.at.hub":
+          "deliveries.yourDeliveryHasBeenPreparedAndAssignedToADriver",
+        "event.delivery.partner.pickup.from.hub.confirmed.via.code":
+          "deliveries.yourDeliveryHasBeenPreparedAndAssignedToADriver",
+        "event.delivery.partner.enroute.to.buyer.location":
+          "deliveries.arrivingSoon",
+        "event.delivery.partner.arrived.at.buyer.location":
+          "deliveries.theDriverHasArrivedAndIsReadyToDeliverThePackage",
+        "event.delivery.buyer.paid.for.goods":
+          "deliveries.theBuyerHasPaidForThePackage",
+        "event.delivery.partner.submitted.items.to.buyer.confirmed.via.code":
+          "deliveries.deliveryCompletedDate",
+        "event.delivery.rejected.items.received.at.hub":
+          "deliveries.deliveryCompletedOnRejected",
+        "event.delivery.failed": "deliveries.yourPackageFailedToBeDelivered",
+        "event.delivery.order.canceled.by.seller":
+          "deliveries.youCancelledThisOrder",
+        "event.delivery.order.canceled.by.sendy":
+          "deliveries.sendyCancelledThisOrder",
+        "event.delivery.rescheduled.by.seller":
+          "deliveries.youRescheduledThisOrderFor",
+        "event.delivery.rescheduled.by.sendy":
+          "deliveries.sendyRescheduledThisOrderFor",
+        "event.delivery.rescheduled.by.buyer":
+          "deliveries.theCustomerRescheduledThisOrderFor",
       },
       productLists: [
         {

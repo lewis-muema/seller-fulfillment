@@ -32,7 +32,7 @@
             "
           >
             <span :class="getLoader">
-              {{ activity.translated_event_code }}
+              {{ formatStatus(activity.translated_event_code, activity) }}
             </span>
           </span>
           <div
@@ -65,9 +65,11 @@ import { shallowRef } from "vue";
 import statusMixin from "../../../../mixins/status_mixin";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { Close } from "@element-plus/icons-vue";
+import eventLabels from "../../../../mixins/event_labels";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
-  mixins: [statusMixin],
+  mixins: [statusMixin, eventLabels, placeholder],
   data() {
     return {
       activities: [],
@@ -98,7 +100,9 @@ export default {
       this.fetchOrder();
     },
   },
-  mounted() {},
+  mounted() {
+    this.setOrderTimelines(this.placeholderOrderTimelines);
+  },
   methods: {
     ...mapMutations([
       "setComponent",
@@ -151,6 +155,15 @@ export default {
     },
     formatDate(date) {
       return moment(date).format("ddd, MMM Do");
+    },
+    formatStatus(status, item) {
+      if (status) {
+        const newStatus = status.split(".").slice(1).join(".");
+        if (newStatus) {
+          return this.showEventLabels(newStatus, item);
+        }
+        return status;
+      }
     },
   },
 };

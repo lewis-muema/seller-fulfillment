@@ -100,31 +100,32 @@
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia, tableHeader },
+  mixins: [placeholder],
   data() {
     return {
-      placeholder: [],
       headers: [
         {
-          title: this.$t("inventory.product"),
+          title: "inventory.product",
           description: "",
         },
         {
-          title: this.$t("inventory.available"),
-          description: this.$t("inventory.availableProducts"),
+          title: "inventory.available",
+          description: "inventory.availableProducts",
         },
         {
-          title: this.$t("inventory.committed"),
-          description: this.$t("inventory.CommittedProducts"),
+          title: "inventory.committed",
+          description: "inventory.CommittedProducts",
         },
         {
-          title: this.$t("inventory.incoming"),
-          description: this.$t("inventory.IncomingProducts"),
+          title: "inventory.incoming",
+          description: "inventory.IncomingProducts",
         },
         {
-          title: this.$t("inventory.actions"),
+          title: "inventory.actions",
           description: "",
         },
       ],
@@ -137,14 +138,11 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.stocks"));
-    this.placeholder = this.getProductLists;
+    this.setComponent("common.stocks");
+    this.setProductLists(this.placeholderProducts);
     this.getStockStats();
     this.fetchProducts();
     this.getStockSettings();
-  },
-  beforeUnmount() {
-    this.setProductLists(this.placeholder);
   },
   computed: {
     ...mapGetters([
@@ -158,10 +156,10 @@ export default {
       return this.headers;
     },
     filteredProducts() {
-      if (this.getInventorySelectedTab === this.$t("inventory.outOfStock")) {
+      if (this.getInventorySelectedTab === "inventory.outOfStock") {
         return this.NoStockProducts;
       }
-      if (this.getInventorySelectedTab === this.$t("inventory.lowStock")) {
+      if (this.getInventorySelectedTab === "inventory.lowStock") {
         return this.lowStockProducts;
       }
       return this.getProductLists;

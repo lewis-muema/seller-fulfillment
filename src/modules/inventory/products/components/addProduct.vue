@@ -30,7 +30,7 @@ export default {
     return {};
   },
   mounted() {
-    this.setComponent(this.$t("common.addProduct"));
+    this.setComponent("common.addProduct");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

@@ -24,7 +24,7 @@
                   : setTab(tab)
               "
             >
-              {{ tab.label }}
+              {{ $t(tab.label) }}
               <v-badge
                 color="#D3DDF6"
                 text-color="#324BA8"
@@ -79,7 +79,7 @@
                 : setTab(tab)
             "
           >
-            {{ tab.label }}
+            {{ $t(tab.label) }}
             <v-badge
               :color="tab.bgColor"
               :text-color="tab.color"
@@ -101,29 +101,29 @@ export default {
     return {
       productTabs: [
         {
-          label: this.$t("inventory.all"),
+          label: "inventory.all",
           content: "-",
         },
         {
-          label: this.$t("inventory.archived"),
+          label: "inventory.archived",
           content: "-",
         },
       ],
       stockLevelTabs: [
         {
-          label: this.$t("inventory.all"),
+          label: "inventory.all",
           content: "-",
           color: "#324BA8",
           bgColor: "#D3DDF6",
         },
         {
-          label: this.$t("inventory.lowStock"),
+          label: "inventory.lowStock",
           content: "-",
           color: "#7F3B02",
           bgColor: "#FBDF9A",
         },
         {
-          label: this.$t("inventory.outOfStock"),
+          label: "inventory.outOfStock",
           content: "-",
           color: "#9B101C",
           bgColor: "#FBDECF",
@@ -151,12 +151,11 @@ export default {
   watch: {
     "$store.state.loader": function loader(val) {
       this.productTabs[0].content =
-        val === "" && this.getInventorySelectedTab === this.$t("inventory.all")
+        val === "" && this.getInventorySelectedTab === "inventory.all"
           ? `${this.getTotalProducts}`
           : "-";
       this.productTabs[1].content =
-        val === "" &&
-        this.getInventorySelectedTab === this.$t("inventory.archived")
+        val === "" && this.getInventorySelectedTab === "inventory.archived"
           ? `${this.getTotalProducts}`
           : "-";
       this.stockLevelTabs[0].content =

@@ -226,29 +226,26 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import eventsMixin from "../../../../mixins/events_mixin";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia },
-  mixins: [eventsMixin],
+  mixins: [eventsMixin, placeholder],
   data() {
     return {
       products: [],
       selectedProducts: [],
-      placeholder: [],
     };
   },
   mounted() {
     this.setComponent(
       this.$route.params.path === "sendy"
-        ? this.$t("common.sendInventoryToSendy")
-        : this.$t("common.sendDeliveryToCustomer")
+        ? "common.sendInventoryToSendy"
+        : "common.sendDeliveryToCustomer"
     );
-    this.placeholder = this.getProductLists;
+    this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
-  },
-  beforeUnmount() {
-    this.setProductLists(this.placeholder);
   },
   methods: {
     ...mapMutations([

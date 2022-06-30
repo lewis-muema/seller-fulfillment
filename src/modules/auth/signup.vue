@@ -46,15 +46,18 @@
             }}</label>
             <el-select v-model="params.countryOfOperation">
               <el-option
-                v-for="item in countries"
+                v-for="item in getCountries"
                 :key="item.value"
-                :label="item.country"
-                :value="item.country"
+                :label="item.name"
+                :value="item.name"
               >
                 <span class="country-image-container">
-                  <img :src="item.image" class="country-image" />
+                  <img
+                    :src="imgPreUrl + item.name + '.png'"
+                    class="country-image"
+                  />
                 </span>
-                <span class="country-container">{{ item.country }}</span>
+                <span class="country-container">{{ item.name }}</span>
               </el-option>
             </el-select>
 
@@ -103,18 +106,7 @@ export default {
   data() {
     return {
       loading: false,
-      countries: [
-        {
-          country: this.$t("auth.kenya"),
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg",
-        },
-        {
-          country: this.$t("auth.uganda"),
-          image:
-            "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UG.svg",
-        },
-      ],
+      imgPreUrl: "https://images.sendyit.com/fulfilment/seller/",
       params: {
         businessName: "",
         businessEmail: "",
@@ -133,13 +125,14 @@ export default {
   },
   mounted() {
     localStorage.clear();
+    this.countries();
   },
   watch: {},
   computed: {
-    ...mapGetters(["getErrors", "getGoogleUserData"]),
+    ...mapGetters(["getErrors", "getGoogleUserData", "getCountries"]),
   },
   methods: {
-    ...mapActions(["signupUser"]),
+    ...mapActions(["signupUser", "listCountries"]),
     ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
     retrieveGoogleData(value) {
       console.log(value);
@@ -168,6 +161,7 @@ export default {
         if (data.status === 200) {
           this.setBizDetails(data.data.data.business);
           localStorage.userDetails = JSON.stringify(data.data.data.business);
+          localStorage.OTPRedirectUrl = "otp/signUp";
           this.loading = false;
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
@@ -190,6 +184,20 @@ export default {
           type: "error",
         });
         this.loading = false;
+      }
+    },
+    async countries() {
+      try {
+        const fullPayload = {
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: "seller/business/signup/countries",
+        };
+        const response = await this.listCountries(fullPayload);
+        if (response.message === "country.list.success") {
+          return response;
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
   },

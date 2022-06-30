@@ -85,22 +85,24 @@ import tableHeader from "@/modules/inventory/tables/tableHeader";
 import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import placeholder from "../../../../mixins/placeholders";
+
 export default {
   components: { tableHeader, addProductsCard, searchAlgolia },
+  mixins: [placeholder],
   data() {
     return {
       headers: [
         {
-          title: this.$t("inventory.product"),
+          title: "inventory.product",
         },
         {
-          title: this.$t("inventory.availableProduct"),
+          title: "inventory.availableProduct",
         },
         {
-          title: this.$t("inventory.actions"),
+          title: "inventory.actions",
         },
       ],
-      placeholder: [],
     };
   },
   computed: {
@@ -116,16 +118,13 @@ export default {
   },
   watch: {
     "$store.state.inventorySelectedTab": function inventorySelectedTab() {
-      this.setProductLists(this.placeholder);
+      this.setProductLists(this.placeholderProducts);
       this.fetchProducts();
     },
   },
   mounted() {
-    this.placeholder = this.getProductLists;
+    this.setProductLists(this.placeholderProducts);
     this.fetchProducts();
-  },
-  beforeUnmount() {
-    this.setProductLists(this.placeholder);
   },
   methods: {
     ...mapMutations(["setLoader", "setProductLists"]),
@@ -135,7 +134,7 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
-          this.getInventorySelectedTab === this.$t("inventory.archived")
+          this.getInventorySelectedTab === "inventory.archived"
             ? "/archived"
             : ""
         }`,

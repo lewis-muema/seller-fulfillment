@@ -1,1 +1,9 @@
-{}
+{
+  "emailAddress": "Adresse email",
+  "Join": "Créer un compte {professionnel} sur Sendy",
+  "name": "Votre Nom + Prénom ",
+  "nameOfBusiness": "Saisir le nom de l'entreprise",
+  "or": "ou",
+  "phoneNumber": "Numéro de Téléphone",
+  "setUpAccount": "Configurer le compte "
+}

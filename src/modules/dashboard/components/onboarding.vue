@@ -46,13 +46,15 @@
               <v-list-item-header>
                 <v-list-item-title>
                   <div class="desktop-content-title">
-                    {{ content.title }}
+                    {{ content.title ? $t(content.title) : "" }}
                   </div>
                 </v-list-item-title>
                 <v-list-item-subtitle
                   v-if="!getAchievements[content.key]"
                   class="mt-1"
-                  >{{ content.text }}</v-list-item-subtitle
+                  >{{
+                    content.text ? $t(content.text) : ""
+                  }}</v-list-item-subtitle
                 >
                 <button
                   v-if="!getAchievements[content.key] && activeStep === i"
@@ -60,7 +62,7 @@
                   class="btn btn-primary desktop-content-button"
                   @click="$router.push(content.link)"
                 >
-                  {{ content.button }}
+                  {{ content.button ? $t(content.button) : "" }}
                 </button>
               </v-list-item-header>
             </div>
@@ -79,15 +81,15 @@
               </v-list-item-avatar>
               <v-list-item-header>
                 <v-list-item-title class="desktop-dashboard-link-title">{{
-                  link.title
+                  $t(link.title)
                 }}</v-list-item-title>
-                <v-list-item-subtitle>{{ link.name }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ $t(link.name) }}</v-list-item-subtitle>
               </v-list-item-header>
             </v-list-item>
             <v-divider
               class="mt-1"
               :class="
-                link.title === 'Meet us in person'
+                link.title === 'dashboard.meetUsInPerson'
                   ? 'v-divider-last-item'
                   : 'v-divider-height'
               "
@@ -111,7 +113,7 @@ export default {
       dashboardContent: [
         {
           step: 1,
-          title: this.$t("dashboard.accountCreated"),
+          title: "dashboard.accountCreated",
           text: "",
           button: "",
           icon: "mdi-check-circle",
@@ -119,25 +121,25 @@ export default {
         },
         {
           step: 2,
-          title: this.$t("dashboard.addYourProducts"),
-          text: this.$t("dashboard.addOrImport"),
-          button: this.$t("dashboard.addProducts"),
+          title: "dashboard.addYourProducts",
+          text: "dashboard.addOrImport",
+          button: "dashboard.addProducts",
           icon: "mdi-check-circle",
           key: "added_at_least_one_product",
           link: "/inventory/add-product",
         },
         {
-          title: this.$t("dashboard.sendUsYourInventory"),
-          text: this.$t("dashboard.sendUsTheProducts"),
-          button: this.$t("dashboard.sendTheInventory"),
+          title: "dashboard.sendUsYourInventory",
+          text: "dashboard.sendUsTheProducts",
+          button: "dashboard.sendTheInventory",
           icon: "mdi-check-circle",
           key: "created_at_least_one_pickup_order",
           link: "/inventory/send-inventory/sendy/select-products",
         },
         {
-          title: this.$t("dashboard.deliverToCustomer"),
-          text: this.$t("dashboard.sendADelivery"),
-          button: this.$t("dashboard.deliverToACustomer"),
+          title: "dashboard.deliverToCustomer",
+          text: "dashboard.sendADelivery",
+          button: "dashboard.deliverToACustomer",
           icon: "mdi-check-circle",
           key: "created_at_least_one_delivery_order",
           link: "/inventory/send-inventory/customer/select-products",
@@ -145,18 +147,18 @@ export default {
       ],
       dashboardLinks: [
         {
-          title: this.$t("dashboard.needHelp"),
-          name: this.$t("dashboard.bookATime"),
+          title: "dashboard.needHelp",
+          name: "dashboard.bookATime",
           icon: "mdi-face-agent",
         },
         {
-          title: this.$t("dashboard.watchTutorial"),
-          name: this.$t("dashboard.learnHowToSend"),
+          title: "dashboard.watchTutorial",
+          name: "dashboard.learnHowToSend",
           icon: "mdi-play-box-multiple",
         },
         {
-          title: this.$t("dashboard.meetUsInPerson"),
-          name: this.$t("dashboard.attendOneOfOurUpcomingEvents"),
+          title: "dashboard.meetUsInPerson",
+          name: "dashboard.attendOneOfOurUpcomingEvents",
           icon: "mdi-calendar-week-begin",
         },
       ],
@@ -175,7 +177,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(this.$t("common.getStarted"));
+    this.setComponent("common.getStarted");
   },
   methods: {
     ...mapMutations(["setComponent"]),

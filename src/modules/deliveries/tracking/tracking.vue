@@ -94,9 +94,9 @@ export default {
     "$store.state.parent": function parentVal(val) {
       this.rescheduleStatus(val);
       if (val === "sendy") {
-        this.setComponent(this.$t("deliveries.trackDeliveryToSendy"));
+        this.setComponent("deliveries.trackDeliveryToSendy");
       } else if (val === "customer") {
-        this.setComponent(this.$t("deliveries.trackDeliveryToCustomer"));
+        this.setComponent("deliveries.trackDeliveryToCustomer");
       }
     },
     "$route.params.order_id": function orderId(val) {

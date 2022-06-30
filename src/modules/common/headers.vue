@@ -1,6 +1,6 @@
 <template>
   <div class="header-container">
-    <div class="header-section-left">{{ getComponent }}</div>
+    <div class="header-section-left">{{ $t(getComponent) }}</div>
     <div class="header-section-right">
       <div></div>
       <div class="header-button-section">
@@ -27,7 +27,7 @@
                 class="header-list-item"
               >
                 <i :class="`header-shortcut-icon mdi ${shrt.icon}`" />
-                {{ shrt.title }}</v-list-item-title
+                {{ $t(shrt.title) }}</v-list-item-title
               >
             </v-list-item>
           </v-list>
@@ -159,12 +159,12 @@ export default {
       profileName: "Irene Jane",
       shortcuts: [
         {
-          title: this.$t("common.deliverToCustomer"),
+          title: "common.deliverToCustomer",
           icon: "mdi-truck-outline",
           url: "/inventory/send-inventory/customer/select-products",
         },
         {
-          title: this.$t("common.inventoryToSendy"),
+          title: "common.inventoryToSendy",
           icon: "mdi-warehouse",
           url: "/inventory/send-inventory/sendy/select-products",
         },
@@ -172,7 +172,7 @@ export default {
       profile: [
         {
           item: "",
-          actionLabel: this.$t("common.seeProfile"),
+          actionLabel: "",
           route: "/settings/profile/personal-info",
           icon: "",
         },
@@ -183,7 +183,7 @@ export default {
           icon: "mdi-chevron-right",
         },
         {
-          item: this.$t("common.logOut"),
+          item: "",
           actionLabel: "",
           route: "/auth/sign-in",
           icon: "",
@@ -202,12 +202,15 @@ export default {
       "getLanguages",
       "getNotifications",
       "getStorageUserDetails",
+      "getMapOptions",
     ]),
     languageName() {
       let lang = "";
       this.getLanguages.forEach((row) => {
-        if (row.tag === this.getBusinessDetails.language) {
-          lang = row.name;
+        if (row.value === this.getBusinessDetails.language) {
+          lang = row.title;
+          this.setDefaultLanguage(row.value);
+          localStorage.language = row.value;
         }
       });
       return lang;
@@ -227,9 +230,11 @@ export default {
       this.profile[1].item = `${this.$t("common.language")}: ${
         this.languageName
       }`;
+      this.profile[2].actionLabel = this.$t("common.logOut");
     },
     "$store.state.userDetails": function businessDetails() {
       this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
+      this.profile[0].actionLabel = this.$t("common.seeProfile");
     },
   },
   mounted() {
@@ -243,6 +248,8 @@ export default {
       "setUserDetails",
       "setLanguages",
       "setNotifications",
+      "setDefaultLanguage",
+      "setMapOptions",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPatch", "requestAxiosPut"]),
     getIcon(notification) {
@@ -297,6 +304,11 @@ export default {
           this.profile[1].item = `${this.$t("common.language")}: ${
             this.languageName
           }`;
+          let mapOptions = this.getMapOptions;
+          mapOptions.componentRestrictions.country = [
+            response.data.data.business.country_code.toLowerCase(),
+          ];
+          this.setMapOptions(mapOptions);
         }
       });
     },
@@ -306,10 +318,20 @@ export default {
         endpoint: `seller/business/signup/languages`,
       }).then((response) => {
         if (response.status === 200) {
-          this.setLanguages(response.data.data.languages);
+          this.setLanguages(this.languageFormat(response.data.data.languages));
           this.listBusinessDetails();
         }
       });
+    },
+    languageFormat(languages) {
+      const langs = [];
+      languages.forEach((row) => {
+        langs.push({
+          title: row.name,
+          value: row.tag,
+        });
+      });
+      return langs;
     },
     listUsersDetails() {
       this.requestAxiosGet({

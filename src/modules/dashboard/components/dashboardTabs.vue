@@ -138,7 +138,7 @@ export default {
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: 20% 20%;
+  grid-template-columns: 190px 190px;
   border-bottom: 1px solid #e2e7ed;
 }
 .desktop-dashboard-tab {

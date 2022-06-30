@@ -59,7 +59,7 @@
                     </span>
                   </v-list-item-title>
                   <v-progress-linear
-                    :model-value="30"
+                    :model-value="item.delivery_progress_ratio * 100"
                     color="#324BA8"
                     rounded
                     height="7"

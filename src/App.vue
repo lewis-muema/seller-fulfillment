@@ -110,6 +110,7 @@ export default {
       window.addEventListener("resize", (event) => {
         onResizeFunction(event.target.innerWidth);
       });
+
       function onResizeFunction(width) {
         if (width >= 1440) {
           document.querySelector("#app").style.zoom = "100%";

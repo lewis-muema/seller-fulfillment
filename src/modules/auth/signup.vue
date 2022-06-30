@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ countDown }}
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
         <v-card-title class="text-center sign-up-title">
@@ -162,6 +161,7 @@ export default {
         if (data.status === 200) {
           this.setBizDetails(data.data.data.business);
           localStorage.userDetails = JSON.stringify(data.data.data.business);
+          localStorage.OTPRedirectUrl = "otp/signUp";
           this.loading = false;
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");

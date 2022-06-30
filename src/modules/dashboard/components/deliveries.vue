@@ -118,14 +118,14 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import eventLabels from "../../../mixins/event_labels";
+import placeholder from "../../../mixins/placeholders";
 import moment from "moment";
 
 export default {
   props: ["deliveries", "selectedTab"],
-  mixins: [eventLabels],
+  mixins: [eventLabels, placeholder],
   data() {
     return {
-      placeholders: [],
       params: "?max=5",
     };
   },
@@ -150,23 +150,20 @@ export default {
   watch: {
     selectedTab() {
       if (this.getSelectedTab === "dashboard.toYourCustomers") {
-        this.setDeliveries(this.placeholders);
+        this.setDeliveries(this.placeHolderDeliveries);
       } else {
-        this.setConsignments(this.placeholders);
+        this.setConsignments(this.placeholderConsignments);
       }
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders =
-      this.getSelectedTab === "dashboard.toYourCustomers"
-        ? this.getDeliveries
-        : this.getConsignments;
+    if (this.getSelectedTab === "dashboard.toYourCustomers") {
+      this.setDeliveries(this.placeHolderDeliveries);
+    } else {
+      this.setConsignments(this.placeholderConsignments);
+    }
     this.fetchOrders();
-  },
-  beforeUnmount() {
-    this.setDeliveries(this.placeholders);
-    this.setConsignments(this.placeholders);
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),

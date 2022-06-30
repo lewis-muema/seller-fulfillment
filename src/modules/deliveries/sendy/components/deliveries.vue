@@ -121,15 +121,15 @@ import moment from "moment";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import eventLabels from "../../../../mixins/event_labels";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia },
-  mixins: [eventLabels],
+  mixins: [eventLabels, placeholder],
   data: () => ({
     deliveries: [],
     range: "",
     params: "",
-    placeholders: [],
   }),
   watch: {
     range(val) {
@@ -155,17 +155,14 @@ export default {
       }
     },
     params() {
-      this.setConsignments(this.placeholders);
+      this.setConsignments(this.placeholderConsignments);
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders = this.getConsignments;
+    this.setConsignments(this.placeholderConsignments);
     this.getPickUpStats();
     this.fetchOrders();
-  },
-  beforeUnmount() {
-    this.setConsignments(this.placeholders);
   },
   computed: {
     ...mapGetters([

@@ -149,6 +149,7 @@ export default {
         if (data.status === 200) {
           this.setBizDetails(data.data.data);
           localStorage.userDetails = JSON.stringify(data.data.data);
+          localStorage.OTPRedirectUrl = "otp/signIn";
           this.loading = false;
           this.setOTPRedirectUrl("otp/signIn");
           this.$router.push("/auth/otp");

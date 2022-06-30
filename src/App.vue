@@ -30,13 +30,6 @@ export default {
       ) {
         this.getOnboardingStatus();
       }
-      if (
-        !localStorage.userDetails &&
-        this.$route.path !== "/auth/sign-up" &&
-        this.$route.path !== "/auth/otp"
-      ) {
-        this.$router.push("/auth/sign-in");
-      }
     },
     "$store.state.defaultLanguage": function language(val) {
       window.dispatchEvent(
@@ -61,21 +54,16 @@ export default {
     },
   },
   created() {
-    if (
-      !localStorage.userDetails &&
-      this.$route.path !== "/auth/sign-up" &&
-      this.$route.path !== "/auth/otp"
-    ) {
-      this.$router.push("/auth/sign-in");
-    }
-    if (
-      this.$route.path !== "/auth/sign-up" &&
-      this.$route.path !== "/auth/otp" &&
-      this.onboardingStatus &&
-      typeof localStorage.userDetails === "string"
-    ) {
-      this.getOnboardingStatus();
-    }
+    setTimeout(() => {
+      if (
+        this.$route.path !== "/auth/sign-up" &&
+        this.$route.path !== "/auth/otp" &&
+        this.onboardingStatus &&
+        typeof localStorage.userDetails === "string"
+      ) {
+        this.getOnboardingStatus();
+      }
+    }, 500);
     window.addEventListener("register-fcm", () => {
       this.firebase();
     });

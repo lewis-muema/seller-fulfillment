@@ -85,8 +85,11 @@ import tableHeader from "@/modules/inventory/tables/tableHeader";
 import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import placeholder from "../../../../mixins/placeholders";
+
 export default {
   components: { tableHeader, addProductsCard, searchAlgolia },
+  mixins: [placeholder],
   data() {
     return {
       headers: [
@@ -100,7 +103,6 @@ export default {
           title: "inventory.actions",
         },
       ],
-      placeholder: [],
     };
   },
   computed: {
@@ -116,16 +118,13 @@ export default {
   },
   watch: {
     "$store.state.inventorySelectedTab": function inventorySelectedTab() {
-      this.setProductLists(this.placeholder);
+      this.setProductLists(this.placeholderProducts);
       this.fetchProducts();
     },
   },
   mounted() {
-    this.placeholder = this.getProductLists;
+    this.setProductLists(this.placeholderProducts);
     this.fetchProducts();
-  },
-  beforeUnmount() {
-    this.setProductLists(this.placeholder);
   },
   methods: {
     ...mapMutations(["setLoader", "setProductLists"]),

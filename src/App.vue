@@ -54,41 +54,84 @@ export default {
     },
   },
   created() {
-    setTimeout(() => {
-      if (
-        this.$route.path !== "/auth/sign-up" &&
-        this.$route.path !== "/auth/otp" &&
-        this.onboardingStatus &&
-        typeof localStorage.userDetails === "string"
-      ) {
-        this.getOnboardingStatus();
-      }
-    }, 500);
-    window.addEventListener("register-fcm", () => {
-      this.firebase();
-    });
-    window.addEventListener("freshchat-loaded", () => {
-      this.sendSegmentEvents({
-        event: "Sendy Support",
-        data: {
-          userId: this.getStorageUserDetails.business_id,
-          email: this.getStorageUserDetails.email,
-          clientType: "web",
-          device: "desktop",
-        },
-      });
-    });
-    if (localStorage.language) {
-      setTimeout(() => {
-        window.dispatchEvent(
-          new CustomEvent("language-changed", { detail: localStorage.language })
-        );
-      }, 500);
-    }
+    this.getOnboarding();
+    this.registerFCM();
+    this.freshchatInit();
+    this.changeLanguage();
+    this.autoZoom();
+    this.detectMobile();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
     ...mapMutations(["setNotifications", "setAchievements"]),
+    registerFCM() {
+      window.addEventListener("register-fcm", () => {
+        this.firebase();
+      });
+    },
+    getOnboarding() {
+      setTimeout(() => {
+        if (
+          this.$route.path !== "/auth/sign-up" &&
+          this.$route.path !== "/auth/otp" &&
+          this.onboardingStatus &&
+          typeof localStorage.userDetails === "string"
+        ) {
+          this.getOnboardingStatus();
+        }
+      }, 500);
+    },
+    freshchatInit() {
+      window.addEventListener("freshchat-loaded", () => {
+        this.sendSegmentEvents({
+          event: "Sendy Support",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      });
+    },
+    changeLanguage() {
+      if (localStorage.language) {
+        setTimeout(() => {
+          window.dispatchEvent(
+            new CustomEvent("language-changed", {
+              detail: localStorage.language,
+            })
+          );
+        }, 500);
+      }
+    },
+    autoZoom() {
+      onResizeFunction(window.innerWidth);
+      window.addEventListener("resize", (event) => {
+        onResizeFunction(event.target.innerWidth);
+      });
+      function onResizeFunction(width) {
+        if (width >= 1440) {
+          document.querySelector("#app").style.zoom = "100%";
+        } else if (width < 1440 && width >= 1200) {
+          document.querySelector("#app").style.zoom = "90%";
+        } else if (width < 1200 && width >= 1024) {
+          document.querySelector("#app").style.zoom = "80%";
+        } else {
+          document.querySelector("#app").style.zoom = "70%";
+        }
+      }
+    },
+    detectMobile() {
+      if (
+        navigator.userAgent.match(/Android/i) ||
+        navigator.userAgent.match(/iPhone/i) ||
+        navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/iPod/i)
+      ) {
+        window.location = "https://fulfilment.page.link/app";
+      }
+    },
     firebase() {
       initializeApp({
         apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
@@ -182,6 +225,7 @@ export default {
 <style>
 #app {
   font-family: "DM Sans";
+  zoom: 100%;
 }
 .v-btn--variant-contained {
   box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%),

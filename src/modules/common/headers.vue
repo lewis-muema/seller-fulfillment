@@ -202,6 +202,7 @@ export default {
       "getLanguages",
       "getNotifications",
       "getStorageUserDetails",
+      "getMapOptions",
     ]),
     languageName() {
       let lang = "";
@@ -248,6 +249,7 @@ export default {
       "setLanguages",
       "setNotifications",
       "setDefaultLanguage",
+      "setMapOptions",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPatch", "requestAxiosPut"]),
     getIcon(notification) {
@@ -302,6 +304,11 @@ export default {
           this.profile[1].item = `${this.$t("common.language")}: ${
             this.languageName
           }`;
+          let mapOptions = this.getMapOptions;
+          mapOptions.componentRestrictions.country = [
+            response.data.data.business.country_code.toLowerCase(),
+          ];
+          this.setMapOptions(mapOptions);
         }
       });
     },

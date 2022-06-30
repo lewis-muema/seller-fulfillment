@@ -100,12 +100,13 @@
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia, tableHeader },
+  mixins: [placeholder],
   data() {
     return {
-      placeholder: [],
       headers: [
         {
           title: "inventory.product",
@@ -138,13 +139,10 @@ export default {
   },
   mounted() {
     this.setComponent("common.stocks");
-    this.placeholder = this.getProductLists;
+    this.setProductLists(this.placeholderProducts);
     this.getStockStats();
     this.fetchProducts();
     this.getStockSettings();
-  },
-  beforeUnmount() {
-    this.setProductLists(this.placeholder);
   },
   computed: {
     ...mapGetters([

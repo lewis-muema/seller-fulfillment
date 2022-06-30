@@ -93,7 +93,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserData", "getLoginData", "getOTPRedirectUrl"]),
+    ...mapGetters([
+      "getUserData",
+      "getLoginData",
+      "getOTPRedirectUrl",
+      "getBizDetails",
+    ]),
     userEmail() {
       return this.getOTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.email
@@ -111,8 +116,17 @@ export default {
     },
   },
   mounted() {
-    if (!this.getOTPRedirectUrl) {
-      this.$router.go(-1);
+    if (localStorage.userDetails && localStorage.OTPRedirectUrl) {
+      this.setBizDetails(JSON.parse(localStorage.userDetails));
+      this.setOTPRedirectUrl(localStorage.OTPRedirectUrl);
+      this.setUserData({ business: JSON.parse(localStorage.userDetails) });
+      this.setLoginData(JSON.parse(localStorage.userDetails));
+    } else {
+      this.$router.push(
+        this.getOTPRedirectUrl === "otp/signIn"
+          ? "auth/sign-in"
+          : "auth/sign-up"
+      );
     }
     this.countDownTimer();
   },
@@ -129,6 +143,9 @@ export default {
       "setUserDetails",
       "setAchievements",
       "setBizDetails",
+      "setOTPRedirectUrl",
+      "setUserData",
+      "setLoginData",
     ]),
     handleOnComplete(value) {
       this.otp = parseInt(value);
@@ -171,7 +188,11 @@ export default {
             this.countDownTimer();
           }
         } catch (error) {
-          console.log(error);
+          ElNotification({
+            title: "",
+            message: this.$t("auth.weCouldNotResendYouAnOTP"),
+            type: "success",
+          });
         }
       }
     },
@@ -230,6 +251,7 @@ export default {
           message: this.$t("auth.couldNotVerifyOTP"),
           type: "error",
         });
+        this.loading = false;
       }
     },
     redirect() {
@@ -250,6 +272,7 @@ export default {
         this.loading = false;
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
+          localStorage.user = response.data.data.user;
           if (
             response.data.data.user.first_name &&
             response.data.data.user.last_name &&

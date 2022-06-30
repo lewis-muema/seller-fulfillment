@@ -52,7 +52,7 @@
   "phoneNumber": "Numéro de Téléphone",
   "phoneRequired": "Le numéro de téléphone est requis",
   "priscillaNjenga": "Priscilla Njenga",
-  "resendCode": "Renvoyez le code dans 120 secondes",
+  "resendCode": "Renvoyez le code dans {time} secondes",
   "safeCosmetics": "Produits cosmétiques sains",
   "signUp": "S'inscrire",
   "signupSendyFulfillment": "S'inscrire à la plateforme Traitement des demandes de Sendy",

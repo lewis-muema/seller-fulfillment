@@ -138,14 +138,15 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import moment from "moment";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
+  mixins: [placeholder],
   data() {
     return {
       from: "",
       to: "",
       range: "",
-      placeholder: [],
       params: "",
     };
   },
@@ -166,10 +167,7 @@ export default {
     },
   },
   mounted() {
-    this.placeholder = this.getBillingCycles;
-  },
-  beforeUnmount() {
-    this.setBillingCycles(this.placeholder);
+    this.setBillingCycles(this.placeholderBillingCycles);
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),
@@ -179,7 +177,7 @@ export default {
     },
     expandCycle(cycle, i) {
       const dummyLineItems = this.getBillingCycles;
-      dummyLineItems[i].lineItems = this.getLineItems;
+      dummyLineItems[i].lineItems = this.placeholderLineItems;
       dummyLineItems[i].loading = "loading-text";
       this.setBillingCycles(dummyLineItems);
       this.requestAxiosGet({

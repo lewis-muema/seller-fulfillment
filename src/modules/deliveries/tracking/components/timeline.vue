@@ -66,9 +66,10 @@ import statusMixin from "../../../../mixins/status_mixin";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { Close } from "@element-plus/icons-vue";
 import eventLabels from "../../../../mixins/event_labels";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
-  mixins: [statusMixin, eventLabels],
+  mixins: [statusMixin, eventLabels, placeholder],
   data() {
     return {
       activities: [],
@@ -99,7 +100,9 @@ export default {
       this.fetchOrder();
     },
   },
-  mounted() {},
+  mounted() {
+    this.setOrderTimelines(this.placeholderOrderTimelines);
+  },
   methods: {
     ...mapMutations([
       "setComponent",
@@ -156,7 +159,10 @@ export default {
     formatStatus(status, item) {
       if (status) {
         const newStatus = status.split(".").slice(1).join(".");
-        return this.showEventLabels(newStatus, item);
+        if (newStatus) {
+          return this.showEventLabels(newStatus, item);
+        }
+        return status;
       }
     },
   },

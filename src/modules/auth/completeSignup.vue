@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import industryList from "@/mixins/industry_list";
@@ -137,8 +137,22 @@ export default {
     };
   },
   async mounted() {
-    if (!this.getOTPRedirectUrl) {
-      this.$router.go(-2);
+    if (
+      localStorage.userDetails &&
+      localStorage.OTPRedirectUrl &&
+      localStorage.user
+    ) {
+      this.setBizDetails(JSON.parse(localStorage.userDetails));
+      this.setOTPRedirectUrl(localStorage.OTPRedirectUrl);
+      this.setUserData({ business: JSON.parse(localStorage.userDetails) });
+      this.setLoginData(JSON.parse(localStorage.userDetails));
+      this.setUserDetails(localStorage.user);
+    } else {
+      this.$router.push(
+        this.getOTPRedirectUrl === "otp/signIn"
+          ? "auth/sign-in"
+          : "auth/sign-up"
+      );
     }
     if (this.getOTPRedirectUrl === "otp/signIn") {
       this.firstName = this.getUserDetails.first_name
@@ -173,6 +187,13 @@ export default {
   },
   methods: {
     ...mapActions(["businessUserDetails", "industries"]),
+    ...mapMutations([
+      "setUserDetails",
+      "setBizDetails",
+      "setOTPRedirectUrl",
+      "setUserData",
+      "setLoginData",
+    ]),
     selectIndustryId(event) {
       this.params.industryOfBusiness = event.target.value;
     },

@@ -68,7 +68,7 @@
                   </span>
                 </p>
                 <v-progress-linear
-                  :model-value="30"
+                  :model-value="item.delivery_progress_ratio * 100"
                   color="#324BA8"
                   height="10"
                   rounded
@@ -130,15 +130,15 @@ import moment from "moment";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import eventLabels from "../../../../mixins/event_labels";
+import placeholder from "../../../../mixins/placeholders";
 
 export default {
   components: { searchAlgolia },
-  mixins: [eventLabels],
+  mixins: [eventLabels, placeholder],
   data: () => ({
     deliveries: [],
     range: "",
     params: "",
-    placeholders: [],
   }),
   watch: {
     range(val) {
@@ -164,17 +164,14 @@ export default {
       }
     },
     params() {
-      this.setDeliveries(this.placeholders);
+      this.setDeliveries(this.placeHolderDeliveries);
       this.fetchOrders();
     },
   },
   mounted() {
-    this.placeholders = this.getDeliveries;
+    this.setDeliveries(this.placeHolderDeliveries);
     this.fetchOrders();
     this.getDeliveryStats();
-  },
-  beforeUnmount() {
-    this.setDeliveries(this.placeholders);
   },
   computed: {
     ...mapGetters([

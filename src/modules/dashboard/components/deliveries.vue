@@ -1,5 +1,5 @@
 <template>
-  <div class="deliveries-container">
+  <v-card variant="outlined" class="dashboard-deliveries-container">
     <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
       <v-table class="">
         <thead>
@@ -112,7 +112,7 @@
         }}
       </v-btn>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -265,10 +265,10 @@ export default {
   color: #324ba8;
   text-decoration: none;
 }
-.deliveries-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.dashboard-deliveries-container {
+  margin: 30px 0px;
+  border-color: #e2e7ed;
+  height: auto;
   min-height: 80%;
 }
 .deliveries-container-inner {

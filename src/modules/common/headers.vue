@@ -17,7 +17,7 @@
               append-icon="mdi-chevron-down"
               class="header-shortcuts-button"
             >
-              {{ $t("common.new") }}
+              {{ $t("common.send") }}
             </v-btn>
           </template>
           <v-list class="header-list-popup">
@@ -487,5 +487,9 @@ export default {
   color: #324ba8;
   float: right;
   margin: 16px;
+}
+.v-btn--variant-contained {
+  box-shadow: none !important;
+  border: 2px #e2e7ed;
 }
 </style>

@@ -162,6 +162,7 @@ export default {
 .v-divider-last-item {
   height: 40px !important;
   color: transparent !important;
+  border: none;
 }
 .dashboard-cards {
   box-shadow: none !important;

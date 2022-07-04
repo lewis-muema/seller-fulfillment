@@ -10,7 +10,7 @@
                 aria-hidden="true"
                 @click="$router.push('/inventory/send-inventory')"
               ></i>
-              <v-card-title class="text-center">
+              <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
               </v-card-title>
             </div>
@@ -19,14 +19,23 @@
               {{ $t("inventory.addNewProduct") }}
             </router-link>
           </div>
-          <div class="search-input">
-            <searchAlgolia type="product" />
+          <div class="search-input-product-select">
+            <v-text-field
+              color="#324BA8"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+              :label="$t('deliveries.searchProducts')"
+              variant="outlined"
+              v-model="searchProduct"
+              @click:clear="clearItems()"
+              :placeholder="$t('deliveries.searchProducts')"
+            ></v-text-field>
           </div>
           <hr />
           <v-table v-if="products.length > 0">
             <thead>
               <tr>
-                <th>
+                <th class="product-select-table-titles">
                   <span>{{ $t("settings.name") }}</span
                   ><span class="product-select-units">
                     {{ $t("inventory.availableInventory") }}
@@ -35,7 +44,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(product, i) in products" :key="i">
+              <tr
+                v-for="(product, i) in products"
+                id="product-select"
+                :class="`product-select-${sanitizeName(product.product_name)}`"
+                :key="i"
+              >
                 <td v-if="product.product_variants.length === 1">
                   <div class="product-select-column">
                     <input
@@ -224,18 +238,22 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
-import searchAlgolia from "../../../common/searchAlgolia.vue";
 import eventsMixin from "../../../../mixins/events_mixin";
 import placeholder from "../../../../mixins/placeholders";
 
 export default {
-  components: { searchAlgolia },
   mixins: [eventsMixin, placeholder],
   data() {
     return {
       products: [],
       selectedProducts: [],
+      searchProduct: "",
     };
+  },
+  watch: {
+    searchProduct(val) {
+      this.filterProducts(val.replace(" ", ""));
+    },
   },
   mounted() {
     this.setComponent(
@@ -246,6 +264,7 @@ export default {
     this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
+    this.searchProduct = "";
   },
   methods: {
     ...mapMutations([
@@ -377,6 +396,22 @@ export default {
         });
       }
     },
+    sanitizeName(name) {
+      return name.replace(" ", "");
+    },
+    filterProducts(val) {
+      const products = document.querySelectorAll("#product-select");
+      products.forEach((row) => {
+        if (row.className.toLowerCase().includes(val.toLowerCase())) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    },
+    clearItems() {
+      this.filterProducts("");
+    },
   },
   computed: {
     ...mapGetters([
@@ -431,7 +466,7 @@ export default {
 }
 .product-select-checkbox {
   height: 70px;
-  width: min-content;
+  width: 18px !important;
 }
 .product-select-img {
   width: 40px;
@@ -443,12 +478,14 @@ export default {
 }
 .product-select-checkbox {
   accent-color: #324ba8;
-  margin-right: 20px;
+  margin-right: 35px;
 }
 .product-select-checkbox-inner {
   accent-color: #324ba8;
-  margin-right: 20px;
+  margin-right: 35px;
   margin-left: 40px;
+  width: 18px !important;
+  height: 18px;
 }
 .product-select-units {
   margin-left: auto;
@@ -456,7 +493,7 @@ export default {
 }
 .product-select-chevron {
   font-size: 20px;
-  margin-right: 15px;
+  margin-right: 35px;
 }
 .product-select-exp-title {
   padding: 15px !important;
@@ -486,5 +523,16 @@ export default {
 .deliveries-empty-subtitle {
   color: #606266;
   font-size: 15px;
+}
+.send-products-title {
+  font-size: 18px !important;
+}
+.product-select-table-titles {
+  font-weight: 500;
+  color: #303133;
+}
+.search-input-product-select {
+  height: 55px;
+  margin: 30px;
 }
 </style>

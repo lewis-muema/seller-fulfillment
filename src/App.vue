@@ -60,6 +60,7 @@ export default {
     this.changeLanguage();
     this.autoZoom();
     this.detectMobile();
+    this.detectPayments();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
@@ -132,6 +133,13 @@ export default {
       ) {
         window.location = "https://fulfilment.page.link/app";
       }
+    },
+    detectPayments() {
+      setTimeout(() => {
+        if (this.$route.path === "/payment-option-page") {
+          this.$router.push("/settings/payment-options");
+        }
+      }, 100);
     },
     firebase() {
       initializeApp({

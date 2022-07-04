@@ -12,6 +12,7 @@
         class="delivery-info-edit"
         @click="overlayStatus(true)"
         :class="getLoader"
+        v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
       >
         <i class="mdi mdi-pencil"></i>
         {{ $t("deliveries.edit") }}

@@ -106,7 +106,7 @@ export default {
         },
         {
           label: "inventory.archived",
-          content: "-",
+          content: "0",
         },
       ],
       stockLevelTabs: [
@@ -137,6 +137,8 @@ export default {
       "getProductLists",
       "getStockStatistics",
       "getLoader",
+      "getAllProductCount",
+      "getArchivedProductCount",
     ]),
     getRoute() {
       return this.$route.path;
@@ -149,15 +151,9 @@ export default {
     },
   },
   watch: {
-    "$store.state.loader": function loader(val) {
-      this.productTabs[0].content =
-        val === "" && this.getInventorySelectedTab === "inventory.all"
-          ? `${this.getTotalProducts}`
-          : "-";
-      this.productTabs[1].content =
-        val === "" && this.getInventorySelectedTab === "inventory.archived"
-          ? `${this.getTotalProducts}`
-          : "-";
+    "$store.state.loader": function loader() {
+      this.productTabs[0].content = `${this.getAllProductCount}`;
+      this.productTabs[1].content = `${this.getArchivedProductCount}`;
       this.stockLevelTabs[0].content =
         Object.keys(this.getStockStatistics).length > 0
           ? (
@@ -189,7 +185,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 10% 12% 12%;
+  grid-template-columns: 100px 145px 155px;
   margin: 30px;
 }
 .desktop-product-tab {

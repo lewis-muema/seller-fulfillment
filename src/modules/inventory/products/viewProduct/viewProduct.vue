@@ -20,7 +20,7 @@
               <v-menu transition="slide-y-transition" anchor="bottom center">
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    class="product-details-actions-btn"
+                    class="product-details-actions-btn elevation-0"
                     append-icon="mdi-menu-down"
                     v-bind="props"
                   >
@@ -220,6 +220,7 @@ export default {
   letter-spacing: 0px;
   color: #606266 !important;
   font-weight: 300;
+  border: 1px solid #e0e0e0;
 }
 .archived-badge {
   background: #9b101c;

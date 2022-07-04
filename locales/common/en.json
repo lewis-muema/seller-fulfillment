@@ -18,7 +18,7 @@
   "sendInventoryToSendy": "Send inventory to Sendy",
   "sendDeliveryToCustomer": "Send delivery to a customer",
   "toCustomers": "To customers",
-  "toFulfilmentCentre": "To Fulfilment Centre",
+  "toFulfilmentCentre": "To Fulfillment Centre",
   "toSendy": "To Sendy",
   "statements": "Statements",
   "invoices": "Invoices",
@@ -40,5 +40,6 @@
   "logOut": "Log Out",
   "trackDelivery": "Track delivery",
   "restockInventory": "Restock inventory",
-  "billings": "Billings"
+  "billings": "Billings",
+  "trackDeliveries": "Track Deliveries"
 }

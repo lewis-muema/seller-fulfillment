@@ -6,6 +6,17 @@
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
         <p class="text-grey ml-5">{{ $t("auth.loginToContinue") }}</p>
+        <div class="auth-error-container" v-if="isSendyEmail">
+          <i class="mdi mdi-alert-circle-outline auth-error-warning-icon"></i>
+          <div>
+            <p class="auth-error-title">
+              {{ $t("auth.emailNotRegisteredUnderSendy") }}
+              <router-link to="/auth/sign-in" class="login-url">
+                {{ $t("auth.login") }}</router-link
+              >
+            </p>
+          </div>
+        </div>
         <div v-if="emailLogin">
           <v-card-text>
             <div class="mb-5 mt-3">
@@ -118,6 +129,9 @@ export default {
   },
   computed: {
     ...mapGetters(["getSendyPhoneProps", "getVueTelInputProps", "getErrors"]),
+    isSendyEmail() {
+      return this.getErrors.message === "useridentifier.notfound";
+    },
   },
   mounted() {
     localStorage.clear();
@@ -157,14 +171,13 @@ export default {
         this.loading = false;
       } catch (error) {
         this.loading = false;
-        ElNotification({
-          title:
-            this.getErrors.message === "useridentifier.notfound"
-              ? this.$t("auth.userAccountNotFound")
-              : this.getErrors.message.replaceAll(".", " "),
-          message: "",
-          type: "error",
-        });
+        if (!this.isSendyEmail) {
+          ElNotification({
+            title: this.getErrors.message.replaceAll(".", " "),
+            message: "",
+            type: "error",
+          });
+        }
       }
     },
   },

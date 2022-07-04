@@ -7,7 +7,7 @@
           aria-hidden="true"
           @click="$router.push('/inventory/send-inventory/sendy/add-quantity')"
         ></i>
-        <v-card-title class="text-center">
+        <v-card-title class="text-center send-products-title">
           {{ $t("inventory.checkout") }}
         </v-card-title>
       </div>
@@ -85,7 +85,7 @@
         </div>
         <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
           <button
-            class="btn btn-primary mt-2 btn-long"
+            class="btn btn-primary mt-2 btn-long submit-order-btn"
             @click="createConsignment()"
             v-loading="buttonLoader"
           >
@@ -277,5 +277,8 @@ export default {
 }
 .checkout-amount {
   float: right;
+}
+.submit-order-btn {
+  height: 55px;
 }
 </style>

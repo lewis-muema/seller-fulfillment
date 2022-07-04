@@ -836,6 +836,7 @@ export default {
   box-shadow: none !important;
   text-transform: capitalize;
   letter-spacing: 0px;
+  border: 1px solid #e0e0e0;
 }
 .tracking-cancel-title-label {
   font-size: 15px;

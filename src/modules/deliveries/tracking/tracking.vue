@@ -5,7 +5,7 @@
         class="mdi mdi-arrow-left tracking-arrow-back"
         @click="$router.go(-1)"
       ></i>
-      <p class="tracking-order-title">
+      <p class="tracking-order-title mb-0">
         <span :class="getLoader">
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
@@ -14,7 +14,7 @@
           <v-menu transition="slide-y-transition" anchor="bottom center">
             <template v-slot:activator="{ props }">
               <v-btn
-                class="tracking-order-actions-btn"
+                class="tracking-order-actions-btn elevation-0"
                 append-icon="mdi-chevron-down"
                 v-bind="props"
               >
@@ -39,9 +39,16 @@
         </span>
       </p>
       <p class="tracking-order-time-est">
-        <span :class="getLoader">
+        <span
+          :class="getLoader"
+          v-if="getOrderTrackingData.order.order_status === 'ORDER_COMPLETED'"
+        >
+          {{ $t("deliveries.dateOfCompletion") }}
+          {{ formatDateComplete(getOrderTrackingData.order.completed_date) }}
+        </span>
+        <span :class="getLoader" v-else>
           {{ $t("deliveries.timeOfArrival") }}
-          {{ formatDate(getOrderTrackingData.scheduled_date) }}
+          {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
         </span>
       </p>
     </div>
@@ -168,6 +175,9 @@ export default {
       return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
         "ha"
       )} - ${moment(finalTime).format("ha")}`;
+    },
+    formatDateComplete(date) {
+      return moment(date).format("dddd, Do MMM YYYY");
     },
   },
 };

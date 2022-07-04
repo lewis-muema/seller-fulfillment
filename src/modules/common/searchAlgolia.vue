@@ -13,7 +13,7 @@
         :label="
           type === 'product'
             ? $t('deliveries.searchProducts')
-            : $t('deliveries.searchDelivery')
+            : $t('deliveries.searchUsingNameOrPhoneNumber')
         "
         variant="outlined"
         v-model="searchParam"
@@ -21,7 +21,7 @@
         :placeholder="
           type === 'product'
             ? $t('deliveries.searchProducts')
-            : $t('deliveries.searchDelivery')
+            : $t('deliveries.searchUsingNameOrPhoneNumber')
         "
       ></v-text-field>
     </template>
@@ -138,12 +138,34 @@ export default {
     searchParam(val) {
       this.initiateAlgolia(val, this.type);
     },
+    searchToggle(val) {
+      if (val) {
+        this.searchToggle =
+          this.searchItems.length > 0 && this.searchParam !== "";
+      }
+    },
   },
   methods: {
     algoliaResults(object) {
       this.searchToggle = true;
       this.searchObject = object;
       this.searchItems = object.hits;
+      this.searchToggle = object.hits.length > 0;
+      if (document.querySelector(".v-overlay__content")) {
+        const overlayStyle = document.querySelector(
+          ".v-overlay__content"
+        ).style;
+        setTimeout(() => {
+          overlayStyle.marginLeft = `${
+            (parseInt(overlayStyle.left) - 305) * -1
+          }px`;
+          overlayStyle.marginTop = `${
+            (parseInt(overlayStyle.top) -
+              (this.type === "product" ? 230 : 260)) *
+            -1
+          }px`;
+        }, 10);
+      }
       if (this.type === "delivery") {
         this.sendSegmentEvents({
           event: "Search Consignment",

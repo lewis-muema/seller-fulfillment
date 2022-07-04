@@ -31,7 +31,7 @@
   "priceOfTheProduct": "Price of the product",
   "enterWeight": "Enter weight",
   "weight": "Weight or the volume of the product",
-  "description": "Description(optional)",
+  "description": "Description (optional)",
   "desc":"Description",
   "productDescription": "Enter description of the product",
   "productOptions": "Product options (optional)",
@@ -143,5 +143,9 @@
   "sellingPrice": "Selling price of the product",
   "enterTheNameOnThePackage": "Enter the name on the package of the product or the main attribute.",
   "thisHelpsUsToKnow": "This helps us to know the type of vehicle we should send to pick your products.",
-  "aShortDescriptionToHelp": "A short description to help us distinguish your products at the fulfillment centre"
+  "aShortDescriptionToHelp": "A short description to help us distinguish your products at the fulfillment centre",
+  "thereAreNoArchivedProductsAtTheMoment": "There are no archived products at the moment",
+  "thereAreNoLowStockItems": "There are no low stock items at the moment",
+  "thereAreNoOutOfStockItems": "There are no out of stock items at the moment",
+  "theQuantityYouHaveEntered": "The quantity you have entered exceeds your available units"
 }

@@ -52,7 +52,20 @@
             </td>
             <td>
               <v-list-item class="dashboard-customer-columns" lines="two">
-                <v-list-item-header>
+                <v-list-item-header v-if="item.order_status === 'ORDER_FAILED'">
+                  <p class="delivery-attempted-error">
+                    <i class="mdi mdi-information-outline mr-2"></i
+                    >{{ $t("deliveries.deliveryAttempt") }}
+                  </p>
+                  <p class="ml-6 mb-1">
+                    {{
+                      $t("deliveries.weWillDeliverAgain", {
+                        Date: deliveryDate(item.scheduled_date),
+                      })
+                    }}
+                  </p>
+                </v-list-item-header>
+                <v-list-item-header v-else>
                   <v-list-item-title>
                     <span :class="getLoader">
                       {{ formatStatus(item.order_event_status, item) }}
@@ -247,6 +260,13 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 10px;
+  color: #324ba8;
+  background: #e3e9f7;
+  width: max-content;
+  margin: auto;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 .show-more-deliveries-link a {
   color: #324ba8;

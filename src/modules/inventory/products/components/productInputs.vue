@@ -28,7 +28,7 @@
               class="businessProfile-field"
               id="update-price"
               v-model="productVariants[0].product_variant_unit_price"
-              label="100"
+              label="0"
               variant="outlined"
               :prefix="productVariants[0].product_variant_currency"
               clearable
@@ -96,8 +96,7 @@
                 </v-list-item-avatar>
                 <v-list-item-header>
                   <v-list-item-title>
-                    {{ variant.product_variant_quantity }}
-                    {{ variant.product_variant_quantity_type }}
+                    {{ variant.product_variant_description }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     {{ variant.product_variant_currency }}
@@ -163,7 +162,7 @@
         </div>
       </v-col>
       <v-col cols="6">
-        <p class="ml-5">{{ $t("inventory.image") }}</p>
+        <p class="ml-12">{{ $t("inventory.img") }}</p>
         <div
           class="img-container"
           @click="pickImg()"
@@ -596,6 +595,7 @@ label {
   font-size: 12px;
   margin-top: 10px !important;
   margin-bottom: 30px !important;
+  color: #606266;
 }
 .v-field--active .v-label.v-field-label {
   display: none !important;

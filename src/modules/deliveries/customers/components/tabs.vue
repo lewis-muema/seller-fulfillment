@@ -33,10 +33,7 @@
           @click="
             activeTab !== 'Pending' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab(
-                  'Pending',
-                  'ORDER_RECEIVED&status=ORDER_IN_PROCESSING'
-                )
+              : passActiveTab('Pending', 'ORDER_RECEIVED,ORDER_IN_PROCESSING')
           "
         >
           {{ $t("deliveries.pending") }}
@@ -195,13 +192,16 @@ export default {
   display: grid;
   grid-template-columns: auto auto;
   margin: 0px 30px;
+  margin-top: 45px !important;
 }
 .customers-deliver-btn {
   float: right;
-  margin: 8px 25px;
+  margin-right: 25px;
   text-transform: inherit;
   font-size: 14px;
   letter-spacing: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 .customers-orders-tab-section {
   width: max-content;

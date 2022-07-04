@@ -117,7 +117,7 @@
   "yourProductsAreOnTheWay": "Your products are on the way",
   "yourDriverHasArrivedAtTheFulfillmentCentre": "Your driver has arrived at the fulfillment centre",
   "yourDriverHasDroppedYourProductsAtTheFulfillmentCentre": "Your driver has dropped your products at the Fulfillment Centre",
-  "yourProductsHaveBeenReceivedAtTheFulfilmentCentre": "Your products have been received at the fulfilment centre",
+  "yourProductsHaveBeenReceivedAtTheFulfilmentCentre": "Your products have been received at the fulfillment centre",
   "youHaveCancelledThisOrder": "You have cancelled this order",
   "sendyHasCancelledThisOrder": "Sendy has cancelled this order",
   "youHaveRescheduledThisOrder": "You have rescheduled this order for {Date}",
@@ -132,5 +132,7 @@
   "sendyCancelledThisOrder": "Sendy cancelled this order",
   "youRescheduledThisOrderFor": "You rescheduled this order for {Date}",
   "sendyRescheduledThisOrderFor": "Sendy rescheduled this order for {Date}",
-  "theCustomerRescheduledThisOrderFor": "The customer rescheduled this order for {Date}"
+  "theCustomerRescheduledThisOrderFor": "The customer rescheduled this order for {Date}",
+  "weWillDeliverAgain": "We will deliver again on {Date}",
+  "searchUsingNameOrPhoneNumber": "Search using name or phone number"
 }

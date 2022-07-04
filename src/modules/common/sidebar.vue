@@ -58,8 +58,8 @@
             <v-list-item
               v-bind="checkProps(props, 'deliveries')"
               prepend-icon="mdi-truck-outline"
-              :title="$t('common.deliveries')"
-              :value="'common.deliveries'"
+              :title="$t('common.trackDeliveries')"
+              :value="'common.trackDeliveries'"
               class="desktop-sidebar-icons"
               id="deliveries"
             ></v-list-item>

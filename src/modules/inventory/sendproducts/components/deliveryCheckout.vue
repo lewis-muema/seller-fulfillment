@@ -9,7 +9,7 @@
             $router.push('/inventory/send-inventory/customer/add-quantity')
           "
         ></i>
-        <v-card-title class="text-center">
+        <v-card-title class="text-center send-products-title">
           {{ $t("inventory.checkout") }}
         </v-card-title>
       </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-3">
           <button
-            class="btn btn-primary mt-2 btn-long"
+            class="btn btn-primary mt-2 btn-long submit-order-btn"
             @click="createDelivery()"
             v-loading="buttonLoader"
           >

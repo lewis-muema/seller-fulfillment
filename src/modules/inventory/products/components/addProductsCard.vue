@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-card class="add-products-outer-card-container" variant="outlined">
-      <div class="add-products-container">
+      <div class="add-products-container" v-if="getAllProductCount === 0">
         <p class="text-center">
           {{ $t("inventory.manageProducts") }}
         </p>
         <div class="add-products-card-container">
-          <v-card class="mr-3" variant="outlined">
+          <v-card class="mr-3" variant="outlined" v-if="upload">
             <v-list-item
               two-line
               @click="$router.push('/inventory/import-products')"
@@ -46,12 +46,31 @@
           </v-card>
         </div>
       </div>
+      <div v-else>
+        <div class="no-products-card-container">
+          <i class="mdi mdi-store no-products-icon"></i>
+          <div class="no-products-description">
+            {{ $t("inventory.thereAreNoArchivedProductsAtTheMoment") }}
+          </div>
+        </div>
+      </div>
     </v-card>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  data() {
+    return {
+      upload: false,
+    };
+  },
+  computed: {
+    ...mapGetters(["getAllProductCount"]),
+  },
+};
 </script>
 
 <style>
@@ -74,5 +93,21 @@ export default {};
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+.no-products-card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 70vh;
+}
+.no-products-icon {
+  font-size: 50px;
+  color: #324ba8;
+}
+.no-products-description {
+  width: 275px;
+  text-align: center;
+  font-size: 18px;
 }
 </style>

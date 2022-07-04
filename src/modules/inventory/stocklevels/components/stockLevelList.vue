@@ -29,8 +29,8 @@
                   <v-list-item-subtitle>
                     <span :class="getLoader">
                       {{
-                        product.product_variants
-                          ? `${product.product_variants.length} ${$t(
+                        product.product_variants.length > 1
+                          ? `${product.product_variants.length - 1} ${$t(
                               "inventory.producTOptions"
                             )}`
                           : ""
@@ -72,25 +72,40 @@
         </tbody>
       </v-table>
       <div class="deliveries-empty" v-else>
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
+        {{ getProductLists.length }}
+        <div v-if="getProductLists.length">
+          <div class="no-products-card-container">
+            <i class="mdi mdi-store no-products-icon"></i>
+            <div class="no-products-description">
+              {{
+                getInventorySelectedTab === "inventory.lowStock"
+                  ? $t("inventory.thereAreNoLowStockItems")
+                  : $t("inventory.thereAreNoOutOfStockItems")
+              }}
+            </div>
+          </div>
         </div>
-        <p class="deliveries-empty-title">
-          {{ $t("inventory.noInventoryToTrackYet") }}
-        </p>
-        <v-btn
-          class="deliveries-btn"
-          @click="
-            $router.push('/inventory/send-inventory/sendy/select-products')
-          "
-          size="default"
-        >
-          {{ $t("inventory.sendInventoryToSendy") }}
-        </v-btn>
+        <div v-else>
+          <div>
+            <img
+              src="https://images.sendyit.com/fulfilment/seller/track.png"
+              alt=""
+              class="deliveries-empty-img"
+            />
+          </div>
+          <p class="deliveries-empty-title">
+            {{ $t("inventory.noInventoryToTrackYet") }}
+          </p>
+          <v-btn
+            class="deliveries-btn"
+            @click="
+              $router.push('/inventory/send-inventory/sendy/select-products')
+            "
+            size="default"
+          >
+            {{ $t("inventory.sendInventoryToSendy") }}
+          </v-btn>
+        </div>
       </div>
     </v-card>
   </div>

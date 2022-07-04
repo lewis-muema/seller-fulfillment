@@ -44,6 +44,8 @@ export default createStore({
       session: {},
       signUpwithGoogle: false,
       OTPRedirectUrl: "",
+      allProductCount: 0,
+      archivedProductCount: 0,
       accessToken: localStorage.getItem("accessToken"),
       refreshToken: "",
       productStep: 0,

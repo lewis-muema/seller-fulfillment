@@ -134,5 +134,6 @@
   "sendyRescheduledThisOrderFor": "Sendy rescheduled this order for {Date}",
   "theCustomerRescheduledThisOrderFor": "The customer rescheduled this order for {Date}",
   "weWillDeliverAgain": "We will deliver again on {Date}",
-  "searchUsingNameOrPhoneNumber": "Search using name or phone number"
+  "searchUsingNameOrPhoneNumber": "Search using name or phone number",
+  "dateOfCompletion": "Date of completion:"
 }

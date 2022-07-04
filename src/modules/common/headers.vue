@@ -13,9 +13,8 @@
             <v-btn
               dark
               v-bind="props"
-              prepend-icon="mdi-plus"
               append-icon="mdi-chevron-down"
-              class="header-shortcuts-button"
+              class="header-shortcuts-button elevation-0"
             >
               {{ $t("common.new") }}
             </v-btn>
@@ -107,7 +106,7 @@
             <v-btn
               dark
               v-bind="props"
-              class="header-shortcuts-button"
+              class="header-shortcuts-button elevation-0"
               append-icon="mdi-menu-down"
             >
               <div class="header-profile-pic">
@@ -415,6 +414,8 @@ export default {
   color: #606266 !important;
   letter-spacing: 0.01em !important;
   font-weight: 600 !important;
+  box-shadow: none !important;
+  border: 1px solid #e0e0e0;
 }
 .header-profile-pic {
   height: 25px;

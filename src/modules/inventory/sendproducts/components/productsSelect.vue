@@ -493,7 +493,7 @@ export default {
 }
 .product-select-chevron {
   font-size: 20px;
-  margin-right: 15px;
+  margin-right: 35px;
 }
 .product-select-exp-title {
   padding: 15px !important;

@@ -32,8 +32,24 @@
             :title="$t('common.products')"
             class="desktop-sidebar-sub-menu"
             @click="$router.push('/inventory/products')"
-            :active="route === 'common.products'"
-            :append-icon="route === 'common.products' ? 'mdi-circle-small' : ''"
+            :active="
+              [
+                'common.products',
+                'common.viewProduct',
+                'common.editProduct',
+                'common.addProduct',
+              ].includes(route)
+            "
+            :append-icon="
+              [
+                'common.products',
+                'common.viewProduct',
+                'common.editProduct',
+                'common.addProduct',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
+            "
           ></v-list-item>
           <v-list-item
             :title="$t('common.stocks')"
@@ -46,13 +62,24 @@
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
             class="desktop-sidebar-sub-menu"
-            :active="route === 'common.sendInventory'"
+            :active="
+              [
+                'common.sendInventory',
+                'common.sendInventoryToSendy',
+                'common.sendDeliveryToCustomer',
+              ].includes(route)
+            "
             :append-icon="
-              route === 'common.sendInventory' ? 'mdi-circle-small' : ''
+              [
+                'common.sendInventory',
+                'common.sendInventoryToSendy',
+                'common.sendDeliveryToCustomer',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
         </v-list-group>
-
         <v-list-group>
           <template v-slot:activator="{ props }">
             <v-list-item
@@ -68,18 +95,38 @@
             :title="$t('common.toCustomers')"
             @click="$router.push('/deliveries/customer')"
             class="desktop-sidebar-sub-menu"
-            :active="route === 'common.deliveriesToCustomers'"
+            :active="
+              [
+                'common.deliveriesToCustomers',
+                'deliveries.trackDeliveryToCustomer',
+              ].includes(route)
+            "
             :append-icon="
-              route === 'common.deliveriesToCustomers' ? 'mdi-circle-small' : ''
+              [
+                'common.deliveriesToCustomers',
+                'deliveries.trackDeliveryToCustomer',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
           <v-list-item
             :title="$t('common.toSendy')"
             @click="$router.push('/deliveries/sendy')"
             class="desktop-sidebar-sub-menu"
-            :active="route === 'common.deliveriesToSendy'"
+            :active="
+              [
+                'common.deliveriesToSendy',
+                'deliveries.trackDeliveryToSendy',
+              ].includes(route)
+            "
             :append-icon="
-              route === 'common.deliveriesToSendy' ? 'mdi-circle-small' : ''
+              [
+                'common.deliveriesToSendy',
+                'deliveries.trackDeliveryToSendy',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
         </v-list-group>
@@ -171,6 +218,7 @@ export default {
   data() {
     return {
       drawer: true,
+      routeActive: false,
     };
   },
   computed: {
@@ -178,6 +226,11 @@ export default {
       return this.getComponent;
     },
     ...mapGetters(["getComponent"]),
+  },
+  watch: {
+    $route() {
+      this.routeActive = true;
+    },
   },
   mounted() {},
   methods: {
@@ -189,8 +242,20 @@ export default {
         }
       });
     },
+    collapse(props, category) {
+      if (this.routeActive && this.$route.path !== "/payment-option-page") {
+        const params = this.$route.path.split("/");
+        if (props.appendIcon === "$collapse" && params[1] !== category) {
+          document.getElementById(`${category}`).click();
+          setTimeout(() => {
+            this.routeActive = false;
+          }, 100);
+        }
+      }
+    },
     checkProps(props, category) {
       this.expand(props, category);
+      this.collapse(props, category);
       return props;
     },
   },

@@ -390,6 +390,11 @@ export default {
 .statements-expansion-panel {
   width: calc(100% - 60px);
   margin: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+.statements-expansion-panel .v-expansion-panel .v-expansion-panel__shadow {
+  box-shadow: none !important;
 }
 .statements-empty-title {
   font-weight: 600;

@@ -1,0 +1,9 @@
+{
+  "name": "Your Name",
+  "nameOfBusiness": "Enter name of business",
+  "emailAddress": "Email address",
+  "phoneNumber": "Phone Number",
+  "Join": "Join {business} account on Sendy",
+  "setUpAccount": "Set up account",
+  "or": "or"
+}

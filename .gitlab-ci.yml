@@ -1,0 +1,75 @@
+image: node:14.18.1
+
+variables:
+  IMAGE_BASE_NAME: ${CI_REGISTRY}/seller-fulfillment
+  STAGING_IMAGE: $CI_REGISTRY/seller-fulfillment:latest_$CI_COMMIT_SHORT_SHA
+  
+stages:
+  - lint
+  - test
+  - docker
+  - deploy
+
+eslint:
+  stage: lint
+  tags:
+    - docker
+  script:
+    - npm i eslint
+    - npm run lint
+
+test:
+  image: cypress/base:14.16.0
+  stage: test
+  tags:
+    - docker
+  cache:
+    paths:
+      - .npm
+      - /root/.cache/Cypress
+
+  script:
+    - npm ci --prefer-offline
+    - npx cypress cache path
+    - npx cypress cache list
+    - npm run test
+
+docker_build:
+  stage: docker
+  tags:
+    - shell 
+  script:
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]
+      then 
+        echo "Setup prod docker builds here!"
+      elif [ "$CI_COMMIT_REF_NAME" == "staging" ]
+      then 
+        IMAGE_TAG=dev_$(date +%Y-%m-%d-%H-%M)
+        IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
+        docker build --build-arg ENV="testing" -t $IMAGE_NAME -t $STAGING_IMAGE .
+        docker push $STAGING_IMAGE
+        docker push $IMAGE_NAME
+      else
+        export IMAGE_NAME="sendy-docker-local.jfrog.io/seller-fulfillment:$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')_$(date +%Y-%m-%d-%H-%M)"
+        docker build -t $IMAGE_NAME . 
+      fi
+      docker push $IMAGE_NAME
+  only:
+    - staging
+    - master
+    - /^feature*.*$/
+
+
+create-preview-env:
+  stage: deploy
+  tags:
+    - manta
+  before_script:
+    - export FEATURE="$(echo $CI_COMMIT_REF_NAME | awk -F "/" '{ print $2 }')"
+  script:
+    - pwd
+    - source ~/.bash_profile && /opt/manta -c $FEATURE -f /home/ubuntu/.kube/config
+  only:
+    refs:
+      - /^feature*.*$/

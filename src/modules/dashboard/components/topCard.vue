@@ -1,0 +1,169 @@
+<template>
+  <div>
+    <span class="">
+      <h5>
+        {{
+          $t("dashboard.welcome", {
+            name: `${getUserDetails.first_name}`,
+          })
+        }}
+        🎉
+      </h5>
+      <p>{{ $t("dashboard.whatsHappening") }}</p>
+    </span>
+    <v-row class="desktop-dashboard-upper-content">
+      <v-col cols="11">
+        <v-card variant="outlined" class="desktop-dashboard-upper-card">
+          <v-row>
+            <v-col cols="12" md="3" v-for="(order, i) in orders" :key="i">
+              <v-list class="dashboard-cards" lines="two">
+                <v-list-item>
+                  <v-icon
+                    :icon="order.icon"
+                    :color="order.color"
+                    class="mr-3 desktop-dashboard-icon"
+                  ></v-icon>
+                  <v-list-item-header>
+                    <v-list-item-title class="count">
+                      <span :class="getLoader">
+                        {{ order.count }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span :class="getLoader">
+                        {{ $t(order.orderStatus) }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </v-list-item-header>
+                  <v-divider
+                    :class="
+                      order.orderStatus === 'dashboard.itemsOutOfStock'
+                        ? 'v-divider-last-item'
+                        : 'v-divider-height'
+                    "
+                    vertical
+                  ></v-divider>
+                </v-list-item>
+              </v-list>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from "vuex";
+
+export default {
+  data() {
+    return {
+      name: "Irene",
+      orders: [
+        {
+          icon: "mdi mdi-truck",
+          count: "0",
+          orderStatus: "dashboard.ongoingOrders",
+          color: "#5287EE",
+        },
+        {
+          icon: "mdi-check-all",
+          count: "6",
+          orderStatus: "dashboard.completedOrders",
+          color: "#84CC8C",
+        },
+        {
+          icon: "mdi-home-city",
+          count: "32",
+          orderStatus: "dashboard.availableStock",
+          color: "#324BA8",
+        },
+        {
+          icon: "mdi-archive",
+          count: "4",
+          orderStatus: "dashboard.itemsOutOfStock",
+          color: "#CC6100",
+        },
+      ],
+      ongoing: "",
+    };
+  },
+  watch: {
+    "$store.state.loader": function loader(val) {
+      if (val === "") {
+        this.orders[0].count = this.ongoingOrders;
+        this.orders[1].count = this.completedOrders;
+        this.orders[2].count = this.availableStock;
+        this.orders[3].count = this.outOfStock;
+      }
+    },
+  },
+  computed: {
+    ...mapGetters([
+      "getLoader",
+      "getUserDetails",
+      "getStockStatistics",
+      "getDeliveriesStatistics",
+      "getConsignmentStatistics",
+    ]),
+    ongoingOrders() {
+      return (
+        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getDeliveriesStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getConsignmentStatistics.ORDER_IN_TRANSIT)
+      );
+    },
+    completedOrders() {
+      return (
+        parseInt(this.getDeliveriesStatistics.ORDER_COMPLETED) +
+        parseInt(this.getConsignmentStatistics.ORDER_COMPLETED)
+      );
+    },
+    availableStock() {
+      return this.getStockStatistics.available_products;
+    },
+    outOfStock() {
+      return this.getStockStatistics.out_of_stock_products;
+    },
+  },
+  mounted() {},
+};
+</script>
+
+<style>
+.desktop-dashboard-upper-card {
+  border-color: #e2e7ed;
+  height: auto;
+  padding-left: 25px;
+  background: white;
+}
+.desktop-dashboard-icon {
+  background: #f1f2f4;
+  height: 40px;
+  width: 40px;
+  display: inline-flex;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px 0px 0px;
+}
+.count {
+  font-size: 24px !important;
+  font-weight: 700;
+  line-height: 28px;
+}
+.v-divider-height {
+  height: 40px !important;
+}
+.v-divider-last-item {
+  height: 40px !important;
+  color: transparent !important;
+}
+.dashboard-cards {
+  box-shadow: none !important;
+}
+</style>

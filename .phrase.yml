@@ -3,17 +3,108 @@ phrase:
   project_id: 2ad664d459bde73e9dab437523e07b7d
   push:
     sources:
-    - file: ./locales/en.json
-      params:
-        file_format: simple_json
-        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+      - file: ./locales/common/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: common
+
+      - file: ./locales/auth/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: auth
+
+      - file: ./locales/dashboard/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: dashboard
+
+      - file: ./locales/inventory/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: inventory
+
+      - file: ./locales/deliveries/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: deliveries
+
+      - file: ./locales/payments/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: payments
+
+      - file: ./locales/settings/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: settings
+
+      - file: ./locales/external/en.json
+        params:
+          file_format: simple_json
+          locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+          update_translations: true
+          tags: external
+
   pull:
     targets:
-    - file: ./locales/fr.json
-      params:
-        file_format: simple_json
-        locale_id: 6a7c82d335ab0c8b9985e0793647009c
-    - file: ./locales/en.json
-      params:
-        file_format: simple_json
-        locale_id: e1aa6b21d6ca3ce83e1521854e6a041d
+      - file: ./locales/common/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: common
+
+      - file: ./locales/auth/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: auth
+
+      - file: ./locales/dashboard/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: dashboard
+
+      - file: ./locales/inventory/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: inventory
+
+      - file: ./locales/deliveries/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: deliveries
+
+      - file: ./locales/payments/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: payments
+
+      - file: ./locales/settings/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: settings
+
+      - file: ./locales/external/fr.json
+        params:
+          file_format: simple_json
+          locale_id: 6a7c82d335ab0c8b9985e0793647009c
+          tags: external

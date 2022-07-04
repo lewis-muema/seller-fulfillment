@@ -1,0 +1,20 @@
+.loading-text {
+  background: #ddd !important;
+  color: #ddd !important;
+  border-radius: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.75;
+  }
+}

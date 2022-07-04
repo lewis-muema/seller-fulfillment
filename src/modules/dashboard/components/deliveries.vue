@@ -80,7 +80,7 @@
           </tr>
         </tbody>
       </v-table>
-      <div class="show-more-deliveries-link">
+      <div class="show-more-deliveries-link" v-if="showMoreDeliveries">
         <router-link
           :to="
             getSelectedTab === 'dashboard.toYourCustomers'
@@ -145,6 +145,9 @@ export default {
         return this.getDeliveries;
       }
       return this.getConsignments;
+    },
+    showMoreDeliveries() {
+      return this.filteredDeliveries.length >= 5;
     },
   },
   watch: {

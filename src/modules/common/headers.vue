@@ -16,6 +16,7 @@
               prepend-icon="mdi-plus"
               append-icon="mdi-chevron-down"
               class="header-shortcuts-button"
+              variant="outlined"
             >
               {{ $t("common.send") }}
             </v-btn>
@@ -109,6 +110,7 @@
               v-bind="props"
               class="header-shortcuts-button"
               append-icon="mdi-menu-down"
+              variant="outlined"
             >
               <div class="header-profile-pic">
                 {{ profile[0].item.charAt(0) }}
@@ -415,6 +417,7 @@ export default {
   color: #606266 !important;
   letter-spacing: 0.01em !important;
   font-weight: 600 !important;
+  border-color: #e2e7ed;
 }
 .header-profile-pic {
   height: 25px;
@@ -487,9 +490,5 @@ export default {
   color: #324ba8;
   float: right;
   margin: 16px;
-}
-.v-btn--variant-contained {
-  box-shadow: none !important;
-  border: 2px #e2e7ed;
 }
 </style>

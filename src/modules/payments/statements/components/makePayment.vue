@@ -50,7 +50,7 @@ export default {
   border: 1px solid #9b101c;
   padding: 12px;
   border-radius: 10px;
-  margin: 30px;
+  margin: 30px 30px 30px 0px;
   width: 95%;
   background: white;
 }

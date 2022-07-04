@@ -43,6 +43,10 @@ docker_build:
       if [ "$CI_COMMIT_REF_NAME" == "master" ]
       then 
         echo "Setup prod docker builds here!"
+        IMAGE_TAG=prod_$(date +%Y-%m-%d-%H-%M)
+        IMAGE_NAME=${IMAGE_BASE_NAME}:${IMAGE_TAG}
+        docker build --build-arg ENV="prod" -t $IMAGE_NAME  .
+        docker push $IMAGE_NAME
       elif [ "$CI_COMMIT_REF_NAME" == "staging" ]
       then 
         IMAGE_TAG=dev_$(date +%Y-%m-%d-%H-%M)

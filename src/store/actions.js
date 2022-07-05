@@ -138,6 +138,7 @@ export default {
     if (payload) {
       payload.forEach((el) => {
         errors["message"] = el.message;
+        errors["value"] = el.value ? el.value : "";
       });
       commit("setErrors", errors);
     }

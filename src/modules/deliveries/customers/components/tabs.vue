@@ -149,13 +149,23 @@ export default {
   }),
   watch: {
     "$store.state.loader": function loader() {
-      this.pending = (
+      this.pending =
         parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
         parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-      ).toString();
-      this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString();
-      this.failed = this.getDeliveriesStatistics.ORDER_FAILED.toString();
-      this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED.toString();
+          ? (
+              parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+              parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
+            ).toString()
+          : "0";
+      this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT
+        ? this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString()
+        : "0";
+      this.failed = this.getDeliveriesStatistics.ORDER_FAILED
+        ? this.getDeliveriesStatistics.ORDER_FAILED.toString()
+        : "0";
+      this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED
+        ? this.getDeliveriesStatistics.ORDER_COMPLETED.toString()
+        : "0";
     },
   },
   mounted() {

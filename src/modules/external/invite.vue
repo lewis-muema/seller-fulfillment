@@ -44,6 +44,7 @@
         {{ $t("external.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         class="invite-phone"
         id="phone-number"
         v-model="phone"
@@ -85,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getDefaultLanguage", "getLanguages"]),
+    ...mapGetters(["getDefaultLanguage", "getLanguages", "getSendyPhoneProps"]),
   },
   mounted() {
     this.defaultLanguage = this.getDefaultLanguage;

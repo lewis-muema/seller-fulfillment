@@ -16,7 +16,7 @@
               append-icon="mdi-chevron-down"
               class="header-shortcuts-button elevation-0"
             >
-              {{ $t("common.new") }}
+              {{ $t("common.send") }}
             </v-btn>
           </template>
           <v-list class="header-list-popup">
@@ -108,6 +108,7 @@
               v-bind="props"
               class="header-shortcuts-button elevation-0"
               append-icon="mdi-menu-down"
+              variant="outlined"
             >
               <div class="header-profile-pic">
                 {{ profile[0].item.charAt(0) }}

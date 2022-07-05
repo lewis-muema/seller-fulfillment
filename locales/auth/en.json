@@ -71,5 +71,7 @@
     "userAccountNotFound": "User account not found",
     "kenya": "KENYA",
     "uganda": "UGANDA",
-    "weCouldNotResendYouAnOTP": "We could not resend you an OTP, Please retry"
+    "weCouldNotResendYouAnOTP": "We could not resend you an OTP, Please retry",
+    "emailAlreadyExist": "The email you entered already exists. Please enter another email address or",
+    "emailNotRegisteredUnderSendy": "The email address you’ve entered isn’t registered on Sendy.  Please enter another email address or"
 }

@@ -31,37 +31,17 @@ function changeLanguage() {
     i18n.locale = event.detail;
     moment.locale(event.detail);
   });
+  window.addEventListener("country-default", () => {
+    ipLookUp();
+  });
 }
 
-// eslint-disable-next-line no-unused-vars
 function ipLookUp() {
-  const { EXTREME_IP_KEY } = process.env;
-  axios(`https://extreme-ip-lookup.com/json/?key=${EXTREME_IP_KEY}`)
+  axios(`https://extreme-ip-lookup.com/json/?key=${process.env.EXTREME_IP_KEY}`)
     .then((response) => {
       window.dispatchEvent(
         new CustomEvent("country-fetched", { detail: response.data })
       );
-      const francoPhoneCountries = ["FR", "CI"].includes(
-        response.data.countryCode
-      );
-      let lang;
-      let locale;
-      if (francoPhoneCountries) {
-        this.$i18n.locale = "fr";
-        lang = `fr-${response.data.countryCode}`;
-        locale = "fr";
-      } else if (response.data.countryCode === "NG") {
-        this.$i18n.locale = "en-ng";
-        lang = `en-${response.data.countryCode}`;
-        locale = "en-ng";
-      } else {
-        this.$i18n.locale = "en";
-        lang = "en-US,en;q=0.9";
-        locale = "en";
-      }
-      localStorage.setItem("buyerTimeLocale", locale);
-      localStorage.setItem("buyerLanguage", lang);
-      localStorage.setItem("buyerCountryCode", response.data.countryCode);
     })
     .catch((error) => error);
 }

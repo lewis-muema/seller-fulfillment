@@ -186,20 +186,35 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <div class="deliveries-empty" v-else>
-      <div>
-        <img
-          src="https://images.sendyit.com/fulfilment/seller/track.png"
-          alt=""
-          class="deliveries-empty-img"
-        />
+    <div v-else>
+      <div v-if="activeCycle.active">
+        <div class="no-products-card-container">
+          <span class="no-deliveries-icon-halo">
+            <i class="mdi mdi-magnify no-products-icon"></i>
+          </span>
+          <div class="no-products-description">
+            {{ $t("payments.sorryNoTransactionsFound") }}
+          </div>
+          <div class="no-deliveries-description">
+            {{ $t("payments.WecouldntFindAnyTransactions") }}
+          </div>
+        </div>
       </div>
-      <p class="statements-empty-title">
-        {{ $t("payments.noTransactionsYet") }}
-      </p>
-      <p class="statements-empty-label">
-        {{ $t("payments.trackTransactions") }}
-      </p>
+      <div class="deliveries-empty" v-else>
+        <div>
+          <img
+            src="https://images.sendyit.com/fulfilment/seller/track.png"
+            alt=""
+            class="deliveries-empty-img"
+          />
+        </div>
+        <p class="statements-empty-title">
+          {{ $t("payments.noTransactionsYet") }}
+        </p>
+        <p class="statements-empty-label">
+          {{ $t("payments.trackTransactions") }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -210,6 +225,7 @@ import moment from "moment";
 import placeholder from "../../../../mixins/placeholders";
 
 export default {
+  props: ["activeCycle"],
   mixins: [placeholder],
   data() {
     return {

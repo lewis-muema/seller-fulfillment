@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="container-border">
-      <statement-list @range="rangeChanged" />
+      <statement-list :activeCycle="activeCycle" @range="rangeChanged" />
     </div>
   </div>
 </template>

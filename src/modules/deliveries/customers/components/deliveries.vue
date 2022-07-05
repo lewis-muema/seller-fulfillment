@@ -124,26 +124,41 @@
           </tbody>
         </v-table>
       </div>
-      <div class="deliveries-empty" v-else>
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
+      <div v-else>
+        <div v-if="ongoingDeliveries > 0">
+          <div class="no-products-card-container">
+            <span class="no-deliveries-icon-halo">
+              <i class="mdi mdi-magnify no-products-icon"></i>
+            </span>
+            <div class="no-products-description">
+              {{ $t("deliveries.sorryNoDeliveriesFound") }}
+            </div>
+            <div class="no-deliveries-description">
+              {{ $t("deliveries.weCouldntFindAnyDeliveries") }}
+            </div>
+          </div>
         </div>
-        <p class="deliveries-empty-title">
-          {{ $t("deliveries.noDeliveriesToTrack") }}
-        </p>
-        <v-btn
-          class="deliveries-btn"
-          @click="
-            $router.push('/inventory/send-inventory/customer/select-products')
-          "
-          size="default"
-        >
-          {{ $t("deliveries.deliverToACustomer") }}
-        </v-btn>
+        <div v-else class="deliveries-empty">
+          <div>
+            <img
+              src="https://images.sendyit.com/fulfilment/seller/track.png"
+              alt=""
+              class="deliveries-empty-img"
+            />
+          </div>
+          <p class="deliveries-empty-title">
+            {{ $t("deliveries.noDeliveriesToTrack") }}
+          </p>
+          <v-btn
+            class="deliveries-btn"
+            @click="
+              $router.push('/inventory/send-inventory/customer/select-products')
+            "
+            size="default"
+          >
+            {{ $t("deliveries.deliverToACustomer") }}
+          </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -196,6 +211,7 @@ export default {
     this.setDeliveries(this.placeHolderDeliveries);
     this.fetchOrders();
     this.getDeliveryStats();
+    this.setTab("All");
   },
   computed: {
     ...mapGetters([
@@ -204,7 +220,15 @@ export default {
       "getTabStatus",
       "getStorageUserDetails",
       "getTab",
+      "getDeliveriesStatistics",
     ]),
+    ongoingDeliveries() {
+      let orderCount = 0;
+      Object.values(this.getDeliveriesStatistics).forEach((row) => {
+        orderCount = row + orderCount;
+      });
+      return orderCount;
+    },
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
@@ -213,6 +237,7 @@ export default {
       "setLoader",
       "setDeliveries",
       "setDeliveriesStatistics",
+      "setTab",
     ]),
     navigate(route) {
       this.$router.push(route);
@@ -392,5 +417,21 @@ export default {
   color: #9b101c;
   font-size: 16px;
   font-weight: 500;
+}
+.no-deliveries-icon-halo {
+  height: 100px;
+  width: 100px;
+  border-radius: 70px;
+  background: #f0f3f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.no-deliveries-description {
+  margin-top: 10px;
+  color: #606266;
+  width: 400px;
+  text-align: center;
 }
 </style>

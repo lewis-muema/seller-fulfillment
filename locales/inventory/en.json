@@ -147,5 +147,6 @@
   "thereAreNoArchivedProductsAtTheMoment": "There are no archived products at the moment",
   "thereAreNoLowStockItems": "There are no low stock items at the moment",
   "thereAreNoOutOfStockItems": "There are no out of stock items at the moment",
-  "theQuantityYouHaveEntered": "The quantity you have entered exceeds your available units"
+  "theQuantityYouHaveEntered": "The quantity you have entered exceeds your available units",
+  "change": "Change"
 }

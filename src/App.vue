@@ -21,7 +21,7 @@ export default {
     //
   }),
   watch: {
-    $route() {
+    $route(to) {
       if (
         this.$route.path !== "/auth/sign-up" &&
         this.$route.path !== "/auth/otp" &&
@@ -29,6 +29,18 @@ export default {
         typeof localStorage.userDetails === "string"
       ) {
         this.getOnboardingStatus();
+      }
+      if (
+        to.path.includes("/inventory/send-inventory/customer") &&
+        this.activeCycle
+      ) {
+        this.$router.go(-1);
+        setTimeout(() => {
+          this.setOverlayStatus({
+            overlay: true,
+            popup: "payments",
+          });
+        }, 500);
       }
     },
     "$store.state.defaultLanguage": function language(val) {
@@ -43,6 +55,7 @@ export default {
       "getStorageUserDetails",
       "getAchievements",
       "getSendyPhoneProps",
+      "getActivePayment",
     ]),
     onboardingStatus() {
       if (
@@ -52,6 +65,10 @@ export default {
         return true;
       }
       return false;
+    },
+    activeCycle() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
     },
   },
   created() {
@@ -73,6 +90,7 @@ export default {
       "setDefaultCountryCode",
       "setDefaultCountryName",
       "setDefaultLanguage",
+      "setOverlayStatus",
     ]),
     registerFCM() {
       window.addEventListener("register-fcm", () => {

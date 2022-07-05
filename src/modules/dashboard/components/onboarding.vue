@@ -72,7 +72,11 @@
       <v-col cols="3" class="desktop-dashboard-content mt-3">
         <v-card variant="outlined">
           <p class="ml-3 mt-3">{{ $t("dashboard.getMoreoutOfSendy") }}</p>
-          <v-list v-for="(link, i) in dashboardLinks" :key="i">
+          <v-list
+            v-for="(link, i) in dashboardLinks"
+            :key="i"
+            class="dashboard-links-content"
+          >
             <v-list-item>
               <v-list-item-avatar>
                 <v-icon class="dashboard-links-icon mr-5">{{
@@ -248,5 +252,8 @@ export default {
   color: #116f28;
   margin-top: -10px;
   margin-right: 10px;
+}
+.dashboard-links-content {
+  box-shadow: none !important;
 }
 </style>

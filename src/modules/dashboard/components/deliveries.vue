@@ -1,5 +1,5 @@
 <template>
-  <div class="deliveries-container">
+  <v-card variant="outlined" class="dashboard-deliveries-container">
     <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
       <v-table class="">
         <thead>
@@ -93,7 +93,7 @@
           </tr>
         </tbody>
       </v-table>
-      <div class="show-more-deliveries-link">
+      <div class="show-more-deliveries-link" v-if="showMoreDeliveries">
         <router-link
           :to="
             getSelectedTab === 'dashboard.toYourCustomers'
@@ -125,7 +125,7 @@
         }}
       </v-btn>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -158,6 +158,9 @@ export default {
         return this.getDeliveries;
       }
       return this.getConsignments;
+    },
+    showMoreDeliveries() {
+      return this.filteredDeliveries.length >= 5;
     },
   },
   watch: {
@@ -285,10 +288,10 @@ export default {
   color: #324ba8;
   text-decoration: none;
 }
-.deliveries-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.dashboard-deliveries-container {
+  margin: 30px 0px;
+  border-color: #e2e7ed;
+  height: auto;
   min-height: 80%;
 }
 .deliveries-container-inner {

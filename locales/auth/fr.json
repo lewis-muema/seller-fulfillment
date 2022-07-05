@@ -64,5 +64,7 @@
   "welcomeBack": "Bienvenue",
   "withinTheFirstMonth": "Au cours du premier mois de notre partenariat avec Sendy, nous avons été en mesure de réapprovisionner trois fois. Traitement des commandes Sendy était la passerelle dont nous avions besoin pour gérer une entreprise en ligne prospère.",
   "yourEmailAddress": "Votre adresse e-mail",
-  "yourName": "Votre prénom "
+  "yourName": "Votre prénom ",
+  "emailAlreadyExist": "The email you entered already exists. Please enter another email address or",
+  "emailNotRegisteredUnderSendy": "The email address you’ve entered isn’t registered on Sendy.  Please enter another email address or"
 }

@@ -115,26 +115,41 @@
           </tbody>
         </v-table>
       </div>
-      <div class="deliveries-empty" v-else>
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
+      <div v-else>
+        <div v-if="ongoingDeliveries > 0">
+          <div class="no-products-card-container">
+            <span class="no-deliveries-icon-halo">
+              <i class="mdi mdi-magnify no-products-icon"></i>
+            </span>
+            <div class="no-products-description">
+              {{ $t("deliveries.sorryNoConsignmentsFound") }}
+            </div>
+            <div class="no-deliveries-description">
+              {{ $t("deliveries.weCouldntFindAnyConsignments") }}
+            </div>
+          </div>
         </div>
-        <p class="deliveries-empty-title">
-          {{ $t("deliveries.noDeliveriesToTrack") }}
-        </p>
-        <v-btn
-          class="deliveries-btn"
-          @click="
-            $router.push('/inventory/send-inventory/sendy/select-products')
-          "
-          size="default"
-        >
-          {{ $t("deliveries.deliverToSendy") }}
-        </v-btn>
+        <div class="deliveries-empty" v-else>
+          <div>
+            <img
+              src="https://images.sendyit.com/fulfilment/seller/track.png"
+              alt=""
+              class="deliveries-empty-img"
+            />
+          </div>
+          <p class="deliveries-empty-title">
+            {{ $t("deliveries.noDeliveriesToTrack") }}
+          </p>
+          <v-btn
+            class="deliveries-btn"
+            @click="
+              $router.push('/inventory/send-inventory/sendy/select-products')
+            "
+            size="default"
+          >
+            {{ $t("deliveries.deliverToSendy") }}
+          </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -187,6 +202,7 @@ export default {
     this.setConsignments(this.placeholderConsignments);
     this.getPickUpStats();
     this.fetchOrders();
+    this.setTab("All");
   },
   computed: {
     ...mapGetters([
@@ -194,7 +210,15 @@ export default {
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
+      "getConsignmentStatistics",
     ]),
+    ongoingDeliveries() {
+      let orderCount = 0;
+      Object.values(this.getConsignmentStatistics).forEach((row) => {
+        orderCount = row + orderCount;
+      });
+      return orderCount;
+    },
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
@@ -203,6 +227,7 @@ export default {
       "setLoader",
       "setConsignments",
       "setConsignmentStatistics",
+      "setTab",
     ]),
     navigate(route) {
       this.$router.push(route);

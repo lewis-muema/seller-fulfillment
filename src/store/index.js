@@ -145,6 +145,8 @@ export default createStore({
           rejection_policy: null,
         },
       },
+      defaultCountryCode: "KE",
+      defaultCountryName: "KENYA",
       sendyPhoneProps: {
         mode: "international",
         defaultCountry: "ke",

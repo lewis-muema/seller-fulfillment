@@ -95,6 +95,7 @@
         id="phone-number"
         v-model="phone"
         mode="international"
+        v-bind="getSendyPhoneProps"
       ></vue-tel-input>
       <label
         for="phone-number"
@@ -104,6 +105,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         v-if="secondaryPhoneStatus"
         class="invite-phone"
         id="phone-number"
@@ -171,6 +173,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         class="invite-phone"
         id="phone-number"
         v-model="phone"
@@ -184,6 +187,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         v-if="secondaryPhoneStatus"
         class="invite-phone"
         id="sec-phone-number"
@@ -522,6 +526,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getMapOptions",
+      "getSendyPhoneProps",
     ]),
   },
   data() {

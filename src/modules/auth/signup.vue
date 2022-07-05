@@ -141,7 +141,13 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapGetters(["getErrors", "getGoogleUserData", "getCountries"]),
+    ...mapGetters([
+      "getErrors",
+      "getGoogleUserData",
+      "getCountries",
+      "getSendyPhoneProps",
+      "getDefaultCountryName",
+    ]),
     emailExists() {
       return this.getErrors.message === "user.email.already.exists";
     },
@@ -197,7 +203,7 @@ export default {
         if (!this.emailExists) {
           ElNotification({
             title: this.getErrors.message.replaceAll(".", " "),
-            message: "",
+            message: this.getErrors.value ? this.getErrors.value : "",
             type: "error",
           });
         }
@@ -211,6 +217,7 @@ export default {
         };
         const response = await this.listCountries(fullPayload);
         if (response.message === "country.list.success") {
+          this.params.countryOfOperation = this.getDefaultCountryName;
           return response;
         }
       } catch (error) {

@@ -237,4 +237,10 @@ export default {
   setArchivedProductCount(state, val) {
     state.archivedProductCount = val;
   },
+  setDefaultCountryCode(state, val) {
+    state.defaultCountryCode = val;
+  },
+  setDefaultCountryName(state, val) {
+    state.defaultCountryName = val;
+  },
 };

@@ -42,6 +42,7 @@ export default {
       "getUserDetails",
       "getStorageUserDetails",
       "getAchievements",
+      "getSendyPhoneProps",
     ]),
     onboardingStatus() {
       if (
@@ -61,10 +62,18 @@ export default {
     this.autoZoom();
     this.detectMobile();
     this.detectPayments();
+    this.countryDefault();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
-    ...mapMutations(["setNotifications", "setAchievements"]),
+    ...mapMutations([
+      "setNotifications",
+      "setAchievements",
+      "setSendyPhoneProps",
+      "setDefaultCountryCode",
+      "setDefaultCountryName",
+      "setDefaultLanguage",
+    ]),
     registerFCM() {
       window.addEventListener("register-fcm", () => {
         this.firebase();
@@ -140,6 +149,34 @@ export default {
           this.$router.push("/settings/payment-options");
         }
       }, 100);
+    },
+    countryDefault() {
+      window.dispatchEvent(new CustomEvent("country-default"));
+      window.addEventListener("country-fetched", (event) => {
+        const props = this.getSendyPhoneProps;
+        props.defaultCountry = event.detail.countryCode.toLowerCase();
+        this.setSendyPhoneProps(props);
+        this.setDefaultCountryCode(event.detail.countryCode);
+        this.setDefaultCountryName(
+          event.detail.country === "Ivory Coast"
+            ? "COTE_D_VOIRE"
+            : event.detail.country.toUpperCase()
+        );
+        const francoPhoneCountries = ["FR", "CI"].includes(
+          event.detail.countryCode
+        );
+        let locale;
+        if (francoPhoneCountries) {
+          locale = "fr";
+        } else {
+          locale = "en";
+        }
+        this.setDefaultLanguage(locale);
+        setTimeout(() => {
+          localStorage.language = locale;
+          this.changeLanguage();
+        }, 100);
+      });
     },
     firebase() {
       initializeApp({

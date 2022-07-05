@@ -40,6 +40,7 @@
       {{ $t("settings.yourPhoneNumber") }}
     </label>
     <vue-tel-input
+      v-bind="getSendyPhoneProps"
       class="personalInfo-phone"
       id="phone-number"
       v-model="phone"
@@ -73,7 +74,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserDetails", "getStorageUserDetails"]),
+    ...mapGetters([
+      "getUserDetails",
+      "getStorageUserDetails",
+      "getSendyPhoneProps",
+    ]),
   },
   mounted() {
     this.getUsersDetails();

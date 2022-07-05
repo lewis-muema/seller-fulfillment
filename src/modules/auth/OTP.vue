@@ -50,7 +50,7 @@
             <button
               class="resend-code-otp"
               @click="resendCode()"
-              :disabled="!countDownTriggered"
+              :disabled="!countDownTriggered || resendStatus"
             >
               {{
                 !countDownTriggered
@@ -82,6 +82,7 @@ export default {
     return {
       countDown: 120,
       countDownTriggered: false,
+      resendStatus: false,
       loading: false,
       correctOTP: false,
       otp: "",
@@ -100,18 +101,20 @@ export default {
       "getBizDetails",
     ]),
     userEmail() {
-      return this.getOTPRedirectUrl === "otp/signIn"
+      return localStorage.OTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.email
         : this.businessEmail;
     },
     businessId() {
-      return this.getOTPRedirectUrl === "otp/signIn"
+      return localStorage.OTPRedirectUrl === "otp/signIn"
         ? this.getLoginData.business_id
         : this.getUserData.business.business_id;
     },
     businessEmail() {
       return this.getUserData.business
-        ? this.getUserData.business.business_email
+        ? this.getUserData.business.email
+          ? this.getUserData.business.email
+          : this.getUserData.business.business_email
         : "";
     },
   },
@@ -123,9 +126,9 @@ export default {
       this.setLoginData(JSON.parse(localStorage.userDetails));
     } else {
       this.$router.push(
-        this.getOTPRedirectUrl === "otp/signIn"
-          ? "auth/sign-in"
-          : "auth/sign-up"
+        this.getOTPRedirectUrl === "otp/signUp"
+          ? "/auth/sign-up"
+          : "/auth/sign-in"
       );
     }
     this.countDownTimer();
@@ -167,6 +170,7 @@ export default {
       const payload = {
         email: this.userEmail,
       };
+      this.resendStatus = true;
       if (this.countDown === 0) {
         try {
           const fullPayload = {
@@ -175,7 +179,10 @@ export default {
             endpoint: "seller/business/signin",
           };
           const data = await this.loginUser(fullPayload);
+          this.resendStatus = false;
           if (data.status === 200) {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
             this.setBizDetails(data.data.data);
             localStorage.userDetails = JSON.stringify(data.data.data);
             ElNotification({
@@ -255,7 +262,7 @@ export default {
       }
     },
     redirect() {
-      if (this.getOTPRedirectUrl === "otp/signUp") {
+      if (localStorage.OTPRedirectUrl === "otp/signUp") {
         this.clearInput();
         this.loading = false;
         this.$router.push("/auth/complete-signup");

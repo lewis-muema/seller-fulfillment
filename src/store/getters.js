@@ -77,4 +77,6 @@ export default {
   getEventLabels: (state) => state.eventLabels,
   getAllProductCount: (state) => state.allProductCount,
   getArchivedProductCount: (state) => state.archivedProductCount,
+  getDefaultCountryCode: (state) => state.defaultCountryCode,
+  getDefaultCountryName: (state) => state.defaultCountryName,
 };

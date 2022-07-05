@@ -51,7 +51,10 @@
             <label for="phoneNumber" class="form-label">{{
               $t("auth.phoneNumber")
             }}</label>
-            <vue-tel-input v-model="params.phoneNo"></vue-tel-input>
+            <vue-tel-input
+              v-bind="getSendyPhoneProps"
+              v-model="params.phoneNo"
+            ></vue-tel-input>
             <div v-if="v$.params.phoneNo.$error" class="error-msg">
               {{ $t("auth.phoneRequired") }}
             </div>
@@ -137,21 +140,19 @@ export default {
     };
   },
   async mounted() {
-    if (
-      localStorage.userDetails &&
-      localStorage.OTPRedirectUrl &&
-      localStorage.user
-    ) {
+    if (localStorage.userDetails && localStorage.OTPRedirectUrl) {
       this.setBizDetails(JSON.parse(localStorage.userDetails));
       this.setOTPRedirectUrl(localStorage.OTPRedirectUrl);
       this.setUserData({ business: JSON.parse(localStorage.userDetails) });
       this.setLoginData(JSON.parse(localStorage.userDetails));
-      this.setUserDetails(localStorage.user);
+      if (localStorage.user) {
+        this.setUserDetails(localStorage.user);
+      }
     } else {
       this.$router.push(
-        this.getOTPRedirectUrl === "otp/signIn"
-          ? "auth/sign-in"
-          : "auth/sign-up"
+        this.getOTPRedirectUrl === "otp/signUp"
+          ? "/auth/sign-up"
+          : "/auth/sign-in"
       );
     }
     if (this.getOTPRedirectUrl === "otp/signIn") {
@@ -175,6 +176,7 @@ export default {
       "getOTPRedirectUrl",
       "getUserDetails",
       "getLoginData",
+      "getSendyPhoneProps",
     ]),
     businessId() {
       return this.getUserData.business

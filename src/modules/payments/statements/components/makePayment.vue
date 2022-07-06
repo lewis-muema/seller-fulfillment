@@ -1,5 +1,5 @@
 <template>
-  <div class="make-payment-container">
+  <div class="make-payment-container v-col v-col-11">
     <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">

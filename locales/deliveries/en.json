@@ -72,6 +72,7 @@
   "attempts": "attempts",
   "attemptsAndReasons": "We were unable to reach you here are the attempts and the reasons",
   "noDeliveriesToTrack": "No deliveries to track yet. Get started by sending a delivery to a customer",
+  "noDeliveriesToTrackToSendy": "No deliveries to track yet. Get started by sending a delivery to sendy",
   "filterByCompletionDate": "Filter by completion date",
   "startDate": "Start date",
   "endDate": "End date",

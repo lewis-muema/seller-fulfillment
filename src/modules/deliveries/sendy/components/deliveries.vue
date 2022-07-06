@@ -138,7 +138,7 @@
             />
           </div>
           <p class="deliveries-empty-title">
-            {{ $t("deliveries.noDeliveriesToTrack") }}
+            {{ $t("deliveries.noDeliveriesToTrackToSendy") }}
           </p>
           <v-btn
             class="deliveries-btn"

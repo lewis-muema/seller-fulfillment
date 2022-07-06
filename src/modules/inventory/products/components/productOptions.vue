@@ -180,6 +180,9 @@ export default {
       }
     },
     show(val) {
+      if (!val) {
+        this.resetInputs();
+      }
       this.setAddProductStatus(val);
     },
     "$store.state.supportedCountries": function supportedCountries() {

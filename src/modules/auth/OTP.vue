@@ -242,6 +242,8 @@ export default {
           this.setRefreshToken(refreshToken);
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
+          localStorage.setItem("tokenCreated", new Date().valueOf());
+          localStorage.setItem("tokenDuration", 3);
           this.setAchievements({});
           this.redirect();
         } else {

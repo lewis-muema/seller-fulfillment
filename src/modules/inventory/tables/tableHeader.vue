@@ -7,7 +7,7 @@
           v-if="header.description"
           class="box-item"
           effect="light"
-          :content="header.description"
+          :content="$t(header.description)"
           placement="top"
         >
           <i

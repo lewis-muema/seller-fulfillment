@@ -435,6 +435,7 @@ export default {
   border-color: #e2e7ed;
   margin-left: 50px;
   background: white;
+  margin-bottom: 30px;
 }
 .el-table {
   color: #303133 !important;

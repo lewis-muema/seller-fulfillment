@@ -44,6 +44,8 @@ export default createStore({
       session: {},
       signUpwithGoogle: false,
       OTPRedirectUrl: "",
+      allProductCount: 0,
+      archivedProductCount: 0,
       accessToken: localStorage.getItem("accessToken"),
       refreshToken: "",
       productStep: 0,
@@ -143,6 +145,8 @@ export default createStore({
           rejection_policy: null,
         },
       },
+      defaultCountryCode: "KE",
+      defaultCountryName: "KENYA",
       sendyPhoneProps: {
         mode: "international",
         defaultCountry: "ke",

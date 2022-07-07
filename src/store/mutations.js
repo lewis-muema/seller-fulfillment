@@ -231,4 +231,16 @@ export default {
   setEventLabels(state, val) {
     state.eventLabels = val;
   },
+  setAllProductCount(state, val) {
+    state.allProductCount = val;
+  },
+  setArchivedProductCount(state, val) {
+    state.archivedProductCount = val;
+  },
+  setDefaultCountryCode(state, val) {
+    state.defaultCountryCode = val;
+  },
+  setDefaultCountryName(state, val) {
+    state.defaultCountryName = val;
+  },
 };

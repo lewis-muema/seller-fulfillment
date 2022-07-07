@@ -13,7 +13,7 @@
                 )
               "
             ></i>
-            <v-card-title class="text-center">
+            <v-card-title class="text-center send-products-title">
               {{ $t("inventory.enterQuantity") }}
             </v-card-title>
           </div>
@@ -117,7 +117,7 @@
                       class="form-control"
                       v-model="selectedProduct.quantity"
                       placeholder="0.0"
-                      @change="addQuantity(index, $event)"
+                      @input="addQuantity(index, $event)"
                       required
                     />
                   </td>
@@ -234,11 +234,27 @@ export default {
     },
     addQuantity(val, event) {
       const products = this.getSelectedProducts;
+      let tally = "";
+      if (
+        this.$route.params.path === "customer" &&
+        event.target.value >
+          products[val].selectedOption.product_variant_stock_levels
+            .quantity_in_inventory &&
+        process.env.NODE_ENV === "production"
+      ) {
+        ElNotification({
+          title: "",
+          message: this.$t("inventory.theQuantityYouHaveEntered"),
+          type: "error",
+        });
+      } else {
+        tally = event.target.value;
+      }
       let newProduct = {};
       Object.keys(products[val]).forEach((row) => {
         newProduct[row] = products[val][row];
       });
-      newProduct.quantity = event.target.value;
+      newProduct.quantity = tally;
       products[val] = newProduct;
       this.setSelectedProducts(products);
       if (this.$route.params.path === "customer") {

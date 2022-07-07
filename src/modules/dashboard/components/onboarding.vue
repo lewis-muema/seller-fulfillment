@@ -72,7 +72,11 @@
       <v-col cols="3" class="desktop-dashboard-content mt-3">
         <v-card variant="outlined">
           <p class="ml-3 mt-3">{{ $t("dashboard.getMoreoutOfSendy") }}</p>
-          <v-list v-for="(link, i) in dashboardLinks" :key="i">
+          <v-list
+            v-for="(link, i) in dashboardLinks"
+            :key="i"
+            class="dashboard-links-content"
+          >
             <v-list-item>
               <v-list-item-avatar>
                 <v-icon class="dashboard-links-icon mr-5">{{
@@ -80,9 +84,11 @@
                 }}</v-icon>
               </v-list-item-avatar>
               <v-list-item-header>
-                <v-list-item-title class="desktop-dashboard-link-title">{{
-                  $t(link.title)
-                }}</v-list-item-title>
+                <v-list-item-title
+                  class="desktop-dashboard-link-title"
+                  @click="redirect(link.link)"
+                  >{{ $t(link.title) }}</v-list-item-title
+                >
                 <v-list-item-subtitle>{{ $t(link.name) }}</v-list-item-subtitle>
               </v-list-item-header>
             </v-list-item>
@@ -150,16 +156,13 @@ export default {
           title: "dashboard.needHelp",
           name: "dashboard.bookATime",
           icon: "mdi-face-agent",
+          link: "https://meetings.hubspot.com/jacinta5/fulfillment-introduction",
         },
         {
           title: "dashboard.watchTutorial",
           name: "dashboard.learnHowToSend",
           icon: "mdi-play-box-multiple",
-        },
-        {
-          title: "dashboard.meetUsInPerson",
-          name: "dashboard.attendOneOfOurUpcomingEvents",
-          icon: "mdi-calendar-week-begin",
+          link: "#",
         },
       ],
     };
@@ -183,6 +186,9 @@ export default {
     ...mapMutations(["setComponent"]),
     completeSteps() {
       this.activeStep += 1;
+    },
+    redirect(link) {
+      window.open(link);
     },
   },
 };
@@ -248,5 +254,8 @@ export default {
   color: #116f28;
   margin-top: -10px;
   margin-right: 10px;
+}
+.dashboard-links-content {
+  box-shadow: none !important;
 }
 </style>

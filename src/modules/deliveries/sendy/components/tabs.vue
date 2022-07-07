@@ -33,10 +33,7 @@
           @click="
             activeTab !== 'Pending' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab(
-                  'Pending',
-                  'ORDER_RECEIVED&status=ORDER_IN_PROCESSING'
-                )
+              : passActiveTab('Pending', 'ORDER_RECEIVED,ORDER_IN_PROCESSING')
           "
         >
           {{ $t("deliveries.pending") }}
@@ -150,13 +147,23 @@ export default {
   }),
   watch: {
     "$store.state.loader": function loader() {
-      this.pending = (
+      this.pending =
         parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
         parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
-      ).toString();
-      this.transit = this.getConsignmentStatistics.ORDER_IN_TRANSIT.toString();
-      this.failed = this.getConsignmentStatistics.ORDER_FAILED.toString();
-      this.completed = this.getConsignmentStatistics.ORDER_COMPLETED.toString();
+          ? (
+              parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
+              parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
+            ).toString()
+          : "0";
+      this.transit = this.getConsignmentStatistics.ORDER_IN_TRANSIT
+        ? this.getConsignmentStatistics.ORDER_IN_TRANSIT.toString()
+        : "0";
+      this.failed = this.getConsignmentStatistics.ORDER_FAILED
+        ? this.getConsignmentStatistics.ORDER_FAILED.toString()
+        : "0";
+      this.completed = this.getConsignmentStatistics.ORDER_COMPLETED
+        ? this.getConsignmentStatistics.ORDER_COMPLETED.toString()
+        : "0";
     },
   },
   mounted() {
@@ -196,10 +203,12 @@ export default {
 }
 .customers-deliver-btn {
   float: right;
-  margin: 8px 25px;
+  margin-right: 25px;
   text-transform: inherit;
   font-size: 14px;
   letter-spacing: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 .customers-orders-tab-section {
   width: max-content;

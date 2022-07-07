@@ -14,7 +14,7 @@
               <v-icon class="dashboard-links-icon send-products-icon"
                 >mdi mdi-truck</v-icon
               >
-              <p class="mt-4">{{ $t("inventory.deliverToCustomer") }}</p>
+              <p class="">{{ $t("common.deliverToCustomer") }}</p>
             </div>
           </v-card>
         </div>
@@ -27,7 +27,7 @@
               <v-icon class="dashboard-links-icon send-products-icon"
                 >mdi mdi-warehouse</v-icon
               >
-              <p class="mt-4">{{ $t("inventory.deliverToSendy") }}</p>
+              <p class="">{{ $t("inventory.deliverToSendy") }}</p>
             </div>
           </v-card>
         </div>
@@ -171,7 +171,7 @@ export default {
   height: 48px !important;
   width: 48px !important;
   background-color: #f0f3f7 !important;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 .send-products-card {
   margin-right: 30px !important;
@@ -193,5 +193,8 @@ export default {
 }
 .el-step__title.is-success {
   color: #324ba8 !important;
+}
+.el-step__title.is-process {
+  font-weight: 500 !important;
 }
 </style>

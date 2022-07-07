@@ -75,4 +75,8 @@ export default {
   getCountries: (state) => state.countries,
   getMapOptions: (state) => state.mapOptions,
   getEventLabels: (state) => state.eventLabels,
+  getAllProductCount: (state) => state.allProductCount,
+  getArchivedProductCount: (state) => state.archivedProductCount,
+  getDefaultCountryCode: (state) => state.defaultCountryCode,
+  getDefaultCountryName: (state) => state.defaultCountryName,
 };

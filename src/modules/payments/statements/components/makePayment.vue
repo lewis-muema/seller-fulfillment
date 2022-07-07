@@ -1,5 +1,5 @@
 <template>
-  <div class="make-payment-container">
+  <div class="make-payment-container v-col v-col-11">
     <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">
@@ -50,7 +50,7 @@ export default {
   border: 1px solid #9b101c;
   padding: 12px;
   border-radius: 10px;
-  margin: 30px;
+  margin: 30px 30px 30px 0px;
   width: 95%;
   background: white;
 }

@@ -25,6 +25,7 @@
           {{ $t("settings.phoneNumber") }}
         </label>
         <vue-tel-input
+          v-bind="getSendyPhoneProps"
           class="edit-user-field-phone"
           id="phone"
           v-model="phone"
@@ -52,7 +53,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -63,6 +64,9 @@ export default {
       roles: [this.$t("settings.admin"), this.$t("settings.user")],
       phone: "",
     };
+  },
+  computed: {
+    ...mapGetters(["getSendyPhoneProps"]),
   },
   mounted() {
     this.setComponent("settings.addAUser");

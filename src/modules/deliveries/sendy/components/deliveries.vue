@@ -23,18 +23,18 @@
         <v-table>
           <thead>
             <tr>
-              <th class="text-left">
+              <th class="text-left deliveries-table-header">
                 <span :class="getLoader">{{ $t("deliveries.products") }}</span>
               </th>
-              <th class="text-left">
+              <th class="text-left deliveries-table-header">
                 <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
               </th>
-              <th class="text-left">
+              <th class="text-left deliveries-table-header">
                 <span :class="getLoader">{{
                   $t("deliveries.deliveryDate")
                 }}</span>
               </th>
-              <th class="text-left">
+              <th class="text-left deliveries-table-header">
                 <span :class="getLoader">{{ $t("deliveries.actions") }}</span>
               </th>
             </tr>
@@ -53,29 +53,53 @@
                 </div>
               </td>
               <td class="deliveries-progress-row">
-                <p class="deliveries-progress-row-top">
-                  <span :class="getLoader">
-                    {{ formatStatus(item.order_event_status, item) }}
-                  </span>
-                </p>
-                <v-progress-linear
-                  :model-value="item.delivery_progress_ratio * 100"
-                  color="#324BA8"
-                  height="10"
-                  rounded
-                ></v-progress-linear>
+                <div v-if="item.order_status === 'ORDER_FAILED'">
+                  <p class="delivery-attempted-error">
+                    <i class="mdi mdi-information-outline mr-2"></i
+                    >{{ $t("deliveries.deliveryAttempt") }}
+                  </p>
+                  <p class="ml-6 mb-1">
+                    {{
+                      $t("deliveries.weWillDeliverAgain", {
+                        Date: deliveryDate(item.scheduled_date),
+                      })
+                    }}
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="deliveries-progress-row-top">
+                    <span :class="getLoader">
+                      {{ formatStatus(item.order_event_status, item) }}
+                    </span>
+                  </p>
+                  <v-progress-linear
+                    :model-value="item.delivery_progress_ratio * 100"
+                    color="#324BA8"
+                    height="10"
+                    rounded
+                  ></v-progress-linear>
+                </div>
               </td>
               <td class="deliveries-date-row">
-                <p class="deliveries-date-row-top">
-                  <span :class="getLoader">
-                    {{ deliveryDate(item.scheduled_date) }}
-                  </span>
-                </p>
-                <p class="deliveries-date-row-bottom">
-                  <span :class="getLoader">
-                    {{ deliveryTime(item.scheduled_date) }}
-                  </span>
-                </p>
+                <div v-if="item.order_status === 'ORDER_COMPLETED'">
+                  <p class="deliveries-date-row-top">
+                    <span :class="getLoader">
+                      {{ deliveryDate(item.completed_date) }}
+                    </span>
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="deliveries-date-row-top">
+                    <span :class="getLoader">
+                      {{ deliveryDate(item.scheduled_date) }}
+                    </span>
+                  </p>
+                  <p class="deliveries-date-row-bottom">
+                    <span :class="getLoader">
+                      {{ deliveryTime(item.scheduled_date) }}
+                    </span>
+                  </p>
+                </div>
               </td>
               <td class="deliveries-action-row">
                 <p
@@ -91,26 +115,41 @@
           </tbody>
         </v-table>
       </div>
-      <div class="deliveries-empty" v-else>
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
+      <div v-else>
+        <div v-if="ongoingDeliveries > 0">
+          <div class="no-products-card-container">
+            <span class="no-deliveries-icon-halo">
+              <i class="mdi mdi-magnify no-products-icon"></i>
+            </span>
+            <div class="no-products-description">
+              {{ $t("deliveries.sorryNoConsignmentsFound") }}
+            </div>
+            <div class="no-deliveries-description">
+              {{ $t("deliveries.weCouldntFindAnyConsignments") }}
+            </div>
+          </div>
         </div>
-        <p class="deliveries-empty-title">
-          {{ $t("deliveries.noDeliveriesToTrack") }}
-        </p>
-        <v-btn
-          class="deliveries-btn"
-          @click="
-            $router.push('/inventory/send-inventory/sendy/select-products')
-          "
-          size="default"
-        >
-          {{ $t("deliveries.deliverToSendy") }}
-        </v-btn>
+        <div class="deliveries-empty" v-else>
+          <div>
+            <img
+              src="https://images.sendyit.com/fulfilment/seller/track.png"
+              alt=""
+              class="deliveries-empty-img"
+            />
+          </div>
+          <p class="deliveries-empty-title">
+            {{ $t("deliveries.noDeliveriesToTrackToSendy") }}
+          </p>
+          <v-btn
+            class="deliveries-btn"
+            @click="
+              $router.push('/inventory/send-inventory/sendy/select-products')
+            "
+            size="default"
+          >
+            {{ $t("deliveries.deliverToSendy") }}
+          </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -163,6 +202,7 @@ export default {
     this.setConsignments(this.placeholderConsignments);
     this.getPickUpStats();
     this.fetchOrders();
+    this.setTab("All");
   },
   computed: {
     ...mapGetters([
@@ -170,7 +210,15 @@ export default {
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
+      "getConsignmentStatistics",
     ]),
+    ongoingDeliveries() {
+      let orderCount = 0;
+      Object.values(this.getConsignmentStatistics).forEach((row) => {
+        orderCount = row + orderCount;
+      });
+      return orderCount;
+    },
   },
   methods: {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
@@ -179,6 +227,7 @@ export default {
       "setLoader",
       "setConsignments",
       "setConsignmentStatistics",
+      "setTab",
     ]),
     navigate(route) {
       this.$router.push(route);
@@ -339,7 +388,7 @@ export default {
 .deliveries-location-row {
   font-size: 14px;
   margin-bottom: 10px;
-  margin-top: 5px;
+  margin-top: 0px;
   color: #909399;
   white-space: nowrap;
   width: 250px;
@@ -348,7 +397,7 @@ export default {
 }
 .deliveries-name-row {
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   margin-top: 10px;
   white-space: nowrap;
   color: #303133;

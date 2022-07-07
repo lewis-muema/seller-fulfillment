@@ -21,19 +21,21 @@
         </div>
       </div>
       <div />
-      <div :class="getLoader">
-        <span>
-          {{ $t("payments.billingCycle") }}:
-          {{
-            activeCycle.cycle_interval_type
-              ? activeCycle.cycle_interval_type
-              : $t("payments.none")
-          }}
-        </span>
+      <div>
+        <p class="mt-1">
+          <span :class="getLoader">
+            {{ $t("payments.billingCycle") }}:
+            {{
+              activeCycle.cycle_interval_type
+                ? activeCycle.cycle_interval_type
+                : $t("payments.none")
+            }}
+          </span>
+        </p>
       </div>
     </div>
     <div class="container-border">
-      <statement-list @range="rangeChanged" />
+      <statement-list :activeCycle="activeCycle" @range="rangeChanged" />
     </div>
   </div>
 </template>
@@ -62,7 +64,7 @@ export default {
     },
     activeCycle() {
       let active = {};
-      this.getBillingCycles.forEach((row) => {
+      this.activeBillingCycle.forEach((row) => {
         if (row.active) {
           active = row;
         }
@@ -81,6 +83,7 @@ export default {
       prompt: false,
       params: "",
       range: "",
+      activeBillingCycle: [],
     };
   },
   mounted() {
@@ -111,6 +114,9 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setBillingCycles(response.data.data.billing_cycles);
+          if (this.activeBillingCycle.length === 0) {
+            this.activeBillingCycle = this.getBillingCycles;
+          }
           if (this.$route.path === "/payments/billings") {
             this.setLoader("");
           }

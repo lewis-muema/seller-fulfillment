@@ -9,7 +9,7 @@
             $router.push('/inventory/send-inventory/customer/add-quantity')
           "
         ></i>
-        <v-card-title class="text-center">
+        <v-card-title class="text-center send-products-title">
           {{ $t("inventory.checkout") }}
         </v-card-title>
       </div>
@@ -94,28 +94,47 @@
         <hr class="mt-3" />
         <div class="mt-3">
           <p>{{ $t("inventory.payment") }}</p>
-          <div @click="selectPaymentMethod" class="payment-default-trigger">
-            <span class="payment-method">
-              <v-icon class="pr-3"> mdi-credit-card-outline </v-icon>
-              {{ $t("inventory.changePayment") }}
-            </span>
-            <span>
-              <v-icon class="payment-method-icon">mdi-chevron-right</v-icon>
-            </span>
-          </div>
         </div>
-        <div>
+        <div v-if="getBusinessDetails.settings.payments_enabled">
           <div
             class="payment-method-default"
             v-for="(method, i) in defaultPaymentMethod"
             :key="i"
           >
-            <span>{{ method.category }}</span>
-            <span class="payment-default-right">{{
+            <img
+              class="mr-2"
+              :src="`https://sendy-web-apps-assets.s3.eu-west-1.amazonaws.com/payment-method-icons/${method.pay_method_name.toLowerCase()}.svg`"
+              alt=""
+            />
+            <span>{{
               method.pay_method_details
                 ? method.pay_method_details
                 : method.pay_method_name
             }}</span>
+            <span
+              class="payment-default-right payment-default-trigger"
+              @click="selectPaymentMethod"
+              >{{ $t("inventory.change") }}
+              <v-icon class="payment-method-icon"
+                >mdi-chevron-right</v-icon
+              ></span
+            >
+          </div>
+          <div
+            class="payment-method-default"
+            v-if="defaultPaymentMethod.length === 0"
+          >
+            <span class="payment-default-left">{{
+              $t("payments.noDefaultPaymentMethodSelected")
+            }}</span>
+            <span
+              class="payment-default-right payment-default-trigger"
+              @click="selectPaymentMethod"
+              >{{ $t("inventory.change") }}
+              <v-icon class="payment-method-icon"
+                >mdi-chevron-right</v-icon
+              ></span
+            >
           </div>
         </div>
         <div class="mt-3">
@@ -127,7 +146,7 @@
         </div>
         <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-3">
           <button
-            class="btn btn-primary mt-2 btn-long"
+            class="btn btn-primary mt-2 btn-long submit-order-btn"
             @click="createDelivery()"
             v-loading="buttonLoader"
           >
@@ -216,11 +235,17 @@ export default {
       });
       const payload = {
         means_of_payment: {
-          means_of_payment_type:
-            this.defaultPaymentMethod[0].pay_method_name.replace("-", ""),
-          means_of_payment_id: this.defaultPaymentMethod[0].pay_method_details,
+          means_of_payment_type: this.getBusinessDetails.settings
+            .payments_enabled
+            ? this.defaultPaymentMethod[0].pay_method_name.replace("-", "")
+            : "CARD",
+          means_of_payment_id: this.getBusinessDetails.settings.payments_enabled
+            ? this.defaultPaymentMethod[0].pay_method_details
+            : "",
           participant_type: "SELLER",
-          participant_id: this.defaultPaymentMethod[0].user_id,
+          participant_id: this.getBusinessDetails.settings.payments_enabled
+            ? this.defaultPaymentMethod[0].user_id
+            : "",
         },
         products,
         destination: {
@@ -285,7 +310,8 @@ export default {
         this.phone &&
         this.location &&
         this.getSelectedProducts.length &&
-        this.defaultPaymentMethod.length > 0
+        (this.defaultPaymentMethod.length > 0 ||
+          !this.getBusinessDetails.settings.payments_enabled)
       ) {
         this.buttonLoader = true;
         this.requestAxiosPost({
@@ -373,24 +399,25 @@ export default {
 <style>
 .payment-method,
 .payment-method-icon {
-  color: #324ba8;
+  color: #303133;
 }
 .payment-method-icon {
   float: right;
 }
 .payment-method-default {
   height: 60px;
-  border: 1px solid #324ba8;
   border-radius: 5px;
   margin-top: 10px;
-  padding: 0px 20px;
   display: flex;
   align-items: center;
-  color: #2e49ae;
-  font-weight: 700;
+  color: #303133;
 }
 .payment-default-right {
   margin-left: auto;
+  font-size: 14px;
+}
+.payment-default-left {
+  font-size: 14px;
 }
 .payment-default-trigger {
   cursor: pointer;

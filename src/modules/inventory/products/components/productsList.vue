@@ -31,8 +31,8 @@
                     <v-list-item-subtitle>
                       <span :class="getLoader">
                         {{
-                          product.product_variants
-                            ? `${product.product_variants.length} ${$t(
+                          product.product_variants.length > 1
+                            ? `${product.product_variants.length - 1} ${$t(
                                 "inventory.producTOptions"
                               )}`
                             : ""
@@ -66,11 +66,13 @@
             </tr>
           </tbody>
         </v-table>
-        <div class="show-more-deliveries-link mb-3">
-          <router-link to="/" class="show-more-deliveries-link">
-            {{ $t("inventory.loadMore")
-            }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
-          >
+        <div
+          class="show-more-deliveries-link mb-3"
+          v-if="getProductLists.length === max"
+        >
+          <div @click="loadMore()" class="show-more-deliveries-link">
+            {{ $t("inventory.loadMore") }}<v-icon>mdi mdi-arrow-right</v-icon>
+          </div>
         </div>
       </v-card>
     </div>
@@ -103,6 +105,7 @@ export default {
           title: "inventory.actions",
         },
       ],
+      max: 10,
     };
   },
   computed: {
@@ -127,7 +130,12 @@ export default {
     this.fetchProducts();
   },
   methods: {
-    ...mapMutations(["setLoader", "setProductLists"]),
+    ...mapMutations([
+      "setLoader",
+      "setProductLists",
+      "setAllProductCount",
+      "setArchivedProductCount",
+    ]),
     ...mapActions(["requestAxiosGet"]),
     fetchProducts() {
       this.setLoader("loading-text");
@@ -137,15 +145,24 @@ export default {
           this.getInventorySelectedTab === "inventory.archived"
             ? "/archived"
             : ""
-        }`,
+        }?max=${this.max}`,
       }).then((response) => {
         if (this.$route.path === "/inventory/products") {
           this.setLoader("");
         }
         if (response.status === 200) {
+          if (this.getInventorySelectedTab === "inventory.all") {
+            this.setAllProductCount(response.data.data.products.length);
+          } else {
+            this.setArchivedProductCount(response.data.data.products.length);
+          }
           this.setProductLists(response.data.data.products);
         }
       });
+    },
+    loadMore() {
+      this.max = this.max + 10;
+      this.fetchProducts();
     },
   },
 };
@@ -178,5 +195,6 @@ export default {
 }
 .product-img {
   width: 40px;
+  height: inherit;
 }
 </style>

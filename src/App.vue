@@ -21,7 +21,7 @@ export default {
     //
   }),
   watch: {
-    $route() {
+    $route(to) {
       if (
         this.$route.path !== "/auth/sign-up" &&
         this.$route.path !== "/auth/otp" &&
@@ -29,6 +29,18 @@ export default {
         typeof localStorage.userDetails === "string"
       ) {
         this.getOnboardingStatus();
+      }
+      if (
+        to.path.includes("/inventory/send-inventory/customer") &&
+        this.activeCycle
+      ) {
+        this.$router.go(-1);
+        setTimeout(() => {
+          this.setOverlayStatus({
+            overlay: true,
+            popup: "payments",
+          });
+        }, 500);
       }
     },
     "$store.state.defaultLanguage": function language(val) {
@@ -42,6 +54,8 @@ export default {
       "getUserDetails",
       "getStorageUserDetails",
       "getAchievements",
+      "getSendyPhoneProps",
+      "getActivePayment",
     ]),
     onboardingStatus() {
       if (
@@ -52,6 +66,10 @@ export default {
       }
       return false;
     },
+    activeCycle() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
+    },
   },
   created() {
     this.getOnboarding();
@@ -60,10 +78,20 @@ export default {
     this.changeLanguage();
     this.autoZoom();
     this.detectMobile();
+    this.detectPayments();
+    this.countryDefault();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
-    ...mapMutations(["setNotifications", "setAchievements"]),
+    ...mapMutations([
+      "setNotifications",
+      "setAchievements",
+      "setSendyPhoneProps",
+      "setDefaultCountryCode",
+      "setDefaultCountryName",
+      "setDefaultLanguage",
+      "setOverlayStatus",
+    ]),
     registerFCM() {
       window.addEventListener("register-fcm", () => {
         this.firebase();
@@ -132,6 +160,41 @@ export default {
       ) {
         window.location = "https://fulfilment.page.link/app";
       }
+    },
+    detectPayments() {
+      setTimeout(() => {
+        if (this.$route.path === "/payment-option-page") {
+          this.$router.push("/settings/payment-options");
+        }
+      }, 100);
+    },
+    countryDefault() {
+      window.dispatchEvent(new CustomEvent("country-default"));
+      window.addEventListener("country-fetched", (event) => {
+        const props = this.getSendyPhoneProps;
+        props.defaultCountry = event.detail.countryCode.toLowerCase();
+        this.setSendyPhoneProps(props);
+        this.setDefaultCountryCode(event.detail.countryCode);
+        this.setDefaultCountryName(
+          event.detail.country === "Ivory Coast"
+            ? "COTE_D_VOIRE"
+            : event.detail.country.toUpperCase()
+        );
+        const francoPhoneCountries = ["FR", "CI"].includes(
+          event.detail.countryCode
+        );
+        let locale;
+        if (francoPhoneCountries) {
+          locale = "fr";
+        } else {
+          locale = "en";
+        }
+        this.setDefaultLanguage(locale);
+        setTimeout(() => {
+          localStorage.language = locale;
+          this.changeLanguage();
+        }, 100);
+      });
     },
     firebase() {
       initializeApp({

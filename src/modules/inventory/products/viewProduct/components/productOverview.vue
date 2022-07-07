@@ -44,7 +44,7 @@
       <p>
         <span :class="getLoader">
           {{ $t("inventory.totalStockAvailable") }}:
-          {{ product.product_variants.length }}
+          {{ totalStock(product) }}
         </span>
       </p>
     </div>
@@ -67,23 +67,25 @@
               {{ variant.fulfillmentCenter }}
             </div>
           </td>
-          <td v-if="product.product_variants">
-            <v-list-item lines="two">
-              <v-list-item-header>
-                <v-list-item-title>
-                  <span :class="getLoader">
-                    {{ variant.product_variant_quantity }}
-                    {{ variant.product_variant_quantity_type }}
-                  </span></v-list-item-title
-                >
-                <v-list-item-subtitle>
-                  <span :class="getLoader">
-                    {{ variant.product_variant_currency }}
-                    {{ variant.product_variant_unit_price }}
-                  </span>
-                </v-list-item-subtitle>
-              </v-list-item-header>
-            </v-list-item>
+          <td>
+            <div v-if="product.product_variants.length > 1">
+              <v-list-item lines="two">
+                <v-list-item-header>
+                  <v-list-item-title>
+                    <span :class="getLoader">
+                      {{ variant.product_variant_description }}
+                    </span></v-list-item-title
+                  >
+                  <v-list-item-subtitle>
+                    <span :class="getLoader">
+                      {{ variant.product_variant_currency }}
+                      {{ variant.product_variant_unit_price }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-header>
+              </v-list-item>
+            </div>
+            <div></div>
           </td>
           <td>
             <span :class="getLoader">
@@ -144,42 +146,42 @@ export default {
       showProductVariants: false,
       tableHeaders: [
         {
-          title: this.$t("inventory.fulfillmentCenter"),
+          title: "inventory.fulfillmentCenter",
           description: "",
         },
         {
-          title: this.$t("inventory.available"),
-          description: this.$t("inventory.availableProducts"),
+          title: "inventory.available",
+          description: "inventory.availableProducts",
         },
         {
-          title: this.$t("inventory.committed"),
-          description: this.$t("inventory.CommittedProducts"),
+          title: "inventory.committed",
+          description: "inventory.CommittedProducts",
         },
         {
-          title: this.$t("inventory.incoming"),
-          description: this.$t("inventory.IncomingProducts"),
+          title: "inventory.incoming",
+          description: "inventory.IncomingProducts",
         },
       ],
       tableHeaders2: [
         {
-          title: this.$t("inventory.img"),
+          title: "inventory.img",
           description: "",
         },
         {
-          title: this.$t("inventory.option"),
+          title: "inventory.option",
           description: "",
         },
         {
-          title: this.$t("inventory.available"),
-          description: this.$t("inventory.availableProducts"),
+          title: "inventory.available",
+          description: "inventory.availableProducts",
         },
         {
-          title: this.$t("inventory.committed"),
-          description: this.$t("inventory.CommittedProducts"),
+          title: "inventory.committed",
+          description: "inventory.CommittedProducts",
         },
         {
-          title: this.$t("inventory.incoming"),
-          description: this.$t("inventory.IncomingProducts"),
+          title: "inventory.incoming",
+          description: "inventory.IncomingProducts",
         },
       ],
       pSummary: [
@@ -198,6 +200,8 @@ export default {
     variants() {
       const res = [];
       this.product.product_variants.forEach((row) => {
+        // (this.product.product_variants.length === 1 ||
+        // (this.product.product_variants.length > 1 && i >= 1))
         if (!row.product_variant_archived) {
           res.push(row);
         }
@@ -206,6 +210,20 @@ export default {
     },
     product() {
       return this.getProduct;
+    },
+  },
+  methods: {
+    totalStock(product) {
+      let total = 0;
+      product.product_variants.forEach((row) => {
+        total = total + row.product_variant_stock_levels.quantity_in_inventory;
+      });
+      if (product.product_variants.length === 1) {
+        this.tableHeaders2[1].title = "";
+      } else {
+        this.tableHeaders2[1].title = "inventory.option";
+      }
+      return total;
     },
   },
 };

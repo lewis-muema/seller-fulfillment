@@ -3,6 +3,9 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import router from "../router";
 import { ElNotification } from "element-plus";
+import moment, { duration } from "moment";
+
+let errorRefreshStatus = true;
 
 export default {
   async initializeAuth({ commit }) {
@@ -99,11 +102,12 @@ export default {
     });
   },
 
-  handleErrors({ dispatch }, error) {
+  handleErrors({ dispatch, commit }, error) {
+    commit("setLoader", "loading-text");
     dispatch("setErrorAction", error.response.data.errors);
-    if (error.response.status === 403) {
-      router.push("/auth/sign-in");
-      router.go(0);
+    if (error.response.status === 403 && errorRefreshStatus) {
+      dispatch("refreshToken", error);
+      errorRefreshStatus = false;
     }
     if (
       error.response.status === 500 &&
@@ -138,8 +142,41 @@ export default {
     if (payload) {
       payload.forEach((el) => {
         errors["message"] = el.message;
+        errors["value"] = el.value ? el.value : "";
       });
       commit("setErrors", errors);
+    }
+  },
+
+  async refreshToken({ dispatch }) {
+    let refreshStatus = false;
+    if (localStorage.tokenCreated && localStorage.tokenDuration) {
+      const duration = parseInt(
+        new Date().valueOf() - localStorage.tokenCreated
+      );
+      refreshStatus =
+        duration <
+        moment.duration(localStorage.tokenDuration, "days").asMilliseconds();
+    }
+    const payload = {
+      app: process.env.AUTH,
+      endpoint: "token",
+      values: {
+        refresh_token: localStorage.refreshToken,
+        access_token: localStorage.accessToken,
+      },
+    };
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
+      if (res.status === 200 && refreshStatus) {
+        localStorage.accessToken = res.data;
+        localStorage.tokenCreated = new Date().valueOf();
+        router.go(0);
+      } else {
+        router.push("/auth/sign-in");
+      }
+    } catch (error) {
+      const err = error;
     }
   },
 

@@ -95,6 +95,7 @@
         id="phone-number"
         v-model="phone"
         mode="international"
+        v-bind="getSendyPhoneProps"
       ></vue-tel-input>
       <label
         for="phone-number"
@@ -104,6 +105,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         v-if="secondaryPhoneStatus"
         class="invite-phone"
         id="phone-number"
@@ -171,6 +173,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         class="invite-phone"
         id="phone-number"
         v-model="phone"
@@ -184,6 +187,7 @@
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
+        v-bind="getSendyPhoneProps"
         v-if="secondaryPhoneStatus"
         class="invite-phone"
         id="sec-phone-number"
@@ -522,6 +526,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getMapOptions",
+      "getSendyPhoneProps",
     ]),
   },
   data() {
@@ -836,6 +841,7 @@ export default {
   box-shadow: none !important;
   text-transform: capitalize;
   letter-spacing: 0px;
+  border: 1px solid #e0e0e0;
 }
 .tracking-cancel-title-label {
   font-size: 15px;

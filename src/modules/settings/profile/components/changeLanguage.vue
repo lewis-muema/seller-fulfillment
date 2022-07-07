@@ -64,7 +64,7 @@ export default {
       "setLanguages",
       "setBusinessDetails",
     ]),
-    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPatch"]),
     listLanguages() {
       this.buttonLoader = true;
       this.requestAxiosGet({
@@ -102,7 +102,7 @@ export default {
     },
     saveLanguage() {
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      this.requestAxiosPatch({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/business`,
         values: {

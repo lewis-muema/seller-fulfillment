@@ -18,17 +18,17 @@
   "sendInventoryToSendy": "Send inventory to Sendy",
   "sendDeliveryToCustomer": "Send delivery to a customer",
   "toCustomers": "To customers",
-  "toFulfilmentCentre": "To Fulfilment Centre",
+  "toFulfilmentCentre": "To Fulfillment Centre",
   "toSendy": "To Sendy",
   "statements": "Statements",
   "invoices": "Invoices",
   "profile": "Profile",
   "paymentOptions": "Payment Options",
   "manageUsers": "Manage System Users",
-  "deliverToCustomer": "Deliver to a Customer",
+  "deliverToCustomer": "Delivery to a Customer",
   "sendToFC": "Send to Fulfilment Centre",
   "addProducts": "Add products",
-  "new": "new",
+  "send": "Send",
   "notifications": "Notifications",
   "trackCustomerDelivery": "Track delivery to customer",
   "deliveriesToCustomers": "Deliveries to the customer",
@@ -40,5 +40,6 @@
   "logOut": "Log Out",
   "trackDelivery": "Track delivery",
   "restockInventory": "Restock inventory",
-  "billings": "Billings"
+  "billings": "Billings",
+  "trackDeliveries": "Track Deliveries"
 }

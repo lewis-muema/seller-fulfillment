@@ -5,6 +5,17 @@
         <v-card-title class="text-center sign-up-title">
           {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
+        <div class="auth-error-container" v-if="emailExists">
+          <i class="mdi mdi-alert-circle-outline auth-error-warning-icon"></i>
+          <div>
+            <p class="auth-error-title">
+              {{ $t("auth.emailAlreadyExist") }}
+              <router-link to="/auth/sign-in" class="login-url">
+                {{ $t("auth.login") }}</router-link
+              >
+            </p>
+          </div>
+        </div>
         <v-card-text class="pt-3">
           <div class="mb-3">
             <label for="businessName" class="form-label">{{
@@ -93,9 +104,9 @@
 <script>
 // import googleAuth from "@/modules/common/googleAuth";
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import { ElNotification } from "element-plus";
 import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, email } from "@vuelidate/validators";
+import { ElNotification } from "element-plus";
 import eventsMixin from "../../mixins/events_mixin";
 
 export default {
@@ -105,6 +116,7 @@ export default {
   mixins: [eventsMixin],
   data() {
     return {
+      name: "Login",
       loading: false,
       imgPreUrl: "https://images.sendyit.com/fulfilment/seller/",
       params: {
@@ -118,7 +130,7 @@ export default {
     return {
       params: {
         businessName: { required },
-        businessEmail: { required },
+        businessEmail: { required, email },
         countryOfOperation: { required },
       },
     };
@@ -129,7 +141,16 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapGetters(["getErrors", "getGoogleUserData", "getCountries"]),
+    ...mapGetters([
+      "getErrors",
+      "getGoogleUserData",
+      "getCountries",
+      "getSendyPhoneProps",
+      "getDefaultCountryName",
+    ]),
+    emailExists() {
+      return this.getErrors.message === "user.email.already.exists";
+    },
   },
   methods: {
     ...mapActions(["signupUser", "listCountries"]),
@@ -178,12 +199,14 @@ export default {
         }
         this.loading = false;
       } catch (err) {
-        ElNotification({
-          title: this.getErrors.message.replaceAll(".", " "),
-          message: "",
-          type: "error",
-        });
         this.loading = false;
+        if (!this.emailExists) {
+          ElNotification({
+            title: this.getErrors.message.replaceAll(".", " "),
+            message: this.getErrors.value ? this.getErrors.value : "",
+            type: "error",
+          });
+        }
       }
     },
     async countries() {
@@ -194,6 +217,7 @@ export default {
         };
         const response = await this.listCountries(fullPayload);
         if (response.message === "country.list.success") {
+          this.params.countryOfOperation = this.getDefaultCountryName;
           return response;
         }
       } catch (error) {
@@ -325,5 +349,28 @@ h1 {
 .desktop-sign-up {
   padding: 0px 40px;
   margin: 20px 0px;
+}
+.auth-error-container {
+  display: flex;
+  border: 1px solid #9b101c;
+  padding: 10px 0px;
+  border-radius: 4px;
+  margin: 30px 30px 30px 0px;
+  width: 95%;
+  background: #fff8f2;
+}
+.auth-error-warning-icon {
+  color: #9b101c;
+  margin: 0px 5px;
+  font-size: 15px;
+}
+.auth-error-title {
+  color: #9b101c;
+  font-weight: 300;
+  margin-bottom: 0px !important;
+}
+.login-url {
+  color: #324ba8;
+  text-decoration: none;
 }
 </style>

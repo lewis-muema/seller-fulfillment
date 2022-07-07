@@ -72,7 +72,6 @@
         </tbody>
       </v-table>
       <div class="deliveries-empty" v-else>
-        {{ getProductLists.length }}
         <div v-if="getProductLists.length">
           <div class="no-products-card-container">
             <i class="mdi mdi-store no-products-icon"></i>

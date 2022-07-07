@@ -47,5 +47,6 @@
   "orderNumber": "Order Number",
   "paidVia": "Paid via {method}. Transaction code: {code}",
   "sorryNoTransactionsFound": "Sorry! No transactions found",
-  "WecouldntFindAnyTransactions": "We couldn’t find any transactions for the selected dates. Please try filtering again"
+  "WecouldntFindAnyTransactions": "We couldn’t find any transactions for the selected dates. Please try filtering again",
+  "noDefaultPaymentMethodSelected": "No default payment method selected"
 }

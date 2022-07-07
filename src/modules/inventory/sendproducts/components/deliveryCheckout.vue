@@ -95,7 +95,7 @@
         <div class="mt-3">
           <p>{{ $t("inventory.payment") }}</p>
         </div>
-        <div v-if="getBusinessDetails.country_code !== 'CI'">
+        <div v-if="getBusinessDetails.settings.payments_enabled">
           <div
             class="payment-method-default"
             v-for="(method, i) in defaultPaymentMethod"
@@ -233,17 +233,19 @@ export default {
           unit_price: row.selectedOption.product_variant_unit_price,
         });
       });
-      const excludeCI = this.getBusinessDetails.country_code !== "CI";
       const payload = {
         means_of_payment: {
-          means_of_payment_type: excludeCI
+          means_of_payment_type: this.getBusinessDetails.settings
+            .payments_enabled
             ? this.defaultPaymentMethod[0].pay_method_name.replace("-", "")
             : "CARD",
-          means_of_payment_id: excludeCI
+          means_of_payment_id: this.getBusinessDetails.settings.payments_enabled
             ? this.defaultPaymentMethod[0].pay_method_details
             : "",
           participant_type: "SELLER",
-          participant_id: excludeCI ? this.defaultPaymentMethod[0].user_id : "",
+          participant_id: this.getBusinessDetails.settings.payments_enabled
+            ? this.defaultPaymentMethod[0].user_id
+            : "",
         },
         products,
         destination: {
@@ -309,7 +311,7 @@ export default {
         this.location &&
         this.getSelectedProducts.length &&
         (this.defaultPaymentMethod.length > 0 ||
-          this.getBusinessDetails.country_code === "CI")
+          !this.getBusinessDetails.settings.payments_enabled)
       ) {
         this.buttonLoader = true;
         this.requestAxiosPost({

@@ -95,7 +95,7 @@
         <div class="mt-3">
           <p>{{ $t("inventory.payment") }}</p>
         </div>
-        <div>
+        <div v-if="getBusinessDetails.country_code !== 'CI'">
           <div
             class="payment-method-default"
             v-for="(method, i) in defaultPaymentMethod"
@@ -110,6 +110,22 @@
               method.pay_method_details
                 ? method.pay_method_details
                 : method.pay_method_name
+            }}</span>
+            <span
+              class="payment-default-right payment-default-trigger"
+              @click="selectPaymentMethod"
+              >{{ $t("inventory.change") }}
+              <v-icon class="payment-method-icon"
+                >mdi-chevron-right</v-icon
+              ></span
+            >
+          </div>
+          <div
+            class="payment-method-default"
+            v-if="defaultPaymentMethod.length === 0"
+          >
+            <span class="payment-default-left">{{
+              $t("payments.noDefaultPaymentMethodSelected")
             }}</span>
             <span
               class="payment-default-right payment-default-trigger"
@@ -217,13 +233,17 @@ export default {
           unit_price: row.selectedOption.product_variant_unit_price,
         });
       });
+      const excludeCI = this.getBusinessDetails.country_code !== "CI";
       const payload = {
         means_of_payment: {
-          means_of_payment_type:
-            this.defaultPaymentMethod[0].pay_method_name.replace("-", ""),
-          means_of_payment_id: this.defaultPaymentMethod[0].pay_method_details,
+          means_of_payment_type: excludeCI
+            ? this.defaultPaymentMethod[0].pay_method_name.replace("-", "")
+            : "CARD",
+          means_of_payment_id: excludeCI
+            ? this.defaultPaymentMethod[0].pay_method_details
+            : "",
           participant_type: "SELLER",
-          participant_id: this.defaultPaymentMethod[0].user_id,
+          participant_id: excludeCI ? this.defaultPaymentMethod[0].user_id : "",
         },
         products,
         destination: {
@@ -288,7 +308,8 @@ export default {
         this.phone &&
         this.location &&
         this.getSelectedProducts.length &&
-        this.defaultPaymentMethod.length > 0
+        (this.defaultPaymentMethod.length > 0 ||
+          this.getBusinessDetails.country_code === "CI")
       ) {
         this.buttonLoader = true;
         this.requestAxiosPost({
@@ -391,6 +412,9 @@ export default {
 }
 .payment-default-right {
   margin-left: auto;
+  font-size: 14px;
+}
+.payment-default-left {
   font-size: 14px;
 }
 .payment-default-trigger {

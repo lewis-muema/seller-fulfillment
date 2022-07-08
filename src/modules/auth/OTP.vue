@@ -34,6 +34,31 @@
             <div v-if="v$.otp.$error" class="error-msg">
               {{ $t("auth.OTPRequired") }}
             </div>
+            <div class="resend-code-otp-container">
+              <span
+                class="didnt-recieve-code"
+                v-if="!(!countDownTriggered || resendStatus)"
+              >
+                {{ $t("auth.didntReceiveCode") }}
+              </span>
+              <div
+                class="resend-code-otp"
+                :class="
+                  !countDownTriggered || resendStatus
+                    ? 'disabled-resend-code-otp'
+                    : 'enabled-resend-code-otp'
+                "
+                @click="resendCode()"
+              >
+                {{
+                  !countDownTriggered
+                    ? $t("auth.resendCode", {
+                        time: `${countDown}`,
+                      })
+                    : $t("auth.resend")
+                }}
+              </div>
+            </div>
           </div>
           <div class="d-grid gap-2 col-12 mx-auto pt-3">
             <button
@@ -44,21 +69,6 @@
               :class="loading ? 'disabled' : ''"
             >
               {{ $t("auth.confirmCode") }}
-            </button>
-          </div>
-          <div class="resend-code-otp-container">
-            <button
-              class="resend-code-otp"
-              @click="resendCode()"
-              :disabled="!countDownTriggered || resendStatus"
-            >
-              {{
-                !countDownTriggered
-                  ? $t("auth.resendCode", {
-                      time: `${countDown}`,
-                    })
-                  : $t("auth.resend")
-              }}
             </button>
           </div>
         </v-card-text>
@@ -343,9 +353,10 @@ export default {
 }
 .resend-code-otp-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding-top: 20px;
+  margin-bottom: 20px;
 }
 .resend-code-otp {
   color: #324ba8;
@@ -356,7 +367,16 @@ export default {
   overflow: hidden;
   outline: none;
 }
-.resend-code-otp:disabled {
+.disabled-resend-code-otp {
+  color: #606266 !important;
+  pointer-events: none;
+}
+.otp-input {
+  margin-bottom: 0px !important;
+}
+.didnt-recieve-code {
+  font-weight: 100 !important;
+  margin-right: 5px;
   color: #606266 !important;
 }
 </style>

@@ -243,4 +243,7 @@ export default {
   setDefaultCountryName(state, val) {
     state.defaultCountryName = val;
   },
+  setTabStatuses(state, val) {
+    state.tabStatuses = val;
+  },
 };

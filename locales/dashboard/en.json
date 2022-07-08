@@ -29,9 +29,12 @@
     "clearAll": "Clear All",
     "ongoingOrders": "Ongoing orders",
     "completedOrders": "Completed orders",
+    "completedConsignments": "Completed consignments",
     "availableStock": "Available Stock",
     "itemsOutOfStock": "Items out of Stock",
     "toYourCustomers": "To your Customers",
-    "toSendy": "To Sendy"
+    "toSendy": "To Sendy",
+    "yourProductsWillBeInsured": "Your products will be insured and stored in our Fulfillment Center to enable faster deliveries to your customers",
+    "weWillPackAndDeliverYourPackageWithin24hrs": "We will pack and deliver your package within 24hrs"
 
 }

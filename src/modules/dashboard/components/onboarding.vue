@@ -49,13 +49,9 @@
                     {{ content.title ? $t(content.title) : "" }}
                   </div>
                 </v-list-item-title>
-                <v-list-item-subtitle
-                  v-if="!getAchievements[content.key]"
-                  class="mt-1"
-                  >{{
-                    content.text ? $t(content.text) : ""
-                  }}</v-list-item-subtitle
-                >
+                <v-list-item-subtitle v-if="activeStep === i" class="mt-1">{{
+                  content.text ? $t(content.text) : ""
+                }}</v-list-item-subtitle>
                 <button
                   v-if="!getAchievements[content.key] && activeStep === i"
                   type="submit"
@@ -136,7 +132,7 @@ export default {
         },
         {
           title: "dashboard.sendUsYourInventory",
-          text: "dashboard.sendUsTheProducts",
+          text: "dashboard.yourProductsWillBeInsured",
           button: "dashboard.sendTheInventory",
           icon: "mdi-check-circle",
           key: "created_at_least_one_pickup_order",
@@ -144,7 +140,7 @@ export default {
         },
         {
           title: "dashboard.deliverToCustomer",
-          text: "dashboard.sendADelivery",
+          text: "dashboard.weWillPackAndDeliverYourPackageWithin24hrs",
           button: "dashboard.deliverToACustomer",
           icon: "mdi-check-circle",
           key: "created_at_least_one_delivery_order",

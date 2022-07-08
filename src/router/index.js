@@ -110,12 +110,12 @@ const routes = [
     component: SendProducts,
   },
   {
-    path: "/deliveries/customer",
+    path: "/deliveries/customer/:tab?/:date?",
     name: "To Customers",
     component: Customers,
   },
   {
-    path: "/deliveries/sendy",
+    path: "/deliveries/sendy/:tab?/:date?",
     name: "To Sendy",
     component: Sendy,
   },

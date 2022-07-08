@@ -11,8 +11,8 @@
           <div>
             <p class="auth-error-title">
               {{ $t("auth.emailNotRegisteredUnderSendy") }}
-              <router-link to="/auth/sign-in" class="login-url">
-                {{ $t("auth.login") }}</router-link
+              <router-link to="/auth/sign-up" class="login-url">
+                {{ $t("auth.signUp") }}</router-link
               >
             </p>
           </div>

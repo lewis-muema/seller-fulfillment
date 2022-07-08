@@ -79,4 +79,5 @@ export default {
   getArchivedProductCount: (state) => state.archivedProductCount,
   getDefaultCountryCode: (state) => state.defaultCountryCode,
   getDefaultCountryName: (state) => state.defaultCountryName,
+  getTabStatuses: (state) => state.tabStatuses,
 };

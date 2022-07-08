@@ -14,7 +14,7 @@
           @click="
             activeTab !== 'All' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('All', '')
+              : passActiveTab('All')
           "
         >
           {{ $t("inventory.all") }}
@@ -33,7 +33,7 @@
           @click="
             activeTab !== 'Pending' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('Pending', 'ORDER_RECEIVED,ORDER_IN_PROCESSING')
+              : passActiveTab('Pending')
           "
         >
           {{ $t("deliveries.pending") }}
@@ -58,7 +58,7 @@
           @click="
             activeTab !== 'inTransit' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('inTransit', 'ORDER_IN_TRANSIT')
+              : passActiveTab('inTransit')
           "
         >
           {{ $t("deliveries.inTransit") }}
@@ -83,7 +83,7 @@
           @click="
             activeTab !== 'Failed' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('Failed', 'ORDER_FAILED')
+              : passActiveTab('Failed')
           "
         >
           {{ $t("deliveries.failed") }}
@@ -108,7 +108,7 @@
           @click="
             activeTab !== 'Completed' && getLoader === 'loading-text'
               ? nothing()
-              : passActiveTab('Completed', 'ORDER_COMPLETED')
+              : passActiveTab('Completed')
           "
         >
           {{ $t("deliveries.completed") }}
@@ -165,21 +165,26 @@ export default {
         ? this.getConsignmentStatistics.ORDER_COMPLETED.toString()
         : "0";
     },
-  },
-  mounted() {
-    this.setTab("All");
+    "$store.state.tab": function tab(val) {
+      this.passActiveTab(val);
+    },
   },
   computed: {
     activeTab() {
       return this.getTab;
     },
-    ...mapGetters(["getTab", "getConsignmentStatistics", "getLoader"]),
+    ...mapGetters([
+      "getTab",
+      "getConsignmentStatistics",
+      "getLoader",
+      "getTabStatuses",
+    ]),
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setTabStatus"]),
-    passActiveTab(tab, val) {
+    passActiveTab(tab) {
       this.setTab(tab);
-      this.setTabStatus(val);
+      this.setTabStatus(this.getTabStatuses[tab]);
     },
     nothing() {},
   },

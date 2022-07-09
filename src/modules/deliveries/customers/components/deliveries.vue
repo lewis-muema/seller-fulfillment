@@ -195,7 +195,6 @@ export default {
       }
     },
     "$store.state.tabStatus": function tabStatus(val) {
-      console.log(val);
       if (val && !this.range) {
         this.allParams(this.statusParams(), "");
       } else if (val && this.range) {

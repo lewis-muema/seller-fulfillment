@@ -54,7 +54,7 @@
       </div>
     </div>
     <div
-      v-if="getRoute === '/inventory/stock-levels'"
+      v-if="getRoute.includes('/inventory/stock-levels')"
       class="desktop-product-tab-container"
     >
       <div

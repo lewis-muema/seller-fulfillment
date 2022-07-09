@@ -228,8 +228,11 @@ export default {
     ...mapGetters(["getComponent"]),
   },
   watch: {
-    $route() {
-      this.routeActive = true;
+    $route(to, from) {
+      this.routeActive =
+        from.path === "/" || from.path.split("/")[1] === to.path.split("/")[1]
+          ? false
+          : true;
     },
   },
   mounted() {},
@@ -251,6 +254,8 @@ export default {
             this.routeActive = false;
           }, 100);
         }
+      } else {
+        this.routeActive = false;
       }
     },
     checkProps(props, category) {

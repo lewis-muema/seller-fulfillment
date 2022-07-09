@@ -95,7 +95,7 @@ const routes = [
     component: Products,
   },
   {
-    path: "/inventory/stock-levels",
+    path: "/inventory/stock-levels/:tab?",
     name: "Stock Levels",
     component: StockLevels,
   },

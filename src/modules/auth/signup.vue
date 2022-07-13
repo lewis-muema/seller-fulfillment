@@ -183,6 +183,9 @@ export default {
           this.setBizDetails(data.data.data.business);
           localStorage.userDetails = JSON.stringify(data.data.data.business);
           localStorage.OTPRedirectUrl = "otp/signUp";
+          localStorage.country = this.getCountries.find(
+            (row) => row.name === this.params.countryOfOperation
+          ).code;
           this.loading = false;
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");

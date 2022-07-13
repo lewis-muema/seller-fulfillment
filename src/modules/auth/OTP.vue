@@ -291,7 +291,7 @@ export default {
         this.loading = false;
         if (response.status === 200) {
           this.setUserDetails(response.data.data.user);
-          localStorage.user = response.data.data.user;
+          localStorage.user = JSON.stringify(response.data.data.user);
           if (
             response.data.data.user.first_name &&
             response.data.data.user.last_name &&

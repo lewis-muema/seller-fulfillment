@@ -58,6 +58,12 @@ export default createStore({
       productStep: 0,
       tabStatus: "",
       addProductStatus: false,
+      terms: {
+        KE: "https://www.sendyit.com/fulfillment-terms-conditions",
+        NG: "https://www.sendyit.com/nigeria/fulfillment-terms-conditions",
+        CI: "https://www.sendyit.com/cote-divoire/fulfillment-terms-conditions",
+        UG: "https://www.sendyit.com/ug/fulfillment-terms-conditions",
+      },
       downloadActions: [
         {
           label: "Excel",
@@ -1474,6 +1480,8 @@ export default createStore({
       stockStatistics: {},
       deliveriesStatistics: {},
       consignmentStatistics: {},
+      deliveriesStatisticsToday: {},
+      consignmentStatisticsToday: {},
       settings: {},
       activePayment: {},
       editedPriceIndex: 0,

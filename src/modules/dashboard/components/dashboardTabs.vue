@@ -93,6 +93,8 @@ export default {
       "getDeliveriesStatistics",
       "getConsignmentStatistics",
       "getLoader",
+      "getDeliveries",
+      "getConsignments",
     ]),
     activeTab() {
       return this.getDashboardSelectedTab;

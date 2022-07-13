@@ -108,14 +108,14 @@ export default {
       "getLoader",
       "getUserDetails",
       "getStockStatistics",
-      "getDeliveriesStatistics",
-      "getConsignmentStatistics",
+      "getDeliveriesStatisticsToday",
+      "getConsignmentStatisticsToday",
     ]),
     ongoingOrders() {
-      return this.getConsignmentStatistics.ORDER_COMPLETED;
+      return this.getConsignmentStatisticsToday.ORDER_COMPLETED;
     },
     completedOrders() {
-      return this.getDeliveriesStatistics.ORDER_COMPLETED;
+      return this.getDeliveriesStatisticsToday.ORDER_COMPLETED;
     },
     availableStock() {
       return this.getStockStatistics.available_products;

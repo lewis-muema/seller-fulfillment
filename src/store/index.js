@@ -31,6 +31,13 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
       ],
+      tabStatuses: {
+        All: "",
+        Pending: "ORDER_RECEIVED,ORDER_IN_PROCESSING",
+        inTransit: "ORDER_IN_TRANSIT",
+        Failed: "ORDER_FAILED",
+        Completed: "ORDER_COMPLETED",
+      },
       supportedCountries: [],
       userData: {},
       confirmedUser: {},

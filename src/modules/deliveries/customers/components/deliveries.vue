@@ -181,14 +181,17 @@ export default {
   }),
   watch: {
     range(val) {
-      if (val && !this.getTabStatus) {
-        this.allParams("", this.limitParams());
-      } else if (val && this.getTabStatus) {
-        this.allParams(this.statusParams(), this.limitParams());
-      } else if (!val && this.getTabStatus) {
-        this.allParams(this.statusParams(), "");
-      } else if (!val && !this.getTabStatus) {
-        this.allParams("", "");
+      const length = val ? val.length : 0;
+      if (length !== 3) {
+        if (val && !this.getTabStatus) {
+          this.allParams("", this.limitParams());
+        } else if (val && this.getTabStatus) {
+          this.allParams(this.statusParams(), this.limitParams());
+        } else if (!val && this.getTabStatus) {
+          this.allParams(this.statusParams(), "");
+        } else if (!val && !this.getTabStatus) {
+          this.allParams("", "");
+        }
       }
     },
     "$store.state.tabStatus": function tabStatus(val) {
@@ -209,9 +212,20 @@ export default {
   },
   mounted() {
     this.setDeliveries(this.placeHolderDeliveries);
-    this.fetchOrders();
     this.getDeliveryStats();
+    this.range = this.$route.params.date
+      ? [
+          new Date(parseInt(this.$route.params.date)),
+          new Date(parseInt(this.$route.params.date)),
+          new Date(parseInt(this.$route.params.date)),
+        ]
+      : "";
+    this.params = this.$route.params.tab ? "" : "?";
+    this.setTab(this.$route.params.tab ? this.$route.params.tab : "All");
+  },
+  beforeUnmount() {
     this.setTab("All");
+    this.setTabStatus("");
   },
   computed: {
     ...mapGetters([
@@ -219,8 +233,8 @@ export default {
       "getLoader",
       "getTabStatus",
       "getStorageUserDetails",
-      "getTab",
       "getDeliveriesStatistics",
+      "getTabStatuses",
     ]),
     ongoingDeliveries() {
       let orderCount = 0;
@@ -238,6 +252,7 @@ export default {
       "setDeliveries",
       "setDeliveriesStatistics",
       "setTab",
+      "setTabStatus",
     ]),
     navigate(route) {
       this.$router.push(route);
@@ -264,7 +279,7 @@ export default {
         if (response.status === 200) {
           this.setDeliveries(response.data.data.orders);
         }
-        if (this.$route.path === "/deliveries/customer") {
+        if (this.$route.path.includes("/deliveries/customer")) {
           this.setLoader("");
         }
       });

@@ -17,7 +17,7 @@
           <v-row>
             <v-col cols="12" md="3" v-for="(order, i) in orders" :key="i">
               <v-list class="dashboard-cards" lines="two">
-                <v-list-item>
+                <v-list-item @click="$router.push(order.link)">
                   <v-icon
                     :icon="order.icon"
                     :color="order.color"
@@ -31,7 +31,7 @@
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       <span :class="getLoader">
-                        {{ $t(order.orderStatus) }}
+                        {{ $t(order.orderStatus) }} >
                       </span>
                     </v-list-item-subtitle>
                   </v-list-item-header>
@@ -64,25 +64,29 @@ export default {
         {
           icon: "mdi mdi-truck",
           count: "0",
-          orderStatus: "dashboard.ongoingOrders",
+          orderStatus: "dashboard.completedConsignments",
+          link: `/deliveries/sendy/Completed/${new Date().valueOf()}`,
           color: "#5287EE",
         },
         {
           icon: "mdi-check-all",
           count: "6",
           orderStatus: "dashboard.completedOrders",
+          link: `/deliveries/customer/Completed/${new Date().valueOf()}`,
           color: "#84CC8C",
         },
         {
           icon: "mdi-home-city",
           count: "32",
           orderStatus: "dashboard.availableStock",
+          link: "/inventory/stock-levels",
           color: "#324BA8",
         },
         {
           icon: "mdi-archive",
           count: "4",
           orderStatus: "dashboard.itemsOutOfStock",
+          link: "/inventory/stock-levels/noStock",
           color: "#CC6100",
         },
       ],
@@ -108,20 +112,10 @@ export default {
       "getConsignmentStatistics",
     ]),
     ongoingOrders() {
-      return (
-        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING) +
-        parseInt(this.getDeliveriesStatistics.ORDER_IN_TRANSIT) +
-        parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
-        parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING) +
-        parseInt(this.getConsignmentStatistics.ORDER_IN_TRANSIT)
-      );
+      return this.getConsignmentStatistics.ORDER_COMPLETED;
     },
     completedOrders() {
-      return (
-        parseInt(this.getDeliveriesStatistics.ORDER_COMPLETED) +
-        parseInt(this.getConsignmentStatistics.ORDER_COMPLETED)
-      );
+      return this.getDeliveriesStatistics.ORDER_COMPLETED;
     },
     availableStock() {
       return this.getStockStatistics.available_products;

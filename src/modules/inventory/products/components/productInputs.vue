@@ -70,8 +70,10 @@
               id="desc"
               rows="3"
               v-model="productDescription"
-              :placeholder="$t('inventory.aShortDescriptionToHelp')"
             ></textarea>
+          </div>
+          <div class="add-product-helper-text">
+            {{ $t("inventory.aShortDescriptionToHelp") }}
           </div>
         </div>
         <div class="desktop-product-options-container mt-3 mb-3">

@@ -157,6 +157,13 @@ export default {
     this.getStockStats();
     this.fetchProducts();
     this.getStockSettings();
+    if (this.$route.params.tab === "noStock") {
+      this.setInventorySelectedTab("inventory.outOfStock");
+    } else if (this.$route.params.tab === "lowStock") {
+      this.setInventorySelectedTab("inventory.lowStock");
+    } else {
+      this.setInventorySelectedTab("inventory.all");
+    }
   },
   computed: {
     ...mapGetters([
@@ -214,6 +221,7 @@ export default {
       "setProductLists",
       "setStockStatistics",
       "setSettings",
+      "setInventorySelectedTab",
     ]),
     ...mapActions(["requestAxiosGet"]),
     badgeAllocation(val) {
@@ -234,7 +242,7 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
       }).then((response) => {
-        if (this.$route.path === "/inventory/stock-levels") {
+        if (this.$route.path.includes("/inventory/stock-levels")) {
           this.setLoader("");
         }
         if (response.status === 200) {

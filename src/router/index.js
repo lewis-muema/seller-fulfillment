@@ -95,7 +95,7 @@ const routes = [
     component: Products,
   },
   {
-    path: "/inventory/stock-levels",
+    path: "/inventory/stock-levels/:tab?",
     name: "Stock Levels",
     component: StockLevels,
   },
@@ -110,12 +110,12 @@ const routes = [
     component: SendProducts,
   },
   {
-    path: "/deliveries/customer",
+    path: "/deliveries/customer/:tab?/:date?",
     name: "To Customers",
     component: Customers,
   },
   {
-    path: "/deliveries/sendy",
+    path: "/deliveries/sendy/:tab?/:date?",
     name: "To Sendy",
     component: Sendy,
   },

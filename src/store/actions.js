@@ -119,6 +119,14 @@ export default {
     if (error.response.status === 502) {
       console.log(error);
     }
+    if (
+      error.response.status === 404 &&
+      ["business.notfound", "user.notfound"].includes(
+        error.response.data.errors[0].message
+      )
+    ) {
+      router.push("/auth/sign-in");
+    }
   },
 
   async custom_headers({ state }, fileUpload) {

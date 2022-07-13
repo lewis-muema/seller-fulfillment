@@ -70,6 +70,8 @@ export default {
   getStockStatistics: (state) => state.stockStatistics,
   getDeliveriesStatistics: (state) => state.deliveriesStatistics,
   getConsignmentStatistics: (state) => state.consignmentStatistics,
+  getDeliveriesStatisticsToday: (state) => state.deliveriesStatisticsToday,
+  getConsignmentStatisticsToday: (state) => state.consignmentStatisticsToday,
   getSettings: (state) => state.settings,
   getCheckoutDetails: (state) => state.checkoutDetails,
   getCountries: (state) => state.countries,
@@ -80,4 +82,5 @@ export default {
   getDefaultCountryCode: (state) => state.defaultCountryCode,
   getDefaultCountryName: (state) => state.defaultCountryName,
   getTabStatuses: (state) => state.tabStatuses,
+  getTerms: (state) => state.terms,
 };

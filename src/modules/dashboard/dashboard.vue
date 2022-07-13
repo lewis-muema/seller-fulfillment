@@ -25,6 +25,8 @@ import onboarding from "./components/onboarding.vue";
 import dashboardTabsContent from "@/modules/dashboard/components/dashboardTabsContent";
 import makePayment from "../payments/statements/components/makePayment.vue";
 import topCard from "@/modules/dashboard/components/topCard";
+import moment from "moment";
+
 export default {
   components: {
     topCard,
@@ -43,6 +45,7 @@ export default {
       "getStorageUserDetails",
       "getActivePayment",
       "getAchievements",
+      "getConsignmentStatistics",
     ]),
     activeCycle() {
       const cycle = this.getActivePayment ? this.getActivePayment : {};
@@ -58,6 +61,8 @@ export default {
   mounted() {
     this.setComponent("common.dashboard");
     this.getActiveCycle();
+    this.getDeliveryStatsToday();
+    this.getPickUpStatsToday();
     this.getDeliveryStats();
     this.getPickUpStats();
     this.getStockStats();
@@ -70,6 +75,8 @@ export default {
       "setStockStatistics",
       "setDeliveriesStatistics",
       "setConsignmentStatistics",
+      "setDeliveriesStatisticsToday",
+      "setConsignmentStatisticsToday",
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
@@ -96,6 +103,22 @@ export default {
         }
       });
     },
+    getDeliveryStatsToday() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/deliveries/statistics?lower_limit_date=${moment().format(
+          "YYYY-MM-DD"
+        )}&upper_limit_date=${moment().format("YYYY-MM-DD")}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliveriesStatisticsToday(
+            response.data.data.grouped_by_status_count
+          );
+        }
+      });
+    },
     getPickUpStats() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
@@ -103,6 +126,22 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setConsignmentStatistics(
+            response.data.data.grouped_by_status_count
+          );
+        }
+      });
+    },
+    getPickUpStatsToday() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/consignments/statistics?lower_limit_date=${moment().format(
+          "YYYY-MM-DD"
+        )}&upper_limit_date=${moment().format("YYYY-MM-DD")}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setConsignmentStatisticsToday(
             response.data.data.grouped_by_status_count
           );
         }

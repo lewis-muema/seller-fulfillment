@@ -94,8 +94,8 @@
           </div>
           <p class="terms-link-text">
             {{ $t("auth.bySigningUp") }}
-            <router-link to="/auth/sign-in">
-              {{ $t("auth.termsAndConditions") }}</router-link
+            <span class="terms-link" @click="redirect()">
+              {{ $t("auth.termsAndConditions") }}</span
             >
           </p>
         </v-card-text>
@@ -146,7 +146,7 @@ export default {
       this.setUserData({ business: JSON.parse(localStorage.userDetails) });
       this.setLoginData(JSON.parse(localStorage.userDetails));
       if (localStorage.user) {
-        this.setUserDetails(localStorage.user);
+        this.setUserDetails(JSON.parse(localStorage.user));
       }
     } else {
       this.$router.push(
@@ -177,6 +177,7 @@ export default {
       "getUserDetails",
       "getLoginData",
       "getSendyPhoneProps",
+      "getTerms",
     ]),
     businessId() {
       return this.getUserData.business
@@ -198,6 +199,15 @@ export default {
     ]),
     selectIndustryId(event) {
       this.params.industryOfBusiness = event.target.value;
+    },
+    redirect() {
+      if (localStorage.country) {
+        window.open(this.getTerms[localStorage.country]);
+      } else {
+        window.open(
+          this.getTerms[this.getSendyPhoneProps.defaultCountry.toUpperCase()]
+        );
+      }
     },
     async completeSignUp() {
       this.v$.$validate();
@@ -243,4 +253,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.terms-link {
+  color: #324ba8 !important;
+  font-weight: 500;
+  cursor: pointer;
+}
+</style>

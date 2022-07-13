@@ -368,12 +368,12 @@ export default {
     },
     removeProduct(product, i, option, x) {
       this.selectedProducts.forEach((row, p) => {
-        if (row.productIndex === i && row.optionIndex === undefined) {
+        if (row.productIndex === i && row.product_variants.length === 1) {
           this.products[i].status = false;
           this.selectedProducts.splice(p, 1);
         } else if (
           row.productIndex === i &&
-          row.optionIndex !== undefined &&
+          row.product_variants.length > 1 &&
           row.optionIndex === x
         ) {
           this.products[i].product_variants[x].status = false;

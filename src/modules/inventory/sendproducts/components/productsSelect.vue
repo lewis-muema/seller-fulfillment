@@ -50,7 +50,10 @@
                 :class="`product-select-${sanitizeName(product.product_name)}`"
                 :key="i"
               >
-                <td v-if="product.product_variants.length === 1">
+                <td
+                  :class="disabledStatus(product) ? 'disabled-row' : ''"
+                  v-if="product.product_variants.length === 1"
+                >
                   <div class="product-select-column">
                     <input
                       type="checkbox"
@@ -71,6 +74,7 @@
                             )
                       "
                       :checked="product.status"
+                      :disabled="disabledStatus(product)"
                     />
                     <span>
                       <img
@@ -148,6 +152,7 @@
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
                           class="product-select-option"
+                          :class="disabledStatus(product) ? 'disabled-row' : ''"
                           v-for="(option, x) in product.product_variants"
                           :key="x"
                         >
@@ -160,6 +165,7 @@
                                 : addProduct(product, i, option, x)
                             "
                             :checked="option.status"
+                            :disabled="disabledStatus(product)"
                           />
                           <img
                             :src="option.product_variant_image_link"
@@ -275,6 +281,17 @@ export default {
       "setProductLists",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    disabledStatus(product) {
+      const quantity = product.product_variants[0].product_variant_stock_levels
+        ? product.product_variants[0].product_variant_stock_levels
+            .quantity_in_inventory
+        : 0;
+      return (
+        this.$route.params.path === "customer" &&
+        quantity === 0 &&
+        process.env.NODE_ENV === "production"
+      );
+    },
     fetchProducts() {
       this.setLoader("loading-text");
       this.requestAxiosGet({
@@ -535,5 +552,8 @@ export default {
 .search-input-product-select {
   height: 55px;
   margin: 30px;
+}
+.disabled-row {
+  background: #a1a0a017;
 }
 </style>

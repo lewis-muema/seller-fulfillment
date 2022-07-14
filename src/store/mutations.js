@@ -215,13 +215,18 @@ export default {
   setConsignmentStatistics(state, val) {
     state.consignmentStatistics = val;
   },
+  setDeliveriesStatisticsToday(state, val) {
+    state.deliveriesStatisticsToday = val;
+  },
+  setConsignmentStatisticsToday(state, val) {
+    state.consignmentStatisticsToday = val;
+  },
   setSettings(state, val) {
     state.settings = val;
   },
   setCheckoutDetails(state, val) {
     state.checkoutDetails = val;
   },
-
   setCountries(state, val) {
     state.countries = val;
   },
@@ -245,5 +250,8 @@ export default {
   },
   setTabStatuses(state, val) {
     state.tabStatuses = val;
+  },
+  setTerms(state, val) {
+    state.terms = val;
   },
 };

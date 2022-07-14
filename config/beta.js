@@ -22,6 +22,6 @@ module.exports = {
     "https://fulfillment-biz-logic-service-dev.sendyit.com/v1/",
   VUE_APP_BASE_URL: "https://payment-gateway-dev.sendyit.com/payment-gateway",
   VUE_APP_VGS_VAULT_ID: "tnt4d8qyodm",
-  VUE_APP_VGS_ENVIRONMENT: "sandbox",
+  VUE_APP_VGS_ENVIRONMENT: "live",
   EXTREME_IP_KEY: "dmmw1HciGEhld0FiG2ID",
 };

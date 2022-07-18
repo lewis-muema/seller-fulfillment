@@ -81,8 +81,12 @@ export default {
   watch: {
     "$store.state.loader": function loader(val) {
       if (val === "") {
-        this.tabs[0].content = this.ongoingDeliveries;
-        this.tabs[1].content = this.ongoingConsignments;
+        this.tabs[0].content = this.ongoingDeliveries
+          ? this.ongoingDeliveries
+          : 0;
+        this.tabs[1].content = this.ongoingConsignments
+          ? this.ongoingConsignments
+          : 0;
       }
     },
   },

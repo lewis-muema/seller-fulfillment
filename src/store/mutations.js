@@ -254,4 +254,25 @@ export default {
   setTerms(state, val) {
     state.terms = val;
   },
+  setUserActions(state, val) {
+    state.userActions = val;
+  },
+  setUser(state, val) {
+    state.user = val;
+  },
+  setNotificationPreferences(state, val) {
+    state.notificationPreferences = val;
+  },
+  setUserAccessPermissions(state, val) {
+    state.userAccessPermissions = val;
+  },
+  setAccessDenied(state, val) {
+    state.accessDenied = val;
+  },
+  setUserAction(state, val) {
+    state.userAction = val;
+  },
+  setActiveUser(state, val) {
+    state.activeUser = val;
+  },
 };

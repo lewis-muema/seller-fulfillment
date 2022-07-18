@@ -120,6 +120,11 @@ export default {
         ? this.getLoginData.business_id
         : this.getUserData.business.business_id;
     },
+    userId() {
+      return localStorage.OTPRedirectUrl === "otp/signIn"
+        ? this.getLoginData.user_id
+        : this.getUserData.business.user_id;
+    },
     businessEmail() {
       return this.getUserData.business
         ? this.getUserData.business.email
@@ -221,6 +226,7 @@ export default {
       this.loading = true;
       const payload = {
         business_id: this.businessId,
+        user_id: this.userId,
         code: this.otp,
       };
       const fullPayload = {

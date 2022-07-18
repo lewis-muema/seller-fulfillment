@@ -7,17 +7,42 @@
       </div>
       <div>
         <label for="name" class="addUser-label">
-          {{ $t("settings.name") }}
+          {{ $t("settings.firstName") }}
         </label>
         <v-text-field
           class="addUser-field"
           id="name"
           :label="$t('settings.enterName')"
-          v-model="name"
+          v-model="firstName"
           variant="outlined"
           clearable
           clear-icon="mdi-close"
+          :disabled="buttonLoader"
         ></v-text-field>
+        <label for="name" class="addUser-label">
+          {{ $t("settings.lastName") }}
+        </label>
+        <v-text-field
+          class="addUser-field"
+          id="name"
+          :label="$t('settings.enterName')"
+          v-model="lastName"
+          variant="outlined"
+          clearable
+          clear-icon="mdi-close"
+          :disabled="buttonLoader"
+        ></v-text-field>
+        <label for="phone" class="addUser-label">
+          {{ $t("settings.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          class="addUser-field personalInfo-phone mb-4"
+          id="phone"
+          :label="$t('settings.phoneNumber')"
+          v-bind="getSendyPhoneProps"
+          v-model="phone"
+          :disabled="buttonLoader"
+        ></vue-tel-input>
         <label for="email-address" class="addUser-label">
           {{ $t("settings.emailAddress") }}
         </label>
@@ -29,19 +54,30 @@
           variant="outlined"
           clearable
           clear-icon="mdi-close"
+          :disabled="buttonLoader"
         ></v-text-field>
         <label for="user-role" class="addUser-label">
           {{ $t("settings.userRole") }}
         </label>
-        <v-select
-          class="addUser-select"
+        <el-select
+          class="mb-6 business-details-industry"
           id="user-role"
-          label="Select"
-          :items="roles"
           v-model="defaultRole"
-          outlined
-        ></v-select>
-        <v-btn class="addUser-save">
+          :disabled="buttonLoader"
+        >
+          <el-option
+            v-for="role in roles"
+            :key="role.value"
+            :label="role.label"
+            :value="role.value"
+          >
+          </el-option>
+        </el-select>
+        <v-btn
+          class="addUser-save"
+          @click="submitUser()"
+          v-loading="buttonLoader"
+        >
           {{ $t("settings.saveChanges") }}
         </v-btn>
       </div>
@@ -50,22 +86,84 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
     return {
-      name: "",
+      firstName: "",
+      lastName: "",
       emailAddress: "",
       defaultRole: "",
-      roles: [this.$t("settings.admin"), this.$t("settings.user")],
+      phone: "",
+      buttonLoader: false,
+      roles: [
+        {
+          label: this.$t("settings.admin"),
+          value: "ROLE_ADMIN",
+        },
+        {
+          label: this.$t("settings.user"),
+          value: "ROLE_ASSISTANT",
+        },
+      ],
     };
   },
   mounted() {
     this.setComponent("settings.addAUser");
   },
+  computed: {
+    ...mapGetters(["getStorageUserDetails", "getSendyPhoneProps"]),
+  },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapActions(["requestAxiosPost"]),
+    submitUser() {
+      if (
+        this.firstName &&
+        this.lastName &&
+        this.defaultRole &&
+        this.emailAddress &&
+        this.phone
+      ) {
+        const payload = {
+          first_name: this.firstName,
+          last_name: this.lastName,
+          user_role: this.defaultRole,
+          phone_number: this.phone,
+          email: this.emailAddress,
+        };
+        this.buttonLoader = true;
+        this.requestAxiosPost({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `/seller/${this.getStorageUserDetails.business_id}/admin/users`,
+          values: payload,
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            this.$router.push(
+              `/settings/user-permissions/${response.data.data.user.user_id}`
+            );
+          } else {
+            ElNotification({
+              title: response.response.data.errors[0].message.replaceAll(
+                ".",
+                " "
+              ),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.fillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
   },
 };
 </script>

@@ -10,26 +10,41 @@
       </div>
       <div>
         <label for="name" class="edit-user-label">
-          {{ $t("settings.name") }}
+          {{ $t("settings.firstName") }}
         </label>
         <v-text-field
           class="edit-user-field"
           id="name"
           :label="$t('settings.enterName')"
-          v-model="name"
+          v-model="firstName"
           variant="outlined"
           clearable
           clear-icon="mdi-close"
+          :disabled="buttonLoader"
+        ></v-text-field>
+        <label for="name" class="edit-user-label">
+          {{ $t("settings.lastName") }}
+        </label>
+        <v-text-field
+          class="edit-user-field"
+          id="name"
+          :label="$t('settings.enterName')"
+          v-model="lastName"
+          variant="outlined"
+          clearable
+          clear-icon="mdi-close"
+          :disabled="buttonLoader"
         ></v-text-field>
         <label for="phone" class="edit-user-label">
           {{ $t("settings.phoneNumber") }}
         </label>
         <vue-tel-input
-          v-bind="getSendyPhoneProps"
-          class="edit-user-field-phone"
+          class="edit-user-field personalInfo-phone mb-4"
           id="phone"
+          :label="$t('settings.phoneNumber')"
+          v-bind="getSendyPhoneProps"
           v-model="phone"
-          mode="international"
+          disabled
         ></vue-tel-input>
         <label for="email-address" class="edit-user-label">
           {{ $t("settings.emailAddress") }}
@@ -40,12 +55,33 @@
           :label="$t('settings.emailAddress')"
           v-model="emailAddress"
           variant="outlined"
-          disabled
           clearable
           clear-icon="mdi-close"
+          disabled
         ></v-text-field>
-        <v-btn class="edit-user-save">
-          {{ $t("deliveries.submit") }}
+        <label for="user-role" class="edit-user-label">
+          {{ $t("settings.userRole") }}
+        </label>
+        <el-select
+          class="mb-6 business-details-industry"
+          id="user-role"
+          v-model="defaultRole"
+          disabled
+        >
+          <el-option
+            v-for="role in roles"
+            :key="role.value"
+            :label="role.label"
+            :value="role.value"
+          >
+          </el-option>
+        </el-select>
+        <v-btn
+          class="edit-user-save"
+          @click="submitUser()"
+          v-loading="buttonLoader"
+        >
+          {{ $t("settings.saveChanges") }}
         </v-btn>
       </div>
     </div>
@@ -53,26 +89,110 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
     return {
-      name: "",
+      firstName: "",
+      lastName: "",
       emailAddress: "",
       defaultRole: "",
-      roles: [this.$t("settings.admin"), this.$t("settings.user")],
       phone: "",
+      buttonLoader: false,
+      roles: [
+        {
+          label: this.$t("settings.admin"),
+          value: "ROLE_ADMIN",
+        },
+        {
+          label: this.$t("settings.user"),
+          value: "ROLE_ASSISTANT",
+        },
+      ],
     };
   },
-  computed: {
-    ...mapGetters(["getSendyPhoneProps"]),
-  },
   mounted() {
-    this.setComponent("settings.addAUser");
+    this.setComponent("settings.editUser");
+    this.fetchUser();
+  },
+  computed: {
+    ...mapGetters(["getStorageUserDetails", "getSendyPhoneProps", "getUser"]),
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations(["setComponent", "setLoader", "setTab", "setUser"]),
+    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    fetchUser() {
+      this.setLoader("loading-text");
+      this.buttonLoader = true;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
+      }).then((response) => {
+        this.setLoader("");
+        this.buttonLoader = false;
+        if (response.status === 200) {
+          this.setUser(response.data.data.user);
+          this.userMapping();
+        }
+      });
+    },
+    userMapping() {
+      this.firstName = this.getUser.first_name;
+      this.lastName = this.getUser.last_name;
+      this.emailAddress = this.getUser.email;
+      this.defaultRole = this.getUser.user_role;
+      this.phone = this.getUser.phone_number;
+    },
+    submitUser() {
+      if (
+        this.firstName &&
+        this.lastName &&
+        this.defaultRole &&
+        this.emailAddress &&
+        this.phone
+      ) {
+        const payload = {
+          first_name: this.firstName,
+          last_name: this.lastName,
+          user_role: this.defaultRole,
+          phone_number: this.phone,
+          email: this.emailAddress,
+        };
+        this.buttonLoader = true;
+        this.requestAxiosPut({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
+          values: payload,
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            ElNotification({
+              title: this.$t("settings.userEditedSuccessfully"),
+              message: "",
+              type: "success",
+            });
+            this.$router.go(-1);
+          } else {
+            ElNotification({
+              title: response.response.data.errors[0].message.replaceAll(
+                ".",
+                " "
+              ),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.fillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
   },
 };
 </script>
@@ -84,6 +204,7 @@ export default {
   padding: 3% 5%;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
+  background: white;
 }
 .edit-user-label {
   font-size: 14px;
@@ -119,9 +240,5 @@ export default {
   font-size: 25px;
   cursor: pointer;
   margin-right: 10px;
-}
-.edit-user-field-phone {
-  height: 50px;
-  margin-bottom: 40px;
 }
 </style>

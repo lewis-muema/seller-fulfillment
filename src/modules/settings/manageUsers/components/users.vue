@@ -13,10 +13,13 @@
         <v-text-field
           color="#324BA8"
           class="manageUsers-search-field"
+          v-model="params"
           prepend-inner-icon="mdi-magnify"
           :label="$t('settings.searchUser')"
           variant="outlined"
           :placeholder="$t('settings.searchUser')"
+          clearable
+          clear-icon="mdi-close"
         ></v-text-field>
       </div>
       <div class="users-table">
@@ -44,40 +47,57 @@
           </thead>
           <tbody>
             <tr
+              :id="`users ${sanitizeId(user.first_name)} ${sanitizeId(
+                user.last_name
+              )} ${sanitizeId(user.phone_number)} ${sanitizeId(user.email)}`"
               class="users-table-column"
               v-for="(user, i) in getUsers"
               :key="i"
-              @click="viewUser(i)"
+              @click="viewUser(user)"
+              :class="getLoader ? 'inactive-col' : ''"
             >
               <td class="users-name-row users-name-head">
-                <span :class="getLoader">{{ user.name }}</span>
+                <span :class="getLoader"
+                  >{{ user.first_name }} {{ user.last_name }}</span
+                >
               </td>
               <td class="users-number-row">
                 <span :class="getLoader">
-                  {{ user.phoneNumber }}
+                  {{ user.phone_number }}
                 </span>
               </td>
               <td class="users-email-row">
                 <span :class="getLoader">
-                  {{ user.emailAddress }}
+                  {{ user.email }}
                 </span>
               </td>
               <td class="users-status-row">
                 <span v-if="getLoader" :class="getLoader">
-                  {{ user.status }}
+                  {{ user.active_status }}
                 </span>
-                <span v-else :class="`users-${user.status}-status`">
-                  {{ user.status }}</span
+                <span
+                  v-else
+                  :class="`users-${status(user.active_status)}-status`"
+                >
+                  {{
+                    user.active_status
+                      ? statusName(user.active_status)
+                      : $t("deliveries.pending")
+                  }}</span
                 >
               </td>
               <td class="users-action-row">
-                <v-menu transition="slide-y-transition" anchor="bottom center">
+                <v-menu
+                  transition="slide-y-transition"
+                  anchor="bottom center"
+                  v-if="!getLoader && user.user_role !== 'ROLE_OWNER'"
+                >
                   <template v-slot:activator="{ props }">
                     <i class="mdi mdi-dots-horizontal" v-bind="props"></i>
                   </template>
                   <v-list class="users-actions-popup">
-                    <v-list-item v-for="(action, i) in user.actions" :key="i">
-                      <v-list-item-title @click="$router.push(action.link)">
+                    <v-list-item v-for="(action, i) in actions(user)" :key="i">
+                      <v-list-item-title @click="triggerAction(action, user)">
                         {{ $t(action.label) }}
                       </v-list-item-title>
                     </v-list-item>
@@ -93,15 +113,167 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   computed: {
-    ...mapGetters(["getLoader", "getUsers"]),
+    ...mapGetters([
+      "getLoader",
+      "getUsers",
+      "getStorageUserDetails",
+      "getUserActions",
+      "getActiveUser",
+    ]),
+  },
+  mounted() {
+    this.fetchUsers();
+  },
+  data() {
+    return {
+      params: "",
+      activeUser: "",
+    };
+  },
+  watch: {
+    params(val) {
+      this.fiterUsers(val);
+    },
+    "$store.state.userAction": function userAction(val) {
+      if (val) {
+        this[val]();
+        this.setOverlayStatus({
+          overlay: false,
+          popup: val,
+        });
+      }
+    },
   },
   methods: {
-    viewUser(i) {
-      this.$emit("viewUser", i);
+    ...mapMutations([
+      "setLoader",
+      "setUsers",
+      "setOverlayStatus",
+      "setActiveUser",
+    ]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
+    viewUser(user) {
+      this.$router.push(`/settings/view-user/${user.user_id}`);
+    },
+    triggerAction(action, user) {
+      if (action.link) {
+        this.$router.push(`${action.link}/${user.user_id}`);
+      } else {
+        this[action.trigger](user);
+      }
+    },
+    sanitizeId(id) {
+      return id.replaceAll(" ", "");
+    },
+    fiterUsers(param) {
+      const users = document.querySelectorAll(".users-table-column");
+      users.forEach((row) => {
+        if (row.id.toLowerCase().includes(param.toLowerCase())) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    },
+    actions(user) {
+      const actions = [];
+      const index = user.active_status === "ACTIVATED" ? 1 : 2;
+      const resend =
+        user.invitation_status === "INVITATION_PENDING_ACCEPTANCE" ? "" : 3;
+      this.getUserActions.forEach((row, i) => {
+        if (index !== i && resend !== i) {
+          actions.push(row);
+        }
+      });
+      return actions;
+    },
+    fetchUsers() {
+      this.setLoader("loading-text");
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users`,
+      }).then((response) => {
+        this.setLoader("");
+        if (response.status === 200) {
+          this.setUsers(response.data.data.users);
+        }
+      });
+    },
+    deactivateUser(user) {
+      this.setActiveUser(user);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deactivate",
+      });
+    },
+    activateUser(user) {
+      this.setActiveUser(user);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "activate",
+      });
+    },
+    activate() {
+      this.setLoader("loading-text");
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/activate`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.fetchUsers();
+          ElNotification({
+            title: this.$t("settings.userActivateSuccessfully"),
+            message: "",
+            type: "success",
+          });
+        } else {
+          ElNotification({
+            title: this.$t("settings.failedToActivateUser"),
+            message: "",
+            type: "success",
+          });
+        }
+      });
+    },
+    deactivate() {
+      this.setLoader("loading-text");
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/deactivate`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.fetchUsers();
+          ElNotification({
+            title: this.$t("settings.userDeactivateSuccessfully"),
+            message: "",
+            type: "success",
+          });
+        } else {
+          ElNotification({
+            title: this.$t("settings.failedToDeactivateUser"),
+            message: "",
+            type: "success",
+          });
+        }
+      });
+    },
+    resendEmail(user) {
+      this.setActiveUser(user);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "invite",
+      });
+    },
+    status(activeStatus) {
+      return activeStatus ? activeStatus : "pending";
+    },
+    statusName(status) {
+      return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     },
   },
 };
@@ -148,10 +320,23 @@ export default {
   border-radius: 10px;
   color: #7f3b02;
 }
-.users-Active-status {
+.users-DEACTIVATED-status {
+  background: #eb8892;
+  padding: 2px 20px;
+  border-radius: 10px;
+  color: #61040c;
+}
+.users-ACTIVATED-status {
   background: #b8f5a8;
   padding: 2px 20px;
   border-radius: 10px;
   color: #064a23;
+}
+.inactive-col {
+  pointer-events: none;
+}
+.users-action-row {
+  color: #c0c4cc;
+  font-size: 35px !important;
 }
 </style>

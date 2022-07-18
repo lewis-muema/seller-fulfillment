@@ -187,16 +187,43 @@
               route === 'common.paymentOptions' ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
-          <!-- <v-list-item
+          <v-list-item
             :title="$t('common.manageUsers')"
             @click="$router.push('/settings/manage-users')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('common.manageUsers')"
+            :active="
+              [
+                'common.manageUsers',
+                'settings.addAUser',
+                'settings.editUser',
+                'settings.modifyPermissions',
+                'settings.confirmUserInformation',
+              ].includes(route)
+            "
             :append-icon="
-              route === $t('common.manageUsers') ? 'mdi-circle-small' : ''
+              [
+                'common.manageUsers',
+                'settings.addAUser',
+                'settings.editUser',
+                'settings.modifyPermissions',
+                'settings.confirmUserInformation',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
           <v-list-item
+            :title="$t('common.manageNotifications')"
+            @click="$router.push('/settings/notification-preferences')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === 'common.manageNotificationsPreferences'"
+            :append-icon="
+              route === 'common.manageNotificationsPreferences'
+                ? 'mdi-circle-small'
+                : ''
+            "
+          ></v-list-item>
+          <!-- <v-list-item
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
             class="desktop-sidebar-sub-menu"

@@ -473,6 +473,99 @@
         {{ getOrderTrackingData.order.confirmation_pin }}
       </div>
     </div>
+    <div v-if="popup === 'user'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'user')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="user-added-section-bottom">
+        <i class="mdi mdi-check-circle-outline user-added-check"></i>
+        <p class="user-added-title">
+          {{ $t("settings.userAddedSuccessfully") }}
+        </p>
+        <p class="user-added-description">
+          {{
+            $t("settings.addedSuccessfully", {
+              name: `${getUser.first_name} ${getUser.last_name}`,
+            })
+          }}
+        </p>
+        <v-btn class="edit-user-save" @click="overlayStatusSet(false, 'user')">
+          {{ $t("settings.okay") }}
+        </v-btn>
+      </div>
+    </div>
+    <div v-if="popup === 'invite'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'invite')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p class="resend-invite-title">
+          {{ $t("settings.resendEmailTo") }}
+        </p>
+        <p class="resend-invite-description">
+          <span>{{ getActiveUser.email }}</span>
+        </p>
+        <v-btn class="edit-user-save" @click="resendInvite()">
+          {{ $t("settings.resendEmail") }}
+        </v-btn>
+      </div>
+    </div>
+    <div v-if="popup === 'deactivate'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'deactivate')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="deactivate-user-title">
+          {{ $t("settings.deactivateTheUser") }}
+        </p>
+        <p class="deactivate-user-description">
+          {{ $t("settings.theUserWillNotBeAble") }}
+        </p>
+        <v-btn class="edit-user-save" @click="setUserAction('deactivate')">
+          {{ $t("settings.yesDeactivateUser") }}
+        </v-btn>
+        <p
+          class="deactivate-user-no"
+          @click="overlayStatusSet(false, 'deactivate')"
+        >
+          {{ $t("settings.noDontDeactivateUser") }}
+        </p>
+      </div>
+    </div>
+    <div v-if="popup === 'activate'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'activate')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="deactivate-user-title">
+          {{ $t("settings.activateTheUser") }}
+        </p>
+        <p class="deactivate-user-description">
+          {{ $t("settings.theUserWillNowBeAble") }}
+        </p>
+        <v-btn class="edit-user-save" @click="setUserAction('activate')">
+          {{ $t("settings.yesActivateUser") }}
+        </v-btn>
+        <p
+          class="deactivate-user-no"
+          @click="overlayStatusSet(false, 'activate')"
+        >
+          {{ $t("settings.noDontActivateUser") }}
+        </p>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -527,6 +620,8 @@ export default {
       "getUserDetails",
       "getMapOptions",
       "getSendyPhoneProps",
+      "getUser",
+      "getActiveUser",
     ]),
   },
   data() {
@@ -568,7 +663,12 @@ export default {
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
-    ...mapMutations(["setLoader", "setOrderTrackingData", "setPromoCode"]),
+    ...mapMutations([
+      "setLoader",
+      "setOrderTrackingData",
+      "setPromoCode",
+      "setUserAction",
+    ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
       this.popup = popup;
@@ -581,6 +681,7 @@ export default {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
     },
+    resendInvite() {},
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
@@ -938,5 +1039,173 @@ export default {
   color: #324ba8;
   text-align: center;
   margin: 30px;
+}
+.user-added-container {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  width: 450px;
+  border-radius: 5px;
+  font-family: "DM Sans";
+}
+.user-added-section {
+  display: flex;
+}
+.user-added-label {
+  font-size: 16px;
+  width: 60%;
+  font-weight: 500;
+}
+.user-added-close-icon {
+  font-size: 20px;
+  margin-left: auto;
+  cursor: pointer;
+}
+.user-added-row-top {
+  display: flex;
+  padding-bottom: 15px;
+  border-bottom: 0.6px solid #c0c4cc78;
+  margin-bottom: 15px;
+}
+.user-added-row-top-name {
+  margin-bottom: 0px;
+}
+.user-added-row-top-variant {
+  color: #606266;
+}
+.user-added-row-top-left {
+  margin-left: 20px;
+}
+.user-added-row-top-right {
+  font-weight: 500;
+  font-size: 16px;
+  margin-left: auto;
+}
+.user-added-row-bottom {
+  color: #606266;
+  margin-bottom: 20px;
+}
+.user-added-img {
+  width: 40px;
+}
+.user-added-close {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.user-added-check {
+  font-size: 60px;
+  color: #116f28;
+  margin-bottom: 20px;
+  background: #defad287;
+  border-radius: 40px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-added-section-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.user-added-title {
+  color: #303133;
+  font-weight: 500;
+}
+.user-added-description {
+  color: #303133;
+  font-size: 14px;
+  width: 75%;
+  text-align: center;
+}
+.resend-invite-container {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  width: 450px;
+  border-radius: 5px;
+  font-family: "DM Sans";
+}
+.resend-invite-section {
+  display: flex;
+}
+.resend-invite-label {
+  font-size: 16px;
+  width: 60%;
+  font-weight: 500;
+}
+.resend-invite-close-icon {
+  font-size: 20px;
+  margin-left: auto;
+  cursor: pointer;
+}
+.resend-invite-row-top {
+  display: flex;
+  padding-bottom: 15px;
+  border-bottom: 0.6px solid #c0c4cc78;
+  margin-bottom: 15px;
+}
+.resend-invite-row-top-name {
+  margin-bottom: 0px;
+}
+.resend-invite-row-top-variant {
+  color: #606266;
+}
+.resend-invite-row-top-left {
+  margin-left: 20px;
+}
+.resend-invite-row-top-right {
+  font-weight: 500;
+  font-size: 16px;
+  margin-left: auto;
+}
+.resend-invite-row-bottom {
+  color: #606266;
+  margin-bottom: 20px;
+}
+.resend-invite-img {
+  width: 40px;
+}
+.resend-invite-close {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.resend-invite-check {
+  font-size: 60px;
+  color: #116f28;
+  margin-bottom: 20px;
+}
+.resend-invite-section-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.resend-invite-title {
+  color: #303133;
+  margin-bottom: 0px;
+}
+.resend-invite-description {
+  color: #303133;
+  font-size: 18px;
+  font-weight: 500;
+}
+.deactivate-user-title {
+  margin-top: -50px;
+  font-size: 18px;
+  font-weight: 500;
+}
+.deactivate-user-description {
+  color: #909399;
+}
+.deactivate-user-no {
+  color: #909399;
+  text-align: center;
+  margin-top: 25px;
+  cursor: pointer;
 }
 </style>

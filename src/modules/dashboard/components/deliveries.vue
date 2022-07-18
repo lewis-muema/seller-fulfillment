@@ -1,135 +1,143 @@
 <template>
   <v-card variant="outlined" class="dashboard-deliveries-container">
-    <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
-      <v-table class="">
-        <thead>
-          <tr>
-            <th class="text-left table-headers">
-              {{
-                getSelectedTab === "dashboard.toYourCustomers"
-                  ? $t("deliveries.customerInfo")
-                  : $t("deliveries.products")
-              }}
-            </th>
-            <th class="text-left table-headers">
-              {{ $t("dashboard.progress") }}
-            </th>
-            <th class="text-left table-headers">
-              {{ $t("dashboard.action") }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in filteredDeliveries" :key="index">
-            <td>
-              <v-list-item class="dashboard-customer-columns" lines="two">
-                <v-list-item-header>
-                  <v-list-item-title>
-                    <span :class="getLoader">
-                      {{
-                        getSelectedTab === "dashboard.toYourCustomers"
-                          ? formatName(item.destination.name)
-                          : formatProducts(item.products)
-                      }}
-                    </span>
-                  </v-list-item-title>
-                  <v-list-item-subtitle
-                    class="dashboard-customer-delivery-location"
-                    v-if="getSelectedTab === 'dashboard.toYourCustomers'"
-                  >
-                    <div class="dashboard-customer-delivery-location-inner">
+    <div v-if="!noAccess">
+      <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
+        <v-table class="">
+          <thead>
+            <tr>
+              <th class="text-left table-headers">
+                {{
+                  getSelectedTab === "dashboard.toYourCustomers"
+                    ? $t("deliveries.customerInfo")
+                    : $t("deliveries.products")
+                }}
+              </th>
+              <th class="text-left table-headers">
+                {{ $t("dashboard.progress") }}
+              </th>
+              <th class="text-left table-headers">
+                {{ $t("dashboard.action") }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in filteredDeliveries" :key="index">
+              <td>
+                <v-list-item class="dashboard-customer-columns" lines="two">
+                  <v-list-item-header>
+                    <v-list-item-title>
                       <span :class="getLoader">
                         {{
-                          formatName(
-                            item.destination.delivery_location.description
-                          )
+                          getSelectedTab === "dashboard.toYourCustomers"
+                            ? formatName(item.destination.name)
+                            : formatProducts(item.products)
                         }}
                       </span>
-                    </div>
-                  </v-list-item-subtitle>
-                </v-list-item-header>
-              </v-list-item>
-            </td>
-            <td>
-              <v-list-item class="dashboard-customer-columns" lines="two">
-                <v-list-item-header v-if="item.order_status === 'ORDER_FAILED'">
-                  <p class="delivery-attempted-error">
-                    <i class="mdi mdi-information-outline mr-2"></i
-                    >{{ $t("deliveries.deliveryAttempt") }}
-                  </p>
-                  <p class="ml-6 mb-1">
-                    {{
-                      $t("deliveries.weWillDeliverAgain", {
-                        Date: deliveryDate(item.scheduled_date),
-                      })
-                    }}
-                  </p>
-                </v-list-item-header>
-                <v-list-item-header v-else>
-                  <v-list-item-title>
-                    <span :class="getLoader">
-                      {{ formatStatus(item.order_event_status, item) }}
-                    </span>
-                  </v-list-item-title>
-                  <v-progress-linear
-                    :model-value="item.delivery_progress_ratio * 100"
-                    color="#324BA8"
-                    rounded
-                    height="7"
-                  ></v-progress-linear>
-                </v-list-item-header>
-              </v-list-item>
-            </td>
-            <td>
-              <router-link
-                :to="`/deliveries/tracking/${item.order_id}`"
-                class="dashboard-track-order"
-              >
-                <span :class="getLoader">
-                  {{ $t("deliveries.trackOrder") }}
-                </span>
-              </router-link>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-      <div class="show-more-deliveries-link" v-if="showMoreDeliveries">
-        <router-link
-          :to="
-            getSelectedTab === 'dashboard.toYourCustomers'
-              ? '/deliveries/customer'
-              : '/deliveries/sendy'
-          "
-          class="show-more-deliveries-link"
-          >{{ $t("dashboard.showMoreDeliveries")
-          }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
-        >
+                    </v-list-item-title>
+                    <v-list-item-subtitle
+                      class="dashboard-customer-delivery-location"
+                      v-if="getSelectedTab === 'dashboard.toYourCustomers'"
+                    >
+                      <div class="dashboard-customer-delivery-location-inner">
+                        <span :class="getLoader">
+                          {{
+                            formatName(
+                              item.destination.delivery_location.description
+                            )
+                          }}
+                        </span>
+                      </div>
+                    </v-list-item-subtitle>
+                  </v-list-item-header>
+                </v-list-item>
+              </td>
+              <td>
+                <v-list-item class="dashboard-customer-columns" lines="two">
+                  <v-list-item-header
+                    v-if="item.order_status === 'ORDER_FAILED'"
+                  >
+                    <p class="delivery-attempted-error">
+                      <i class="mdi mdi-information-outline mr-2"></i
+                      >{{ $t("deliveries.deliveryAttempt") }}
+                    </p>
+                    <p class="ml-6 mb-1">
+                      {{
+                        $t("deliveries.weWillDeliverAgain", {
+                          Date: deliveryDate(item.scheduled_date),
+                        })
+                      }}
+                    </p>
+                  </v-list-item-header>
+                  <v-list-item-header v-else>
+                    <v-list-item-title>
+                      <span :class="getLoader">
+                        {{ formatStatus(item.order_event_status, item) }}
+                      </span>
+                    </v-list-item-title>
+                    <v-progress-linear
+                      :model-value="item.delivery_progress_ratio * 100"
+                      color="#324BA8"
+                      rounded
+                      height="7"
+                    ></v-progress-linear>
+                  </v-list-item-header>
+                </v-list-item>
+              </td>
+              <td>
+                <router-link
+                  :to="`/deliveries/tracking/${item.order_id}`"
+                  class="dashboard-track-order"
+                >
+                  <span :class="getLoader">
+                    {{ $t("deliveries.trackOrder") }}
+                  </span>
+                </router-link>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+        <div class="show-more-deliveries-link" v-if="showMoreDeliveries">
+          <router-link
+            :to="
+              getSelectedTab === 'dashboard.toYourCustomers'
+                ? '/deliveries/customer'
+                : '/deliveries/sendy'
+            "
+            class="show-more-deliveries-link"
+            >{{ $t("dashboard.showMoreDeliveries")
+            }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
+          >
+        </div>
+      </div>
+      <div class="deliveries-empty" v-else>
+        <div>
+          <img
+            src="https://images.sendyit.com/fulfilment/seller/track.png"
+            alt=""
+            class="deliveries-empty-img"
+          />
+        </div>
+        <p class="deliveries-empty-title">
+          {{ $t("deliveries.noDeliveriesToTrack") }}
+        </p>
+        <v-btn class="deliveries-btn" @click="redirect()" size="default">
+          {{
+            getSelectedTab === "dashboard.toYourCustomers"
+              ? $t("deliveries.deliverToACustomer")
+              : $t("deliveries.deliverToSendy")
+          }}
+        </v-btn>
       </div>
     </div>
-    <div class="deliveries-empty" v-else>
-      <div>
-        <img
-          src="https://images.sendyit.com/fulfilment/seller/track.png"
-          alt=""
-          class="deliveries-empty-img"
-        />
-      </div>
-      <p class="deliveries-empty-title">
-        {{ $t("deliveries.noDeliveriesToTrack") }}
-      </p>
-      <v-btn class="deliveries-btn" @click="redirect()" size="default">
-        {{
-          getSelectedTab === "dashboard.toYourCustomers"
-            ? $t("deliveries.deliverToACustomer")
-            : $t("deliveries.deliverToSendy")
-        }}
-      </v-btn>
+    <div class="dashboard-noaccess-container" v-else>
+      <accessDeniedComponent />
     </div>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import accessDeniedComponent from "../../common/accessDenied.vue";
 import eventLabels from "../../../mixins/event_labels";
 import placeholder from "../../../mixins/placeholders";
 import moment from "moment";
@@ -137,9 +145,11 @@ import moment from "moment";
 export default {
   props: ["deliveries", "selectedTab"],
   mixins: [eventLabels, placeholder],
+  components: { accessDeniedComponent },
   data() {
     return {
       params: "?max=5",
+      noAccess: false,
     };
   },
   computed: {
@@ -149,6 +159,7 @@ export default {
       "getDeliveries",
       "getConsignments",
       "getStorageUserDetails",
+      "getAccessDenied",
     ]),
     getSelectedTab() {
       return this.selectedTab;
@@ -166,17 +177,27 @@ export default {
   watch: {
     selectedTab() {
       if (this.getSelectedTab === "dashboard.toYourCustomers") {
+        this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
         this.setDeliveries(this.placeHolderDeliveries);
       } else {
+        this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
         this.setConsignments(this.placeholderConsignments);
       }
       this.fetchOrders();
     },
+    "$store.state.accessDenied": function accessDenied(val) {
+      this.noAccess =
+        this.getSelectedTab === "dashboard.toYourCustomers"
+          ? val.includes("/deliveries/customer")
+          : val.includes("/deliveries/sendy");
+    },
   },
   mounted() {
     if (this.getSelectedTab === "dashboard.toYourCustomers") {
+      this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
       this.setDeliveries(this.placeHolderDeliveries);
     } else {
+      this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
       this.setConsignments(this.placeholderConsignments);
     }
     this.fetchOrders();
@@ -306,5 +327,9 @@ export default {
 }
 .dashboard-customer-columns {
   padding: 15px 0px;
+}
+.dashboard-noaccess-container {
+  zoom: 80%;
+  margin-top: -5%;
 }
 </style>

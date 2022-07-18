@@ -29,7 +29,7 @@
                         {{ order.count }}
                       </span>
                     </v-list-item-title>
-                    <v-list-item-subtitle>
+                    <v-list-item-subtitle class="desktop-dashboard-subtitle">
                       <span :class="getLoader">
                         {{ $t(order.orderStatus) }} >
                       </span>
@@ -160,5 +160,9 @@ export default {
 }
 .dashboard-cards {
   box-shadow: none !important;
+}
+.desktop-dashboard-subtitle {
+  overflow: visible !important;
+  text-overflow: inherit !important;
 }
 </style>

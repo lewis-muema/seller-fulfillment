@@ -6,85 +6,172 @@
           @click="$router.go(-1)"
           class="mdi mdi-arrow-left userPermisssions-back"
         ></i>
-        <span>{{ $t("settings.userPermissions") }}</span>
+        <span class="userPermisssions-page-name">{{
+          $t("settings.userPermissions")
+        }}</span>
       </div>
       <div>
         <p class="userPermisssions-title">{{ $t("settings.whichModules") }}</p>
         <div class="userPermisssions-checkbox-container">
-          <p>{{ $t("settings.inventory") }}</p>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="products"
-            :label="$t('settings.products')"
-            :value="$t('settings.products')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="stockLevels"
-            :label="$t('settings.stockLevels')"
-            :value="$t('settings.stockLevels')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="sendInventory"
-            :label="$t('settings.sendInventory')"
-            :value="$t('settings.sendInventory')"
-            color="#324BA8"
-          ></v-checkbox>
+          <p class="mb-2">{{ $t("settings.inventory") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_PRODUCTS_MODULE"
+              @click="
+                permissions.CAN_ACCESS_PRODUCTS_MODULE =
+                  !permissions.CAN_ACCESS_PRODUCTS_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_PRODUCTS_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.products")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_CREATE_PRODUCTS"
+              @click="
+                permissions.CAN_CREATE_PRODUCTS =
+                  !permissions.CAN_CREATE_PRODUCTS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_CREATE_PRODUCTS')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.createProducts")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_CREATE_CONSIGNMENTS"
+              @click="
+                permissions.CAN_CREATE_CONSIGNMENTS =
+                  !permissions.CAN_CREATE_CONSIGNMENTS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_CREATE_CONSIGNMENTS')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.sendInventory")
+            }}</span>
+          </div>
         </div>
         <div class="userPermisssions-checkbox-container">
-          <p>{{ $t("settings.deliveries") }}</p>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="toTheCustomer"
-            :label="$t('settings.toTheCustomer')"
-            :value="$t('settings.toTheCustomer')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="toTheFulfillmentCentre"
-            :label="$t('settings.toTheFulfillmentCentre')"
-            :value="$t('settings.toTheFulfillmentCentre')"
-            color="#324BA8"
-          ></v-checkbox>
+          <p class="mb-2">{{ $t("settings.deliveries") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_DELIVERIES_MODULE"
+              @click="
+                permissions.CAN_ACCESS_DELIVERIES_MODULE =
+                  !permissions.CAN_ACCESS_DELIVERIES_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_DELIVERIES_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.toTheCustomer")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_CONSIGNMENTS_MODULE"
+              @click="
+                permissions.CAN_ACCESS_CONSIGNMENTS_MODULE =
+                  !permissions.CAN_ACCESS_CONSIGNMENTS_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_CONSIGNMENTS_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.toTheFulfillmentCentre")
+            }}</span>
+          </div>
         </div>
         <div class="userPermisssions-checkbox-container">
-          <p>{{ $t("settings.payments") }}</p>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="statement"
-            :label="$t('settings.statement')"
-            :value="$t('settings.statement')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="invoice"
-            :label="$t('settings.invoice')"
-            :value="$t('settings.invoice')"
-            color="#324BA8"
-          ></v-checkbox>
+          <p class="mb-2">{{ $t("settings.payments") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_BILLING_MODULE"
+              @click="
+                permissions.CAN_ACCESS_BILLING_MODULE =
+                  !permissions.CAN_ACCESS_BILLING_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_BILLING_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("common.billings")
+            }}</span>
+          </div>
         </div>
         <div class="userPermisssions-checkbox-container">
-          <p>{{ $t("settings.settings") }}</p>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="paymentOptions"
-            :label="$t('settings.paymentOptions')"
-            :value="$t('settings.paymentOptions')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-checkbox
-            class="userPermisssions-checkbox"
-            v-model="manageUsers"
-            :label="$t('settings.manageUsers')"
-            :value="$t('settings.manageUsers')"
-            color="#324BA8"
-          ></v-checkbox>
-          <v-btn class="userPermisssions-save">
+          <p class="mb-2">{{ $t("settings.settings") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_PAYMENT_OPTIONS_MODULE"
+              @click="
+                permissions.CAN_ACCESS_PAYMENT_OPTIONS_MODULE =
+                  !permissions.CAN_ACCESS_PAYMENT_OPTIONS_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_PAYMENT_OPTIONS_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("common.paymentOptions")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_MANAGE_USERS_MODULE"
+              @click="
+                permissions.CAN_ACCESS_MANAGE_USERS_MODULE =
+                  !permissions.CAN_ACCESS_MANAGE_USERS_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_MANAGE_USERS_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.manageUsers")
+            }}</span>
+          </div>
+          <v-btn
+            class="userPermisssions-save"
+            @click="submitPermissions()"
+            v-loading="buttonLoading"
+          >
             {{ $t("settings.editPermissions") }}
           </v-btn>
         </div>
@@ -94,27 +181,99 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
     return {
-      products: "",
-      stockLevels: "",
-      sendInventory: "",
-      toTheCustomer: "",
-      toTheFulfillmentCentre: "",
-      statement: "",
-      invoice: "",
-      paymentOptions: "",
-      manageUsers: "",
+      buttonLoading: false,
+      permissions: {},
     };
   },
   mounted() {
-    this.setComponent("settings.addAUser");
+    this.setComponent("settings.modifyPermissions");
+    this.fetchUser();
+  },
+  computed: {
+    ...mapGetters(["getStorageUserDetails", "getUser"]),
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setUser",
+      "setOverlayStatus",
+    ]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
+    fetchUser() {
+      this.setLoader("loading-text");
+      this.buttonLoading = true;
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
+      }).then((response) => {
+        this.setLoader("");
+        this.buttonLoading = false;
+        if (response.status === 200) {
+          this.setUser(response.data.data.user);
+          this.permissions = this.permissionMapping();
+        }
+      });
+    },
+    permissionMapping() {
+      const mappings = {};
+      this.getUser.user_access_permissions.forEach((row) => {
+        mappings[row.permission_id] = row.permission_granted;
+      });
+      return mappings;
+    },
+    submitPermissions() {
+      const permissions = [];
+      Object.keys(this.permissions).forEach((row) => {
+        if (this.permissions[row]) {
+          permissions.push({
+            permission_id: row,
+          });
+        }
+      });
+      this.buttonLoading = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}/amendpermissions`,
+        values: { user_access_permissions: permissions },
+      }).then((response) => {
+        this.buttonLoading = false;
+        if (response.status === 200) {
+          if (
+            this.$router.options.history.state.back.includes(
+              "/settings/confirm-user-details"
+            ) ||
+            this.$router.options.history.state.back.includes(
+              "/settings/manage-users"
+            )
+          ) {
+            ElNotification({
+              title: this.$t("settings.permissionsEditedSuccessfully"),
+              message: "",
+              type: "success",
+            });
+            this.$router.go(-1);
+          } else {
+            this.$router.push(
+              `/settings/confirm-user-details/${this.$route.params.user_id}`
+            );
+          }
+        } else {
+          ElNotification({
+            title: this.$t("settings.failedToEditPermissions"),
+            message: "",
+            type: "error",
+          });
+        }
+      });
+    },
   },
 };
 </script>
@@ -129,8 +288,7 @@ export default {
   background: white;
 }
 .userPermisssions-label {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
 }
 .userPermisssions-field {
   zoom: 90%;
@@ -164,17 +322,28 @@ export default {
   margin-right: 10px;
 }
 .userPermisssions-checkbox {
-  height: 45px;
+  accent-color: #324ba8;
+  margin-right: 17px;
+  height: 40px;
+  width: 18px !important;
+}
+.userPermisssions-label {
+  display: flex;
+  align-items: center;
+  color: #303133;
 }
 .v-selection-control .v-label {
   color: #303133;
   font-size: 14px;
 }
 .userPermisssions-title {
-  font-size: 14px;
+  font-size: 15px;
 }
 .userPermisssions-checkbox-container {
   font-size: 16px;
   margin: 20px 0px;
+}
+.userPermisssions-page-name {
+  font-size: 20px;
 }
 </style>

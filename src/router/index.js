@@ -11,7 +11,10 @@ import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Statements from "../modules/payments/statements/statements.vue";
 // import Invoices from "../modules/payments/invoices/invoices.vue";
-// import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
+import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
+import notifications from "../modules/settings/notifications/notifications.vue";
+import viewUser from "../modules/settings/manageUsers/components/viewUser.vue";
+import confirmUserDetails from "../modules/settings/manageUsers/components/confirmUserDetails.vue";
 import PaymentOptions from "../modules/settings/paymentOptions/paymentOptions.vue";
 import Profile from "../modules/settings/profile/profile.vue";
 import viewInvoice from "../modules/payments/invoices/components/viewInvoice.vue";
@@ -155,12 +158,12 @@ const routes = [
     component: addUser,
   },
   {
-    path: "/settings/edit-user",
+    path: "/settings/edit-user/:user_id?",
     name: "Edit User",
     component: editUser,
   },
   {
-    path: "/settings/user-permissions",
+    path: "/settings/user-permissions/:user_id?",
     name: "User Permissions",
     component: userPermissions,
   },
@@ -169,11 +172,26 @@ const routes = [
     name: "Payment Options",
     component: PaymentOptions,
   },
-  // {
-  //   path: "/settings/manage-users",
-  //   name: "Manage Users",
-  //   component: ManageUsers,
-  // },
+  {
+    path: "/settings/manage-users",
+    name: "Manage Users",
+    component: ManageUsers,
+  },
+  {
+    path: "/settings/confirm-user-details/:user_id?",
+    name: "Confirm User Details",
+    component: confirmUserDetails,
+  },
+  {
+    path: "/settings/view-user/:user_id?",
+    name: "View User",
+    component: viewUser,
+  },
+  {
+    path: "/settings/notification-preferences",
+    name: "Notifications",
+    component: notifications,
+  },
   // {
   //   path: "/settings/activity-log",
   //   name: "Activity Log",

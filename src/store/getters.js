@@ -83,4 +83,11 @@ export default {
   getDefaultCountryName: (state) => state.defaultCountryName,
   getTabStatuses: (state) => state.tabStatuses,
   getTerms: (state) => state.terms,
+  getUserActions: (state) => state.userActions,
+  getUser: (state) => state.user,
+  getNotificationPreferences: (state) => state.notificationPreferences,
+  getUserAccessPermissions: (state) => state.userAccessPermissions,
+  getAccessDenied: (state) => state.accessDenied,
+  getUserAction: (state) => state.userAction,
+  getActiveUser: (state) => state.activeUser,
 };

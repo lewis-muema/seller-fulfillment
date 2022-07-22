@@ -167,14 +167,97 @@
               $t("settings.manageUsers")
             }}</span>
           </div>
-          <v-btn
-            class="userPermisssions-save"
-            @click="submitPermissions()"
-            v-loading="buttonLoading"
-          >
-            {{ $t("settings.editPermissions") }}
-          </v-btn>
         </div>
+        <div class="userPermisssions-checkbox-container">
+          <p class="mb-2">{{ $t("common.notifications") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS"
+              @click="
+                permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS =
+                  !permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty(
+                  'CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS'
+                )
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.receiveNotificationsForInventoryUpdates")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS"
+              @click="
+                permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS =
+                  !permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty(
+                  'CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS'
+                )
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.receiveNotificationsForDeliveriesToSendy")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES"
+              @click="
+                permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES =
+                  !permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty(
+                  'CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES'
+                )
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.receiveNotificationsForDeliveriesToYourCustomers")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS"
+              @click="
+                permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS =
+                  !permissions.CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty(
+                  'CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS'
+                )
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.receiveNotificationsForPayments")
+            }}</span>
+          </div>
+        </div>
+        <v-btn
+          class="userPermisssions-save"
+          @click="submitPermissions()"
+          v-loading="buttonLoading"
+        >
+          {{ $t("settings.editPermissions") }}
+        </v-btn>
       </div>
     </div>
   </div>
@@ -280,7 +363,7 @@ export default {
 
 <style>
 .userPermisssions-container {
-  width: 35%;
+  width: 40%;
   margin: 60px auto;
   padding: 3% 5%;
   border: 1px solid #e2e7ed;

@@ -511,7 +511,11 @@
         <p class="resend-invite-description">
           <span>{{ getActiveUser.email }}</span>
         </p>
-        <v-btn class="edit-user-save" @click="resendInvite()">
+        <v-btn
+          v-loading="buttonLoader"
+          class="edit-user-save"
+          @click="resendInvite()"
+        >
           {{ $t("settings.resendEmail") }}
         </v-btn>
       </div>
@@ -681,7 +685,31 @@ export default {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
     },
-    resendInvite() {},
+    resendInvite() {
+      this.buttonLoader = true;
+      this.requestAxiosPut({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/sendinvitationemail`,
+        values: {},
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("settings.instunctionEmailResentSuccessfully"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "invite");
+          this.buttonLoader = false;
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("settings.failedToResendInstructionEmail"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
+    },
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;

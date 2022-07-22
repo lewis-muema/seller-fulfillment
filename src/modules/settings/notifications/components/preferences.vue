@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="nofifications-container">
-      <v-expansion-panels class="notification-expansion-panels">
+      <v-expansion-panels
+        class="notification-expansion-panels"
+        v-if="filteredFields(inventory).length"
+      >
         <v-expansion-panel class="product-select-exp-panel">
           <v-expansion-panel-title class="notifications-preferences-title">
             <div class="notifications-preferences-left">
@@ -37,7 +40,7 @@
               <tbody>
                 <tr
                   class="deliveries-table-column"
-                  v-for="(row, i) in inventory"
+                  v-for="(row, i) in filteredFields(inventory)"
                   :key="i"
                 >
                   <td class="deliveries-product-row">
@@ -85,7 +88,10 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-expansion-panels class="notification-expansion-panels">
+      <v-expansion-panels
+        class="notification-expansion-panels"
+        v-if="filteredFields(consignment).length"
+      >
         <v-expansion-panel class="product-select-exp-panel">
           <v-expansion-panel-title class="notifications-preferences-title">
             <div class="notifications-preferences-left">
@@ -123,7 +129,7 @@
               <tbody>
                 <tr
                   class="deliveries-table-column"
-                  v-for="(row, i) in consignment"
+                  v-for="(row, i) in filteredFields(consignment)"
                   :key="i"
                 >
                   <td class="deliveries-product-row">
@@ -171,7 +177,10 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-expansion-panels class="notification-expansion-panels">
+      <v-expansion-panels
+        class="notification-expansion-panels"
+        v-if="filteredFields(delivery).length"
+      >
         <v-expansion-panel class="product-select-exp-panel">
           <v-expansion-panel-title class="notifications-preferences-title">
             <div class="notifications-preferences-left">
@@ -211,7 +220,7 @@
               <tbody>
                 <tr
                   class="deliveries-table-column"
-                  v-for="(row, i) in delivery"
+                  v-for="(row, i) in filteredFields(delivery)"
                   :key="i"
                 >
                   <td class="deliveries-product-row">
@@ -259,7 +268,10 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-expansion-panels class="notification-expansion-panels">
+      <v-expansion-panels
+        class="notification-expansion-panels"
+        v-if="filteredFields(payment).length"
+      >
         <v-expansion-panel class="product-select-exp-panel">
           <v-expansion-panel-title class="notifications-preferences-title">
             <div class="notifications-preferences-left">
@@ -299,7 +311,7 @@
               <tbody>
                 <tr
                   class="deliveries-table-column"
-                  v-for="(row, i) in payment"
+                  v-for="(row, i) in filteredFields(payment)"
                   :key="i"
                 >
                   <td class="deliveries-product-row">
@@ -377,6 +389,10 @@ export default {
       ],
       consignment: [
         {
+          item: this.$t("settings.whenARiderIsAssignedToPickMyInventory"),
+          id: "",
+        },
+        {
           item: this.$t("settings.whenRiderArrivesToPickInventory"),
           id: "EVENT_PICKUP_PARTNER_ARRIVED_AT_PICKUP_LOCATION",
         },
@@ -386,9 +402,15 @@ export default {
         },
         {
           item: this.$t(
-            "settings.whenInventoryIsDeliveredToTheFulfilmentCenter"
+            "settings.whenRiderReachesTheFulfillmentCentreToDropOffItems"
           ),
           id: "EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
+        },
+        {
+          item: this.$t(
+            "settings.whenInventoryIsDeliveredToTheFulfilmentCenter"
+          ),
+          id: "EVENT_PICKUP_HUB_ITEMS_RECEIVED_AT_HUB",
         },
       ],
       delivery: [
@@ -410,6 +432,10 @@ export default {
           item: this.$t("settings.whenDeliveryAttemptsHaveBeenExceeded"),
           id: "",
         },
+        {
+          item: this.$t("settings.whenDeliveryHasBeenCompleted"),
+          id: "EVENT_DELIVERY_PARTNER_SUBMITTED_ITEMS_TO_BUYER_CONFIRMED_VIA_CODE",
+        },
       ],
       payment: [
         {
@@ -418,6 +444,10 @@ export default {
         },
         {
           item: this.$t("settings.reminderOfAPendingPayment"),
+          id: "",
+        },
+        {
+          item: this.$t("settings.whenPaymentIsSuccessful"),
           id: "PAYMENT_UPDATES",
         },
       ],
@@ -447,6 +477,15 @@ export default {
           this.preferences = this.preferenceMapping();
         }
       });
+    },
+    filteredFields(field) {
+      const fields = [];
+      field.forEach((row) => {
+        if (row.id) {
+          fields.push(row);
+        }
+      });
+      return fields;
     },
     preferenceMapping() {
       const mappings = {};

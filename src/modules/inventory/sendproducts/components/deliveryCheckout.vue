@@ -237,7 +237,9 @@ export default {
         means_of_payment: {
           means_of_payment_type: this.getBusinessDetails.settings
             .payments_enabled
-            ? this.defaultPaymentMethod[0].pay_method_name.toUpperCase().replace("-", "")
+            ? this.defaultPaymentMethod[0].pay_method_name
+                .toUpperCase()
+                .replace("-", "")
             : "CARD",
           means_of_payment_id: this.getBusinessDetails.settings.payments_enabled
             ? this.defaultPaymentMethod[0].pay_method_details

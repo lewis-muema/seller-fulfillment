@@ -237,7 +237,7 @@ export default {
         means_of_payment: {
           means_of_payment_type: this.getBusinessDetails.settings
             .payments_enabled
-            ? this.defaultPaymentMethod[0].pay_method_name.replace("-", "")
+            ? this.defaultPaymentMethod[0].pay_method_name.toUpperCase().replace("-", "")
             : "CARD",
           means_of_payment_id: this.getBusinessDetails.settings.payments_enabled
             ? this.defaultPaymentMethod[0].pay_method_details
@@ -264,6 +264,7 @@ export default {
           ? this.getFulfillmentFees.promotion_session_id
           : null,
       };
+      console.log(payload);
       return payload;
     },
   },
@@ -305,6 +306,7 @@ export default {
       });
     },
     createDelivery() {
+      console.log(this.checkoutPayload);
       if (
         this.name &&
         this.phone &&

@@ -266,7 +266,6 @@ export default {
           ? this.getFulfillmentFees.promotion_session_id
           : null,
       };
-      console.log(payload);
       return payload;
     },
   },
@@ -308,7 +307,6 @@ export default {
       });
     },
     createDelivery() {
-      console.log(this.checkoutPayload);
       if (
         this.name &&
         this.phone &&

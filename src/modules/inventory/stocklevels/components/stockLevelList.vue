@@ -150,6 +150,15 @@ export default {
     searchParam(val) {
       this.initiateAlgolia(val);
     },
+    "$store.state.inventorySelectedTab": function inventorySelectedTab(val) {
+      if (val === "inventory.lowStock") {
+        this.params = "/lowstock";
+      } else if (val === "inventory.outOfStock") {
+        this.params = "/outofstock";
+      } else {
+        this.params = "";
+      }
+    },
   },
   mounted() {
     this.setComponent("common.stocks");
@@ -158,10 +167,13 @@ export default {
     this.fetchProducts();
     this.getStockSettings();
     if (this.$route.params.tab === "noStock") {
+      this.params = "/outofstock";
       this.setInventorySelectedTab("inventory.outOfStock");
     } else if (this.$route.params.tab === "lowStock") {
+      this.params = "/lowstock";
       this.setInventorySelectedTab("inventory.lowStock");
     } else {
+      this.params = "";
       this.setInventorySelectedTab("inventory.all");
     }
   },

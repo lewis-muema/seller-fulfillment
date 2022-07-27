@@ -22,7 +22,7 @@
           clear-icon="mdi-close"
         ></v-text-field>
       </div>
-      <div class="users-table" v-if="!noResults">
+      <div class="users-table" :class="noResults ? 'hidden-ui' : ''">
         <v-table>
           <thead>
             <tr>
@@ -82,7 +82,7 @@
                   {{
                     user.active_status
                       ? statusName(user.active_status)
-                      : $t("deliveries.pending")
+                      : $t("deliveries.active")
                   }}</span
                 >
               </td>
@@ -100,7 +100,8 @@
                       v-for="(action, i) in actions(user)"
                       :key="i"
                       :class="
-                        user.user_role === 'ROLE_OWNER'
+                        user.user_role === 'ROLE_OWNER' &&
+                        action.link !== '/settings/view-user'
                           ? 'disabled-action-row'
                           : ''
                       "
@@ -116,7 +117,7 @@
           </tbody>
         </v-table>
       </div>
-      <div v-else>
+      <div :class="noResults ? '' : 'hidden-ui'">
         <div class="no-products-card-container">
           <span class="no-deliveries-icon-halo">
             <i class="mdi mdi-magnify no-products-icon"></i>
@@ -201,8 +202,7 @@ export default {
           hidden.push("user");
         }
       });
-      this.noResults =
-        users.length > 0 ? hidden.length === users.length : false;
+      this.noResults = hidden.length === users.length;
     },
     actions(user) {
       const actions = [];
@@ -294,9 +294,10 @@ export default {
       });
     },
     status(activeStatus) {
-      return activeStatus ? activeStatus : "pending";
+      return activeStatus ? activeStatus : "ACTIVATED";
     },
     statusName(status) {
+      status = status === "ACTIVATED" ? "ACTIVE" : status;
       return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     },
   },
@@ -366,5 +367,8 @@ export default {
 .disabled-action-row {
   pointer-events: none;
   background: #80808033;
+}
+.hidden-ui {
+  display: none;
 }
 </style>

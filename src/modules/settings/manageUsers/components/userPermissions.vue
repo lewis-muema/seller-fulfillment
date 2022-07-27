@@ -398,7 +398,9 @@ export default {
             this.$router.push("/settings/manage-users");
           } else {
             ElNotification({
-              title: this.$t("settings.permissionsSetSuccessfully"),
+              title: this.$t("settings.permissionsSetSuccessfully", {
+                name: this.getUser.first_name,
+              }),
               message: "",
               type: "success",
             });

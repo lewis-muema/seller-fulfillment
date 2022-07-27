@@ -470,6 +470,11 @@ export default createStore({
           link: "/settings/user-permissions",
           trigger: "",
         },
+        {
+          label: "settings.viewUser",
+          link: "/settings/view-user",
+          trigger: "",
+        },
       ],
       userAccessPermissions: {
         CAN_ACCESS_PRODUCTS_MODULE: {

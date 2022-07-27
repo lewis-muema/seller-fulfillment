@@ -54,7 +54,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'inventory'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -66,7 +66,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'inventory'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -78,13 +78,21 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'inventory'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
                 </tr>
               </tbody>
             </v-table>
+            <button
+              class="btn btn-primary mt-2 btn-long notification-preferences-save-button"
+              @click="submitPreference('inventory')"
+              v-loading="loading && button === 'inventory'"
+              :disabled="button !== 'inventory' && button !== ''"
+            >
+              {{ $t("inventory.saveChanges") }}
+            </button>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -143,7 +151,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'consignment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -155,7 +163,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'consignment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -167,13 +175,21 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'consignment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
                 </tr>
               </tbody>
             </v-table>
+            <button
+              class="btn btn-primary mt-2 btn-long notification-preferences-save-button"
+              @click="submitPreference('consignment')"
+              v-loading="loading && button === 'consignment'"
+              :disabled="button !== 'consignment' && button !== ''"
+            >
+              {{ $t("inventory.saveChanges") }}
+            </button>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -234,7 +250,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'delivery'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -246,7 +262,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'delivery'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -258,13 +274,21 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'delivery'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
                 </tr>
               </tbody>
             </v-table>
+            <button
+              class="btn btn-primary mt-2 btn-long notification-preferences-save-button"
+              @click="submitPreference('delivery')"
+              v-loading="loading && button === 'delivery'"
+              :disabled="button !== 'delivery' && button !== ''"
+            >
+              {{ $t("inventory.saveChanges") }}
+            </button>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -325,7 +349,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'payment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -337,7 +361,7 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'payment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
@@ -349,13 +373,21 @@
                       color="indigo-darken-3"
                       hide-details
                       v-if="preferences[row.id]"
-                      :disabled="loading"
+                      :disabled="loading && button === 'payment'"
                     ></v-switch>
                     <v-switch v-else disabled hide-details></v-switch>
                   </td>
                 </tr>
               </tbody>
             </v-table>
+            <button
+              class="btn btn-primary mt-2 btn-long notification-preferences-save-button"
+              @click="submitPreference('payment')"
+              v-loading="loading && button === 'payment'"
+              :disabled="button !== 'payment' && button !== ''"
+            >
+              {{ $t("inventory.saveChanges") }}
+            </button>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -420,7 +452,7 @@ export default {
         },
         {
           item: this.$t("settings.whenRiderArrivesAtMyCustomersLocation"),
-          id: "EVENT_DELIVERY_PARTNER_SUBMITTED_ITEMS_TO_BUYER_CONFIRMED_VIA_CODE",
+          id: "",
         },
         {
           item: this.$t(
@@ -452,6 +484,8 @@ export default {
         },
       ],
       preferences: {},
+      payload: [],
+      button: "",
       loading: false,
     };
   },
@@ -512,11 +546,15 @@ export default {
           });
         }
       });
+      this.payload = preferences;
+    },
+    submitPreference(button) {
+      this.button = button;
       this.loading = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/user/notificationchannel`,
-        values: { business_notification_types: preferences },
+        values: { business_notification_types: this.payload },
       }).then((response) => {
         this.loading = false;
         if (response.status === 200) {
@@ -524,6 +562,7 @@ export default {
             response.data.data.business_notification_types
           );
           this.preferences = this.preferenceMapping();
+          this.button = "";
           ElNotification({
             title: this.$t("settings.notificationPreferencesSetSuccessfully"),
             message: "",
@@ -584,5 +623,9 @@ export default {
 }
 .next-col {
   width: 10%;
+}
+.notification-preferences-save-button {
+  float: right;
+  margin-bottom: 30px;
 }
 </style>

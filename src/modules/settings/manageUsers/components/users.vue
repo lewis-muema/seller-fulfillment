@@ -5,7 +5,7 @@
         class="manageUsers-add-button"
         @click="$router.push('/settings/add-user')"
       >
-        {{ $t("settings.addUser") }}
+        {{ $t("settings.addNewUser") }}
       </v-btn>
     </div>
     <div class="manageUsers-bottom-bar">
@@ -22,7 +22,7 @@
           clear-icon="mdi-close"
         ></v-text-field>
       </div>
-      <div class="users-table">
+      <div class="users-table" v-if="!noResults">
         <v-table>
           <thead>
             <tr>
@@ -90,13 +90,21 @@
                 <v-menu
                   transition="slide-y-transition"
                   anchor="bottom center"
-                  v-if="!getLoader && user.user_role !== 'ROLE_OWNER'"
+                  v-if="!getLoader"
                 >
                   <template v-slot:activator="{ props }">
                     <i class="mdi mdi-dots-horizontal" v-bind="props"></i>
                   </template>
                   <v-list class="users-actions-popup">
-                    <v-list-item v-for="(action, i) in actions(user)" :key="i">
+                    <v-list-item
+                      v-for="(action, i) in actions(user)"
+                      :key="i"
+                      :class="
+                        user.user_role === 'ROLE_OWNER'
+                          ? 'disabled-action-row'
+                          : ''
+                      "
+                    >
                       <v-list-item-title @click="triggerAction(action, user)">
                         {{ $t(action.label) }}
                       </v-list-item-title>
@@ -107,6 +115,16 @@
             </tr>
           </tbody>
         </v-table>
+      </div>
+      <div v-else>
+        <div class="no-products-card-container">
+          <span class="no-deliveries-icon-halo">
+            <i class="mdi mdi-magnify no-products-icon"></i>
+          </span>
+          <div class="no-deliveries-description">
+            {{ $t("settings.sorryWeCouldntFindAnyMatches") }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -133,6 +151,7 @@ export default {
     return {
       params: "",
       activeUser: "",
+      noResults: false,
     };
   },
   watch: {
@@ -172,13 +191,18 @@ export default {
     },
     fiterUsers(param) {
       const users = document.querySelectorAll(".users-table-column");
-      users.forEach((row) => {
+      const hidden = [];
+      users.forEach((row, i) => {
         if (row.id.toLowerCase().includes(param.toLowerCase())) {
           row.style.display = "";
+          hidden.splice(i, 1);
         } else {
           row.style.display = "none";
+          hidden.push("user");
         }
       });
+      this.noResults =
+        users.length > 0 ? hidden.length === users.length : false;
     },
     actions(user) {
       const actions = [];
@@ -338,5 +362,9 @@ export default {
 .users-action-row {
   color: #c0c4cc;
   font-size: 35px !important;
+}
+.disabled-action-row {
+  pointer-events: none;
+  background: #80808033;
 }
 </style>

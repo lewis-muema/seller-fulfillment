@@ -172,10 +172,9 @@
                             alt=""
                             class="product-select-img"
                           />
-                          <span :class="getLoader"
-                            >{{ option.product_variant_quantity }}
-                            {{ option.product_variant_quantity_type }}</span
-                          >
+                          <span :class="getLoader">{{
+                            option.product_variant_description
+                          }}</span>
                           <span :class="getLoader" class="product-select-units"
                             >{{
                               option.product_variant_stock_levels

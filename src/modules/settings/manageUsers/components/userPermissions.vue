@@ -2,12 +2,8 @@
   <div>
     <div class="userPermisssions-container">
       <div class="userPermisssions-top-bar">
-        <i
-          @click="$router.go(-1)"
-          class="mdi mdi-arrow-left userPermisssions-back"
-        ></i>
         <span class="userPermisssions-page-name">{{
-          $t("settings.userPermissions")
+          $t("settings.setUserPermissionsFor", { name: getUser.first_name })
         }}</span>
       </div>
       <div>
@@ -29,7 +25,7 @@
               "
             />
             <span class="userPermisssions-label">{{
-              $t("settings.products")
+              $t("deliveries.viewProducts")
             }}</span>
           </div>
           <div class="d-flex">
@@ -47,9 +43,12 @@
               "
             />
             <span class="userPermisssions-label">{{
-              $t("settings.createProducts")
+              $t("common.addProducts")
             }}</span>
           </div>
+        </div>
+        <div class="userPermisssions-checkbox-container">
+          <p class="mb-2">{{ $t("settings.deliveries") }}</p>
           <div class="d-flex">
             <input
               type="checkbox"
@@ -65,28 +64,7 @@
               "
             />
             <span class="userPermisssions-label">{{
-              $t("settings.sendInventory")
-            }}</span>
-          </div>
-        </div>
-        <div class="userPermisssions-checkbox-container">
-          <p class="mb-2">{{ $t("settings.deliveries") }}</p>
-          <div class="d-flex">
-            <input
-              type="checkbox"
-              class="userPermisssions-checkbox"
-              :checked="permissions.CAN_ACCESS_DELIVERIES_MODULE"
-              @click="
-                permissions.CAN_ACCESS_DELIVERIES_MODULE =
-                  !permissions.CAN_ACCESS_DELIVERIES_MODULE
-              "
-              :disabled="
-                buttonLoading ||
-                !permissions.hasOwnProperty('CAN_ACCESS_DELIVERIES_MODULE')
-              "
-            />
-            <span class="userPermisssions-label">{{
-              $t("settings.toTheCustomer")
+              $t("common.sendInventoryToSendy")
             }}</span>
           </div>
           <div class="d-flex">
@@ -104,7 +82,43 @@
               "
             />
             <span class="userPermisssions-label">{{
-              $t("settings.toTheFulfillmentCentre")
+              $t("settings.viewAndTrackDeliveriesToSendy")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_CREATE_DELIVERIES"
+              @click="
+                permissions.CAN_CREATE_DELIVERIES =
+                  !permissions.CAN_CREATE_DELIVERIES
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_CREATE_DELIVERIES')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("common.sendDeliveryToCustomer")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_DELIVERIES_MODULE"
+              @click="
+                permissions.CAN_ACCESS_DELIVERIES_MODULE =
+                  !permissions.CAN_ACCESS_DELIVERIES_MODULE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_DELIVERIES_MODULE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.viewAndTrackDeliveriesToCustomers")
             }}</span>
           </div>
         </div>
@@ -165,6 +179,42 @@
             />
             <span class="userPermisssions-label">{{
               $t("settings.manageUsers")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_ACCESS_USER_ACTION_LOG"
+              @click="
+                permissions.CAN_ACCESS_USER_ACTION_LOG =
+                  !permissions.CAN_ACCESS_USER_ACTION_LOG
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_ACCESS_USER_ACTION_LOG')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.viewActivityLog")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_EDIT_BUSINESS_PROFILE"
+              @click="
+                permissions.CAN_EDIT_BUSINESS_PROFILE =
+                  !permissions.CAN_EDIT_BUSINESS_PROFILE
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_EDIT_BUSINESS_PROFILE')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.manageBusinessProfile")
             }}</span>
           </div>
         </div>
@@ -256,7 +306,7 @@
           @click="submitPermissions()"
           v-loading="buttonLoading"
         >
-          {{ $t("settings.editPermissions") }}
+          {{ $t("settings.setPermissions") }}
         </v-btn>
       </div>
     </div>
@@ -331,26 +381,32 @@ export default {
         if (response.status === 200) {
           if (
             this.$router.options.history.state.back.includes(
-              "/settings/confirm-user-details"
-            ) ||
-            this.$router.options.history.state.back.includes(
-              "/settings/manage-users"
+              "/settings/add-user"
             )
           ) {
             ElNotification({
-              title: this.$t("settings.permissionsEditedSuccessfully"),
+              title: this.$t("settings.userHasBeenAdded"),
+              message: this.$t(
+                "settings.anEmailHasBeenSentToTheUserWithInstructionsOnHowToLogin"
+              ),
+              type: "success",
+            });
+            this.setOverlayStatus({
+              overlay: true,
+              popup: "user",
+            });
+            this.$router.push("/settings/manage-users");
+          } else {
+            ElNotification({
+              title: this.$t("settings.permissionsSetSuccessfully"),
               message: "",
               type: "success",
             });
             this.$router.go(-1);
-          } else {
-            this.$router.push(
-              `/settings/confirm-user-details/${this.$route.params.user_id}`
-            );
           }
         } else {
           ElNotification({
-            title: this.$t("settings.failedToEditPermissions"),
+            title: this.$t("settings.failedToSetPermissions"),
             message: "",
             type: "error",
           });

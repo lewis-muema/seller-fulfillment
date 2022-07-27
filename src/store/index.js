@@ -396,7 +396,7 @@ export default createStore({
       ],
       user: {
         user_id: "U-LSH-0000",
-        first_name: "First",
+        first_name: "User",
         last_name: "Name",
         user_role: "ROLE_OWNER",
         invitation_status: null,
@@ -513,6 +513,12 @@ export default createStore({
             "/settings/view-user",
             "/settings/confirm-user-details",
           ],
+        },
+        CAN_ACCESS_USER_ACTION_LOG: {
+          route: [],
+        },
+        CAN_EDIT_BUSINESS_PROFILE: {
+          route: ["/settings/profile/business-profile"],
         },
       },
       accessDenied: [],
@@ -1479,7 +1485,7 @@ export default createStore({
       },
       userDetails: {
         user_id: "U-ALG-1812",
-        first_name: "First",
+        first_name: "User",
         last_name: "Name",
         user_role: "ROLE_OWNER",
         invitation_status: "INVITATION_ACCEPTED",

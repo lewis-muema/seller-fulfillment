@@ -106,7 +106,7 @@
               {{
                 getUser.active_status
                   ? statusName(getUser.active_status)
-                  : $t("deliveries.pending")
+                  : $t("deliveries.active")
               }}</span
             >
           </p>
@@ -279,9 +279,10 @@ export default {
       });
     },
     status(activeStatus) {
-      return activeStatus ? activeStatus : "pending";
+      return activeStatus ? activeStatus : "ACTIVATED";
     },
     statusName(status) {
+      status = status === "ACTIVATED" ? "ACTIVE" : status;
       status = status.replaceAll("_", " ");
       return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     },

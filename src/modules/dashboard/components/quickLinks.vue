@@ -24,7 +24,7 @@ export default {
       quickLinks: [
         {
           icon: "mdi-truck",
-          name: "common.deliverToCustomer",
+          name: "common.sendDeliveryToCustomer",
           path: "/inventory/send-inventory/customer/select-products",
         },
         {

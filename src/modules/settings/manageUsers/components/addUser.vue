@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="addUser-container">
+    <div class="addUser-container" v-if="!confirmStatus">
       <div class="addUser-top-bar">
         <i @click="$router.go(-1)" class="mdi mdi-arrow-left addUser-back"></i>
         <span>{{ $t("settings.addAUser") }}</span>
@@ -73,14 +73,70 @@
           >
           </el-option>
         </el-select>
-        <v-btn
-          class="addUser-save"
-          @click="submitUser()"
-          v-loading="buttonLoader"
-        >
-          {{ $t("settings.saveChanges") }}
+        <v-btn class="addUser-save" @click="confirmUser()">
+          {{ $t("auth.continue") }}
         </v-btn>
       </div>
+    </div>
+    <div class="view-users-details-panel" v-else>
+      <div class="view-users-details-panel-top">
+        <span class="view-users-details-back" @click="confirmStatus = false">
+          <i class="mdi mdi-arrow-left"></i>
+        </span>
+        <span>
+          {{ $t("settings.confirmUserInformation") }}
+        </span>
+      </div>
+      <div class="confirm-user-details-top">
+        <span
+          class="delivery-info-edit confirm-user-details-edit"
+          @click="confirmStatus = false"
+        >
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.firstName") }}</p>
+          <p class="view-users-details-row-description">
+            {{ firstName }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.lastName") }}</p>
+          <p class="view-users-details-row-description">
+            {{ lastName }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">
+            {{ $t("settings.phoneNumber") }}
+          </p>
+          <p class="view-users-details-row-description">
+            {{ phone }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">
+            {{ $t("settings.emailAddress") }}
+          </p>
+          <p class="view-users-details-row-description">
+            {{ emailAddress }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.userRole") }}</p>
+          <p class="view-users-details-row-description">
+            {{ defaultRole.replace("_", " ") }}
+          </p>
+        </div>
+      </div>
+      <v-btn
+        class="edit-info-submit-button confirm-user-details-btn"
+        @click="submitUser()"
+        v-loading="buttonLoader"
+      >
+        {{ $t("settings.addUser") }}
+      </v-btn>
     </div>
   </div>
 </template>
@@ -108,6 +164,7 @@ export default {
           value: "ROLE_ASSISTANT",
         },
       ],
+      confirmStatus: false,
     };
   },
   mounted() {
@@ -119,6 +176,23 @@ export default {
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),
     ...mapActions(["requestAxiosPost"]),
+    confirmUser() {
+      if (
+        this.firstName &&
+        this.lastName &&
+        this.defaultRole &&
+        this.emailAddress &&
+        this.phone
+      ) {
+        this.confirmStatus = true;
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.fillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
     submitUser() {
       if (
         this.firstName &&

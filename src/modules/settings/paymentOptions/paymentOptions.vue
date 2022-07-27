@@ -42,7 +42,7 @@ export default {
         bulk: false,
         paybill_no: "",
         email: this.getUserDetails.email,
-        authToken: localStorage.token,
+        authToken: localStorage.accessToken,
         firstname: this.getUserDetails.first_name,
         lastname: this.getUserDetails.last_name,
         payment_options: "",

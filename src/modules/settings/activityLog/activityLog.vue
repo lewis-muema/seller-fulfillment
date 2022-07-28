@@ -1,5 +1,7 @@
 <template>
   <div>
+    Params - {{ params }}
+    {{ user }}
     {{ getUserChanged }}
     Range - {{ getRangeChanged }}
     <logs @range="rangeChanged" @user="userChanged" />
@@ -30,9 +32,13 @@ export default {
       "getRangeChanged",
     ]),
     limitParams() {
-      return `?lower_limit_date=${moment(this.range[0]).format(
-        "YYYY-MM-DD"
-      )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+      return this.getUserChanged === true && this.getRangeChanged === true
+        ? `&lower_limit_date=${moment(this.range[0]).format(
+            "YYYY-MM-DD"
+          )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`
+        : `?lower_limit_date=${moment(this.range[0]).format(
+            "YYYY-MM-DD"
+          )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
     },
   },
   methods: {
@@ -57,9 +63,7 @@ export default {
       this.filteredUserLogs();
     },
     userChanged(val) {
-      console.log(val);
       this.setUserChanged(true);
-      console.log("here");
       this.user = val;
       this.filteredUserLogs();
     },
@@ -72,6 +76,8 @@ export default {
               ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}`
               : this.getRangeChanged === true
               ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/${this.params}`
+              : this.getUserChanged === true && this.getRangeChanged === true
+              ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}${this.params}`
               : "",
         };
         console.log(fullPayload);

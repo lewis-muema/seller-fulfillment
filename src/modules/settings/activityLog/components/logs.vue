@@ -1,4 +1,5 @@
 <template>
+  Loader - {{ user }}
   <div class="activity-log-container">
     <div class="activity-log-container-top">
       <el-select
@@ -8,7 +9,7 @@
         @change="filterUsers($event)"
       >
         <el-option
-          v-for="(user, i) in getLogUsers"
+          v-for="(user, i) in getBusinessUsers"
           :key="i"
           :label="user.firstName + ' ' + user.lastName"
           :value="user.userId"
@@ -70,7 +71,19 @@
         </tbody>
       </v-table>
     </div>
-    <div v-else>No Logs</div>
+    <div v-else>
+      <div class="deliveries-empty">
+        <div>
+          <img
+            src="https://images.sendyit.com/fulfilment/seller/track.png"
+            alt=""
+            class="deliveries-empty-img"
+          />
+        </div>
+        <p class="statements-empty-title">No Activity Logs</p>
+        <p class="statements-empty-label">You will be able to see logs here</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -92,21 +105,13 @@ export default {
       "getActivityLog",
       "getFilteredLog",
       "getLogsFiltered",
+      "getBusinessUsers",
       "getStorageUserDetails",
     ]),
-    getUserActionLogs() {
-      return this.getActivityLog.user_action_logs;
-    },
-    getUserFilteredLogs() {
-      return this.getFilteredLog.user_action_logs;
-    },
-    getLogUsers() {
-      return this.getActivityLog.users;
-    },
     getActivityLogs() {
       return this.getLogsFiltered === true
-        ? this.getUserFilteredLogs
-        : this.getUserActionLogs;
+        ? this.getFilteredLog
+        : this.getActivityLog;
     },
   },
   watch: {
@@ -125,16 +130,19 @@ export default {
         "h:mm"
       )}`;
     },
-    async retriveActivityLogs() {
+    retriveActivityLogs() {
+      console.log("loader here");
+      this.setLoader("loading-text");
       try {
         const fullPayload = {
           app: process.env.FULFILMENT_SERVER,
           endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
         };
-        this.setLoader("loading-text");
-        const response = await this.activityLogs(fullPayload);
-        this.setLoader("");
-        console.log(response);
+        const response = this.activityLogs(fullPayload);
+        console.log(this.$route.path);
+        if (this.$route.path === "/settings/activity-log") {
+          this.setLoader("");
+        }
         if (response.message === "list.user.action.logs.success") {
           return response;
         }
@@ -158,7 +166,7 @@ export default {
   border: 1px solid #e2e7ed;
   border-radius: 5px;
   background: white;
-  min-height: 700px !important;
+  height: auto;
 }
 .activity-log-container-top {
   height: 90px;

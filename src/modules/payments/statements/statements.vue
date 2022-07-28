@@ -1,5 +1,6 @@
 <template>
   <div>
+    Params - {{ params }}
     <make-payment v-if="prompt" />
     <div class="statements-top-bar-container">
       <div>

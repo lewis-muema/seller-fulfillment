@@ -30,6 +30,7 @@ export default {
   getLogsFiltered: (state) => state.isLogsFiltered,
   getUserChanged: (state) => state.userChanged,
   getRangeChanged: (state) => state.rangeChanged,
+  getBusinessUsers: (state) => state.businessUsers,
   getDashboardSelectedTab: (state) => state.dashboardSelectedTab,
   getInventorySelectedTab: (state) => state.inventorySelectedTab,
   getStockSelectedTab: (state) => state.stockSelectedTab,

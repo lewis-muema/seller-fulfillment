@@ -253,7 +253,8 @@ export default {
   async activityLogs({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosGet", payload);
-      commit("setActivityLog", res.data.data);
+      commit("setActivityLog", res.data.data.user_action_logs);
+      commit("setBusinessUsers", res.data.data.users);
       return res.data;
     } catch (error) {
       return error.response;
@@ -262,7 +263,7 @@ export default {
   async filterActivityLogs({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosGet", payload);
-      commit("setFilteredLogs", res.data.data);
+      commit("setFilteredLogs", res.data.data.user_action_logs);
       return res.data;
     } catch (error) {
       return error.response;

@@ -68,6 +68,18 @@ export default {
   setActivityLog(state, val) {
     state.activityLog = val;
   },
+  setFilteredLogs(state, val) {
+    state.filteredLog = val;
+  },
+  setLogsFiltered(state, val) {
+    state.isLogsFiltered = val;
+  },
+  setUserChanged(state, val) {
+    state.userChanged = val;
+  },
+  setRangeChanged(state, val) {
+    state.rangeChanged = val;
+  },
   setDashboardSelectedTab(state, val) {
     state.dashboardSelectedTab = val;
   },

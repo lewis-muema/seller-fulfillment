@@ -210,6 +210,10 @@ export default createStore({
       tab: "All",
       loader: "loading-text",
       overlay: false,
+      filteredLog: {},
+      userChanged: false,
+      rangeChanged: false,
+      isLogsFiltered: false,
       activityLog: [
         {
           date: "Thur, 1st May 2022   17:06",

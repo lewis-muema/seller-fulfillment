@@ -223,7 +223,7 @@
                 : ''
             "
           ></v-list-item>
-          <!-- <v-list-item
+          <v-list-item
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
             class="desktop-sidebar-sub-menu"
@@ -231,7 +231,7 @@
             :append-icon="
               route === $t('common.activityLog') ? 'mdi-circle-small' : ''
             "
-          ></v-list-item> -->
+          ></v-list-item>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>

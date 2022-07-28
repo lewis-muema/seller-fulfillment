@@ -250,4 +250,22 @@ export default {
       return error.response;
     }
   },
+  async activityLogs({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosGet", payload);
+      commit("setActivityLog", res.data.data);
+      return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async filterActivityLogs({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosGet", payload);
+      commit("setFilteredLogs", res.data.data);
+      return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

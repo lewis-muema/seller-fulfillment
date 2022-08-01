@@ -1,5 +1,4 @@
 <template>
-  Loader - {{ user }}
   <div class="activity-log-container">
     <div class="activity-log-container-top">
       <el-select
@@ -29,10 +28,7 @@
         />
       </div>
     </div>
-    <div
-      class="activity-log"
-      v-if="getActivityLogs ? getActivityLogs.length : []"
-    >
+    <div class="activity-log">
       <v-table>
         <thead>
           <tr>
@@ -47,7 +43,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="getActivityLogs ? getActivityLogs.length : []">
           <tr
             class="activity-log-column"
             v-for="(log, i) in getActivityLogs"
@@ -64,25 +60,26 @@
             </td>
             <td class="users-email-row">
               <span :class="getLoader">
-                {{ log.user_action_type }}
+                {{ formatActionName(log.user_action_type) }}
+                {{ formatActionValues(log) }}
               </span>
             </td>
           </tr>
         </tbody>
-      </v-table>
-    </div>
-    <div v-else>
-      <div class="deliveries-empty">
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
+        <div v-else>
+          <div class="no-products-card-container">
+            <span class="no-deliveries-icon-halo">
+              <i class="mdi mdi-magnify no-products-icon"></i>
+            </span>
+            <div class="no-products-description no-activities-desc">
+              {{ $t("settings.sorryActivitiesFound") }}
+            </div>
+            <div class="no-deliveries-description">
+              {{ $t("settings.adjustDeliveryDate") }}
+            </div>
+          </div>
         </div>
-        <p class="statements-empty-title">No Activity Logs</p>
-        <p class="statements-empty-label">You will be able to see logs here</p>
-      </div>
+      </v-table>
     </div>
   </div>
 </template>
@@ -129,6 +126,17 @@ export default {
       return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
         "h:mm"
       )}`;
+    },
+    formatActionName(action) {
+      return (
+        action.charAt(0) +
+        action.substring(1).replaceAll("_", " ").toLowerCase()
+      );
+    },
+    formatActionValues(action) {
+      return action.before_value !== null && action.before_value !== null
+        ? `from ${action.before_value} to ${action.after_value}`
+        : "";
     },
     retriveActivityLogs() {
       console.log("loader here");
@@ -193,5 +201,9 @@ export default {
 }
 .activity-log {
   margin-top: 20px;
+}
+.no-activities-desc {
+  color: #606266 !important;
+  font-weight: 500 !important;
 }
 </style>

@@ -1,9 +1,6 @@
 <template>
   <div>
-    Params - {{ params }}
-    {{ user }}
-    {{ getUserChanged }}
-    Range - {{ getRangeChanged }}
+    Params - {{ filterEndpoints }}
     <logs @range="rangeChanged" @user="userChanged" />
   </div>
 </template>
@@ -25,6 +22,18 @@ export default {
   mounted() {
     this.setComponent("common.activityLog");
   },
+  // watch: {
+  //   "$store.state.rangeChanged": function changeRange(val) {
+  //     if (val === true) {
+  //       this.setRangeChanged(true);
+  //     }
+  //   },
+  //   "$store.state.userChanged": function changeUser(val) {
+  //     if (val === true) {
+  //       this.setUserChanged(true);
+  //     }
+  //   },
+  // },
   computed: {
     ...mapGetters([
       "getStorageUserDetails",
@@ -32,13 +41,30 @@ export default {
       "getRangeChanged",
     ]),
     limitParams() {
-      return this.getUserChanged === true && this.getRangeChanged === true
+      return this.getUserChanged && this.getRangeChanged
         ? `&lower_limit_date=${moment(this.range[0]).format(
             "YYYY-MM-DD"
           )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`
         : `?lower_limit_date=${moment(this.range[0]).format(
             "YYYY-MM-DD"
           )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+    },
+    filterEndpoints() {
+      let endpoint = "";
+      switch (true) {
+        case this.getUserChanged && this.getRangeChanged:
+          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}${this.params}`;
+          break;
+        case this.getRangeChanged:
+          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/${this.params}`;
+          break;
+        case this.getUserChanged:
+          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}`;
+          break;
+        default:
+          break;
+      }
+      return endpoint;
     },
   },
   methods: {
@@ -71,14 +97,7 @@ export default {
       try {
         const fullPayload = {
           app: process.env.FULFILMENT_SERVER,
-          endpoint:
-            this.getUserChanged === true
-              ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}`
-              : this.getRangeChanged === true
-              ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/${this.params}`
-              : this.getUserChanged === true && this.getRangeChanged === true
-              ? `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}${this.params}`
-              : "",
+          endpoint: this.filterEndpoints,
         };
         console.log(fullPayload);
         this.setLoader("loading-text");

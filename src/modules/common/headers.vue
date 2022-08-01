@@ -293,7 +293,7 @@ export default {
       return "";
     },
     formatPeriod(notification) {
-      return moment(notification).fromNow();
+      return moment(notification.created_date).fromNow();
     },
     listBusinessDetails() {
       this.requestAxiosGet({

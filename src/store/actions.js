@@ -121,6 +121,12 @@ export default {
     }
     if (
       error.response.status === 404 &&
+      error.response.config.url.includes("token")
+    ) {
+      router.push("/auth/sign-in");
+    }
+    if (
+      error.response.status === 404 &&
       ["business.notfound", "user.notfound"].includes(
         error.response.data.errors[0].message
       )

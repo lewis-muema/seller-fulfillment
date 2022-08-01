@@ -58,7 +58,11 @@ export default {
   getParent: (state) => state.parent,
   getPaymnetMethods: (state) => state.paymnetMethods,
   getStorageUserDetails: (state) =>
-    state.bizDetails ? state.bizDetails : JSON.parse(state.storageUserDetails),
+    state.bizDetails
+      ? state.bizDetails
+      : state.storageUserDetails
+      ? JSON.parse(state.storageUserDetails)
+      : {},
   getBillingCycles: (state) => state.billingCycles,
   getLineItems: (state) => state.lineItems,
   getInvoice: (state) => state.invoice,
@@ -83,4 +87,11 @@ export default {
   getDefaultCountryName: (state) => state.defaultCountryName,
   getTabStatuses: (state) => state.tabStatuses,
   getTerms: (state) => state.terms,
+  getUserActions: (state) => state.userActions,
+  getUser: (state) => state.user,
+  getNotificationPreferences: (state) => state.notificationPreferences,
+  getUserAccessPermissions: (state) => state.userAccessPermissions,
+  getAccessDenied: (state) => state.accessDenied,
+  getUserAction: (state) => state.userAction,
+  getActiveUser: (state) => state.activeUser,
 };

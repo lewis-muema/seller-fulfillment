@@ -41,5 +41,10 @@
   "trackDelivery": "Track delivery",
   "restockInventory": "Restock inventory",
   "billings": "Billings",
-  "trackDeliveries": "Track Deliveries"
+  "trackDeliveries": "Track Deliveries",
+  "manageNotificationsPreferences": "Manage notifications preferences",
+  "manageNotifications": "Manage notifications",
+  "accessDenied": "Access Denied",
+  "thePageYoureTryingToAccess": "We are sorry, the page you’re trying to access has restricted access. Contact administrator to get permissions.",
+  "goBack": "Go Back"
 }

@@ -1,23 +1,48 @@
 <template>
   <div>
-    <div class="addUser-container">
+    <div class="addUser-container" v-if="!confirmStatus">
       <div class="addUser-top-bar">
         <i @click="$router.go(-1)" class="mdi mdi-arrow-left addUser-back"></i>
         <span>{{ $t("settings.addAUser") }}</span>
       </div>
       <div>
         <label for="name" class="addUser-label">
-          {{ $t("settings.name") }}
+          {{ $t("settings.firstName") }}
         </label>
         <v-text-field
           class="addUser-field"
           id="name"
           :label="$t('settings.enterName')"
-          v-model="name"
+          v-model="firstName"
           variant="outlined"
           clearable
           clear-icon="mdi-close"
+          :disabled="buttonLoader"
         ></v-text-field>
+        <label for="name" class="addUser-label">
+          {{ $t("settings.lastName") }}
+        </label>
+        <v-text-field
+          class="addUser-field"
+          id="name"
+          :label="$t('settings.enterName')"
+          v-model="lastName"
+          variant="outlined"
+          clearable
+          clear-icon="mdi-close"
+          :disabled="buttonLoader"
+        ></v-text-field>
+        <label for="phone" class="addUser-label">
+          {{ $t("settings.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          class="addUser-field personalInfo-phone mb-4"
+          id="phone"
+          :label="$t('settings.phoneNumber')"
+          v-bind="getSendyPhoneProps"
+          v-model="phone"
+          :disabled="buttonLoader"
+        ></vue-tel-input>
         <label for="email-address" class="addUser-label">
           {{ $t("settings.emailAddress") }}
         </label>
@@ -29,43 +54,190 @@
           variant="outlined"
           clearable
           clear-icon="mdi-close"
+          :disabled="buttonLoader"
         ></v-text-field>
         <label for="user-role" class="addUser-label">
           {{ $t("settings.userRole") }}
         </label>
-        <v-select
-          class="addUser-select"
+        <el-select
+          class="mb-6 business-details-industry"
           id="user-role"
-          label="Select"
-          :items="roles"
           v-model="defaultRole"
-          outlined
-        ></v-select>
-        <v-btn class="addUser-save">
-          {{ $t("settings.saveChanges") }}
+          :disabled="buttonLoader"
+        >
+          <el-option
+            v-for="role in roles"
+            :key="role.value"
+            :label="role.label"
+            :value="role.value"
+          >
+          </el-option>
+        </el-select>
+        <v-btn class="addUser-save" @click="confirmUser()">
+          {{ $t("auth.continue") }}
         </v-btn>
       </div>
+    </div>
+    <div class="view-users-details-panel" v-else>
+      <div class="view-users-details-panel-top">
+        <span class="view-users-details-back" @click="confirmStatus = false">
+          <i class="mdi mdi-arrow-left"></i>
+        </span>
+        <span>
+          {{ $t("settings.confirmUserInformation") }}
+        </span>
+      </div>
+      <div class="confirm-user-details-top">
+        <span
+          class="delivery-info-edit confirm-user-details-edit"
+          @click="confirmStatus = false"
+        >
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.firstName") }}</p>
+          <p class="view-users-details-row-description">
+            {{ firstName }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.lastName") }}</p>
+          <p class="view-users-details-row-description">
+            {{ lastName }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">
+            {{ $t("settings.phoneNumber") }}
+          </p>
+          <p class="view-users-details-row-description">
+            {{ phone }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">
+            {{ $t("settings.emailAddress") }}
+          </p>
+          <p class="view-users-details-row-description">
+            {{ emailAddress }}
+          </p>
+        </div>
+        <div class="view-users-details-row">
+          <p class="view-users-details-title">{{ $t("settings.userRole") }}</p>
+          <p class="view-users-details-row-description">
+            {{ defaultRole.replace("_", " ") }}
+          </p>
+        </div>
+      </div>
+      <v-btn
+        class="edit-info-submit-button confirm-user-details-btn"
+        @click="submitUser()"
+        v-loading="buttonLoader"
+      >
+        {{ $t("settings.addUser") }}
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
     return {
-      name: "",
+      firstName: "",
+      lastName: "",
       emailAddress: "",
       defaultRole: "",
-      roles: [this.$t("settings.admin"), this.$t("settings.user")],
+      phone: "",
+      buttonLoader: false,
+      roles: [
+        {
+          label: this.$t("settings.admin"),
+          value: "ROLE_ADMIN",
+        },
+        {
+          label: this.$t("settings.user"),
+          value: "ROLE_ASSISTANT",
+        },
+      ],
+      confirmStatus: false,
     };
   },
   mounted() {
     this.setComponent("settings.addAUser");
   },
+  computed: {
+    ...mapGetters(["getStorageUserDetails", "getSendyPhoneProps"]),
+  },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapActions(["requestAxiosPost"]),
+    confirmUser() {
+      if (
+        this.firstName &&
+        this.lastName &&
+        this.defaultRole &&
+        this.emailAddress &&
+        this.phone
+      ) {
+        this.confirmStatus = true;
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.fillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
+    submitUser() {
+      if (
+        this.firstName &&
+        this.lastName &&
+        this.defaultRole &&
+        this.emailAddress &&
+        this.phone
+      ) {
+        const payload = {
+          first_name: this.firstName,
+          last_name: this.lastName,
+          user_role: this.defaultRole,
+          phone_number: this.phone,
+          email: this.emailAddress,
+        };
+        this.buttonLoader = true;
+        this.requestAxiosPost({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `/seller/${this.getStorageUserDetails.business_id}/admin/users`,
+          values: payload,
+        }).then((response) => {
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            this.$router.push(
+              `/settings/user-permissions/${response.data.data.user.user_id}`
+            );
+          } else {
+            ElNotification({
+              title: response.response.data.errors[0].message.replaceAll(
+                ".",
+                " "
+              ),
+              message: "",
+              type: "error",
+            });
+          }
+        });
+      } else {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message: this.$t("deliveries.fillInAllFields"),
+          type: "warning",
+        });
+      }
+    },
   },
 };
 </script>

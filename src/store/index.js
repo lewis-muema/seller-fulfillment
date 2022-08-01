@@ -247,116 +247,286 @@ export default createStore({
           action: "Changed the price of Shea butter from KES 500 to KES350",
         },
       ],
+      notificationPreferences: [],
       users: [
         {
-          name: "James Doe",
-          phoneNumber: "+2547000000000",
-          emailAddress: "James@smartcollections.com",
-          status: "Active",
-          actions: [
+          user_id: "U-LSH-0000",
+          first_name: "First",
+          last_name: "Name",
+          user_role: "ROLE_OWNER",
+          invitation_status: null,
+          active_status: null,
+          phone_number: "+254 795 000000",
+          email: "user@sendyit.com",
+          user_access_permissions: [
             {
-              label: "settings.editUser",
-              link: "/settings/edit-user/",
-              trigger: "",
+              permission_id: "CAN_ACCESS_PRODUCTS_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.deactivateUser",
-              link: "/settings/deactivate-user/",
-              trigger: "",
+              permission_id: "CAN_CREATE_PRODUCTS",
+              permission_granted: true,
             },
             {
-              label: "settings.resendEmail",
-              link: "",
-              trigger: "resend",
+              permission_id: "CAN_ACCESS_DELIVERIES_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
-              trigger: "",
-            },
-          ],
-        },
-        {
-          name: "Jane Doe",
-          phoneNumber: "+2547000000000",
-          emailAddress: "James1@smartcollections.com",
-          status: "Active",
-          actions: [
-            {
-              label: "settings.editUser",
-              link: "/settings/edit-user/",
+              permission_id: "CAN_CREATE_DELIVERIES",
+              permission_granted: true,
             },
             {
-              label: "settings.deactivateUser",
-              link: "/settings/deactivate-user/",
+              permission_id: "CAN_ACCESS_CONSIGNMENTS_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
-            },
-          ],
-        },
-        {
-          name: "Martin Doe",
-          phoneNumber: "+2547000000000",
-          emailAddress: "James2@smartcollections.com",
-          status: "Active",
-          actions: [
-            {
-              label: "settings.editUser",
-              link: "/settings/edit-user/",
+              permission_id: "CAN_CREATE_CONSIGNMENTS",
+              permission_granted: true,
             },
             {
-              label: "settings.deactivateUser",
-              link: "/settings/deactivate-user/",
+              permission_id: "CAN_ACCESS_BILLING_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
+              permission_id: "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_MANAGE_USERS_MODULE",
+              permission_granted: true,
             },
           ],
         },
         {
-          name: "Cuz Doe",
-          phoneNumber: "+2547000000000",
-          emailAddress: "James3@smartcollections.com",
-          status: "Active",
-          actions: [
+          user_id: "U-LSH-0000",
+          first_name: "First",
+          last_name: "Name",
+          user_role: "ROLE_OWNER",
+          invitation_status: null,
+          active_status: null,
+          phone_number: "+254 795 000000",
+          email: "user@sendyit.com",
+          user_access_permissions: [
             {
-              label: "settings.editUser",
-              link: "/settings/edit-user/",
+              permission_id: "CAN_ACCESS_PRODUCTS_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.deactivateUser",
-              link: "/settings/deactivate-user/",
+              permission_id: "CAN_CREATE_PRODUCTS",
+              permission_granted: true,
             },
             {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
+              permission_id: "CAN_ACCESS_DELIVERIES_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_CREATE_DELIVERIES",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_CONSIGNMENTS_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_CREATE_CONSIGNMENTS",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_BILLING_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_MANAGE_USERS_MODULE",
+              permission_granted: true,
             },
           ],
         },
         {
-          name: "Shyla Doe",
-          phoneNumber: "+2547000000000",
-          emailAddress: "James4@smartcollections.com",
-          status: "Active",
-          actions: [
+          user_id: "U-LSH-0000",
+          first_name: "First",
+          last_name: "Name",
+          user_role: "ROLE_OWNER",
+          invitation_status: null,
+          active_status: null,
+          phone_number: "+254 795 000000",
+          email: "user@sendyit.com",
+          user_access_permissions: [
             {
-              label: "settings.editUser",
-              link: "/settings/edit-user/",
+              permission_id: "CAN_ACCESS_PRODUCTS_MODULE",
+              permission_granted: true,
             },
             {
-              label: "settings.deactivateUser",
-              link: "/settings/deactivate-user/",
+              permission_id: "CAN_CREATE_PRODUCTS",
+              permission_granted: true,
             },
             {
-              label: "settings.modifyPermissions",
-              link: "/settings/user-permissions",
+              permission_id: "CAN_ACCESS_DELIVERIES_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_CREATE_DELIVERIES",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_CONSIGNMENTS_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_CREATE_CONSIGNMENTS",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_BILLING_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+              permission_granted: true,
+            },
+            {
+              permission_id: "CAN_ACCESS_MANAGE_USERS_MODULE",
+              permission_granted: true,
             },
           ],
         },
       ],
+      user: {
+        user_id: "U-LSH-0000",
+        first_name: "User",
+        last_name: "Name",
+        user_role: "ROLE_OWNER",
+        invitation_status: null,
+        active_status: null,
+        phone_number: "+254 795 000000",
+        email: "user@sendyit.com",
+        user_access_permissions: [
+          {
+            permission_id: "CAN_ACCESS_PRODUCTS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_PRODUCTS",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_DELIVERIES_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_DELIVERIES",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_CONSIGNMENTS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_CONSIGNMENTS",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_BILLING_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_MANAGE_USERS_MODULE",
+            permission_granted: true,
+          },
+        ],
+      },
+      userAction: "",
+      activeUser: {},
+      userActions: [
+        {
+          label: "settings.editUser",
+          link: "/settings/edit-user",
+          trigger: "",
+        },
+        {
+          label: "settings.activateUser",
+          link: "",
+          trigger: "activateUser",
+        },
+        {
+          label: "settings.deactivateUser",
+          link: "",
+          trigger: "deactivateUser",
+        },
+        {
+          label: "settings.resendEmail",
+          link: "",
+          trigger: "resendEmail",
+        },
+        {
+          label: "settings.modifyPermissions",
+          link: "/settings/user-permissions",
+          trigger: "",
+        },
+        {
+          label: "settings.viewUser",
+          link: "/settings/view-user",
+          trigger: "",
+        },
+      ],
+      userAccessPermissions: {
+        CAN_ACCESS_PRODUCTS_MODULE: {
+          route: [
+            "/inventory/products",
+            "/inventory/stock-levels",
+            "/inventory/view-product",
+          ],
+        },
+        CAN_CREATE_PRODUCTS: {
+          route: [
+            "/inventory/add-product",
+            "/inventory/edit-product",
+            "/inventory/import-products",
+          ],
+        },
+        CAN_ACCESS_DELIVERIES_MODULE: {
+          route: ["/deliveries/customer", "/deliveries/tracking"],
+        },
+        CAN_CREATE_DELIVERIES: {
+          route: ["/inventory/send-inventory/customer"],
+        },
+        CAN_ACCESS_CONSIGNMENTS_MODULE: {
+          route: ["/deliveries/sendy", "/deliveries/tracking"],
+        },
+        CAN_CREATE_CONSIGNMENTS: {
+          route: ["/inventory/send-inventory/sendy"],
+        },
+        CAN_ACCESS_BILLING_MODULE: {
+          route: ["/payments/billings", "/payments/payment-summary"],
+        },
+        CAN_ACCESS_PAYMENT_OPTIONS_MODULE: {
+          route: ["/payment-option-page", "/settings/payment-options"],
+        },
+        CAN_ACCESS_MANAGE_USERS_MODULE: {
+          route: [
+            "/settings/manage-users",
+            "/settings/add-user",
+            "/settings/edit-user",
+            "/settings/user-permissions",
+            "/settings/view-user",
+            "/settings/confirm-user-details",
+          ],
+        },
+        CAN_ACCESS_USER_ACTION_LOG: {
+          route: [],
+        },
+        CAN_EDIT_BUSINESS_PROFILE: {
+          route: ["/settings/profile/business-profile"],
+        },
+      },
+      accessDenied: [],
       invoices: [
         {
           created_date: 1636456110000,
@@ -1319,11 +1489,52 @@ export default createStore({
         promotion_notifications: [],
       },
       userDetails: {
-        email: "user@gmail.com",
+        user_id: "U-ALG-1812",
         first_name: "User",
         last_name: "Name",
-        phone_number: "+25470000000",
-        user_id: "U-LSH-0000",
+        user_role: "ROLE_OWNER",
+        invitation_status: "INVITATION_ACCEPTED",
+        active_status: "ACTIVATED",
+        phone_number: "+25422222",
+        email: "user@sendyit.com",
+        user_access_permissions: [
+          {
+            permission_id: "CAN_ACCESS_PRODUCTS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_PRODUCTS",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_DELIVERIES_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_DELIVERIES",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_CONSIGNMENTS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_CREATE_CONSIGNMENTS",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_BILLING_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+            permission_granted: true,
+          },
+          {
+            permission_id: "CAN_ACCESS_MANAGE_USERS_MODULE",
+            permission_granted: true,
+          },
+        ],
       },
       storageUserDetails: localStorage.userDetails,
       bizDetails: "",

@@ -29,6 +29,7 @@
             ></v-list-item>
           </template>
           <v-list-item
+            v-if="!getAccessDenied.includes('/inventory/products')"
             :title="$t('common.products')"
             class="desktop-sidebar-sub-menu"
             @click="$router.push('/inventory/products')"
@@ -52,6 +53,7 @@
             "
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/inventory/stock-levels')"
             :title="$t('common.stocks')"
             @click="$router.push('/inventory/stock-levels')"
             class="desktop-sidebar-sub-menu"
@@ -59,6 +61,7 @@
             :append-icon="route === 'common.stocks' ? 'mdi-circle-small' : ''"
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/inventory/send-inventory')"
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
             class="desktop-sidebar-sub-menu"
@@ -92,6 +95,7 @@
             ></v-list-item>
           </template>
           <v-list-item
+            v-if="!getAccessDenied.includes('/deliveries/customer')"
             :title="$t('common.toCustomers')"
             @click="$router.push('/deliveries/customer')"
             class="desktop-sidebar-sub-menu"
@@ -111,6 +115,7 @@
             "
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/deliveries/sendy')"
             :title="$t('common.toSendy')"
             @click="$router.push('/deliveries/sendy')"
             class="desktop-sidebar-sub-menu"
@@ -143,6 +148,7 @@
             ></v-list-item>
           </template>
           <v-list-item
+            v-if="!getAccessDenied.includes('/payments/billings')"
             :title="$t('common.billings')"
             @click="$router.push('/payments/billings')"
             class="desktop-sidebar-sub-menu"
@@ -172,6 +178,7 @@
             ></v-list-item>
           </template>
           <v-list-item
+            v-if="!getAccessDenied.includes('/settings/profile/personal-info')"
             :title="$t('common.profile')"
             @click="$router.push('/settings/profile/personal-info')"
             class="desktop-sidebar-sub-menu"
@@ -179,6 +186,7 @@
             :append-icon="route === 'common.profile' ? 'mdi-circle-small' : ''"
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/settings/payment-options')"
             :title="$t('common.paymentOptions')"
             @click="$router.push('/settings/payment-options')"
             class="desktop-sidebar-sub-menu"
@@ -187,16 +195,47 @@
               route === 'common.paymentOptions' ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
-          <!-- <v-list-item
-            :title="$t('common.manageUsers')"
+          <v-list-item
+            v-if="!getAccessDenied.includes('/settings/manage-users')"
+            :title="$t('settings.manageUsers')"
             @click="$router.push('/settings/manage-users')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('common.manageUsers')"
+            :active="
+              [
+                'common.manageUsers',
+                'settings.addAUser',
+                'settings.editUser',
+                'settings.modifyPermissions',
+                'settings.confirmUserInformation',
+              ].includes(route)
+            "
             :append-icon="
-              route === $t('common.manageUsers') ? 'mdi-circle-small' : ''
+              [
+                'common.manageUsers',
+                'settings.addAUser',
+                'settings.editUser',
+                'settings.modifyPermissions',
+                'settings.confirmUserInformation',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
             "
           ></v-list-item>
           <v-list-item
+            v-if="
+              !getAccessDenied.includes('/settings/notification-preferences')
+            "
+            :title="$t('common.manageNotifications')"
+            @click="$router.push('/settings/notification-preferences')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === 'common.manageNotificationsPreferences'"
+            :append-icon="
+              route === 'common.manageNotificationsPreferences'
+                ? 'mdi-circle-small'
+                : ''
+            "
+          ></v-list-item>
+          <!-- <v-list-item
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
             class="desktop-sidebar-sub-menu"
@@ -225,7 +264,7 @@ export default {
     route() {
       return this.getComponent;
     },
-    ...mapGetters(["getComponent"]),
+    ...mapGetters(["getComponent", "getAccessDenied"]),
   },
   watch: {
     $route(to, from) {

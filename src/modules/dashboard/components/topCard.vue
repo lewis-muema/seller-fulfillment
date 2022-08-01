@@ -1,16 +1,5 @@
 <template>
   <div>
-    <span class="">
-      <h5>
-        {{
-          $t("dashboard.welcome", {
-            name: `${getUserDetails.first_name}`,
-          })
-        }}
-        🎉
-      </h5>
-      <p>{{ $t("dashboard.whatsHappening") }}</p>
-    </span>
     <v-row class="desktop-dashboard-upper-content">
       <v-col cols="11">
         <v-card variant="outlined" class="desktop-dashboard-upper-card">
@@ -29,7 +18,7 @@
                         {{ order.count }}
                       </span>
                     </v-list-item-title>
-                    <v-list-item-subtitle>
+                    <v-list-item-subtitle class="desktop-dashboard-subtitle">
                       <span :class="getLoader">
                         {{ $t(order.orderStatus) }} >
                       </span>
@@ -64,7 +53,7 @@ export default {
         {
           icon: "mdi mdi-truck",
           count: "0",
-          orderStatus: "dashboard.completedConsignments",
+          orderStatus: "dashboard.completedPickups",
           link: `/deliveries/sendy/Completed/${new Date().valueOf()}`,
           color: "#5287EE",
         },
@@ -160,5 +149,9 @@ export default {
 }
 .dashboard-cards {
   box-shadow: none !important;
+}
+.desktop-dashboard-subtitle {
+  overflow: visible !important;
+  text-overflow: inherit !important;
 }
 </style>

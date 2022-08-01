@@ -13,6 +13,7 @@
   "deliveryDate": "Delivery date",
   "actions": "Actions",
   "timeline": "Timeline",
+  "active": "Active",
   "trackDeliveryToCustomer": "Track delivery to customer",
   "trackDeliveryToSendy": "Track delivery to Sendy",
   "orderNo": "Order No:",

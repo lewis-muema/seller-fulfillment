@@ -29,7 +29,7 @@
 export default {
   data() {
     return {
-      userAdded: true,
+      userAdded: false,
     };
   },
 };

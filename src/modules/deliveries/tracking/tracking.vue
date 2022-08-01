@@ -123,7 +123,19 @@ export default {
     deliveryActions() {
       const actions = [];
       this.getDeliveryActions.forEach((row) => {
-        if (row.show) {
+        let showCancel = true;
+        if (row.popup === "cancel") {
+          showCancel =
+            [
+              "event.delivery.order.created",
+              "event.delivery.at.hub.processing.for.delivery",
+              "event.delivery.at.hub.waiting.for.partner",
+            ].includes(this.getOrderTrackingData.order.order_event_status) ||
+            this.getOrderTrackingData.order.order_event_status.includes(
+              "pickup"
+            );
+        }
+        if (row.show && showCancel) {
           actions.push(row);
         }
       });

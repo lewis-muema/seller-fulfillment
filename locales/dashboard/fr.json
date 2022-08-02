@@ -8,6 +8,7 @@
   "availableStock": "Stock disponible",
   "bookATime": "Réservez un rendez-vous avec l'un de nos spécialistes de traitement des commandes.",
   "clearAll": "Effacer tout",
+  "completedConsignments": "Envois terminés",
   "completedOrders": "Commandes livrées",
   "completeSteps": "Complétez les étapes ci-dessous pour traiter votre première commande.",
   "deliverToACustomer": "Livrer à un client",
@@ -32,5 +33,7 @@
   "toYourCustomers": "A vos clients",
   "watchTutorial": "Regarder le tutoriel",
   "welcome": "Bienvenue, {nom}",
-  "whatsHappening": "Voici ce qu’il se passe sur votre compte aujourd’hui"
+  "weWillPackAndDeliverYourPackageWithin24hrs": "Nous emballerons et livrerons votre colis dans les 24 heures.",
+  "whatsHappening": "Voici ce qu’il se passe sur votre compte aujourd’hui",
+  "yourProductsWillBeInsured": "Vos produits seront assurés et stockés dans notre centre de traitement des commandes afin de permettre des livraisons plus rapides à vos clients."
 }

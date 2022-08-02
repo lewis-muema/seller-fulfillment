@@ -1,6 +1,7 @@
 {
   "action": "Action",
   "actions": "Actions",
+  "activity": "Activité",
   "addAUser": "Ajouter un utilisateur ",
   "addedSuccessfully": "{Prénom} a été ajouté avec succès. Un courriel contenant un lien pour accepter l’invitation lui a été envoyé.",
   "addUser": "Ajouter un utilisateur ",

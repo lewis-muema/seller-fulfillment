@@ -31,7 +31,7 @@
                 : `${activity.event_tense}-timeline-text`
             "
           >
-            <span :class="getLoader">
+            <span :class="getLoader.orderTimeline">
               {{ formatStatus(activity.translated_event_code, activity) }}
             </span>
           </span>
@@ -48,7 +48,7 @@
               })
             "
           >
-            <span :class="getLoader">
+            <span :class="getLoader.orderTimeline">
               {{ getDeliveryAttempts.length }} {{ $t("deliveries.attempts") }}
               <i class="mdi mdi-chevron-right"></i>
             </span>
@@ -117,14 +117,18 @@ export default {
       return name.charAt(0).toUpperCase() + name.slice(1);
     },
     fetchOrder() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "orderTimeline",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
-        if (this.$route.path.includes("/deliveries/tracking")) {
-          this.setLoader("");
-        }
+        this.setLoader({
+          type: "orderTimeline",
+          value: "",
+        });
         if (response.status === 200) {
           this.setOrderTimelines(response.data.data.events);
           const events = response.data.data.events;

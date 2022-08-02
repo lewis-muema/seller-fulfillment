@@ -24,20 +24,24 @@
           <thead>
             <tr>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{
+                <span :class="getLoader.deliveries">{{
                   $t("deliveries.customerInfo")
                 }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
+                <span :class="getLoader.deliveries">{{
+                  $t("deliveries.progress")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{
+                <span :class="getLoader.deliveries">{{
                   $t("deliveries.deliveryDate")
                 }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{ $t("deliveries.actions") }}</span>
+                <span :class="getLoader.deliveries">{{
+                  $t("deliveries.actions")
+                }}</span>
               </th>
             </tr>
           </thead>
@@ -49,12 +53,12 @@
             >
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
-                  <span :class="getLoader">
+                  <span :class="getLoader.deliveries">
                     {{ formatName(item.destination.name) }}
                   </span>
                 </div>
                 <div class="deliveries-location-row">
-                  <span :class="getLoader">
+                  <span :class="getLoader.deliveries">
                     {{
                       formatName(item.destination.delivery_location.description)
                     }}
@@ -77,7 +81,7 @@
                 </div>
                 <div v-else>
                   <p class="deliveries-progress-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.deliveries">
                       {{ formatStatus(item.order_event_status, item) }}
                     </span>
                   </p>
@@ -92,19 +96,19 @@
               <td class="deliveries-date-row">
                 <div v-if="item.order_status === 'ORDER_COMPLETED'">
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.deliveries">
                       {{ deliveryDate(item.completed_date) }}
                     </span>
                   </p>
                 </div>
                 <div v-else>
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.deliveries">
                       {{ deliveryDate(item.scheduled_date) }}
                     </span>
                   </p>
                   <p class="deliveries-date-row-bottom">
-                    <span :class="getLoader">
+                    <span :class="getLoader.deliveries">
                       {{ deliveryTime(item.scheduled_date) }}
                     </span>
                   </p>
@@ -115,7 +119,7 @@
                   class="deliveries-action-row-top"
                   @click="navigate(`/deliveries/tracking/${item.order_id}`)"
                 >
-                  <span :class="getLoader">
+                  <span :class="getLoader.deliveries">
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </p>
@@ -271,7 +275,10 @@ export default {
       }${status}`;
     },
     fetchOrders() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "deliveries",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries${this.params}`,
@@ -280,7 +287,10 @@ export default {
           this.setDeliveries(response.data.data.orders);
         }
         if (this.$route.path.includes("/deliveries/customer")) {
-          this.setLoader("");
+          this.setLoader({
+            type: "deliveries",
+            value: "",
+          });
         }
       });
     },

@@ -6,7 +6,7 @@
         @click="$router.go(-1)"
       ></i>
       <p class="tracking-order-title mb-0">
-        <span :class="getLoader">
+        <span :class="getLoader.orderTracking">
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
         </span>
@@ -40,13 +40,13 @@
       </p>
       <p class="tracking-order-time-est">
         <span
-          :class="getLoader"
+          :class="getLoader.orderTracking"
           v-if="getOrderTrackingData.order.order_status === 'ORDER_COMPLETED'"
         >
           {{ $t("deliveries.dateOfCompletion") }}
           {{ formatDateComplete(getOrderTrackingData.order.completed_date) }}
         </span>
-        <span :class="getLoader" v-else>
+        <span :class="getLoader.orderTracking" v-else>
           {{ $t("deliveries.timeOfArrival") }}
           {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
         </span>
@@ -165,13 +165,24 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchOrder() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "orderTracking",
+        value: "loading-text",
+      });
+      this.setLoader({
+        type: "orderTimeline",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
           this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {
+        this.setLoader({
+          type: "orderTracking",
+          value: "",
+        });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
         }

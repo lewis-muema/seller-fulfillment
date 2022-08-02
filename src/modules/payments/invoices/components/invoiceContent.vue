@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="invoice-content-title">
-      <span :class="getLoader">
+      <span :class="getLoader.invoices">
         {{ $t("payments.invoiceContent") }}
       </span>
     </p>
@@ -10,21 +10,27 @@
         <thead>
           <tr>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("payments.customerInfo") }}</span>
+              <span :class="getLoader.invoices">{{
+                $t("payments.customerInfo")
+              }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("payments.products") }}</span>
+              <span :class="getLoader.invoices">{{
+                $t("payments.products")
+              }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("payments.dateCompleted") }}</span>
+              <span :class="getLoader.invoices">{{
+                $t("payments.dateCompleted")
+              }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{
+              <span :class="getLoader.invoices">{{
                 $t("payments.costOfProducts")
               }}</span>
             </th>
             <th class="text-left">
-              <span class="invoices-price-col" :class="getLoader">{{
+              <span class="invoices-price-col" :class="getLoader.invoices">{{
                 $t("payments.fulfilmentPrice")
               }}</span>
             </th>
@@ -38,31 +44,36 @@
           >
             <td class="invoices-table-col">
               <p>
-                <span class="invoices-table-customer-info" :class="getLoader">
+                <span
+                  class="invoices-table-customer-info"
+                  :class="getLoader.invoices"
+                >
                   {{ invoice.customerInfo.customer }}
                 </span>
               </p>
               <p class="invoice-subtitle">
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ invoice.customerInfo.location }}
                 </span>
               </p>
             </td>
             <td class="invoices-table-col">
-              <span :class="getLoader">
+              <span :class="getLoader.invoices">
                 {{ invoice.products }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span :class="getLoader">
+              <span :class="getLoader.invoices">
                 {{ invoice.dateCompleted }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span :class="getLoader"> {{ invoice.costOfProducts }}</span>
+              <span :class="getLoader.invoices">
+                {{ invoice.costOfProducts }}</span
+              >
             </td>
             <td class="invoices-table-col">
-              <span class="invoices-price-col" :class="getLoader">
+              <span class="invoices-price-col" :class="getLoader.invoices">
                 {{ invoice.fulfilmentPrice }}
               </span>
             </td>
@@ -70,7 +81,7 @@
         </tbody>
       </v-table>
       <div class="invoice-content-total-due">
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.totalDue") }}: {{ getTotalDue }}
         </span>
       </div>

@@ -2,46 +2,46 @@
   <div class="invoices-details-container">
     <div>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.billedFrom") }}
         </span>
       </p>
       <p v-for="(item, i) in billedFrom" :key="i">
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ item }}
         </span>
       </p>
     </div>
     <div>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.billedTo") }}
         </span>
       </p>
       <p v-for="(item, i) in billedTo" :key="i">
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ item }}
         </span>
       </p>
     </div>
     <div>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.invoiceDetails") }}
         </span>
       </p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.invoiceNumber") }}: {{ invoiceDetails.invoiceNumber }}
         </span>
       </p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.dateSent") }}: {{ invoiceDetails.dateSent }}
         </span>
       </p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.dueDate") }}: {{ invoiceDetails.dueDate }}
         </span>
       </p>

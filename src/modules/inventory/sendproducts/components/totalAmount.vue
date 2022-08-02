@@ -15,21 +15,23 @@
     </div>
     <div class="promo-code-container-inner">
       <div class="promo-code-row promo-code-divider">
-        <span :class="getLoader">
+        <span :class="getLoader.calculateFee">
           {{ $t("inventory.totalValue") }}
         </span>
-        <span :class="getLoader" class="promo-code-left-section">
+        <span :class="getLoader.calculateFee" class="promo-code-left-section">
           {{ getFulfillmentFees.currency }}
           {{ getFulfillmentFees.total_product_value }}
         </span>
       </div>
       <div>
         <div class="promo-code-row promo-code-bold promo-code-margin-top">
-          <span :class="getLoader">{{ $t("inventory.fees") }}</span>
+          <span :class="getLoader.calculateFee">{{
+            $t("inventory.fees")
+          }}</span>
         </div>
         <div class="promo-code-row">
           <span>
-            <span :class="getLoader">
+            <span :class="getLoader.calculateFee">
               {{ $t("inventory.fulfillmentFee") }}
             </span>
             <i
@@ -39,18 +41,20 @@
                   popup: 'fees',
                 })
               "
-              v-if="!getLoader"
+              v-if="!getLoader.calculateFee"
               class="mdi mdi-information"
             ></i
           ></span>
-          <span :class="getLoader" class="promo-code-left-section"
+          <span :class="getLoader.calculateFee" class="promo-code-left-section"
             >{{ getFulfillmentFees.currency }}
             {{ getFulfillmentFees.pre_adjustments_calculated_fee }}</span
           >
         </div>
         <div class="promo-code-row promo-code-divider">
-          <span :class="getLoader">{{ $t("inventory.discount") }}</span>
-          <span :class="getLoader" class="promo-code-left-section"
+          <span :class="getLoader.calculateFee">{{
+            $t("inventory.discount")
+          }}</span>
+          <span :class="getLoader.calculateFee" class="promo-code-left-section"
             >{{ getFulfillmentFees.currency }}
             {{
               getFulfillmentFees.calculated_fee -
@@ -60,8 +64,10 @@
         </div>
       </div>
       <div class="promo-code-row promo-code-bold promo-code-margin-top">
-        <span :class="getLoader">{{ $t("inventory.amountToPay") }}</span>
-        <span :class="getLoader" class="promo-code-left-section"
+        <span :class="getLoader.calculateFee">{{
+          $t("inventory.amountToPay")
+        }}</span>
+        <span :class="getLoader.calculateFee" class="promo-code-left-section"
           >{{ getFulfillmentFees.currency }}
           {{ getFulfillmentFees.calculated_fee }}</span
         >
@@ -141,7 +147,10 @@ export default {
     ]),
     ...mapActions(["requestAxiosPost"]),
     calculateFee() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "calculateFee",
+        value: "loading-text",
+      });
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
@@ -151,7 +160,10 @@ export default {
           this.$route.path ===
           `/inventory/send-inventory/${this.$route.params.path}/checkout`
         ) {
-          this.setLoader("");
+          this.setLoader({
+            type: "calculateFee",
+            value: "",
+          });
         }
         if (response.status === 200) {
           this.setFulfillmentFees(response.data.data);
@@ -209,10 +221,12 @@ export default {
 .promo-code-card {
   background: #b8f5a8;
   color: #064a23;
-  height: 40px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   border-radius: 5px;
+  padding: 5px;
+  padding-left: 10px;
 }
 .promo-code-card-description {
   margin: auto;

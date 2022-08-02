@@ -17,19 +17,19 @@
                       :src="
                         product.product_variants[0].product_variant_image_link
                       "
-                      v-if="!getLoader"
+                      v-if="!getLoader.products"
                       alt="img"
                       class="product-img"
                     />
                   </v-list-item-avatar>
                   <v-list-item-header>
                     <v-list-item-title>
-                      <span :class="getLoader">
+                      <span :class="getLoader.products">
                         {{ product.product_name }}
                       </span>
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      <span :class="getLoader">
+                      <span :class="getLoader.products">
                         {{
                           product.product_variants.length > 1
                             ? `${product.product_variants.length - 1} ${$t(
@@ -43,7 +43,7 @@
                 </v-list-item>
               </td>
               <td>
-                <span :class="getLoader">
+                <span :class="getLoader.products">
                   {{
                     product.product_variants[0].product_variant_stock_levels
                       ? product.product_variants[0].product_variant_stock_levels
@@ -58,7 +58,7 @@
                   :to="`/inventory/view-product/${product.product_id}`"
                   class="view-product-link"
                 >
-                  <span :class="getLoader"
+                  <span :class="getLoader.products"
                     >{{ $t("inventory.view") }}
                   </span></router-link
                 >
@@ -138,7 +138,10 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchProducts() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "products",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
@@ -147,9 +150,10 @@ export default {
             : ""
         }?max=${this.max}`,
       }).then((response) => {
-        if (this.$route.path === "/inventory/products") {
-          this.setLoader("");
-        }
+        this.setLoader({
+          type: "products",
+          value: "",
+        });
         if (response.status === 200) {
           if (this.getInventorySelectedTab === "inventory.all") {
             this.setAllProductCount(response.data.data.products.length);

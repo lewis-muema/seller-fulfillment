@@ -44,12 +44,12 @@
         >
           <v-expansion-panel-title>
             <div class="statements-expansion-title">
-              <p :class="getLoader">
+              <p :class="getLoader.billingCycles">
                 {{ formatDate(cycle.billing_cycle_start_date) }}
               </p>
               <p
                 class="statements-expansion-title-bottom-row"
-                :class="getLoader"
+                :class="getLoader.billingCycles"
               >
                 <span class="statements-expansion-title-amount">
                   {{ getBusinessDetails.currency }}
@@ -121,22 +121,26 @@
                 <tr>
                   <th></th>
                   <th class="text-left">
-                    <span :class="getLoader">{{ $t("payments.details") }}</span>
+                    <span :class="getLoader.billingCycles">{{
+                      $t("payments.details")
+                    }}</span>
                   </th>
                   <th class="text-left">
-                    <span :class="getLoader">{{
+                    <span :class="getLoader.billingCycles">{{
                       $t("payments.paymentDetails")
                     }}</span>
                   </th>
                   <th class="text-left">
-                    <span :class="getLoader">{{
+                    <span :class="getLoader.billingCycles">{{
                       $t("payments.datePaid")
                     }}</span>
                   </th>
                   <th class="text-left">
-                    <span class="invoices-price-col" :class="getLoader">{{
-                      $t("payments.amountPaid")
-                    }}</span>
+                    <span
+                      class="invoices-price-col"
+                      :class="getLoader.billingCycles"
+                      >{{ $t("payments.amountPaid") }}</span
+                    >
                   </th>
                 </tr>
               </thead>

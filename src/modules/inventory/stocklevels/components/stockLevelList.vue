@@ -15,19 +15,19 @@
                     :src="
                       product.product_variants[0].product_variant_image_link
                     "
-                    v-if="!getLoader"
+                    v-if="!getLoader.products"
                     alt="img"
                     class="product-img"
                   />
                 </v-list-item-avatar>
                 <v-list-item-header>
                   <v-list-item-title>
-                    <span :class="getLoader">
+                    <span :class="getLoader.products">
                       {{ product.product_name }}
                     </span>
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    <span :class="getLoader">
+                    <span :class="getLoader.products">
                       {{
                         product.product_variants.length > 1
                           ? `${product.product_variants.length - 1} ${$t(
@@ -42,21 +42,21 @@
             </td>
             <td>
               <span :class="badgeAllocation(availableleTally(product))">
-                <span :class="getLoader">
+                <span :class="getLoader.products">
                   {{ availableleTally(product) }}
                 </span>
               </span>
             </td>
             <td>
               <span :class="badgeAllocation(committedTally(product))">
-                <span :class="getLoader">
+                <span :class="getLoader.products">
                   {{ committedTally(product) }}
                 </span>
               </span>
             </td>
             <td>
               <span :class="badgeAllocation(incomingTally(product))">
-                <span :class="getLoader">
+                <span :class="getLoader.products">
                   {{ incomingTally(product) }}
                 </span>
               </span>
@@ -249,13 +249,19 @@ export default {
       }
     },
     fetchProducts() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "products",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
       }).then((response) => {
         if (this.$route.path.includes("/inventory/stock-levels")) {
-          this.setLoader("");
+          this.setLoader({
+            type: "products",
+            value: "",
+          });
         }
         if (response.status === 200) {
           this.setProductLists(response.data.data.products);

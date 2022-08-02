@@ -4,11 +4,11 @@
       <span>
         <img
           :src="product.product_variants[0].product_variant_image_link"
-          v-if="!getLoader"
+          v-if="!getLoader.productDetails"
           alt="img"
           class="product-details-img"
         />
-        <span :class="getLoader">
+        <span :class="getLoader.productDetails">
           {{ product.product_name }}
         </span>
       </span>
@@ -16,7 +16,7 @@
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.desc") }}</p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.productDetails">
           {{ product.product_description }}
         </span>
       </p>
@@ -24,7 +24,7 @@
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.price") }}</p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.productDetails">
           {{ product.product_variants[0].product_variant_currency }}
           {{ product.product_variants[0].product_variant_unit_price }}
         </span>
@@ -33,7 +33,7 @@
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.weight") }}</p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.productDetails">
           {{ product.product_variants[0].product_variant_quantity }}
           {{ product.product_variants[0].product_variant_quantity_type }}
         </span>
@@ -42,7 +42,7 @@
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
       <p>
-        <span :class="getLoader">
+        <span :class="getLoader.productDetails">
           {{ $t("inventory.totalStockAvailable") }}:
           {{ totalStock(product) }}
         </span>
@@ -58,7 +58,7 @@
             <div v-if="product.product_variants">
               <img
                 :src="variant.product_variant_image_link"
-                v-if="!getLoader"
+                v-if="!getLoader.productDetails"
                 alt="img"
                 class="product-details-img"
               />
@@ -72,12 +72,12 @@
               <v-list-item lines="two">
                 <v-list-item-header>
                   <v-list-item-title>
-                    <span :class="getLoader">
+                    <span :class="getLoader.productDetails">
                       {{ variant.product_variant_description }}
                     </span></v-list-item-title
                   >
                   <v-list-item-subtitle>
-                    <span :class="getLoader">
+                    <span :class="getLoader.productDetails">
                       {{ variant.product_variant_currency }}
                       {{ variant.product_variant_unit_price }}
                     </span>
@@ -88,7 +88,7 @@
             <div></div>
           </td>
           <td>
-            <span :class="getLoader">
+            <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels.quantity_in_inventory
@@ -97,7 +97,7 @@
             </span>
           </td>
           <td>
-            <span :class="getLoader">
+            <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels
@@ -107,7 +107,7 @@
             </span>
           </td>
           <td>
-            <span :class="getLoader">
+            <span :class="getLoader.productDetails">
               {{
                 false
                   ? variant.product_variant_stock_level.quantity_in_sales_orders

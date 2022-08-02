@@ -16,11 +16,6 @@ import { mapGetters, mapMutations } from "vuex";
 
 export default {
   components: { Desktop, Mobile, overlays },
-  watch: {
-    "$route.path": function () {
-      this.setLoader("loading-text");
-    },
-  },
   computed: {
     ...mapGetters(["getMobile"]),
   },

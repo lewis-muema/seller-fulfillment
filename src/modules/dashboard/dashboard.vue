@@ -92,10 +92,18 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
+      this.setLoader({
+        type: "pendingPayment",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
       }).then((response) => {
+        this.setLoader({
+          type: "pendingPayment",
+          value: "",
+        });
         if (response.status === 200) {
           this.setActivePayment(response.data.data);
         } else {
@@ -104,10 +112,18 @@ export default {
       });
     },
     getDeliveryStats() {
+      this.setLoader({
+        type: "statistics",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/statistics`,
       }).then((response) => {
+        this.setLoader({
+          type: "statistics",
+          value: "",
+        });
         if (response.status === 200) {
           this.setDeliveriesStatistics(
             response.data.data.grouped_by_status_count
@@ -116,6 +132,10 @@ export default {
       });
     },
     getDeliveryStatsToday() {
+      this.setLoader({
+        type: "statistics",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${
@@ -124,6 +144,10 @@ export default {
           "YYYY-MM-DD"
         )}&upper_limit_date=${moment().format("YYYY-MM-DD")}`,
       }).then((response) => {
+        this.setLoader({
+          type: "statistics",
+          value: "",
+        });
         if (response.status === 200) {
           this.setDeliveriesStatisticsToday(
             response.data.data.grouped_by_status_count
@@ -132,10 +156,18 @@ export default {
       });
     },
     getPickUpStats() {
+      this.setLoader({
+        type: "statistics",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/statistics`,
       }).then((response) => {
+        this.setLoader({
+          type: "statistics",
+          value: "",
+        });
         if (response.status === 200) {
           this.setConsignmentStatistics(
             response.data.data.grouped_by_status_count
@@ -144,6 +176,10 @@ export default {
       });
     },
     getPickUpStatsToday() {
+      this.setLoader({
+        type: "statistics",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${
@@ -152,6 +188,10 @@ export default {
           "YYYY-MM-DD"
         )}&upper_limit_date=${moment().format("YYYY-MM-DD")}`,
       }).then((response) => {
+        this.setLoader({
+          type: "statistics",
+          value: "",
+        });
         if (response.status === 200) {
           this.setConsignmentStatisticsToday(
             response.data.data.grouped_by_status_count
@@ -160,10 +200,18 @@ export default {
       });
     },
     getStockStats() {
+      this.setLoader({
+        type: "statistics",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/statistics`,
       }).then((response) => {
+        this.setLoader({
+          type: "statistics",
+          value: "",
+        });
         if (response.status === 200) {
           this.setStockStatistics(
             response.data.data.grouped_by_stock_level_count

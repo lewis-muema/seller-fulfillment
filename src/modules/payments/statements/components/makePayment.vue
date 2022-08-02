@@ -3,12 +3,12 @@
     <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">
-        <span :class="getLoader">
+        <span :class="getLoader.pendingPayment">
           {{ $t("payments.pleaseMakePayment") }}
         </span>
       </p>
       <p class="make-payment-description">
-        <span :class="getLoader">
+        <span :class="getLoader.pendingPayment">
           {{
             $t("payments.pleaseMakeYourPayment", {
               amount: `${getBusinessDetails.currency} ${getActivePayment.amount_to_charge}`,

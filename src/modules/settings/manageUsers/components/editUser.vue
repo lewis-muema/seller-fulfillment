@@ -124,13 +124,19 @@ export default {
     ...mapMutations(["setComponent", "setLoader", "setTab", "setUser"]),
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
     fetchUser() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.buttonLoader = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "userDetails",
+          value: "",
+        });
         this.buttonLoader = false;
         if (response.status === 200) {
           this.setUser(response.data.data.user);

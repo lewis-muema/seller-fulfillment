@@ -9,7 +9,7 @@
       ></i>
       <div>
         <p class="view-users-details-panel-banner-description">
-          <span :class="getLoader">
+          <span :class="getLoader.userDetails">
             {{
               $t("settings.anEmailToAcceptInvitation", {
                 email: getUser.email,
@@ -38,7 +38,7 @@
             transition="slide-y-transition"
             anchor="bottom center"
             v-model="shown"
-            v-if="!getLoader && getUser.user_role !== 'ROLE_OWNER'"
+            v-if="!getLoader.userDetails && getUser.user_role !== 'ROLE_OWNER'"
           >
             <template v-slot:activator="{ props }">
               <v-btn
@@ -64,7 +64,7 @@
         <div class="view-users-details-row">
           <p class="view-users-details-title">{{ $t("settings.name") }}</p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.first_name }} {{ getUser.last_name }}
             </span>
           </p>
@@ -74,7 +74,7 @@
             {{ $t("settings.phoneNumber") }}
           </p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.phone_number }}
             </span>
           </p>
@@ -84,7 +84,7 @@
             {{ $t("settings.emailAddress") }}
           </p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.email }}
             </span>
           </p>
@@ -94,7 +94,7 @@
             {{ $t("settings.userRole") }}
           </p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ roleName(getUser.user_role) }}
             </span>
           </p>
@@ -197,12 +197,18 @@ export default {
       return actions;
     },
     fetchUser() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "userDetails",
+          value: "",
+        });
         if (response.status === 200) {
           this.setUser(response.data.data.user);
         }
@@ -227,7 +233,10 @@ export default {
       });
     },
     activate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/activate`,
@@ -249,7 +258,10 @@ export default {
       });
     },
     deactivate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/deactivate`,

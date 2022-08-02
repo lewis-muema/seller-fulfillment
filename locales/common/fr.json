@@ -28,6 +28,7 @@
   "profile": "Profil ",
   "restockInventory": "Réapprovisionner l'inventaire",
   "seeProfile": "Afficher profil ",
+  "send": "Envoyer",
   "sendDeliveryToCustomer": "Envoyer une livraison à un client",
   "sendInventory": "Envoyer du stock",
   "sendInventoryToSendy": "Envoyer du stock à Sendy",
@@ -39,6 +40,7 @@
   "toFulfilmentCentre": "Au centre de traitement",
   "toSendy": "À Sendy",
   "trackCustomerDelivery": "Suivre la livraison au client",
+  "trackDeliveries": "Suivi des livraisons",
   "trackDelivery": "Suivre la livraison",
   "viewProduct": "Afficher le produit"
 }

@@ -3,12 +3,12 @@
     <i class="mdi mdi-alert-circle-outline failed-delivery-warning-icon"></i>
     <div>
       <p class="delivery-failed-title">
-        <span :class="getLoader">
+        <span :class="getLoader.orderTimeline">
           {{ $t("deliveries.weAttemptedToPickUpYourItems") }}
         </span>
       </p>
       <p class="delivery-failed-description">
-        <span :class="getLoader">
+        <span :class="getLoader.orderTimeline">
           {{
             $t("deliveries.weTriedToReachYourCustomer", {
               date: formatDate(

@@ -27,21 +27,27 @@
           <thead>
             <tr>
               <th class="text-left users-name-head">
-                <span :class="getLoader">{{ $t("settings.name") }}</span>
+                <span :class="getLoader.users">{{ $t("settings.name") }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.phoneNumber") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.phoneNumber")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{
+                <span :class="getLoader.users">{{
                   $t("settings.emailAddress")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.status") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.status")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.actions") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.actions")
+                }}</span>
               </th>
             </tr>
           </thead>
@@ -54,25 +60,25 @@
               v-for="(user, i) in getUsers"
               :key="i"
               @click="viewUser(user)"
-              :class="getLoader ? 'inactive-col' : ''"
+              :class="getLoader.users ? 'inactive-col' : ''"
             >
               <td class="users-name-row users-name-head">
-                <span :class="getLoader"
+                <span :class="getLoader.users"
                   >{{ user.first_name }} {{ user.last_name }}</span
                 >
               </td>
               <td class="users-number-row">
-                <span :class="getLoader">
+                <span :class="getLoader.users">
                   {{ user.phone_number }}
                 </span>
               </td>
               <td class="users-email-row">
-                <span :class="getLoader">
+                <span :class="getLoader.users">
                   {{ user.email }}
                 </span>
               </td>
               <td class="users-status-row">
-                <span v-if="getLoader" :class="getLoader">
+                <span v-if="getLoader.users" :class="getLoader.users">
                   {{ user.active_status }}
                 </span>
                 <span
@@ -90,7 +96,7 @@
                 <v-menu
                   transition="slide-y-transition"
                   anchor="bottom center"
-                  v-if="!getLoader"
+                  v-if="!getLoader.users"
                 >
                   <template v-slot:activator="{ props }">
                     <i class="mdi mdi-dots-horizontal" v-bind="props"></i>
@@ -217,12 +223,18 @@ export default {
       return actions;
     },
     fetchUsers() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "users",
+          value: "",
+        });
         if (response.status === 200) {
           this.setUsers(response.data.data.users);
         }
@@ -243,7 +255,10 @@ export default {
       });
     },
     activate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/activate`,
@@ -265,7 +280,10 @@ export default {
       });
     },
     deactivate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/deactivate`,

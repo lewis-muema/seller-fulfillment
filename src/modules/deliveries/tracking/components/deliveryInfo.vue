@@ -1,7 +1,7 @@
 <template>
   <div class="delivery-info-container">
     <p class="delivery-info-title">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
             ? $t("deliveries.pickupInfo")
@@ -11,7 +11,7 @@
       <span
         class="delivery-info-edit"
         @click="overlayStatus(true)"
-        :class="getLoader"
+        :class="getLoader.orderTracking"
         v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
       >
         <i class="mdi mdi-pencil"></i>
@@ -19,7 +19,7 @@
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
             ? $t("deliveries.pickUpLocation")
@@ -28,7 +28,7 @@
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
             ? getOrderTrackingData.order.destination.delivery_location
@@ -38,7 +38,7 @@
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
             ? $t("deliveries.pickUpInstructions")
@@ -47,7 +47,7 @@
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
             ? getOrderTrackingData.order.destination.delivery_instructions
@@ -59,12 +59,12 @@
       </span>
     </p>
     <p class="delivery-info-label">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ $t("deliveries.phoneNumber") }}
       </span>
     </p>
     <p class="delivery-info-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ getOrderTrackingData.order.destination.phone_number }}
       </span>
     </p>
@@ -72,7 +72,7 @@
       v-if="getOrderTrackingData.order.destination.secondary_phone_number"
       class="delivery-info-label"
     >
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ $t("deliveries.secondaryPhoneNumber") }}
       </span>
     </p>
@@ -80,17 +80,17 @@
       v-if="getOrderTrackingData.order.destination.secondary_phone_number"
       class="delivery-info-data"
     >
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ getOrderTrackingData.order.destination.secondary_phone_number }}
       </span>
     </p>
     <p v-if="getParent === 'customer'" class="delivery-info-label">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ $t("deliveries.instructions") }}
       </span>
     </p>
     <p v-if="getParent === 'customer'" class="delivery-info-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getOrderTrackingData.order.destination.delivery_instructions
             ? getOrderTrackingData.order.destination.delivery_instructions
@@ -99,12 +99,12 @@
       </span>
     </p>
     <p v-if="getParent === 'customer'" class="delivery-info-label">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ $t("deliveries.paymentMethod") }}
       </span>
     </p>
     <p v-if="getParent === 'customer'" class="delivery-info-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{
           getOrderTrackingData.order.fulfilment_cost_means_of_payment
             .means_of_payment_type

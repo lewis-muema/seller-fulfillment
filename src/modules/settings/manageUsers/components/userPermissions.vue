@@ -341,13 +341,19 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     fetchUser() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.buttonLoading = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "userDetails",
+          value: "",
+        });
         this.buttonLoading = false;
         if (response.status === 200) {
           this.setUser(response.data.data.user);
@@ -390,10 +396,6 @@ export default {
                 "settings.anEmailHasBeenSentToTheUserWithInstructionsOnHowToLogin"
               ),
               type: "success",
-            });
-            this.setOverlayStatus({
-              overlay: true,
-              popup: "user",
             });
             this.$router.push("/settings/manage-users");
           } else {

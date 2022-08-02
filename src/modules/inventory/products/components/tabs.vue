@@ -5,7 +5,7 @@
         <div
           class="desktop-product-tab"
           :class="
-            activeTab !== tab.label && getLoader === 'loading-text'
+            activeTab !== tab.label && getLoader.products === 'loading-text'
               ? 'inactive-tab'
               : 'active-tab'
           "
@@ -19,7 +19,7 @@
           >
             <span
               @click="
-                activeTab !== tab.label && getLoader === 'loading-text'
+                activeTab !== tab.label && getLoader.products === 'loading-text'
                   ? nothing()
                   : setTab(tab)
               "
@@ -60,7 +60,7 @@
       <div
         class="desktop-product-tab"
         :class="
-          activeTab !== tab.label && getLoader === 'loading-text'
+          activeTab !== tab.label && getLoader.products === 'loading-text'
             ? 'inactive-tab'
             : 'active-tab'
         "
@@ -74,7 +74,7 @@
         >
           <span
             @click="
-              activeTab !== tab.label && getLoader === 'loading-text'
+              activeTab !== tab.label && getLoader.products === 'loading-text'
                 ? nothing()
                 : setTab(tab)
             "
@@ -151,25 +151,28 @@ export default {
     },
   },
   watch: {
-    "$store.state.loader": function loader() {
-      this.productTabs[0].content = `${this.getAllProductCount}`;
-      this.productTabs[1].content = `${this.getArchivedProductCount}`;
-      this.stockLevelTabs[0].content =
-        Object.keys(this.getStockStatistics).length > 0
-          ? (
-              this.getStockStatistics.available_products +
-              this.getStockStatistics.low_stock_products +
-              this.getStockStatistics.out_of_stock_products
-            ).toString()
-          : "-";
-      this.stockLevelTabs[1].content =
-        Object.keys(this.getStockStatistics).length > 0
-          ? this.getStockStatistics.low_stock_products.toString()
-          : "-";
-      this.stockLevelTabs[2].content =
-        Object.keys(this.getStockStatistics).length > 0
-          ? this.getStockStatistics.out_of_stock_products.toString()
-          : "-";
+    "$store.state.loader": {
+      handler() {
+        this.productTabs[0].content = `${this.getAllProductCount}`;
+        this.productTabs[1].content = `${this.getArchivedProductCount}`;
+        this.stockLevelTabs[0].content =
+          Object.keys(this.getStockStatistics).length > 0
+            ? (
+                this.getStockStatistics.available_products +
+                this.getStockStatistics.low_stock_products +
+                this.getStockStatistics.out_of_stock_products
+              ).toString()
+            : "-";
+        this.stockLevelTabs[1].content =
+          Object.keys(this.getStockStatistics).length > 0
+            ? this.getStockStatistics.low_stock_products.toString()
+            : "-";
+        this.stockLevelTabs[2].content =
+          Object.keys(this.getStockStatistics).length > 0
+            ? this.getStockStatistics.out_of_stock_products.toString()
+            : "-";
+      },
+      deep: true,
     },
   },
   methods: {

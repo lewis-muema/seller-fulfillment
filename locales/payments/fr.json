@@ -27,6 +27,7 @@
   "invoiceDetails": "Détails de la facture",
   "invoiceNumber": "Numéro de facture",
   "makePayment": "Effectuer le paiement",
+  "noDefaultPaymentMethodSelected": "Aucun mode de paiement par défaut sélectionné",
   "none": "Aucun",
   "noTransactionsYet": "Aucune transaction pour le moment",
   "orderNumber": "N° de commande",
@@ -39,11 +40,13 @@
   "pleaseMakeYourPayment": "Veuillez effectuer votre paiement de {montant} pour {total} des livraisons effectuées afin de continuer à effectuer des livraisons à vos clients.",
   "products": "Produits",
   "showMore": "Afficher plus",
+  "sorryNoTransactionsFound": "Désolé ! Aucune transaction trouvée",
   "status": "Statut ",
   "to": "À",
   "totalDue": "montant total dû",
   "trackTransactions": "Vous pourrez suivre les transactions et les paiements ici.",
   "transactionHistory": "Historique des transactions",
   "viewInvoice": "Afficher la facture",
+  "WecouldntFindAnyTransactions": "Nous n’avons trouvé aucune transaction pour les dates sélectionnées. Veuillez réessayer de filtrer.",
   "youWillBeCharged": "Sera facturé "
 }

@@ -8,7 +8,7 @@
             <span>
               <i class="mdi mdi-cash-multiple statements-top-bar-cash-icon"></i>
             </span>
-            <span :class="getLoader">
+            <span :class="getLoader.billingCycles">
               <b
                 >{{ getBusinessDetails.currency }}
                 {{
@@ -23,7 +23,7 @@
       <div />
       <div>
         <p class="mt-1">
-          <span :class="getLoader">
+          <span :class="getLoader.billingCycles">
             {{ $t("payments.billingCycle") }}:
             {{
               activeCycle.cycle_interval_type
@@ -107,7 +107,10 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     listBillingCycles() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "billingCycles",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles${this.params}`,
@@ -118,7 +121,10 @@ export default {
             this.activeBillingCycle = this.getBillingCycles;
           }
           if (this.$route.path === "/payments/billings") {
-            this.setLoader("");
+            this.setLoader({
+              type: "billingCycles",
+              value: "",
+            });
           }
         }
       });

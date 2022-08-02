@@ -894,13 +894,24 @@ export default {
       });
     },
     fetchOrder() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "orderTracking",
+        value: "loading-text",
+      });
+      this.setLoader({
+        type: "orderTimeline",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
           this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {
+        this.setLoader({
+          type: "orderTracking",
+          value: "",
+        });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
         }

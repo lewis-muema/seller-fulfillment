@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="transaction-history-content-title">
-      <span :class="getLoader">
+      <span :class="getLoader.invoices">
         {{ $t("payments.transactionHistory") }}
       </span>
     </p>
@@ -10,18 +10,22 @@
         <thead>
           <tr>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("payments.details") }}</span>
+              <span :class="getLoader.invoices">{{
+                $t("payments.details")
+              }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{
+              <span :class="getLoader.invoices">{{
                 $t("payments.paymentDetails")
               }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("payments.datePaid") }}</span>
+              <span :class="getLoader.invoices">{{
+                $t("payments.datePaid")
+              }}</span>
             </th>
             <th class="text-left">
-              <span class="invoices-price-col" :class="getLoader">{{
+              <span class="invoices-price-col" :class="getLoader.invoices">{{
                 $t("payments.amountPaid")
               }}</span>
             </th>
@@ -34,36 +38,36 @@
             class="invoices-table-row"
           >
             <td class="invoices-table-col">
-              <span :class="getLoader">
+              <span :class="getLoader.invoices">
                 <i
-                  v-if="!getLoader"
+                  v-if="!getLoader.invoices"
                   class="transaction-history-details-icon"
                   :class="`mdi ${invoice.details.icon}`"
                 ></i>
               </span>
-              <span :class="getLoader">
+              <span :class="getLoader.invoices">
                 {{ invoice.details.description }}
               </span>
             </td>
             <td class="invoices-table-col">
               <p>
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ invoice.paymentDetails }}
                 </span>
               </p>
               <p class="invoice-subtitle">
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ invoice.code }}
                 </span>
               </p>
             </td>
             <td class="invoices-table-col">
-              <span :class="getLoader">
+              <span :class="getLoader.invoices">
                 {{ invoice.datePaid }}
               </span>
             </td>
             <td class="invoices-table-col">
-              <span class="invoices-price-col" :class="getLoader">
+              <span class="invoices-price-col" :class="getLoader.invoices">
                 {{ invoice.amountPaid }}
               </span>
             </td>

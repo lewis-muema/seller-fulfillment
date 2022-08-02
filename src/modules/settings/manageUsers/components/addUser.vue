@@ -174,7 +174,12 @@ export default {
     ...mapGetters(["getStorageUserDetails", "getSendyPhoneProps"]),
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setOverlayStatus",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     confirmUser() {
       if (
@@ -216,6 +221,10 @@ export default {
         }).then((response) => {
           this.buttonLoader = false;
           if (response.status === 200) {
+            this.setOverlayStatus({
+              overlay: true,
+              popup: "user",
+            });
             this.$router.push(
               `/settings/user-permissions/${response.data.data.user.user_id}`
             );

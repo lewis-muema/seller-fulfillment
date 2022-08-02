@@ -26,7 +26,13 @@
                 <v-list-item class="dashboard-customer-columns" lines="two">
                   <v-list-item-header>
                     <v-list-item-title>
-                      <span :class="getLoader">
+                      <span
+                        :class="
+                          getSelectedTab === 'dashboard.toYourCustomers'
+                            ? getLoader.deliveries
+                            : getLoader.consignments
+                        "
+                      >
                         {{
                           getSelectedTab === "dashboard.toYourCustomers"
                             ? formatName(item.destination.name)
@@ -39,7 +45,13 @@
                       v-if="getSelectedTab === 'dashboard.toYourCustomers'"
                     >
                       <div class="dashboard-customer-delivery-location-inner">
-                        <span :class="getLoader">
+                        <span
+                          :class="
+                            getSelectedTab === 'dashboard.toYourCustomers'
+                              ? getLoader.deliveries
+                              : getLoader.consignments
+                          "
+                        >
                           {{
                             formatName(
                               item.destination.delivery_location.description
@@ -70,7 +82,13 @@
                   </v-list-item-header>
                   <v-list-item-header v-else>
                     <v-list-item-title>
-                      <span :class="getLoader">
+                      <span
+                        :class="
+                          getSelectedTab === 'dashboard.toYourCustomers'
+                            ? getLoader.deliveries
+                            : getLoader.consignments
+                        "
+                      >
                         {{ formatStatus(item.order_event_status, item) }}
                       </span>
                     </v-list-item-title>
@@ -88,7 +106,13 @@
                   :to="`/deliveries/tracking/${item.order_id}`"
                   class="dashboard-track-order"
                 >
-                  <span :class="getLoader">
+                  <span
+                    :class="
+                      getSelectedTab === 'dashboard.toYourCustomers'
+                        ? getLoader.deliveries
+                        : getLoader.consignments
+                    "
+                  >
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </router-link>
@@ -211,7 +235,13 @@ export default {
       "setConsignments",
     ]),
     fetchOrders() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type:
+          this.getSelectedTab === "dashboard.toYourCustomers"
+            ? "deliveries"
+            : "consignments",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
@@ -228,7 +258,14 @@ export default {
           }
         }
         if (this.$route.path === "/") {
-          this.setLoader("");
+          this.setLoader({
+            type: "consignments",
+            value: "",
+          });
+          this.setLoader({
+            type: "deliveries",
+            value: "",
+          });
         }
       });
     },

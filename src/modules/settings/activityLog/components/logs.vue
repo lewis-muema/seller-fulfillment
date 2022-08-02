@@ -28,13 +28,13 @@
         <thead>
           <tr>
             <th class="text-left users-name-head">
-              <span :class="getLoader">{{ $t("settings.date") }}</span>
+              <span :class="getLoader.logs">{{ $t("settings.date") }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("settings.user") }}</span>
+              <span :class="getLoader.logs">{{ $t("settings.user") }}</span>
             </th>
             <th class="text-left">
-              <span :class="getLoader">{{ $t("settings.action") }}</span>
+              <span :class="getLoader.logs">{{ $t("settings.action") }}</span>
             </th>
           </tr>
         </thead>
@@ -46,15 +46,15 @@
             @click="viewUser(i)"
           >
             <td class="users-name-row users-name-head">
-              <span :class="getLoader">{{ log.date }}</span>
+              <span :class="getLoader.logs">{{ log.date }}</span>
             </td>
             <td class="users-number-row">
-              <span :class="getLoader">
+              <span :class="getLoader.logs">
                 {{ log.user }}
               </span>
             </td>
             <td class="users-email-row">
-              <span :class="getLoader">
+              <span :class="getLoader.logs">
                 {{ log.action }}
               </span>
             </td>
@@ -77,9 +77,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getUsers", "getLoader", "getActivityLog"]),
-  },
-  mounted() {
-    this.setLoader("");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setTab"]),

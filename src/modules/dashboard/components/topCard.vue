@@ -25,12 +25,12 @@
                   ></v-icon>
                   <v-list-item-header>
                     <v-list-item-title class="count">
-                      <span :class="getLoader">
+                      <span :class="getLoader.statistics">
                         {{ order.count }}
                       </span>
                     </v-list-item-title>
                     <v-list-item-subtitle class="desktop-dashboard-subtitle">
-                      <span :class="getLoader">
+                      <span :class="getLoader.statistics">
                         {{ $t(order.orderStatus) }} >
                       </span>
                     </v-list-item-subtitle>
@@ -110,6 +110,7 @@ export default {
       "getStockStatistics",
       "getDeliveriesStatisticsToday",
       "getConsignmentStatisticsToday",
+      "getDashboardSelectedTab",
     ]),
     ongoingOrders() {
       return this.getConsignmentStatisticsToday.ORDER_COMPLETED;

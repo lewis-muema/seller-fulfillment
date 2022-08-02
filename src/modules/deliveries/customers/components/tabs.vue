@@ -7,12 +7,12 @@
       >
         <span
           :class="
-            activeTab !== 'All' && getLoader === 'loading-text'
+            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'All' && getLoader === 'loading-text'
+            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
               ? nothing()
               : passActiveTab('All')
           "
@@ -26,12 +26,12 @@
       >
         <span
           :class="
-            activeTab !== 'Pending' && getLoader === 'loading-text'
+            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Pending' && getLoader === 'loading-text'
+            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
               ? nothing()
               : passActiveTab('Pending')
           "
@@ -51,12 +51,12 @@
       >
         <span
           :class="
-            activeTab !== 'inTransit' && getLoader === 'loading-text'
+            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'inTransit' && getLoader === 'loading-text'
+            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
               ? nothing()
               : passActiveTab('inTransit')
           "
@@ -76,12 +76,12 @@
       >
         <span
           :class="
-            activeTab !== 'Failed' && getLoader === 'loading-text'
+            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Failed' && getLoader === 'loading-text'
+            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
               ? nothing()
               : passActiveTab('Failed')
           "
@@ -101,12 +101,12 @@
       >
         <span
           :class="
-            activeTab !== 'Completed' && getLoader === 'loading-text'
+            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Completed' && getLoader === 'loading-text'
+            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
               ? nothing()
               : passActiveTab('Completed')
           "
@@ -148,24 +148,27 @@ export default {
     completed: "-",
   }),
   watch: {
-    "$store.state.loader": function loader() {
-      this.pending =
-        parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-        parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-          ? (
-              parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-              parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-            ).toString()
+    "$store.state.loader": {
+      handler() {
+        this.pending =
+          parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+          parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
+            ? (
+                parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
+                parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
+              ).toString()
+            : "0";
+        this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT
+          ? this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString()
           : "0";
-      this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT
-        ? this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString()
-        : "0";
-      this.failed = this.getDeliveriesStatistics.ORDER_FAILED
-        ? this.getDeliveriesStatistics.ORDER_FAILED.toString()
-        : "0";
-      this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED
-        ? this.getDeliveriesStatistics.ORDER_COMPLETED.toString()
-        : "0";
+        this.failed = this.getDeliveriesStatistics.ORDER_FAILED
+          ? this.getDeliveriesStatistics.ORDER_FAILED.toString()
+          : "0";
+        this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED
+          ? this.getDeliveriesStatistics.ORDER_COMPLETED.toString()
+          : "0";
+      },
+      deep: true,
     },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);

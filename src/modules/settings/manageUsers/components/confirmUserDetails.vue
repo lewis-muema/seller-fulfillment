@@ -20,7 +20,7 @@
         <div class="view-users-details-row">
           <p class="view-users-details-title">{{ $t("settings.firstName") }}</p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.first_name }}
             </span>
           </p>
@@ -28,7 +28,7 @@
         <div class="view-users-details-row">
           <p class="view-users-details-title">{{ $t("settings.lastName") }}</p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.last_name }}
             </span>
           </p>
@@ -38,7 +38,7 @@
             {{ $t("settings.emailAddress") }}
           </p>
           <p class="view-users-details-row-description">
-            <span :class="getLoader">
+            <span :class="getLoader.userDetails">
               {{ getUser.email }}
             </span>
           </p>
@@ -119,12 +119,18 @@ export default {
       return actions;
     },
     fetchUser() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "userDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.$route.params.user_id}`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "userDetails",
+          value: "",
+        });
         if (response.status === 200) {
           this.setUser(response.data.data.user);
         }

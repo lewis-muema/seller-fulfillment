@@ -47,9 +47,24 @@ export default {
         Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
+    const { app } = payload;
+    const { endpoint } = payload;
+    const { params } = payload;
+
+    const values = {
+      params,
+      headers: config.headers,
+    };
+    for (const value in values) {
+      if (values[value] === null || values[value] === undefined) {
+        delete values[value];
+      }
+    }
+
+    console.log(app, endpoint, values);
     return new Promise((resolve, reject) => {
       axios
-        .get(`${payload.app}${payload.endpoint}`, config)
+        .get(`${app}${endpoint}`, values)
         .then((response) => {
           resolve(response);
         })

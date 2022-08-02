@@ -1,6 +1,6 @@
 <template>
   <div>
-    Params - {{ filterEndpoints }}
+    Params - {{ filterParams }}
     <logs @range="rangeChanged" @user="userChanged" />
   </div>
 </template>
@@ -21,50 +21,38 @@ export default {
   },
   mounted() {
     this.setComponent("common.activityLog");
+    // this.filteredUserLogs();
   },
-  // watch: {
-  //   "$store.state.rangeChanged": function changeRange(val) {
-  //     if (val === true) {
-  //       this.setRangeChanged(true);
-  //     }
-  //   },
-  //   "$store.state.userChanged": function changeUser(val) {
-  //     if (val === true) {
-  //       this.setUserChanged(true);
-  //     }
-  //   },
-  // },
   computed: {
     ...mapGetters([
       "getStorageUserDetails",
       "getUserChanged",
       "getRangeChanged",
     ]),
-    limitParams() {
-      return this.getUserChanged && this.getRangeChanged
-        ? `&lower_limit_date=${moment(this.range[0]).format(
-            "YYYY-MM-DD"
-          )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`
-        : `?lower_limit_date=${moment(this.range[0]).format(
-            "YYYY-MM-DD"
-          )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
-    },
-    filterEndpoints() {
-      let endpoint = "";
+    filterParams() {
+      let params = "";
       switch (true) {
         case this.getUserChanged && this.getRangeChanged:
-          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}${this.params}`;
+          params = {
+            user_id: this.user,
+            lower_limit_date: moment(this.range[0]).format("YYYY-MM-DD"),
+            upper_limit_date: moment(this.range[1]).format("YYYY-MM-DD"),
+          };
           break;
         case this.getRangeChanged:
-          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/${this.params}`;
+          params = {
+            lower_limit_date: moment(this.range[0]).format("YYYY-MM-DD"),
+            upper_limit_date: moment(this.range[1]).format("YYYY-MM-DD"),
+          };
           break;
         case this.getUserChanged:
-          endpoint = `seller/${this.getStorageUserDetails.business_id}/useractionlogs/?user_id=${this.user}`;
+          params = { user_id: this.user };
           break;
         default:
+          params = "";
           break;
       }
-      return endpoint;
+      return params;
     },
   },
   methods: {
@@ -79,12 +67,8 @@ export default {
     ...mapActions(["filterActivityLogs"]),
     async rangeChanged(val) {
       this.setRangeChanged(true);
-      console.log(val);
       if (val) {
         this.range = val;
-        this.params = this.limitParams;
-      } else {
-        this.params = "";
       }
       this.filteredUserLogs();
     },
@@ -97,7 +81,8 @@ export default {
       try {
         const fullPayload = {
           app: process.env.FULFILMENT_SERVER,
-          endpoint: this.filterEndpoints,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
+          params: this.filterParams,
         };
         console.log(fullPayload);
         this.setLoader("loading-text");

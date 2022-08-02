@@ -69,7 +69,7 @@
         <div v-else>
           <div class="no-products-card-container">
             <span class="no-deliveries-icon-halo">
-              <i class="mdi mdi-magnify no-products-icon"></i>
+              <i class="mdi mdi-history no-activities-icon"></i>
             </span>
             <div class="no-products-description no-activities-desc">
               {{ $t("settings.sorryActivitiesFound") }}
@@ -139,7 +139,6 @@ export default {
         : "";
     },
     retriveActivityLogs() {
-      console.log("loader here");
       this.setLoader("loading-text");
       try {
         const fullPayload = {
@@ -147,7 +146,6 @@ export default {
           endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
         };
         const response = this.activityLogs(fullPayload);
-        console.log(this.$route.path);
         if (this.$route.path === "/settings/activity-log") {
           this.setLoader("");
         }
@@ -205,5 +203,9 @@ export default {
 .no-activities-desc {
   color: #606266 !important;
   font-weight: 500 !important;
+}
+.no-activities-icon {
+  font-size: 50px !important;
+  color: #909399 !important;
 }
 </style>

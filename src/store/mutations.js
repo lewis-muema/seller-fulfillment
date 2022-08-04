@@ -68,9 +68,6 @@ export default {
   setActivityLog(state, val) {
     state.activityLog = val;
   },
-  setFilteredLogs(state, val) {
-    state.filteredLog = val;
-  },
   setLogsFiltered(state, val) {
     state.isLogsFiltered = val;
   },

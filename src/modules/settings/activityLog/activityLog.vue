@@ -1,6 +1,8 @@
 <template>
   <div>
-    Params - {{ filterParams }}
+    <!-- Params - {{ filterParams }}
+    RangeChanged - {{ getRangeChanged }}
+    userChanged - {{ getUserChanged }} -->
     <logs @range="rangeChanged" @user="userChanged" />
   </div>
 </template>
@@ -21,7 +23,7 @@ export default {
   },
   mounted() {
     this.setComponent("common.activityLog");
-    // this.filteredUserLogs();
+    this.filteredUserLogs();
   },
   computed: {
     ...mapGetters([
@@ -64,8 +66,8 @@ export default {
       "setUserChanged",
       "setRangeChanged",
     ]),
-    ...mapActions(["filterActivityLogs"]),
-    async rangeChanged(val) {
+    ...mapActions(["activityLogs"]),
+    rangeChanged(val) {
       this.setRangeChanged(true);
       if (val) {
         this.range = val;
@@ -74,7 +76,9 @@ export default {
     },
     userChanged(val) {
       this.setUserChanged(true);
-      this.user = val;
+      if (val) {
+        this.user = val;
+      }
       this.filteredUserLogs();
     },
     async filteredUserLogs() {
@@ -84,11 +88,8 @@ export default {
           endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
           params: this.filterParams,
         };
-        console.log(fullPayload);
         this.setLoader("loading-text");
-        const response = await this.filterActivityLogs(fullPayload);
-        console.log("response", response);
-        this.setLogsFiltered(true);
+        const response = await this.activityLogs(fullPayload);
         this.setLoader("");
         if (response.message === "list.user.action.logs.success") {
           return response;

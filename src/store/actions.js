@@ -47,8 +47,7 @@ export default {
         Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
-    const { app } = payload;
-    const { endpoint } = payload;
+
     const { params } = payload;
 
     const values = {
@@ -60,11 +59,9 @@ export default {
         delete values[value];
       }
     }
-
-    console.log(app, endpoint, values);
     return new Promise((resolve, reject) => {
       axios
-        .get(`${app}${endpoint}`, values)
+        .get(`${payload.app}${payload.endpoint}`, values)
         .then((response) => {
           resolve(response);
         })
@@ -275,10 +272,10 @@ export default {
       return error.response;
     }
   },
-  async filterActivityLogs({ dispatch, commit }, payload) {
+  async singleProductVariant({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosGet", payload);
-      commit("setFilteredLogs", res.data.data.user_action_logs);
+      commit("setProductVariant", res.data.data.product_variant);
       return res.data;
     } catch (error) {
       return error.response;

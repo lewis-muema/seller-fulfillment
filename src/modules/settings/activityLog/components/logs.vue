@@ -1,4 +1,5 @@
 <template>
+  {{ getActivityLogs }}
   <div class="activity-log-container">
     <div class="activity-log-container-top">
       <el-select
@@ -60,6 +61,10 @@
             </td>
             <td class="users-email-row">
               <span :class="getLoader">
+                <span class="log-product-name">
+                  {{ log.resource_short_description }}</span
+                >
+
                 {{ formatActionName(log.user_action_type) }}
                 {{ formatActionValues(log) }}
               </span>
@@ -100,15 +105,11 @@ export default {
       "getLoader",
       "getUsers",
       "getActivityLog",
-      "getFilteredLog",
-      "getLogsFiltered",
       "getBusinessUsers",
       "getStorageUserDetails",
     ]),
     getActivityLogs() {
-      return this.getLogsFiltered === true
-        ? this.getFilteredLog
-        : this.getActivityLog;
+      return this.getActivityLog;
     },
   },
   watch: {
@@ -207,5 +208,8 @@ export default {
 .no-activities-icon {
   font-size: 50px !important;
   color: #909399 !important;
+}
+.log-product-name {
+  color: #324ba8;
 }
 </style>

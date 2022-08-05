@@ -236,6 +236,7 @@
             "
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/settings/activity-log')"
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
             class="desktop-sidebar-sub-menu"

@@ -10,7 +10,7 @@
         <el-option
           v-for="(user, i) in getBusinessUsers"
           :key="i"
-          :label="user.firstName + ' ' + user.lastName"
+          :label="`${user.firstName} ${user.lastName}`"
           :value="user.userId"
         />
       </el-select>

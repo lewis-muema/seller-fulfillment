@@ -4,7 +4,7 @@
       <el-select
         v-model="user"
         class="m-2"
-        placeholder="All users"
+        :placeholder="$t('settings.allUsers')"
         @change="filterUsers($event)"
       >
         <el-option

@@ -141,6 +141,7 @@
   "adjustDeliveryDate": "Try adjusting your date range or users filters",
   "from": "from",
   "to": "to",
+  "allUsers": "All users",
   "sorryWeCouldntFindAnyMatches": "Sorry! We couldn’t find any matches for your search. Try adjusting your search",
   "viewAndTrackDeliveriesToSendy": "View and track deliveries to Sendy",
   "viewAndTrackDeliveriesToCustomers": "View and track deliveries to customers",

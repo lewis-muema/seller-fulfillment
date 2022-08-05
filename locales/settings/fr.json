@@ -75,5 +75,6 @@
   "sorryActivitiesFound": "Sorry! No activity log found",
   "adjustDeliveryDate": "Try adjusting your date range or users filters",
   "from": "from",
-  "to": "to"
+  "to": "to",
+  "allUsers": "All users"
 }

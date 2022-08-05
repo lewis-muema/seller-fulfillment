@@ -6,11 +6,11 @@
         @click="$router.go(-1)"
       ></i>
       <p class="invoices-title">
-        <span :class="getLoader">
+        <span :class="getLoader.invoices">
           {{ $t("payments.invoice") }} {{ invoice }}
         </span>
       </p>
-      <span v-if="!getLoader" :class="`invoices-${status}-status`">
+      <span v-if="!getLoader.invoices" :class="`invoices-${status}-status`">
         {{ status }}
       </span>
       <v-btn class="invoices-download-btn">

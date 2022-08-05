@@ -41,24 +41,34 @@
           <thead>
             <tr>
               <th class="text-left">
-                <span :class="getLoader" class="first-col-padding">{{
+                <span :class="getLoader.invoices" class="first-col-padding">{{
                   $t("payments.invoiceNumber")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("payments.deliveries") }}</span>
+                <span :class="getLoader.invoices">{{
+                  $t("payments.deliveries")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("payments.amount") }}</span>
+                <span :class="getLoader.invoices">{{
+                  $t("payments.amount")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("payments.status") }}</span>
+                <span :class="getLoader.invoices">{{
+                  $t("payments.status")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("payments.dateSent") }}</span>
+                <span :class="getLoader.invoices">{{
+                  $t("payments.dateSent")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("payments.action") }}</span>
+                <span :class="getLoader.invoices">{{
+                  $t("payments.action")
+                }}</span>
               </th>
             </tr>
           </thead>
@@ -69,22 +79,22 @@
               class="invoices-table-row"
             >
               <td class="invoices-table-col">
-                <span :class="getLoader" class="first-col-padding">
+                <span :class="getLoader.invoices" class="first-col-padding">
                   {{ invoice.invoice_id }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ invoice.order_id }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ invoice.currency }} {{ invoice.amount }}
                 </span>
               </td>
               <td class="invoices-table-col">
-                <span v-if="getLoader" :class="getLoader">
+                <span v-if="getLoader.invoices" :class="getLoader.invoices">
                   {{ invoice.invoice_status }}
                 </span>
                 <span
@@ -97,14 +107,14 @@
                 >
               </td>
               <td class="invoices-table-col">
-                <span :class="getLoader">
+                <span :class="getLoader.invoices">
                   {{ formatInvoiceDate(invoice.created_date) }}
                 </span>
               </td>
               <td class="invoices-table-col-last">
                 <span
                   class="invoices-view-col"
-                  :class="getLoader"
+                  :class="getLoader.invoices"
                   @click="
                     $router.push(`/payments/view-invoice/${invoice.invoice_id}`)
                   "
@@ -157,14 +167,20 @@ export default {
     ]),
     ...mapActions(["requestAxiosGet"]),
     listInvoices() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "invoices",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/invoices`,
       }).then((response) => {
         if (response.status === 200) {
           this.setInvoices(response.data.data.invoices);
-          this.setLoader("");
+          this.setLoader({
+            type: "invoices",
+            value: "",
+          });
         }
       });
     },

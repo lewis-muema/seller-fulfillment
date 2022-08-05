@@ -5,7 +5,7 @@
         class="manageUsers-add-button"
         @click="$router.push('/settings/add-user')"
       >
-        {{ $t("settings.addUser") }}
+        {{ $t("settings.addNewUser") }}
       </v-btn>
     </div>
     <div class="manageUsers-bottom-bar">
@@ -22,26 +22,32 @@
           clear-icon="mdi-close"
         ></v-text-field>
       </div>
-      <div class="users-table">
+      <div class="users-table" :class="noResults ? 'hidden-ui' : ''">
         <v-table>
           <thead>
             <tr>
               <th class="text-left users-name-head">
-                <span :class="getLoader">{{ $t("settings.name") }}</span>
+                <span :class="getLoader.users">{{ $t("settings.name") }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.phoneNumber") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.phoneNumber")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{
+                <span :class="getLoader.users">{{
                   $t("settings.emailAddress")
                 }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.status") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.status")
+                }}</span>
               </th>
               <th class="text-left">
-                <span :class="getLoader">{{ $t("settings.actions") }}</span>
+                <span :class="getLoader.users">{{
+                  $t("settings.actions")
+                }}</span>
               </th>
             </tr>
           </thead>
@@ -54,25 +60,25 @@
               v-for="(user, i) in getUsers"
               :key="i"
               @click="viewUser(user)"
-              :class="getLoader ? 'inactive-col' : ''"
+              :class="getLoader.users ? 'inactive-col' : ''"
             >
               <td class="users-name-row users-name-head">
-                <span :class="getLoader"
+                <span :class="getLoader.users"
                   >{{ user.first_name }} {{ user.last_name }}</span
                 >
               </td>
               <td class="users-number-row">
-                <span :class="getLoader">
+                <span :class="getLoader.users">
                   {{ user.phone_number }}
                 </span>
               </td>
               <td class="users-email-row">
-                <span :class="getLoader">
+                <span :class="getLoader.users">
                   {{ user.email }}
                 </span>
               </td>
               <td class="users-status-row">
-                <span v-if="getLoader" :class="getLoader">
+                <span v-if="getLoader.users" :class="getLoader.users">
                   {{ user.active_status }}
                 </span>
                 <span
@@ -82,7 +88,7 @@
                   {{
                     user.active_status
                       ? statusName(user.active_status)
-                      : $t("deliveries.pending")
+                      : $t("deliveries.active")
                   }}</span
                 >
               </td>
@@ -90,13 +96,22 @@
                 <v-menu
                   transition="slide-y-transition"
                   anchor="bottom center"
-                  v-if="!getLoader && user.user_role !== 'ROLE_OWNER'"
+                  v-if="!getLoader.users"
                 >
                   <template v-slot:activator="{ props }">
                     <i class="mdi mdi-dots-horizontal" v-bind="props"></i>
                   </template>
                   <v-list class="users-actions-popup">
-                    <v-list-item v-for="(action, i) in actions(user)" :key="i">
+                    <v-list-item
+                      v-for="(action, i) in actions(user)"
+                      :key="i"
+                      :class="
+                        user.user_role === 'ROLE_OWNER' &&
+                        action.link !== '/settings/view-user'
+                          ? 'disabled-action-row'
+                          : ''
+                      "
+                    >
                       <v-list-item-title @click="triggerAction(action, user)">
                         {{ $t(action.label) }}
                       </v-list-item-title>
@@ -107,6 +122,16 @@
             </tr>
           </tbody>
         </v-table>
+      </div>
+      <div :class="noResults ? '' : 'hidden-ui'">
+        <div class="no-products-card-container">
+          <span class="no-deliveries-icon-halo">
+            <i class="mdi mdi-magnify no-products-icon"></i>
+          </span>
+          <div class="no-deliveries-description">
+            {{ $t("settings.sorryWeCouldntFindAnyMatches") }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -133,6 +158,7 @@ export default {
     return {
       params: "",
       activeUser: "",
+      noResults: false,
     };
   },
   watch: {
@@ -172,13 +198,17 @@ export default {
     },
     fiterUsers(param) {
       const users = document.querySelectorAll(".users-table-column");
-      users.forEach((row) => {
+      const hidden = [];
+      users.forEach((row, i) => {
         if (row.id.toLowerCase().includes(param.toLowerCase())) {
           row.style.display = "";
+          hidden.splice(i, 1);
         } else {
           row.style.display = "none";
+          hidden.push("user");
         }
       });
+      this.noResults = hidden.length === users.length;
     },
     actions(user) {
       const actions = [];
@@ -193,12 +223,18 @@ export default {
       return actions;
     },
     fetchUsers() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users`,
       }).then((response) => {
-        this.setLoader("");
+        this.setLoader({
+          type: "users",
+          value: "",
+        });
         if (response.status === 200) {
           this.setUsers(response.data.data.users);
         }
@@ -219,7 +255,10 @@ export default {
       });
     },
     activate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/activate`,
@@ -241,7 +280,10 @@ export default {
       });
     },
     deactivate() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "users",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/admin/users/${this.getActiveUser.user_id}/deactivate`,
@@ -270,9 +312,10 @@ export default {
       });
     },
     status(activeStatus) {
-      return activeStatus ? activeStatus : "pending";
+      return activeStatus ? activeStatus : "ACTIVATED";
     },
     statusName(status) {
+      status = status === "ACTIVATED" ? "ACTIVE" : status;
       return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     },
   },
@@ -338,5 +381,12 @@ export default {
 .users-action-row {
   color: #c0c4cc;
   font-size: 35px !important;
+}
+.disabled-action-row {
+  pointer-events: none;
+  background: #80808033;
+}
+.hidden-ui {
+  display: none;
 }
 </style>

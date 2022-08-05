@@ -208,7 +208,23 @@ export default createStore({
         popup: "",
       },
       tab: "All",
-      loader: "loading-text",
+      loader: {
+        orderTracking: "loading-text",
+        deliveries: "loading-text",
+        consignments: "loading-text",
+        orderTimeline: "loading-text",
+        products: "loading-text",
+        productDetails: "loading-text",
+        calculateFee: "loading-text",
+        invoices: "loading-text",
+        billingCycles: "loading-text",
+        pendingPayment: "loading-text",
+        cycleLineItems: "loading-text",
+        userDetails: "loading-text",
+        users: "loading-text",
+        statistics: "loading-text",
+        logs: "loading-text",
+      },
       overlay: false,
       userChanged: false,
       rangeChanged: false,
@@ -381,7 +397,7 @@ export default createStore({
       ],
       user: {
         user_id: "U-LSH-0000",
-        first_name: "First",
+        first_name: "User",
         last_name: "Name",
         user_role: "ROLE_OWNER",
         invitation_status: null,
@@ -455,6 +471,11 @@ export default createStore({
           link: "/settings/user-permissions",
           trigger: "",
         },
+        {
+          label: "settings.viewUser",
+          link: "/settings/view-user",
+          trigger: "",
+        },
       ],
       userAccessPermissions: {
         CAN_ACCESS_PRODUCTS_MODULE: {
@@ -498,6 +519,12 @@ export default createStore({
             "/settings/view-user",
             "/settings/confirm-user-details",
           ],
+        },
+        CAN_ACCESS_USER_ACTION_LOG: {
+          route: [],
+        },
+        CAN_EDIT_BUSINESS_PROFILE: {
+          route: ["/settings/profile/business-profile"],
         },
       },
       accessDenied: [],
@@ -1464,7 +1491,7 @@ export default createStore({
       },
       userDetails: {
         user_id: "U-ALG-1812",
-        first_name: "First",
+        first_name: "User",
         last_name: "Name",
         user_role: "ROLE_OWNER",
         invitation_status: "INVITATION_ACCEPTED",

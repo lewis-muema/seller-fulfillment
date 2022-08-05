@@ -137,14 +137,18 @@ export default {
       this.setAddProductStatus(true);
     },
     fetchProduct() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "productDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}`,
       }).then((response) => {
-        if (this.$route.path.includes("/inventory/view-product")) {
-          this.setLoader("");
-        }
+        this.setLoader({
+          type: "productDetails",
+          value: "",
+        });
         if (response.status === 200) {
           this.setProduct(response.data.data.product);
           this.actions[1].show = !this.getProduct.product_archived;
@@ -162,14 +166,18 @@ export default {
       });
     },
     archive() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "productDetails",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/archive`,
       }).then((response) => {
-        if (this.$route.path.includes("/inventory/view-product")) {
-          this.setLoader("");
-        }
+        this.setLoader({
+          type: "productDetails",
+          value: "",
+        });
         if (response.status === 200) {
           ElNotification({
             title: this.$t("inventory.productArchivedSuccessfully"),
@@ -181,14 +189,18 @@ export default {
       });
     },
     unarchive() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "productDetails",
+        value: "loading-text",
+      });
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${this.$route.params.product}/unarchive`,
       }).then((response) => {
-        if (this.$route.path.includes("/inventory/view-product")) {
-          this.setLoader("");
-        }
+        this.setLoader({
+          type: "productDetails",
+          value: "",
+        });
         if (response.status === 200) {
           ElNotification({
             title: this.$t("inventory.productUnarchivedSuccessfully"),

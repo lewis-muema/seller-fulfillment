@@ -17,12 +17,12 @@
               <div class="summary-items-container">
                 <div class="summary-items">
                   <div>
-                    <p :class="getLoader">
+                    <p :class="getLoader.cycleLineItems">
                       {{ summary.line_item_title }}
                     </p>
                     <p
                       class="statements-expansion-title-bottom-row"
-                      :class="getLoader"
+                      :class="getLoader.cycleLineItems"
                     >
                       <span>
                         {{ summary.line_item_subtitle }}
@@ -30,12 +30,12 @@
                     </p>
                   </div>
                   <div class="summary-items-right">
-                    <p :class="getLoader">
+                    <p :class="getLoader.cycleLineItems">
                       {{ getBusinessDetails.currency }} {{ summary.amount }}
                     </p>
                     <p
                       class="statements-expansion-title-bottom-row"
-                      :class="getLoader"
+                      :class="getLoader.cycleLineItems"
                     >
                       <span>
                         {{ formatDate(summary.created_date) }}
@@ -49,10 +49,12 @@
               <div class="summary-items-container">
                 <div class="summary-items">
                   <div>
-                    <p :class="getLoader">{{ $t("settings.invoice") }}</p>
+                    <p :class="getLoader.cycleLineItems">
+                      {{ $t("settings.invoice") }}
+                    </p>
                     <p
                       class="statements-expansion-title-bottom-row"
-                      :class="getLoader"
+                      :class="getLoader.cycleLineItems"
                     >
                       <span>
                         {{ summary.line_item_id }}
@@ -60,12 +62,12 @@
                     </p>
                   </div>
                   <div class="summary-items-right mr-8">
-                    <p :class="getLoader">
+                    <p :class="getLoader.cycleLineItems">
                       {{ $t("payments.orderNumber") }}
                     </p>
                     <p
                       class="statements-expansion-title-bottom-row"
-                      :class="getLoader"
+                      :class="getLoader.cycleLineItems"
                     >
                       <span>
                         {{ summary.resource_id }}
@@ -82,7 +84,9 @@
         <div class="payment-summary-amount-section">
           <div>
             <span>{{ $t("payments.amountToPay") }}</span>
-            <span class="payment-summary-amount-val" :class="getLoader"
+            <span
+              class="payment-summary-amount-val"
+              :class="getLoader.cycleLineItems"
               >{{ getBusinessDetails.currency }}
               {{ getActivePayment.amount_to_charge }}</span
             >
@@ -134,11 +138,18 @@ export default {
     },
     ...mapMutations(["setComponent", "setLoader"]),
     getCycles() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "cycleLineItems",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.$route.params.cycle_id}/lineitems`,
       }).then((response) => {
+        this.setLoader({
+          type: "cycleLineItems",
+          value: "",
+        });
         if (response.status === 200) {
           this.setCycleLineItems(response.data.data.billing_cycle_line_items);
           this.getActiveCycle();
@@ -156,7 +167,10 @@ export default {
         if (response.status === 200) {
           this.setActivePayment(response.data.data);
           if (this.$route.path.includes("/payments/payment-summary")) {
-            this.setLoader("");
+            this.setLoader({
+              type: "cycleLineItems",
+              value: "",
+            });
           }
         } else {
           this.setActivePayment({});

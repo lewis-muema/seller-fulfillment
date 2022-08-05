@@ -12,7 +12,7 @@ export default {
     state.tab = val;
   },
   setLoader(state, val) {
-    state.loader = val;
+    state.loader[val.type] = val.value;
   },
   setData(state, val) {
     state.data = val;

@@ -24,18 +24,24 @@
           <thead>
             <tr>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{ $t("deliveries.products") }}</span>
+                <span :class="getLoader.consignments">{{
+                  $t("deliveries.products")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{ $t("deliveries.progress") }}</span>
+                <span :class="getLoader.consignments">{{
+                  $t("deliveries.progress")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{
+                <span :class="getLoader.consignments">{{
                   $t("deliveries.deliveryDate")
                 }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader">{{ $t("deliveries.actions") }}</span>
+                <span :class="getLoader.consignments">{{
+                  $t("deliveries.actions")
+                }}</span>
               </th>
             </tr>
           </thead>
@@ -47,7 +53,7 @@
             >
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
-                  <span :class="getLoader">
+                  <span :class="getLoader.consignments">
                     {{ formatProducts(item.products) }}
                   </span>
                 </div>
@@ -68,7 +74,7 @@
                 </div>
                 <div v-else>
                   <p class="deliveries-progress-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.consignments">
                       {{ formatStatus(item.order_event_status, item) }}
                     </span>
                   </p>
@@ -83,19 +89,19 @@
               <td class="deliveries-date-row">
                 <div v-if="item.order_status === 'ORDER_COMPLETED'">
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.consignments">
                       {{ deliveryDate(item.completed_date) }}
                     </span>
                   </p>
                 </div>
                 <div v-else>
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader">
+                    <span :class="getLoader.consignments">
                       {{ deliveryDate(item.scheduled_date) }}
                     </span>
                   </p>
                   <p class="deliveries-date-row-bottom">
-                    <span :class="getLoader">
+                    <span :class="getLoader.consignments">
                       {{ deliveryTime(item.scheduled_date) }}
                     </span>
                   </p>
@@ -106,7 +112,7 @@
                   class="deliveries-action-row-top"
                   @click="navigate(`/deliveries/tracking/${item.order_id}`)"
                 >
-                  <span :class="getLoader">
+                  <span :class="getLoader.consignments">
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </p>
@@ -262,7 +268,10 @@ export default {
       }${status}`;
     },
     fetchOrders() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "consignments",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments${this.params}`,
@@ -271,7 +280,10 @@ export default {
           this.setConsignments(response.data.data.orders);
         }
         if (this.$route.path.includes("/deliveries/sendy")) {
-          this.setLoader("");
+          this.setLoader({
+            type: "consignments",
+            value: "",
+          });
         }
       });
     },

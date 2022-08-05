@@ -5,7 +5,9 @@
       <div
         class="dashboard-deliveries-tab"
         :class="
-          activeTab !== tab.label && getLoader === 'loading-text'
+          activeTab !== tab.label &&
+          (getLoader.deliveries === 'loading-text' ||
+            getLoader.consignments === 'loading-text')
             ? 'inactive-tab'
             : 'active-tab'
         "
@@ -20,7 +22,9 @@
           <span
             class="d-flex"
             @click="
-              activeTab !== tab.label && getLoader === 'loading-text'
+              activeTab !== tab.label &&
+              (getLoader.deliveries === 'loading-text' ||
+                getLoader.consignments === 'loading-text')
                 ? nothing()
                 : setTab(tab)
             "
@@ -79,15 +83,18 @@ export default {
     nothing() {},
   },
   watch: {
-    "$store.state.loader": function loader(val) {
-      if (val === "") {
-        this.tabs[0].content = this.ongoingDeliveries
-          ? this.ongoingDeliveries
-          : 0;
-        this.tabs[1].content = this.ongoingConsignments
-          ? this.ongoingConsignments
-          : 0;
-      }
+    "$store.state.loader": {
+      handler(val) {
+        if (val.consignments === "" || val.deliveries === "") {
+          this.tabs[0].content = this.ongoingDeliveries
+            ? this.ongoingDeliveries
+            : 0;
+          this.tabs[1].content = this.ongoingConsignments
+            ? this.ongoingConsignments
+            : 0;
+        }
+      },
+      deep: true,
     },
   },
   computed: {

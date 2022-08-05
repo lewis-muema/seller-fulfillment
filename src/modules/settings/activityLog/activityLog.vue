@@ -93,16 +93,22 @@ export default {
       this.filteredUserLogs();
     },
     async filteredUserLogs() {
+      this.setLoader({
+        type: "logs",
+        value: "loading-text",
+      });
       try {
         const fullPayload = {
           app: process.env.FULFILMENT_SERVER,
           endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
           params: this.filterParams,
         };
-        this.setLoader("loading-text");
         const response = await this.activityLogs(fullPayload);
         if (this.$route.path === "/settings/activity-log") {
-          this.setLoader("");
+          this.setLoader({
+            type: "logs",
+            value: "",
+          });
         }
         if (response.message === "list.user.action.logs.success") {
           return response;

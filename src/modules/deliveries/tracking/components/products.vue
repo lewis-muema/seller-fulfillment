@@ -1,18 +1,18 @@
 <template>
   <div class="products-container">
     <p class="products-title">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ $t("deliveries.products") }}
       </span>
     </p>
     <p class="products-data">
-      <span :class="getLoader">
+      <span :class="getLoader.orderTracking">
         {{ formatProducts(getOrderTrackingData.order.products) }}
       </span>
     </p>
     <p class="products-view">
       <span
-        :class="getLoader"
+        :class="getLoader.orderTracking"
         @click="
           setOverlayStatus({
             overlay: true,

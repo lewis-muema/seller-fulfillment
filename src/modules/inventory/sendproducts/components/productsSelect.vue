@@ -81,15 +81,17 @@
                         :src="
                           product.product_variants[0].product_variant_image_link
                         "
-                        v-if="!getLoader"
+                        v-if="!getLoader.products"
                         alt=""
                         class="product-select-img"
                       />
-                      <span :class="getLoader">
+                      <span :class="getLoader.products">
                         {{ product.product_name }}
                       </span>
                     </span>
-                    <span :class="getLoader" class="product-select-units"
+                    <span
+                      :class="getLoader.products"
+                      class="product-select-units"
                       >{{
                         product.product_variants[0].product_variant_stock_levels
                           ? product.product_variants[0]
@@ -119,25 +121,27 @@
                               product.product_variants[0]
                                 .product_variant_image_link
                             "
-                            v-if="!getLoader"
+                            v-if="!getLoader.products"
                             alt=""
                             class="product-select-img"
                           />
                           <span class="product-select-expansion-title">
                             <div>
-                              <span :class="getLoader">
+                              <span :class="getLoader.products">
                                 {{ product.product_name }}
                               </span>
                             </div>
                             <div class="product-select-expansion-description">
-                              <span :class="getLoader">
+                              <span :class="getLoader.products">
                                 {{ product.product_variants.length }}
                                 {{ $t("inventory.producTOptions") }}
                               </span>
                             </div>
                           </span>
                         </span>
-                        <span :class="getLoader" class="product-select-units"
+                        <span
+                          :class="getLoader.products"
+                          class="product-select-units"
                           >{{
                             product.product_variants[0]
                               .product_variant_stock_levels
@@ -172,11 +176,12 @@
                             alt=""
                             class="product-select-img"
                           />
-                          <span :class="getLoader"
-                            >{{ option.product_variant_quantity }}
-                            {{ option.product_variant_quantity_type }}</span
-                          >
-                          <span :class="getLoader" class="product-select-units"
+                          <span :class="getLoader.products">{{
+                            option.product_variant_description
+                          }}</span>
+                          <span
+                            :class="getLoader.products"
+                            class="product-select-units"
                             >{{
                               option.product_variant_stock_levels
                                 ? option.product_variant_stock_levels
@@ -293,7 +298,10 @@ export default {
       );
     },
     fetchProducts() {
-      this.setLoader("loading-text");
+      this.setLoader({
+        type: "products",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
@@ -302,7 +310,10 @@ export default {
           this.$route.path ===
           `/inventory/send-inventory/${this.$route.params.path}/select-products`
         ) {
-          this.setLoader("");
+          this.setLoader({
+            type: "products",
+            value: "",
+          });
         }
 
         if (response.status === 200) {

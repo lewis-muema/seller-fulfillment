@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- Params - {{ filterParams }}
-    RangeChanged - {{ getRangeChanged }}
-    userChanged - {{ getUserChanged }} -->
     <logs @range="rangeChanged" @user="userChanged" />
   </div>
 </template>
@@ -37,14 +34,22 @@ export default {
         case this.getUserChanged && this.getRangeChanged:
           params = {
             user_id: this.user,
-            lower_limit_date: moment(this.range[0]).format("YYYY-MM-DD"),
-            upper_limit_date: moment(this.range[1]).format("YYYY-MM-DD"),
+            lower_limit_date: this.range
+              ? moment(this.range[0]).format("YYYY-MM-DD")
+              : "",
+            upper_limit_date: this.range
+              ? moment(this.range[1]).format("YYYY-MM-DD")
+              : "",
           };
           break;
         case this.getRangeChanged:
           params = {
-            lower_limit_date: moment(this.range[0]).format("YYYY-MM-DD"),
-            upper_limit_date: moment(this.range[1]).format("YYYY-MM-DD"),
+            lower_limit_date: this.range
+              ? moment(this.range[0]).format("YYYY-MM-DD")
+              : "",
+            upper_limit_date: this.range
+              ? moment(this.range[1]).format("YYYY-MM-DD")
+              : "",
           };
           break;
         case this.getUserChanged:
@@ -54,6 +59,11 @@ export default {
           params = "";
           break;
       }
+      for (const key of Object.keys(params)) {
+        if (params[key] === "") {
+          delete params[key];
+        }
+      }
       return params;
     },
   },
@@ -62,7 +72,6 @@ export default {
       "setComponent",
       "setLoader",
       "setTab",
-      "setLogsFiltered",
       "setUserChanged",
       "setRangeChanged",
     ]),
@@ -71,6 +80,8 @@ export default {
       this.setRangeChanged(true);
       if (val) {
         this.range = val;
+      } else {
+        this.range = "";
       }
       this.filteredUserLogs();
     },
@@ -90,7 +101,9 @@ export default {
         };
         this.setLoader("loading-text");
         const response = await this.activityLogs(fullPayload);
-        this.setLoader("");
+        if (this.$route.path === "/settings/activity-log") {
+          this.setLoader("");
+        }
         if (response.message === "list.user.action.logs.success") {
           return response;
         }

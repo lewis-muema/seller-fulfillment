@@ -212,22 +212,21 @@ export default createStore({
       overlay: false,
       userChanged: false,
       rangeChanged: false,
-      isLogsFiltered: false,
       businessUsers: {},
       activityLog: [
         {
-          created_date: "",
+          created_date: 1658906290000,
           user_name: "James Doe",
           user_action_type:
             "Changed the price of Shea butter from KES 500 to KES350",
         },
         {
-          created_date: "",
+          created_date: 1658906290000,
           user_name: "Mary Monroe",
           user_action_type: "Added a new product called Mango Butter",
         },
         {
-          created_date: "",
+          created_date: 1658906290000,
           user_name: "James Doe",
           user_action_type:
             "Changed the price of Shea butter from KES 500 to KES350",

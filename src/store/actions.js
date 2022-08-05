@@ -272,13 +272,4 @@ export default {
       return error.response;
     }
   },
-  async singleProductVariant({ dispatch, commit }, payload) {
-    try {
-      const res = await dispatch("requestAxiosGet", payload);
-      commit("setProductVariant", res.data.data.product_variant);
-      return res.data;
-    } catch (error) {
-      return error.response;
-    }
-  },
 };

@@ -132,5 +132,7 @@
   "instunctionEmailResentSuccessfully": "Instruction email resent successfully",
   "failedToResendInstructionEmail": "Failed to resend instruction email",
   "sorryActivitiesFound": "Sorry! No activity log found",
-  "adjustDeliveryDate": "Try adjusting your date range or users filters"
+  "adjustDeliveryDate": "Try adjusting your date range or users filters",
+  "from": "from",
+  "to": "to"
 }

@@ -1,5 +1,4 @@
 <template>
-  {{ getActivityLogs }}
   <div class="activity-log-container">
     <div class="activity-log-container-top">
       <el-select
@@ -61,7 +60,7 @@
             </td>
             <td class="users-email-row">
               <span :class="getLoader">
-                <span class="log-product-name">
+                <span class="log-product-name" :class="getLoader">
                   {{ log.resource_short_description }}</span
                 >
 
@@ -117,11 +116,8 @@ export default {
       this.$emit("range", val);
     },
   },
-  mounted() {
-    this.retriveActivityLogs();
-  },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab", "setFilteredLogs"]),
+    ...mapMutations(["setComponent", "setLoader", "setTab"]),
     ...mapActions(["activityLogs"]),
     formatDate(date) {
       return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
@@ -129,33 +125,14 @@ export default {
       )}`;
     },
     formatActionName(action) {
-      return (
-        action.charAt(0) +
-        action.substring(1).replaceAll("_", " ").toLowerCase()
-      );
+      return action.replaceAll("_", " ").toLowerCase();
     },
     formatActionValues(action) {
       return action.before_value !== null && action.before_value !== null
-        ? `from ${action.before_value} to ${action.after_value}`
+        ? `${this.$t("settings.from")} ${action.before_value} ${this.$t(
+            "settings.to"
+          )} ${action.after_value}`
         : "";
-    },
-    retriveActivityLogs() {
-      this.setLoader("loading-text");
-      try {
-        const fullPayload = {
-          app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${this.getStorageUserDetails.business_id}/useractionlogs`,
-        };
-        const response = this.activityLogs(fullPayload);
-        if (this.$route.path === "/settings/activity-log") {
-          this.setLoader("");
-        }
-        if (response.message === "list.user.action.logs.success") {
-          return response;
-        }
-      } catch (error) {
-        console.log(error);
-      }
     },
     filterUsers(val) {
       this.$emit("user", val);

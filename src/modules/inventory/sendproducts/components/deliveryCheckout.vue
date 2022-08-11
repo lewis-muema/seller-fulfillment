@@ -241,7 +241,8 @@ export default {
                 .toUpperCase()
                 .replace("-", "")
             : "CARD",
-          means_of_payment_id: this.getBusinessDetails.settings.payments_enabled
+          means_of_payment_identifier: this.getBusinessDetails.settings
+            .payments_enabled
             ? this.defaultPaymentMethod[0].pay_method_details
             : "",
           participant_type: "SELLER",

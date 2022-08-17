@@ -143,5 +143,16 @@
   "manageBusinessProfile": "Manage business profile",
   "viewActivityLog": "View activity log",
   "anEmailHasBeenSentToTheUserWithInstructionsOnHowToLogin": "An email has been sent to the user with instructions on how to login",
-  "userHasBeenAdded": "User has been added"
+  "userHasBeenAdded": "User has been added",
+  "weArePreparingYourCSVExport": "We are preparing your CSV export",
+  "weWillNotifyYouWhenYourExport": "We will notify you when your export is ready for download",
+  "weCouldNotInitiateYouCSVExport": "We are not able to initiate your CSV export at the moment, Kindly retry later",
+  "exportNotifications": "Export Notifications",
+  "notificationsAboutExports": "These are notifications about Export tasks",
+  "whenAnExportCompletes": "When an export completes successfully",
+  "whenAnExportFails": "When an export fails to complete",
+  "exportNotificationUpdates": "Export notification updates",
+  "exports": "Exports",
+  "canExportSellerData": "Can export seller data"
+
 }

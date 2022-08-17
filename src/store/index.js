@@ -21,6 +21,7 @@ export default createStore({
           value: "fr",
         },
       ],
+      exportDataType: "",
       parent: "",
       defaultLanguage: "en",
       external: [

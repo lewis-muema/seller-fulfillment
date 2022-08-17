@@ -301,6 +301,27 @@
             }}</span>
           </div>
         </div>
+        <div class="userPermisssions-checkbox-container">
+          <p class="mb-2">{{ $t("common.Exports") }}</p>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_EXPORT_SELLER_DATA"
+              @click="
+                permissions.CAN_EXPORT_SELLER_DATA =
+                  !permissions.CAN_EXPORT_SELLER_DATA
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_EXPORT_SELLER_DATA')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("settings.canExportSellerData")
+            }}</span>
+          </div>
+        </div>
         <v-btn
           class="userPermisssions-save"
           @click="submitPermissions()"

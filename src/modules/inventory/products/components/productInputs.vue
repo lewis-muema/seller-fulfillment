@@ -260,6 +260,7 @@ export default {
   },
   mounted() {
     this.setComponent("common.productDetails");
+    this.fetchCountries();
     this.initiateS3();
     this.productVariants[0].product_id = this.getProduct.product_id;
     this.productVariants[0].business_id =

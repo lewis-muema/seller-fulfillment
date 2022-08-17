@@ -15,6 +15,16 @@
         />
       </div>
       <div class="statement-info-bar-download">
+        <div class="statement-info-export">
+          <div class="export-button" @click="triggerExport()">
+            <span>
+              <i class="mdi mdi-export-variant export-icon"></i>
+            </span>
+            <span>
+              {{ $t("common.export") }}
+            </span>
+          </div>
+        </div>
         <!-- <v-menu transition="slide-y-transition" anchor="bottom center">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -248,6 +258,7 @@ export default {
       "getBusinessDetails",
       "getStorageUserDetails",
       "getLineItems",
+      "getExportDataType",
     ]),
   },
   watch: {
@@ -260,9 +271,20 @@ export default {
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),
-    ...mapMutations(["setBillingCycles"]),
+    ...mapMutations([
+      "setBillingCycles",
+      "setOverlayStatus",
+      "setExportDataType",
+    ]),
     formatDate(date) {
       return moment(date).format("dddd, Do MMM YYYY");
+    },
+    triggerExport() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "export",
+      });
+      this.setExportDataType("BILLING_CYCLE");
     },
     expandCycle(cycle, i) {
       const dummyLineItems = this.getBillingCycles;
@@ -446,5 +468,9 @@ export default {
 .payments-amount {
   float: right;
   margin-right: 15px;
+}
+.statement-info-export {
+  height: 40px;
+  margin-right: 20px;
 }
 </style>

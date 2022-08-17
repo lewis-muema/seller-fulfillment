@@ -46,5 +46,10 @@
   "manageNotifications": "Manage notifications",
   "accessDenied": "Access Denied",
   "thePageYoureTryingToAccess": "We are sorry, the page you’re trying to access has restricted access. Contact administrator to get permissions.",
-  "goBack": "Go Back"
+  "goBack": "Go Back",
+  "export": "Export",
+  "exportToCSV": "Export to CSV",
+  "yourExportWillTakeAFewMinutes": "Your export will take a few minutes to prepare. We’ll notify you and send an email to {email} when it’s ready for download",
+  "exportCSV": "Export CSV",
+  "cancel": "Cancel"
 }

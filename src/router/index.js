@@ -22,7 +22,7 @@ import addUser from "../modules/settings/manageUsers/components/addUser.vue";
 import userPermissions from "../modules/settings/manageUsers/components/userPermissions.vue";
 import invite from "../modules/external/invite.vue";
 import editUser from "../modules/settings/manageUsers/components/editUser.vue";
-// import activityLog from "../modules/settings/activityLog/activityLog.vue";
+import activityLog from "../modules/settings/activityLog/activityLog.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/inventory/products/components/addProduct.vue";
 import Products from "../modules/inventory/products/products";
@@ -192,11 +192,11 @@ const routes = [
     name: "Notifications",
     component: notifications,
   },
-  // {
-  //   path: "/settings/activity-log",
-  //   name: "Activity Log",
-  //   component: activityLog,
-  // },
+  {
+    path: "/settings/activity-log",
+    name: "Activity Log",
+    component: activityLog,
+  },
   {
     path: "/external/invite",
     name: "Invite",

@@ -1,6 +1,6 @@
 <template>
   <div class="desktop-dashboard-tab">
-    <p>{{ $t("dashboard.ongoingDeliveries") }}</p>
+    <p>{{ $t("dashboard.recentDeliveries") }}</p>
     <div class="desktop-dashboard-tab-container">
       <div
         class="dashboard-deliveries-tab"

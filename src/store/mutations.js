@@ -68,6 +68,15 @@ export default {
   setActivityLog(state, val) {
     state.activityLog = val;
   },
+  setUserChanged(state, val) {
+    state.userChanged = val;
+  },
+  setRangeChanged(state, val) {
+    state.rangeChanged = val;
+  },
+  setBusinessUsers(state, val) {
+    state.businessUsers = val;
+  },
   setDashboardSelectedTab(state, val) {
     state.dashboardSelectedTab = val;
   },

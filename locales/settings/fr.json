@@ -71,5 +71,10 @@
   "website": "Site web",
   "whichModules": "Quels modules voulez-vous que cet utilisateur accède ?",
   "yesResendInvite": "Oui, renvoyer l'invitation",
-  "yourPhoneNumber": "Votre numéro de téléphone"
+  "yourPhoneNumber": "Votre numéro de téléphone",
+  "sorryActivitiesFound": "Sorry! No activity log found",
+  "adjustDeliveryDate": "Try adjusting your date range or users filters",
+  "from": "from",
+  "to": "to",
+  "allUsers": "All users"
 }

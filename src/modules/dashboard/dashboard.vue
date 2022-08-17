@@ -4,8 +4,19 @@
       <onboarding />
     </div>
     <div v-else>
-      <top-card />
+      <span class="">
+        <h5>
+          {{
+            $t("dashboard.welcome", {
+              name: `${getUserDetails.first_name}`,
+            })
+          }}
+          🎉
+        </h5>
+        <p>{{ $t("dashboard.whatsHappening") }}</p>
+      </span>
       <makePayment v-if="activeCycle" />
+      <top-card />
       <v-row>
         <v-col cols="8" class="">
           <dashboard-tabs-content />
@@ -43,6 +54,7 @@ export default {
   computed: {
     ...mapGetters([
       "getStorageUserDetails",
+      "getUserDetails",
       "getActivePayment",
       "getAchievements",
       "getConsignmentStatistics",

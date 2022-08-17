@@ -14,7 +14,7 @@
               <v-icon class="dashboard-links-icon send-products-icon"
                 >mdi mdi-truck</v-icon
               >
-              <p class="">{{ $t("common.deliverToCustomer") }}</p>
+              <p class="">{{ $t("common.sendDeliveryToCustomer") }}</p>
             </div>
           </v-card>
         </div>

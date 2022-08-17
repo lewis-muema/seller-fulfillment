@@ -227,41 +227,26 @@ export default createStore({
         logs: "loading-text",
       },
       overlay: false,
+      userChanged: false,
+      rangeChanged: false,
+      businessUsers: {},
       activityLog: [
         {
-          date: "Thur, 1st May 2022   17:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
+          created_date: 1658906290000,
+          user_name: "James Doe",
+          user_action_type:
+            "Changed the price of Shea butter from KES 500 to KES350",
         },
         {
-          date: "Thur, 1st May 2022   15:06",
-          user: "Mary Monroe",
-          action: "Added a new product called Mango Butter",
+          created_date: 1658906290000,
+          user_name: "Mary Monroe",
+          user_action_type: "Added a new product called Mango Butter",
         },
         {
-          date: "Thur, 1st May 2022   13:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   12:06",
-          user: "James Doe",
-          action: "Sent a delivery of Shea Butter to Moses Doe",
-        },
-        {
-          date: "Thur, 1st May 2022   11:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   10:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   09:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
+          created_date: 1658906290000,
+          user_name: "James Doe",
+          user_action_type:
+            "Changed the price of Shea butter from KES 500 to KES350",
         },
       ],
       notificationPreferences: [],

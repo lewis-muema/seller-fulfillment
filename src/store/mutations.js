@@ -284,4 +284,7 @@ export default {
   setActiveUser(state, val) {
     state.activeUser = val;
   },
+  setExportDataType(state, val) {
+    state.exportDataType = val;
+  },
 };

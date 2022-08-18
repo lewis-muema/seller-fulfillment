@@ -292,6 +292,9 @@ export default {
     name() {
       this.productVariants[0].product_variant_description = this.name;
     },
+    "$store.state.businessDetails": function (value) {
+      this.productVariants[0].product_variant_currency = value.currency;
+    },
   },
   unmounted() {
     this.setAddProductStatus(false);
@@ -311,16 +314,6 @@ export default {
         return true;
       }
       return false;
-    },
-    currencyFilter() {
-      const currencies = [];
-      this.getSupportedCountries.forEach((country) => {
-        currencies.push({
-          title: country.currency.currency_symbol,
-          value: country.currency.currency_id,
-        });
-      });
-      return currencies;
     },
     filteredVariants() {
       const variants = [];
@@ -352,17 +345,6 @@ export default {
     ...mapActions(["requestAxiosPut", "requestAxiosPost", "requestAxiosGet"]),
     pickImg() {
       document.querySelector("#upload-img").click();
-    },
-    fetchCountries() {
-      this.requestAxiosGet({
-        app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/business/signup/countries`,
-      }).then((response) => {
-        if (response.status === 200) {
-          this.setSupportedCountries(response.data.data.countries);
-          this.currencies = this.currencyFilter;
-        }
-      });
     },
     addProductOptions(value) {
       this.activeOption = {};

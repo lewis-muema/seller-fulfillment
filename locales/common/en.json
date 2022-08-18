@@ -51,5 +51,9 @@
   "exportToCSV": "Export to CSV",
   "yourExportWillTakeAFewMinutes": "Your export will take a few minutes to prepare. We’ll notify you and send an email to {email} when it’s ready for download",
   "exportCSV": "Export CSV",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "downloadCsvFile": "Download CSV file",
+  "fetchingDownloadFile": "Fetching download file",
+  "downloadingFile": "Downloading file",
+  "couldNotFetchDownloadFile": "Could not fetch download file"
 }

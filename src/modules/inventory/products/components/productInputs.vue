@@ -11,7 +11,7 @@
               type="text"
               class="form-control"
               v-model="name"
-              :placeholder="$t('inventory.enterNameOfProduct')"
+              :placeholder="$t('inventory.whiteCoats')"
               :disabled="action === 'editProduct'"
             />
           </div>
@@ -28,11 +28,12 @@
               class="businessProfile-field"
               id="update-price"
               v-model="productVariants[0].product_variant_unit_price"
-              label="0"
+              :label="productVariants[0].product_variant_currency"
               variant="outlined"
               :prefix="productVariants[0].product_variant_currency"
               clearable
               clear-icon="mdi-close"
+              :disabled="productVariants.length > 1"
             ></v-text-field>
           </div>
         </div>
@@ -44,8 +45,9 @@
             <input
               type="number"
               class="form-control"
-              placeholder="0"
+              placeholder="0.0"
               v-model="productVariants[0].product_variant_quantity"
+              :disabled="productVariants.length > 1"
             />
           </div>
           <div class="col-4">
@@ -53,6 +55,7 @@
               class="edit-product-weight-field"
               :items="dimensions"
               v-model="productVariants[0].product_variant_quantity_type"
+              :disabled="productVariants.length > 1"
               outlined
             ></v-select>
           </div>
@@ -295,6 +298,16 @@ export default {
     "$store.state.businessDetails": function (value) {
       this.productVariants[0].product_variant_currency = value.currency;
     },
+    productVariants: {
+      handler(val) {
+        if (val.length > 1) {
+          this.productVariants[0].product_variant_unit_price = "0";
+          this.productVariants[0].product_variant_quantity = "0";
+          this.productVariants[0].product_variant_quantity_type = "GRAM";
+        }
+      },
+      deep: true,
+    },
   },
   unmounted() {
     this.setAddProductStatus(false);
@@ -370,8 +383,10 @@ export default {
       if (
         this.name &&
         this.productVariants[0].product_variant_currency &&
-        this.productVariants[0].product_variant_unit_price &&
-        this.productVariants[0].product_variant_quantity &&
+        (this.productVariants[0].product_variant_unit_price ||
+          this.productVariants.length > 1) &&
+        (this.productVariants[0].product_variant_quantity ||
+          this.productVariants.length > 1) &&
         this.productVariants[0].product_variant_quantity_type &&
         this.productVariants[0].product_variant_image_link
       ) {
@@ -425,8 +440,10 @@ export default {
       if (
         this.name &&
         this.productVariants[0].product_variant_currency &&
-        this.productVariants[0].product_variant_unit_price &&
-        this.productVariants[0].product_variant_quantity &&
+        (this.productVariants[0].product_variant_unit_price ||
+          this.productVariants.length > 1) &&
+        (this.productVariants[0].product_variant_quantity ||
+          this.productVariants.length > 1) &&
         this.productVariants[0].product_variant_quantity_type &&
         this.productVariants[0].product_variant_image_link
       ) {
@@ -460,7 +477,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push(`/inventory/products`);
+              this.$router.push(
+                `/inventory/view-product/${response.data.data.productId}`
+              );
             }
           } else {
             ElNotification({
@@ -492,6 +511,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 25px;
 }
 .edit-product-weight-left {
   width: 65%;
@@ -524,7 +544,8 @@ export default {
   margin-right: 20px;
 }
 .upload-img {
-  width: 150px;
+  max-width: 100%;
+  max-height: 100%;
 }
 .desktop-product-options-img {
   width: 70px;

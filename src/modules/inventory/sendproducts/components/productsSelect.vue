@@ -294,7 +294,7 @@ export default {
       return (
         this.$route.params.path === "customer" &&
         quantity === 0 &&
-        process.env.NODE_ENV === "production"
+        process.env.DOCKER_ENV === "production"
       );
     },
     fetchProducts() {

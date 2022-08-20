@@ -284,4 +284,7 @@ export default {
   setActiveUser(state, val) {
     state.activeUser = val;
   },
+  setUpdatedData(state, val) {
+    state.updatedData = val;
+  },
 };

@@ -208,6 +208,7 @@ export default {
         }).then((response) => {
           this.buttonLoader = false;
           if (response.status === 200) {
+            console.log("response", response);
             ElNotification({
               title: this.$t("inventory.consignmentCreatedSuccessfully"),
               message: "",
@@ -228,7 +229,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push("/deliveries/sendy");
+              this.$router.push(
+                `/deliveries/tracking/${response.data.data.order_id}`
+              );
             }
           } else {
             ElNotification({

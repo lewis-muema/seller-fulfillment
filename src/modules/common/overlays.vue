@@ -570,6 +570,20 @@
         </p>
       </div>
     </div>
+    <div v-if="popup === 'noEdits'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">We are Sorry</p>
+        <i
+          @click="overlayStatusSet(false, 'noEdits')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        You can’t edit products at the moment because a driver has been assigned
+        to pick your order.
+      </p>
+      <v-btn class="get-help-button"> Get Help </v-btn>
+    </div>
   </v-overlay>
 </template>
 
@@ -597,6 +611,7 @@ export default {
           : "";
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
+      console.log("val", val);
       this.customerName = val.order.destination.name;
       this.location = val.order.destination.delivery_location.description;
       this.phone = val.order.destination.phone_number;
@@ -712,6 +727,7 @@ export default {
     },
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
+      console.log("here", order.products);
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
@@ -767,6 +783,7 @@ export default {
     },
     submitDelivery() {
       const order = this.getOrderTrackingData.order;
+      console.log("here", order.products);
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       this.buttonLoader = true;
@@ -1246,5 +1263,16 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.get-help-button {
+  width: 100%;
+  margin-top: 20px;
+  height: 50px !important;
+  background: #d3ddf6;
+  color: #324ba8 !important;
+  text-transform: inherit;
+  letter-spacing: 0px;
+  font-size: 16px;
+  font-weight: 400 !important;
 }
 </style>

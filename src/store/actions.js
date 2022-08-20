@@ -278,4 +278,13 @@ export default {
       return error.response;
     }
   },
+  async updateOrderTrackingData({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPut", payload);
+      commit("setUpdatedData", res.data.data);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

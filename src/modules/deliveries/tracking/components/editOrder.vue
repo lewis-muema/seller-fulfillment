@@ -8,16 +8,19 @@
               class="mdi mdi-arrow-left"
               aria-hidden="true"
               @click="$router.go(-1)"
+              v-if="!productsEmpty"
             ></i>
             <v-card-title class="text-center send-products-title">
               Edit Products
             </v-card-title>
           </div>
-          <span class="add-products-span">
-            <i class="mdi mdi-plus"></i>
-            {{ $t("inventory.addProducts") }}
-          </span>
-          <div class="products-selected-summary" v-if="test">
+          <router-link to="/inventory/send-inventory/sendy/select-products">
+            <span class="add-products-span-header">
+              <i class="mdi mdi-plus"></i>
+              {{ $t("inventory.addProducts") }}
+            </span>
+          </router-link>
+          <div class="products-selected-summary" v-if="!productsEmpty">
             <v-table>
               <table-header :header="tableHeaders" />
               <tbody>
@@ -79,7 +82,7 @@
                 Your cart is empty, add products to submit changes
               </div>
               <router-link to="/inventory/send-inventory/sendy/select-products">
-                <span>
+                <span class="add-products-span">
                   <i class="mdi mdi-plus"></i>
                   {{ $t("inventory.addProducts") }}
                 </span>
@@ -128,7 +131,7 @@ export default {
   mixins: [eventsMixin],
   data() {
     return {
-      test: false,
+      productsEmpty: false,
       quantities: [],
       buttonLoader: false,
       quantity: 1,
@@ -190,26 +193,35 @@ export default {
           this.getParent === "sendy" ? "consignments" : "deliveries"
         }/${this.getOrderTrackingData.order.order_id}`,
       };
-      console.log(fullPayload);
-      const response = await this.updateOrderTrackingData(fullPayload);
-      if (response.status === 200) {
-        ElNotification({
-          title: "",
-          message: this.$t("deliveries.deliveryEditedSuccessfully"),
-          type: "success",
-        });
-        this.buttonLoader = false;
-        this.$router.push({
-          name: "Tracking",
-          params: { order_id: this.getOrderTrackingData.order.order_id },
-        });
-        setTimeout(() => {
-          this.fetchOrder();
-        }, 1000);
+      if (payload.products.length > 0) {
+        const response = await this.updateOrderTrackingData(fullPayload);
+        if (response.status === 200) {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.deliveryEditedSuccessfully"),
+            type: "success",
+          });
+          this.buttonLoader = false;
+          this.$router.push({
+            name: "Tracking",
+            params: { order_id: this.getOrderTrackingData.order.order_id },
+          });
+          setTimeout(() => {
+            this.fetchOrder();
+          }, 1000);
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("deliveries.cosignmentEditingFailed"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
       } else {
+        this.productsEmpty = true;
         ElNotification({
           title: "",
-          message: this.$t("deliveries.cosignmentEditingFailed"),
+          message: this.$t("deliveries.pleaseAddProduct"),
           type: "error",
         });
         this.buttonLoader = false;
@@ -258,8 +270,15 @@ export default {
   margin-top: 10px !important;
   text-transform: uppercase !important;
 }
-.add-products-span {
+.add-products-span-header {
   float: right !important;
   margin: -50px 30px 0px 0px;
+  /* color: #324ba8;
+  text-decoration: none; */
+}
+.add-products-span,
+.add-products-span-header {
+  color: #324ba8;
+  text-decoration: none !important;
 }
 </style>

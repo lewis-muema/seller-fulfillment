@@ -208,7 +208,6 @@ export default {
         }).then((response) => {
           this.buttonLoader = false;
           if (response.status === 200) {
-            console.log("response", response);
             ElNotification({
               title: this.$t("inventory.consignmentCreatedSuccessfully"),
               message: "",

@@ -11,13 +11,13 @@
               v-if="!productsEmpty"
             ></i>
             <v-card-title class="text-center send-products-title">
-              Edit Products
+              {{ $t("common.editProducts") }}
             </v-card-title>
           </div>
           <router-link to="/inventory/send-inventory/sendy/select-products">
             <span class="add-products-span-header">
               <i class="mdi mdi-plus"></i>
-              {{ $t("inventory.addProducts") }}
+              {{ $t("common.addProducts") }}
             </span>
           </router-link>
           <div class="products-selected-summary" v-if="!productsEmpty">
@@ -79,12 +79,12 @@
             <div class="no-products-card-container">
               <i class="mdi mdi-store no-products-icon"></i>
               <div class="no-products-description">
-                Your cart is empty, add products to submit changes
+                {{ $t("deliveries.cartEmpty") }}
               </div>
               <router-link to="/inventory/send-inventory/sendy/select-products">
                 <span class="add-products-span">
                   <i class="mdi mdi-plus"></i>
-                  {{ $t("inventory.addProducts") }}
+                  {{ $t("common.addProducts") }}
                 </span>
               </router-link>
             </div>
@@ -101,17 +101,17 @@
               {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
             </p>
             <v-divider />
-            <div class="mt-2">Fees</div>
+            <div class="mt-2">{{ $t("inventory.fees") }}</div>
             <p class="mt-2">
-              <span>Pickup fee</span>
-              <span class="orderedProductKes">KES 0</span>
+              <span>{{ $t("inventory.pickupFee") }}</span>
+              <span class="orderedProductKes">{{ currency }} {{ amount }}</span>
             </p>
             <v-btn
               v-loading="buttonLoader"
               @click="submitChanges()"
               class="edit-info-submit-button edit-order-button"
             >
-              Submit Changes
+              {{ $t("deliveries.submit") }}
             </v-btn>
           </div></v-card
         >
@@ -132,7 +132,8 @@ export default {
   data() {
     return {
       productsEmpty: false,
-      quantities: [],
+      amount: 0,
+      currency: "KES",
       buttonLoader: false,
       quantity: 1,
       tableHeaders: [
@@ -222,7 +223,7 @@ export default {
         ElNotification({
           title: "",
           message: this.$t("deliveries.pleaseAddProduct"),
-          type: "error",
+          type: "warning",
         });
         this.buttonLoader = false;
       }

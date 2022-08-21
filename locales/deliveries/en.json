@@ -89,6 +89,7 @@
   "customerInfo": "Customer info",
   "trackOrder": "Track order",
   "pleaseAddProduct": "Please add a product to submit changes",
+  "cartEmpty": "Your cart is empty, add products to submit changes",
   "otherItems": "and {count} other items",
   "attempt": "Attempt",
   "insufficientInformation": "Insufficient Information",

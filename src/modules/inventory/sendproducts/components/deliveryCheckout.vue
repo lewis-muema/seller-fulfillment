@@ -345,7 +345,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push("/deliveries/customer");
+              this.$router.push(
+                `/deliveries/tracking/${response.data.data.order_id}`
+              );
             }
           } else {
             ElNotification({

@@ -611,7 +611,6 @@ export default {
           : "";
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
-      console.log("val", val);
       this.customerName = val.order.destination.name;
       this.location = val.order.destination.delivery_location.description;
       this.phone = val.order.destination.phone_number;
@@ -727,7 +726,6 @@ export default {
     },
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
-      console.log("here", order.products);
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
@@ -783,7 +781,6 @@ export default {
     },
     submitDelivery() {
       const order = this.getOrderTrackingData.order;
-      console.log("here", order.products);
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       this.buttonLoader = true;

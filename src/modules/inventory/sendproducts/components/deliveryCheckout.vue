@@ -289,7 +289,6 @@ export default {
           ? this.getFulfillmentFees.promotion_session_id
           : null,
       };
-      console.log("payload", payload);
       return payload;
     },
   },

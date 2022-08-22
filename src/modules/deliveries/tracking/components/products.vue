@@ -79,11 +79,13 @@ export default {
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
     formatProducts(products) {
-      return `${products[0].product_variant_description} ${
-        products.length > 1
-          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
-          : ""
-      }`;
+      if (products.length !== 0) {
+        return `${products[0].product_variant_description} ${
+          products.length > 1
+            ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+            : ""
+        }`;
+      }
     },
   },
 };

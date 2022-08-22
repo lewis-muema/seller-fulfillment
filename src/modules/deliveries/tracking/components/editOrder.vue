@@ -1,4 +1,5 @@
 <template>
+  {{ $router.params }}
   <div>
     <v-row class="edit-order-container">
       <v-col cols="8">
@@ -7,8 +8,14 @@
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="$router.go(-1)"
-              v-if="!productsEmpty"
+              @click="
+                $router.push({
+                  name: 'Tracking',
+                  params: {
+                    order_id: this.getOrderTrackingData.order.order_id,
+                  },
+                })
+              "
             ></i>
             <v-card-title class="text-center send-products-title">
               {{ $t("common.editProducts") }}
@@ -183,9 +190,6 @@ export default {
       });
       const payload = {
         products: JSON.parse(JSON.stringify(newProduct)),
-        destination: JSON.parse(
-          JSON.stringify(this.getOrderTrackingData.order.destination)
-        ),
       };
       const fullPayload = {
         app: process.env.FULFILMENT_SERVER,

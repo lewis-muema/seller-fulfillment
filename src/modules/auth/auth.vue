@@ -18,7 +18,7 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <carousel :items-to-show="1" :autoplay="3000" :wrapAround="true">
+          <carousel :items-to-show="1" :autoplay="6000" :wrapAround="true">
             <slide
               v-for="slide in slides"
               :key="slide.title"

@@ -1,10 +1,37 @@
 <template>
   <div class="products-container">
-    <p class="products-title">
+    <div class="products-title">
       <span :class="getLoader.orderTracking">
         {{ $t("deliveries.products") }}
       </span>
-    </p>
+      <div v-if="checkEdits">
+        <router-link to="/deliveries/edit-order">
+          <span class="delivery-info-edit" :class="getLoader.orderTracking">
+            <i class="mdi mdi-pencil"></i>
+            {{ $t("deliveries.edit") }}
+          </span>
+        </router-link>
+      </div>
+      <span
+        :class="getLoader.orderTracking"
+        @click="
+          setOverlayStatus({
+            overlay: true,
+            popup: 'noEdits',
+          })
+        "
+        v-else
+      >
+        <span
+          class="delivery-info-edit"
+          :class="getLoader.orderTracking"
+          v-if="getParent === 'sendy'"
+        >
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
+      </span>
+    </div>
     <p class="products-data">
       <span :class="getLoader.orderTracking">
         {{ formatProducts(getOrderTrackingData.order.products) }}
@@ -36,16 +63,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getLoader", "getProducts", "getOrderTrackingData"]),
+    ...mapGetters([
+      "getLoader",
+      "getProducts",
+      "getOrderTrackingData",
+      "getParent",
+    ]),
+    checkEdits() {
+      return (
+        this.getParent === "sendy" &&
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED"
+      );
+    },
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
     formatProducts(products) {
-      return `${products[0].product_variant_description} ${
-        products.length > 1
-          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
-          : ""
-      }`;
+      if (products.length !== 0) {
+        return `${products[0].product_variant_description} ${
+          products.length > 1
+            ? this.$t("deliveries.otherItems", { count: products.length - 1 })
+            : ""
+        }`;
+      }
     },
   },
 };

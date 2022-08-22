@@ -570,6 +570,19 @@
         </p>
       </div>
     </div>
+    <div v-if="popup === 'noEdits'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEdits')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        {{ $t("deliveries.cantEditProducts") }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
     <div v-if="popup === 'export'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <i
@@ -1321,6 +1334,17 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.get-help-button {
+  width: 100%;
+  margin-top: 20px;
+  height: 50px !important;
+  background: #d3ddf6;
+  color: #324ba8 !important;
+  text-transform: inherit;
+  letter-spacing: 0px;
+  font-size: 16px;
+  font-weight: 400 !important;
 }
 .export-popup-buttons {
   display: flex;

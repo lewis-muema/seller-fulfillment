@@ -583,6 +583,43 @@
       </p>
       <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
     </div>
+    <div v-if="popup === 'export'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'export')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="deactivate-user-title">
+          {{ $t("common.exportToCSV") }}
+        </p>
+        <p class="export-CSV-description">
+          {{
+            $t("common.yourExportWillTakeAFewMinutes", {
+              email: getUserDetails.email,
+            })
+          }}
+        </p>
+        <div class="export-popup-buttons">
+          <div
+            class="deactivate-user-no"
+            @click="overlayStatusSet(false, 'export')"
+          >
+            {{ $t("common.cancel") }}
+          </div>
+          <div class="export-CSV-button">
+            <v-btn
+              class="edit-user-save"
+              v-loading="buttonLoader"
+              @click="exportData()"
+            >
+              {{ $t("common.exportCSV") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -639,6 +676,7 @@ export default {
       "getSendyPhoneProps",
       "getUser",
       "getActiveUser",
+      "getExportDataType",
     ]),
   },
   data() {
@@ -679,7 +717,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    ...mapActions(["requestAxiosPut", "requestAxiosGet", "requestAxiosPost"]),
     ...mapMutations([
       "setLoader",
       "setOrderTrackingData",
@@ -697,6 +735,43 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    exportData() {
+      this.buttonLoader = true;
+      const payload = {
+        business_id: this.getStorageUserDetails.business_id,
+        data_query: {
+          data_type: this.getExportDataType,
+          data_filters: [],
+        },
+        output_file_types: [
+          {
+            file_type: "CSV",
+          },
+        ],
+      };
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/exporttasks`,
+        values: payload,
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: this.$t("settings.weArePreparingYourCSVExport"),
+            message: this.$t("settings.weWillNotifyYouWhenYourExport"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "export");
+          this.buttonLoader = false;
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("settings.weCouldNotInitiateYouCSVExport"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
     },
     resendInvite() {
       this.buttonLoader = true;
@@ -1270,5 +1345,18 @@ export default {
   letter-spacing: 0px;
   font-size: 16px;
   font-weight: 400 !important;
+}
+.export-popup-buttons {
+  display: flex;
+  width: 60%;
+  align-items: center;
+  float: right;
+}
+.export-CSV-button {
+  margin-left: 20px;
+  width: 150px;
+}
+.export-CSV-description {
+  color: #606266;
 }
 </style>

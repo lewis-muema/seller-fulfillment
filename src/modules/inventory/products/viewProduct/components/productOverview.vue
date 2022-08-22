@@ -17,27 +17,33 @@
       <p class="product-header">{{ $t("inventory.desc") }}</p>
       <p>
         <span :class="getLoader.productDetails">
-          {{ product.product_description }}
+          {{
+            product.product_description
+              ? product.product_description
+              : $t("inventory.noDescriptionProvided")
+          }}
         </span>
       </p>
     </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">{{ $t("inventory.price") }}</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          {{ product.product_variants[0].product_variant_currency }}
-          {{ product.product_variants[0].product_variant_unit_price }}
-        </span>
-      </p>
-    </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">{{ $t("inventory.weight") }}</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          {{ product.product_variants[0].product_variant_quantity }}
-          {{ product.product_variants[0].product_variant_quantity_type }}
-        </span>
-      </p>
+    <div v-if="product.product_variants.length <= 1">
+      <div class="product-details-content mb-3">
+        <p class="product-header">{{ $t("inventory.price") }}</p>
+        <p>
+          <span :class="getLoader.productDetails">
+            {{ product.product_variants[0].product_variant_currency }}
+            {{ product.product_variants[0].product_variant_unit_price }}
+          </span>
+        </p>
+      </div>
+      <div class="product-details-content mb-3">
+        <p class="product-header">{{ $t("inventory.weight") }}</p>
+        <p>
+          <span :class="getLoader.productDetails">
+            {{ product.product_variants[0].product_variant_quantity }}
+            {{ product.product_variants[0].product_variant_quantity_type }}
+          </span>
+        </p>
+      </div>
     </div>
     <div class="product-details-content mb-3">
       <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
@@ -76,6 +82,12 @@
                       {{ variant.product_variant_description }}
                     </span></v-list-item-title
                   >
+                  <v-list-item-subtitle>
+                    <span :class="getLoader.productDetails">
+                      {{ variant.product_variant_quantity }}
+                      {{ variant.product_variant_quantity_type }}
+                    </span>
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle>
                     <span :class="getLoader.productDetails">
                       {{ variant.product_variant_currency }}
@@ -199,10 +211,12 @@ export default {
     ...mapGetters(["getProduct", "getLoader"]),
     variants() {
       const res = [];
-      this.product.product_variants.forEach((row) => {
-        // (this.product.product_variants.length === 1 ||
-        // (this.product.product_variants.length > 1 && i >= 1))
-        if (!row.product_variant_archived) {
+      this.product.product_variants.forEach((row, i) => {
+        if (
+          (this.product.product_variants.length === 1 ||
+            (this.product.product_variants.length > 1 && i >= 1)) &&
+          !row.product_variant_archived
+        ) {
           res.push(row);
         }
       });
@@ -216,7 +230,10 @@ export default {
     totalStock(product) {
       let total = 0;
       product.product_variants.forEach((row) => {
-        total = total + row.product_variant_stock_levels.quantity_in_inventory;
+        total =
+          total + row.product_variant_stock_levels
+            ? row.product_variant_stock_levels.quantity_in_inventory
+            : 0;
       });
       if (product.product_variants.length === 1) {
         this.tableHeaders2[1].title = "";

@@ -133,7 +133,9 @@
                             </div>
                             <div class="product-select-expansion-description">
                               <span :class="getLoader.products">
-                                {{ product.product_variants.length }}
+                                {{
+                                  variantFilter(product.product_variants).length
+                                }}
                                 {{ $t("inventory.producTOptions") }}
                               </span>
                             </div>
@@ -157,7 +159,9 @@
                         <div
                           class="product-select-option"
                           :class="disabledStatus(product) ? 'disabled-row' : ''"
-                          v-for="(option, x) in product.product_variants"
+                          v-for="(option, x) in variantFilter(
+                            product.product_variants
+                          )"
                           :key="x"
                         >
                           <input
@@ -286,6 +290,15 @@ export default {
       "setProductLists",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    variantFilter(variants) {
+      let variant = [];
+      variants.forEach((row, i) => {
+        if (i > 0) {
+          variant.push(row);
+        }
+      });
+      return variant;
+    },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels
@@ -294,7 +307,7 @@ export default {
       return (
         this.$route.params.path === "customer" &&
         quantity === 0 &&
-        process.env.NODE_ENV === "production"
+        process.env.DOCKER_ENV === "production"
       );
     },
     fetchProducts() {
@@ -498,7 +511,7 @@ export default {
   width: 18px !important;
 }
 .product-select-img {
-  width: 40px;
+  height: 40px;
   margin-right: 20px;
 }
 .product-select-column {

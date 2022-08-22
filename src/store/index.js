@@ -21,6 +21,7 @@ export default createStore({
           value: "fr",
         },
       ],
+      exportDataType: "",
       parent: "",
       defaultLanguage: "en",
       external: [
@@ -522,7 +523,7 @@ export default createStore({
           ],
         },
         CAN_ACCESS_USER_ACTION_LOG: {
-          route: [],
+          route: ["/settings/activity-log"],
         },
         CAN_EDIT_BUSINESS_PROFILE: {
           route: ["/settings/profile/business-profile"],

@@ -97,4 +97,5 @@ export default {
   getAccessDenied: (state) => state.accessDenied,
   getUserAction: (state) => state.userAction,
   getActiveUser: (state) => state.activeUser,
+  getExportDataType: (state) => state.exportDataType,
 };

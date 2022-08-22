@@ -287,4 +287,7 @@ export default {
   setUpdatedData(state, val) {
     state.updatedData = val;
   },
+  setExportDataType(state, val) {
+    state.exportDataType = val;
+  },
 };

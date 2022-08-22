@@ -200,6 +200,7 @@ export default {
 .timeline-failed-attempt-section {
   margin-bottom: 20px;
   display: flex;
+  z-index: 100;
 }
 .timeline-failed-attempt-label {
   font-size: 15px;

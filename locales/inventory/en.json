@@ -43,8 +43,9 @@
   "img": "Image",
   "image":"Image (optional)",
   "eg":"E.g Red, black, size XL, M",
-  "saveAnother":"Save and add another one",
+  "saveAnother":"Save and add another option",
   "saveProduct": "Save product",
+  "saveProductOption": "Save product option",
   "productSavedSuccessfully": "Product Saved successfully",
   "productSavingFailed": "Product saving failed",
   "view": "View",
@@ -148,5 +149,7 @@
   "thereAreNoLowStockItems": "There are no low stock items at the moment",
   "thereAreNoOutOfStockItems": "There are no out of stock items at the moment",
   "theQuantityYouHaveEntered": "The quantity you have entered exceeds your available units",
-  "change": "Change"
+  "change": "Change",
+  "whiteCoats": "E.g White coat, Shea butter",
+  "noDescriptionProvided": "No description provided"
 }

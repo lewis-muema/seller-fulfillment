@@ -43,7 +43,14 @@
           <i class="mdi mdi-upload"></i>
           {{ $t("inventory.uploadProduct") }}
         </button> -->
-
+        <div v-if="exportStatus" class="export-button" @click="triggerExport()">
+          <span>
+            <i class="mdi mdi-export-variant export-icon"></i>
+          </span>
+          <span>
+            {{ $t("common.export") }}
+          </span>
+        </div>
         <button
           class="btn btn-primary upload-buttons-section"
           @click="$router.push('/inventory/add-product')"
@@ -88,6 +95,18 @@
             ></v-badge>
           </span>
         </div>
+      </div>
+      <div
+        v-if="exportStatus"
+        class="export-button ml-auto"
+        @click="triggerExport()"
+      >
+        <span>
+          <i class="mdi mdi-export-variant export-icon"></i>
+        </span>
+        <span>
+          {{ $t("common.export") }}
+        </span>
       </div>
     </div>
     <slot></slot>
@@ -139,7 +158,14 @@ export default {
       "getLoader",
       "getAllProductCount",
       "getArchivedProductCount",
+      "getUserDetails",
     ]),
+    exportStatus() {
+      const status = this.getUserDetails.user_access_permissions.find(
+        (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
+      );
+      return typeof status === "object" ? status.permission_granted : false;
+    },
     getRoute() {
       return this.$route.path;
     },
@@ -176,9 +202,20 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setInventorySelectedTab"]),
+    ...mapMutations([
+      "setInventorySelectedTab",
+      "setOverlayStatus",
+      "setExportDataType",
+    ]),
     setTab(tab) {
       this.setInventorySelectedTab(tab.label);
+    },
+    triggerExport() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "export",
+      });
+      this.setExportDataType("PRODUCT");
     },
     nothing() {},
   },
@@ -188,7 +225,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 100px 145px 155px;
+  grid-template-columns: 100px 145px 155px auto;
   margin: 30px;
 }
 .desktop-product-tab {
@@ -220,6 +257,7 @@ button {
 .product-buttons-container {
   float: right !important;
   margin-top: -70px;
+  display: flex;
 }
 .products-buttons-section {
   background-color: #ffffff !important;
@@ -234,5 +272,19 @@ button {
 .products-buttons-section > i,
 .import-products-link {
   color: #324ba8 !important;
+}
+.export-icon {
+  font-weight: 800;
+  margin-right: 5px;
+  font-size: 20px;
+}
+.export-button {
+  height: 30px;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #324ba8;
+  cursor: pointer;
 }
 </style>

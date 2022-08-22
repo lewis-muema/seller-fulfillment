@@ -12,10 +12,25 @@
         class="delivery-info-edit"
         @click="overlayStatus(true)"
         :class="getLoader.orderTracking"
-        v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
+        v-if="getOrderTrackingData.order.order_status === 'ORDER_RECEIVED'"
       >
         <i class="mdi mdi-pencil"></i>
         {{ $t("deliveries.edit") }}
+      </span>
+      <span
+        :class="getLoader.orderTracking"
+        @click="
+          setOverlayStatus({
+            overlay: true,
+            popup: 'noEdits',
+          })
+        "
+        v-else
+      >
+        <span class="delivery-info-edit" :class="getLoader.orderTracking">
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
       </span>
     </p>
     <p class="delivery-info-label">

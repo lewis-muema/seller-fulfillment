@@ -41,6 +41,7 @@ export default createStore({
       },
       supportedCountries: [],
       userData: {},
+      updatedData: {},
       confirmedUser: {},
       businessUserDetails: {},
       googleUserData: {},

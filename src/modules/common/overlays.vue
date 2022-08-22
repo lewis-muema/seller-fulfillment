@@ -572,17 +572,16 @@
     </div>
     <div v-if="popup === 'noEdits'" class="view-products-container">
       <div class="view-products-section">
-        <p class="view-products-label">We are Sorry</p>
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
         <i
           @click="overlayStatusSet(false, 'noEdits')"
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
       <p>
-        You can’t edit products at the moment because a driver has been assigned
-        to pick your order.
+        {{ $t("deliveries.cantEditProducts") }}
       </p>
-      <v-btn class="get-help-button"> Get Help </v-btn>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
     </div>
   </v-overlay>
 </template>

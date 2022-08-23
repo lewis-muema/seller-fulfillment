@@ -317,8 +317,10 @@ export default {
       this.location = document.querySelector("#location").value;
     },
     formatPaymentMethod(method) {
-      return method.pay_method_details &&
-        method.pay_method_name !== "Virtual Accounts"
+      if (method.pay_method_id === 20) {
+        return "Pay by Bank";
+      }
+      return method.pay_method_details
         ? method.pay_method_details
         : method.pay_method_name;
     },

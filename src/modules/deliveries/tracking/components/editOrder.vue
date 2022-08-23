@@ -88,7 +88,10 @@
               <div class="no-products-description">
                 {{ $t("deliveries.cartEmpty") }}
               </div>
-              <router-link to="/inventory/send-inventory/sendy/select-products">
+              <router-link
+                to="/inventory/send-inventory/sendy/select-products"
+                class="add-products-span-link"
+              >
                 <span class="add-products-span">
                   <i class="mdi mdi-plus"></i>
                   {{ $t("common.addProducts") }}
@@ -278,12 +281,13 @@ export default {
 .add-products-span-header {
   float: right !important;
   margin: -50px 30px 0px 0px;
-  /* color: #324ba8;
-  text-decoration: none; */
-}
-.add-products-span,
-.add-products-span-header {
   color: #324ba8;
   text-decoration: none !important;
+}
+.add-products-span {
+  color: #324ba8;
+}
+.add-products-span-link {
+  text-decoration: none;
 }
 </style>

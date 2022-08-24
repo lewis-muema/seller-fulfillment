@@ -12,7 +12,10 @@
         class="delivery-info-edit"
         @click="overlayStatus(true)"
         :class="getLoader.orderTracking"
-        v-if="getOrderTrackingData.order.order_status === 'ORDER_RECEIVED'"
+        v-if="
+          getOrderTrackingData.order.order_status === 'ORDER_RECEIVED' ||
+          getOrderTrackingData.order.order_status === 'ORDER_IN_PROCESSING'
+        "
       >
         <i class="mdi mdi-pencil"></i>
         {{ $t("deliveries.edit") }}
@@ -156,6 +159,7 @@ export default {
       "setTab",
       "setOverlayStatus",
       "setParent",
+      "setEditValue",
     ]),
     overlayStatus(overlay) {
       if (this.getParent === "sendy") {

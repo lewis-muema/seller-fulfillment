@@ -139,6 +139,7 @@ export default {
   data() {
     return {
       overlay: false,
+      editInfo: false,
     };
   },
   computed: {

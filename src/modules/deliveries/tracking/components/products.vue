@@ -5,19 +5,19 @@
         {{ $t("deliveries.products") }}
       </span>
       <div v-if="checkEdits">
-        <router-link to="/deliveries/edit-order">
+        <p @click="nagivateRoute('/deliveries/edit-order')">
           <span class="delivery-info-edit" :class="getLoader.orderTracking">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
-        </router-link>
+        </p>
       </div>
       <span
         :class="getLoader.orderTracking"
         @click="
           setOverlayStatus({
             overlay: true,
-            popup: 'noEdits',
+            popup: 'noEditsProducts',
           })
         "
         v-else
@@ -72,12 +72,17 @@ export default {
     checkEdits() {
       return (
         this.getParent === "sendy" &&
-        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED"
+        (this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+          this.getOrderTrackingData.order.order_status ===
+            "ORDER_IN_PROCESSING")
       );
     },
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
+    nagivateRoute(route) {
+      this.$router.push(route);
+    },
     formatProducts(products) {
       if (products.length !== 0) {
         return `${products[0].product_variant_description} ${

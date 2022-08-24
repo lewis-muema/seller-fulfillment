@@ -579,6 +579,23 @@
         ></i>
       </div>
       <p>
+        {{
+          getParent === "sendy"
+            ? $t("deliveries.cantEditPickups")
+            : $t("deliveries.cantEditDelivery")
+        }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
+    <div v-if="popup === 'noEditsProducts'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEditsProducts')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
         {{ $t("deliveries.cantEditProducts") }}
       </p>
       <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
@@ -717,7 +734,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["requestAxiosPut", "requestAxiosGet", "requestAxiosPost"]),
+    ...mapActions([
+      "requestAxiosPut",
+      "requestAxiosGet",
+      "requestAxiosPost",
+      "requestAxiosPatch",
+    ]),
     ...mapMutations([
       "setLoader",
       "setOrderTrackingData",
@@ -801,7 +823,7 @@ export default {
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      this.requestAxiosPatch({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
         values: {
@@ -858,7 +880,7 @@ export default {
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      this.requestAxiosPatch({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
         values: {

@@ -235,6 +235,8 @@
             <p>
               {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
             </p>
+            <p>Edit Value</p>
+            {{ getEditValue }}
             <button
               type="submit"
               @click="addProductStep()"
@@ -336,9 +338,14 @@ export default {
       });
     },
     addProductStep() {
+      // if (this.getEditValue === "consignment") {
+      //   return;
+      // }
       if (this.getSelectedProducts.length > 0) {
         this.$router.push(
-          `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
+          this.getEditValue === "consignment"
+            ? "/deliveries/edit-order"
+            : `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
         );
       } else {
         ElNotification({
@@ -459,6 +466,7 @@ export default {
       "getSelectedProducts",
       "getProductLists",
       "getLoader",
+      "getEditValue",
       "getStorageUserDetails",
     ]),
     itemsSelectedCount() {

@@ -179,6 +179,9 @@ export default {
   setNotifications(state, val) {
     state.notifications = val;
   },
+  setEditValue(state, val) {
+    state.editValue = val;
+  },
   setParent(state, val) {
     state.parent = val;
   },

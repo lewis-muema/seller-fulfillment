@@ -22,6 +22,7 @@ export default {
   getTransationHistory: (state) => state.transationHistory,
   getUsers: (state) => state.users,
   getLanguages: (state) => state.languages,
+  getEditValue: (state) => state.editValue,
   getDefaultLanguage: (state) => state.defaultLanguage,
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,

@@ -1,5 +1,5 @@
 <template>
-  {{ $router.params }}
+  {{ orderedProducts }}
   <div>
     <v-row class="edit-order-container">
       <v-col cols="8">
@@ -167,6 +167,7 @@ export default {
       "getStorageUserDetails",
       "getOrderTrackingData",
       "getParent",
+      "getSelectedProducts",
     ]),
     totalProducts() {
       let total = 0;
@@ -178,7 +179,14 @@ export default {
       return total;
     },
     orderedProducts() {
-      return this.getOrderTrackingData.order.products;
+      let pv = [];
+      if (this.getSelectedProducts.length) {
+        pv = this.getSelectedProducts;
+        console.log("pv", pv);
+      }
+
+      let mappedOrderedProducts = [...this.getOrderTrackingData.order.products];
+      return mappedOrderedProducts;
     },
   },
   methods: {
@@ -186,7 +194,7 @@ export default {
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
     async submitChanges() {
       this.buttonLoader = true;
-      const products = this.orderedProducts;
+      const products = this.test;
       let newProduct = [];
       Object.keys(products).forEach((row) => {
         newProduct[row] = products[row];
@@ -194,6 +202,7 @@ export default {
       const payload = {
         products: JSON.parse(JSON.stringify(newProduct)),
       };
+      console.log("payload");
       const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
         values: payload,
@@ -260,7 +269,9 @@ export default {
       });
     },
     removeProductOption(index) {
+      console.log("here");
       const products = this.orderedProducts;
+      console.log(this.orderedProducts);
       products.splice(index, 1);
     },
   },

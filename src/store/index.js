@@ -23,6 +23,7 @@ export default createStore({
       ],
       exportDataType: "",
       parent: "",
+      editValue: "",
       defaultLanguage: "en",
       external: [
         "/auth/",

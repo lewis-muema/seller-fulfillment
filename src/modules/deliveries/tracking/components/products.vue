@@ -4,9 +4,12 @@
       <span :class="getLoader.orderTracking">
         {{ $t("deliveries.products") }}
       </span>
-      <div v-if="checkEdits">
+      <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span class="delivery-info-edit" :class="getLoader.orderTracking">
+          <span
+            :class="getLoader.orderTracking"
+            v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
+          >
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -22,14 +25,18 @@
         "
         v-else
       >
-        <span
-          class="delivery-info-edit"
-          :class="getLoader.orderTracking"
-          v-if="getParent === 'sendy'"
+        <div
+          v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
         >
-          <i class="mdi mdi-pencil"></i>
-          {{ $t("deliveries.edit") }}
-        </span>
+          <span
+            class="delivery-info-edit"
+            :class="getLoader.orderTracking"
+            v-if="getParent === 'sendy'"
+          >
+            <i class="mdi mdi-pencil"></i>
+            {{ $t("deliveries.edit") }}
+          </span>
+        </div>
       </span>
     </div>
     <p class="products-data">
@@ -79,8 +86,16 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setOverlayStatus",
+      "setEditValue",
+    ]),
     nagivateRoute(route) {
+      if (this.getParent === "sendy") {
+        this.setEditValue("consignment");
+      }
       this.$router.push(route);
     },
     formatProducts(products) {

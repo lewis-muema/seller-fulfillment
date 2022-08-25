@@ -827,7 +827,6 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
         values: {
-          products: order.products,
           destination: {
             name: order.destination.name,
             phone_number: this.phone
@@ -891,7 +890,6 @@ export default {
             participant_id: meansOfPayment.participant_id,
             meta_data: meansOfPayment.meta_data,
           },
-          products: order.products,
           destination: {
             name: this.customerName
               ? this.customerName

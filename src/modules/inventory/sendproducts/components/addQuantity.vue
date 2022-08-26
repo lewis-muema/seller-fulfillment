@@ -233,6 +233,7 @@ export default {
       }
     },
     addQuantity(val, event) {
+      console.log("val", val);
       const products = this.getSelectedProducts;
       let tally = "";
       if (

@@ -1,4 +1,5 @@
 <template>
+  No edit {{ showEditIcon }}
   <div class="delivery-info-container">
     <div class="delivery-info-title">
       <span :class="getLoader.orderTracking">
@@ -12,7 +13,7 @@
         <span
           @click="overlayStatus(true)"
           :class="getLoader.orderTracking"
-          v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
+          v-if="!showEditIcon"
         >
           <i class="mdi mdi-pencil"></i>
           {{ $t("deliveries.edit") }}
@@ -156,6 +157,12 @@ export default {
             this.getOrderTrackingData.order.order_event_status !==
               "event.pickup.partner.assigned"
         : "";
+    },
+    showEditIcon() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
+      );
     },
   },
   mounted() {},

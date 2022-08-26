@@ -6,10 +6,7 @@
       </span>
       <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span
-            :class="getLoader.orderTracking"
-            v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
-          >
+          <span :class="getLoader.orderTracking" v-if="!showEditIcon">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -25,9 +22,7 @@
         "
         v-else
       >
-        <div
-          v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
-        >
+        <div v-if="!showEditIcon">
           <span
             class="delivery-info-edit"
             :class="getLoader.orderTracking"
@@ -82,6 +77,12 @@ export default {
         (this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
           this.getOrderTrackingData.order.order_status ===
             "ORDER_IN_PROCESSING")
+      );
+    },
+    showEditIcon() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
       );
     },
   },

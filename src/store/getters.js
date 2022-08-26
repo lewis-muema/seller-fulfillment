@@ -27,6 +27,7 @@ export default {
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,
   getActivityLog: (state) => state.activityLog,
+  getActivityLogs: (state) => state.activityLogs,
   getUserChanged: (state) => state.userChanged,
   getRangeChanged: (state) => state.rangeChanged,
   getBusinessUsers: (state) => state.businessUsers,

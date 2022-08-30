@@ -8,6 +8,7 @@ const mappedActivityLogs = {
     showActivityLogs(name, activity) {
       let previous = "";
       let current = "";
+      let productName = "";
       let newName = name.split("_").join(".");
       if (!newName) {
         return;
@@ -21,6 +22,7 @@ const mappedActivityLogs = {
           "productUnitChanged",
           "productImageLinkChanged",
           "orderlineItemChanged",
+          "productPriceChanged",
           "orderDestinatioHouseChanged",
           "orderDestinatioLatitudeChanged",
           "orderDestinatioLongitudeChanged",
@@ -31,31 +33,24 @@ const mappedActivityLogs = {
           "orderInstructionsChanged",
         ].includes(this.getActivityLogs[newName].split(".")[1])
       ) {
-        previous = activity.before_value;
-        current = activity.after_value;
+        previous = activity.before_value !== null ? activity.before_value : "";
+        current = activity.after_value !== null ? activity.after_value : "";
       }
       if (
-        ["addedNewProduct", "productArchived", "productUnarchived"].includes(
-          this.getActivityLogs[newName].split(".")[1]
-        )
+        [
+          "addedNewProduct",
+          "productArchived",
+          "productUnarchived",
+          "productPriceChanged",
+        ].includes(this.getActivityLogs[newName].split(".")[1])
       ) {
-        name = activity.resource_short_description;
+        productName = activity.resource_short_description;
       }
-      console.log(
-        "activityMixin",
-        this.$t(
-          this.getActivityLogs[newName],
-          { name: name },
-          { previous: previous },
-          { current: current }
-        )
-      );
-      return this.$t(
-        this.getActivityLogs[newName],
-        { Name: name },
-        { previous: previous },
-        { current: current }
-      );
+      return this.$t(this.getActivityLogs[newName], {
+        previous: previous,
+        current: current,
+        name: productName,
+      });
     },
   },
 };

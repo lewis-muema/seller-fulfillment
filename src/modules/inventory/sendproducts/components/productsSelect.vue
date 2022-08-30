@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    :class="getEditValue === 'consignment' ? 'consignment-product-select' : ''"
+  >
     <v-row>
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
@@ -14,7 +16,11 @@
                 {{ $t("inventory.selectProducts") }}
               </v-card-title>
             </div>
-            <router-link to="/inventory/add-product/" class="add-new-product">
+            <router-link
+              to="/inventory/add-product/"
+              class="add-new-product"
+              v-if="getEditValue !== 'consignment'"
+            >
               <v-icon>mdi mdi-plus</v-icon>
               {{ $t("inventory.addNewProduct") }}
             </router-link>
@@ -235,8 +241,6 @@
             <p>
               {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
             </p>
-            <p>Edit Value</p>
-            {{ getEditValue }}
             <button
               type="submit"
               @click="addProductStep()"
@@ -338,9 +342,6 @@ export default {
       });
     },
     addProductStep() {
-      // if (this.getEditValue === "consignment") {
-      //   return;
-      // }
       if (this.getSelectedProducts.length > 0) {
         this.$router.push(
           this.getEditValue === "consignment"
@@ -468,6 +469,7 @@ export default {
       "getLoader",
       "getEditValue",
       "getStorageUserDetails",
+      "getEditValue",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
@@ -587,5 +589,8 @@ export default {
 }
 .disabled-row {
   background: #a1a0a017;
+}
+.consignment-product-select {
+  padding-top: 50px;
 }
 </style>

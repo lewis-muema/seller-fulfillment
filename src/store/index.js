@@ -3,7 +3,7 @@ import actions from "./actions";
 import getters from "./getters";
 import mutations from "./mutations";
 import { shallowRef } from "vue";
-import { Check } from "@element-plus/icons-vue";
+import { Check, Minus } from "@element-plus/icons-vue";
 
 export default createStore({
   namespaced: true,
@@ -1240,9 +1240,9 @@ export default createStore({
           iconClass: "el-icon-check",
         },
         PRESENT: {
-          icon: shallowRef(Check),
+          icon: shallowRef(Minus),
           color: "#EE7D00",
-          iconClass: "el-icon-check",
+          iconClass: "el-icon-minus",
         },
         FUTURE: {
           hollow: false,
@@ -1429,7 +1429,8 @@ export default createStore({
         "ORDER.DELIVERY.INSTRUCTIONS.CHANGED":
           "settings.orderInstructionsChanged",
         "USER.CREATED": "settings.userCreated",
-        "USER.ACTIVATED": "setttings.userActivated",
+        "USER.ACTIVATED": "settings.userActivated",
+        "USER.DEACTIVATED": "settings.userDeactivated",
       },
       productLists: [
         {

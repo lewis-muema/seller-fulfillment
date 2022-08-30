@@ -1377,13 +1377,11 @@ export default {
 }
 .export-popup-buttons {
   display: flex;
-  width: 60%;
   align-items: center;
-  float: right;
 }
 .export-CSV-button {
-  margin-left: 20px;
-  width: 150px;
+  margin-left: 70px;
+  width: 260px;
 }
 .export-CSV-description {
   color: #606266;

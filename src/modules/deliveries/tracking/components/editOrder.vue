@@ -1,5 +1,4 @@
 <template>
-  {{ $router.params }}
   <div>
     <v-row class="edit-order-container">
       <v-col cols="8">
@@ -21,12 +20,17 @@
               {{ $t("common.editProducts") }}
             </v-card-title>
           </div>
-          <router-link to="/inventory/send-inventory/sendy/select-products">
-            <span class="add-products-span-header">
+          <div>
+            <span
+              class="add-products-span-header"
+              @click="
+                navigateRoute('/inventory/send-inventory/sendy/select-products')
+              "
+            >
               <i class="mdi mdi-plus"></i>
               {{ $t("common.addProducts") }}
             </span>
-          </router-link>
+          </div>
           <div class="products-selected-summary" v-if="!productsEmpty">
             <v-table>
               <table-header :header="tableHeaders" />
@@ -143,6 +147,7 @@ export default {
     return {
       productsEmpty: false,
       amount: 0,
+      selectedQuantity: 0,
       currency: "KES",
       buttonLoader: false,
       quantity: 1,
@@ -167,6 +172,7 @@ export default {
       "getStorageUserDetails",
       "getOrderTrackingData",
       "getParent",
+      "getSelectedProducts",
     ]),
     totalProducts() {
       let total = 0;
@@ -178,12 +184,47 @@ export default {
       return total;
     },
     orderedProducts() {
-      return this.getOrderTrackingData.order.products;
+      let finalOrderedItems = [];
+      const mappedSelectedProduct = [];
+      if (this.getSelectedProducts.length) {
+        this.getSelectedProducts.forEach((product) => {
+          const productPayload = {
+            product_id: product.product_id,
+            product_variant_id: product.product_variants[0].product_variant_id,
+            product_variant_image_link:
+              product.product_variants[0].product_variant_image_link,
+            product_name: product.product_name,
+            product_variant_description:
+              product.product_variants[0].product_variant_description,
+            product_variant_quantity:
+              product.product_variants[0].product_variant_quantity,
+            product_variant_quantity_type:
+              product.product_variants[0].product_variant_quantity_type,
+            quantity: "",
+            unit_price: product.product_variants[0].product_variant_unit_price,
+            currency: product.product_variants[0].product_variant_currency,
+          };
+          mappedSelectedProduct.push(productPayload);
+        });
+      }
+      finalOrderedItems = [
+        ...this.getOrderTrackingData.order.products,
+        ...mappedSelectedProduct,
+      ];
+      return finalOrderedItems;
     },
   },
   methods: {
-    ...mapMutations(["setOrderTrackingData", "setLoader"]),
+    ...mapMutations([
+      "setOrderTrackingData",
+      "setLoader",
+      "setEditValue",
+      "setSelectedProducts",
+    ]),
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
+    navigateRoute(route) {
+      this.$router.push(route);
+    },
     async submitChanges() {
       this.buttonLoader = true;
       const products = this.orderedProducts;
@@ -210,6 +251,7 @@ export default {
             type: "success",
           });
           this.buttonLoader = false;
+          this.setSelectedProducts([]);
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
@@ -283,6 +325,7 @@ export default {
   margin: -50px 30px 0px 0px;
   color: #324ba8;
   text-decoration: none !important;
+  cursor: pointer !important;
 }
 .add-products-span {
   color: #324ba8;

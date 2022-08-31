@@ -54,6 +54,7 @@
       </v-btn>
     </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
+      P - {{ partnerNotAssigned }}
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editPickUpInfo") }}
@@ -73,6 +74,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setPickUp"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="instructions" class="edit-info-label">
@@ -167,6 +169,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setLocation"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
@@ -695,6 +698,12 @@ export default {
       "getActiveUser",
       "getExportDataType",
     ]),
+    partnerNotAssigned() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
   },
   data() {
     return {
@@ -1368,15 +1377,16 @@ export default {
 }
 .export-popup-buttons {
   display: flex;
-  width: 60%;
   align-items: center;
-  float: right;
 }
 .export-CSV-button {
-  margin-left: 20px;
-  width: 150px;
+  margin-left: 70px;
+  width: 260px;
 }
 .export-CSV-description {
   color: #606266;
+}
+.businessProfile-address:disabled {
+  background: #e2e7ed !important;
 }
 </style>

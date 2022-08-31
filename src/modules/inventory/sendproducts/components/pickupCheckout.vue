@@ -189,7 +189,11 @@ export default {
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },
   methods: {
-    ...mapMutations(["setProductStep", "setCheckoutDetails"]),
+    ...mapMutations([
+      "setProductStep",
+      "setCheckoutDetails",
+      "setSelectedProducts",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
       this.setProductStep(val);
@@ -213,6 +217,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Send Products to Sendy",
               data: {

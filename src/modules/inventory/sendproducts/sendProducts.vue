@@ -34,7 +34,7 @@
       </div>
     </div>
     <div v-else>
-      <v-row>
+      <v-row v-if="getEditValue === 'inventory'">
         <v-col cols="6" class="mx-auto mt-4 mb-3">
           <el-steps :active="step" finish-status="success">
             <el-step :title="$t('inventory.selectProducts')"></el-step>
@@ -76,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getStorageUserDetails"]),
+    ...mapGetters(["getStorageUserDetails", "getEditValue"]),
     step() {
       if (this.$route.params.page === "add-quantity") {
         return 1;
@@ -112,9 +112,11 @@ export default {
       "setSendProductsRoute",
       "setComponent",
       "setSelectedProducts",
+      "setEditValue",
     ]),
     redirect(route, header) {
       if (route === `${this.customerRoute}/select-products`) {
+        this.setEditValue("inventory");
         this.sendSegmentEvents({
           event: "Send to Customer",
           data: {
@@ -124,6 +126,7 @@ export default {
           },
         });
       } else if (route === `${this.sendyRoute}/select-products`) {
+        this.setEditValue("inventory");
         this.sendSegmentEvents({
           event: "Manage Inventory",
           data: {

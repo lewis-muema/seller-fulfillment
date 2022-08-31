@@ -21,6 +21,8 @@ semgrep:
   cache: {}
   image: returntocorp/semgrep
   script: semgrep ci
+  tags: 
+    - docker
   rules:
   - changes:
       - .gitlab-ci.yml
@@ -30,6 +32,7 @@ semgrep:
   variables:
     
     SEMGREP_APP_TOKEN: $SEMGREP_APP_TOKEN
+  allow_failure: true
 
 eslint:
   stage: lint

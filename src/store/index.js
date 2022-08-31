@@ -1508,6 +1508,7 @@ export default createStore({
           ],
         },
       ],
+      productsToSubmit: [],
       fulfillmentFees: {
         total_product_value: 0,
         pre_adjustments_calculated_fee: 0,

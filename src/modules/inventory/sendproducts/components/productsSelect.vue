@@ -294,6 +294,7 @@ export default {
       "setProductStep",
       "setComponent",
       "setProductLists",
+      "setProductsToSubmit",
     ]),
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
@@ -342,7 +343,10 @@ export default {
       });
     },
     addProductStep() {
-      if (this.getSelectedProducts.length > 0) {
+      if (
+        this.getSelectedProducts.length > 0 ||
+        this.getProductsToSubmit.length > 0
+      ) {
         this.$router.push(
           this.getEditValue === "consignment"
             ? "/deliveries/edit-order"
@@ -398,6 +402,38 @@ export default {
       }
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
+      console.log("xxx", this.selectedProducts);
+      if (this.getEditValue === "consignment") {
+        let mappedSelectedProduct = [];
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const productPayload = {
+              product_id: product.product_id,
+              product_variant_id:
+                product.product_variants[0].product_variant_id,
+              product_variant_image_link:
+                product.product_variants[0].product_variant_image_link,
+              product_name: product.product_name,
+              product_variant_description:
+                product.product_variants[0].product_variant_description,
+              product_variant_quantity:
+                product.product_variants[0].product_variant_quantity,
+              product_variant_quantity_type:
+                product.product_variants[0].product_variant_quantity_type,
+              quantity: 0,
+              unit_price:
+                product.product_variants[0].product_variant_unit_price,
+              currency: product.product_variants[0].product_variant_currency,
+            };
+            mappedSelectedProduct.push(productPayload);
+            console.log("selectedpayload", mappedSelectedProduct);
+          });
+        }
+        this.setProductsToSubmit([
+          ...this.getProductsToSubmit,
+          ...mappedSelectedProduct,
+        ]);
+      }
       this.setSelectedProducts(this.selectedProducts);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
@@ -469,7 +505,7 @@ export default {
       "getLoader",
       "getEditValue",
       "getStorageUserDetails",
-      "getEditValue",
+      "getProductsToSubmit",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;

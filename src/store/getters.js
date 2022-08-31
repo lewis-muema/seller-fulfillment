@@ -28,6 +28,7 @@ export default {
   getDeliveryActions: (state) => state.deliveryActions,
   getActivityLog: (state) => state.activityLog,
   getActivityLogs: (state) => state.activityLogs,
+  getProductsToSubmit: (state) => state.productsToSubmit,
   getUserChanged: (state) => state.userChanged,
   getRangeChanged: (state) => state.rangeChanged,
   getBusinessUsers: (state) => state.businessUsers,

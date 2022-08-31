@@ -217,7 +217,6 @@ export default {
               message: "",
               type: "success",
             });
-            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Send Products to Sendy",
               data: {

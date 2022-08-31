@@ -123,9 +123,6 @@ export default {
         "h:mm"
       )}`;
     },
-    formatActionName(action) {
-      return action.replaceAll("_", " ").toLowerCase();
-    },
     formatActivityLogs(name, activity) {
       return this.showActivityLogs(name, activity);
     },

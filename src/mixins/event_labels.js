@@ -11,7 +11,6 @@ const eventLabels = {
       if (!event) {
         return;
       }
-      console.log("eventMixin", this.getEventLabels[event]);
       if (
         ["orderPlaced", "orderPlacedOn"].includes(
           this.getEventLabels[event].split(".")[1]

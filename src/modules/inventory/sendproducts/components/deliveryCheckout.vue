@@ -359,6 +359,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Request Delivery to Buyer",
               data: {

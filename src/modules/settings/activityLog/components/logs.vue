@@ -43,10 +43,10 @@
             </th>
           </tr>
         </thead>
-        <tbody v-if="getActivityLogs ? getActivityLogs.length : []">
+        <tbody v-if="retrieveActivityLogs ? retrieveActivityLogs.length : []">
           <tr
             class="activity-log-column"
-            v-for="(log, i) in getActivityLogs"
+            v-for="(log, i) in retrieveActivityLogs"
             :key="i"
             @click="viewUser(i)"
           >
@@ -62,12 +62,7 @@
             </td>
             <td class="users-email-row">
               <span :class="getLoader.logs">
-                <span class="log-product-name" :class="getLoader.logs">
-                  {{ log.resource_short_description }}</span
-                >
-
-                {{ formatActionName(log.user_action_type) }}
-                {{ formatActionValues(log) }}
+                {{ formatActivityLogs(log.user_action_type, log) }}
               </span>
             </td>
           </tr>
@@ -93,8 +88,10 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import moment from "moment";
+import mappedActivityLogs from "../../../../mixins/activityLogs";
 
 export default {
+  mixins: [mappedActivityLogs],
   data() {
     return {
       user: "",
@@ -109,7 +106,7 @@ export default {
       "getBusinessUsers",
       "getStorageUserDetails",
     ]),
-    getActivityLogs() {
+    retrieveActivityLogs() {
       return this.getActivityLog;
     },
   },
@@ -126,15 +123,8 @@ export default {
         "h:mm"
       )}`;
     },
-    formatActionName(action) {
-      return action.replaceAll("_", " ").toLowerCase();
-    },
-    formatActionValues(action) {
-      return action.before_value !== null && action.before_value !== null
-        ? `${this.$t("settings.from")} ${action.before_value} ${this.$t(
-            "settings.to"
-          )} ${action.after_value}`
-        : "";
+    formatActivityLogs(name, activity) {
+      return this.showActivityLogs(name, activity);
     },
     filterUsers(val) {
       this.$emit("user", val);

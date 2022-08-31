@@ -23,6 +23,7 @@ export default createStore({
       ],
       exportDataType: "",
       parent: "",
+      editValue: "",
       defaultLanguage: "en",
       external: [
         "/auth/",
@@ -235,19 +236,26 @@ export default createStore({
         {
           created_date: 1658906290000,
           user_name: "James Doe",
-          user_action_type:
-            "Changed the price of Shea butter from KES 500 to KES350",
+          user_action_type: "PRODUCT_VARIANT_NAME_CHANGED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
         {
           created_date: 1658906290000,
           user_name: "Mary Monroe",
-          user_action_type: "Added a new product called Mango Butter",
+          user_action_type: "PRODUCT_VARIANT_ADDED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
         {
           created_date: 1658906290000,
           user_name: "James Doe",
-          user_action_type:
-            "Changed the price of Shea butter from KES 500 to KES350",
+          user_action_type: "PRODUCT_VARIANT_ADDED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
       ],
       notificationPreferences: [],
@@ -1237,7 +1245,7 @@ export default createStore({
           iconClass: "el-icon-minus",
         },
         FUTURE: {
-          hollow: true,
+          hollow: false,
         },
       },
       deliveryAttempts: [
@@ -1390,6 +1398,39 @@ export default createStore({
           "deliveries.sendyRescheduledThisOrderFor",
         "event.delivery.rescheduled.by.buyer":
           "deliveries.theCustomerRescheduledThisOrderFor",
+      },
+      activityLogs: {
+        "PRODUCT.VARIANT.ADDED": "settings.addedNewProduct",
+        "PRODUCT.VARIANT.ARCHIVED": "settings.productArchived",
+        "PRODUCT.VARIANT.UNARCHIVED": "settings.productUnarchived",
+        "PRODUCT.VARIANT.NAME.CHANGED": "settings.productChanged",
+        "PRODUCT.VARIANT.UNIT.OF.MEASURE.CHANGED":
+          "settings.productUnitChanged",
+        "PRODUCT.VARIANT.IMAGE.LINK.CHANGED":
+          "settings.productImageLinkChanged",
+        "PRODUCT.VARIANT.PRICE.CHANGED": "settings.productPriceChanged",
+        "ORDER.CREATED": "settings.orderCreated",
+        "ORDER.CANCELED": "settings.orderCanceled",
+        "ORDER.RESCHEDULED": "settings.orderRescheduled",
+        "ORDER.LINE.ITEM.QUANTITY.CHANGED": "settings.orderlineItemChanged",
+        "ORDER.DESTINATION.HOUSE_LOCATION.CHANGED":
+          "settings.orderDestinatioHouseChanged",
+        "ORDER.DESTINATION.LATITUDE.CHANGED":
+          "settings.orderDestinatioLatitudeChanged",
+        "ORDER.DESTINATION.LONGITUDE.CHANGED":
+          "settings.orderDestinatioLongitudeChanged",
+        "ORDER.DESTINATION.NAME.CHANGED": "settings.orderDestinatioNameChanged",
+        "ORDER.PRIMARY.RECIPIENT.NAME.CHANGED":
+          "settings.orderPrimaryRecepientChanged",
+        "ORDER.PRIMARY.RECIPIENT.PHONE.NUMBER.CHANGED":
+          "settings.orderPrimaryRecepientPhoneChanged",
+        "ORDER.SECONDARY.RECIPIENT.PHONE_NUMBER.CHANGED":
+          "settings.orderSecondaryRecepientPhoneChanged",
+        "ORDER.DELIVERY.INSTRUCTIONS.CHANGED":
+          "settings.orderInstructionsChanged",
+        "USER.CREATED": "settings.userCreated",
+        "USER.ACTIVATED": "settings.userActivated",
+        "USER.DEACTIVATED": "settings.userDeactivated",
       },
       productLists: [
         {

@@ -4,11 +4,30 @@ variables:
   IMAGE_BASE_NAME: ${CI_REGISTRY}/seller-fulfillment
   STAGING_IMAGE: $CI_REGISTRY/seller-fulfillment:latest_$CI_COMMIT_SHORT_SHA
   
+
+cache: 
+  paths:
+  - node_modules/
+
 stages:
+  - semgrep
   - lint
   - test
   - docker
   - deploy
+
+semgrep:
+  image: returntocorp/semgrep
+  script: semgrep ci
+  rules:
+  - changes:
+      - .gitlab-ci.yml
+  - if: $CI_PIPELINE_SOURCE == "web"  
+  - if: $CI_MERGE_REQUEST_IID
+  
+  variables:
+    
+    SEMGREP_APP_TOKEN: $SEMGREP_APP_TOKEN
 
 eslint:
   stage: lint
@@ -35,6 +54,7 @@ test:
     - npm run test
 
 docker_build:
+  cache: {}
   stage: docker
   tags:
     - shell 
@@ -66,6 +86,7 @@ docker_build:
 
 
 create-preview-env:
+  cache: {}
   stage: deploy
   tags:
     - manta

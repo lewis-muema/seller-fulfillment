@@ -1,5 +1,4 @@
 <template>
-  No edit {{ showEditIcon }}
   <div class="delivery-info-container">
     <div class="delivery-info-title">
       <span :class="getLoader.orderTracking">

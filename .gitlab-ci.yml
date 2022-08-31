@@ -20,7 +20,7 @@ semgrep:
   stage: semgrep
   cache: {}
   image: returntocorp/semgrep
-  script: semgrep ci
+  script: semgrep ci --verbose
   tags: 
     - docker
   rules:

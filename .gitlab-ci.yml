@@ -17,6 +17,8 @@ stages:
   - deploy
 
 semgrep:
+  stage: semgrep
+  cache: {}
   image: returntocorp/semgrep
   script: semgrep ci
   rules:

@@ -167,6 +167,7 @@ export default {
       "setOrderTrackingData",
       "setParent",
       "setDeliveryActions",
+      "setProductsToSubmit",
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchOrder() {
@@ -190,6 +191,7 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setProductsToSubmit(response.data.data.order.products);
         }
       });
     },

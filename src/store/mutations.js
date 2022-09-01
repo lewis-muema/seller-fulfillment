@@ -65,6 +65,9 @@ export default {
   setDeliveryActions(state, val) {
     state.deliveryActions = val;
   },
+  setProductsToSubmit(state, val) {
+    state.productsToSubmit = val;
+  },
   setActivityLog(state, val) {
     state.activityLog = val;
   },

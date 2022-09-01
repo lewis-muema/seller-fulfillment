@@ -294,6 +294,7 @@ export default {
       "setProductStep",
       "setComponent",
       "setProductLists",
+      "setProductsToSubmit",
     ]),
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
@@ -398,6 +399,36 @@ export default {
       }
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
+      if (this.getEditValue === "consignment") {
+        let mappedSelectedProduct = [];
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const productPayload = {
+              product_id: product.product_id,
+              product_variant_id:
+                product.product_variants[0].product_variant_id,
+              product_variant_image_link:
+                product.product_variants[0].product_variant_image_link,
+              product_name: product.product_name,
+              product_variant_description:
+                product.product_variants[0].product_variant_description,
+              product_variant_quantity:
+                product.product_variants[0].product_variant_quantity,
+              product_variant_quantity_type:
+                product.product_variants[0].product_variant_quantity_type,
+              quantity: 0,
+              unit_price:
+                product.product_variants[0].product_variant_unit_price,
+              currency: product.product_variants[0].product_variant_currency,
+            };
+            mappedSelectedProduct.push(productPayload);
+          });
+        }
+        this.setProductsToSubmit([
+          ...this.getProductsToSubmit,
+          ...mappedSelectedProduct,
+        ]);
+      }
       this.setSelectedProducts(this.selectedProducts);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
@@ -469,7 +500,7 @@ export default {
       "getLoader",
       "getEditValue",
       "getStorageUserDetails",
-      "getEditValue",
+      "getProductsToSubmit",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;

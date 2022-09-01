@@ -182,7 +182,4 @@ export default {
 .log-product-name {
   color: #324ba8;
 }
-.product-name {
-  color: green;
-}
 </style>

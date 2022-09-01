@@ -343,10 +343,7 @@ export default {
       });
     },
     addProductStep() {
-      if (
-        this.getSelectedProducts.length > 0 ||
-        this.getProductsToSubmit.length > 0
-      ) {
+      if (this.getSelectedProducts.length > 0) {
         this.$router.push(
           this.getEditValue === "consignment"
             ? "/deliveries/edit-order"
@@ -402,7 +399,6 @@ export default {
       }
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
-      console.log("xxx", this.selectedProducts);
       if (this.getEditValue === "consignment") {
         let mappedSelectedProduct = [];
         if (this.selectedProducts.length) {
@@ -426,7 +422,6 @@ export default {
               currency: product.product_variants[0].product_variant_currency,
             };
             mappedSelectedProduct.push(productPayload);
-            console.log("selectedpayload", mappedSelectedProduct);
           });
         }
         this.setProductsToSubmit([

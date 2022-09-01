@@ -307,6 +307,7 @@ export default {
       "setProductStep",
       "setPaymentMethods",
       "setCheckoutDetails",
+      "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
@@ -359,6 +360,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Request Delivery to Buyer",
               data: {

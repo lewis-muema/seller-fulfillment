@@ -1,5 +1,4 @@
 <template>
-  Products - {{ getProductsToSubmit }}
   <div>
     <v-row class="edit-order-container">
       <v-col cols="8">
@@ -180,41 +179,10 @@ export default {
       let total = 0;
       this.getProductsToSubmit.forEach((row) => {
         if (row.quantity) {
-          console.log("Qua", row.quantity);
           total = parseInt(row.quantity) + total;
         }
       });
       return total;
-    },
-    orderedProducts() {
-      let finalOrderedItems = [];
-      const mappedSelectedProduct = [];
-      if (this.getSelectedProducts.length) {
-        this.getSelectedProducts.forEach((product) => {
-          const productPayload = {
-            product_id: product.product_id,
-            product_variant_id: product.product_variants[0].product_variant_id,
-            product_variant_image_link:
-              product.product_variants[0].product_variant_image_link,
-            product_name: product.product_name,
-            product_variant_description:
-              product.product_variants[0].product_variant_description,
-            product_variant_quantity:
-              product.product_variants[0].product_variant_quantity,
-            product_variant_quantity_type:
-              product.product_variants[0].product_variant_quantity_type,
-            quantity: 0,
-            unit_price: product.product_variants[0].product_variant_unit_price,
-            currency: product.product_variants[0].product_variant_currency,
-          };
-          mappedSelectedProduct.push(productPayload);
-        });
-      }
-      finalOrderedItems = [
-        ...this.getOrderTrackingData.order.products,
-        ...mappedSelectedProduct,
-      ];
-      return finalOrderedItems;
     },
   },
   methods: {

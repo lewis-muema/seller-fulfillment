@@ -741,6 +741,13 @@ export default {
       secondaryPhoneStatus: false,
     };
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   methods: {
     ...mapActions([
       "requestAxiosPut",
@@ -754,6 +761,7 @@ export default {
       "setPromoCode",
       "setUserAction",
       "setProductsToSubmit",
+      "setSendyPhoneProps",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;

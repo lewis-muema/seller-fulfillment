@@ -302,7 +302,7 @@
           </div>
         </div>
         <div class="userPermisssions-checkbox-container">
-          <p class="mb-2">{{ $t("common.Exports") }}</p>
+          <p class="mb-2">{{ $t("settings.exports") }}</p>
           <div class="d-flex">
             <input
               type="checkbox"

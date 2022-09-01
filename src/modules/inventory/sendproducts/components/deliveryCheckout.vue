@@ -292,6 +292,13 @@ export default {
       return payload;
     },
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.getDefaultPaymentMethod();
     this.name = this.getCheckoutDetails.name;
@@ -307,6 +314,8 @@ export default {
       "setProductStep",
       "setPaymentMethods",
       "setCheckoutDetails",
+      "setSendyPhoneProps",
+      "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {

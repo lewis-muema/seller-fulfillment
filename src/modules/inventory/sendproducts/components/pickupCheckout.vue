@@ -178,6 +178,13 @@ export default {
       return payload;
     },
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -192,6 +199,7 @@ export default {
     ...mapMutations([
       "setProductStep",
       "setCheckoutDetails",
+      "setSendyPhoneProps",
       "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost"]),

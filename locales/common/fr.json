@@ -9,6 +9,7 @@
   "deliveriesToSendy": "Livraisons à Sendy",
   "deliverToCustomer": "Livrer vos clients",
   "editProduct": "Modifier le produit",
+  "editProducts": "Edit Products",
   "getStarted": "Démarrer",
   "help": "Aide",
   "home": "Accueil",
@@ -42,5 +43,13 @@
   "trackCustomerDelivery": "Suivre la livraison au client",
   "trackDeliveries": "Suivi des livraisons",
   "trackDelivery": "Suivre la livraison",
-  "viewProduct": "Afficher le produit"
+  "viewProduct": "Afficher le produit",
+  "exportCSV": "Continue to export CSV",
+  "cancel": "Cancel",
+  "downloadCsvFile": "Download CSV file",
+  "fetchingDownloadFile": "Fetching download file",
+  "downloadingFile": "Downloading file",
+  "couldNotFetchDownloadFile": "Could not fetch download file",
+  "export": "Export",
+  "exportToCSV": "Export to CSV"
 }

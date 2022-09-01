@@ -179,6 +179,9 @@ export default {
   setNotifications(state, val) {
     state.notifications = val;
   },
+  setEditValue(state, val) {
+    state.editValue = val;
+  },
   setParent(state, val) {
     state.parent = val;
   },
@@ -283,6 +286,9 @@ export default {
   },
   setActiveUser(state, val) {
     state.activeUser = val;
+  },
+  setUpdatedData(state, val) {
+    state.updatedData = val;
   },
   setExportDataType(state, val) {
     state.exportDataType = val;

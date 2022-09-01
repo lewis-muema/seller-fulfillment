@@ -54,6 +54,7 @@
       </v-btn>
     </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
+      P - {{ partnerNotAssigned }}
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editPickUpInfo") }}
@@ -73,6 +74,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setPickUp"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="instructions" class="edit-info-label">
@@ -167,6 +169,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setLocation"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
@@ -570,6 +573,36 @@
         </p>
       </div>
     </div>
+    <div v-if="popup === 'noEdits'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEdits')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        {{
+          getParent === "sendy"
+            ? $t("deliveries.cantEditPickups")
+            : $t("deliveries.cantEditDelivery")
+        }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
+    <div v-if="popup === 'noEditsProducts'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEditsProducts')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        {{ $t("deliveries.cantEditProducts") }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
     <div v-if="popup === 'export'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <i
@@ -665,6 +698,12 @@ export default {
       "getActiveUser",
       "getExportDataType",
     ]),
+    partnerNotAssigned() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
   },
   data() {
     return {
@@ -711,7 +750,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["requestAxiosPut", "requestAxiosGet", "requestAxiosPost"]),
+    ...mapActions([
+      "requestAxiosPut",
+      "requestAxiosGet",
+      "requestAxiosPost",
+      "requestAxiosPatch",
+    ]),
     ...mapMutations([
       "setLoader",
       "setOrderTrackingData",
@@ -796,11 +840,10 @@ export default {
     submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      this.requestAxiosPatch({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
         values: {
-          products: order.products,
           destination: {
             name: order.destination.name,
             phone_number: this.phone
@@ -853,7 +896,7 @@ export default {
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      this.requestAxiosPatch({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
         values: {
@@ -864,7 +907,6 @@ export default {
             participant_id: meansOfPayment.participant_id,
             meta_data: meansOfPayment.meta_data,
           },
-          products: order.products,
           destination: {
             name: this.customerName
               ? this.customerName
@@ -1330,17 +1372,29 @@ export default {
   margin-top: 25px;
   cursor: pointer;
 }
+.get-help-button {
+  width: 100%;
+  margin-top: 20px;
+  height: 50px !important;
+  background: #d3ddf6;
+  color: #324ba8 !important;
+  text-transform: inherit;
+  letter-spacing: 0px;
+  font-size: 16px;
+  font-weight: 400 !important;
+}
 .export-popup-buttons {
   display: flex;
-  width: 60%;
   align-items: center;
-  float: right;
 }
 .export-CSV-button {
-  margin-left: 20px;
-  width: 150px;
+  margin-left: 70px;
+  width: 260px;
 }
 .export-CSV-description {
   color: #606266;
+}
+.businessProfile-address:disabled {
+  background: #e2e7ed !important;
 }
 </style>

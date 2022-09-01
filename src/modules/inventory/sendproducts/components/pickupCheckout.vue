@@ -200,6 +200,7 @@ export default {
       "setProductStep",
       "setCheckoutDetails",
       "setSendyPhoneProps",
+      "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
@@ -224,6 +225,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Send Products to Sendy",
               data: {
@@ -239,7 +241,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push("/deliveries/sendy");
+              this.$router.push(
+                `/deliveries/tracking/${response.data.data.order_id}`
+              );
             }
           } else {
             ElNotification({

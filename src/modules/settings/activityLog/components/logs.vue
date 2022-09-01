@@ -126,6 +126,7 @@ export default {
     formatActivityLogs(name, activity) {
       return this.showActivityLogs(name, activity);
     },
+    formatName() {},
     filterUsers(val) {
       this.$emit("user", val);
     },
@@ -180,5 +181,8 @@ export default {
 }
 .log-product-name {
   color: #324ba8;
+}
+.product-name {
+  color: green;
 }
 </style>

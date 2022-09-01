@@ -83,9 +83,9 @@
   "productUnitChanged":"Changed the product unit from {previous} to {current}",
   "productImageLinkChanged":"Changed the product image link from {previous} to {current}",
   "productPriceChanged":"Changed the product price from",
-  "orderCreated":"Created an order",
-  "orderCanceled":"Canceled an order",
-  "orderRescheduled": "Rescheduled an order",
+  "orderCreated": "Created a {type}{customerName}",
+  "orderCanceled": "Canceled a {type}",
+  "orderRescheduled": "Rescheduled a {type}",
   "orderlineItemChanged":"Changed the oder line Item from {previous} to {current}",
   "orderDestinatioHouseChanged":"Changed the order destination from {previous} to {current}",
   "orderDestinatioLatitudeChanged":"Changed the order latitude from {previous} to {current}",
@@ -95,7 +95,9 @@
   "orderPrimaryRecepientPhoneChanged":"Changed the primary recepient primary phone number from {previous} to {current}",
   "orderSecondaryRecepientPhoneChanged":"Changed the secondary recepient primary phone number from {previous} to {current}",
   "orderInstructionsChanged":"Changed the order instructions from {previous} to {current}",
-  "userCreated":"Created a user",
-  "userActivated":"Activated a user",
+  "userCreated": "Created a user called {username}",
+  "userActivated": "Activated a user called {username}",
+  "userDeactivated": "Deactivated a user called {username}",
   "allUsers": "All users"
+  
 }

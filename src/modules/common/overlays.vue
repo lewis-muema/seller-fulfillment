@@ -54,7 +54,6 @@
       </v-btn>
     </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
-      P - {{ partnerNotAssigned }}
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.editPickUpInfo") }}
@@ -761,6 +760,7 @@ export default {
       "setOrderTrackingData",
       "setPromoCode",
       "setUserAction",
+      "setProductsToSubmit",
       "setSendyPhoneProps",
     ]),
     overlayStatusSet(overlay, popup) {

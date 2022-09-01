@@ -36,7 +36,7 @@
               <table-header :header="tableHeaders" />
               <tbody>
                 <tr
-                  v-for="(orderedProduct, index) in orderedProducts"
+                  v-for="(orderedProduct, index) in getProductsToSubmit"
                   :key="index"
                   class="enter-quantity-input"
                 >
@@ -147,7 +147,6 @@ export default {
     return {
       productsEmpty: false,
       amount: 0,
-      selectedQuantity: 0,
       currency: "KES",
       buttonLoader: false,
       quantity: 1,
@@ -167,51 +166,23 @@ export default {
       ],
     };
   },
+  mounted() {},
   computed: {
     ...mapGetters([
       "getStorageUserDetails",
       "getOrderTrackingData",
       "getParent",
       "getSelectedProducts",
+      "getProductsToSubmit",
     ]),
     totalProducts() {
       let total = 0;
-      this.orderedProducts.forEach((row) => {
+      this.getProductsToSubmit.forEach((row) => {
         if (row.quantity) {
           total = parseInt(row.quantity) + total;
         }
       });
       return total;
-    },
-    orderedProducts() {
-      let finalOrderedItems = [];
-      const mappedSelectedProduct = [];
-      if (this.getSelectedProducts.length) {
-        this.getSelectedProducts.forEach((product) => {
-          const productPayload = {
-            product_id: product.product_id,
-            product_variant_id: product.product_variants[0].product_variant_id,
-            product_variant_image_link:
-              product.product_variants[0].product_variant_image_link,
-            product_name: product.product_name,
-            product_variant_description:
-              product.product_variants[0].product_variant_description,
-            product_variant_quantity:
-              product.product_variants[0].product_variant_quantity,
-            product_variant_quantity_type:
-              product.product_variants[0].product_variant_quantity_type,
-            quantity: "",
-            unit_price: product.product_variants[0].product_variant_unit_price,
-            currency: product.product_variants[0].product_variant_currency,
-          };
-          mappedSelectedProduct.push(productPayload);
-        });
-      }
-      finalOrderedItems = [
-        ...this.getOrderTrackingData.order.products,
-        ...mappedSelectedProduct,
-      ];
-      return finalOrderedItems;
     },
   },
   methods: {
@@ -220,6 +191,7 @@ export default {
       "setLoader",
       "setEditValue",
       "setSelectedProducts",
+      "setProductsToSubmit",
     ]),
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
     navigateRoute(route) {
@@ -227,13 +199,8 @@ export default {
     },
     async submitChanges() {
       this.buttonLoader = true;
-      const products = this.orderedProducts;
-      let newProduct = [];
-      Object.keys(products).forEach((row) => {
-        newProduct[row] = products[row];
-      });
       const payload = {
-        products: JSON.parse(JSON.stringify(newProduct)),
+        products: JSON.parse(JSON.stringify(this.getProductsToSubmit)),
       };
       const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
@@ -251,7 +218,7 @@ export default {
             type: "success",
           });
           this.buttonLoader = false;
-          this.setSelectedProducts([]);
+          this.setProductsToSubmit([]);
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
@@ -302,7 +269,7 @@ export default {
       });
     },
     removeProductOption(index) {
-      const products = this.orderedProducts;
+      const products = this.getProductsToSubmit;
       products.splice(index, 1);
     },
   },

@@ -8,6 +8,9 @@ const eventLabels = {
   methods: {
     showEventLabels(event, item) {
       let date = "";
+      if (event === null) {
+        return "";
+      }
       if (
         ["orderPlaced", "orderPlacedOn"].includes(
           this.getEventLabels[event].split(".")[1]

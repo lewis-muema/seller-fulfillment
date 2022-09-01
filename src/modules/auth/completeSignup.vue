@@ -139,6 +139,13 @@ export default {
       },
     };
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   async mounted() {
     if (localStorage.userDetails && localStorage.OTPRedirectUrl) {
       this.setBizDetails(JSON.parse(localStorage.userDetails));
@@ -196,6 +203,7 @@ export default {
       "setOTPRedirectUrl",
       "setUserData",
       "setLoginData",
+      "setSendyPhoneProps",
     ]),
     selectIndustryId(event) {
       this.params.industryOfBusiness = event.target.value;

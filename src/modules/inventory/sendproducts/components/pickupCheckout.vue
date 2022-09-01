@@ -178,6 +178,13 @@ export default {
       return payload;
     },
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -189,7 +196,11 @@ export default {
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },
   methods: {
-    ...mapMutations(["setProductStep", "setCheckoutDetails"]),
+    ...mapMutations([
+      "setProductStep",
+      "setCheckoutDetails",
+      "setSendyPhoneProps",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
       this.setProductStep(val);

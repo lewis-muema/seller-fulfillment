@@ -167,6 +167,13 @@ export default {
       confirmStatus: false,
     };
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.setComponent("settings.addAUser");
   },
@@ -179,6 +186,7 @@ export default {
       "setLoader",
       "setTab",
       "setOverlayStatus",
+      "setSendyPhoneProps",
     ]),
     ...mapActions(["requestAxiosPost"]),
     confirmUser() {

@@ -349,6 +349,9 @@ export default {
             response.data.data.business.country_code.toLowerCase(),
           ];
           this.setMapOptions(mapOptions);
+          if (!localStorage.country) {
+            localStorage.country = response.data.data.business.country_code;
+          }
         }
       });
     },

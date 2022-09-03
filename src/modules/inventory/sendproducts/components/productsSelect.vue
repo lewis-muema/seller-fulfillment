@@ -10,7 +10,11 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push('/inventory/send-inventory')"
+                @click="
+                  getEditValue === 'inventory'
+                    ? $router.push('/inventory/send-inventory')
+                    : $router.go(-1)
+                "
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -57,7 +61,13 @@
                 :key="i"
               >
                 <td
-                  :class="disabledStatus(product) ? 'disabled-row' : ''"
+                  :class="
+                    disabledStatus(product)
+                      ? 'disabled-row'
+                      : '' || disableOrderedItem(product.product_variants)
+                      ? 'disabled-row'
+                      : ''
+                  "
                   v-if="product.product_variants.length === 1"
                 >
                   <div class="product-select-column">
@@ -80,7 +90,10 @@
                             )
                       "
                       :checked="product.status"
-                      :disabled="disabledStatus(product)"
+                      :disabled="
+                        disabledStatus(product) ||
+                        disableOrderedItem(product.product_variants)
+                      "
                     />
                     <span>
                       <img
@@ -164,7 +177,14 @@
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
                           class="product-select-option"
-                          :class="disabledStatus(product) ? 'disabled-row' : ''"
+                          :class="
+                            disabledStatus(product)
+                              ? 'disabled-row'
+                              : '' ||
+                                disableOrderedItem(product.product_variants)
+                              ? 'disabled-row'
+                              : ''
+                          "
                           v-for="(option, x) in variantFilter(
                             product.product_variants
                           )"
@@ -179,7 +199,10 @@
                                 : addProduct(product, i, option, x)
                             "
                             :checked="option.status"
-                            :disabled="disabledStatus(product)"
+                            :disabled="
+                              disabledStatus(product) ||
+                              disableOrderedItem(product.product_variants)
+                            "
                           />
                           <img
                             :src="option.product_variant_image_link"
@@ -240,6 +263,7 @@
           <div class="items-selected-container">
             <p>
               {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
+              Mapped {{ getMappedSelectedProducts.length }}
             </p>
             <button
               type="submit"
@@ -269,6 +293,7 @@ export default {
       products: [],
       selectedProducts: [],
       searchProduct: "",
+      mappedSelectedProducts: [],
     };
   },
   watch: {
@@ -295,6 +320,7 @@ export default {
       "setComponent",
       "setProductLists",
       "setProductsToSubmit",
+      "setMappedSelectedProducts",
     ]),
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
@@ -305,6 +331,9 @@ export default {
         }
       });
       return variant;
+    },
+    disableOrderedItem(product) {
+      console.log(product);
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
@@ -344,6 +373,13 @@ export default {
     },
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
+        if (this.getEditValue === "consignment") {
+          this.setProductsToSubmit([
+            ...this.getProductsToSubmit,
+            ...this.getMappedSelectedProducts,
+          ]);
+          this.setMappedSelectedProducts([]);
+        }
         this.$router.push(
           this.getEditValue === "consignment"
             ? "/deliveries/edit-order"
@@ -383,6 +419,41 @@ export default {
         this.selectedProducts = this.getSelectedProducts;
       }
     },
+    mapProductsOnOrder() {
+      if (this.getEditValue === "consignment") {
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const existingProductIndex = this.getProductsToSubmit.findIndex(
+              (x) =>
+                x.product_variant_id ===
+                product.selectedOption.product_variant_id
+            );
+            if (existingProductIndex === -1) {
+              const mappedSelectedProduct = {
+                product_id: product.product_id,
+                product_variant_id: product.selectedOption.product_variant_id,
+                product_variant_image_link:
+                  product.selectedOption.product_variant_image_link,
+                product_name: product.product_name,
+                product_variant_description:
+                  product.selectedOption.product_variant_description,
+                product_variant_quantity:
+                  product.selectedOption.product_variant_quantity,
+                product_variant_quantity_type:
+                  product.selectedOption.product_variant_quantity_type,
+                quantity: 0,
+                unit_price: product.selectedOption.product_variant_unit_price,
+                currency: product.selectedOption.product_variant_currency,
+                status: true,
+              };
+              this.mappedSelectedProducts.push(mappedSelectedProduct);
+              this.setMappedSelectedProducts(this.mappedSelectedProducts);
+              this.selectedProducts = [];
+            }
+          });
+        }
+      }
+    },
     handleSelectionChange(val) {
       this.setSelectedProducts(val);
     },
@@ -399,37 +470,8 @@ export default {
       }
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
-      if (this.getEditValue === "consignment") {
-        let mappedSelectedProduct = [];
-        if (this.selectedProducts.length) {
-          this.selectedProducts.forEach((product) => {
-            const productPayload = {
-              product_id: product.product_id,
-              product_variant_id:
-                product.product_variants[0].product_variant_id,
-              product_variant_image_link:
-                product.product_variants[0].product_variant_image_link,
-              product_name: product.product_name,
-              product_variant_description:
-                product.product_variants[0].product_variant_description,
-              product_variant_quantity:
-                product.product_variants[0].product_variant_quantity,
-              product_variant_quantity_type:
-                product.product_variants[0].product_variant_quantity_type,
-              quantity: 0,
-              unit_price:
-                product.product_variants[0].product_variant_unit_price,
-              currency: product.product_variants[0].product_variant_currency,
-            };
-            mappedSelectedProduct.push(productPayload);
-          });
-        }
-        this.setProductsToSubmit([
-          ...this.getProductsToSubmit,
-          ...mappedSelectedProduct,
-        ]);
-      }
       this.setSelectedProducts(this.selectedProducts);
+      this.mapProductsOnOrder();
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
           event: "Product Selection",
@@ -447,6 +489,12 @@ export default {
       }
     },
     removeProduct(product, i, option, x) {
+      console.log("removed", product);
+      if (this.getEditValue === "consignment") {
+        //this.getProductsToSubmit.splice(i, 1);
+        console.log("getp", this.getP);
+        this.getP.splice(i, 1);
+      }
       this.selectedProducts.forEach((row, p) => {
         if (row.productIndex === i && row.product_variants.length === 1) {
           this.products[i].status = false;
@@ -501,6 +549,7 @@ export default {
       "getEditValue",
       "getStorageUserDetails",
       "getProductsToSubmit",
+      "getMappedSelectedProducts",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;

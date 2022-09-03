@@ -92,15 +92,19 @@
               <div class="no-products-description">
                 {{ $t("deliveries.cartEmpty") }}
               </div>
-              <router-link
-                to="/inventory/send-inventory/sendy/select-products"
+              <span
+                @click="
+                  navigateRoute(
+                    '/inventory/send-inventory/sendy/select-products'
+                  )
+                "
                 class="add-products-span-link"
               >
                 <span class="add-products-span">
                   <i class="mdi mdi-plus"></i>
                   {{ $t("common.addProducts") }}
                 </span>
-              </router-link>
+              </span>
             </div>
           </div>
         </v-card>
@@ -220,7 +224,6 @@ export default {
           });
           this.buttonLoader = false;
           this.setEditValue("inventory");
-          this.setProductsToSubmit([]);
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
@@ -228,6 +231,7 @@ export default {
           setTimeout(() => {
             this.fetchOrder();
           }, 1000);
+          this.setProductsToSubmit([]);
         } else {
           ElNotification({
             title: "",

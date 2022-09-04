@@ -61,13 +61,7 @@
                 :key="i"
               >
                 <td
-                  :class="
-                    disabledStatus(product)
-                      ? 'disabled-row'
-                      : '' || disableOrderedItem(product.product_variants)
-                      ? 'disabled-row'
-                      : ''
-                  "
+                  :class="disabledStatus(product) ? 'disabled-row' : ''"
                   v-if="product.product_variants.length === 1"
                 >
                   <div class="product-select-column">
@@ -90,10 +84,7 @@
                             )
                       "
                       :checked="product.status"
-                      :disabled="
-                        disabledStatus(product) ||
-                        disableOrderedItem(product.product_variants)
-                      "
+                      :disabled="disabledStatus(product)"
                     />
                     <span>
                       <img
@@ -177,14 +168,7 @@
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
                           class="product-select-option"
-                          :class="
-                            disabledStatus(product)
-                              ? 'disabled-row'
-                              : '' ||
-                                disableOrderedItem(product.product_variants)
-                              ? 'disabled-row'
-                              : ''
-                          "
+                          :class="disabledStatus(product) ? 'disabled-row' : ''"
                           v-for="(option, x) in variantFilter(
                             product.product_variants
                           )"
@@ -199,10 +183,7 @@
                                 : addProduct(product, i, option, x)
                             "
                             :checked="option.status"
-                            :disabled="
-                              disabledStatus(product) ||
-                              disableOrderedItem(product.product_variants)
-                            "
+                            :disabled="disabledStatus(product)"
                           />
                           <img
                             :src="option.product_variant_image_link"
@@ -263,7 +244,6 @@
           <div class="items-selected-container">
             <p>
               {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
-              Mapped {{ getMappedSelectedProducts.length }}
             </p>
             <button
               type="submit"
@@ -332,9 +312,6 @@ export default {
       });
       return variant;
     },
-    disableOrderedItem(product) {
-      console.log(product);
-    },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels
@@ -374,6 +351,7 @@ export default {
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
         if (this.getEditValue === "consignment") {
+          this.mapProductsOnOrder();
           this.setProductsToSubmit([
             ...this.getProductsToSubmit,
             ...this.getMappedSelectedProducts,
@@ -471,7 +449,6 @@ export default {
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
       this.setSelectedProducts(this.selectedProducts);
-      this.mapProductsOnOrder();
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
           event: "Product Selection",
@@ -489,12 +466,6 @@ export default {
       }
     },
     removeProduct(product, i, option, x) {
-      console.log("removed", product);
-      if (this.getEditValue === "consignment") {
-        //this.getProductsToSubmit.splice(i, 1);
-        console.log("getp", this.getP);
-        this.getP.splice(i, 1);
-      }
       this.selectedProducts.forEach((row, p) => {
         if (row.productIndex === i && row.product_variants.length === 1) {
           this.products[i].status = false;

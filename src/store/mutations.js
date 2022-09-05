@@ -68,6 +68,9 @@ export default {
   setProductsToSubmit(state, val) {
     state.productsToSubmit = val;
   },
+  setMappedSelectedProducts(state, val) {
+    state.mappedSelectedProducts = val;
+  },
   setActivityLog(state, val) {
     state.activityLog = val;
   },

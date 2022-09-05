@@ -30,6 +30,7 @@ export default {
   getActivityLogs: (state) => state.activityLogs,
   getProductsToSubmit: (state) => state.productsToSubmit,
   getUserChanged: (state) => state.userChanged,
+  getMappedSelectedProducts: (state) => state.mappedSelectedProducts,
   getRangeChanged: (state) => state.rangeChanged,
   getBusinessUsers: (state) => state.businessUsers,
   getDashboardSelectedTab: (state) => state.dashboardSelectedTab,

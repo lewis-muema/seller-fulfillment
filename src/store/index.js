@@ -23,8 +23,9 @@ export default createStore({
       ],
       exportDataType: "",
       parent: "",
-      editValue: "",
+      editValue: "inventory",
       defaultLanguage: "en",
+      mappedSelectedProducts: [],
       external: [
         "/auth/",
         "/auth/sign-in",

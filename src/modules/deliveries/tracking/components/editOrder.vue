@@ -92,15 +92,19 @@
               <div class="no-products-description">
                 {{ $t("deliveries.cartEmpty") }}
               </div>
-              <router-link
-                to="/inventory/send-inventory/sendy/select-products"
+              <span
+                @click="
+                  navigateRoute(
+                    '/inventory/send-inventory/sendy/select-products'
+                  )
+                "
                 class="add-products-span-link"
               >
                 <span class="add-products-span">
                   <i class="mdi mdi-plus"></i>
                   {{ $t("common.addProducts") }}
                 </span>
-              </router-link>
+              </span>
             </div>
           </div>
         </v-card>
@@ -195,6 +199,7 @@ export default {
     ]),
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
     navigateRoute(route) {
+      this.setEditValue("consignment");
       this.$router.push(route);
     },
     async submitChanges() {
@@ -218,13 +223,14 @@ export default {
             type: "success",
           });
           this.buttonLoader = false;
-          this.setProductsToSubmit([]);
+          this.setEditValue("inventory");
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
           });
           setTimeout(() => {
-            this.fetchOrder();
+            this.setSelectedProducts([]);
+            this.setProductsToSubmit([]);
           }, 1000);
         } else {
           ElNotification({
@@ -243,30 +249,6 @@ export default {
         });
         this.buttonLoader = false;
       }
-    },
-    fetchOrder() {
-      this.setLoader({
-        type: "orderTracking",
-        value: "loading-text",
-      });
-      this.setLoader({
-        type: "orderTimeline",
-        value: "loading-text",
-      });
-      this.requestAxiosGet({
-        app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getParent === "sendy" ? "consignments" : "deliveries"
-        }/${this.$route.params.order_id}`,
-      }).then((response) => {
-        this.setLoader({
-          type: "orderTracking",
-          value: "",
-        });
-        if (response.status === 200) {
-          this.setOrderTrackingData(response.data.data);
-        }
-      });
     },
     removeProductOption(index) {
       const products = this.getProductsToSubmit;

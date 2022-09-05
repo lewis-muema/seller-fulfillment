@@ -95,9 +95,8 @@ export default {
     ]),
     nagivateRoute(route) {
       if (this.getParent === "sendy") {
-        this.setEditValue("consignment");
+        this.$router.push(route);
       }
-      this.$router.push(route);
     },
     formatProducts(products) {
       if (products.length !== 0) {

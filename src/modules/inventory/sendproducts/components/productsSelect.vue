@@ -10,7 +10,11 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push('/inventory/send-inventory')"
+                @click="
+                  getEditValue === 'inventory'
+                    ? $router.push('/inventory/send-inventory')
+                    : $router.go(-1)
+                "
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -269,6 +273,7 @@ export default {
       products: [],
       selectedProducts: [],
       searchProduct: "",
+      mappedSelectedProducts: [],
     };
   },
   watch: {
@@ -295,6 +300,7 @@ export default {
       "setComponent",
       "setProductLists",
       "setProductsToSubmit",
+      "setMappedSelectedProducts",
     ]),
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
@@ -344,6 +350,14 @@ export default {
     },
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
+        if (this.getEditValue === "consignment") {
+          this.mapProductsOnOrder();
+          this.setProductsToSubmit([
+            ...this.getProductsToSubmit,
+            ...this.getMappedSelectedProducts,
+          ]);
+          this.setMappedSelectedProducts([]);
+        }
         this.$router.push(
           this.getEditValue === "consignment"
             ? "/deliveries/edit-order"
@@ -383,6 +397,41 @@ export default {
         this.selectedProducts = this.getSelectedProducts;
       }
     },
+    mapProductsOnOrder() {
+      if (this.getEditValue === "consignment") {
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const existingProductIndex = this.getProductsToSubmit.findIndex(
+              (x) =>
+                x.product_variant_id ===
+                product.selectedOption.product_variant_id
+            );
+            if (existingProductIndex === -1) {
+              const mappedSelectedProduct = {
+                product_id: product.product_id,
+                product_variant_id: product.selectedOption.product_variant_id,
+                product_variant_image_link:
+                  product.selectedOption.product_variant_image_link,
+                product_name: product.product_name,
+                product_variant_description:
+                  product.selectedOption.product_variant_description,
+                product_variant_quantity:
+                  product.selectedOption.product_variant_quantity,
+                product_variant_quantity_type:
+                  product.selectedOption.product_variant_quantity_type,
+                quantity: 0,
+                unit_price: product.selectedOption.product_variant_unit_price,
+                currency: product.selectedOption.product_variant_currency,
+                status: true,
+              };
+              this.mappedSelectedProducts.push(mappedSelectedProduct);
+              this.setMappedSelectedProducts(this.mappedSelectedProducts);
+              this.selectedProducts = [];
+            }
+          });
+        }
+      }
+    },
     handleSelectionChange(val) {
       this.setSelectedProducts(val);
     },
@@ -399,36 +448,6 @@ export default {
       }
       newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
-      if (this.getEditValue === "consignment") {
-        let mappedSelectedProduct = [];
-        if (this.selectedProducts.length) {
-          this.selectedProducts.forEach((product) => {
-            const productPayload = {
-              product_id: product.product_id,
-              product_variant_id:
-                product.product_variants[0].product_variant_id,
-              product_variant_image_link:
-                product.product_variants[0].product_variant_image_link,
-              product_name: product.product_name,
-              product_variant_description:
-                product.product_variants[0].product_variant_description,
-              product_variant_quantity:
-                product.product_variants[0].product_variant_quantity,
-              product_variant_quantity_type:
-                product.product_variants[0].product_variant_quantity_type,
-              quantity: 0,
-              unit_price:
-                product.product_variants[0].product_variant_unit_price,
-              currency: product.product_variants[0].product_variant_currency,
-            };
-            mappedSelectedProduct.push(productPayload);
-          });
-        }
-        this.setProductsToSubmit([
-          ...this.getProductsToSubmit,
-          ...mappedSelectedProduct,
-        ]);
-      }
       this.setSelectedProducts(this.selectedProducts);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
@@ -501,6 +520,7 @@ export default {
       "getEditValue",
       "getStorageUserDetails",
       "getProductsToSubmit",
+      "getMappedSelectedProducts",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;

@@ -126,6 +126,7 @@ export default {
     formatActivityLogs(name, activity) {
       return this.showActivityLogs(name, activity);
     },
+    formatName() {},
     filterUsers(val) {
       this.$emit("user", val);
     },

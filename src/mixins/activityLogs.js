@@ -6,9 +6,16 @@ const mappedActivityLogs = {
   },
   methods: {
     showActivityLogs(name, activity) {
-      let previous = "";
-      let current = "";
-      let productName = "";
+      let {
+        previous,
+        current,
+        productName,
+        type,
+        customerName,
+        to,
+        toCustomer,
+        username,
+      } = "";
       let newName = name.split("_").join(".");
       if (!newName) {
         return;
@@ -46,10 +53,33 @@ const mappedActivityLogs = {
       ) {
         productName = activity.resource_short_description;
       }
+      if (
+        ["userCreated", "userActivated", "userDeactivated"].includes(
+          this.getActivityLogs[newName].split(".")[1]
+        )
+      ) {
+        username = activity.resource_short_description;
+      }
+      if (
+        ["orderCreated", "orderCanceled", "orderRescheduled"].includes(
+          this.getActivityLogs[newName].split(".")[1]
+        )
+      ) {
+        type = activity.resource_type;
+        if (type === "DELIVERY_ORDER") {
+          to = this.$t("settings.to");
+          customerName = activity.resource_short_description;
+          toCustomer = " " + to + " " + customerName;
+        }
+        type = activity.resource_type.replace("_", " ").toLowerCase();
+      }
       return this.$t(this.getActivityLogs[newName], {
         previous: previous,
         current: current,
         name: productName,
+        type: type,
+        customerName: toCustomer,
+        username: username,
       });
     },
   },

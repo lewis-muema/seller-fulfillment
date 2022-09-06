@@ -227,7 +227,7 @@ export default {
             });
             this.setSelectedProducts([]);
             this.sendSegmentEvents({
-              event: "Send Products to Sendy",
+              event: "Send_products_to_sendy",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getSelectedProducts,

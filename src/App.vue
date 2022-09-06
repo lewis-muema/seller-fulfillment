@@ -110,9 +110,9 @@ export default {
       }, 500);
     },
     freshchatInit() {
-      window.addEventListener("freshchat-loaded", () => {
+      window.addEventListener("freshchat_loaded", () => {
         this.sendSegmentEvents({
-          event: "Sendy Support",
+          event: "Sendy_support",
           data: {
             userId: this.getStorageUserDetails.business_id,
             email: this.getStorageUserDetails.email,

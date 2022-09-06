@@ -12,7 +12,7 @@ export default {
     this.setComponent("common.paymentOptions");
     this.selectPaymentMethod();
     this.sendSegmentEvents({
-      event: "Select Payment Methods",
+      event: "Select_payment_methods",
       data: {
         userId: this.getStorageUserDetails.business_id,
         clientType: "web",

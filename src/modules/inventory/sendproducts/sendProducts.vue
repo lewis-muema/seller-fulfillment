@@ -118,7 +118,7 @@ export default {
       if (route === `${this.customerRoute}/select-products`) {
         this.setEditValue("inventory");
         this.sendSegmentEvents({
-          event: "Send to Customer",
+          event: "Send_to_customer",
           data: {
             userId: this.getStorageUserDetails.business_id,
             clientType: "web",
@@ -128,7 +128,7 @@ export default {
       } else if (route === `${this.sendyRoute}/select-products`) {
         this.setEditValue("inventory");
         this.sendSegmentEvents({
-          event: "Manage Inventory",
+          event: "Manage_inventory",
           data: {
             userId: this.getStorageUserDetails.business_id,
             clientType: "web",

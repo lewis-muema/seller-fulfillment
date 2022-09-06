@@ -168,7 +168,7 @@ export default {
       }
       if (this.type === "delivery") {
         this.sendSegmentEvents({
-          event: "Search Consignment",
+          event: "Search_consignment",
           data: {
             userId: this.getStorageUserDetails.business_id,
             searchWord: this.searchParam,

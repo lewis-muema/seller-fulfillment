@@ -21,8 +21,11 @@ export default createStore({
           value: "fr",
         },
       ],
+      exportDataType: "",
       parent: "",
+      editValue: "inventory",
       defaultLanguage: "en",
+      mappedSelectedProducts: [],
       external: [
         "/auth/",
         "/auth/sign-in",
@@ -40,6 +43,7 @@ export default createStore({
       },
       supportedCountries: [],
       userData: {},
+      updatedData: {},
       confirmedUser: {},
       businessUserDetails: {},
       googleUserData: {},
@@ -226,41 +230,33 @@ export default createStore({
         logs: "loading-text",
       },
       overlay: false,
+      userChanged: false,
+      rangeChanged: false,
+      businessUsers: {},
       activityLog: [
         {
-          date: "Thur, 1st May 2022   17:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
+          created_date: 1658906290000,
+          user_name: "James Doe",
+          user_action_type: "PRODUCT_VARIANT_NAME_CHANGED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
         {
-          date: "Thur, 1st May 2022   15:06",
-          user: "Mary Monroe",
-          action: "Added a new product called Mango Butter",
+          created_date: 1658906290000,
+          user_name: "Mary Monroe",
+          user_action_type: "PRODUCT_VARIANT_ADDED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
         {
-          date: "Thur, 1st May 2022   13:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   12:06",
-          user: "James Doe",
-          action: "Sent a delivery of Shea Butter to Moses Doe",
-        },
-        {
-          date: "Thur, 1st May 2022   11:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   10:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
-        },
-        {
-          date: "Thur, 1st May 2022   09:06",
-          user: "James Doe",
-          action: "Changed the price of Shea butter from KES 500 to KES350",
+          created_date: 1658906290000,
+          user_name: "James Doe",
+          user_action_type: "PRODUCT_VARIANT_ADDED",
+          before_value: "Red",
+          after_value: "Shear Butter",
+          resource_short_description: "Shear Buttter-Shear Buttter",
         },
       ],
       notificationPreferences: [],
@@ -536,7 +532,7 @@ export default createStore({
           ],
         },
         CAN_ACCESS_USER_ACTION_LOG: {
-          route: [],
+          route: ["/settings/activity-log"],
         },
         CAN_EDIT_BUSINESS_PROFILE: {
           route: ["/settings/profile/business-profile"],
@@ -1250,7 +1246,7 @@ export default createStore({
           iconClass: "el-icon-minus",
         },
         FUTURE: {
-          hollow: true,
+          hollow: false,
         },
       },
       deliveryAttempts: [
@@ -1404,6 +1400,39 @@ export default createStore({
         "event.delivery.rescheduled.by.buyer":
           "deliveries.theCustomerRescheduledThisOrderFor",
       },
+      activityLogs: {
+        "PRODUCT.VARIANT.ADDED": "settings.addedNewProduct",
+        "PRODUCT.VARIANT.ARCHIVED": "settings.productArchived",
+        "PRODUCT.VARIANT.UNARCHIVED": "settings.productUnarchived",
+        "PRODUCT.VARIANT.NAME.CHANGED": "settings.productChanged",
+        "PRODUCT.VARIANT.UNIT.OF.MEASURE.CHANGED":
+          "settings.productUnitChanged",
+        "PRODUCT.VARIANT.IMAGE.LINK.CHANGED":
+          "settings.productImageLinkChanged",
+        "PRODUCT.VARIANT.PRICE.CHANGED": "settings.productPriceChanged",
+        "ORDER.CREATED": "settings.orderCreated",
+        "ORDER.CANCELED": "settings.orderCanceled",
+        "ORDER.RESCHEDULED": "settings.orderRescheduled",
+        "ORDER.LINE.ITEM.QUANTITY.CHANGED": "settings.orderlineItemChanged",
+        "ORDER.DESTINATION.HOUSE_LOCATION.CHANGED":
+          "settings.orderDestinatioHouseChanged",
+        "ORDER.DESTINATION.LATITUDE.CHANGED":
+          "settings.orderDestinatioLatitudeChanged",
+        "ORDER.DESTINATION.LONGITUDE.CHANGED":
+          "settings.orderDestinatioLongitudeChanged",
+        "ORDER.DESTINATION.NAME.CHANGED": "settings.orderDestinatioNameChanged",
+        "ORDER.PRIMARY.RECIPIENT.NAME.CHANGED":
+          "settings.orderPrimaryRecepientChanged",
+        "ORDER.PRIMARY.RECIPIENT.PHONE.NUMBER.CHANGED":
+          "settings.orderPrimaryRecepientPhoneChanged",
+        "ORDER.SECONDARY.RECIPIENT.PHONE_NUMBER.CHANGED":
+          "settings.orderSecondaryRecepientPhoneChanged",
+        "ORDER.DELIVERY.INSTRUCTIONS.CHANGED":
+          "settings.orderInstructionsChanged",
+        "USER.CREATED": "settings.userCreated",
+        "USER.ACTIVATED": "settings.userActivated",
+        "USER.DEACTIVATED": "settings.userDeactivated",
+      },
       productLists: [
         {
           product_id: "P-KXG-0000",
@@ -1480,6 +1509,7 @@ export default createStore({
           ],
         },
       ],
+      productsToSubmit: [],
       fulfillmentFees: {
         total_product_value: 0,
         pre_adjustments_calculated_fee: 0,

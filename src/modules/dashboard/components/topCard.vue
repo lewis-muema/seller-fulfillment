@@ -52,28 +52,28 @@ export default {
       orders: [
         {
           icon: "mdi mdi-truck",
-          count: "0",
+          count: 0,
           orderStatus: "dashboard.completedPickups",
           link: `/deliveries/sendy/Completed/${new Date().valueOf()}`,
           color: "#5287EE",
         },
         {
           icon: "mdi-check-all",
-          count: "6",
+          count: 0,
           orderStatus: "dashboard.completedOrders",
           link: `/deliveries/customer/Completed/${new Date().valueOf()}`,
           color: "#84CC8C",
         },
         {
           icon: "mdi-home-city",
-          count: "32",
+          count: 0,
           orderStatus: "dashboard.availableStock",
           link: "/inventory/stock-levels",
           color: "#324BA8",
         },
         {
           icon: "mdi-archive",
-          count: "4",
+          count: 0,
           orderStatus: "dashboard.itemsOutOfStock",
           link: "/inventory/stock-levels/noStock",
           color: "#CC6100",
@@ -83,13 +83,16 @@ export default {
     };
   },
   watch: {
-    "$store.state.loader": function loader(val) {
-      if (val === "") {
-        this.orders[0].count = this.ongoingOrders;
-        this.orders[1].count = this.completedOrders;
-        this.orders[2].count = this.availableStock;
-        this.orders[3].count = this.outOfStock;
-      }
+    "$store.state.loader": {
+      handler(val) {
+        if (val !== "") {
+          this.orders[0].count = this.completedPickups;
+          this.orders[1].count = this.completedOrders;
+          this.orders[2].count = this.availableStock;
+          this.orders[3].count = this.outOfStock;
+        }
+      },
+      deep: true,
     },
   },
   computed: {
@@ -100,12 +103,14 @@ export default {
       "getDeliveriesStatisticsToday",
       "getConsignmentStatisticsToday",
       "getDashboardSelectedTab",
+      "getConsignmentStatistics",
+      "getDeliveriesStatistics",
     ]),
-    ongoingOrders() {
-      return this.getConsignmentStatisticsToday.ORDER_COMPLETED;
+    completedPickups() {
+      return this.getConsignmentStatistics.ORDER_COMPLETED;
     },
     completedOrders() {
-      return this.getDeliveriesStatisticsToday.ORDER_COMPLETED;
+      return this.getDeliveriesStatistics.ORDER_COMPLETED;
     },
     availableStock() {
       return this.getStockStatistics.available_products;

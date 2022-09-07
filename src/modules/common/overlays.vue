@@ -73,6 +73,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setPickUp"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="instructions" class="edit-info-label">
@@ -167,6 +168,7 @@
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
         @place_changed="setLocation"
+        :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
       <label for="phone-number" class="edit-info-label">
@@ -570,6 +572,73 @@
         </p>
       </div>
     </div>
+    <div v-if="popup === 'noEdits'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEdits')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        {{
+          getParent === "sendy"
+            ? $t("deliveries.cantEditPickups")
+            : $t("deliveries.cantEditDelivery")
+        }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
+    <div v-if="popup === 'noEditsProducts'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'noEditsProducts')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        {{ $t("deliveries.cantEditProducts") }}
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
+    <div v-if="popup === 'export'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'export')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="deactivate-user-title">
+          {{ $t("common.exportToCSV") }}
+        </p>
+        <p class="export-CSV-description">
+          {{
+            $t("common.yourExportWillTakeAFewMinutes", {
+              email: getUserDetails.email,
+            })
+          }}
+        </p>
+        <div class="export-popup-buttons">
+          <div
+            class="deactivate-user-no"
+            @click="overlayStatusSet(false, 'export')"
+          >
+            {{ $t("common.cancel") }}
+          </div>
+          <div class="export-CSV-button">
+            <v-btn
+              class="edit-user-save"
+              v-loading="buttonLoader"
+              @click="exportData()"
+            >
+              {{ $t("common.exportCSV") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -626,7 +695,14 @@ export default {
       "getSendyPhoneProps",
       "getUser",
       "getActiveUser",
+      "getExportDataType",
     ]),
+    partnerNotAssigned() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
   },
   data() {
     return {
@@ -665,13 +741,28 @@ export default {
       secondaryPhoneStatus: false,
     };
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   methods: {
-    ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
+    ...mapActions([
+      "requestAxiosPut",
+      "requestAxiosGet",
+      "requestAxiosPost",
+      "requestAxiosPatch",
+      "updateOrderTrackingData",
+    ]),
     ...mapMutations([
       "setLoader",
       "setOrderTrackingData",
       "setPromoCode",
       "setUserAction",
+      "setProductsToSubmit",
+      "setSendyPhoneProps",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -684,6 +775,43 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    exportData() {
+      this.buttonLoader = true;
+      const payload = {
+        business_id: this.getStorageUserDetails.business_id,
+        data_query: {
+          data_type: this.getExportDataType,
+          data_filters: [],
+        },
+        output_file_types: [
+          {
+            file_type: "CSV",
+          },
+        ],
+      };
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/exporttasks`,
+        values: payload,
+      }).then((response) => {
+        if (response.status === 200) {
+          ElNotification({
+            title: this.$t("settings.weArePreparingYourCSVExport"),
+            message: this.$t("settings.weWillNotifyYouWhenYourExport"),
+            type: "success",
+          });
+          this.overlayStatusSet(false, "export");
+          this.buttonLoader = false;
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("settings.weCouldNotInitiateYouCSVExport"),
+            type: "error",
+          });
+          this.buttonLoader = false;
+        }
+      });
     },
     resendInvite() {
       this.buttonLoader = true;
@@ -710,126 +838,130 @@ export default {
         }
       });
     },
-    submitConsignment() {
+    async submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      this.requestAxiosPut({
+      const payload = {
+        destination: {
+          name: order.destination.name,
+          phone_number: this.phone
+            ? this.phone
+            : order.destination.phone_number,
+          secondary_phone_number: this.secPhone
+            ? this.secPhone
+            : order.destination.secondary_phone_number,
+          delivery_location: {
+            description: this.location
+              ? this.location
+              : order.destination.delivery_location.description,
+            longitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lng()
+              : order.destination.delivery_location.longitude,
+            latitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lat()
+              : order.destination.delivery_location.latitude,
+          },
+          house_location: order.destination.house_location,
+          delivery_instructions: this.instructions
+            ? this.instructions
+            : order.destination.delivery_instructions,
+        },
+      };
+      if (!this.partnerNotAssigned) {
+        delete payload.destination.delivery_location;
+      }
+      const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
-        values: {
-          products: order.products,
-          destination: {
-            name: order.destination.name,
-            phone_number: this.phone
-              ? this.phone
-              : order.destination.phone_number,
-            secondary_phone_number: this.secPhone
-              ? this.secPhone
-              : order.destination.secondary_phone_number,
-            delivery_location: {
-              description: this.location
-                ? this.location
-                : order.destination.delivery_location.description,
-              longitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lng()
-                : order.destination.delivery_location.longitude,
-              latitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lat()
-                : order.destination.delivery_location.latitude,
-            },
-            house_location: order.destination.house_location,
-            delivery_instructions: this.instructions
-              ? this.instructions
-              : order.destination.delivery_instructions,
-          },
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.cosignmentEditedSuccessfully"),
-            type: "success",
-          });
-          this.overlayStatusSet(false, "pickupInfo");
-          this.buttonLoader = false;
-          setTimeout(() => {
-            this.fetchOrder();
-          }, 1000);
-        } else {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.cosignmentEditingFailed"),
-            type: "error",
-          });
-          this.buttonLoader = false;
-        }
-      });
+        values: payload,
+      };
+      const response = await this.updateOrderTrackingData(fullPayload);
+      if (response.status === 200) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.cosignmentEditedSuccessfully"),
+          type: "success",
+        });
+        this.overlayStatusSet(false, "pickupInfo");
+        this.buttonLoader = false;
+        setTimeout(() => {
+          this.fetchOrder();
+        }, 1000);
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.cosignmentEditingFailed"),
+          type: "error",
+        });
+        this.buttonLoader = false;
+      }
     },
-    submitDelivery() {
+    async submitDelivery() {
       const order = this.getOrderTrackingData.order;
+      this.buttonLoader = true;
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
-      this.buttonLoader = true;
-      this.requestAxiosPut({
+      const payload = {
+        means_of_payment: {
+          means_of_payment_type: meansOfPayment.means_of_payment_type,
+          means_of_payment_identifier: meansOfPayment.means_of_payment_id,
+          participant_type: meansOfPayment.participant_type,
+          participant_id: meansOfPayment.participant_id,
+          meta_data: meansOfPayment.meta_data,
+        },
+        destination: {
+          name: this.customerName ? this.customerName : order.destination.name,
+          phone_number: this.phone
+            ? this.phone
+            : order.destination.phone_number,
+          secondary_phone_number: this.secPhone
+            ? this.secPhone
+            : order.destination.secondary_phone_number,
+          delivery_location: {
+            description: this.location
+              ? this.location
+              : order.destination.delivery_location.description,
+            longitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lng()
+              : order.destination.delivery_location.longitude,
+            latitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lat()
+              : order.destination.delivery_location.latitude,
+          },
+          house_location: order.destination.house_location,
+          delivery_instructions: this.instructions
+            ? this.instructions
+            : order.destination.delivery_instructions,
+        },
+      };
+      if (!this.partnerNotAssigned) {
+        delete payload.destination.delivery_location;
+      }
+      const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
-        values: {
-          means_of_payment: {
-            means_of_payment_type: meansOfPayment.means_of_payment_type,
-            means_of_payment_identifier: meansOfPayment.means_of_payment_id,
-            participant_type: meansOfPayment.participant_type,
-            participant_id: meansOfPayment.participant_id,
-            meta_data: meansOfPayment.meta_data,
-          },
-          products: order.products,
-          destination: {
-            name: this.customerName
-              ? this.customerName
-              : order.destination.name,
-            phone_number: this.phone
-              ? this.phone
-              : order.destination.phone_number,
-            secondary_phone_number: this.secPhone
-              ? this.secPhone
-              : order.destination.secondary_phone_number,
-            delivery_location: {
-              description: this.location
-                ? this.location
-                : order.destination.delivery_location.description,
-              longitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lng()
-                : order.destination.delivery_location.longitude,
-              latitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lat()
-                : order.destination.delivery_location.latitude,
-            },
-            house_location: order.destination.house_location,
-            delivery_instructions: this.instructions
-              ? this.instructions
-              : order.destination.delivery_instructions,
-          },
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryEditedSuccessfully"),
-            type: "success",
-          });
-          this.overlayStatusSet(false, "deliveryInfo");
-          this.buttonLoader = false;
-          setTimeout(() => {
-            this.fetchOrder();
-          }, 1000);
-        } else {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryEditingFailed"),
-            type: "error",
-          });
-          this.buttonLoader = false;
-        }
-      });
+        values: payload,
+      };
+      const response = await this.updateOrderTrackingData(fullPayload);
+      if (response.status === 200) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.deliveryEditedSuccessfully"),
+          type: "success",
+        });
+        this.overlayStatusSet(false, "deliveryInfo");
+        this.buttonLoader = false;
+        setTimeout(() => {
+          this.fetchOrder();
+        }, 1000);
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.deliveryEditingFailed"),
+          type: "error",
+        });
+        this.buttonLoader = false;
+      }
     },
     reschedule() {
       this.buttonLoader = true;
@@ -1246,5 +1378,30 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.get-help-button {
+  width: 100%;
+  margin-top: 20px;
+  height: 50px !important;
+  background: #d3ddf6;
+  color: #324ba8 !important;
+  text-transform: inherit;
+  letter-spacing: 0px;
+  font-size: 16px;
+  font-weight: 400 !important;
+}
+.export-popup-buttons {
+  display: flex;
+  align-items: center;
+}
+.export-CSV-button {
+  margin-left: 70px;
+  width: 260px;
+}
+.export-CSV-description {
+  color: #606266;
+}
+.businessProfile-address:disabled {
+  background: #e2e7ed !important;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <make-payment v-if="prompt" />
+    <make-payment class="statements-payment-banner" v-if="prompt" />
     <div class="statements-top-bar-container">
       <div>
         <div v-if="activeCycle.active">
@@ -56,11 +56,16 @@ export default {
       "getStorageUserDetails",
       "getBusinessDetails",
       "getBillingCycles",
+      "getActivePayment",
     ]),
     limitParams() {
       return `?lower_limit_date=${moment(this.range[0]).format(
         "YYYY-MM-DD"
       )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+    },
+    prompt() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
     },
     activeCycle() {
       let active = {};
@@ -80,7 +85,6 @@ export default {
       orders: "3",
       amount: "KES 750",
       billingCycle: "Daily",
-      prompt: false,
       params: "",
       range: "",
       activeBillingCycle: [],
@@ -89,6 +93,7 @@ export default {
   mounted() {
     this.setComponent("common.billings");
     this.listBillingCycles();
+    this.getActiveCycle();
     this.sendSegmentEvents({
       event: "Select Transaction History",
       data: {
@@ -104,8 +109,29 @@ export default {
       "setLoader",
       "setTab",
       "setBillingCycles",
+      "setActivePayment",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    getActiveCycle() {
+      this.setLoader({
+        type: "pendingPayment",
+        value: "loading-text",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+      }).then((response) => {
+        this.setLoader({
+          type: "pendingPayment",
+          value: "",
+        });
+        if (response.status === 200) {
+          this.setActivePayment(response.data.data);
+        } else {
+          this.setActivePayment({});
+        }
+      });
+    },
     listBillingCycles() {
       this.setLoader({
         type: "billingCycles",
@@ -154,5 +180,9 @@ export default {
 .statements-info-bar-container {
   display: grid;
   grid-template-columns: 15% 15% 5% 65%;
+}
+.statements-payment-banner {
+  max-width: 100% !important;
+  margin-left: 30px;
 }
 </style>

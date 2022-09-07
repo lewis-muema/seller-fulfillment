@@ -235,15 +235,16 @@
                 : ''
             "
           ></v-list-item>
-          <!-- <v-list-item
+          <v-list-item
+            v-if="!getAccessDenied.includes('/settings/activity-log')"
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
             class="desktop-sidebar-sub-menu"
-            :active="route === $t('common.activityLog')"
+            :active="route === 'common.activityLog'"
             :append-icon="
-              route === $t('common.activityLog') ? 'mdi-circle-small' : ''
+              route === 'common.activityLog' ? 'mdi-circle-small' : ''
             "
-          ></v-list-item> -->
+          ></v-list-item>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>

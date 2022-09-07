@@ -65,8 +65,23 @@ export default {
   setDeliveryActions(state, val) {
     state.deliveryActions = val;
   },
+  setProductsToSubmit(state, val) {
+    state.productsToSubmit = val;
+  },
+  setMappedSelectedProducts(state, val) {
+    state.mappedSelectedProducts = val;
+  },
   setActivityLog(state, val) {
     state.activityLog = val;
+  },
+  setUserChanged(state, val) {
+    state.userChanged = val;
+  },
+  setRangeChanged(state, val) {
+    state.rangeChanged = val;
+  },
+  setBusinessUsers(state, val) {
+    state.businessUsers = val;
   },
   setDashboardSelectedTab(state, val) {
     state.dashboardSelectedTab = val;
@@ -169,6 +184,9 @@ export default {
   },
   setNotifications(state, val) {
     state.notifications = val;
+  },
+  setEditValue(state, val) {
+    state.editValue = val;
   },
   setParent(state, val) {
     state.parent = val;
@@ -274,5 +292,11 @@ export default {
   },
   setActiveUser(state, val) {
     state.activeUser = val;
+  },
+  setUpdatedData(state, val) {
+    state.updatedData = val;
+  },
+  setExportDataType(state, val) {
+    state.exportDataType = val;
   },
 };

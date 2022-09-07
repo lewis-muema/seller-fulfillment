@@ -178,6 +178,13 @@ export default {
       return payload;
     },
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -189,7 +196,12 @@ export default {
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
   },
   methods: {
-    ...mapMutations(["setProductStep", "setCheckoutDetails"]),
+    ...mapMutations([
+      "setProductStep",
+      "setCheckoutDetails",
+      "setSendyPhoneProps",
+      "setSelectedProducts",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
       this.setProductStep(val);
@@ -213,6 +225,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Send Products to Sendy",
               data: {
@@ -228,7 +241,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push("/deliveries/sendy");
+              this.$router.push(
+                `/deliveries/tracking/${response.data.data.order_id}`
+              );
             }
           } else {
             ElNotification({

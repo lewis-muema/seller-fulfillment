@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    :class="getEditValue === 'consignment' ? 'consignment-product-select' : ''"
+  >
     <v-row>
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
@@ -8,13 +10,21 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push('/inventory/send-inventory')"
+                @click="
+                  getEditValue === 'inventory'
+                    ? $router.push('/inventory/send-inventory')
+                    : $router.go(-1)
+                "
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
               </v-card-title>
             </div>
-            <router-link to="/inventory/add-product/" class="add-new-product">
+            <router-link
+              to="/inventory/add-product/"
+              class="add-new-product"
+              v-if="getEditValue !== 'consignment'"
+            >
               <v-icon>mdi mdi-plus</v-icon>
               {{ $t("inventory.addNewProduct") }}
             </router-link>
@@ -133,7 +143,9 @@
                             </div>
                             <div class="product-select-expansion-description">
                               <span :class="getLoader.products">
-                                {{ product.product_variants.length }}
+                                {{
+                                  variantFilter(product.product_variants).length
+                                }}
                                 {{ $t("inventory.producTOptions") }}
                               </span>
                             </div>
@@ -157,7 +169,9 @@
                         <div
                           class="product-select-option"
                           :class="disabledStatus(product) ? 'disabled-row' : ''"
-                          v-for="(option, x) in product.product_variants"
+                          v-for="(option, x) in variantFilter(
+                            product.product_variants
+                          )"
                           :key="x"
                         >
                           <input
@@ -259,6 +273,7 @@ export default {
       products: [],
       selectedProducts: [],
       searchProduct: "",
+      mappedSelectedProducts: [],
     };
   },
   watch: {
@@ -284,8 +299,19 @@ export default {
       "setProductStep",
       "setComponent",
       "setProductLists",
+      "setProductsToSubmit",
+      "setMappedSelectedProducts",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    variantFilter(variants) {
+      let variant = [];
+      variants.forEach((row, i) => {
+        if (i > 0) {
+          variant.push(row);
+        }
+      });
+      return variant;
+    },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels
@@ -294,7 +320,7 @@ export default {
       return (
         this.$route.params.path === "customer" &&
         quantity === 0 &&
-        process.env.NODE_ENV === "production"
+        process.env.DOCKER_ENV === "production"
       );
     },
     fetchProducts() {
@@ -324,8 +350,18 @@ export default {
     },
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
+        if (this.getEditValue === "consignment") {
+          this.mapProductsOnOrder();
+          this.setProductsToSubmit([
+            ...this.getProductsToSubmit,
+            ...this.getMappedSelectedProducts,
+          ]);
+          this.setMappedSelectedProducts([]);
+        }
         this.$router.push(
-          `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
+          this.getEditValue === "consignment"
+            ? "/deliveries/edit-order"
+            : `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
         );
       } else {
         ElNotification({
@@ -359,6 +395,41 @@ export default {
           }
         });
         this.selectedProducts = this.getSelectedProducts;
+      }
+    },
+    mapProductsOnOrder() {
+      if (this.getEditValue === "consignment") {
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const existingProductIndex = this.getProductsToSubmit.findIndex(
+              (x) =>
+                x.product_variant_id ===
+                product.selectedOption.product_variant_id
+            );
+            if (existingProductIndex === -1) {
+              const mappedSelectedProduct = {
+                product_id: product.product_id,
+                product_variant_id: product.selectedOption.product_variant_id,
+                product_variant_image_link:
+                  product.selectedOption.product_variant_image_link,
+                product_name: product.product_name,
+                product_variant_description:
+                  product.selectedOption.product_variant_description,
+                product_variant_quantity:
+                  product.selectedOption.product_variant_quantity,
+                product_variant_quantity_type:
+                  product.selectedOption.product_variant_quantity_type,
+                quantity: 0,
+                unit_price: product.selectedOption.product_variant_unit_price,
+                currency: product.selectedOption.product_variant_currency,
+                status: true,
+              };
+              this.mappedSelectedProducts.push(mappedSelectedProduct);
+              this.setMappedSelectedProducts(this.mappedSelectedProducts);
+              this.selectedProducts = [];
+            }
+          });
+        }
       }
     },
     handleSelectionChange(val) {
@@ -446,7 +517,10 @@ export default {
       "getSelectedProducts",
       "getProductLists",
       "getLoader",
+      "getEditValue",
       "getStorageUserDetails",
+      "getProductsToSubmit",
+      "getMappedSelectedProducts",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;
@@ -498,7 +572,7 @@ export default {
   width: 18px !important;
 }
 .product-select-img {
-  width: 40px;
+  height: 40px;
   margin-right: 20px;
 }
 .product-select-column {
@@ -566,5 +640,8 @@ export default {
 }
 .disabled-row {
   background: #a1a0a017;
+}
+.consignment-product-select {
+  padding-top: 50px;
 }
 </style>

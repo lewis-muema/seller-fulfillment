@@ -50,6 +50,7 @@
                 class="mdi mdi-bell-outline notification-bell"
                 v-bind="props"
               ></i>
+              <iframe id="my_iframe" style="display: none"></iframe>
             </v-badge>
           </template>
           <v-list class="header-list-popup">
@@ -70,7 +71,11 @@
                     </div>
                     <div
                       class="header-notification-action"
-                      @click="$router.push(getAction(not).link)"
+                      @click="
+                        getAction(not).link
+                          ? $router.push(getAction(not).link)
+                          : triggerAction(not)
+                      "
                     >
                       <span :class="notificationLoader">
                         {{ getAction(not).label }}
@@ -148,6 +153,7 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import moment from "moment";
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
@@ -290,7 +296,40 @@ export default {
           link: "/payments/billings",
         };
       }
+      if (notification.notification_type === "EXPORT_DATA_SUCCESS_UPDATES") {
+        return {
+          label: this.$t("common.downloadCsvFile"),
+          link: "",
+        };
+      }
       return "";
+    },
+    triggerAction(notification) {
+      ElNotification({
+        title: "",
+        message: this.$t("common.fetchingDownloadFile"),
+        type: "info",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/exporttasks/${notification.entity_identifier}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          document.getElementById("my_iframe").src =
+            response.data.data.export_task.exported_file;
+          ElNotification({
+            title: "",
+            message: this.$t("common.downloadingFile"),
+            type: "success",
+          });
+        } else {
+          ElNotification({
+            title: "",
+            message: this.$t("common.couldNotFetchDownloadFile"),
+            type: "error",
+          });
+        }
+      });
     },
     formatPeriod(notification) {
       return moment(notification.created_date).fromNow();
@@ -310,6 +349,9 @@ export default {
             response.data.data.business.country_code.toLowerCase(),
           ];
           this.setMapOptions(mapOptions);
+          if (!localStorage.country) {
+            localStorage.country = response.data.data.business.country_code;
+          }
         }
       });
     },

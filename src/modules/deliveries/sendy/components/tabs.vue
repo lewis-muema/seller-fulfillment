@@ -125,7 +125,15 @@
         </span>
       </div>
     </div>
-    <div>
+    <div class="deliver-btn-container">
+      <div v-if="exportStatus" class="export-button" @click="triggerExport()">
+        <span>
+          <i class="mdi mdi-export-variant export-icon"></i>
+        </span>
+        <span>
+          {{ $t("common.export") }}
+        </span>
+      </div>
       <v-btn
         class="customers-deliver-btn"
         color="#324BA8"
@@ -185,13 +193,34 @@ export default {
       "getConsignmentStatistics",
       "getLoader",
       "getTabStatuses",
+      "getUserDetails",
     ]),
+    exportStatus() {
+      const status = this.getUserDetails.user_access_permissions.find(
+        (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
+      );
+      return typeof status === "object" ? status.permission_granted : false;
+    },
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab", "setTabStatus"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setTabStatus",
+      "setOverlayStatus",
+      "setExportDataType",
+    ]),
     passActiveTab(tab) {
       this.setTab(tab);
       this.setTabStatus(this.getTabStatuses[tab]);
+    },
+    triggerExport() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "export",
+      });
+      this.setExportDataType("PICKUP_ORDER");
     },
     nothing() {},
   },
@@ -215,7 +244,6 @@ export default {
 }
 .customers-deliver-btn {
   float: right;
-  margin-right: 25px;
   text-transform: inherit;
   font-size: 14px;
   letter-spacing: 0px;
@@ -235,5 +263,10 @@ export default {
 }
 .customers-orders-tab-section-inner {
   cursor: pointer;
+}
+.deliver-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 </style>

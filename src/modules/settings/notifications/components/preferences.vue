@@ -391,6 +391,101 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
+      <v-expansion-panels
+        class="notification-expansion-panels"
+        v-if="filteredFields(exportData).length"
+      >
+        <v-expansion-panel class="product-select-exp-panel">
+          <v-expansion-panel-title class="notifications-preferences-title">
+            <div class="notifications-preferences-left">
+              <div class="notifications-preferences-title-top">
+                {{ $t("settings.exportNotifications") }}
+              </div>
+              <div class="notifications-preferences-title-bottom">
+                {{ $t("settings.notificationsAboutExports") }}
+              </div>
+            </div>
+            <div class="notifications-preferences-view">
+              {{ $t("inventory.view") }}
+            </div>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text class="product-select-panel-text">
+            <v-table>
+              <thead>
+                <tr>
+                  <th class="text-left notifications-table-header first-col">
+                    {{ $t("settings.activity") }}
+                  </th>
+                  <th class="text-left notifications-table-header next-col">
+                    {{ $t("settings.mobilePush") }}
+                  </th>
+                  <th class="text-left notifications-table-header next-col">
+                    {{ $t("settings.SMS") }}
+                  </th>
+                  <th class="text-left notifications-table-header next-col">
+                    {{ $t("settings.email") }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  class="deliveries-table-column"
+                  v-for="(row, i) in filteredFields(exportData)"
+                  :key="i"
+                >
+                  <td class="deliveries-product-row">
+                    {{ row.item }}
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].FCM"
+                      @change="savePreference(row.id, 'FCM')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'exportData'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].SMS"
+                      @change="savePreference(row.id, 'SMS')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'exportData'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].EMAIL"
+                      @change="savePreference(row.id, 'EMAIL')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'exportData'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+            <button
+              class="btn btn-primary mt-2 btn-long notification-preferences-save-button"
+              @click="submitPreference('exportData')"
+              v-loading="loading && button === 'exportData'"
+              :disabled="button !== 'exportData' && button !== ''"
+            >
+              {{ $t("inventory.saveChanges") }}
+            </button>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </div>
   </div>
 </template>
@@ -481,6 +576,20 @@ export default {
         {
           item: this.$t("settings.whenPaymentIsSuccessful"),
           id: "PAYMENT_UPDATES",
+        },
+      ],
+      exportData: [
+        {
+          item: this.$t("settings.whenAnExportCompletes"),
+          id: "EXPORT_DATA_SUCCESS_UPDATES",
+        },
+        {
+          item: this.$t("settings.whenAnExportFails"),
+          id: "EXPORT_DATA_FAILURE_UPDATES",
+        },
+        {
+          item: this.$t("settings.exportNotificationUpdates"),
+          id: "EXPORT_DATA_UPDATES",
         },
       ],
       preferences: {},

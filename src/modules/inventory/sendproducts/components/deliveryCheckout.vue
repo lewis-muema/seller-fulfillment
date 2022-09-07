@@ -106,11 +106,7 @@
               :src="`https://sendy-web-apps-assets.s3.eu-west-1.amazonaws.com/payment-method-icons/${method.pay_method_name.toLowerCase()}.svg`"
               alt=""
             />
-            <span>{{
-              method.pay_method_details
-                ? method.pay_method_details
-                : method.pay_method_name
-            }}</span>
+            <span>{{ formatPaymentMethod(method) }}</span>
             <span
               class="payment-default-right payment-default-trigger"
               @click="selectPaymentMethod"
@@ -222,6 +218,34 @@ export default {
       });
       return method;
     },
+    meansOfPayment() {
+      let paymentMethod = "";
+      switch (this.defaultPaymentMethod[0].pay_method_name) {
+        case "M-PESA":
+          paymentMethod = this.defaultPaymentMethod[0].pay_method_name
+            .toUpperCase()
+            .replace("-", "");
+          break;
+        case "Card":
+          paymentMethod =
+            this.defaultPaymentMethod[0].pay_method_name.toUpperCase();
+          break;
+        case "Virtual Accounts":
+          paymentMethod = (
+            this.defaultPaymentMethod[0].pay_method_name.substring(0, 7) +
+            "_" +
+            this.defaultPaymentMethod[0].pay_method_name.substring(
+              8,
+              this.defaultPaymentMethod[0].pay_method_name.length
+            )
+          ).toUpperCase();
+          break;
+        default:
+          paymentMethod = "";
+          break;
+      }
+      return paymentMethod;
+    },
     checkoutPayload() {
       const products = [];
       this.getSelectedProducts.forEach((row) => {
@@ -237,9 +261,7 @@ export default {
         means_of_payment: {
           means_of_payment_type: this.getBusinessDetails.settings
             .payments_enabled
-            ? this.defaultPaymentMethod[0].pay_method_name
-                .toUpperCase()
-                .replace("-", "")
+            ? this.meansOfPayment
             : "CARD",
           means_of_payment_identifier: this.getBusinessDetails.settings
             .payments_enabled
@@ -270,6 +292,13 @@ export default {
       return payload;
     },
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.getDefaultPaymentMethod();
     this.name = this.getCheckoutDetails.name;
@@ -285,6 +314,8 @@ export default {
       "setProductStep",
       "setPaymentMethods",
       "setCheckoutDetails",
+      "setSendyPhoneProps",
+      "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
@@ -293,6 +324,14 @@ export default {
     setLocation(val) {
       this.place = val;
       this.location = document.querySelector("#location").value;
+    },
+    formatPaymentMethod(method) {
+      if (method.pay_method_id === 20) {
+        return "Pay by Bank";
+      }
+      return method.pay_method_details
+        ? method.pay_method_details
+        : method.pay_method_name;
     },
     getDefaultPaymentMethod() {
       this.requestAxiosPost({
@@ -329,6 +368,7 @@ export default {
               message: "",
               type: "success",
             });
+            this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Request Delivery to Buyer",
               data: {
@@ -345,7 +385,9 @@ export default {
             if (this.onboardingStatus) {
               this.$router.push("/");
             } else {
-              this.$router.push("/deliveries/customer");
+              this.$router.push(
+                `/deliveries/tracking/${response.data.data.order_id}`
+              );
             }
           } else {
             ElNotification({

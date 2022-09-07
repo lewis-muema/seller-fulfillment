@@ -113,6 +113,13 @@ export default {
       ],
     };
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.setComponent("settings.editUser");
     this.fetchUser();
@@ -121,7 +128,13 @@ export default {
     ...mapGetters(["getStorageUserDetails", "getSendyPhoneProps", "getUser"]),
   },
   methods: {
-    ...mapMutations(["setComponent", "setLoader", "setTab", "setUser"]),
+    ...mapMutations([
+      "setComponent",
+      "setLoader",
+      "setTab",
+      "setUser",
+      "setSendyPhoneProps",
+    ]),
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
     fetchUser() {
       this.setLoader({

@@ -3,7 +3,11 @@
     <div class="tracking-order-no">
       <i
         class="mdi mdi-arrow-left tracking-arrow-back"
-        @click="$router.go(-1)"
+        @click="
+          getParent === 'sendy'
+            ? $router.push({ name: 'To Sendy' })
+            : $router.push({ name: 'To Customers' })
+        "
       ></i>
       <p class="tracking-order-title mb-0">
         <span :class="getLoader.orderTracking">
@@ -119,6 +123,7 @@ export default {
       "getOrderTrackingData",
       "getParent",
       "getStorageUserDetails",
+      "getParent",
     ]),
     deliveryActions() {
       const actions = [];
@@ -162,6 +167,7 @@ export default {
       "setOrderTrackingData",
       "setParent",
       "setDeliveryActions",
+      "setProductsToSubmit",
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchOrder() {
@@ -185,6 +191,7 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setProductsToSubmit(response.data.data.order.products);
         }
       });
     },

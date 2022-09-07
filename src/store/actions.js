@@ -47,9 +47,21 @@ export default {
         Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
+
+    const { params } = payload;
+
+    const values = {
+      params,
+      headers: config.headers,
+    };
+    for (const value in values) {
+      if (values[value] === null || values[value] === undefined) {
+        delete values[value];
+      }
+    }
     return new Promise((resolve, reject) => {
       axios
-        .get(`${payload.app}${payload.endpoint}`, config)
+        .get(`${payload.app}${payload.endpoint}`, values)
         .then((response) => {
           resolve(response);
         })
@@ -252,6 +264,25 @@ export default {
       const res = await dispatch("requestAxiosGet", payload);
       commit("setCountries", res.data.data.countries);
       return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async activityLogs({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosGet", payload);
+      commit("setActivityLog", res.data.data.user_action_logs);
+      commit("setBusinessUsers", res.data.data.users);
+      return res.data;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async updateOrderTrackingData({ dispatch, commit }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPatch", payload);
+      commit("setUpdatedData", res.data.data);
+      return res;
     } catch (error) {
       return error.response;
     }

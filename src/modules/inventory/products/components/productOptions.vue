@@ -34,7 +34,7 @@
                     class="businessProfile-field add-product-variant-price"
                     id="update-price"
                     v-model="productOption.product_variant_unit_price"
-                    label="100"
+                    :label="productOption.product_variant_currency"
                     variant="outlined"
                     :prefix="productOption.product_variant_currency"
                     clearable
@@ -70,7 +70,7 @@
                     class="btn btn-primary mb-3"
                     @click="addProductOption()"
                   >
-                    {{ $t("inventory.addProductOption") }}
+                    {{ $t("inventory.saveProductOption") }}
                   </button>
                 </div>
                 <p
@@ -187,6 +187,9 @@ export default {
     },
     "$store.state.supportedCountries": function supportedCountries() {
       this.currencies = this.currencyFilter;
+    },
+    "$store.state.businessDetails": function (value) {
+      this.productOption.product_variant_currency = value.currency;
     },
   },
   computed: {
@@ -318,6 +321,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 25px;
 }
 .product-option-img > i,
 .upload {

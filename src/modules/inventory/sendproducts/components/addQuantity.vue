@@ -240,7 +240,7 @@ export default {
         event.target.value >
           products[val].selectedOption.product_variant_stock_levels
             .quantity_in_inventory &&
-        process.env.NODE_ENV === "production"
+        process.env.DOCKER_ENV === "production"
       ) {
         ElNotification({
           title: "",

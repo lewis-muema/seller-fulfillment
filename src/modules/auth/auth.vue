@@ -18,7 +18,7 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <carousel :items-to-show="1" :autoplay="3000" :wrapAround="true">
+          <carousel :items-to-show="1" :autoplay="6000" :wrapAround="true">
             <slide
               v-for="slide in slides"
               :key="slide.title"
@@ -126,11 +126,11 @@ export default {
           "https://images.sendyit.com/fulfilment/seller/StorymojaPublishers.jpg",
       },
       {
-        name: "auth.HellenGathegia",
-        content: "auth.forAnyoneDoingOnlineBusiness",
-        position: "auth.FounderSafeCosmetics",
-        businessName: "auth.safeCosmetics",
-        profilePhoto: "",
+        name: "auth.lonahJoyce",
+        content: "auth.growthIsEverything",
+        position: "auth.CEOBinti",
+        businessName: "auth.bintiSanitaryPads",
+        profilePhoto: "https://images.sendyit.com/fulfilment/seller/Binti.jpg",
       },
     ];
     this.defaultLanguage = this.getDefaultLanguage;

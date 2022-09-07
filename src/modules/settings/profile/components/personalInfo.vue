@@ -80,6 +80,13 @@ export default {
       "getSendyPhoneProps",
     ]),
   },
+  beforeMount() {
+    if (localStorage.country) {
+      const props = this.getSendyPhoneProps;
+      props.defaultCountry = localStorage.country.toLowerCase();
+      this.setSendyPhoneProps(props);
+    }
+  },
   mounted() {
     this.getUsersDetails();
     this.sendSegmentEvents({
@@ -92,7 +99,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["setUserDetails"]),
+    ...mapMutations(["setUserDetails", "setSendyPhoneProps"]),
     ...mapActions(["requestAxiosGet", "requestAxiosPut"]),
     getUsersDetails() {
       this.buttonLoader = true;

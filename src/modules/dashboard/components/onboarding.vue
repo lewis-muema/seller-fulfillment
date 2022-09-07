@@ -152,7 +152,7 @@ export default {
           title: "dashboard.needHelp",
           name: "dashboard.bookATime",
           icon: "mdi-face-agent",
-          link: "https://meetings.hubspot.com/jacinta5/fulfillment-introduction",
+          link: "https://meetings.hubspot.com/stacey79/fulfillment-sales-meetings-kenya",
         },
         {
           title: "dashboard.watchTutorial",

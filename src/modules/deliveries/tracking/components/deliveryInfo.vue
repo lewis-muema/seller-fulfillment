@@ -1,6 +1,6 @@
 <template>
   <div class="delivery-info-container">
-    <p class="delivery-info-title">
+    <div class="delivery-info-title">
       <span :class="getLoader.orderTracking">
         {{
           getParent === "sendy"
@@ -8,16 +8,33 @@
             : $t("deliveries.deliveryInfo")
         }}
       </span>
+      <div class="delivery-info-edit" v-if="!cantEdit">
+        <span
+          @click="overlayStatus(true)"
+          :class="getLoader.orderTracking"
+          v-if="!showEditIcon"
+        >
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
+      </div>
+
       <span
-        class="delivery-info-edit"
-        @click="overlayStatus(true)"
         :class="getLoader.orderTracking"
-        v-if="getOrderTrackingData.order.order_status !== 'ORDER_COMPLETED'"
+        @click="
+          setOverlayStatus({
+            overlay: true,
+            popup: 'noEdits',
+          })
+        "
+        v-else
       >
-        <i class="mdi mdi-pencil"></i>
-        {{ $t("deliveries.edit") }}
+        <span class="delivery-info-edit" :class="getLoader.orderTracking">
+          <i class="mdi mdi-pencil"></i>
+          {{ $t("deliveries.edit") }}
+        </span>
       </span>
-    </p>
+    </div>
     <p class="delivery-info-label">
       <span :class="getLoader.orderTracking">
         {{
@@ -131,7 +148,24 @@ export default {
       "getPickupInfo",
       "getOrderTrackingData",
       "getParent",
+      "getOrderTimelines",
     ]),
+    cantEdit() {
+      return this.getParent === "sendy"
+        ? this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT" &&
+            this.getOrderTrackingData.order.order_event_status !==
+              "event.pickup.partner.assigned" &&
+            this.getOrderTrackingData.order.order_event_status !==
+              "event.pickup.partner.enroute.to.pickup.location"
+        : "";
+    },
+    showEditIcon() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
+      );
+    },
   },
   mounted() {},
   methods: {
@@ -141,6 +175,7 @@ export default {
       "setTab",
       "setOverlayStatus",
       "setParent",
+      "setEditValue",
     ]),
     overlayStatus(overlay) {
       if (this.getParent === "sendy") {

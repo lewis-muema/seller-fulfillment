@@ -90,7 +90,7 @@ export default {
   mounted() {
     this.getUsersDetails();
     this.sendSegmentEvents({
-      event: "Select Account",
+      event: "Select_account",
       data: {
         userId: this.getStorageUserDetails.business_id,
         clientType: "web",
@@ -145,7 +145,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Edit Account",
+              event: "Edit_account",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 clientType: "web",

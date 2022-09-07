@@ -875,8 +875,6 @@ export default {
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
         values: payload,
       };
-      console.log(fullPayload);
-
       const response = await this.updateOrderTrackingData(fullPayload);
       if (response.status === 200) {
         ElNotification({

@@ -154,13 +154,16 @@ export default {
       return this.getParent === "sendy"
         ? this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT" &&
             this.getOrderTrackingData.order.order_event_status !==
-              "event.pickup.partner.assigned"
+              "event.pickup.partner.assigned" &&
+            this.getOrderTrackingData.order.order_event_status !==
+              "event.pickup.partner.enroute.to.pickup.location"
         : "";
     },
     showEditIcon() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
       );
     },
   },

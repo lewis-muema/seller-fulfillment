@@ -105,12 +105,14 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { ElNotification } from "element-plus";
+import eventsMixin from "../../mixins/events_mixin";
 // import googleAuth from "@/modules/common/googleAuth";
 
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
+  mixins: [eventsMixin],
   data() {
     return {
       loading: false,
@@ -167,6 +169,15 @@ export default {
           this.loading = false;
           this.setOTPRedirectUrl("otp/signIn");
           this.$router.push("/auth/otp");
+          this.sendSegmentEvents({
+            event: "Sign_in",
+            data: {
+              userId: data.data.data.business.business_id,
+              email: this.params.emailAddress,
+              clientType: "web",
+              device: "desktop",
+            },
+          });
         }
         this.loading = false;
       } catch (error) {

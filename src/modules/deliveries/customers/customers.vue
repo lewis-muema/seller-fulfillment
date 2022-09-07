@@ -21,7 +21,7 @@ export default {
   mounted() {
     this.setComponent("common.deliveriesToCustomers");
     this.sendSegmentEvents({
-      event: "See on going Deliveries",
+      event: "See_on_going_deliveries",
       data: {
         userId: this.getStorageUserDetails.business_id,
         email: this.getStorageUserDetails.email,

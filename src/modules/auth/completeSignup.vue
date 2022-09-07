@@ -244,7 +244,7 @@ export default {
         this.loading = false;
         if (this.getOTPRedirectUrl === "otp/signUp") {
           this.sendSegmentEvents({
-            event: "Signed Up",
+            event: "Signed_up",
             data: {
               userId: this.businessId,
               email: this.getUserDetails.email,

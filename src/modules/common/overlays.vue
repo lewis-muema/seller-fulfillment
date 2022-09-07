@@ -754,6 +754,7 @@ export default {
       "requestAxiosGet",
       "requestAxiosPost",
       "requestAxiosPatch",
+      "updateOrderTrackingData",
     ]),
     ...mapMutations([
       "setLoader",
@@ -837,124 +838,132 @@ export default {
         }
       });
     },
-    submitConsignment() {
+    async submitConsignment() {
       const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      this.requestAxiosPatch({
+      const payload = {
+        destination: {
+          name: order.destination.name,
+          phone_number: this.phone
+            ? this.phone
+            : order.destination.phone_number,
+          secondary_phone_number: this.secPhone
+            ? this.secPhone
+            : order.destination.secondary_phone_number,
+          delivery_location: {
+            description: this.location
+              ? this.location
+              : order.destination.delivery_location.description,
+            longitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lng()
+              : order.destination.delivery_location.longitude,
+            latitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lat()
+              : order.destination.delivery_location.latitude,
+          },
+          house_location: order.destination.house_location,
+          delivery_instructions: this.instructions
+            ? this.instructions
+            : order.destination.delivery_instructions,
+        },
+      };
+      if (!this.partnerNotAssigned) {
+        delete payload.destination.delivery_location;
+      }
+      const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}`,
-        values: {
-          destination: {
-            name: order.destination.name,
-            phone_number: this.phone
-              ? this.phone
-              : order.destination.phone_number,
-            secondary_phone_number: this.secPhone
-              ? this.secPhone
-              : order.destination.secondary_phone_number,
-            delivery_location: {
-              description: this.location
-                ? this.location
-                : order.destination.delivery_location.description,
-              longitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lng()
-                : order.destination.delivery_location.longitude,
-              latitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lat()
-                : order.destination.delivery_location.latitude,
-            },
-            house_location: order.destination.house_location,
-            delivery_instructions: this.instructions
-              ? this.instructions
-              : order.destination.delivery_instructions,
-          },
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.cosignmentEditedSuccessfully"),
-            type: "success",
-          });
-          this.overlayStatusSet(false, "pickupInfo");
-          this.buttonLoader = false;
-          setTimeout(() => {
-            this.fetchOrder();
-          }, 1000);
-        } else {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.cosignmentEditingFailed"),
-            type: "error",
-          });
-          this.buttonLoader = false;
-        }
-      });
+        values: payload,
+      };
+      console.log(fullPayload);
+
+      const response = await this.updateOrderTrackingData(fullPayload);
+      if (response.status === 200) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.cosignmentEditedSuccessfully"),
+          type: "success",
+        });
+        this.overlayStatusSet(false, "pickupInfo");
+        this.buttonLoader = false;
+        setTimeout(() => {
+          this.fetchOrder();
+        }, 1000);
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.cosignmentEditingFailed"),
+          type: "error",
+        });
+        this.buttonLoader = false;
+      }
     },
-    submitDelivery() {
+    async submitDelivery() {
       const order = this.getOrderTrackingData.order;
+      this.buttonLoader = true;
       const meansOfPayment =
         this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
-      this.buttonLoader = true;
-      this.requestAxiosPatch({
+      const payload = {
+        means_of_payment: {
+          means_of_payment_type: meansOfPayment.means_of_payment_type,
+          means_of_payment_identifier: meansOfPayment.means_of_payment_id,
+          participant_type: meansOfPayment.participant_type,
+          participant_id: meansOfPayment.participant_id,
+          meta_data: meansOfPayment.meta_data,
+        },
+        destination: {
+          name: this.customerName ? this.customerName : order.destination.name,
+          phone_number: this.phone
+            ? this.phone
+            : order.destination.phone_number,
+          secondary_phone_number: this.secPhone
+            ? this.secPhone
+            : order.destination.secondary_phone_number,
+          delivery_location: {
+            description: this.location
+              ? this.location
+              : order.destination.delivery_location.description,
+            longitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lng()
+              : order.destination.delivery_location.longitude,
+            latitude: this.locationData.geometry
+              ? this.locationData.geometry.location.lat()
+              : order.destination.delivery_location.latitude,
+          },
+          house_location: order.destination.house_location,
+          delivery_instructions: this.instructions
+            ? this.instructions
+            : order.destination.delivery_instructions,
+        },
+      };
+      if (!this.partnerNotAssigned) {
+        delete payload.destination.delivery_location;
+      }
+      const fullPayload = {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}`,
-        values: {
-          means_of_payment: {
-            means_of_payment_type: meansOfPayment.means_of_payment_type,
-            means_of_payment_identifier: meansOfPayment.means_of_payment_id,
-            participant_type: meansOfPayment.participant_type,
-            participant_id: meansOfPayment.participant_id,
-            meta_data: meansOfPayment.meta_data,
-          },
-          destination: {
-            name: this.customerName
-              ? this.customerName
-              : order.destination.name,
-            phone_number: this.phone
-              ? this.phone
-              : order.destination.phone_number,
-            secondary_phone_number: this.secPhone
-              ? this.secPhone
-              : order.destination.secondary_phone_number,
-            delivery_location: {
-              description: this.location
-                ? this.location
-                : order.destination.delivery_location.description,
-              longitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lng()
-                : order.destination.delivery_location.longitude,
-              latitude: this.locationData.geometry
-                ? this.locationData.geometry.location.lat()
-                : order.destination.delivery_location.latitude,
-            },
-            house_location: order.destination.house_location,
-            delivery_instructions: this.instructions
-              ? this.instructions
-              : order.destination.delivery_instructions,
-          },
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryEditedSuccessfully"),
-            type: "success",
-          });
-          this.overlayStatusSet(false, "deliveryInfo");
-          this.buttonLoader = false;
-          setTimeout(() => {
-            this.fetchOrder();
-          }, 1000);
-        } else {
-          ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryEditingFailed"),
-            type: "error",
-          });
-          this.buttonLoader = false;
-        }
-      });
+        values: payload,
+      };
+      const response = await this.updateOrderTrackingData(fullPayload);
+      if (response.status === 200) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.deliveryEditedSuccessfully"),
+          type: "success",
+        });
+        this.overlayStatusSet(false, "deliveryInfo");
+        this.buttonLoader = false;
+        setTimeout(() => {
+          this.fetchOrder();
+        }, 1000);
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.deliveryEditingFailed"),
+          type: "error",
+        });
+        this.buttonLoader = false;
+      }
     },
     reschedule() {
       this.buttonLoader = true;

@@ -2,7 +2,7 @@
   <div>
     <form action="" @submit.prevent>
       <div class="sign-in-card">
-        <v-card-title class="text-center">
+        <v-card-title class="text-center" data-textId="signin-card-title">
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
         <p class="text-grey ml-5">{{ $t("auth.loginToContinue") }}</p>
@@ -30,6 +30,7 @@
                   type="email"
                   class="form-control"
                   :placeholder="$t('auth.enterBusinessEmailAddress')"
+                  data-test="signin-email-input"
                 />
                 <div v-if="v$.params.emailAddress.$error" class="error-msg">
                   {{ $t("auth.businessEmailRequired") }}
@@ -44,6 +45,7 @@
                 v-loading="loading"
                 :class="loading ? 'disabled' : ''"
                 style="height: 46px"
+                data-test="signin-submit-button"
               >
                 {{ $t("auth.continueWithEmailAddress") }}
               </button>

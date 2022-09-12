@@ -87,6 +87,7 @@
   "nameOfOption": "Nom de l'option",
   "nameOfProduct": "Nom du produit",
   "noActivity": "Aucune activité pour le moment",
+  "noDescriptionProvided": "Aucune description",
   "noInventoryToTrackYet": "Il n'y a pas encore de stock à suivre.  Envoyez des produits à Sendy et suivez les niveaux de stock ici.",
   "option": "option",
   "outOfStock": "Indisponible ",
@@ -120,6 +121,7 @@
   "saveChanges": "Enregistrer les modifications",
   "saveFile": "Enregistrez et mettez le fichier en ligne",
   "saveProduct": "Enregistrer le produit ",
+  "saveProductOption": "Sauvegarder l'option du produit",
   "searchDeliveryLocation": "Rechercher un lieu de livraison",
   "searchProduct": "Recherche de produit",
   "selectProducts": "Sélectionnez les produits",
@@ -148,5 +150,6 @@
   "uploadProducts": "chargement de produits",
   "view": "Afficher",
   "weight": "Poids ou volume du produit",
+  "whiteCoats": "Ex : Veste blanche, Beurre de Karité",
   "youveNotAddedAnyProductYet": "Vous n’avez pas encore ajouté de produit"
 }

@@ -6,7 +6,11 @@
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
         <p class="text-grey ml-5">{{ $t("auth.loginToContinue") }}</p>
-        <div class="auth-error-container" v-if="isSendyEmail">
+        <div
+          class="auth-error-container"
+          v-if="isSendyEmail"
+          data-test="signin-error-message"
+        >
           <i class="mdi mdi-alert-circle-outline auth-error-warning-icon"></i>
           <div>
             <p class="auth-error-title">
@@ -174,7 +178,7 @@ export default {
           this.sendSegmentEvents({
             event: "Sign_in",
             data: {
-              userId: data.data.data.business.business_id,
+              userId: data.data.data.business_id,
               email: this.params.emailAddress,
               clientType: "web",
               device: "desktop",
@@ -183,6 +187,7 @@ export default {
         }
         this.loading = false;
       } catch (error) {
+        console.log(error);
         this.loading = false;
         if (!this.isSendyEmail) {
           ElNotification({

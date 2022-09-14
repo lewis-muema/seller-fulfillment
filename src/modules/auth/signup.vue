@@ -199,6 +199,12 @@ export default {
               region: this.params.countryOfOperation,
             },
           });
+          window.fbq("track", "Sign_up", {
+            userId: data.data.data.business.business_id,
+            businessName: this.params.businessName,
+            email: this.params.businessEmail,
+            region: this.params.countryOfOperation,
+          });
         }
         this.loading = false;
       } catch (err) {

@@ -2,7 +2,10 @@
   <div>
     <form action="" @submit.prevent>
       <div class="desktop-sign-up">
-        <v-card-title class="text-center sign-up-title">
+        <v-card-title
+          class="text-center sign-up-title"
+          data-textId="signup-card-title"
+        >
           {{ $t("auth.signupSendyFulfillment") }}
         </v-card-title>
         <div class="auth-error-container" v-if="emailExists">
@@ -28,6 +31,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Enter name of business"
+                data-test="signup-business-name"
               />
               <div v-if="v$.params.businessName.$error" class="error-msg">
                 {{ $t("auth.businessNameRequired") }}
@@ -45,6 +49,7 @@
                 type="email"
                 class="form-control"
                 :placeholder="$t('auth.enterBusinessEmailAddress')"
+                data-test="signup-business-email"
               />
               <div v-if="v$.params.businessEmail.$error" class="error-msg">
                 {{ $t("auth.businessEmailRequired") }}
@@ -55,12 +60,16 @@
             <label for="businessEmail" class="form-label">{{
               $t("auth.countryOfOperation")
             }}</label>
-            <el-select v-model="params.countryOfOperation">
+            <el-select
+              v-model="params.countryOfOperation"
+              data-test="signup-country"
+            >
               <el-option
                 v-for="item in getCountries"
                 :key="item.value"
                 :label="item.name"
                 :value="item.name"
+                data-test="signup-country-option"
               >
                 <span class="country-image-container">
                   <img
@@ -83,6 +92,7 @@
               @click="submitForm"
               v-loading="loading"
               :class="loading ? 'disabled' : ''"
+              data-test="signup-submit-button"
             >
               {{ $t("auth.continue") }}
             </button>

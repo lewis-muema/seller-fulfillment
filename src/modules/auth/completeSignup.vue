@@ -253,6 +253,11 @@ export default {
               industry: this.params.industryOfBusiness,
             },
           });
+          window.fbq("track", "Complete_Sign_up", {
+            first_name: this.params.firstName,
+            last_name: this.params.lastName,
+            phone_number: this.params.phoneNo,
+          });
         }
         this.$router.push("/");
       }

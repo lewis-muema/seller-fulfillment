@@ -1584,42 +1584,7 @@ export default createStore({
       },
       storageUserDetails: localStorage.userDetails,
       bizDetails: "",
-      businessDetails: {
-        business_id: "B-XGS-0000",
-        business_name: "Some Business",
-        business_industry: {
-          name: "Appliances",
-          industry_id: "IN-LUM-0000",
-          country: "KENYA",
-          fulfillment_rate: 0,
-        },
-        business_tax_identification_number: null,
-        business_default_address: null,
-        business_instagram_page: null,
-        business_website: null,
-        business_facebook_page: null,
-        terms_of_service_accepted: true,
-        country: "KENYA",
-        country_code: "KE",
-        company_code: "FFKE",
-        currency: "KES",
-        language: "en",
-        settings: {
-          payments_enabled: true,
-          payment_methods: [
-            {
-              paymentType: "MPESA",
-              payment_method: "MPESA",
-              sendy_payment_method_id: 1,
-            },
-            {
-              paymentType: "CARD",
-              payment_method: "CARD",
-              sendy_payment_method_id: 2,
-            },
-          ],
-        },
-      },
+      businessDetails: {},
       notifications: [],
       paymnetMethods: [
         {

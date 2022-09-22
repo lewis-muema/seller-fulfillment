@@ -105,6 +105,13 @@
         });
 
         DD_RUM.startSessionReplayRecording();
+        DD_RUM.setUser({
+          id: JSON.parse(localStorage.userDetails).business_id,
+          name:JSON.parse(localStorage.userDetails).business_name,
+          email: JSON.parse(localStorage.userDetails).email,
+          userId: JSON.parse(localStorage.user).user_id,
+          userName: JSON.parse(localStorage.user).first_name
+        });
       });
     </script>
     <script>

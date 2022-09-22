@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { datadogRum } from "@datadog/browser-rum";
 import { mapMutations, mapActions, mapGetters } from "vuex";
 import quickLinks from "@/modules/dashboard/components/quickLinks";
 import onboarding from "./components/onboarding.vue";
@@ -79,11 +78,6 @@ export default {
     this.getDeliveryStats();
     this.getPickUpStats();
     this.getStockStats();
-    datadogRum.setUser({
-      id: this.getStorageUserDetails.business_id,
-      name: this.getStorageUserDetails.business_name,
-      email: this.getStorageUserDetails.email,
-    });
   },
   methods: {
     ...mapMutations([

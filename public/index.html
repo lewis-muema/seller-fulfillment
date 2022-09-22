@@ -69,51 +69,6 @@
       rel="stylesheet"
     />
     <title>Seller Fulfillment</title>
-
-    <script>
-      (function (h, o, u, n, d) {
-        h = h[d] = h[d] || {
-          q: [],
-          onReady: function (c) {
-            h.q.push(c);
-          },
-        };
-        d = o.createElement(u);
-        d.async = 1;
-        d.src = n;
-        n = o.getElementsByTagName(u)[0];
-        n.parentNode.insertBefore(d, n);
-      })(
-        window,
-        document,
-        "script",
-        "https://www.datadoghq-browser-agent.com/datadog-rum-v4.js",
-        "DD_RUM"
-      );
-      DD_RUM.onReady(function () {
-        DD_RUM.init({
-          clientToken: "pubefae2294472632446090d0b17cdabc28",
-          applicationId: "ceb04c37-f2df-4331-9987-e21c38687804",
-          site: "datadoghq.eu",
-          service: "seller-fulfillment-webapp",
-          // Specify a version number to identify the deployed version of your application in Datadog
-          // version: '1.0.0',
-          sampleRate: 100,
-          premiumSampleRate: 100,
-          trackInteractions: true,
-          defaultPrivacyLevel: "mask-user-input",
-        });
-
-        DD_RUM.startSessionReplayRecording();
-        DD_RUM.setUser({
-          id: JSON.parse(localStorage.userDetails).business_id,
-          name:JSON.parse(localStorage.userDetails).business_name,
-          email: JSON.parse(localStorage.userDetails).email,
-          userId: JSON.parse(localStorage.user).user_id,
-          userName: JSON.parse(localStorage.user).first_name
-        });
-      });
-    </script>
     <script>
       function initFreshChat() {
         window.fcWidget.init({

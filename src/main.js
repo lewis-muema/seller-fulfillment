@@ -35,7 +35,7 @@ datadogRum.init({
   clientToken: "pubefae2294472632446090d0b17cdabc28",
   site: "datadoghq.eu",
   service: "seller-fulfillment-webapp",
-  env: process.env.NODE_ENV,
+  env: process.env.DOCKER_ENV,
   // Specify a version number to identify the deployed version of your application in Datadog
   // version: '1.0.0',
   // sampleRate: 100,

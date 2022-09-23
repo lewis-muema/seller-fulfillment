@@ -38,12 +38,13 @@ datadogRum.init({
   env: process.env.NODE_ENV,
   // Specify a version number to identify the deployed version of your application in Datadog
   // version: '1.0.0',
-  sampleRate: 100,
-  premiumSampleRate: 100,
+  // sampleRate: 100,
+  // premiumSampleRate: 100,
   trackInteractions: true,
   defaultPrivacyLevel: "mask-user-input",
+  allowedTracingOrigins: [/https:\/\/.*\.sendyit\.com/],
 });
-
+console.log("ENV", process.env.NODE_ENV);
 datadogRum.startSessionReplayRecording();
 if (localStorage.userDetails && localStorage.user) {
   datadogRum.setUser({

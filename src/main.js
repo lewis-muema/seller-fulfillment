@@ -44,7 +44,6 @@ datadogRum.init({
   defaultPrivacyLevel: "mask-user-input",
   allowedTracingOrigins: [/https:\/\/.*\.sendyit\.com/],
 });
-console.log("ENV", process.env.NODE_ENV);
 datadogRum.startSessionReplayRecording();
 if (localStorage.userDetails && localStorage.user) {
   datadogRum.setUser({

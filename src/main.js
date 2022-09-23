@@ -24,11 +24,36 @@ import "element-plus/dist/index.css";
 import VueTelInput from "vue-tel-input";
 import "vue-tel-input/dist/vue-tel-input.css";
 import payments from "@sendyit/pay";
+import { datadogRum } from "@datadog/browser-rum";
 
 const VueTelInputOptions = {
   mode: "international",
   onlyCountries: ["NG", "KE", "UG", "TZ", "CI"],
 };
+datadogRum.init({
+  applicationId: "ceb04c37-f2df-4331-9987-e21c38687804",
+  clientToken: "pubefae2294472632446090d0b17cdabc28",
+  site: "datadoghq.eu",
+  service: "seller-fulfillment-webapp",
+  env: process.env.DOCKER_ENV,
+  // Specify a version number to identify the deployed version of your application in Datadog
+  // version: '1.0.0',
+  // sampleRate: 100,
+  // premiumSampleRate: 100,
+  trackInteractions: true,
+  defaultPrivacyLevel: "mask-user-input",
+  allowedTracingOrigins: [/https:\/\/.*\.sendyit\.com/],
+});
+datadogRum.startSessionReplayRecording();
+if (localStorage.userDetails && localStorage.user) {
+  datadogRum.setUser({
+    id: JSON.parse(localStorage.userDetails).business_id,
+    name: JSON.parse(localStorage.userDetails).business_name,
+    email: JSON.parse(localStorage.userDetails).email,
+    userId: JSON.parse(localStorage.user).user_id,
+    userName: JSON.parse(localStorage.user).first_name,
+  });
+}
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 loadFonts();

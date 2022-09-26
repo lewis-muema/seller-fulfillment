@@ -11,7 +11,7 @@
               name: `${getUserDetails.first_name}`,
             })
           }}
-          🎉
+          &#127881;
         </h5>
         <p>{{ $t("dashboard.whatsHappening") }}</p>
       </span>

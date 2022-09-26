@@ -42,7 +42,7 @@ datadogRum.init({
   // premiumSampleRate: 100,
   trackInteractions: true,
   defaultPrivacyLevel: "mask-user-input",
-  allowedTracingOrigins: [/https:\/\/.*\.sendyit\.com/],
+  // allowedTracingOrigins: [/https:\/\/.*\.sendyit\.com/],
 });
 datadogRum.startSessionReplayRecording();
 if (localStorage.userDetails && localStorage.user) {

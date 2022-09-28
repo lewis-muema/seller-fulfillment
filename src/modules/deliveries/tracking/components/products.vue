@@ -98,7 +98,7 @@ export default {
     ]),
     nagivateRoute(route) {
       if (this.getParent === "sendy") {
-        this.$router.push(route);gir
+        this.$router.push(route);
         this.sendSegmentEvents({
           event: "clicked_edit_order_products",
           data: {

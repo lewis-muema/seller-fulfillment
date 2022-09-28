@@ -229,7 +229,7 @@ export default {
             params: { order_id: this.getOrderTrackingData.order.order_id },
           });
           this.sendSegmentEvents({
-            event: "Edit_products_on_order",
+            event: "click_submit_edited_order_products",
             data: {
               userId: this.getStorageUserDetails.business_id,
               SKU: response.data.data.order_id,

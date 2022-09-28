@@ -95,7 +95,7 @@ export default {
     this.listBillingCycles();
     this.getActiveCycle();
     this.sendSegmentEvents({
-      event: "Select_transaction_history",
+      event: "Select_Transaction_History",
       data: {
         userId: this.getStorageUserDetails.business_id,
         clientType: "web",

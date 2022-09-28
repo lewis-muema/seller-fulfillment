@@ -680,7 +680,7 @@ export default {
             type: "success",
           });
           this.sendSegmentEvents({
-            event: "Edit_notification_preference",
+            event: "Edit_Notification_Preference",
             data: {
               userId: this.getStorageUserDetails.business_id,
               clientType: "web",

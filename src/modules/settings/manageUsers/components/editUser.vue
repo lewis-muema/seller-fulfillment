@@ -196,7 +196,7 @@ export default {
             });
             this.$router.go(-1);
             this.sendSegmentEvents({
-              event: "Edit_multiuser",
+              event: "Edit_Multiuser",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 first_name: this.firstName,

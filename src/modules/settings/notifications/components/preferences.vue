@@ -493,8 +493,10 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  mixin: [eventsMixin],
   data() {
     return {
       mobilePush: false,
@@ -676,6 +678,14 @@ export default {
             title: this.$t("settings.notificationPreferencesSetSuccessfully"),
             message: "",
             type: "success",
+          });
+          this.sendSegmentEvents({
+            event: "Edit_notification_preference",
+            data: {
+              userId: this.getStorageUserDetails.business_id,
+              clientType: "web",
+              device: "desktop",
+            },
           });
         } else {
           ElNotification({

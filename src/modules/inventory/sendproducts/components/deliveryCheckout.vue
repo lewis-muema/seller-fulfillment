@@ -370,7 +370,7 @@ export default {
             });
             this.setSelectedProducts([]);
             this.sendSegmentEvents({
-              event: "Request_delivery_to_buyer",
+              event: "Request_Delivery_to_Buyer",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getSelectedProducts,

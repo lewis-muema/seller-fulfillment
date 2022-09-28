@@ -154,7 +154,7 @@ export default {
           this.actions[1].show = !this.getProduct.product_archived;
           this.actions[2].show = this.getProduct.product_archived;
           this.sendSegmentEvents({
-            event: "View_product",
+            event: "View_Product",
             data: {
               userId: this.getStorageUserDetails.business_id,
               SKU: response.data.data.product.product_id,

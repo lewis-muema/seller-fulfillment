@@ -102,4 +102,12 @@ export default {
   getUserAction: (state) => state.userAction,
   getActiveUser: (state) => state.activeUser,
   getExportDataType: (state) => state.exportDataType,
+  getPaymentCollectionStatus: (state) => state.paymentCollectionStatus,
+  getWallets: (state) => state.wallets,
+  getTransactions: (state) => state.transactions,
+  getBillingCycle: (state) => state.billingCycle,
+  getSignMapping: (state) => state.signMapping,
+  getStatisticsStats: (state) => state.statisticsStats,
+  getActiveTransaction: (state) => state.activeTransaction,
+  getTransactionTypes: (state) => state.transactionTypes,
 };

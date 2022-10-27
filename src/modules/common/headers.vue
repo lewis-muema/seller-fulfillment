@@ -293,7 +293,7 @@ export default {
       if (notification.message.includes("Please make payment")) {
         return {
           label: this.$t("payments.makePayment"),
-          link: "/payments/billings",
+          link: "/payments/statements",
         };
       }
       if (notification.notification_type === "EXPORT_DATA_SUCCESS_UPDATES") {

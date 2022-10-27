@@ -239,7 +239,7 @@ export default {
               `/settings/user-permissions/${response.data.data.user.user_id}`
             );
             this.sendSegmentEvents({
-              event: "Add_multiuser",
+              event: "Add_Multiuser",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 first_name: this.firstName,

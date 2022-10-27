@@ -299,4 +299,28 @@ export default {
   setExportDataType(state, val) {
     state.exportDataType = val;
   },
+  setPaymentCollectionStatus(state, val) {
+    state.paymentCollectionStatus = val;
+  },
+  setWallets(state, val) {
+    state.wallets = val;
+  },
+  setTransactions(state, val) {
+    state.transactions = val;
+  },
+  setBillingCycle(state, val) {
+    state.billingCycle = val;
+  },
+  setSignMapping(state, val) {
+    state.signMapping = val;
+  },
+  setStatisticsStats(state, val) {
+    state.statisticsStats = val;
+  },
+  setActiveTransaction(state, val) {
+    state.activeTransaction = val;
+  },
+  setTransactionTypes(state, val) {
+    state.transactionTypes = val;
+  },
 };

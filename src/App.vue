@@ -112,7 +112,7 @@ export default {
     freshchatInit() {
       window.addEventListener("freshchat-loaded", () => {
         this.sendSegmentEvents({
-          event: "Sendy_support",
+          event: "Sendy_Support",
           data: {
             userId: this.getStorageUserDetails.business_id,
             email: this.getStorageUserDetails.email,

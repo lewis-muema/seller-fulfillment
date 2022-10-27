@@ -451,7 +451,7 @@ export default {
       this.setSelectedProducts(this.selectedProducts);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
-          event: "Product_selection",
+          event: "Product_Selection",
           data: {
             userId: this.getStorageUserDetails.business_id,
             SKU: this.products[i].product_id,
@@ -481,7 +481,7 @@ export default {
       });
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
-          event: "Remove_from_product_selection",
+          event: "Remove_from_Product_Selection",
           data: {
             userId: this.getStorageUserDetails.business_id,
             SKU: this.products[i].product_id,

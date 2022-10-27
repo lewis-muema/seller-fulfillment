@@ -259,7 +259,7 @@ export default {
       this.setSelectedProducts(products);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
-          event: "Review_added_items",
+          event: "Review_Added_Items",
           data: {
             userId: this.getStorageUserDetails.business_id,
             SKU: products[val].product_id,

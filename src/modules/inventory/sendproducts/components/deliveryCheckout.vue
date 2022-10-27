@@ -13,6 +13,9 @@
           {{ $t("inventory.checkout") }}
         </v-card-title>
       </div>
+      <div class="payment-collection-title">
+        {{ $t("deliveries.deliveryInfo") }}
+      </div>
       <div>
         <div class="mb-4">
           <label for="yourName" class="form-label">
@@ -91,11 +94,110 @@
             ></textarea>
           </div>
         </div>
+        <div class="mb-10">
+          <label for="price" class="payment-collection-title">
+            {{ $t("inventory.paymentCollection") }}
+            <i class="mdi mdi-alert-circle-outline"></i>
+          </label>
+          <p
+            class="select-payment-collection-error"
+            v-if="selectPaymentCollection"
+          >
+            <i class="mdi mdi-alert mr-3"></i>
+            <span class="select-payment-collection-error-text">{{
+              $t("inventory.pleaseSelectTheOptionThatApplies")
+            }}</span>
+          </p>
+          <p class="payment-collection-label">
+            {{ $t("inventory.doYouWantPaymentForThisDelivery") }}
+          </p>
+          <div>
+            <div
+              class="payment-collection-select"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'paymentCollection',
+                })
+              "
+            >
+              <p
+                class="mr-auto payment-collection-select-text weight-override"
+                v-if="
+                  getPaymentCollectionStatus.status === '' ||
+                  (getPaymentCollectionStatus.status === true &&
+                    getPaymentCollectionStatus.amountToBeCollected === '')
+                "
+              >
+                {{ $t("inventory.select") }}
+              </p>
+              <p
+                class="mr-auto payment-collection-select-text weight-override"
+                v-else-if="getPaymentCollectionStatus.status === false"
+              >
+                {{ $t("inventory.noDontCollectPayment") }}
+              </p>
+              <p
+                class="mr-auto payment-collection-select-text"
+                v-else-if="
+                  getPaymentCollectionStatus.status === true &&
+                  getPaymentCollectionStatus.amountToBeCollected === 'nofee'
+                "
+              >
+                <span class="weight-override">
+                  {{
+                    $t("inventory.collect", {
+                      Amount: `${getFulfillmentFees.currency} ${getFulfillmentFees.total_product_value}`,
+                    })
+                  }}
+                </span>
+                <br />
+                <span>({{ $t("inventory.priceOfProducts") }})</span>
+              </p>
+              <p
+                class="mr-auto payment-collection-select-text"
+                v-else-if="
+                  getPaymentCollectionStatus.status === true &&
+                  getPaymentCollectionStatus.amountToBeCollected === 'fee'
+                "
+              >
+                <span class="weight-override">
+                  {{
+                    $t("inventory.collect", {
+                      Amount: `${getFulfillmentFees.currency} ${
+                        parseInt(getFulfillmentFees.total_product_value) +
+                        parseInt(
+                          getPaymentCollectionStatus.deliveryFee
+                            ? getPaymentCollectionStatus.deliveryFee
+                            : 0
+                        )
+                      }`,
+                    })
+                  }}
+                </span>
+                <br />
+                <span>({{ $t("inventory.priceOfProducts&DeliveryFee") }})</span>
+              </p>
+              <v-icon class="payment-method-icon payment-collection-select-text"
+                >mdi-chevron-right</v-icon
+              >
+            </div>
+          </div>
+        </div>
         <hr class="mt-3" />
         <div class="mt-3">
-          <p>{{ $t("inventory.payment") }}</p>
+          <p class="payment-collection-label">
+            {{ $t("inventory.paymentOfFulfillmentFees") }}
+          </p>
+          <p class="payment-collection-fees-text" v-if="cycleDate">
+            {{
+              $t("inventory.weWillChargeYourWallet", {
+                Date: cycleDate,
+              })
+            }}
+          </p>
         </div>
-        <div v-if="getBusinessDetails.settings.payments_enabled">
+        <div v-if="paymentEnabled">
           <div
             class="payment-method-default"
             v-for="(method, i) in defaultPaymentMethod"
@@ -106,11 +208,11 @@
               :src="`https://sendy-web-apps-assets.s3.eu-west-1.amazonaws.com/payment-method-icons/${method.pay_method_name.toLowerCase()}.svg`"
               alt=""
             />
-            <span>{{ formatPaymentMethod(method) }}</span>
+            <span class="ml-3">{{ formatPaymentMethod(method) }}</span>
             <span
               class="payment-default-right payment-default-trigger"
               @click="selectPaymentMethod"
-              >{{ $t("inventory.change") }}
+            >
               <v-icon class="payment-method-icon"
                 >mdi-chevron-right</v-icon
               ></span
@@ -133,13 +235,6 @@
             >
           </div>
         </div>
-        <div class="mt-3">
-          <span>{{ $t("inventory.amountToPay") }}</span>
-          <span class="checkout-amount"
-            >{{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.calculated_fee }}</span
-          >
-        </div>
         <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-3">
           <button
             class="btn btn-primary mt-2 btn-long submit-order-btn"
@@ -158,6 +253,7 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
+import moment from "moment";
 
 export default {
   mixins: [eventsMixin],
@@ -173,6 +269,7 @@ export default {
       phone: "",
       secPhone: "",
       buttonLoader: false,
+      selectPaymentCollection: false,
     };
   },
   watch: {
@@ -202,12 +299,22 @@ export default {
       "getAchievements",
       "getCheckoutDetails",
       "getMapOptions",
+      "getPaymentCollectionStatus",
+      "getActivePayment",
+      "getBillingCycles",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
         return true;
       }
       return false;
+    },
+    cycleDate() {
+      const date =
+        this.getBillingCycles.length && this.getBillingCycles[0].active > 0
+          ? this.getBillingCycles[0].billing_cycle_end_date
+          : "";
+      return moment(date).format("dddd, Do MMM");
     },
     defaultPaymentMethod() {
       const method = [];
@@ -217,6 +324,15 @@ export default {
         }
       });
       return method;
+    },
+    paymentEnabled() {
+      if (
+        this.getBusinessDetails.settings &&
+        this.getBusinessDetails.settings.payments_enabled
+      ) {
+        return true;
+      }
+      return false;
     },
     meansOfPayment() {
       let paymentMethod = "";
@@ -289,6 +405,27 @@ export default {
           ? this.getFulfillmentFees.promotion_session_id
           : null,
       };
+      if (
+        this.getPaymentCollectionStatus.status &&
+        this.getPaymentCollectionStatus.amountToBeCollected
+      ) {
+        payload.sale_of_goods_policy = {
+          costs_to_collect: [
+            {
+              cost_type: "SALE_OF_GOOD",
+            },
+          ],
+        };
+        if (this.getPaymentCollectionStatus.amountToBeCollected === "fee") {
+          payload.sale_of_goods_policy.costs_to_collect.push({
+            cost_type: "DELIVERY_FEE",
+            cost_amount: this.getPaymentCollectionStatus.deliveryFee
+              ? this.getPaymentCollectionStatus.deliveryFee
+              : 0,
+            currency: this.getFulfillmentFees.currency,
+          });
+        }
+      }
       return payload;
     },
   },
@@ -301,6 +438,7 @@ export default {
   },
   mounted() {
     this.getDefaultPaymentMethod();
+    this.activeBillingCycle();
     this.name = this.getCheckoutDetails.name;
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -316,8 +454,12 @@ export default {
       "setCheckoutDetails",
       "setSendyPhoneProps",
       "setSelectedProducts",
+      "setOverlayStatus",
+      "setPaymentCollectionStatus",
+      "setActivePayment",
+      "setBillingCycles",
     ]),
-    ...mapActions(["requestAxiosPost"]),
+    ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProductStep(val) {
       this.setProductStep(val);
     },
@@ -341,9 +483,22 @@ export default {
           country_code: this.getBusinessDetails.country_code,
           entity_id: "6",
           user_id: this.getBusinessDetails.business_id,
+          pay_direction: "PAY_IN",
         },
       }).then((response) => {
-        this.setPaymentMethods(response.data.saved_payment_methods);
+        if (response.data) {
+          this.setPaymentMethods(response.data.saved_payment_methods);
+        }
+      });
+    },
+    activeBillingCycle() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setBillingCycles(response.data.data.billing_cycles);
+        }
       });
     },
     createDelivery() {
@@ -352,6 +507,8 @@ export default {
         this.phone &&
         this.location &&
         this.getSelectedProducts.length &&
+        this.getPaymentCollectionStatus.status !== "" &&
+        this.getPaymentCollectionStatus.amountToBeCollected !== "" &&
         (this.defaultPaymentMethod.length > 0 ||
           !this.getBusinessDetails.settings.payments_enabled)
       ) {
@@ -370,7 +527,7 @@ export default {
             });
             this.setSelectedProducts([]);
             this.sendSegmentEvents({
-              event: "Request_delivery_to_buyer",
+              event: "Request_Delivery_to_Buyer",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getSelectedProducts,
@@ -398,11 +555,27 @@ export default {
           }
         });
       } else {
-        ElNotification({
-          title: this.$t("deliveries.insufficientInformation"),
-          message: this.$t("deliveries.pleaseFillInAllFieldsDefaultPayment"),
-          type: "warning",
-        });
+        if (
+          this.name &&
+          this.phone &&
+          this.location &&
+          this.getSelectedProducts.length &&
+          (this.getPaymentCollectionStatus.status === "" ||
+            this.getPaymentCollectionStatus.amountToBeCollected === "") &&
+          (this.defaultPaymentMethod.length > 0 ||
+            !this.getBusinessDetails.settings.payments_enabled)
+        ) {
+          this.selectPaymentCollection = true;
+          setTimeout(() => {
+            this.selectPaymentCollection = false;
+          }, 3000);
+        } else {
+          ElNotification({
+            title: this.$t("deliveries.insufficientInformation"),
+            message: this.$t("deliveries.pleaseFillInAllFieldsDefaultPayment"),
+            type: "warning",
+          });
+        }
       }
     },
     resetInput() {
@@ -413,6 +586,11 @@ export default {
       this.phone = "";
       this.secPhone = "";
       this.addPhoneStatus = "";
+      this.setPaymentCollectionStatus({
+        status: "",
+        amountToBeCollected: "",
+        deliveryFee: "",
+      });
     },
     selectPaymentMethod() {
       const buPayload = {
@@ -455,7 +633,8 @@ export default {
   margin-top: 10px;
   display: flex;
   align-items: center;
-  color: #303133;
+  color: #324ba8;
+  font-weight: 600;
 }
 .payment-default-right {
   margin-left: auto;
@@ -472,5 +651,40 @@ export default {
 }
 .checkout-input {
   height: 50px;
+}
+.payment-collection-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+.payment-collection-title {
+  color: #606266;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.payment-collection-select {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  border-bottom: 1px solid #dcdfe6;
+  padding-top: 15px;
+}
+.payment-collection-select-text {
+  color: #606266;
+  font-size: 14px;
+}
+.weight-override {
+  font-weight: 500;
+}
+.payment-collection-fees-text {
+  font-size: 15px;
+}
+.select-payment-collection-error-text {
+  font-size: 14px;
+}
+.select-payment-collection-error {
+  color: #b72f25;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
 }
 </style>

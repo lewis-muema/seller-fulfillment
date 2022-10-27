@@ -276,7 +276,7 @@ export default {
       }
       this.showProductOptions = this.getAddProductStatus;
       this.sendSegmentEvents({
-        event: "Edit_product",
+        event: "Edit_Product",
         data: {
           userId: this.getStorageUserDetails.business_id,
           SKU: this.getProduct.product_id,
@@ -409,7 +409,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Save_product_details_edits",
+              event: "Save_Product_Details_Edits",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getProduct.product_id,
@@ -466,7 +466,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Add_new_product",
+              event: "Add_New_Product",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 variation: this.productVariants,

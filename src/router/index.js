@@ -10,7 +10,12 @@ import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Statements from "../modules/payments/statements/statements.vue";
-// import Invoices from "../modules/payments/invoices/invoices.vue";
+import Transactions from "../modules/payments/transactions/transactions.vue";
+import Wallet from "../modules/payments/wallet/wallet.vue";
+import DeliveriesPendingPayment from "../modules/payments/wallet/components/deliveriesPendingPayment.vue";
+import PendingPaymentCollections from "../modules/payments/wallet/components/pendingPaymentCollections.vue";
+import TransactionDetails from "../modules/payments/wallet/components/transactionDetails.vue";
+import Withdraw from "../modules/payments/wallet/components/withdraw.vue";
 import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
 import notifications from "../modules/settings/notifications/notifications.vue";
 import viewUser from "../modules/settings/manageUsers/components/viewUser.vue";
@@ -134,15 +139,40 @@ const routes = [
     component: editOrder,
   },
   {
-    path: "/payments/billings",
-    name: "Billings",
+    path: "/payments/statements",
+    name: "Statements",
     component: Statements,
   },
-  // {
-  //   path: "/payments/invoices",
-  //   name: "Invoices",
-  //   component: Invoices,
-  // },
+  {
+    path: "/payments/transactions",
+    name: "Transactions",
+    component: Transactions,
+  },
+  {
+    path: "/payments/wallet",
+    name: "Wallet",
+    component: Wallet,
+  },
+  {
+    path: "/payments/deliveries-pending-payment/:cycle_id",
+    name: "Deliveries pending payment",
+    component: DeliveriesPendingPayment,
+  },
+  {
+    path: "/payments/pending-payment-collections",
+    name: "Pending payment collections",
+    component: PendingPaymentCollections,
+  },
+  {
+    path: "/payments/transaction-details",
+    name: "Transaction details",
+    component: TransactionDetails,
+  },
+  {
+    path: "/payments/withdraw",
+    name: "Withdraw",
+    component: Withdraw,
+  },
   {
     path: "/payments/view-invoice/:invoice_id?",
     name: "View Invoice",

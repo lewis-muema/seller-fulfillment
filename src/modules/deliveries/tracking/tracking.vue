@@ -3,11 +3,7 @@
     <div class="tracking-order-no">
       <i
         class="mdi mdi-arrow-left tracking-arrow-back"
-        @click="
-          getParent === 'sendy'
-            ? $router.push({ name: 'To Sendy' })
-            : $router.push({ name: 'To Customers' })
-        "
+        @click="$router.back()"
       ></i>
       <p class="tracking-order-title mb-0">
         <span :class="getLoader.orderTracking">
@@ -152,7 +148,11 @@ export default {
       this.setParent("sendy");
       this.rescheduleStatus("sendy");
     }
-    if (this.$router.options.history.state.back === "/deliveries/customer") {
+    if (
+      this.$router.options.history.state.back === "/deliveries/customer" ||
+      this.$router.options.history.state.back ===
+        "/payments/transaction-details"
+    ) {
       this.setParent("customer");
       this.rescheduleStatus("customer");
     }

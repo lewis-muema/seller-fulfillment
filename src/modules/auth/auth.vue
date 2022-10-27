@@ -85,7 +85,6 @@
     </v-container>
   </div>
 </template>
-
 <script>
 import "vue3-carousel/dist/carousel.css";
 import { mapGetters, mapMutations } from "vuex";

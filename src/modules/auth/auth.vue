@@ -18,36 +18,44 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <!-- <carousel :items-to-show="1" :autoplay="6000" :wrapAround="true">
-            <slide
-              v-for="slide in slides"
-              :key="slide.title"
-              class="slider mt-3"
-            >
-              <i class="mdi mdi-format-quote-close desktop-auth-icon"></i>
-              <div class="slider-content">{{ $t(slide.content) }}</div>
-              <br />
-              <div class="d-flex">
-                <v-avatar class="testimonial-img-container">
-                  <img
-                    class="testimonial-img"
-                    v-if="slide.profilePhoto"
-                    :src="slide.profilePhoto"
-                    alt="John"
-                  />
-                </v-avatar>
-                <div class="testimonal-container">
-                  <div class="testimonial-name">{{ $t(slide.name) }}</div>
-                  <div>
-                    {{ $t(slide.position) }}, {{ $t(slide.businessName) }}
+          <div class="carousel-container">
+            <div class="carousel-top">
+              <div v-for="(slide, i) in slides" :key="slide.title">
+                <div v-if="i === activeSlide" class="carousel-top-parent">
+                  <div class="carousel-inner">
+                    <i class="mdi mdi-format-quote-close desktop-auth-icon"></i>
+                    <div class="slider-content">{{ $t(slide.content) }}</div>
+                    <br />
+                    <div class="d-flex">
+                      <v-avatar class="testimonial-img-container">
+                        <img
+                          class="testimonial-img"
+                          v-if="slide.profilePhoto"
+                          :src="slide.profilePhoto"
+                          alt="John"
+                        />
+                      </v-avatar>
+                      <div class="testimonal-container">
+                        <div class="testimonial-name">{{ $t(slide.name) }}</div>
+                        <div>
+                          {{ $t(slide.position) }}, {{ $t(slide.businessName) }}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </slide>
-            <template #addons>
-              <pagination />
-            </template>
-          </carousel> -->
+            </div>
+            <div class="d-flex">
+              <div v-for="(slide, i) in slides" :key="slide.title">
+                <div
+                  class="paginator"
+                  :class="i === activeSlide ? 'paginator-active' : ''"
+                  @click="activeSlide = i"
+                ></div>
+              </div>
+            </div>
+          </div>
         </v-col>
         <v-col
           cols="12"
@@ -80,21 +88,17 @@
 
 <script>
 import "vue3-carousel/dist/carousel.css";
-// import { Carousel, Slide, Pagination } from "vue3-carousel";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
-  components: {
-    // Carousel,
-    // Slide,
-    // Pagination,
-  },
+  components: {},
   data: () => ({
     languages: ["English", "French"],
     language: "English",
     defaultLanguage: "en",
     region: "",
     slides: [],
+    activeSlide: 0,
   }),
   computed: {
     ...mapGetters(["getLanguages", "getDefaultLanguage"]),
@@ -133,12 +137,21 @@ export default {
         profilePhoto: "https://images.sendyit.com/fulfilment/seller/Binti.jpg",
       },
     ];
+    this.changeSlides();
     this.defaultLanguage = this.getDefaultLanguage;
   },
   methods: {
     ...mapMutations(["setLanguages", "setDefaultLanguage"]),
     changeLanguage() {
       this.setDefaultLanguage(this.defaultLanguage);
+    },
+    changeSlides() {
+      setInterval(() => {
+        this.activeSlide =
+          this.activeSlide < this.slides.length - 1
+            ? (this.activeSlide += 1)
+            : 0;
+      }, 7000);
     },
   },
 };
@@ -164,7 +177,8 @@ export default {
 }
 .slider-content {
   text-align: left !important;
-  font-size: 18px;
+  font-size: 19px;
+  margin-bottom: 5px;
 }
 .carousel {
   margin-top: 10%;
@@ -221,5 +235,50 @@ ul {
 }
 .carousel__pagination-button--active {
   background-color: #324ba8 !important;
+}
+.paginator {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #324ba8;
+  border-radius: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+.paginator-active {
+  background: #324ba8;
+}
+.carousel-container {
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.carousel-top {
+  height: 300px;
+  position: relative;
+}
+.carousel-top-parent {
+  position: relative;
+  width: 500px;
+  overflow: hidden;
+  height: 300px;
+}
+.carousel-inner {
+  position: absolute;
+  right: -500px;
+  height: 300px;
+  -webkit-animation: slide 0.5s forwards;
+  animation: slide 0.5s forwards;
+}
+@-webkit-keyframes slide {
+  100% {
+    right: 0;
+  }
+}
+@keyframes slide {
+  100% {
+    right: 0;
+  }
 }
 </style>

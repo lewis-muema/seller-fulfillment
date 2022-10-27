@@ -14,11 +14,6 @@ stages:
   - docker
   - deploy
 
-include: 
-  - project: 'sendy/security-operations/sast'
-    ref: main
-    file: '/semgrep/.gitlab-ci.yml'
-
 eslint:
   stage: lint
   tags:

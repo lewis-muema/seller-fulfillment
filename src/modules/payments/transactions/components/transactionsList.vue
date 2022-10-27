@@ -35,6 +35,7 @@
         class="transactions-top-recent-list"
         v-for="(transaction, i) in transactions"
         :key="i"
+        @click="showTransaction(transaction)"
       >
         <div class="dpp-top-row-date mt-5" v-if="transaction.show_date">
           <span class="" :class="getLoader.transactions">
@@ -51,10 +52,7 @@
               {{ transaction.transaction_currency }}
               {{ transaction.transaction_amount }}
             </span>
-            <i
-              class="mdi mdi-chevron-right transactions-top-recent-arrow"
-              @click="showTransaction(transaction)"
-            ></i>
+            <i class="mdi mdi-chevron-right transactions-top-recent-arrow"></i>
           </span>
         </p>
         <p class="transactions-top-recent-list-bottom-row">

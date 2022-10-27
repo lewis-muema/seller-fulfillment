@@ -46,6 +46,7 @@
             class="transactions-top-recent-list"
             v-for="(transaction, i) in transactions"
             :key="i"
+            @click="showTransaction(transaction)"
           >
             <p class="transactions-top-recent-list-top">
               <span class="" :class="getLoader.transactions">{{
@@ -59,7 +60,6 @@
                 </span>
                 <i
                   class="mdi mdi-chevron-right transactions-top-recent-arrow"
-                  @click="showTransaction(transaction)"
                 ></i>
               </span>
             </p>
@@ -298,6 +298,7 @@ export default {
 .transactions-top-recent-list {
   text-align: left;
   margin: 20px 15px;
+  cursor: pointer;
 }
 .transactions-top-recent-list-bottom-row {
   color: #606266;

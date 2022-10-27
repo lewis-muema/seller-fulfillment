@@ -161,10 +161,12 @@
         </div>
         <div
           v-if="
-            getActiveTransaction.transaction_type.includes(
-              'FULFILMENT_FEE_PAYMENT'
+            ['FULFILMENT_FEE_PAYMENT', 'FULFILMENT_FEE_COST'].includes(
+              getActiveTransaction.transaction_type
             )
           "
+          class="transaction-line-items-select"
+          @click="showLineItems = !showLineItems"
         >
           <hr class="mt-3" />
           <div class="transaction-label">
@@ -176,9 +178,44 @@
                 Date: formatDate(getActiveTransaction.date_created),
               })
             }}
+            <i
+              class="mdi mdi-chevron-up transaction-line-items-arrow"
+              v-if="showLineItems"
+            ></i>
+            <i
+              class="mdi mdi-chevron-down transaction-line-items-arrow"
+              v-else
+            ></i>
           </div>
           <div class="transaction-completed-deliveries">
             {{ getActiveTransaction.transaction_subtitle }}
+          </div>
+          <div v-if="showLineItems">
+            <div v-for="(item, i) in getCycleLineItems" :key="i">
+              <p class="mb-1 mt-4">
+                <span class="transaction-line-items-top">{{
+                  item.line_item_title
+                }}</span>
+                <span
+                  :class="
+                    getSignMapping[getActiveTransaction.transaction_type] ===
+                    '+'
+                      ? 'transaction-amount-right'
+                      : 'transaction-amount-right-negative'
+                  "
+                >
+                  {{ getSignMapping[getActiveTransaction.transaction_type] }}
+                  {{ getActiveTransaction.transaction_currency }}
+                  {{ item.amount }}</span
+                >
+              </p>
+              <p>
+                <span class="transaction-line-items-bottom">{{
+                  item.line_item_subtitle
+                }}</span>
+              </p>
+              <hr v-if="i < getCycleLineItems.length - 1" />
+            </div>
           </div>
         </div>
       </div>
@@ -197,6 +234,7 @@ export default {
       "getStorageUserDetails",
       "getOrderTrackingData",
       "getSignMapping",
+      "getCycleLineItems",
     ]),
     deliveryFee() {
       let fee = 0;
@@ -217,9 +255,26 @@ export default {
         : "";
     },
   },
+  data() {
+    return {
+      showLineItems: false,
+    };
+  },
   mounted() {
     this.setComponent("payments.transactions");
-    this.fetchOrder();
+    if (
+      ["FULFILMENT_FEE_PAYMENT", "FULFILMENT_FEE_COST"].includes(
+        this.getActiveTransaction.transaction_type
+      )
+    ) {
+      this.getLineCycleItems();
+    } else if (
+      [
+        "UPCOMING_EARNING_FROM_SALE_OF_GOOD",
+        "EARNING_FROM_SALE_OF_GOOD",
+      ].includes(this.getActiveTransaction.transaction_type)
+    )
+      this.fetchOrder();
   },
   methods: {
     ...mapMutations([
@@ -228,6 +283,7 @@ export default {
       "setComponent",
       "setOverlayStatus",
       "setOrderTrackingData",
+      "setCycleLineItems",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatDate(date) {
@@ -240,6 +296,18 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+        }
+      });
+    },
+    getLineCycleItems() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.getActiveTransaction.resource_id}/lineitems`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCycleLineItems(response.data.data.billing_cycle_line_items);
+        } else {
+          this.setActivePayment({});
         }
       });
     },
@@ -316,5 +384,19 @@ export default {
   color: #909399;
   font-size: 15px;
   margin-top: 5px;
+}
+.transaction-line-items-top {
+  color: #324ba8;
+  font-weight: 500;
+}
+.transaction-line-items-bottom {
+  color: #909399;
+}
+.transaction-line-items-select {
+  cursor: pointer;
+}
+.transaction-line-items-arrow {
+  float: right;
+  font-size: 20px;
 }
 </style>

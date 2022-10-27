@@ -128,6 +128,65 @@
         }}
       </span>
     </p>
+    <p v-if="getParent === 'customer'" class="delivery-info-label">
+      <span :class="getLoader.orderTracking">
+        {{ $t("inventory.paymentCollection") }}
+        <i
+          class="mdi mdi-alert-circle-outline"
+          v-if="getOrderTrackingData.order.sale_of_goods_invoice"
+          @click="
+            setOverlayStatus({
+              overlay: true,
+              popup: 'paymentBreakdown',
+            })
+          "
+        ></i>
+      </span>
+    </p>
+    <div v-if="getOrderTrackingData.order.sale_of_goods_invoice">
+      <p v-if="getParent === 'customer'" class="delivery-info-data">
+        <span :class="getLoader.orderTracking">
+          {{ $t("inventory.amountToBeCollected") }}
+        </span>
+        <span class="delivery-info-data-float" :class="getLoader.orderTracking">
+          {{
+            `${getOrderTrackingData.order.invoice_summary.currency} ${
+              parseInt(getOrderTrackingData.order.invoice_summary.total_cost) +
+              parseInt(deliveryFee)
+            }`
+          }}</span
+        >
+      </p>
+      <p
+        v-if="
+          invoiceStatus === 'INVOICE_WAITING_PAYMENT' &&
+          getParent === 'customer' &&
+          getLoader.orderTracking === ''
+        "
+      >
+        <span :class="`payment-${invoiceStatus}-status`">
+          {{ $t("deliveries.pending") }}
+        </span>
+      </p>
+      <p
+        v-if="
+          invoiceStatus === 'INVOICE_COMPLETELY_PAID' &&
+          getParent === 'customer' &&
+          getLoader.orderTracking === ''
+        "
+      >
+        <span :class="`payment-${invoiceStatus}-status`">
+          {{ $t("deliveries.completed") }}
+        </span>
+      </p>
+    </div>
+    <div v-else>
+      <p v-if="getParent === 'customer'" class="delivery-info-data">
+        <span :class="getLoader.orderTracking">
+          {{ $t("inventory.noPaymentToBeCollected") }}
+        </span>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -165,6 +224,22 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
       );
+    },
+    invoiceStatus() {
+      return this.getOrderTrackingData.order.sale_of_goods_invoice
+        ? this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_status
+        : "";
+    },
+    deliveryFee() {
+      let fee = 0;
+      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+        (row) => {
+          if (row.adjustment_type === "DELIVERY_FEE") {
+            fee = row.adjustment_subtotal;
+          }
+        }
+      );
+      return fee;
     },
   },
   mounted() {},
@@ -251,5 +326,20 @@ export default {
   color: white !important;
   background: #324ba8;
   width: -webkit-fill-available;
+}
+.delivery-info-data-float {
+  float: right;
+}
+.payment-INVOICE_WAITING_PAYMENT-status {
+  background: #fbdf9a;
+  padding: 2px 20px;
+  border-radius: 10px;
+  color: #7f3b02;
+}
+.payment-INVOICE_COMPLETELY_PAID-status {
+  background: #b8f5a8;
+  padding: 2px 20px;
+  border-radius: 10px;
+  color: #064a23;
 }
 </style>

@@ -639,6 +639,222 @@
         </div>
       </div>
     </div>
+    <div v-if="popup === 'paymentCollection'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'paymentCollection')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="payment-collection-overlay-title">
+          {{ $t("inventory.doYouWantPaymentToBeCollected") }}
+        </p>
+        <p
+          class="select-payment-collection-error"
+          v-if="selectPaymentCollection"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          <span class="select-payment-collection-error-text">{{
+            $t("inventory.pleaseSelectPaymentCollectionOption")
+          }}</span>
+        </p>
+        <el-radio-group
+          v-model="paymentCollection"
+          @change="
+            setPaymentCollectionStatus({
+              status: paymentCollection,
+              amountToBeCollected:
+                getPaymentCollectionStatus.amountToBeCollected,
+              deliveryFee: getPaymentCollectionStatus.deliveryFee,
+            })
+          "
+          class=""
+        >
+          <div class="payment-collection-overlay-border-top padding-override">
+            <el-radio :label="true" size="large">
+              <p class="mb-0 ml-3 font-override">
+                {{ $t("inventory.yesCollectPaymentOnMyBehalf") }}
+              </p>
+            </el-radio>
+          </div>
+          <div
+            class="payment-collection-overlay-border-bottom padding-override"
+          >
+            <el-radio :label="false" size="large">
+              <p class="mb-0 ml-3 font-override">
+                {{ $t("inventory.noDontCollectPayment") }}
+              </p>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <div v-if="getPaymentCollectionStatus.status">
+          <p class="payment-collection-overlay-title mt-5">
+            {{ $t("inventory.selectAmountToBeCollected") }}
+          </p>
+          <p class="select-payment-collection-error" v-if="selectDeliveryFee">
+            <i class="mdi mdi-alert mr-3"></i>
+            <span class="select-payment-collection-error-text">{{
+              $t("inventory.pleaseSelectTheAmount")
+            }}</span>
+          </p>
+          <el-radio-group
+            v-model="deliveryFeeCollection"
+            @change="
+              setPaymentCollectionStatus({
+                status: getPaymentCollectionStatus.status,
+                amountToBeCollected: deliveryFeeCollection,
+                deliveryFee: getPaymentCollectionStatus.deliveryFee,
+              })
+            "
+            class=""
+          >
+            <div class="payment-collection-overlay-border-top">
+              <el-radio label="nofee" size="large">
+                <p class="mb-2 ml-3 font-override">
+                  {{ $t("inventory.priceOfProducts") }}
+                </p>
+                <p class="mb-2 ml-3">
+                  {{ getFulfillmentFees.currency }}
+                  {{ getFulfillmentFees.total_product_value }}
+                </p>
+              </el-radio>
+            </div>
+            <div class="payment-collection-overlay-border-bottom">
+              <el-radio label="fee" size="large">
+                <p class="mb-2 ml-3 font-override">
+                  {{ $t("inventory.priceOfProducts&DeliveryFee") }}
+                </p>
+                <p class="mb-2 ml-3">
+                  {{
+                    $t("inventory.deliveryFeeAmount", {
+                      Amount: `${getFulfillmentFees.currency} ${getFulfillmentFees.total_product_value}`,
+                    })
+                  }}
+                </p>
+              </el-radio>
+            </div>
+          </el-radio-group>
+          <div
+            class="payment-collection-overlay-border-bottom"
+            v-if="getPaymentCollectionStatus.amountToBeCollected === 'fee'"
+          >
+            <p class="select-payment-collection-error" v-if="enterDeliveryFee">
+              <i class="mdi mdi-alert mr-3"></i>
+              <span class="select-payment-collection-error-text">{{
+                $t("inventory.pleaseEnterTheDeliveryFeeAmount")
+              }}</span>
+            </p>
+            <p class="delivery-fee-collection-overlay-title">
+              {{ $t("inventory.deliveryFeeToBeCollected") }}
+            </p>
+            <v-text-field
+              :label="`${getFulfillmentFees.currency} 60`"
+              @input="
+                setPaymentCollectionStatus({
+                  status: getPaymentCollectionStatus.status,
+                  amountToBeCollected:
+                    getPaymentCollectionStatus.amountToBeCollected,
+                  deliveryFee: deliveryFeeAmount,
+                })
+              "
+              v-model="deliveryFeeAmount"
+              variant="outlined"
+              :prefix="getFulfillmentFees.currency"
+              clearable
+              clear-icon="mdi-close"
+              @click:clear="
+                setPaymentCollectionStatus({
+                  status: getPaymentCollectionStatus.status,
+                  amountToBeCollected:
+                    getPaymentCollectionStatus.amountToBeCollected,
+                  deliveryFee: deliveryFeeAmount,
+                })
+              "
+            ></v-text-field>
+          </div>
+        </div>
+        <div class="export-popup-buttons mt-3">
+          <v-btn
+            class="edit-user-save"
+            v-loading="buttonLoader"
+            @click="setPaymentCollection()"
+          >
+            {{ $t("inventory.done") }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
+    <div v-if="popup === 'paymentBreakdown'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'paymentBreakdown')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="deactivate-user-title">
+          {{ $t("inventory.paymentCollection") }}
+        </p>
+        <p class="payment-breakdown-amount">
+          {{ $t("inventory.amountToBeCollected") }}
+        </p>
+        <p class="payment-breakdown-title" v-if="deliveryFee">
+          {{ $t("inventory.priceOfProducts&DeliveryFee") }}
+        </p>
+        <p class="payment-breakdown-title" v-else>
+          {{ $t("inventory.priceOfProducts") }}
+        </p>
+        <p class="payment-breakdown-title mt-4">
+          {{ $t("inventory.priceBreakdown") }}
+        </p>
+        <div
+          v-for="(product, i) in getOrderTrackingData.order.products"
+          :key="i"
+          class="payment-breakdown-title"
+        >
+          <div class="row mb-3 mt-3">
+            <div class="col-2">
+              <div class="payment-breakdown-products-count">
+                {{ product.quantity }}
+              </div>
+            </div>
+            <div class="col-6">
+              {{ product.product_name }}
+            </div>
+            <div class="col-4 header-section-right">
+              {{ product.currency }} {{ product.unit_price }}
+            </div>
+          </div>
+          <hr />
+        </div>
+        <p class="mt-3 mb-2 payment-breakdown-title">
+          <span>{{ $t("inventory.subtotal") }}</span>
+          <span class="payment-method-icon">
+            {{ getOrderTrackingData.order.invoice_summary.currency }}
+            {{ getOrderTrackingData.order.invoice_summary.total_cost }}
+          </span>
+        </p>
+        <p class="mb-3 payment-breakdown-title" v-if="deliveryFee">
+          <span>{{ $t("inventory.deliveryFee") }}</span>
+          <span class="payment-method-icon">
+            {{ getOrderTrackingData.order.sale_of_goods_invoice.currency }}
+            {{ deliveryFee }}
+          </span>
+        </p>
+        <hr />
+        <p class="mt-3 fees-bold">
+          <span>{{ $t("inventory.total") }}</span>
+          <span class="payment-method-icon">
+            {{ getOrderTrackingData.order.invoice_summary.currency }}
+            {{
+              parseInt(getOrderTrackingData.order.invoice_summary.total_cost) +
+              parseInt(deliveryFee)
+            }}
+          </span>
+        </p>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -696,12 +912,24 @@ export default {
       "getUser",
       "getActiveUser",
       "getExportDataType",
+      "getPaymentCollectionStatus",
     ]),
     partnerNotAssigned() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
+    },
+    deliveryFee() {
+      let fee = 0;
+      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+        (row) => {
+          if (row.adjustment_type === "DELIVERY_FEE") {
+            fee = row.adjustment_subtotal;
+          }
+        }
+      );
+      return fee;
     },
   },
   data() {
@@ -733,6 +961,12 @@ export default {
           value: "deliveries.duplicateOrder",
         },
       ],
+      paymentCollection: "",
+      deliveryFeeCollection: "",
+      selectPaymentCollection: false,
+      selectDeliveryFee: false,
+      enterDeliveryFee: false,
+      deliveryFeeAmount: "",
       cancelReason: "",
       phone: "",
       customerName: "",
@@ -747,6 +981,10 @@ export default {
       props.defaultCountry = localStorage.country.toLowerCase();
       this.setSendyPhoneProps(props);
     }
+    this.paymentCollection = this.getPaymentCollectionStatus.status;
+    this.deliveryFeeCollection =
+      this.getPaymentCollectionStatus.amountToBeCollected;
+    this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
   },
   methods: {
     ...mapActions([
@@ -763,6 +1001,7 @@ export default {
       "setUserAction",
       "setProductsToSubmit",
       "setSendyPhoneProps",
+      "setPaymentCollectionStatus",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -775,6 +1014,32 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    setPaymentCollection() {
+      if (this.getPaymentCollectionStatus.status === "") {
+        this.selectPaymentCollection = true;
+        setTimeout(() => {
+          this.selectPaymentCollection = false;
+        }, 3000);
+      } else if (
+        this.getPaymentCollectionStatus.amountToBeCollected === "" &&
+        this.getPaymentCollectionStatus.status
+      ) {
+        this.selectDeliveryFee = true;
+        setTimeout(() => {
+          this.selectDeliveryFee = false;
+        }, 3000);
+      } else if (
+        this.getPaymentCollectionStatus.amountToBeCollected === "fee" &&
+        this.getPaymentCollectionStatus.deliveryFee === ""
+      ) {
+        this.enterDeliveryFee = true;
+        setTimeout(() => {
+          this.enterDeliveryFee = false;
+        }, 3000);
+      } else {
+        this.overlayStatusSet(false, "paymentCollection");
+      }
     },
     exportData() {
       this.buttonLoader = true;
@@ -1403,5 +1668,58 @@ export default {
 }
 .businessProfile-address:disabled {
   background: #e2e7ed !important;
+}
+.payment-collection-overlay-border-top {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  padding: 20px;
+}
+.payment-collection-overlay-border-bottom {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 20px;
+  border-top: none;
+}
+.el-radio__input.is-checked + .el-radio__label {
+  color: var(--el-radio-text-color) !important;
+}
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: #0062db !important;
+  background: #0062db !important;
+}
+.payment-collection-overlay-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+.padding-override {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+.font-override {
+  font-weight: 400 !important;
+}
+.delivery-fee-collection-overlay-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.payment-breakdown-amount {
+  color: #909399;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+.payment-breakdown-title {
+  font-size: 15px;
+}
+.payment-breakdown-products-count {
+  background: #e2e7ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
 }
 </style>

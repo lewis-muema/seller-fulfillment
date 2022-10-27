@@ -139,7 +139,25 @@
               "
             />
             <span class="userPermisssions-label">{{
-              $t("common.billings")
+              $t("payments.canViewTransactionsAndStatements")
+            }}</span>
+          </div>
+          <div class="d-flex">
+            <input
+              type="checkbox"
+              class="userPermisssions-checkbox"
+              :checked="permissions.CAN_WITHDRAW_EARNINGS"
+              @click="
+                permissions.CAN_WITHDRAW_EARNINGS =
+                  !permissions.CAN_WITHDRAW_EARNINGS
+              "
+              :disabled="
+                buttonLoading ||
+                !permissions.hasOwnProperty('CAN_WITHDRAW_EARNINGS')
+              "
+            />
+            <span class="userPermisssions-label">{{
+              $t("payments.withdrawalFunds")
             }}</span>
           </div>
         </div>

@@ -91,7 +91,7 @@ export default {
     };
   },
   mounted() {
-    this.setComponent("common.billings");
+    this.setComponent("common.statements");
     this.listBillingCycles();
     this.getActiveCycle();
     this.sendSegmentEvents({
@@ -146,7 +146,7 @@ export default {
           if (this.activeBillingCycle.length === 0) {
             this.activeBillingCycle = this.getBillingCycles;
           }
-          if (this.$route.path === "/payments/billings") {
+          if (this.$route.path === "/payments/statements") {
             this.setLoader({
               type: "billingCycles",
               value: "",

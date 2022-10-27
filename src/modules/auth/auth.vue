@@ -18,7 +18,7 @@
             class="auth-sendy-logo"
             alt="logo"
           />
-          <carousel :items-to-show="1" :autoplay="6000" :wrapAround="true">
+          <!-- <carousel :items-to-show="1" :autoplay="6000" :wrapAround="true">
             <slide
               v-for="slide in slides"
               :key="slide.title"
@@ -47,7 +47,7 @@
             <template #addons>
               <pagination />
             </template>
-          </carousel>
+          </carousel> -->
         </v-col>
         <v-col
           cols="12"
@@ -80,14 +80,14 @@
 
 <script>
 import "vue3-carousel/dist/carousel.css";
-import { Carousel, Slide, Pagination } from "vue3-carousel";
+// import { Carousel, Slide, Pagination } from "vue3-carousel";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
   components: {
-    Carousel,
-    Slide,
-    Pagination,
+    // Carousel,
+    // Slide,
+    // Pagination,
   },
   data: () => ({
     languages: ["English", "French"],

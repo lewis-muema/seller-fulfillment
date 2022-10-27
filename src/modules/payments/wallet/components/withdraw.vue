@@ -19,7 +19,7 @@
           {{ $t("payments.enterAmount") }}
         </div>
         <v-text-field
-          :label="getWallets[0].currency"
+          :label="`${getWallets[0].currency} ${getWallets[0].wallet_maximum_withdraw_amount}`"
           v-model="amount"
           type="number"
           variant="outlined"
@@ -34,7 +34,7 @@
           {{ $t("payments.amountIsRequired") }}
         </div>
         <div
-          v-if="amount > getWallets[0].wallet_balance"
+          v-if="amount > getWallets[0].wallet_maximum_withdraw_amount"
           class="error-msg withdraw-transaction-error"
         >
           {{ $t("payments.youHaveInsufficientFunds") }}
@@ -49,7 +49,7 @@
       </div>
       <div>
         <button
-          :disabled="amount > getWallets[0].wallet_balance"
+          :disabled="amount > getWallets[0].wallet_maximum_withdraw_amount"
           class="btn btn-primary mt-2 btn-long submit-order-btn withdraw-continue"
           @click="withdraw()"
         >

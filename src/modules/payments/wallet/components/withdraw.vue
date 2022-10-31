@@ -91,9 +91,7 @@
       <div>
         <button
           :disabled="
-            amount > getWallets[0].wallet_maximum_withdraw_amount ||
-            !amount ||
-            loading
+            amount > getWallets[0].wallet_maximum_withdraw_amount || loading
           "
           class="btn btn-primary mt-2 btn-long submit-order-btn withdraw-continue"
           @click="withdraw()"

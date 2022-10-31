@@ -323,4 +323,7 @@ export default {
   setTransactionTypes(state, val) {
     state.transactionTypes = val;
   },
+  setWithDrawalMethods(state, val) {
+    state.withDrawalMethods = val;
+  },
 };

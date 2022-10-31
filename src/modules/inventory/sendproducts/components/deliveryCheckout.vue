@@ -94,7 +94,7 @@
             ></textarea>
           </div>
         </div>
-        <div class="mb-10">
+        <div class="mb-10" v-if="paymentOnDeliveryFlag">
           <label for="price" class="payment-collection-title">
             {{ $t("inventory.paymentCollection") }}
             <i class="mdi mdi-alert-circle-outline"></i>
@@ -309,6 +309,11 @@ export default {
       }
       return false;
     },
+    paymentOnDeliveryFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.payments_on_delivery_enabled
+        : false;
+    },
     cycleDate() {
       const date =
         this.getBillingCycles.length && this.getBillingCycles[0].active > 0
@@ -407,7 +412,8 @@ export default {
       };
       if (
         this.getPaymentCollectionStatus.status &&
-        this.getPaymentCollectionStatus.amountToBeCollected
+        this.getPaymentCollectionStatus.amountToBeCollected &&
+        this.paymentOnDeliveryFlag
       ) {
         payload.sale_of_goods_policy = {
           costs_to_collect: [
@@ -507,8 +513,10 @@ export default {
         this.phone &&
         this.location &&
         this.getSelectedProducts.length &&
-        this.getPaymentCollectionStatus.status !== "" &&
-        this.getPaymentCollectionStatus.amountToBeCollected !== "" &&
+        (this.paymentOnDeliveryFlag
+          ? this.getPaymentCollectionStatus.status !== "" &&
+            this.getPaymentCollectionStatus.amountToBeCollected !== ""
+          : true) &&
         (this.defaultPaymentMethod.length > 0 ||
           !this.getBusinessDetails.settings.payments_enabled)
       ) {

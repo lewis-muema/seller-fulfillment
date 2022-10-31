@@ -110,4 +110,5 @@ export default {
   getStatisticsStats: (state) => state.statisticsStats,
   getActiveTransaction: (state) => state.activeTransaction,
   getTransactionTypes: (state) => state.transactionTypes,
+  getWithDrawalMethods: (state) => state.withDrawalMethods,
 };

@@ -92,5 +92,17 @@
   "withdrawalOfEarningCost": "Withdrawal of earning cost",
   "filter": "Filter",
   "canViewTransactionsAndStatements": "Can view transactions and statements",
-  "withdrawalFunds": "Withdrawal of funds"
+  "withdrawalFunds": "Withdrawal of funds",
+  "paymentCollection": "Payment Collection",
+  "refundForWithdrawal": "Refund for Withdrawal",
+  "withdrawalFee": "Withdrawal Fee",
+  "withdrawal": "Withdrawal",
+  "paymentOfFulfilmentFees": "Payment of Fulfilment Fees",
+  "invoiceForFulfilmentServices": "Invoice for Fulfilment Services",
+  "selectWithdrawalMethod": "Select withdrawal method",
+  "noWithdrawalMethods": "No withdrawal methods saved",
+  "manageWithdrawalMethods": "Manage withdrawal methods",
+  "pleaseSelectAWithdrawalMethod": "Please select a withdrawal method",
+  "withdrawalSuccessful": "Withdrawal Successful",
+  "withdrawalFailed": "Withdrawal Failed"
 }

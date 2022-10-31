@@ -156,6 +156,11 @@ export default {
         this.seeAll ? this.getTransactions.length : 5
       );
     },
+    withdrawalsEnabledFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.withdrawals_enabled
+        : false;
+    },
     canWithdraw() {
       let status = false;
       this.getUserDetails.user_access_permissions.forEach((row) => {
@@ -166,7 +171,7 @@ export default {
           status = true;
         }
       });
-      return status;
+      return status && this.withdrawalsEnabledFlag;
     },
   },
   mounted() {

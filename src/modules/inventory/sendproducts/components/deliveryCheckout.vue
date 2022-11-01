@@ -445,6 +445,11 @@ export default {
   mounted() {
     this.getDefaultPaymentMethod();
     this.activeBillingCycle();
+    this.setPaymentCollectionStatus({
+      status: "",
+      amountToBeCollected: "",
+      deliveryFee: "",
+    });
     this.name = this.getCheckoutDetails.name;
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -514,8 +519,9 @@ export default {
         this.location &&
         this.getSelectedProducts.length &&
         (this.paymentOnDeliveryFlag
-          ? this.getPaymentCollectionStatus.status !== "" &&
-            this.getPaymentCollectionStatus.amountToBeCollected !== ""
+          ? (this.getPaymentCollectionStatus.status === true &&
+              this.getPaymentCollectionStatus.amountToBeCollected !== "") ||
+            this.getPaymentCollectionStatus.status === false
           : true) &&
         (this.defaultPaymentMethod.length > 0 ||
           !this.getBusinessDetails.settings.payments_enabled)

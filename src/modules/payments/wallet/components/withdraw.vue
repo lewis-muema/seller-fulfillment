@@ -249,10 +249,11 @@ export default {
               message: "",
               type: "success",
             });
+            this.$router.push("/payments/wallet");
           } else {
             ElNotification({
               title: this.$t("payments.withdrawalFailed"),
-              message: "",
+              message: response.response.data.errors[0].message,
               type: "error",
             });
           }

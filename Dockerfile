@@ -18,16 +18,11 @@ RUN if [ "$ENV" = "testing" ]; \
         fi
 
 #####################
-FROM sendy-docker-local.jfrog.io/nginx:base_frontend
-
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+FROM sendy-docker-local.jfrog.io/distroless-nginx-base
 
 WORKDIR /usr/src/app
 
-COPY --from=BUILD --chown=sendy:sendy /build/dist/ .
-
-USER sendy:sendy
+COPY --from=BUILD /build/dist/ .
 
 EXPOSE 8080
 

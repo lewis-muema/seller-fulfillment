@@ -643,6 +643,7 @@ export default createStore({
             "/payments/statements",
             "/payments/payment-summary",
             "/payments/transactions",
+            "/payments/withdraw",
           ],
         },
         CAN_ACCESS_PAYMENT_OPTIONS_MODULE: {

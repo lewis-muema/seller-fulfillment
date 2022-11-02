@@ -880,6 +880,10 @@ export default {
           ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
               .product_variant_unit_price
           : "";
+      this.paymentCollection = this.getPaymentCollectionStatus.status;
+      this.deliveryFeeCollection =
+        this.getPaymentCollectionStatus.amountToBeCollected;
+      this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
       this.customerName = val.order.destination.name;
@@ -981,10 +985,6 @@ export default {
       props.defaultCountry = localStorage.country.toLowerCase();
       this.setSendyPhoneProps(props);
     }
-    this.paymentCollection = this.getPaymentCollectionStatus.status;
-    this.deliveryFeeCollection =
-      this.getPaymentCollectionStatus.amountToBeCollected;
-    this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
   },
   methods: {
     ...mapActions([

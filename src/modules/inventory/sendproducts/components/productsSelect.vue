@@ -168,7 +168,9 @@
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
                           class="product-select-option"
-                          :class="disabledStatus(product) ? 'disabled-row' : ''"
+                          :class="
+                            disabledVariantStatus(option) ? 'disabled-row' : ''
+                          "
                           v-for="(option, x) in variantFilter(
                             product.product_variants
                           )"
@@ -183,7 +185,7 @@
                                 : addProduct(product, i, option, x)
                             "
                             :checked="option.status"
-                            :disabled="disabledStatus(product)"
+                            :disabled="disabledVariantStatus(option)"
                           />
                           <img
                             :src="option.product_variant_image_link"
@@ -316,6 +318,16 @@ export default {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels
             .quantity_in_inventory
+        : 0;
+      return (
+        this.$route.params.path === "customer" &&
+        quantity === 0 &&
+        process.env.DOCKER_ENV === "production"
+      );
+    },
+    disabledVariantStatus(option) {
+      const quantity = option
+        ? option.product_variant_stock_levels.quantity_in_inventory
         : 0;
       return (
         this.$route.params.path === "customer" &&

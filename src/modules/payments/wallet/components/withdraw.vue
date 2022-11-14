@@ -47,47 +47,6 @@
           }}
         </div>
       </div>
-      <!-- <div>
-        <p class="withdraw-input-label">
-          {{ $t("payments.selectWithdrawalMethod") }}
-        </p>
-        <div v-if="getWithDrawalMethods.length > 0">
-          <el-radio-group
-            v-model="paymentMethod"
-            class="withdraw-transaction-methods-radio-group"
-          >
-            <div v-for="(method, i) in getWithDrawalMethods" :key="i">
-              <el-radio :label="i" size="large">
-                <div class="withdraw-transaction-methods">
-                  <img
-                    :src="`https://sendy-web-apps-assets.s3.eu-west-1.amazonaws.com/payment-method-icons/${method.pay_method_name.toLowerCase()}.svg`"
-                    alt=""
-                    class="m-3"
-                  />
-                  <div>
-                    <div class="withdraw-transaction-methods-top">
-                      {{ method.pay_method_name }}
-                    </div>
-                    <div class="withdraw-transaction-methods-bottom">
-                      {{ method.pay_method_details }}
-                    </div>
-                  </div>
-                </div>
-              </el-radio>
-            </div>
-          </el-radio-group>
-        </div>
-        <div class="withdraw-transaction-methods-absent" v-else>
-          {{ $t("payments.noWithdrawalMethods") }}
-        </div>
-        <div
-          class="withdraw-transaction-methods-manage"
-          @click="selectWithdrawOptions()"
-        >
-          <v-icon class="pr-3"> mdi mdi-pencil</v-icon>
-          {{ $t("payments.manageWithdrawalMethods") }}
-        </div>
-      </div> -->
       <div>
         <button
           :disabled="

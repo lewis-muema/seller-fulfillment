@@ -75,7 +75,6 @@
                   [
                     'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
                     'EARNING_FROM_SALE_OF_GOOD',
-                    'WITHDRAWAL_OF_EARNING',
                   ].includes(transaction.transaction_type) &&
                   getLoader.transactions === ''
                 "

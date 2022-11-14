@@ -69,7 +69,7 @@ export default createStore({
       },
       wallets: [
         {
-          wallet_type: "",
+          wallet_type: "test data",
           wallet_description: "Seller's Wallet",
           wallet_balance: 0.0,
           wallet_maximum_withdraw_amount: 0.0,
@@ -1735,6 +1735,7 @@ export default createStore({
           withdrawal_limit: 50,
         },
       ],
+      withDrawalAmount: "",
       billingCycle: {
         billing_cycle_instance_id: "BC-XCU-0000",
         business_id: "B-AEB-0000",

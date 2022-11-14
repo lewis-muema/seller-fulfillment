@@ -326,4 +326,7 @@ export default {
   setWithDrawalMethods(state, val) {
     state.withDrawalMethods = val;
   },
+  setWithDrawalAmount(state, val) {
+    state.withDrawalAmount = val;
+  },
 };

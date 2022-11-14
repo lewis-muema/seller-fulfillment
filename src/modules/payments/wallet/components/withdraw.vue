@@ -4,7 +4,7 @@
       <i
         class="mdi mdi-arrow-left dpp-top-back"
         aria-hidden="true"
-        @click="$router.back()"
+        @click="$router.push('/payments/wallet')"
       ></i>
       <p class="withdraw-title">{{ $t("payments.withdrawCash") }}</p>
       <p class="withdraw-balance-title">
@@ -47,7 +47,7 @@
           }}
         </div>
       </div>
-      <div>
+      <!-- <div>
         <p class="withdraw-input-label">
           {{ $t("payments.selectWithdrawalMethod") }}
         </p>
@@ -87,17 +87,17 @@
           <v-icon class="pr-3"> mdi mdi-pencil</v-icon>
           {{ $t("payments.manageWithdrawalMethods") }}
         </div>
-      </div>
+      </div> -->
       <div>
         <button
           :disabled="
             amount > getWallets[0].wallet_maximum_withdraw_amount || loading
           "
           class="btn btn-primary mt-2 btn-long submit-order-btn withdraw-continue"
-          @click="withdraw()"
+          @click="selectWithdrawOptions()"
           v-loading="loading"
         >
-          {{ $t("auth.continue") }}
+          {{ $t(actionButton) }}
         </button>
       </div>
     </div>
@@ -108,6 +108,7 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import { useWithdrawals } from "@sendyit/pay";
 import { ElNotification } from "element-plus";
 
 export default {
@@ -118,18 +119,14 @@ export default {
     return {
       amount: "",
       paymentMethod: "",
-      loading: true,
+      loading: false,
+      actionButton: "auth.continue",
     };
   },
   validations() {
     return {
       amount: { required },
     };
-  },
-  watch: {
-    "$store.state.businessDetails": function businessDetails() {
-      this.getWithdrawalMethods();
-    },
   },
   computed: {
     ...mapGetters([
@@ -139,45 +136,15 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getWithDrawalMethods",
+      "getWithDrawalAmount",
     ]),
-    withdrawalMethodDetails() {
-      return this.paymentMethod !== "" && this.getWithDrawalMethods.length > 0
-        ? this.getWithDrawalMethods[this.paymentMethod]
-        : "";
-    },
-    meansOfPayment() {
-      let paymentMethod = "";
-      switch (this.withdrawalMethodDetails.pay_method_name) {
-        case "M-PESA":
-          paymentMethod = this.withdrawalMethodDetails.pay_method_name
-            .toUpperCase()
-            .replace("-", "");
-          break;
-        case "Card":
-          paymentMethod =
-            this.withdrawalMethodDetails.pay_method_name.toUpperCase();
-          break;
-        case "Virtual Accounts":
-          paymentMethod = (
-            this.withdrawalMethodDetails.pay_method_name.substring(0, 7) +
-            "_" +
-            this.withdrawalMethodDetails.pay_method_name.substring(
-              8,
-              this.withdrawalMethodDetails.pay_method_name.length
-            )
-          ).toUpperCase();
-          break;
-        default:
-          paymentMethod = "";
-          break;
-      }
-      return paymentMethod;
-    },
   },
   mounted() {
     this.setComponent("payments.wallet");
-    this.getUserWallets();
-    this.getWithdrawalMethods();
+    if (this.getWallets[0].wallet_type === "test data") {
+      this.getUserWallets();
+    }
+    this.withdraw();
   },
   methods: {
     ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
@@ -186,12 +153,37 @@ export default {
       "setWallets",
       "setComponent",
       "setWithDrawalMethods",
+      "setWithDrawalAmount",
     ]),
+    meansOfPayment(name) {
+      let paymentMethod = "";
+      switch (name) {
+        case "M-PESA":
+          paymentMethod = name.toUpperCase().replace("-", "");
+          break;
+        case "Card":
+          paymentMethod = name.toUpperCase();
+          break;
+        case "Virtual Accounts":
+          paymentMethod = (
+            name.substring(0, 7) +
+            "_" +
+            name.substring(8, name.length)
+          ).toUpperCase();
+          break;
+        default:
+          paymentMethod = "";
+          break;
+      }
+      return paymentMethod;
+    },
     getUserWallets() {
+      this.loading = true;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/wallets`,
       }).then((response) => {
+        this.loading = false;
         if (response.status === 200) {
           this.setWallets(response.data.data.wallets);
         } else {
@@ -199,51 +191,35 @@ export default {
         }
       });
     },
-    getWithdrawalMethods() {
-      this.loading = true;
-      this.requestAxiosPost({
-        app: process.env.AUTH,
-        endpoint: `payment-gateway/payment_methods`,
-        values: {
-          country_code: this.getBusinessDetails.country_code,
-          entity_id: "6",
-          user_id: this.getBusinessDetails.business_id,
-          pay_direction: "PAY_OUT",
-        },
-      }).then((response) => {
-        this.loading = false;
-        if (response.status === 200) {
-          this.setWithDrawalMethods(response.data.saved_payment_methods);
-        } else {
-          this.setWithDrawalMethods([]);
-        }
-      });
-    },
     withdraw() {
-      this.v$.$validate();
-      if (this.v$.$errors.length > 0) {
-        return;
-      }
-      if (this.withdrawalMethodDetails) {
+      const { selectedPaymentOption } = useWithdrawals();
+      this.amount = this.getWithDrawalAmount;
+      if (selectedPaymentOption._value && this.getWithDrawalAmount) {
         this.loading = true;
+        this.actionButton = "payments.withdrawingFunds";
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
           endpoint: `seller/${this.getStorageUserDetails.business_id}/withdrawals`,
           values: {
             business_id: this.getBusinessDetails.business_id,
             means_of_payment: {
-              means_of_payment_type: this.meansOfPayment,
-              means_of_payment_id: this.withdrawalMethodDetails.pay_detail_id,
+              means_of_payment_type: this.meansOfPayment(
+                selectedPaymentOption._value.pay_method_name
+              ),
+              means_of_payment_id: selectedPaymentOption._value.pay_detail_id,
               participant_type: null,
               participant_id: null,
               meta_data: null,
             },
             currency: this.getWallets[0].currency,
-            amount: this.amount,
+            amount: this.getWithDrawalAmount,
           },
         }).then((response) => {
           this.loading = false;
+          this.actionButton = "auth.continue";
           if (response.status === 200) {
+            selectedPaymentOption._value = "";
+            this.setWithDrawalAmount("");
             ElNotification({
               title: this.$t("payments.withdrawalSuccessful"),
               message: "",
@@ -258,21 +234,20 @@ export default {
             });
           }
         });
-      } else {
-        ElNotification({
-          title: this.$t("payments.pleaseSelectAWithdrawalMethod"),
-          message: "",
-          type: "warning",
-        });
       }
     },
     selectWithdrawOptions() {
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+      this.setWithDrawalAmount(this.amount);
       const buPayload = {
         user_id: this.getBusinessDetails.business_id,
         entity_id: 6,
         currency: this.getBusinessDetails.currency,
         country_code: this.getBusinessDetails.country_code,
-        amount: "",
+        amount: this.amount,
         success_callback_url: "",
         fail_callback_url: "",
         txref: "",
@@ -288,7 +263,7 @@ export default {
         pay_direction: "PAY_OUT",
       };
 
-      this.$paymentInit(buPayload, "manage-withrawal-options");
+      this.$paymentInit(buPayload, "choose-withdraw-option");
     },
   },
 };
@@ -381,5 +356,8 @@ export default {
   font-weight: 500;
   cursor: pointer;
   justify-content: flex-end;
+}
+hr {
+  border: 1px solid #e2e7ed !important;
 }
 </style>

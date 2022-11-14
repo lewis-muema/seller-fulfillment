@@ -104,5 +104,6 @@
   "manageWithdrawalMethods": "Manage withdrawal methods",
   "pleaseSelectAWithdrawalMethod": "Please select a withdrawal method",
   "withdrawalSuccessful": "Withdrawal Successful",
-  "withdrawalFailed": "Withdrawal Failed"
+  "withdrawalFailed": "Withdrawal Failed",
+  "withdrawingFunds": "Withdrawing Funds..."
 }

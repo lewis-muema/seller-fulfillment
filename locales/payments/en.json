@@ -105,5 +105,6 @@
   "pleaseSelectAWithdrawalMethod": "Please select a withdrawal method",
   "withdrawalSuccessful": "Withdrawal Successful",
   "withdrawalFailed": "Withdrawal Failed",
-  "withdrawingFunds": "Withdrawing Funds..."
+  "withdrawingFunds": "Withdrawing Funds...",
+  "theMinimumAmount": "The minimum amount you can withdraw is {Amount}"
 }

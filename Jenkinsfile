@@ -64,7 +64,7 @@ pipeline {
 
                         env.ENV_TAG = "prod"
                         env.DOCKER_ENV = "prod"
-                        IMAGE_TAG="${ENV_TAG}"_$(date +%Y-%m-%d-%H-%M)
+                        IMAGE_TAG="${ENV_TAG}"_"$(date +%Y-%m-%d-%H-%M)"
                         IMAGE_NAME="${IMAGE_BASE_NAME}":"${IMAGE_TAG}"
                         docker build -t "${IMAGE_NAME}" . \
                         --build-arg ENV="${DOCKER_ENV}"
@@ -73,7 +73,7 @@ pipeline {
 
                         env.ENV_TAG = "dev"
                         env.DOCKER_ENV = "testing"
-                        IMAGE_TAG="${ENV_TAG}"_$(date +%Y-%m-%d-%H-%M)
+                        IMAGE_TAG="${ENV_TAG}"_"$(date +%Y-%m-%d-%H-%M)"
                         IMAGE_NAME="${IMAGE_BASE_NAME}":"${IMAGE_TAG}"
                         docker build -t "${IMAGE_NAME}" . \
                         --build-arg ENV="${DOCKER_ENV}"

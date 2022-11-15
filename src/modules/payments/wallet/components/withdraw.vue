@@ -39,6 +39,16 @@
         >
           {{ $t("payments.youHaveInsufficientFunds") }}
         </div>
+        <div
+          v-if="amount < getWallets[0].wallet_minimum_withdraw_amount && amount"
+          class="error-msg withdraw-transaction-error"
+        >
+          {{
+            $t("payments.theMinimumAmount", {
+              Amount: `${getWallets[0].currency} ${getWallets[0].wallet_minimum_withdraw_amount}`,
+            })
+          }}
+        </div>
         <div class="withdraw-transaction-fees">
           {{
             $t("payments.transactionFees", {
@@ -50,7 +60,9 @@
       <div>
         <button
           :disabled="
-            amount > getWallets[0].wallet_maximum_withdraw_amount || loading
+            (amount > getWallets[0].wallet_maximum_withdraw_amount && amount) ||
+            (amount < getWallets[0].wallet_minimum_withdraw_amount && amount) ||
+            loading
           "
           class="btn btn-primary mt-2 btn-long submit-order-btn withdraw-continue"
           @click="selectWithdrawOptions()"

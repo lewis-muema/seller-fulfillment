@@ -40,7 +40,7 @@
             </span>
             <i
               class="mdi mdi-chevron-right dpp-top-recent-arrow"
-              @click="$router.push('/')"
+              @click="$router.push(`/deliveries/tracking/${item.resource_id}`)"
             ></i>
           </span>
         </p>

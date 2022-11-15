@@ -73,6 +73,7 @@ export default createStore({
           wallet_description: "Seller's Wallet",
           wallet_balance: 0.0,
           wallet_maximum_withdraw_amount: 0.0,
+          wallet_minimum_withdraw_amount: 33,
           wallet_withdraw_fees: 33,
           currency: "KES",
         },
@@ -640,7 +641,6 @@ export default createStore({
         },
         CAN_ACCESS_BILLING_MODULE: {
           route: [
-            "/payments/statements",
             "/payments/payment-summary",
             "/payments/transactions",
             "/payments/withdraw",

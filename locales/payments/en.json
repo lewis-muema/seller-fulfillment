@@ -65,7 +65,7 @@
   "paymentOptions": "Payment options",
   "fulfillmentFeesWillBeCharged": "Fulfillment fees of {Amount} will be charged on {Date}",
   "viewMore": "View More",
-  "deliveriesPendingPayment": "Deliveries pending payment",
+  "deliveriesPendingPayment": "Deliveries for the active billing cycle",
   "willBeChargedOn": "Will be charged on {Date}",
   "totalAmountToBeCollected": "Total amount to be collected",
   "balance": "Balance: {Amount}",

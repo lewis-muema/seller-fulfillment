@@ -6,10 +6,10 @@
         aria-hidden="true"
         @click="$router.back()"
       ></i>
-      <p class="dpp-top-amount">
+      <p class="dpp-top-amount" v-if="getBillingCycle.paid_status !== 'PAID'">
         {{ getBusinessDetails.currency }} {{ getBillingCycle.amount_to_charge }}
       </p>
-      <p>
+      <p v-if="getBillingCycle.paid_status !== 'PAID'">
         <span class="dpp-top-charged">{{
           $t("payments.willBeChargedOn", {
             Date: formatDate(getBillingCycle.billing_cycle_end_date),
@@ -38,7 +38,10 @@
               + {{ getBusinessDetails.currency }}
               {{ item.amount }}
             </span>
-            <i class="mdi mdi-chevron-right dpp-top-recent-arrow"></i>
+            <i
+              class="mdi mdi-chevron-right dpp-top-recent-arrow"
+              @click="$router.push('/')"
+            ></i>
           </span>
         </p>
         <p class="dpp-top-recent-list-bottom-row">

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <make-payment
+      class="statements-payment-banner wallet-banner-override"
+      v-if="prompt"
+    />
     <div class="wallet-banner" v-if="activeCycle">
       <i class="mdi mdi-alert-circle-outline wallet-alert-icon"></i>
       {{
@@ -26,6 +30,8 @@
 <script>
 import transactions from "./components/transactions.vue";
 import statistics from "./components/statistics.vue";
+import makePayment from "../statements/components/makePayment.vue";
+
 import { mapMutations, mapActions, mapGetters } from "vuex";
 import eventsMixin from "../../../mixins/events_mixin";
 import moment from "moment";
@@ -34,6 +40,7 @@ export default {
   components: {
     transactions,
     statistics,
+    makePayment,
   },
   mixins: [eventsMixin],
   computed: {
@@ -43,6 +50,7 @@ export default {
       "getTransactions",
       "getLoader",
       "getBillingCycles",
+      "getActivePayment",
     ]),
     activeCycle() {
       return (
@@ -54,12 +62,17 @@ export default {
     activeCycleId() {
       return this.getBillingCycles[0].billing_cycle_instance_id;
     },
+    prompt() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
+    },
   },
   data() {
     return {};
   },
   mounted() {
     this.setComponent("payments.wallet");
+    this.getActiveCycle();
   },
   methods: {
     ...mapMutations([
@@ -78,6 +91,26 @@ export default {
       return type === "date"
         ? moment(cycle.billing_cycle_end_date).format("dddd, Do MMM")
         : `${this.getWallets[0].currency} ${cycle.amount_to_charge}`;
+    },
+    getActiveCycle() {
+      this.setLoader({
+        type: "pendingPayment",
+        value: "loading-text",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+      }).then((response) => {
+        this.setLoader({
+          type: "pendingPayment",
+          value: "",
+        });
+        if (response.status === 200) {
+          this.setActivePayment(response.data.data);
+        } else {
+          this.setActivePayment({});
+        }
+      });
     },
   },
 };
@@ -102,5 +135,8 @@ export default {
   font-weight: 500;
   font-size: 15px;
   cursor: pointer;
+}
+.wallet-banner-override {
+  margin-left: 40px;
 }
 </style>

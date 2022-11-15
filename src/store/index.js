@@ -641,7 +641,6 @@ export default createStore({
         },
         CAN_ACCESS_BILLING_MODULE: {
           route: [
-            "/payments/statements",
             "/payments/payment-summary",
             "/payments/transactions",
             "/payments/withdraw",

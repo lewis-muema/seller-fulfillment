@@ -179,16 +179,6 @@
               route === 'payments.transactions' ? 'mdi-circle-small' : ''
             "
           ></v-list-item>
-          <v-list-item
-            v-if="!getAccessDenied.includes('/payments/statements')"
-            :title="$t('common.statements')"
-            @click="$router.push('/payments/statements')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === 'common.statements'"
-            :append-icon="
-              route === 'common.statements' ? 'mdi-circle-small' : ''
-            "
-          ></v-list-item>
         </v-list-group>
 
         <v-list-group>

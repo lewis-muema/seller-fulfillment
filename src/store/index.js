@@ -69,10 +69,11 @@ export default createStore({
       },
       wallets: [
         {
-          wallet_type: "",
+          wallet_type: "test data",
           wallet_description: "Seller's Wallet",
           wallet_balance: 0.0,
           wallet_maximum_withdraw_amount: 0.0,
+          wallet_minimum_withdraw_amount: 33,
           wallet_withdraw_fees: 33,
           currency: "KES",
         },
@@ -640,7 +641,6 @@ export default createStore({
         },
         CAN_ACCESS_BILLING_MODULE: {
           route: [
-            "/payments/statements",
             "/payments/payment-summary",
             "/payments/transactions",
             "/payments/withdraw",
@@ -1735,6 +1735,7 @@ export default createStore({
           withdrawal_limit: 50,
         },
       ],
+      withDrawalAmount: "",
       billingCycle: {
         billing_cycle_instance_id: "BC-XCU-0000",
         business_id: "B-AEB-0000",

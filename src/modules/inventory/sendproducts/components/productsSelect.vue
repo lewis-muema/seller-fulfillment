@@ -307,10 +307,8 @@ export default {
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
       let variant = [];
-      variants.forEach((row, i) => {
-        if (i > 0) {
-          variant.push(row);
-        }
+      variants.forEach((row) => {
+        variant.push(row);
       });
       return variant;
     },

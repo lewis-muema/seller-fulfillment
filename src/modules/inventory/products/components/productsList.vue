@@ -32,7 +32,7 @@
                       <span :class="getLoader.products">
                         {{
                           product.product_variants.length > 1
-                            ? `${product.product_variants.length - 1} ${$t(
+                            ? `${product.product_variants.length} ${$t(
                                 "inventory.producTOptions"
                               )}`
                             : ""

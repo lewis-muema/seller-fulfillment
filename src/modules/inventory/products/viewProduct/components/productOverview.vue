@@ -211,12 +211,8 @@ export default {
     ...mapGetters(["getProduct", "getLoader"]),
     variants() {
       const res = [];
-      this.product.product_variants.forEach((row, i) => {
-        if (
-          (this.product.product_variants.length === 1 ||
-            (this.product.product_variants.length > 1 && i >= 1)) &&
-          !row.product_variant_archived
-        ) {
+      this.product.product_variants.forEach((row) => {
+        if (!row.product_variant_archived) {
           res.push(row);
         }
       });

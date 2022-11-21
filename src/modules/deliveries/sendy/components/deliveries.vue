@@ -221,7 +221,6 @@ export default {
         this.params = `?offset=${this.page - 1}`;
       } else {
         const offset = this.params.split("&offset");
-        console.log(offset);
         this.params = offset[1]
           ? `${offset[0]}&offset=${this.page - 1}`
           : `${this.params}&offset=${this.page - 1}`;

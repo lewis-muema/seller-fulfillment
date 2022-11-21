@@ -105,8 +105,7 @@
                       >{{
                         product.product_variants[0].product_variant_stock_levels
                           ? product.product_variants[0]
-                              .product_variant_stock_levels
-                              .quantity_in_inventory
+                              .product_variant_stock_levels.available
                           : "-"
                       }}
                       {{ $t("inventory.units") }}</span
@@ -158,8 +157,7 @@
                             product.product_variants[0]
                               .product_variant_stock_levels
                               ? product.product_variants[0]
-                                  .product_variant_stock_levels
-                                  .quantity_in_inventory
+                                  .product_variant_stock_levels.available
                               : "-"
                           }}
                           {{ $t("inventory.units") }}</span
@@ -200,8 +198,7 @@
                             class="product-select-units"
                             >{{
                               option.product_variant_stock_levels
-                                ? option.product_variant_stock_levels
-                                    .quantity_in_inventory
+                                ? option.product_variant_stock_levels.available
                                 : "-"
                             }}
                             {{ $t("inventory.units") }}</span
@@ -314,8 +311,7 @@ export default {
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
-        ? product.product_variants[0].product_variant_stock_levels
-            .quantity_in_inventory
+        ? product.product_variants[0].product_variant_stock_levels.available
         : 0;
       return (
         this.$route.params.path === "customer" &&
@@ -325,7 +321,7 @@ export default {
     },
     disabledVariantStatus(option) {
       const quantity = option
-        ? option.product_variant_stock_levels.quantity_in_inventory
+        ? option.product_variant_stock_levels.available
         : 0;
       return (
         this.$route.params.path === "customer" &&

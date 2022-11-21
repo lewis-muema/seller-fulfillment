@@ -4,73 +4,84 @@
       <div class="products-search">
         <searchAlgolia type="product" />
       </div>
-      <v-table class="" v-if="filteredProducts.length > 0">
-        <table-header :header="tableHeaders" />
-        <tbody>
-          <tr v-for="(product, index) in filteredProducts" :key="index">
-            <td>
-              <v-list-item lines="two">
-                <v-list-item-avatar class="product-image-container">
-                  <img
-                    :src="
-                      product.product_variants[0].product_variant_image_link
-                    "
-                    v-if="!getLoader.products"
-                    alt="img"
-                    class="product-img"
-                  />
-                </v-list-item-avatar>
-                <v-list-item-header>
-                  <v-list-item-title>
-                    <span :class="getLoader.products">
-                      {{ product.product_name }}
-                    </span>
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    <span :class="getLoader.products">
-                      {{
-                        product.product_variants.length > 1
-                          ? `${product.product_variants.length} ${$t(
-                              "inventory.producTOptions"
-                            )}`
-                          : ""
-                      }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-header>
-              </v-list-item>
-            </td>
-            <td>
-              <span :class="badgeAllocation(availableleTally(product))">
-                <span :class="getLoader.products">
-                  {{ availableleTally(product) }}
+      <div v-if="filteredProducts.length > 0">
+        <v-table class="">
+          <table-header :header="tableHeaders" />
+          <tbody>
+            <tr v-for="(product, index) in filteredProducts" :key="index">
+              <td>
+                <v-list-item lines="two">
+                  <v-list-item-avatar class="product-image-container">
+                    <img
+                      :src="
+                        product.product_variants[0].product_variant_image_link
+                      "
+                      v-if="!getLoader.products"
+                      alt="img"
+                      class="product-img"
+                    />
+                  </v-list-item-avatar>
+                  <v-list-item-header>
+                    <v-list-item-title>
+                      <span :class="getLoader.products">
+                        {{ product.product_name }}
+                      </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <span :class="getLoader.products">
+                        {{
+                          product.product_variants.length > 1
+                            ? `${product.product_variants.length} ${$t(
+                                "inventory.producTOptions"
+                              )}`
+                            : ""
+                        }}
+                      </span>
+                    </v-list-item-subtitle>
+                  </v-list-item-header>
+                </v-list-item>
+              </td>
+              <td>
+                <span :class="badgeAllocation(availableleTally(product))">
+                  <span :class="getLoader.products">
+                    {{ availableleTally(product) }}
+                  </span>
                 </span>
-              </span>
-            </td>
-            <td>
-              <span :class="badgeAllocation(committedTally(product))">
-                <span :class="getLoader.products">
-                  {{ committedTally(product) }}
+              </td>
+              <td>
+                <span :class="badgeAllocation(committedTally(product))">
+                  <span :class="getLoader.products">
+                    {{ committedTally(product) }}
+                  </span>
                 </span>
-              </span>
-            </td>
-            <td>
-              <span :class="badgeAllocation(incomingTally(product))">
-                <span :class="getLoader.products">
-                  {{ incomingTally(product) }}
+              </td>
+              <td>
+                <span :class="badgeAllocation(incomingTally(product))">
+                  <span :class="getLoader.products">
+                    {{ incomingTally(product) }}
+                  </span>
                 </span>
-              </span>
-            </td>
-            <td>
-              <router-link
-                :to="`/inventory/view-product/${product.product_id}`"
-                class="view-product-link"
-                >{{ $t("inventory.view") }}</router-link
-              >
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+              </td>
+              <td>
+                <router-link
+                  :to="`/inventory/view-product/${product.product_id}`"
+                  class="view-product-link"
+                  >{{ $t("inventory.view") }}</router-link
+                >
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+        <div>
+          <v-pagination
+            class="mt-3"
+            v-model="page"
+            :length="getPagination.page_count"
+            :total-visible="7"
+            rounded="circle"
+          ></v-pagination>
+        </div>
+      </div>
       <div class="deliveries-empty" v-else>
         <div v-if="getProductLists.length">
           <div class="no-products-card-container">
@@ -143,7 +154,9 @@ export default {
           description: "",
         },
       ],
-      params: "",
+      params: "?max=5",
+      max: 5,
+      page: 1,
     };
   },
   watch: {
@@ -152,12 +165,20 @@ export default {
     },
     "$store.state.inventorySelectedTab": function inventorySelectedTab(val) {
       if (val === "inventory.lowStock") {
-        this.params = "/lowstock";
+        this.params = `/lowstock?max=${this.max}`;
       } else if (val === "inventory.outOfStock") {
-        this.params = "/outofstock";
+        this.params = `/outofstock?max=${this.max}`;
       } else {
-        this.params = "";
+        this.params = `?max=${this.max}`;
       }
+      if (this.page === 1) {
+        this.fetchProducts();
+      } else {
+        this.page = 1;
+      }
+    },
+    page() {
+      this.fetchProducts();
     },
   },
   mounted() {
@@ -167,13 +188,13 @@ export default {
     this.fetchProducts();
     this.getStockSettings();
     if (this.$route.params.tab === "noStock") {
-      this.params = "/outofstock";
+      this.params = `/lowstock?max=${this.max}`;
       this.setInventorySelectedTab("inventory.outOfStock");
     } else if (this.$route.params.tab === "lowStock") {
-      this.params = "/lowstock";
+      this.params = `/outofstock?max=${this.max}`;
       this.setInventorySelectedTab("inventory.lowStock");
     } else {
-      this.params = "";
+      this.params = `?max=${this.max}`;
       this.setInventorySelectedTab("inventory.all");
     }
   },
@@ -184,45 +205,13 @@ export default {
       "getInventorySelectedTab",
       "getStorageUserDetails",
       "getSettings",
+      "getPagination",
     ]),
     tableHeaders() {
       return this.headers;
     },
     filteredProducts() {
-      if (this.getInventorySelectedTab === "inventory.outOfStock") {
-        return this.NoStockProducts;
-      }
-      if (this.getInventorySelectedTab === "inventory.lowStock") {
-        return this.lowStockProducts;
-      }
       return this.getProductLists;
-    },
-    lowStockProducts() {
-      const products = [];
-      this.getProductLists.forEach((row) => {
-        if (
-          row.product_variants[0].product_variant_stock_levels
-            .quantity_in_inventory <=
-            this.getSettings.global_low_stock_threshhold &&
-          row.product_variants[0].product_variant_stock_levels
-            .quantity_in_inventory > 0
-        ) {
-          products.push(row);
-        }
-      });
-      return products;
-    },
-    NoStockProducts() {
-      const products = [];
-      this.getProductLists.forEach((row) => {
-        if (
-          row.product_variants[0].product_variant_stock_levels
-            .quantity_in_inventory === 0
-        ) {
-          products.push(row);
-        }
-      });
-      return products;
     },
   },
   methods: {
@@ -234,6 +223,7 @@ export default {
       "setStockStatistics",
       "setSettings",
       "setInventorySelectedTab",
+      "setPagination",
     ]),
     ...mapActions(["requestAxiosGet"]),
     badgeAllocation(val) {
@@ -255,7 +245,9 @@ export default {
       });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
+          this.params
+        }&offset=${this.page - 1}`,
       }).then((response) => {
         if (this.$route.path.includes("/inventory/stock-levels")) {
           this.setLoader({
@@ -265,6 +257,8 @@ export default {
         }
         if (response.status === 200) {
           this.setProductLists(response.data.data.products);
+          this.setPagination(response.data.data.pagination);
+          this.page = response.data.data.pagination.current_page + 1;
         }
       });
     },
@@ -294,8 +288,7 @@ export default {
       let tally = 0;
       product.product_variants.forEach((row) => {
         if (row.product_variant_stock_levels) {
-          tally =
-            row.product_variant_stock_levels.quantity_in_inventory + tally;
+          tally = row.product_variant_stock_levels.available + tally;
         }
       });
       return tally;

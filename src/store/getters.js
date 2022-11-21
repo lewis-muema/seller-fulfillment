@@ -112,4 +112,5 @@ export default {
   getTransactionTypes: (state) => state.transactionTypes,
   getWithDrawalMethods: (state) => state.withDrawalMethods,
   getWithDrawalAmount: (state) => state.withDrawalAmount,
+  getPagination: (state) => state.pagination,
 };

@@ -92,6 +92,7 @@ export default createStore({
         FULFILMENT_FEE_COST: "-",
         WITHDRAWAL_OF_EARNING_COST: "-",
       },
+      searchedProducts: [],
       transactionTypes: [
         {
           name: "payments.all",

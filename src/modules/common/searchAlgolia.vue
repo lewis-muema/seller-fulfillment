@@ -27,9 +27,7 @@
     </template>
     <v-list class="header-list-popup" v-if="type === 'product'">
       <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title
-          @click="$router.push(`/inventory/view-product/${item.product_id}`)"
-        >
+        <v-list-item-title @click="productTrigger(item)">
           <div class="search-item-flex">
             <div class="search-items-image-container">
               <img
@@ -118,7 +116,8 @@
 <script>
 import algoliaSearch from "../../mixins/algolia_search";
 import eventsMixin from "../../mixins/events_mixin";
-import { mapGetters } from "vuex";
+import { ElNotification } from "element-plus";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   props: ["type"],
@@ -132,7 +131,11 @@ export default {
     searchToggle: false,
   }),
   computed: {
-    ...mapGetters(["getStorageUserDetails"]),
+    ...mapGetters([
+      "getStorageUserDetails",
+      "getProductLists",
+      "getSearchedProducts",
+    ]),
   },
   watch: {
     searchParam(val) {
@@ -146,6 +149,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setProductLists", "setSearchedProducts"]),
     algoliaResults(object) {
       this.searchToggle = true;
       this.searchObject = object;
@@ -191,6 +195,38 @@ export default {
         }`;
       });
       return productsList;
+    },
+    productTrigger(item) {
+      if (this.$route.path.includes("/inventory/send-inventory/")) {
+        const productsList = this.getProductLists;
+        const searchedList = this.getSearchedProducts;
+        const existingProduct = productsList.filter((row) => {
+          return row.product_id === item.product_id;
+        });
+        const existingList = searchedList.filter((row) => {
+          return row.product_id === item.product_id;
+        });
+        if (!existingProduct.length && !existingList.length) {
+          searchedList.push(item);
+          productsList.push(item);
+          this.clearItems();
+          ElNotification({
+            title: this.$t("common.productAddedToList"),
+            message: "",
+            type: "success",
+          });
+        } else {
+          ElNotification({
+            title: this.$t("common.productAlreadyInTheList"),
+            message: "",
+            type: "warning",
+          });
+        }
+        this.setSearchedProducts(searchedList);
+        this.setProductLists(productsList);
+      } else {
+        this.$router.push(`/inventory/view-product/${item.product_id}`);
+      }
     },
   },
 };

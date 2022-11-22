@@ -56,5 +56,7 @@
   "downloadCsvFile": "Download CSV file",
   "fetchingDownloadFile": "Fetching download file",
   "downloadingFile": "Downloading file",
-  "couldNotFetchDownloadFile": "Could not fetch download file"
+  "couldNotFetchDownloadFile": "Could not fetch download file",
+  "productAddedToList": "Product found, Scroll down to select it",
+  "productAlreadyInTheList": "Product already in the list"
 }

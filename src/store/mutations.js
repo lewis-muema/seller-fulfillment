@@ -332,4 +332,7 @@ export default {
   setPagination(state, val) {
     state.pagination = val;
   },
+  setSearchedProducts(state, val) {
+    state.searchedProducts = val;
+  },
 };

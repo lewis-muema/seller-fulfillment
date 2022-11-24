@@ -104,8 +104,7 @@
                         selectedProduct.selectedOption
                           .product_variant_stock_levels
                           ? selectedProduct.selectedOption
-                              .product_variant_stock_levels
-                              .quantity_in_inventory
+                              .product_variant_stock_levels.available
                           : "-"
                       }}
                     </div>
@@ -238,8 +237,7 @@ export default {
       if (
         this.$route.params.path === "customer" &&
         event.target.value >
-          products[val].selectedOption.product_variant_stock_levels
-            .quantity_in_inventory &&
+          products[val].selectedOption.product_variant_stock_levels.available &&
         process.env.DOCKER_ENV === "production"
       ) {
         ElNotification({

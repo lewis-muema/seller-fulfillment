@@ -47,7 +47,7 @@
                   {{
                     product.product_variants[0].product_variant_stock_levels
                       ? product.product_variants[0].product_variant_stock_levels
-                          .quantity_in_inventory
+                          .available
                       : "-"
                   }}
                   {{ $t("inventory.inStock") }}
@@ -66,13 +66,14 @@
             </tr>
           </tbody>
         </v-table>
-        <div
-          class="show-more-deliveries-link mb-3"
-          v-if="getProductLists.length === max"
-        >
-          <div @click="loadMore()" class="show-more-deliveries-link">
-            {{ $t("inventory.loadMore") }}<v-icon>mdi mdi-arrow-right</v-icon>
-          </div>
+        <div>
+          <v-pagination
+            class="mt-3"
+            v-model="page"
+            :length="getPagination.page_count"
+            :total-visible="7"
+            rounded="circle"
+          ></v-pagination>
         </div>
       </v-card>
     </div>
@@ -105,7 +106,8 @@ export default {
           title: "inventory.actions",
         },
       ],
-      max: 10,
+      max: 5,
+      page: 1,
     };
   },
   computed: {
@@ -114,6 +116,7 @@ export default {
       "getLoader",
       "getInventorySelectedTab",
       "getStorageUserDetails",
+      "getPagination",
     ]),
     tableHeaders() {
       return this.headers;
@@ -122,6 +125,10 @@ export default {
   watch: {
     "$store.state.inventorySelectedTab": function inventorySelectedTab() {
       this.setProductLists(this.placeholderProducts);
+      this.page = 1;
+      this.fetchProducts();
+    },
+    page() {
       this.fetchProducts();
     },
   },
@@ -135,6 +142,7 @@ export default {
       "setProductLists",
       "setAllProductCount",
       "setArchivedProductCount",
+      "setPagination",
     ]),
     ...mapActions(["requestAxiosGet"]),
     fetchProducts() {
@@ -148,7 +156,7 @@ export default {
           this.getInventorySelectedTab === "inventory.archived"
             ? "/archived"
             : ""
-        }?max=${this.max}`,
+        }?max=${this.max}&offset=${this.page - 1}`,
       }).then((response) => {
         this.setLoader({
           type: "products",
@@ -161,6 +169,8 @@ export default {
             this.setArchivedProductCount(response.data.data.products.length);
           }
           this.setProductLists(response.data.data.products);
+          this.setPagination(response.data.data.pagination);
+          this.page = response.data.data.pagination.current_page + 1;
         }
       });
     },

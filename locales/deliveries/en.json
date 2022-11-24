@@ -148,5 +148,6 @@
   "sorryNoDeliveriesFound": "Sorry! No deliveries found",
   "sorryNoConsignmentsFound": "Sorry! No consignments found",
   "weCouldntFindAnyDeliveries": "We couldn’t find any deliveries for the selected dates. Please try filtering again",
-  "weCouldntFindAnyConsignments": "We couldn’t find any consignments for the selected dates. Please try filtering again"
+  "weCouldntFindAnyConsignments": "We couldn’t find any consignments for the selected dates. Please try filtering again",
+  "deliveryAddedToBatch": "The delivery has been added to a batch"
 }

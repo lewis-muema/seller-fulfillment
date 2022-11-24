@@ -30,16 +30,7 @@
             </router-link>
           </div>
           <div class="search-input-product-select">
-            <v-text-field
-              color="#324BA8"
-              prepend-inner-icon="mdi-magnify"
-              clearable
-              :label="$t('deliveries.searchProducts')"
-              variant="outlined"
-              v-model="searchProduct"
-              @click:clear="clearItems()"
-              :placeholder="$t('deliveries.searchProducts')"
-            ></v-text-field>
+            <searchAlgolia type="product" />
           </div>
           <hr />
           <v-table v-if="products.length > 0">
@@ -105,8 +96,7 @@
                       >{{
                         product.product_variants[0].product_variant_stock_levels
                           ? product.product_variants[0]
-                              .product_variant_stock_levels
-                              .quantity_in_inventory
+                              .product_variant_stock_levels.available
                           : "-"
                       }}
                       {{ $t("inventory.units") }}</span
@@ -158,8 +148,7 @@
                             product.product_variants[0]
                               .product_variant_stock_levels
                               ? product.product_variants[0]
-                                  .product_variant_stock_levels
-                                  .quantity_in_inventory
+                                  .product_variant_stock_levels.available
                               : "-"
                           }}
                           {{ $t("inventory.units") }}</span
@@ -200,8 +189,7 @@
                             class="product-select-units"
                             >{{
                               option.product_variant_stock_levels
-                                ? option.product_variant_stock_levels
-                                    .quantity_in_inventory
+                                ? option.product_variant_stock_levels.available
                                 : "-"
                             }}
                             {{ $t("inventory.units") }}</span
@@ -267,6 +255,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
 import placeholder from "../../../../mixins/placeholders";
+import searchAlgolia from "../../../common/searchAlgolia.vue";
 
 export default {
   mixins: [eventsMixin, placeholder],
@@ -277,6 +266,9 @@ export default {
       searchProduct: "",
       mappedSelectedProducts: [],
     };
+  },
+  components: {
+    searchAlgolia,
   },
   watch: {
     searchProduct(val) {
@@ -314,8 +306,7 @@ export default {
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
-        ? product.product_variants[0].product_variant_stock_levels
-            .quantity_in_inventory
+        ? product.product_variants[0].product_variant_stock_levels.available
         : 0;
       return (
         this.$route.params.path === "customer" &&
@@ -325,7 +316,7 @@ export default {
     },
     disabledVariantStatus(option) {
       const quantity = option
-        ? option.product_variant_stock_levels.quantity_in_inventory
+        ? option.product_variant_stock_levels.available
         : 0;
       return (
         this.$route.params.path === "customer" &&
@@ -340,7 +331,7 @@ export default {
       });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/products`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products?max=10`,
       }).then((response) => {
         if (
           this.$route.path ===
@@ -353,7 +344,9 @@ export default {
         }
 
         if (response.status === 200) {
-          this.setProductLists(response.data.data.products);
+          const products = response.data.data.products;
+          products.push(...this.getSearchedProducts);
+          this.setProductLists(products);
           this.productMapping();
         }
       });
@@ -531,6 +524,7 @@ export default {
       "getStorageUserDetails",
       "getProductsToSubmit",
       "getMappedSelectedProducts",
+      "getSearchedProducts",
     ]),
     itemsSelectedCount() {
       return this.getSelectedProducts.length;

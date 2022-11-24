@@ -329,4 +329,10 @@ export default {
   setWithDrawalAmount(state, val) {
     state.withDrawalAmount = val;
   },
+  setPagination(state, val) {
+    state.pagination = val;
+  },
+  setSearchedProducts(state, val) {
+    state.searchedProducts = val;
+  },
 };

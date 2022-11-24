@@ -155,9 +155,7 @@
           </p>
           <v-btn
             class="deliveries-btn"
-            @click="
-              $router.push('/inventory/send-inventory/customer/select-products')
-            "
+            @click="$router.push('/inventory/create-delivery')"
             size="default"
           >
             {{ $t("deliveries.deliverToACustomer") }}

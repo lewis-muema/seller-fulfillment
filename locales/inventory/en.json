@@ -175,5 +175,12 @@
   "noPaymentToBeCollected": "No payment to be collected",
   "priceBreakdown": "Price breakdown",
   "subtotal": "Subtotal",
-  "total": "Total"
+  "total": "Total",
+  "selectProductsToSend": "Select products to send",
+  "addDeliveryInfo": "Add delivery info",
+  "addRecipientInfo": "Add recipient info",
+  "deliveryTime": "Delivery time",
+  "preferences": "Preferences",
+  "setPreferencesForPayment": "Set preferences for payment on delivery, delivery documents & reference number",
+  "addAnotherDeliveryLocation": "Add another delivery location"
 }

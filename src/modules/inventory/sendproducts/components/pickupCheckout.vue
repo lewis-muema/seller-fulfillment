@@ -239,7 +239,7 @@ export default {
             });
             window.gtag("event", "purchase", {
               transaction_id: response.data.data.order_id,
-              currency: this.this.getFulfillmentFees.currency,
+              currency: this.getFulfillmentFees.currency,
               value: this.getFulfillmentFees.calculated_fee,
               items: [
                 {

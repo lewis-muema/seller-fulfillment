@@ -168,7 +168,7 @@ export default {
         {
           title: "common.deliverToCustomer",
           icon: "mdi-truck-outline",
-          url: "/inventory/send-inventory/customer/select-products",
+          url: "/inventory/send-inventory/create-delivery",
         },
         {
           title: "common.inventoryToSendy",
@@ -293,7 +293,7 @@ export default {
       if (notification.message.includes("Please make payment")) {
         return {
           label: this.$t("payments.makePayment"),
-          link: "/payments/statements",
+          link: "/payments/wallet",
         };
       }
       if (notification.notification_type === "EXPORT_DATA_SUCCESS_UPDATES") {

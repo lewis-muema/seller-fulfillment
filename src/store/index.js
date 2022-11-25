@@ -41,6 +41,11 @@ export default createStore({
         Failed: "ORDER_FAILED",
         Completed: "ORDER_COMPLETED",
       },
+      pagination: {
+        current_page: 0,
+        max: 5,
+        page_count: 5,
+      },
       supportedCountries: [],
       userData: {},
       updatedData: {},
@@ -69,10 +74,11 @@ export default createStore({
       },
       wallets: [
         {
-          wallet_type: "",
+          wallet_type: "test data",
           wallet_description: "Seller's Wallet",
           wallet_balance: 0.0,
           wallet_maximum_withdraw_amount: 0.0,
+          wallet_minimum_withdraw_amount: 33,
           wallet_withdraw_fees: 33,
           currency: "KES",
         },
@@ -86,6 +92,7 @@ export default createStore({
         FULFILMENT_FEE_COST: "-",
         WITHDRAWAL_OF_EARNING_COST: "-",
       },
+      searchedProducts: [],
       transactionTypes: [
         {
           name: "payments.all",
@@ -640,7 +647,6 @@ export default createStore({
         },
         CAN_ACCESS_BILLING_MODULE: {
           route: [
-            "/payments/statements",
             "/payments/payment-summary",
             "/payments/transactions",
             "/payments/withdraw",
@@ -1527,6 +1533,7 @@ export default createStore({
           "deliveries.sendyRescheduledThisOrderFor",
         "event.delivery.rescheduled.by.buyer":
           "deliveries.theCustomerRescheduledThisOrderFor",
+        "event.delivery.added.to.batch": "deliveries.deliveryAddedToBatch",
       },
       activityLogs: {
         "PRODUCT.VARIANT.ADDED": "settings.addedNewProduct",
@@ -1562,6 +1569,117 @@ export default createStore({
         "USER.DEACTIVATED": "settings.userDeactivated",
       },
       productLists: [
+        {
+          product_id: "P-KXG-0000",
+          objectID: "P-KXG-0000",
+          product_name: "Item",
+          product_description: "Item variant",
+          product_main_color: null,
+          product_archived: false,
+          business_id: "B-XGS-0000",
+          product_collection: {
+            collection_id: "PC-KST-0000",
+            collection_name: null,
+          },
+          sales_channel_collections: null,
+          product_variants: [
+            {
+              product_variant_id: "PV-JMU-0000",
+              business_id: "B-XGS-0000",
+              product_id: "P-KXG-0000",
+              product_variant_description: "Item",
+              product_variant_currency: "KES",
+              product_variant_unit_price: 0,
+              product_variant_image_link:
+                "https://images.sendyit.com/fulfilment/seller/shirts.png",
+              product_variant_expiry_date: null,
+              product_variant_quantity: 0,
+              product_variant_quantity_type: "GRAM",
+              product_variant_stock_levels: {
+                available: 0,
+                quantity_in_inventory: 0,
+                quantity_in_sales_orders: 1,
+                quantity_held_in_fulfilment_requests: 0,
+                last_updated_date: 1655391003000,
+              },
+              product_variant_archived: false,
+            },
+          ],
+        },
+        {
+          product_id: "P-KXG-0000",
+          objectID: "P-KXG-0000",
+          product_name: "Item",
+          product_description: "Item variant",
+          product_main_color: null,
+          product_archived: false,
+          business_id: "B-XGS-0000",
+          product_collection: {
+            collection_id: "PC-KST-0000",
+            collection_name: null,
+          },
+          sales_channel_collections: null,
+          product_variants: [
+            {
+              product_variant_id: "PV-JMU-0000",
+              business_id: "B-XGS-0000",
+              product_id: "P-KXG-0000",
+              product_variant_description: "Item",
+              product_variant_currency: "KES",
+              product_variant_unit_price: 0,
+              product_variant_image_link:
+                "https://images.sendyit.com/fulfilment/seller/shirts.png",
+              product_variant_expiry_date: null,
+              product_variant_quantity: 0,
+              product_variant_quantity_type: "GRAM",
+              product_variant_stock_levels: {
+                available: 0,
+                quantity_in_inventory: 0,
+                quantity_in_sales_orders: 1,
+                quantity_held_in_fulfilment_requests: 0,
+                last_updated_date: 1655391003000,
+              },
+              product_variant_archived: false,
+            },
+          ],
+        },
+        {
+          product_id: "P-KXG-0000",
+          objectID: "P-KXG-0000",
+          product_name: "Item",
+          product_description: "Item variant",
+          product_main_color: null,
+          product_archived: false,
+          business_id: "B-XGS-0000",
+          product_collection: {
+            collection_id: "PC-KST-0000",
+            collection_name: null,
+          },
+          sales_channel_collections: null,
+          product_variants: [
+            {
+              product_variant_id: "PV-JMU-0000",
+              business_id: "B-XGS-0000",
+              product_id: "P-KXG-0000",
+              product_variant_description: "Item",
+              product_variant_currency: "KES",
+              product_variant_unit_price: 0,
+              product_variant_image_link:
+                "https://images.sendyit.com/fulfilment/seller/shirts.png",
+              product_variant_expiry_date: null,
+              product_variant_quantity: 0,
+              product_variant_quantity_type: "GRAM",
+              product_variant_stock_levels: {
+                available: 0,
+                quantity_in_inventory: 0,
+                quantity_in_sales_orders: 1,
+                quantity_held_in_fulfilment_requests: 0,
+                last_updated_date: 1655391003000,
+              },
+              product_variant_archived: false,
+            },
+          ],
+        },
         {
           product_id: "P-KXG-0000",
           objectID: "P-KXG-0000",
@@ -1735,6 +1853,7 @@ export default createStore({
           withdrawal_limit: 50,
         },
       ],
+      withDrawalAmount: "",
       billingCycle: {
         billing_cycle_instance_id: "BC-XCU-0000",
         business_id: "B-AEB-0000",

@@ -75,7 +75,6 @@
                   [
                     'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
                     'EARNING_FROM_SALE_OF_GOOD',
-                    'WITHDRAWAL_OF_EARNING',
                   ].includes(transaction.transaction_type) &&
                   getLoader.transactions === ''
                 "
@@ -308,6 +307,7 @@ export default {
 .transactions-top-recent-list-bottom-row {
   color: #606266;
   font-size: 14px;
+  height: 20px;
 }
 .transactions-top-recent-list-top {
   margin-bottom: 7px;

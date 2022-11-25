@@ -25,7 +25,7 @@
         :key="i"
         class="ppc-top-row"
       >
-        <div>
+        <div @click="showTransaction(transaction)">
           <p class="ppc-top-recent-list-top">
             <span class="" :class="getLoader.transactions">{{
               transaction.transaction_description
@@ -107,9 +107,14 @@ export default {
       "setBillingCycle",
       "setStatisticsStats",
       "setTransactions",
+      "setActiveTransaction",
     ]),
     timeFormat(date) {
       return moment(date).format("h:mm A");
+    },
+    showTransaction(transaction) {
+      this.setActiveTransaction(transaction);
+      this.$router.push(`/payments/transaction-details`);
     },
     formatDate(date) {
       return moment(date).format("Do MMM, YYYY");

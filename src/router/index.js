@@ -9,7 +9,6 @@ import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
-import Statements from "../modules/payments/statements/statements.vue";
 import Transactions from "../modules/payments/transactions/transactions.vue";
 import Wallet from "../modules/payments/wallet/wallet.vue";
 import DeliveriesPendingPayment from "../modules/payments/wallet/components/deliveriesPendingPayment.vue";
@@ -37,6 +36,7 @@ import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 
 const routes = [
@@ -119,6 +119,11 @@ const routes = [
     component: SendProducts,
   },
   {
+    path: "/inventory/create-delivery",
+    name: "Create Delivery",
+    component: CreateDelivery,
+  },
+  {
     path: "/deliveries/customer/:tab?/:date?",
     name: "To Customers",
     component: Customers,
@@ -137,11 +142,6 @@ const routes = [
     path: "/deliveries/edit-order/",
     name: "EditOrder",
     component: editOrder,
-  },
-  {
-    path: "/payments/statements",
-    name: "Statements",
-    component: Statements,
   },
   {
     path: "/payments/transactions",

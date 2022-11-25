@@ -232,6 +232,63 @@
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
+    <div
+      v-if="popup === 'deliveryInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("deliveries.deliveryInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.locationOfCustomer") }} {{ $t("inventory.required") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.deliveryInstructions") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <v-btn
+        class="edit-info-submit-button"
+        :disabled="!isLocationValid"
+        v-loading="buttonLoader"
+        @click="submitDeliveryInfo()"
+      >
+        {{ $t("inventory.done") }}
+      </v-btn>
+    </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -935,6 +992,9 @@ export default {
       );
       return fee;
     },
+    isLocationValid() {
+      return this.location.length;
+    },
   },
   data() {
     return {
@@ -951,6 +1011,7 @@ export default {
       location: "",
       locationData: {},
       instructions: "",
+      apartmentName: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
@@ -1002,6 +1063,7 @@ export default {
       "setProductsToSubmit",
       "setSendyPhoneProps",
       "setPaymentCollectionStatus",
+      "setDeliveryInfo",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -1014,6 +1076,19 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    submitDeliveryInfo() {
+      this.buttonLoader = true;
+      const deliveryDetails = {
+        location: this.location,
+        apartmentName: this.apartmentName,
+        instructions: this.instructions,
+      };
+      setTimeout(() => {
+        this.buttonLoader = false;
+        this.overlayStatusSet(false, "deliveryInfoCrossdock");
+        this.setDeliveryInfo(deliveryDetails);
+      }, 2000);
     },
     setPaymentCollection() {
       if (this.getPaymentCollectionStatus.status === "") {
@@ -1643,6 +1718,14 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.edit-info-submit-button:disabled {
+  margin-top: 40px;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: #324ba8 !important;
+  background: #d3ddf6 !important;
+  width: -webkit-fill-available;
 }
 .get-help-button {
   width: 100%;

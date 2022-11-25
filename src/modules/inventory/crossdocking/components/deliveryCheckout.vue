@@ -32,11 +32,32 @@
               class="mdi mdi-map-marker-outline cross-docking-checkout-icons"
             ></i>
           </div>
-          <div class="col-11 cross-docking-checkout-text">
+          <div
+            class="col-11 cross-docking-checkout-text"
+            @click="addDeliveryInfo()"
+            v-if="Object.keys(getDeliveryInfo).length === 0"
+          >
             <span>{{ $t("inventory.addDeliveryInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
               ><i class="mdi mdi-chevron-right"></i
             ></span>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+            v-else
+          >
+            <div class="delivery-details-text">
+              <p>Delivery Info</p>
+              <p>{{ getDeliveryInfo.location }}</p>
+              <p>{{ getDeliveryInfo.apartmentName }}</p>
+              <p>{{ getDeliveryInfo.instructions }}</p>
+            </div>
+            <span class="cross-docking-checkout-chevrons">
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
           </div>
         </div>
         <div class="mb-4 row cross-docking-checkout-row">
@@ -277,6 +298,11 @@ export default {
       buttonLoader: false,
       selectPaymentCollection: false,
       preference: false,
+      items: {
+        location: "testt",
+        apartmentName: "Floor 2",
+        instructions: "Instructions",
+      },
     };
   },
   watch: {
@@ -309,6 +335,7 @@ export default {
       "getPaymentCollectionStatus",
       "getActivePayment",
       "getBillingCycles",
+      "getDeliveryInfo",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -480,6 +507,12 @@ export default {
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProductStep(val) {
       this.setProductStep(val);
+    },
+    addDeliveryInfo() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryInfoCrossdock",
+      });
     },
     setLocation(val) {
       this.place = val;
@@ -748,6 +781,10 @@ export default {
 .cross-docking-checkout-text-override {
   height: max-content !important;
   align-items: flex-start !important;
+}
+.delivery-details-text > p {
+  line-height: 10px !important;
+  font-weight: 400 !important;
 }
 .cross-docking-checkout-text-subtitle {
   font-size: 15px;

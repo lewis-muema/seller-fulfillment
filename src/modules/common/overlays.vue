@@ -289,6 +289,115 @@
         {{ $t("inventory.done") }}
       </v-btn>
     </div>
+    <div
+      v-if="popup === 'recepientInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.receivingItems")}}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <el-radio-group v-model="recepientOption" class="">
+        <div class="payment-collection-overlay-border-top padding-override">
+          <el-radio label="individual" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.individual")}}
+            </span>
+          </el-radio>
+        </div>
+        <div class="payment-collection-overlay-border-bottom padding-override">
+          <el-radio label="business" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.business")}}
+            </span>
+          </el-radio>
+        </div>
+      </el-radio-group>
+      <div v-if="recepientOption">
+        <p class="crossdock-recipient-details-text">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.enterRecipientDetails")
+              : $t("deliveries.enterBusinessDetails")
+          }}
+        </p>
+        <label for="customer-name" class="edit-info-label">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.recipientName")
+              : $t("deliveries.businessName")
+          }}
+        </label>
+        <v-text-field
+          class="businessProfile-field"
+          id="customer-name"
+          v-model="customerName"
+          variant="outlined"
+          placeholder="Enter customer name"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+        <label for="phone-number" class="edit-info-label">
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          class="invite-phone"
+          id="phone-number"
+          v-model="phone"
+          mode="international"
+        ></vue-tel-input>
+        <label
+          for="sec-phone-number"
+          v-if="secondaryPhoneStatus"
+          class="edit-info-label"
+        >
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          v-if="secondaryPhoneStatus"
+          class="invite-phone"
+          id="sec-phone-number"
+          v-model="secPhone"
+          mode="international"
+        ></vue-tel-input>
+        <div
+          class="add-phone-number mb-4"
+          v-if="!secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+          {{ $t("inventory.addAnotherPhoneNo") }}
+        </div>
+        <div
+          class="add-phone-number mb-4"
+          v-if="secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+          {{ $t("deliveries.removePhoneNumber") }}
+        </div>
+      </div>
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitRecepientInfo()"
+      >
+        Save Info
+      </v-btn>
+    </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -1012,6 +1121,7 @@ export default {
       locationData: {},
       instructions: "",
       apartmentName: "",
+      recepientOption: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
@@ -1539,6 +1649,9 @@ export default {
   align-items: center;
   font-size: 15px;
 }
+.crossdock-recipient-details-text {
+  margin: 1rem 0px 1rem 0px !important;
+}
 .fees-title {
   display: flex;
   align-items: flex-end;
@@ -1550,6 +1663,10 @@ export default {
   color: #324ba8;
   text-align: center;
   margin: 30px;
+}
+.recepient-info-icons {
+  font-size: 20px !important;
+  padding-right: 6px !important;
 }
 .user-added-container {
   background: white;
@@ -1681,6 +1798,9 @@ export default {
 .resend-invite-img {
   width: 40px;
 }
+.recepient-info-label {
+  padding-left: 10px !important;
+}
 .resend-invite-close {
   width: 100%;
   display: flex;
@@ -1705,6 +1825,7 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .deactivate-user-title {
   margin-top: -50px;
   font-size: 18px;

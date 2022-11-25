@@ -64,7 +64,10 @@
           <div class="col-1">
             <i class="mdi mdi-account-outline cross-docking-checkout-icons"></i>
           </div>
-          <div class="col-11 cross-docking-checkout-text">
+          <div
+            class="col-11 cross-docking-checkout-text"
+            @click="addRecepientInfo()"
+          >
             <span>{{ $t("inventory.addRecipientInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
               ><i class="mdi mdi-chevron-right"></i
@@ -512,6 +515,12 @@ export default {
       this.setOverlayStatus({
         overlay: true,
         popup: "deliveryInfoCrossdock",
+      });
+    },
+    addRecepientInfo() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "recepientInfoCrossdock",
       });
     },
     setLocation(val) {

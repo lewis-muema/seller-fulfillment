@@ -237,6 +237,16 @@ export default {
                 device: "desktop",
               },
             });
+            window.gtag("event", "purchase", {
+              transaction_id: response.data.data.order_id,
+              currency: this.getFulfillmentFees.currency,
+              value: this.getFulfillmentFees.calculated_fee,
+              items: [
+                {
+                  item_id: response.data.data.order_id,
+                },
+              ],
+            });
             this.resetInputs();
             if (this.onboardingStatus) {
               this.$router.push("/");

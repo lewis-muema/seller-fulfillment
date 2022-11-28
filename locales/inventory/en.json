@@ -182,5 +182,7 @@
   "deliveryTime": "Delivery time",
   "preferences": "Preferences",
   "setPreferencesForPayment": "Set preferences for payment on delivery, delivery documents & reference number",
-  "addAnotherDeliveryLocation": "Add another delivery location"
+  "addAnotherDeliveryLocation": "Add another delivery location",
+  "someItemsOnYourList": "Some items on your list are not at the Sendy fulfillment center. On the next step, you’ll let us know how you’d like them to be picked.",
+  "otherProducts": "{Name} & {Count} other products"
 }

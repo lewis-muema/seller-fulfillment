@@ -335,4 +335,10 @@ export default {
   setSearchedProducts(state, val) {
     state.searchedProducts = val;
   },
+  setDestinations(state, val) {
+    state.destinations = val;
+  },
+  setDestinationIndex(state, val) {
+    state.destinationIndex = val;
+  },
 };

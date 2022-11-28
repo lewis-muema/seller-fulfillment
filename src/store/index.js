@@ -1433,6 +1433,8 @@ export default createStore({
       inventorySelectedTab: "inventory.all",
       stockSelectedTab: "Overview",
       selectedProducts: [],
+      destinations: [],
+      destinationIndex: 0,
       sendProductsRoute: "",
       product: {
         product_id: "P-KXG-0000",

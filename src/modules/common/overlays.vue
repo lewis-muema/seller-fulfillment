@@ -870,16 +870,20 @@ export default {
     "$store.state.overlayStatus": function (val) {
       this.overlay = val.overlay;
       this.popup = val.popup;
-      this.newCurrency =
-        val.popup === "editPrice"
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_currency
-          : "";
-      this.newPrice =
-        val.popup === "editPrice"
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_unit_price
-          : "";
+      const optionCurrency = this.getSelectedProducts[this.getEditedPriceIndex]
+        .selectedOption
+        ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+            .product_variant_currency
+        : this.getSelectedProducts[this.getEditedPriceIndex].product_variants[0]
+            .product_variant_currency;
+      const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
+        .selectedOption
+        ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+            .product_variant_unit_price
+        : this.getSelectedProducts[this.getEditedPriceIndex].product_variants[0]
+            .product_variant_unit_price;
+      this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
+      this.newPrice = val.popup === "editPrice" ? optionPrice : "";
       this.paymentCollection = this.getPaymentCollectionStatus.status;
       this.deliveryFeeCollection =
         this.getPaymentCollectionStatus.amountToBeCollected;
@@ -1322,9 +1326,15 @@ export default {
       return moment(time).format("Do MMM h:mm a");
     },
     updatePrice() {
-      this.getSelectedProducts[
-        this.getEditedPriceIndex
-      ].selectedOption.product_variant_unit_price = this.newPrice;
+      if (this.getSelectedProducts[this.getEditedPriceIndex].selectedOption) {
+        this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].selectedOption.product_variant_unit_price = this.newPrice;
+      } else {
+        this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].product_variants[0].product_variant_unit_price = this.newPrice;
+      }
       this.overlayStatusSet(false, "editPrice");
     },
     enterPromoCode() {

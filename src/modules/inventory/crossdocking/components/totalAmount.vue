@@ -108,15 +108,14 @@ export default {
       this.products.forEach((row) => {
         products.push({
           product_id: row.product_id,
-          product_variant_id: row.selectedOption.product_variant_id,
+          product_variant_id: this.option(row).product_variant_id,
           quantity: row.quantity,
-          currency: row.selectedOption.product_variant_currency,
-          unit_price: row.selectedOption.product_variant_unit_price,
+          currency: this.option(row).product_variant_currency,
+          unit_price: this.option(row).product_variant_unit_price,
         });
       });
       return {
-        order_type:
-          this.$route.params.path === "customer" ? "DELIVERY" : "PICKUP",
+        order_type: "DELIVERY",
         products,
         coupon_code: this.getPromoCode ? this.getPromoCode : null,
       };
@@ -152,10 +151,7 @@ export default {
         endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
         values: this.productPayload,
       }).then((response) => {
-        if (
-          this.$route.path ===
-          `/inventory/send-inventory/${this.$route.params.path}/checkout`
-        ) {
+        if (this.$route.path === `/inventory/create-delivery`) {
           this.setLoader({
             type: "calculateFee",
             value: "",
@@ -165,6 +161,12 @@ export default {
           this.setFulfillmentFees(response.data.data);
         }
       });
+    },
+    option(row) {
+      const option = row.selectedOption
+        ? row.selectedOption
+        : row.product_variants[0];
+      return option;
     },
     removePromoCode() {
       this.setPromoCode("");

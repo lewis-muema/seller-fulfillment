@@ -1,17 +1,26 @@
 <template>
   <div>
-    <v-row>
+    <div
+      class="crossdocking-product-unavailable-banner"
+      v-if="unavailableProductStatus"
+    >
+      <span>
+        <i
+          class="mdi mdi-information-outline crossdocking-product-unavailable-banner-icon"
+        ></i>
+      </span>
+      <span>
+        {{ $t("inventory.someItemsOnYourList") }}
+      </span>
+    </div>
+    <v-row class="mt-5">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="enter-quantity-container desktop-header-title d-flex p-3">
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="
-                $router.push(
-                  `/inventory/send-inventory/${$route.params.path}/select-products`
-                )
-              "
+              @click="$router.push(`/inventory/add-delivery-products`)"
             ></i>
             <v-card-title class="text-center send-products-title">
               {{ $t("inventory.enterQuantity") }}
@@ -57,7 +66,12 @@
                       />
                       <div>
                         <p class="product-select-product-name">
-                          {{ selectedProduct.product_name }}
+                          {{
+                            selectedProduct.selectedOption
+                              ? selectedProduct.selectedOption
+                                  .product_variant_description
+                              : selectedProduct.product_name
+                          }}
                         </p>
                         <p
                           v-if="selectedProduct.selectedOption"
@@ -75,7 +89,7 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td style="width: 250px">
                     <div v-if="selectedProduct.selectedOption">
                       {{
                         selectedProduct.selectedOption.product_variant_currency
@@ -86,39 +100,39 @@
                       }}
                     </div>
                     <div v-else>
-                      {{ selectedProduct.product_currency }}
-                      {{ selectedProduct.product_price }}
+                      {{
+                        selectedProduct.product_variants[0]
+                          .product_variant_currency
+                      }}
+                      {{
+                        selectedProduct.product_variants[0]
+                          .product_variant_unit_price
+                      }}
                     </div>
                     <div
                       @click="openPricingOverlay(index)"
                       class="add-quantity-price-tag"
-                      v-if="$route.params.path === 'customer'"
                     >
                       <i class="mdi mdi-tag-multiple"></i>
                       {{ $t("inventory.editPrice") }}
                     </div>
                   </td>
-                  <td v-if="$route.params.path === 'customer'">
-                    <div class="available-units">
-                      {{
-                        selectedProduct.selectedOption
-                          .product_variant_stock_levels
-                          ? selectedProduct.selectedOption
-                              .product_variant_stock_levels.available
-                          : "-"
-                      }}
-                    </div>
-                  </td>
                   <td class="">
-                    <label>{{ $t("inventory.qty") }}</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      v-model="selectedProduct.quantity"
-                      placeholder="0.0"
-                      @input="addQuantity(index, $event)"
-                      required
-                    />
+                    <div class="crossdocking-product-quantity-label">
+                      <p class="mb-1">
+                        {{ $t("inventory.qty") }}
+                      </p>
+                      <el-input-number
+                        class="crossdocking-product-counter"
+                        v-model="selectedProduct.quantity"
+                        :min="0"
+                        @change="addQuantity(index, selectedProduct.quantity)"
+                        required
+                      />
+                    </div>
+                    <div class="crossdocking-product-counter-error">
+                      {{ unavailableProducts(selectedProduct) }}
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -188,16 +202,18 @@ export default {
           title: "inventory.price",
         },
         {
-          title: "inventory.availableUnits",
-        },
-        {
           title: "inventory.quantityToSend",
         },
       ],
     };
   },
   computed: {
-    ...mapGetters(["getSelectedProducts", "getStorageUserDetails"]),
+    ...mapGetters([
+      "getSelectedProducts",
+      "getStorageUserDetails",
+      "getDestinations",
+      "getDestinationIndex",
+    ]),
     selectedProductsSummary() {
       return this.getSelectedProducts;
     },
@@ -210,6 +226,21 @@ export default {
       });
       return total;
     },
+    unavailableProductStatus() {
+      let status = false;
+      this.selectedProductsSummary.forEach((row) => {
+        const availableStock = row.selectedOption
+          ? row.selectedOption.product_variant_stock_levels.available
+          : row.product_variants[0].product_variant_stock_levels.available;
+        if (availableStock < row.quantity) {
+          status = true;
+        }
+      });
+      return status;
+    },
+  },
+  mounted() {
+    this.unavailableStockStatus = false;
   },
   methods: {
     ...mapMutations([
@@ -217,12 +248,16 @@ export default {
       "setSelectedProducts",
       "setOverlayStatus",
       "setEditedPriceIndex",
+      "setDestinations",
     ]),
     addProductStep() {
       if (this.totalProducts > 0) {
-        this.$router.push(
-          `/inventory/send-inventory/${this.$route.params.path}/checkout`
-        );
+        const destinations = this.getDestinations;
+        destinations.splice(this.getDestinationIndex, 0, {
+          products: this.getSelectedProducts,
+        });
+        this.setDestinations(destinations);
+        this.$router.push(`/inventory/create-delivery`);
       } else {
         ElNotification({
           title: "",
@@ -231,46 +266,30 @@ export default {
         });
       }
     },
-    addQuantity(val, event) {
+    unavailableProducts(val) {
+      const availableStock = val.selectedOption
+        ? val.selectedOption.product_variant_stock_levels.available
+        : val.product_variants[0].product_variant_stock_levels.available;
+      if (availableStock < val.quantity) {
+        return `${val.quantity - availableStock} units are unavailable`;
+      }
+    },
+    addQuantity(val, quantity) {
       const products = this.getSelectedProducts;
-      let tally = "";
-      if (
-        this.$route.params.path === "customer" &&
-        event.target.value >
-          products[val].selectedOption.product_variant_stock_levels.available &&
-        process.env.DOCKER_ENV === "production"
-      ) {
-        ElNotification({
-          title: "",
-          message: this.$t("inventory.theQuantityYouHaveEntered"),
-          type: "error",
-        });
-      } else {
-        tally = event.target.value;
-      }
-      let newProduct = {};
-      Object.keys(products[val]).forEach((row) => {
-        newProduct[row] = products[val][row];
+      this.sendSegmentEvents({
+        event: "Review_Added_Items",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          SKU: products[val].product_id,
+          variant: products[val].selectedOption.product_variant_id,
+          quantity: quantity,
+          product_collection: products[val].product_collection
+            ? products[val].product_collection.collection_id
+            : "",
+          clientType: "web",
+          device: "desktop",
+        },
       });
-      newProduct.quantity = tally;
-      products[val] = newProduct;
-      this.setSelectedProducts(products);
-      if (this.$route.params.path === "customer") {
-        this.sendSegmentEvents({
-          event: "Review_Added_Items",
-          data: {
-            userId: this.getStorageUserDetails.business_id,
-            SKU: products[val].product_id,
-            variant: products[val].selectedOption.product_variant_id,
-            quantity: event.target.value,
-            product_collection: products[val].product_collection
-              ? products[val].product_collection.collection_id
-              : "",
-            clientType: "web",
-            device: "desktop",
-          },
-        });
-      }
     },
     removeProductOption(index) {
       const products = this.getSelectedProducts;
@@ -331,5 +350,32 @@ export default {
 .add-quantity-price-tag {
   color: #909399;
   cursor: pointer;
+}
+.crossdocking-product-quantity-label {
+  display: flex;
+  flex-direction: column;
+}
+.crossdocking-product-counter-error {
+  color: #9b101c;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 10px 0px;
+}
+.crossdocking-product-unavailable-banner {
+  margin-left: 50px;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fbdecf;
+  margin-right: 50px;
+  margin-top: 40px;
+  margin-bottom: -30px;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+}
+.crossdocking-product-unavailable-banner-icon {
+  font-size: 25px;
+  margin-right: 20px;
+  color: #9b101c;
 }
 </style>

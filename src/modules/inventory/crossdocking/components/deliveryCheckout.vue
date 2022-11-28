@@ -14,16 +14,43 @@
       <div class="payment-collection-title">
         {{ $t("deliveries.deliveryInfo") }}
       </div>
-      <div>
+      <div v-for="index in indeces" :key="index">
         <div class="mb-4 row cross-docking-checkout-row">
           <div class="col-1">
             <i class="mdi mdi-shape cross-docking-checkout-icons"></i>
           </div>
-          <div class="col-11 cross-docking-checkout-text">
-            <span>{{ $t("inventory.selectProductsToSend") }}</span>
-            <span class="cross-docking-checkout-chevrons"
-              ><i class="mdi mdi-chevron-right"></i
-            ></span>
+          <div
+            class="col-11 cross-docking-checkout-product-underline"
+            @click="addProducts(index)"
+          >
+            <div
+              class="cross-docking-checkout-text-grey-no-underline cross-docking-checkout-products-label"
+              v-if="getDestinations[index - 1]"
+            >
+              <div class="cross-docking-checkout-products-label-upper">
+                <span>{{ $t("deliveries.products") }}</span>
+                <span class="cross-docking-checkout-chevrons"
+                  ><span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.change")
+                  }}</span
+                  ><i class="mdi mdi-chevron-right"></i
+                ></span>
+              </div>
+              <div class="mb-3">
+                {{
+                  $t("inventory.otherProducts", {
+                    Name: getDestinations[index - 1].products[0].product_name,
+                    Count: getDestinations[index - 1].products.length - 1,
+                  })
+                }}
+              </div>
+            </div>
+            <div class="cross-docking-checkout-text-no-underline" v-else>
+              <span>{{ $t("inventory.selectProductsToSend") }}</span>
+              <span class="cross-docking-checkout-chevrons"
+                ><i class="mdi mdi-chevron-right"></i
+              ></span>
+            </div>
           </div>
         </div>
         <div class="mb-4 row cross-docking-checkout-row">
@@ -190,10 +217,10 @@
             </div>
           </div>
         </div>
-        <div class="cross-docking-checkout-add-location">
-          <i class="mdi mdi-plus cross-docking-checkout-add-location-plus"></i>
-          {{ $t("inventory.addAnotherDeliveryLocation") }}
-        </div>
+      </div>
+      <div class="cross-docking-checkout-add-location">
+        <i class="mdi mdi-plus cross-docking-checkout-add-location-plus"></i>
+        {{ $t("inventory.addAnotherDeliveryLocation") }}
       </div>
       <hr class="mt-3" />
       <div class="mt-3">
@@ -309,7 +336,14 @@ export default {
       "getPaymentCollectionStatus",
       "getActivePayment",
       "getBillingCycles",
+      "getDestinations",
+      "getDestinationIndex",
     ]),
+    indeces() {
+      return this.getDestinationIndex === 0
+        ? this.getDestinationIndex + 1
+        : this.getDestinationIndex;
+    },
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
         return true;
@@ -476,8 +510,14 @@ export default {
       "setPaymentCollectionStatus",
       "setActivePayment",
       "setBillingCycles",
+      "setDestinations",
+      "setDestinationIndex",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
+    addProducts(index) {
+      this.setDestinationIndex(index);
+      this.$router.push("/inventory/add-delivery-products");
+    },
     addProductStep(val) {
       this.setProductStep(val);
     },
@@ -732,12 +772,30 @@ export default {
   display: flex;
   align-items: center;
 }
+.cross-docking-checkout-text-no-underline {
+  cursor: pointer;
+  color: #324ba8;
+  font-size: 17px;
+  font-weight: 500;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
 .cross-docking-checkout-text-grey {
   cursor: pointer;
   color: #606266;
   font-size: 17px;
   font-weight: 500;
   border-bottom: 1px solid #dcdfe6;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+.cross-docking-checkout-text-grey-no-underline {
+  cursor: pointer;
+  color: #606266;
+  font-size: 17px;
+  font-weight: 500;
   height: 60px;
   display: flex;
   align-items: center;
@@ -762,5 +820,18 @@ export default {
   color: #909399;
   font-size: 20px;
   margin-right: 20px;
+}
+.cross-docking-checkout-products-label {
+  flex-direction: column;
+  align-items: flex-start !important;
+  height: max-content;
+}
+.cross-docking-checkout-products-label-upper {
+  display: flex;
+  width: 100%;
+  margin-top: 30px;
+}
+.cross-docking-checkout-product-underline {
+  border-bottom: 1px solid #dcdfe6;
 }
 </style>

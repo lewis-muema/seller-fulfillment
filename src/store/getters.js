@@ -114,4 +114,6 @@ export default {
   getWithDrawalAmount: (state) => state.withDrawalAmount,
   getPagination: (state) => state.pagination,
   getSearchedProducts: (state) => state.searchedProducts,
+  getDestinations: (state) => state.destinations,
+  getDestinationIndex: (state) => state.destinationIndex,
 };

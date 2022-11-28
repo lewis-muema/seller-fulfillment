@@ -1,8 +1,6 @@
 <template>
-  <div
-    :class="getEditValue === 'consignment' ? 'consignment-product-select' : ''"
-  >
-    <v-row>
+  <div>
+    <v-row class="mt-5">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -10,11 +8,7 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="
-                  getEditValue === 'inventory'
-                    ? $router.push('/inventory/send-inventory')
-                    : $router.go(-1)
-                "
+                @click="$router.push(`/inventory/create-delivery`)"
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -22,8 +16,7 @@
             </div>
             <router-link
               to="/inventory/add-product/"
-              class="add-new-product"
-              v-if="getEditValue !== 'consignment'"
+              class="add-new-product crossdocking-add-product-button"
             >
               <v-icon>mdi mdi-plus</v-icon>
               {{ $t("inventory.addNewProduct") }}
@@ -36,11 +29,16 @@
           <v-table v-if="products.length > 0">
             <thead>
               <tr>
-                <th class="product-select-table-titles">
-                  <span>{{ $t("settings.name") }}</span
-                  ><span class="product-select-units">
+                <th
+                  class="product-select-table-titles row crossdocking-product-select-titles"
+                >
+                  <div class="col-7">{{ $t("settings.name") }}</div>
+                  <div
+                    class="product-select-units col-2 crossdocking-product-select-header"
+                  >
                     {{ $t("inventory.availableInventory") }}
-                  </span>
+                  </div>
+                  <div class="col-3"></div>
                 </th>
               </tr>
             </thead>
@@ -55,108 +53,133 @@
                   :class="disabledStatus(product) ? 'disabled-row' : ''"
                   v-if="product.product_variants.length === 1"
                 >
-                  <div class="product-select-column">
-                    <input
-                      type="checkbox"
-                      class="product-select-checkbox"
-                      @click="
-                        product.status
-                          ? removeProduct(
-                              product,
-                              i,
-                              product.product_variants[0],
-                              0
-                            )
-                          : addProduct(
-                              product,
-                              i,
-                              product.product_variants[0],
-                              0
-                            )
-                      "
-                      :checked="product.status"
-                      :disabled="disabledStatus(product)"
-                    />
-                    <span>
-                      <img
-                        :src="
-                          product.product_variants[0].product_variant_image_link
+                  <div class="product-select-column row">
+                    <div class="col-7 crossdocking-product-select-titles">
+                      <input
+                        type="checkbox"
+                        class="product-select-checkbox"
+                        @click="
+                          product.status
+                            ? removeProduct(
+                                product,
+                                i,
+                                product.product_variants[0],
+                                0
+                              )
+                            : addProduct(
+                                product,
+                                i,
+                                product.product_variants[0],
+                                0
+                              )
                         "
-                        v-if="!getLoader.products"
-                        alt=""
-                        class="product-select-img"
+                        :checked="product.status"
+                        :disabled="disabledStatus(product)"
                       />
-                      <span :class="getLoader.products">
-                        {{ product.product_name }}
+                      <span>
+                        <img
+                          :src="
+                            product.product_variants[0]
+                              .product_variant_image_link
+                          "
+                          v-if="!getLoader.products"
+                          alt=""
+                          class="product-select-img"
+                        />
+                        <span :class="getLoader.products">
+                          {{ product.product_name }}
+                        </span>
                       </span>
-                    </span>
-                    <span
-                      :class="getLoader.products"
-                      class="product-select-units"
-                      >{{
-                        product.product_variants[0].product_variant_stock_levels
-                          ? product.product_variants[0]
-                              .product_variant_stock_levels.available
-                          : "-"
-                      }}
-                      {{ $t("inventory.units") }}</span
-                    >
+                    </div>
+                    <div class="col-2 crossdocking-product-select-titles">
+                      <span
+                        :class="getLoader.products"
+                        class="product-select-units"
+                        >{{
+                          product.product_variants[0]
+                            .product_variant_stock_levels
+                            ? product.product_variants[0]
+                                .product_variant_stock_levels.available
+                            : "-"
+                        }}
+                        {{ $t("inventory.units") }}</span
+                      >
+                    </div>
+                    <div class="col-3">
+                      <el-input-number
+                        class="crossdocking-product-counter"
+                        v-model="product.quantity"
+                        :min="0"
+                        @change="addCount(product.quantity, product, i)"
+                      />
+                    </div>
                   </div>
                 </td>
                 <div v-else>
                   <v-expansion-panels>
                     <v-expansion-panel class="product-select-exp-panel">
                       <v-expansion-panel-title
-                        class="product-select-exp-title"
+                        class="crossdocking-product-row row"
                         hide-actions
                       >
-                        <span>
-                          <i
-                            class="mdi mdi-chevron-down product-select-chevron"
-                          ></i>
-                        </span>
-                        <span class="d-flex">
-                          <img
-                            :src="
-                              product.product_variants[0]
-                                .product_variant_image_link
-                            "
-                            v-if="!getLoader.products"
-                            alt=""
-                            class="product-select-img"
-                          />
-                          <span class="product-select-expansion-title">
-                            <div>
-                              <span :class="getLoader.products">
-                                {{ product.product_name }}
-                              </span>
-                            </div>
-                            <div class="product-select-expansion-description">
-                              <span :class="getLoader.products">
-                                {{
-                                  variantFilter(product.product_variants).length
-                                }}
-                                {{ $t("inventory.producTOptions") }}
-                              </span>
-                            </div>
+                        <div class="col-7 crossdocking-product-select-titles">
+                          <span>
+                            <i
+                              class="mdi mdi-chevron-down product-select-chevron"
+                            ></i>
                           </span>
-                        </span>
-                        <span
-                          :class="getLoader.products"
-                          class="product-select-units"
-                          >{{
-                            product.product_variants[0]
-                              .product_variant_stock_levels
-                              ? product.product_variants[0]
-                                  .product_variant_stock_levels.available
-                              : "-"
-                          }}
-                          {{ $t("inventory.units") }}</span
-                        >
+                          <span class="d-flex">
+                            <img
+                              :src="
+                                product.product_variants[0]
+                                  .product_variant_image_link
+                              "
+                              v-if="!getLoader.products"
+                              alt=""
+                              class="product-select-img"
+                            />
+                            <span class="product-select-expansion-title">
+                              <div>
+                                <span :class="getLoader.products">
+                                  {{ product.product_name }}
+                                </span>
+                              </div>
+                              <div class="product-select-expansion-description">
+                                <span :class="getLoader.products">
+                                  {{
+                                    variantFilter(product.product_variants)
+                                      .length
+                                  }}
+                                  {{ $t("inventory.producTOptions") }}
+                                </span>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div class="col-2 crossdocking-product-select-titles">
+                          <span
+                            :class="getLoader.products"
+                            class="product-select-units"
+                            >{{
+                              product.product_variants[0]
+                                .product_variant_stock_levels
+                                ? product.product_variants[0]
+                                    .product_variant_stock_levels.available
+                                : "-"
+                            }}
+                            {{ $t("inventory.units") }}</span
+                          >
+                        </div>
+                        <div class="col-3">
+                          <span class="product-select-units">
+                            <span>{{ $t("inventory.view") }}</span>
+                            <i class="mdi mdi-chevron-down ml-2"></i>
+                          </span>
+                        </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
-                          class="product-select-option"
+                          class="product-select-option row crossdocking-product-row-inner"
                           :class="
                             disabledVariantStatus(option) ? 'disabled-row' : ''
                           "
@@ -165,35 +188,50 @@
                           )"
                           :key="x"
                         >
-                          <input
-                            type="checkbox"
-                            class="product-select-checkbox-inner"
-                            @click="
-                              option.status
-                                ? removeProduct(product, i, option, x)
-                                : addProduct(product, i, option, x)
-                            "
-                            :checked="option.status"
-                            :disabled="disabledVariantStatus(option)"
-                          />
-                          <img
-                            :src="option.product_variant_image_link"
-                            alt=""
-                            class="product-select-img"
-                          />
-                          <span :class="getLoader.products">{{
-                            option.product_variant_description
-                          }}</span>
-                          <span
-                            :class="getLoader.products"
-                            class="product-select-units"
-                            >{{
-                              option.product_variant_stock_levels
-                                ? option.product_variant_stock_levels.available
-                                : "-"
-                            }}
-                            {{ $t("inventory.units") }}</span
-                          >
+                          <div class="col-7 crossdocking-product-select-titles">
+                            <input
+                              type="checkbox"
+                              class="product-select-checkbox-inner ml-0"
+                              @click="
+                                option.status
+                                  ? removeProduct(product, i, option, x)
+                                  : addProduct(product, i, option, x)
+                              "
+                              :checked="option.status"
+                              :disabled="disabledVariantStatus(option)"
+                            />
+                            <img
+                              :src="option.product_variant_image_link"
+                              alt=""
+                              class="product-select-img"
+                            />
+                            <span :class="getLoader.products">{{
+                              option.product_variant_description
+                            }}</span>
+                          </div>
+                          <div class="col-2 crossdocking-product-select-titles">
+                            <span
+                              :class="getLoader.products"
+                              class="product-select-units"
+                              >{{
+                                option.product_variant_stock_levels
+                                  ? option.product_variant_stock_levels
+                                      .available
+                                  : "-"
+                              }}
+                              {{ $t("inventory.units") }}</span
+                            >
+                          </div>
+                          <div class="col-3">
+                            <el-input-number
+                              class="crossdocking-product-counter"
+                              v-model="option.quantity"
+                              :min="0"
+                              @change="
+                                addCount(option.quantity, product, i, option, x)
+                              "
+                            />
+                          </div>
                         </div>
                       </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -265,6 +303,7 @@ export default {
       selectedProducts: [],
       searchProduct: "",
       mappedSelectedProducts: [],
+      count: 0,
     };
   },
   components: {
@@ -276,11 +315,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent(
-      this.$route.params.path === "sendy"
-        ? "common.sendInventoryToSendy"
-        : "common.sendDeliveryToCustomer"
-    );
+    this.setComponent("common.sendDeliveryToCustomer");
     this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
@@ -303,6 +338,24 @@ export default {
         variant.push(row);
       });
       return variant;
+    },
+    addCount(val, product, i, option, z) {
+      const products = this.getSelectedProducts;
+      const addedProduct = products.filter((row, x) => {
+        if (row.productIndex === i && !option) {
+          products[x].quantity = val;
+        } else if (row.productIndex === i && option && row.optionIndex === z) {
+          products[x].quantity = option.quantity;
+        }
+        return (
+          row.productIndex === i && (option ? row.optionIndex === z : true)
+        );
+      });
+      if (!addedProduct.length) {
+        product.quantity = val;
+        this.addProduct(product, i, option, z);
+        this.productMapping();
+      }
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
@@ -333,10 +386,7 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products?max=10`,
       }).then((response) => {
-        if (
-          this.$route.path ===
-          `/inventory/send-inventory/${this.$route.params.path}/select-products`
-        ) {
+        if (this.$route.path === `/inventory/add-delivery-products`) {
           this.setLoader({
             type: "products",
             value: "",
@@ -353,19 +403,7 @@ export default {
     },
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
-        if (this.getEditValue === "consignment") {
-          this.mapProductsOnOrder();
-          this.setProductsToSubmit([
-            ...this.getProductsToSubmit,
-            ...this.getMappedSelectedProducts,
-          ]);
-          this.setMappedSelectedProducts([]);
-        }
-        this.$router.push(
-          this.getEditValue === "consignment"
-            ? "/deliveries/edit-order"
-            : `/inventory/send-inventory/${this.$route.params.path}/add-quantity`
-        );
+        this.$router.push(`/inventory/add-delivery-quantities`);
       } else {
         ElNotification({
           title: "",
@@ -394,45 +432,17 @@ export default {
           if (row.selectedOption) {
             this.products[row.productIndex].product_variants[
               row.optionIndex
+            ].quantity = parseInt(row.quantity);
+          } else {
+            this.products[row.productIndex].quantity = parseInt(row.quantity);
+          }
+          if (row.selectedOption) {
+            this.products[row.productIndex].product_variants[
+              row.optionIndex
             ].status = true;
           }
         });
         this.selectedProducts = this.getSelectedProducts;
-      }
-    },
-    mapProductsOnOrder() {
-      if (this.getEditValue === "consignment") {
-        if (this.selectedProducts.length) {
-          this.selectedProducts.forEach((product) => {
-            const existingProductIndex = this.getProductsToSubmit.findIndex(
-              (x) =>
-                x.product_variant_id ===
-                product.selectedOption.product_variant_id
-            );
-            if (existingProductIndex === -1) {
-              const mappedSelectedProduct = {
-                product_id: product.product_id,
-                product_variant_id: product.selectedOption.product_variant_id,
-                product_variant_image_link:
-                  product.selectedOption.product_variant_image_link,
-                product_name: product.product_name,
-                product_variant_description:
-                  product.selectedOption.product_variant_description,
-                product_variant_quantity:
-                  product.selectedOption.product_variant_quantity,
-                product_variant_quantity_type:
-                  product.selectedOption.product_variant_quantity_type,
-                quantity: 0,
-                unit_price: product.selectedOption.product_variant_unit_price,
-                currency: product.selectedOption.product_variant_currency,
-                status: true,
-              };
-              this.mappedSelectedProducts.push(mappedSelectedProduct);
-              this.setMappedSelectedProducts(this.mappedSelectedProducts);
-              this.selectedProducts = [];
-            }
-          });
-        }
       }
     },
     handleSelectionChange(val) {
@@ -602,9 +612,13 @@ export default {
   font-size: 20px;
   margin-right: 35px;
 }
-.product-select-exp-title {
-  padding: 15px !important;
+.crossdocking-product-row {
+  margin: 0px !important;
+  padding: 15px 3px !important;
   border-bottom: 1px solid #e0e0e0;
+}
+.crossdocking-product-row-inner {
+  font-size: 14px;
 }
 .product-select-exp-panel .v-expansion-panel__shadow {
   box-shadow: none;
@@ -616,6 +630,9 @@ export default {
 }
 .product-select-panel-text .v-expansion-panel-text__wrapper {
   padding: 0px 15px;
+}
+.v-expansion-panel-text__wrapper {
+  border-bottom: 1px solid #e0e0e0;
 }
 .product-select-expansion-title {
   display: flex;
@@ -647,5 +664,22 @@ export default {
 }
 .consignment-product-select {
   padding-top: 50px;
+}
+.crossdocking-add-product-button {
+  border: 1px solid;
+  padding: 5px 15px;
+  border-radius: 5px;
+}
+.crossdocking-product-select-titles {
+  display: flex;
+  align-items: center;
+}
+.crossdocking-product-counter {
+  float: right;
+  width: 100px !important;
+}
+.crossdocking-product-select-header {
+  width: auto !important;
+  padding: 0px !important;
 }
 </style>

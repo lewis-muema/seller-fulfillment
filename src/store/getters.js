@@ -12,6 +12,7 @@ export default {
   getDeliveries: (state) => state.deliveries,
   getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
+  getRecepientInfo: (state) => state.recepientInfo,
   getPickupInfo: (state) => state.pickupInfo,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,

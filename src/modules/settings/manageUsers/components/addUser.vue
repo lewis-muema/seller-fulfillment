@@ -235,9 +235,6 @@ export default {
               overlay: true,
               popup: "user",
             });
-            this.$router.push(
-              `/settings/user-permissions/${response.data.data.user.user_id}`
-            );
             this.sendSegmentEvents({
               event: "Add_Multiuser",
               data: {
@@ -251,6 +248,9 @@ export default {
                 device: "desktop",
               },
             });
+            this.$router.push(
+              `/settings/user-permissions/${response.data.data.user.user_id}`
+            );
           } else {
             ElNotification({
               title: response.response.data.errors[0].message.replaceAll(

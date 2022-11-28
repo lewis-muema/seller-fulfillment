@@ -334,11 +334,6 @@ export default {
       buttonLoader: false,
       selectPaymentCollection: false,
       preference: false,
-      items: {
-        location: "testt",
-        apartmentName: "Floor 2",
-        instructions: "Instructions",
-      },
     };
   },
   watch: {

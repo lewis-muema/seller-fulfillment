@@ -26,7 +26,13 @@
             ></span>
           </div>
         </div>
-        <div class="mb-4 row cross-docking-checkout-row">
+        <div
+          :class="
+            Object.keys(getDeliveryInfo).length === 0
+              ? 'mb-4 row cross-docking-checkout-row'
+              : 'mb-4 row cross-docking-checkout-roww'
+          "
+        >
           <div class="col-1">
             <i
               class="mdi mdi-map-marker-outline cross-docking-checkout-icons"
@@ -46,13 +52,18 @@
             class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
             v-else
           >
-            <div class="delivery-details-text">
-              <p>Delivery Info</p>
-              <p>{{ getDeliveryInfo.location }}</p>
-              <p>{{ getDeliveryInfo.apartmentName }}</p>
-              <p>{{ getDeliveryInfo.instructions }}</p>
+            <div>
+              <p>{{ $t("deliveries.deliveryInfo") }}</p>
+              <div class="delivery-details-text">
+                <p>{{ getDeliveryInfo.location }}</p>
+                <p>{{ getDeliveryInfo.apartmentName }}</p>
+                <p>{{ getDeliveryInfo.instructions }}</p>
+              </div>
             </div>
-            <span class="cross-docking-checkout-chevrons">
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="addDeliveryInfo()"
+            >
               <span class="cross-docking-checkout-chevrons-text">{{
                 $t("inventory.change")
               }}</span>
@@ -60,18 +71,46 @@
             </span>
           </div>
         </div>
-        <div class="mb-4 row cross-docking-checkout-row">
+        <div
+          :class="
+            Object.keys(getRecepientInfo).length === 0
+              ? 'mb-4 row cross-docking-checkout-row'
+              : 'mb-4 row cross-docking-checkout-roww'
+          "
+        >
           <div class="col-1">
             <i class="mdi mdi-account-outline cross-docking-checkout-icons"></i>
           </div>
           <div
             class="col-11 cross-docking-checkout-text"
             @click="addRecepientInfo()"
+            v-if="Object.keys(getRecepientInfo).length === 0"
           >
             <span>{{ $t("inventory.addRecipientInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
               ><i class="mdi mdi-chevron-right"></i
             ></span>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+            v-else
+          >
+            <div>
+              <p>{{ $t("inventory.recipientInfo") }}</p>
+              <div class="delivery-details-text">
+                <p>{{ getRecepientInfo.customer_name }}</p>
+                <p>{{ getRecepientInfo.phone }}</p>
+              </div>
+            </div>
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="addRecepientInfo()"
+            >
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
           </div>
         </div>
         <div
@@ -87,12 +126,6 @@
               <p class="mb-2">{{ $t("inventory.deliveryTime") }}</p>
               <p>Wed, 25th July</p>
             </div>
-            <span class="cross-docking-checkout-chevrons">
-              <span class="cross-docking-checkout-chevrons-text">{{
-                $t("inventory.change")
-              }}</span>
-              <i class="mdi mdi-chevron-right"></i>
-            </span>
           </div>
         </div>
         <div
@@ -339,6 +372,7 @@ export default {
       "getActivePayment",
       "getBillingCycles",
       "getDeliveryInfo",
+      "getRecepientInfo",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -755,8 +789,10 @@ export default {
   color: #909399;
 }
 .cross-docking-checkout-row {
-  display: flex;
   align-items: center;
+}
+.cross-docking-checkout-roww {
+  display: flex;
 }
 .cross-docking-checkout-chevrons {
   font-size: 20px;

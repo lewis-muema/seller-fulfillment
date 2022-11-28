@@ -931,6 +931,7 @@ export default createStore({
         },
       ],
       deliveryInfo: {},
+      recepientInfo: {},
       pickupInfo: {
         location: "Windsor Heights",
         phoneNumber: "+2547000000000",

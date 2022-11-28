@@ -180,6 +180,7 @@
   "selectProductsToSend": "Select products to send",
   "addDeliveryInfo": "Add delivery info",
   "addRecipientInfo": "Add recipient info",
+  "recipientInfo": "Recipient info",
   "deliveryTime": "Delivery time",
   "preferences": "Preferences",
   "setPreferencesForPayment": "Set preferences for payment on delivery, delivery documents & reference number",

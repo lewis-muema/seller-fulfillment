@@ -157,5 +157,6 @@
   "businessName": "Name of the business",
   "receivingItems": "Who is receiving the items ?",
   "individual": "An individual",
-  "business": "A business"
+  "business": "A business",
+  "saveInfo" : "Save info"
 }

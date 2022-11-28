@@ -282,7 +282,7 @@
       ></textarea>
       <v-btn
         class="edit-info-submit-button"
-        :disabled="!isLocationValid"
+        :disabled="!isDeliveryFieldsValid"
         v-loading="buttonLoader"
         @click="submitDeliveryInfo()"
       >
@@ -295,7 +295,7 @@
     >
       <div class="view-products-section">
         <p class="view-products-label view-products-label-recepient-info">
-          {{ $t("deliveries.receivingItems")}}
+          {{ $t("deliveries.receivingItems") }}
         </p>
         <i
           @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
@@ -309,7 +309,7 @@
               <i
                 class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
               ></i
-              >{{ $t("deliveries.individual")}}
+              >{{ $t("deliveries.individual") }}
             </span>
           </el-radio>
         </div>
@@ -317,9 +317,9 @@
           <el-radio label="business" size="large">
             <span class="mb-0 ml-3 font-override recepient-info-label">
               <i
-                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+                class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
               ></i
-              >{{ $t("deliveries.business")}}
+              >{{ $t("deliveries.business") }}
             </span>
           </el-radio>
         </div>
@@ -391,11 +391,12 @@
         </div>
       </div>
       <v-btn
-        class="edit-info-submit-button"
+        :disabled="!isRecipientFieldsValid"
         v-loading="buttonLoader"
+        class="edit-info-submit-button"
         @click="submitRecepientInfo()"
       >
-        Save Info
+        {{ $t("deliveries.saveInfo") }}
       </v-btn>
     </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
@@ -1101,8 +1102,11 @@ export default {
       );
       return fee;
     },
-    isLocationValid() {
-      return this.location.length;
+    isDeliveryFieldsValid() {
+      return this.location.length && this.apartmentName.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
     },
   },
   data() {
@@ -1174,6 +1178,7 @@ export default {
       "setSendyPhoneProps",
       "setPaymentCollectionStatus",
       "setDeliveryInfo",
+      "setRecepientInfo",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -1198,6 +1203,18 @@ export default {
         this.buttonLoader = false;
         this.overlayStatusSet(false, "deliveryInfoCrossdock");
         this.setDeliveryInfo(deliveryDetails);
+      }, 2000);
+    },
+    submitRecepientInfo() {
+      this.buttonLoader = true;
+      const recepientDetails = {
+        customer_name: this.customerName,
+        phone: this.phone,
+      };
+      setTimeout(() => {
+        this.buttonLoader = false;
+        this.overlayStatusSet(false, "recepientInfoCrossdock");
+        this.setRecepientInfo(recepientDetails);
       }, 2000);
     },
     setPaymentCollection() {

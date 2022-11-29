@@ -53,28 +53,91 @@
             </div>
           </div>
         </div>
-        <div class="mb-4 row cross-docking-checkout-row">
+        <div
+          :class="
+            Object.keys(getDeliveryInfo).length === 0
+              ? 'mb-4 row cross-docking-checkout-row'
+              : 'mb-4 row cross-docking-checkout-roww'
+          "
+        >
           <div class="col-1">
             <i
               class="mdi mdi-map-marker-outline cross-docking-checkout-icons"
             ></i>
           </div>
-          <div class="col-11 cross-docking-checkout-text">
+          <div
+            class="col-11 cross-docking-checkout-text"
+            @click="addDeliveryInfo()"
+            v-if="Object.keys(getDeliveryInfo).length === 0"
+          >
             <span>{{ $t("inventory.addDeliveryInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
               ><i class="mdi mdi-chevron-right"></i
             ></span>
           </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+            v-else
+          >
+            <div>
+              <p>{{ $t("deliveries.deliveryInfo") }}</p>
+              <div class="delivery-details-text">
+                <p>{{ getDeliveryInfo.location }}</p>
+                <p>{{ getDeliveryInfo.apartmentName }}</p>
+                <p>{{ getDeliveryInfo.instructions }}</p>
+              </div>
+            </div>
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="addDeliveryInfo()"
+            >
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </div>
         </div>
-        <div class="mb-4 row cross-docking-checkout-row">
+        <div
+          :class="
+            Object.keys(getRecepientInfo).length === 0
+              ? 'mb-4 row cross-docking-checkout-row'
+              : 'mb-4 row cross-docking-checkout-roww'
+          "
+        >
           <div class="col-1">
             <i class="mdi mdi-account-outline cross-docking-checkout-icons"></i>
           </div>
-          <div class="col-11 cross-docking-checkout-text">
+          <div
+            class="col-11 cross-docking-checkout-text"
+            @click="addRecepientInfo()"
+            v-if="Object.keys(getRecepientInfo).length === 0"
+          >
             <span>{{ $t("inventory.addRecipientInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
               ><i class="mdi mdi-chevron-right"></i
             ></span>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+            v-else
+          >
+            <div>
+              <p>{{ $t("inventory.recipientInfo") }}</p>
+              <div class="delivery-details-text">
+                <p>{{ getRecepientInfo.customer_name }}</p>
+                <p>{{ getRecepientInfo.phone }}</p>
+              </div>
+            </div>
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="addRecepientInfo()"
+            >
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
           </div>
         </div>
         <div
@@ -90,12 +153,6 @@
               <p class="mb-2">{{ $t("inventory.deliveryTime") }}</p>
               <p>Wed, 25th July</p>
             </div>
-            <span class="cross-docking-checkout-chevrons">
-              <span class="cross-docking-checkout-chevrons-text">{{
-                $t("inventory.change")
-              }}</span>
-              <i class="mdi mdi-chevron-right"></i>
-            </span>
           </div>
         </div>
         <div
@@ -338,6 +395,8 @@ export default {
       "getBillingCycles",
       "getDestinations",
       "getDestinationIndex",
+      "getDeliveryInfo",
+      "getRecepientInfo",
     ]),
     indeces() {
       return this.getDestinationIndex === 0
@@ -520,6 +579,18 @@ export default {
     },
     addProductStep(val) {
       this.setProductStep(val);
+    },
+    addDeliveryInfo() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryInfoCrossdock",
+      });
+    },
+    addRecepientInfo() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "recepientInfoCrossdock",
+      });
     },
     setLocation(val) {
       this.place = val;
@@ -753,8 +824,10 @@ export default {
   color: #909399;
 }
 .cross-docking-checkout-row {
-  display: flex;
   align-items: center;
+}
+.cross-docking-checkout-roww {
+  display: flex;
 }
 .cross-docking-checkout-chevrons {
   font-size: 20px;
@@ -806,6 +879,10 @@ export default {
 .cross-docking-checkout-text-override {
   height: max-content !important;
   align-items: flex-start !important;
+}
+.delivery-details-text > p {
+  line-height: 10px !important;
+  font-weight: 400 !important;
 }
 .cross-docking-checkout-text-subtitle {
   font-size: 15px;

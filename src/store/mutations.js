@@ -26,6 +26,9 @@ export default {
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },
+  setRecepientInfo(state, val) {
+    state.recepientInfo = val;
+  },
   setPickupInfo(state, val) {
     state.pickupInfo = val;
   },

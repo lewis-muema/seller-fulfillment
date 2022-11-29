@@ -232,6 +232,173 @@
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
+    <div
+      v-if="popup === 'deliveryInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("deliveries.deliveryInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.locationOfCustomer") }} {{ $t("inventory.required") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.deliveryInstructions") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <v-btn
+        class="edit-info-submit-button"
+        :disabled="!isDeliveryFieldsValid"
+        v-loading="buttonLoader"
+        @click="submitDeliveryInfo()"
+      >
+        {{ $t("inventory.done") }}
+      </v-btn>
+    </div>
+    <div
+      v-if="popup === 'recepientInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.receivingItems") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <el-radio-group v-model="recepientOption" class="">
+        <div class="payment-collection-overlay-border-top padding-override">
+          <el-radio label="individual" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.individual") }}
+            </span>
+          </el-radio>
+        </div>
+        <div class="payment-collection-overlay-border-bottom padding-override">
+          <el-radio label="business" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.business") }}
+            </span>
+          </el-radio>
+        </div>
+      </el-radio-group>
+      <div v-if="recepientOption">
+        <p class="crossdock-recipient-details-text">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.enterRecipientDetails")
+              : $t("deliveries.enterBusinessDetails")
+          }}
+        </p>
+        <label for="customer-name" class="edit-info-label">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.recipientName")
+              : $t("deliveries.businessName")
+          }}
+        </label>
+        <v-text-field
+          class="businessProfile-field"
+          id="customer-name"
+          v-model="customerName"
+          variant="outlined"
+          placeholder="Enter customer name"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+        <label for="phone-number" class="edit-info-label">
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          class="invite-phone"
+          id="phone-number"
+          v-model="phone"
+          mode="international"
+        ></vue-tel-input>
+        <label
+          for="sec-phone-number"
+          v-if="secondaryPhoneStatus"
+          class="edit-info-label"
+        >
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          v-if="secondaryPhoneStatus"
+          class="invite-phone"
+          id="sec-phone-number"
+          v-model="secPhone"
+          mode="international"
+        ></vue-tel-input>
+        <div
+          class="add-phone-number mb-4"
+          v-if="!secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+          {{ $t("inventory.addAnotherPhoneNo") }}
+        </div>
+        <div
+          class="add-phone-number mb-4"
+          v-if="secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+          {{ $t("deliveries.removePhoneNumber") }}
+        </div>
+      </div>
+      <v-btn
+        :disabled="!isRecipientFieldsValid"
+        v-loading="buttonLoader"
+        class="edit-info-submit-button"
+        @click="submitRecepientInfo()"
+      >
+        {{ $t("deliveries.saveInfo") }}
+      </v-btn>
+    </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -939,6 +1106,12 @@ export default {
       );
       return fee;
     },
+    isDeliveryFieldsValid() {
+      return this.location.length && this.apartmentName.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
+    },
   },
   data() {
     return {
@@ -955,6 +1128,8 @@ export default {
       location: "",
       locationData: {},
       instructions: "",
+      apartmentName: "",
+      recepientOption: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
@@ -1006,6 +1181,8 @@ export default {
       "setProductsToSubmit",
       "setSendyPhoneProps",
       "setPaymentCollectionStatus",
+      "setDeliveryInfo",
+      "setRecepientInfo",
     ]),
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -1018,6 +1195,31 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    submitDeliveryInfo() {
+      this.buttonLoader = true;
+      const deliveryDetails = {
+        location: this.location,
+        apartmentName: this.apartmentName,
+        instructions: this.instructions,
+      };
+      setTimeout(() => {
+        this.buttonLoader = false;
+        this.overlayStatusSet(false, "deliveryInfoCrossdock");
+        this.setDeliveryInfo(deliveryDetails);
+      }, 2000);
+    },
+    submitRecepientInfo() {
+      this.buttonLoader = true;
+      const recepientDetails = {
+        customer_name: this.customerName,
+        phone: this.phone,
+      };
+      setTimeout(() => {
+        this.buttonLoader = false;
+        this.overlayStatusSet(false, "recepientInfoCrossdock");
+        this.setRecepientInfo(recepientDetails);
+      }, 2000);
     },
     setPaymentCollection() {
       if (this.getPaymentCollectionStatus.status === "") {
@@ -1474,6 +1676,9 @@ export default {
   align-items: center;
   font-size: 15px;
 }
+.crossdock-recipient-details-text {
+  margin: 1rem 0px 1rem 0px !important;
+}
 .fees-title {
   display: flex;
   align-items: flex-end;
@@ -1485,6 +1690,10 @@ export default {
   color: #324ba8;
   text-align: center;
   margin: 30px;
+}
+.recepient-info-icons {
+  font-size: 20px !important;
+  padding-right: 6px !important;
 }
 .user-added-container {
   background: white;
@@ -1616,6 +1825,9 @@ export default {
 .resend-invite-img {
   width: 40px;
 }
+.recepient-info-label {
+  padding-left: 10px !important;
+}
 .resend-invite-close {
   width: 100%;
   display: flex;
@@ -1640,6 +1852,7 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .deactivate-user-title {
   margin-top: -50px;
   font-size: 18px;
@@ -1653,6 +1866,14 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.edit-info-submit-button:disabled {
+  margin-top: 40px;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: #324ba8 !important;
+  background: #d3ddf6 !important;
+  width: -webkit-fill-available;
 }
 .get-help-button {
   width: 100%;

@@ -930,13 +930,8 @@ export default createStore({
           ],
         },
       ],
-      deliveryInfo: {
-        name: "James Doe",
-        location: "Windsor Heights",
-        phoneNumber: "+2547000000000",
-        instructions: "Leave the package at the door",
-        payment: "Mpesa",
-      },
+      deliveryInfo: {},
+      recepientInfo: {},
       pickupInfo: {
         location: "Windsor Heights",
         phoneNumber: "+2547000000000",

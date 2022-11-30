@@ -21,11 +21,14 @@
           </div>
           <div
             class="col-11 cross-docking-checkout-product-underline"
-            @click="addProducts(index)"
+            @click="addProducts(index - 1)"
           >
             <div
               class="cross-docking-checkout-text-grey-no-underline cross-docking-checkout-products-label"
-              v-if="getDestinations[index - 1]"
+              v-if="
+                getDestinations[index - 1] &&
+                getDestinations[index - 1].products
+              "
             >
               <div class="cross-docking-checkout-products-label-upper">
                 <span>{{ $t("deliveries.products") }}</span>
@@ -36,7 +39,7 @@
                   ><i class="mdi mdi-chevron-right"></i
                 ></span>
               </div>
-              <div class="mb-3">
+              <div class="mb-3 cross-docking-checkout-product-label-lower">
                 {{
                   $t("inventory.otherProducts", {
                     Name: getDestinations[index - 1].products[0].product_name,
@@ -55,7 +58,10 @@
         </div>
         <div
           :class="
-            Object.keys(getDeliveryInfo).length === 0
+            !(
+              getDestinations[index - 1] &&
+              getDestinations[index - 1].delivery_info
+            )
               ? 'mb-4 row cross-docking-checkout-row'
               : 'mb-4 row cross-docking-checkout-roww'
           "
@@ -67,8 +73,13 @@
           </div>
           <div
             class="col-11 cross-docking-checkout-text"
-            @click="addDeliveryInfo()"
-            v-if="Object.keys(getDeliveryInfo).length === 0"
+            @click="addDeliveryInfo(index)"
+            v-if="
+              !(
+                getDestinations[index - 1] &&
+                getDestinations[index - 1].delivery_info
+              )
+            "
           >
             <span>{{ $t("inventory.addDeliveryInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
@@ -82,14 +93,18 @@
             <div>
               <p>{{ $t("deliveries.deliveryInfo") }}</p>
               <div class="delivery-details-text">
-                <p>{{ getDeliveryInfo.location }}</p>
-                <p>{{ getDeliveryInfo.apartmentName }}</p>
-                <p>{{ getDeliveryInfo.instructions }}</p>
+                <p>{{ getDestinations[index - 1].delivery_info.location }}</p>
+                <p>
+                  {{ getDestinations[index - 1].delivery_info.apartmentName }}
+                </p>
+                <p>
+                  {{ getDestinations[index - 1].delivery_info.instructions }}
+                </p>
               </div>
             </div>
             <span
               class="cross-docking-checkout-chevrons"
-              @click="addDeliveryInfo()"
+              @click="addDeliveryInfo(index)"
             >
               <span class="cross-docking-checkout-chevrons-text">{{
                 $t("inventory.change")
@@ -100,7 +115,9 @@
         </div>
         <div
           :class="
-            Object.keys(getRecepientInfo).length === 0
+            !(
+              getDestinations[index - 1] && getDestinations[index - 1].recipient
+            )
               ? 'mb-4 row cross-docking-checkout-row'
               : 'mb-4 row cross-docking-checkout-roww'
           "
@@ -110,8 +127,13 @@
           </div>
           <div
             class="col-11 cross-docking-checkout-text"
-            @click="addRecepientInfo()"
-            v-if="Object.keys(getRecepientInfo).length === 0"
+            @click="addRecepientInfo(index)"
+            v-if="
+              !(
+                getDestinations[index - 1] &&
+                getDestinations[index - 1].recipient
+              )
+            "
           >
             <span>{{ $t("inventory.addRecipientInfo") }}</span>
             <span class="cross-docking-checkout-chevrons"
@@ -125,13 +147,14 @@
             <div>
               <p>{{ $t("inventory.recipientInfo") }}</p>
               <div class="delivery-details-text">
-                <p>{{ getRecepientInfo.customer_name }}</p>
-                <p>{{ getRecepientInfo.phone }}</p>
+                <p>{{ getDestinations[index - 1].recipient.recipient_type }}</p>
+                <p>{{ getDestinations[index - 1].recipient.customer_name }}</p>
+                <p>{{ getDestinations[index - 1].recipient.phone }}</p>
               </div>
             </div>
             <span
               class="cross-docking-checkout-chevrons"
-              @click="addRecepientInfo()"
+              @click="addRecepientInfo(index)"
             >
               <span class="cross-docking-checkout-chevrons-text">{{
                 $t("inventory.change")
@@ -151,7 +174,7 @@
           >
             <div>
               <p class="mb-2">{{ $t("inventory.deliveryTime") }}</p>
-              <p>Wed, 25th July</p>
+              <p>{{ $t("inventory.nextDay") }}</p>
             </div>
           </div>
         </div>
@@ -173,14 +196,14 @@
             <span class="cross-docking-checkout-chevrons">
               <span
                 class="cross-docking-checkout-chevrons-text"
-                @click="preference = !preference"
+                @click="preferences[index - 1] = !preferences[index - 1]"
                 >{{ $t("inventory.view") }}</span
               >
               <i class="mdi mdi-chevron-right"></i>
             </span>
           </div>
         </div>
-        <div v-if="preference">
+        <div v-if="preferences[index - 1]">
           <div class="row">
             <div class="col-1"></div>
             <div class="mb-10 col-11" v-if="paymentOnDeliveryFlag">
@@ -199,34 +222,38 @@
               <div>
                 <div
                   class="payment-collection-select"
-                  @click="
-                    setOverlayStatus({
-                      overlay: true,
-                      popup: 'paymentCollection',
-                    })
-                  "
+                  @click="addPaymentCollection(index)"
                 >
                   <p
-                    class="mr-auto payment-collection-select-text weight-override"
+                    class="mr-auto payment-collection-select-text weight-override crossdocking-text-blue"
                     v-if="
-                      getPaymentCollectionStatus.status === '' ||
-                      (getPaymentCollectionStatus.status === true &&
-                        getPaymentCollectionStatus.amountToBeCollected === '')
+                      (getDestinations[index - 1] &&
+                        getDestinations[index - 1].POD &&
+                        getDestinations[index - 1].POD.amountToBeCollected ===
+                          '') ||
+                      !getDestinations[index - 1].POD
                     "
                   >
                     {{ $t("inventory.select") }}
                   </p>
                   <p
                     class="mr-auto payment-collection-select-text weight-override"
-                    v-else-if="getPaymentCollectionStatus.status === false"
+                    v-else-if="
+                      getDestinations[index - 1] &&
+                      getDestinations[index - 1].POD &&
+                      getDestinations[index - 1].POD.amountToBeCollected ===
+                        'none'
+                    "
                   >
                     {{ $t("inventory.noDontCollectPayment") }}
                   </p>
                   <p
                     class="mr-auto payment-collection-select-text"
                     v-else-if="
-                      getPaymentCollectionStatus.status === true &&
-                      getPaymentCollectionStatus.amountToBeCollected === 'nofee'
+                      getDestinations[index - 1] &&
+                      getDestinations[index - 1].POD &&
+                      getDestinations[index - 1].POD.amountToBeCollected ===
+                        'nofee'
                     "
                   >
                     <span class="weight-override">
@@ -237,13 +264,15 @@
                       }}
                     </span>
                     <br />
-                    <span>({{ $t("inventory.priceOfProducts") }})</span>
+                    <span>{{ $t("inventory.priceOfProducts") }}</span>
                   </p>
                   <p
                     class="mr-auto payment-collection-select-text"
                     v-else-if="
-                      getPaymentCollectionStatus.status === true &&
-                      getPaymentCollectionStatus.amountToBeCollected === 'fee'
+                      getDestinations[index - 1] &&
+                      getDestinations[index - 1].POD &&
+                      getDestinations[index - 1].POD.amountToBeCollected ===
+                        'fee'
                     "
                   >
                     <span class="weight-override">
@@ -252,8 +281,8 @@
                           Amount: `${getFulfillmentFees.currency} ${
                             parseInt(getFulfillmentFees.total_product_value) +
                             parseInt(
-                              getPaymentCollectionStatus.deliveryFee
-                                ? getPaymentCollectionStatus.deliveryFee
+                              getDestinations[index - 1].POD.deliveryFee
+                                ? getDestinations[index - 1].POD.deliveryFee
                                 : 0
                             )
                           }`,
@@ -261,9 +290,9 @@
                       }}
                     </span>
                     <br />
-                    <span
-                      >({{ $t("inventory.priceOfProducts&DeliveryFee") }})</span
-                    >
+                    <span>{{
+                      $t("inventory.priceOfProducts&DeliveryFee")
+                    }}</span>
                   </p>
                   <v-icon
                     class="payment-method-icon payment-collection-select-text"
@@ -273,11 +302,229 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-1"></div>
+            <div class="mb-10 col-11">
+              <p class="cross-docking-checkout-text-subtitle">
+                {{
+                  $t("inventory.doYouHaveDocumentsThatAccompanyYourDelivery")
+                }}
+              </p>
+              <div>
+                <div
+                  v-if="
+                    getDestinations[index - 1] &&
+                    getDestinations[index - 1].documents
+                  "
+                >
+                  <div
+                    v-for="(docs, x) in getDestinations[index - 1].documents"
+                    :key="x"
+                    class="crossdocking-documents-list"
+                  >
+                    <div class="crossdocking-documents-list-inner">
+                      <i class="mdi mdi-text-box-outline"></i>
+                      <span class="ml-3">{{
+                        docs.title ? docs.title : docs.type
+                      }}</span>
+                      <v-menu v-model="menus[x]">
+                        <template v-slot:activator="{ props }">
+                          <i
+                            class="mdi mdi-dots-vertical payment-method-icon"
+                            v-bind="props"
+                          ></i>
+                        </template>
+                        <v-list>
+                          <v-list-item v-for="(option, i) in options" :key="i">
+                            <v-list-item-title
+                              @click="execute(option.action, index, x)"
+                              >{{ option.title }}</v-list-item-title
+                            >
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="payment-collection-select"
+                  @click="addDeliveryDocuments(index)"
+                >
+                  <p
+                    class="mr-auto payment-collection-select-text weight-override crossdocking-text-blue"
+                  >
+                    {{ $t("inventory.addDocument") }}
+                  </p>
+                  <v-icon
+                    class="payment-method-icon payment-collection-select-text"
+                    >mdi-chevron-right</v-icon
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1"></div>
+            <div class="mb-10 col-11 cross-docking-checkout-product-underline">
+              <p class="cross-docking-checkout-text-subtitle">
+                {{ $t("inventory.doYouHaveAReferenceNumber") }}
+              </p>
+              <div>
+                <v-text-field
+                  :label="$t('inventory.enterReferenceNumber')"
+                  variant="outlined"
+                  v-model="referenceNumbers[index - 1]"
+                  @input="addReferenceNumber(index - 1, $event)"
+                  clearable
+                  clear-icon="mdi-close"
+                  density="compact"
+                ></v-text-field>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="cross-docking-checkout-add-location">
+      <div class="cross-docking-checkout-add-location" @click="addLocation()">
         <i class="mdi mdi-plus cross-docking-checkout-add-location-plus"></i>
         {{ $t("inventory.addAnotherDeliveryLocation") }}
+      </div>
+      <div class="mt-5 mb-5" v-if="pickUpRequired">
+        <p class="payment-collection-title mb-3">
+          {{ $t("inventory.pickUpInfo") }}
+        </p>
+        <div class="row">
+          <div class="col-1">
+            <i class="mdi mdi-store-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div class="col-11">
+            <div>
+              <span class="cross-docking-pickup-title">
+                {{ $t("inventory.howDoYouWantTheUnavailableItemsToBePicked") }}
+              </span>
+            </div>
+            <div
+              class="cross-docking-checkout-text-grey"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'pickItems',
+                })
+              "
+            >
+              <span>{{
+                getPickUpOptions.type
+                  ? $t(getPickUpOptions.text)
+                  : $t("inventory.select")
+              }}</span>
+              <span class="cross-docking-checkout-chevrons"
+                ><i class="mdi mdi-chevron-right"></i
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4" v-if="getPickUpOptions.type === 'driver'">
+          <div class="col-1">
+            <i class="mdi mdi-account-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div class="col-11">
+            <div
+              class="cross-docking-checkout-text pb-3"
+              v-if="Object.keys(getPickUpInfoCD).length === 0"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'pickUpInfoCrossDock',
+                })
+              "
+            >
+              <span>{{ $t("inventory.addPickUpInfo") }}</span>
+              <span class="cross-docking-checkout-chevrons"
+                ><i class="mdi mdi-chevron-right"></i
+              ></span>
+            </div>
+            <div
+              class="cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+              v-else
+            >
+              <div>
+                <p>{{ $t("inventory.pickUpInfo") }}</p>
+                <div class="delivery-details-text">
+                  <p>{{ getPickUpInfoCD.location }}</p>
+                  <p>{{ getPickUpInfoCD.phone }}</p>
+                  <p>{{ getPickUpInfoCD.instructions }}</p>
+                </div>
+              </div>
+              <span
+                class="cross-docking-checkout-chevrons"
+                @click="
+                  setOverlayStatus({
+                    overlay: true,
+                    popup: 'pickUpInfoCrossDock',
+                  })
+                "
+              >
+                <span class="cross-docking-checkout-chevrons-text">{{
+                  $t("inventory.change")
+                }}</span>
+                <i class="mdi mdi-chevron-right"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+          v-if="getPickUpOptions.type === 'driver'"
+        >
+          <div class="col-1">
+            <i class="mdi mdi-clock-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+          >
+            <div>
+              <p class="mb-2">{{ $t("inventory.pickUpDate") }}</p>
+              <p>{{ $t("inventory.nextDay") }}</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+          v-if="getPickUpOptions.type === 'self'"
+        >
+          <div class="col-1">
+            <i class="mdi mdi-warehouse cross-docking-checkout-icons"></i>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+          >
+            <div>
+              <p class="mb-2">
+                {{ $t("inventory.selectTheSendyPickUpStationToTakeTheItems") }}
+              </p>
+              <p>
+                {{
+                  getPickUpStation.name
+                    ? getPickUpStation.name
+                    : $t("inventory.select")
+                }}
+              </p>
+            </div>
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'stations',
+                })
+              "
+            >
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </div>
+        </div>
       </div>
       <hr class="mt-3" />
       <div class="mt-3">
@@ -360,7 +607,19 @@ export default {
       secPhone: "",
       buttonLoader: false,
       selectPaymentCollection: false,
-      preference: false,
+      preferences: [false],
+      menus: [],
+      options: [
+        {
+          title: this.$t("inventory.viewDocument"),
+          action: "viewDocument",
+        },
+        {
+          title: this.$t("inventory.remove"),
+          action: "removeDocument",
+        },
+      ],
+      referenceNumbers: [],
     };
   },
   watch: {
@@ -397,11 +656,32 @@ export default {
       "getDestinationIndex",
       "getDeliveryInfo",
       "getRecepientInfo",
+      "getPickUpOptions",
+      "getPickUpInfoCD",
+      "getPickUpStation",
     ]),
     indeces() {
-      return this.getDestinationIndex === 0
-        ? this.getDestinationIndex + 1
-        : this.getDestinationIndex;
+      return this.getDestinations.length;
+    },
+    pickUpRequired() {
+      let status = false;
+      this.getDestinations.forEach((row) => {
+        if (row.products) {
+          row.products.forEach((product) => {
+            if (product.selectedOption) {
+              status =
+                product.selectedOption.quantity >
+                product.selectedOption.product_variant_stock_levels.available;
+            } else {
+              status =
+                product.quantity >
+                product.product_variants[0].product_variant_stock_levels
+                  .available;
+            }
+          });
+        }
+      });
+      return status;
     },
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -511,8 +791,8 @@ export default {
           : null,
       };
       if (
-        this.getPaymentCollectionStatus.status &&
-        this.getPaymentCollectionStatus.amountToBeCollected &&
+        (this.getPaymentCollectionStatus.amountToBeCollected === "fee" ||
+          this.getPaymentCollectionStatus.amountToBeCollected === "nofee") &&
         this.paymentOnDeliveryFlag
       ) {
         payload.sale_of_goods_policy = {
@@ -550,6 +830,9 @@ export default {
       amountToBeCollected: "",
       deliveryFee: "",
     });
+    this.getDestinations.forEach((row, i) => {
+      this.referenceNumbers[i] = row.reference_number;
+    });
     this.name = this.getCheckoutDetails.name;
     this.location = this.getCheckoutDetails.location;
     this.place = this.getCheckoutDetails.place;
@@ -571,25 +854,83 @@ export default {
       "setBillingCycles",
       "setDestinations",
       "setDestinationIndex",
+      "setDocumentURL",
+      "setSelectedProducts",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
       this.setDestinationIndex(index);
+      if (this.getDestinations[index].products) {
+        this.setSelectedProducts(this.getDestinations[index].products);
+      } else {
+        this.setSelectedProducts([]);
+      }
       this.$router.push("/inventory/add-delivery-products");
+    },
+    changeIndex(index) {
+      this.setDestinationIndex(index - 1);
+    },
+    addReferenceNumber(index, event) {
+      const destinations = this.getDestinations;
+      if (destinations[index]) {
+        destinations[index].reference_number = event.target.value;
+      } else {
+        destinations.splice(index, 0, {
+          reference_number: event.target.value,
+        });
+      }
+    },
+    addLocation() {
+      const destinations = this.getDestinations;
+      this.preferences.push(false);
+      destinations.push({});
+      this.setDestinations(destinations);
+    },
+    execute(action, index, x) {
+      this.menus[x] = false;
+      if (action === "viewDocument") {
+        this.setDocumentURL(this.getDestinations[index - 1].documents[x].url);
+        this.setOverlayStatus({
+          overlay: true,
+          popup: "viewDocument",
+        });
+      } else {
+        const documents = this.getDestinations[index - 1].documents;
+        const destinations = this.getDestinations;
+        documents.splice(x, 1);
+        destinations[index - 1].documents = documents;
+        this.setDestinations(destinations);
+      }
     },
     addProductStep(val) {
       this.setProductStep(val);
     },
-    addDeliveryInfo() {
+    addDeliveryInfo(index) {
+      this.changeIndex(index);
       this.setOverlayStatus({
         overlay: true,
         popup: "deliveryInfoCrossdock",
       });
     },
-    addRecepientInfo() {
+    addRecepientInfo(index) {
+      this.changeIndex(index);
       this.setOverlayStatus({
         overlay: true,
         popup: "recepientInfoCrossdock",
+      });
+    },
+    addPaymentCollection(index) {
+      this.changeIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "paymentCollection",
+      });
+    },
+    addDeliveryDocuments(index) {
+      this.changeIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryDocuments",
       });
     },
     setLocation(val) {
@@ -637,9 +978,9 @@ export default {
         this.location &&
         this.getSelectedProducts.length &&
         (this.paymentOnDeliveryFlag
-          ? (this.getPaymentCollectionStatus.status === true &&
+          ? (this.getPaymentCollectionStatus.amountToBeCollected !== "none" &&
               this.getPaymentCollectionStatus.amountToBeCollected !== "") ||
-            this.getPaymentCollectionStatus.status === false
+            this.getPaymentCollectionStatus.amountToBeCollected === "none"
           : true) &&
         (this.defaultPaymentMethod.length > 0 ||
           !this.getBusinessDetails.settings.payments_enabled)
@@ -692,8 +1033,7 @@ export default {
           this.phone &&
           this.location &&
           this.getSelectedProducts.length &&
-          (this.getPaymentCollectionStatus.status === "" ||
-            this.getPaymentCollectionStatus.amountToBeCollected === "") &&
+          this.getPaymentCollectionStatus.amountToBeCollected === "" &&
           (this.defaultPaymentMethod.length > 0 ||
             !this.getBusinessDetails.settings.payments_enabled)
         ) {
@@ -910,5 +1250,31 @@ export default {
 }
 .cross-docking-checkout-product-underline {
   border-bottom: 1px solid #dcdfe6;
+}
+.cross-docking-checkout-product-label-lower {
+  text-transform: capitalize;
+}
+.crossdocking-text-blue {
+  color: #324ba8;
+}
+.crossdocking-documents-list {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e2e7ed;
+  border-radius: 5px;
+  color: #606266;
+  font-weight: 100;
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+.crossdocking-documents-list-inner {
+  width: 100%;
+}
+.cross-docking-pickup-title {
+  font-size: 17px;
+  color: #303133;
 }
 </style>

@@ -253,9 +253,14 @@ export default {
     addProductStep() {
       if (this.totalProducts > 0) {
         const destinations = this.getDestinations;
-        destinations.splice(this.getDestinationIndex, 0, {
-          products: this.getSelectedProducts,
-        });
+        const index = this.getDestinationIndex;
+        if (destinations[index]) {
+          destinations[index].products = this.getSelectedProducts;
+        } else {
+          destinations.splice([index], 0, {
+            products: this.getSelectedProducts,
+          });
+        }
         this.setDestinations(destinations);
         this.$router.push(`/inventory/create-delivery`);
       } else {

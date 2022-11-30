@@ -344,4 +344,19 @@ export default {
   setDestinationIndex(state, val) {
     state.destinationIndex = val;
   },
+  setDocumentURL(state, val) {
+    state.documentURL = val;
+  },
+  setPickUpOptions(state, val) {
+    state.pickUpOptions = val;
+  },
+  setPickUpInfoCD(state, val) {
+    state.pickUpInfoCD = val;
+  },
+  setStations(state, val) {
+    state.stations = val;
+  },
+  setPickUpStation(state, val) {
+    state.pickUpStation = val;
+  },
 };

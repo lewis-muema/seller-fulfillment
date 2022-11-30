@@ -117,4 +117,9 @@ export default {
   getSearchedProducts: (state) => state.searchedProducts,
   getDestinations: (state) => state.destinations,
   getDestinationIndex: (state) => state.destinationIndex,
+  getDocumentURL: (state) => state.documentURL,
+  getPickUpOptions: (state) => state.pickUpOptions,
+  getPickUpInfoCD: (state) => state.pickUpInfoCD,
+  getStations: (state) => state.stations,
+  getPickUpStation: (state) => state.pickUpStation,
 };

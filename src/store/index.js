@@ -66,9 +66,9 @@ export default createStore({
       refreshToken: "",
       productStep: 0,
       tabStatus: "",
+      documentURL: "",
       addProductStatus: false,
       paymentCollectionStatus: {
-        status: "",
         amountToBeCollected: "",
         deliveryFee: "",
       },
@@ -92,6 +92,40 @@ export default createStore({
         FULFILMENT_FEE_COST: "-",
         WITHDRAWAL_OF_EARNING_COST: "-",
       },
+      pickUpOptions: {
+        type: "",
+        text: "",
+        info: "",
+        date: "",
+        FC: "",
+      },
+      pickUpStation: "",
+      stations: [
+        {
+          name: "Sendy Marsabit Plaza FC",
+          location: "Marsabit Plaza, Ngong road",
+          room: "1st floor, Rm 101",
+          hours: "9:00 AM to 6:00 PM",
+        },
+        {
+          name: "Sendy Marsabit Plaza FC",
+          location: "Marsabit Plaza, Ngong road",
+          room: "1st floor, Rm 101",
+          hours: "9:00 AM to 6:00 PM",
+        },
+        {
+          name: "Sendy Marsabit Plaza FC",
+          location: "Marsabit Plaza, Ngong road",
+          room: "1st floor, Rm 101",
+          hours: "9:00 AM to 6:00 PM",
+        },
+        {
+          name: "Sendy Marsabit Plaza FC",
+          location: "Marsabit Plaza, Ngong road",
+          room: "1st floor, Rm 101",
+          hours: "9:00 AM to 6:00 PM",
+        },
+      ],
       searchedProducts: [],
       transactionTypes: [
         {
@@ -932,6 +966,7 @@ export default createStore({
       ],
       deliveryInfo: {},
       recepientInfo: {},
+      pickUpInfoCD: {},
       pickupInfo: {
         location: "Windsor Heights",
         phoneNumber: "+2547000000000",
@@ -1428,7 +1463,7 @@ export default createStore({
       inventorySelectedTab: "inventory.all",
       stockSelectedTab: "Overview",
       selectedProducts: [],
-      destinations: [],
+      destinations: [{}],
       destinationIndex: 0,
       sendProductsRoute: "",
       product: {

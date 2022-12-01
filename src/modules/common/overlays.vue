@@ -257,6 +257,12 @@
         @place_changed="setLocation"
       >
       </GMapAutocomplete>
+      <div
+        v-if="v$.location.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        {{ $t("inventory.locationIsRequired") }}
+      </div>
       <label for="apartment-name" class="edit-info-label">
         {{ $t("deliveries.apartmentName") }}
       </label>
@@ -280,14 +286,16 @@
         cols="30"
         rows="5"
       ></textarea>
-      <v-btn
-        class="edit-info-submit-button"
-        :disabled="!isDeliveryFieldsValid"
-        v-loading="buttonLoader"
-        @click="submitDeliveryInfo()"
-      >
-        {{ $t("inventory.done") }}
-      </v-btn>
+      <div @click="validateFields()">
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isDeliveryFieldsValid"
+          v-loading="buttonLoader"
+          @click="submitDeliveryInfo()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
     </div>
     <div
       v-if="popup === 'recepientInfoCrossdock'"
@@ -301,6 +309,13 @@
           @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
           class="mdi mdi-close view-products-close"
         ></i>
+      </div>
+      <div
+        v-if="v$.recepientOption.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        <i class="mdi mdi-alert mr-3"></i>
+        {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
       </div>
       <el-radio-group v-model="recepientOption" class="">
         <div class="payment-collection-overlay-border-top padding-override">
@@ -390,14 +405,16 @@
           {{ $t("deliveries.removePhoneNumber") }}
         </div>
       </div>
-      <v-btn
-        :disabled="!isRecipientFieldsValid"
-        v-loading="buttonLoader"
-        class="edit-info-submit-button"
-        @click="submitRecepientInfo()"
-      >
-        {{ $t("deliveries.saveInfo") }}
-      </v-btn>
+      <div @click="validateFields()">
+        <v-btn
+          :disabled="!isRecipientFieldsValid"
+          v-loading="buttonLoader"
+          class="edit-info-submit-button"
+          @click="submitRecepientInfo()"
+        >
+          {{ $t("deliveries.saveInfo") }}
+        </v-btn>
+      </div>
     </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
       <div class="view-products-section">
@@ -547,31 +564,44 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="popup === 'fees'" class="view-products-container">
+    <div
+      v-if="popup === 'pickupfees'"
+      class="view-products-container fees-container"
+    >
       <div class="timeline-failed-attempt-section">
         <p class="edit-price-title">
-          {{ $t("inventory.fulfillmentFeeCalculation") }}
+          {{ $t("inventory.pickUpFeeCalculation") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'fees')"
+          @click="overlayStatusSet(false, 'pickupfees')"
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
-      <div>
+      <div
+        class="m-auto"
+        v-if="!getFulfillmentFees.pricing.pricing_pickups.length"
+      >
+        {{ $t("inventory.noFeesCaluclatedYet") }}
+      </div>
+      <div
+        v-for="(fulfillmentFees, i) in getFulfillmentFees.pricing
+          .pricing_pickups"
+        :key="i"
+      >
         <div class="fees-row fees-divider">
           <span>
             {{ $t("inventory.totalValue") }}
           </span>
           <span class="fees-left-override">
-            {{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.total_product_value }}
+            {{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.total_product_value }}
           </span>
         </div>
         <div class="fees-row fees-bold fees-title">
           {{ $t("inventory.fees") }}
         </div>
         <div
-          v-for="(promos, i) in getFulfillmentFees.promotion_adjustments"
+          v-for="(promos, i) in fulfillmentFees.promotion_adjustments"
           :key="i"
           class="fees-row"
         >
@@ -580,14 +610,14 @@
             <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
           </span>
           <span class="fees-left-override">
-            {{ getFulfillmentFees.currency }} {{ promos.adjustment_value }}
+            {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
         </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
           <span class="fees-left-override"
-            >{{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.calculated_fee }}</span
+            >{{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.calculated_fee }}</span
           >
         </div>
         <p class="fee-margin-top pricing-docs-link">
@@ -595,6 +625,68 @@
           <i class="mdi mdi-chevron-right"></i>
         </p>
       </div>
+    </div>
+    <div
+      v-if="popup === 'fulfillmentFees'"
+      class="view-products-container fees-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("inventory.fulfillmentFeeCalculation") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'pickupfees')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div
+        class="m-auto"
+        v-if="!getFulfillmentFees.pricing.pricing_deliveries.length"
+      >
+        {{ $t("inventory.noFeesCaluclatedYet") }}
+      </div>
+      <div
+        v-for="(fulfillmentFees, i) in getFulfillmentFees.pricing
+          .pricing_deliveries"
+        :key="i"
+      >
+        <div class="fees-row fees-divider">
+          <span>
+            {{ $t("inventory.totalValue") }}
+          </span>
+          <span class="fees-left-override">
+            {{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.total_product_value }}
+          </span>
+        </div>
+        <div class="fees-row fees-bold fees-title">
+          {{ $t("inventory.fees") }}
+        </div>
+        <div
+          v-for="(promos, i) in fulfillmentFees.promotion_adjustments"
+          :key="i"
+          class="fees-row"
+        >
+          <span>
+            <div>{{ promos.adjustment_description }}</div>
+            <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
+          </span>
+          <span class="fees-left-override">
+            {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
+          </span>
+        </div>
+        <div class="fees-row fees-bold fees-divider">
+          <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
+          <span class="fees-left-override"
+            >{{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.calculated_fee }}</span
+          >
+        </div>
+      </div>
+      <p class="fee-margin-top pricing-docs-link">
+        {{ $t("inventory.learnMoreAboutOurPricing") }}
+        <i class="mdi mdi-chevron-right"></i>
+      </p>
     </div>
     <div v-if="popup === 'promo'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
@@ -817,6 +909,13 @@
         <p class="payment-collection-overlay-title">
           {{ $t("inventory.doYouWantPaymentToBeCollected") }}
         </p>
+        <div
+          v-if="v$.deliveryFeeCollection.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+        </div>
         <p
           class="select-payment-collection-error"
           v-if="selectPaymentCollection"
@@ -842,8 +941,16 @@
                 {{ $t("inventory.priceOfProducts") }}
               </p>
               <p class="mb-2 ml-3">
-                {{ getFulfillmentFees.currency }}
-                {{ getFulfillmentFees.total_product_value }}
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                }}
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].total_product_value
+                }}
               </p>
             </el-radio>
           </div>
@@ -855,7 +962,7 @@
               <p class="mb-2 ml-3">
                 {{
                   $t("inventory.deliveryFeeAmount", {
-                    Amount: `${getFulfillmentFees.currency} ${getFulfillmentFees.total_product_value}`,
+                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
                   })
                 }}
               </p>
@@ -877,7 +984,7 @@
                 {{ $t("inventory.deliveryFeeToBeCollected") }}
               </p>
               <v-text-field
-                :label="`${getFulfillmentFees.currency} 60`"
+                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
                 @input="
                   setPaymentCollectionStatus({
                     amountToBeCollected:
@@ -887,7 +994,11 @@
                 "
                 v-model="deliveryFeeAmount"
                 variant="outlined"
-                :prefix="getFulfillmentFees.currency"
+                :prefix="
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                "
                 clearable
                 clear-icon="mdi-close"
                 @click:clear="
@@ -910,9 +1021,10 @@
             </el-radio>
           </div>
         </el-radio-group>
-        <div class="export-popup-buttons mt-3">
+        <div class="export-popup-buttons mt-3" @click="validateFields()">
           <v-btn
-            class="edit-user-save"
+            class="edit-user-save edit-info-submit-button"
+            :disabled="!isPaymentCollectionValid"
             v-loading="buttonLoader"
             @click="setPaymentCollection()"
           >
@@ -932,6 +1044,13 @@
         <p class="payment-collection-overlay-title">
           {{ $t("inventory.uploadDocument") }}
         </p>
+        <div
+          v-if="v$.PDF.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseUploadDocumentToProceed") }}
+        </div>
         <div
           class="crossdocking-add-document-drop"
           @click="uploadPDFFile()"
@@ -982,6 +1101,12 @@
           >
           </v-select>
         </div>
+        <div
+          v-if="v$.documentType.$error"
+          class="error-msg withdraw-transaction-error"
+        >
+          {{ $t("inventory.pleaseSelectADocumentTypeToProceed") }}
+        </div>
         <div v-if="documentType === 'Other'">
           <p class="crossdocking-add-document-titles">
             {{ $t("inventory.enterTheTitleOfTheDocument") }}
@@ -995,7 +1120,7 @@
             density="compact"
           ></v-text-field>
         </div>
-        <div class="mt-3">
+        <div class="mt-3" @click="validateFields()">
           <v-btn
             v-loading="buttonLoader"
             :disabled="
@@ -1050,7 +1175,7 @@
               </el-radio>
             </div>
             <div class="payment-collection-overlay-border-bottom">
-              <el-radio label="self" size="large">
+              <el-radio label="self" size="large" disabled>
                 <p class="mb-0 ml-3 font-override crossdocking-pick-items-text">
                   {{ $t("inventory.IllTakeTheItems") }}
                 </p>
@@ -1277,10 +1402,24 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
 import moment from "moment";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   props: ["overlayVal", "editInfo"],
   mixins: [upload_img],
+  validations() {
+    return {
+      location: { required },
+      recepientOption: { required },
+      deliveryFeeCollection: { required },
+      PDF: { required },
+      documentType: { required },
+    };
+  },
   watch: {
     "$store.state.overlayStatus": function (val) {
       this.overlay = val.overlay;
@@ -1318,6 +1457,11 @@ export default {
       this.secPhone = val.order.destination.secondary_phone_number;
       this.instructions = val.order.destination.delivery_instructions;
       this.date = new Date(val.order.scheduled_date);
+    },
+    "$store.state.pickUpInfoCD": function orderTrackingData() {
+      if (this.$route.path.includes("checkout")) {
+        this.clearInputs();
+      }
     },
   },
   components: { Datepicker },
@@ -1364,13 +1508,16 @@ export default {
       return fee;
     },
     isDeliveryFieldsValid() {
-      return this.location.length && this.apartmentName.length;
+      return this.location.length;
     },
     isRecipientFieldsValid() {
       return this.customerName.length && this.phone.length;
     },
     isPickUpFieldsValid() {
       return this.location.length && this.phone.length;
+    },
+    isPaymentCollectionValid() {
+      return this.deliveryFeeCollection;
     },
   },
   data() {
@@ -1473,6 +1620,12 @@ export default {
       "setPickUpInfoCD",
       "setPickUpStation",
     ]),
+    validateFields() {
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+    },
     uploadPDFFile() {
       document.querySelector("#upload-pdf-card").click();
     },
@@ -1529,10 +1682,13 @@ export default {
         }
         this.setDestinations(destinations);
       }
-      this.documentTitle = "";
-      this.PDF = "";
-      this.documentType = "";
       this.overlayStatusSet(false, "deliveryDocuments");
+      setTimeout(() => {
+        this.documentTitle = "";
+        this.PDF = "";
+        this.documentType = "";
+        this.v$.$reset();
+      }, 500);
     },
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -1553,6 +1709,7 @@ export default {
     submitPickUpInfo() {
       const pickUpDetails = {
         location: this.location,
+        place: this.locationData,
         phone: this.phone,
         secondary_phone_number: this.secPhone,
         instructions: this.instructions,
@@ -1568,6 +1725,7 @@ export default {
         location: this.location,
         apartmentName: this.apartmentName,
         instructions: this.instructions,
+        place: this.locationData,
       };
       this.overlayStatusSet(false, "deliveryInfoCrossdock");
       this.setDeliveryInfo(deliveryDetails);
@@ -1603,13 +1761,17 @@ export default {
       this.clearInputs();
     },
     clearInputs() {
-      this.customerName = "";
-      this.phone = "";
-      this.secPhone = "";
-      this.location = "";
-      this.apartmentName = "";
-      this.instructions = "";
-      this.recepientOption = "";
+      setTimeout(() => {
+        this.customerName = "";
+        this.phone = "";
+        this.secPhone = "";
+        this.location = "";
+        this.apartmentName = "";
+        this.instructions = "";
+        this.recepientOption = "";
+        this.locationData = "";
+        this.v$.$reset();
+      }, 500);
     },
     setPaymentCollection() {
       if (this.getPaymentCollectionStatus.status === "") {
@@ -1645,6 +1807,9 @@ export default {
           POD: this.getPaymentCollectionStatus,
         });
       }
+      setTimeout(() => {
+        this.v$.$reset();
+      }, 500);
     },
     exportData() {
       this.buttonLoader = true;
@@ -1951,6 +2116,10 @@ export default {
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location
             : this.location;
+        this.locationData =
+          destinations[index] && destinations[index].delivery_info
+            ? destinations[index].delivery_info.place
+            : this.locationData;
         this.apartmentName =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.apartmentName
@@ -1980,6 +2149,9 @@ export default {
         this.location = this.getPickUpInfoCD.location
           ? this.getPickUpInfoCD.location
           : this.location;
+        this.locationData = this.getPickUpInfoCD.place
+          ? this.getPickUpInfoCD.place
+          : this.locationData;
         this.phone = this.getPickUpInfoCD.phone
           ? this.getPickUpInfoCD.phone
           : this.phone;
@@ -2467,5 +2639,9 @@ export default {
 .crossdocking-stations-container {
   height: 350px;
   overflow: scroll;
+}
+.fees-container {
+  max-height: 700px;
+  overflow-y: scroll;
 }
 </style>

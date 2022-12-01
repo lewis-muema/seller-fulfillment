@@ -215,5 +215,19 @@
   "pickUpDate": "Pick up date",
   "selectThePickUpStation": "Select the pick up station",
   "selectTheSendyPickUpStationToTakeTheItems": "Select the Sendy pick up station to take the items",
-  "nextDay": "Next Day Delivery"
+  "nextDay": "Next Day Delivery",
+  "locationIsRequired": "Location is required",
+  "pleaseSelectAnOptionToProceed": "Please select an option to proceed",
+  "pleaseUploadDocumentToProceed": "Please upload document to proceed",
+  "pleaseSelectADocumentTypeToProceed": "Please select a document type to proceed",
+  "thisFieldIsRequired": "This field is required",
+  "addProductsError": "Please add products for the {index} destination",
+  "addDeliveryInfoError": "Please fill in the delivery information for the {index} destination",
+  "addRecipientInfoError": "Please fill in your recipient's contact information for the {index} destination",
+  "addPODError": "Please select whether you would like payment on delivery for the {index} destination, This option is under the preferences section",
+  "addPickUpInfoError": "You dont have sufficient stock to place this delivery. We will require you to enter pick up details so we can retrieve the products",
+  "fulfillmentFees": "Fulfillment fees",
+  "pickupFees": "Pick up fees",
+  "pickUpFeeCalculation": "Pick up fee calculation",
+  "noFeesCaluclatedYet": "No Fees Calculated Yet"
 }

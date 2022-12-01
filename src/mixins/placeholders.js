@@ -1039,6 +1039,53 @@ const placeholders = {
           metadata: {},
         },
       ],
+      placeHolderFees: {
+        pricing: {
+          pricing_pickups: [
+            {
+              total_product_value: 0.0,
+              pre_adjustments_calculated_fee: null,
+              calculated_fee: 0.0,
+              currency: "KES",
+              order_type: "PICKUP",
+              promotion_session_id: null,
+              promotion_adjustments: [],
+              promotion_notifications: [],
+            },
+          ],
+          pricing_deliveries: [
+            {
+              total_product_value: 0.0,
+              pre_adjustments_calculated_fee: 0.0,
+              calculated_fee: 0.0,
+              currency: "KES",
+              order_type: "DELIVERY",
+              promotion_session_id: null,
+              promotion_adjustments: [
+                {
+                  adjustment_type: "COST_OF_FULFILMENT",
+                  adjustment_description: "KES 0.0 - KES 300.0",
+                  adjustment_subtitle: "12.0% service fee",
+                  adjustment_value: 0.0,
+                },
+                {
+                  adjustment_type: "DELIVERY_FEE",
+                  adjustment_description: "Delivery Fee",
+                  adjustment_subtitle: "Delivery Fee for 3 out of 5 items",
+                  adjustment_value: 0.0,
+                },
+              ],
+              promotion_notifications: [],
+            },
+          ],
+          pricing_subtotals: {
+            pickup_fee: 0.0,
+            fulfilment_fee: 0.0,
+            total_fee: 0.0,
+          },
+        },
+        errors: [],
+      },
     };
   },
 };

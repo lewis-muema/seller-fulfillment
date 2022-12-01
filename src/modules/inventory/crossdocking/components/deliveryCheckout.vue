@@ -41,10 +41,13 @@
               </div>
               <div class="mb-3 cross-docking-checkout-product-label-lower">
                 {{
-                  $t("inventory.otherProducts", {
-                    Name: getDestinations[index - 1].products[0].product_name,
-                    Count: getDestinations[index - 1].products.length - 1,
-                  })
+                  getDestinations[index - 1].products.length > 1
+                    ? $t("inventory.otherProducts", {
+                        Name: getDestinations[index - 1].products[0]
+                          .product_name,
+                        Count: getDestinations[index - 1].products.length - 1,
+                      })
+                    : getDestinations[index - 1].products[0].product_name
                 }}
               </div>
             </div>
@@ -55,6 +58,16 @@
               ></span>
             </div>
           </div>
+        </div>
+        <div
+          v-if="
+            showErrors &&
+            !(getDestinations[index - 1] && getDestinations[index - 1].products)
+          "
+          class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+        >
+          <div class="col-1"></div>
+          <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
         </div>
         <div
           :class="
@@ -114,6 +127,19 @@
           </div>
         </div>
         <div
+          v-if="
+            showErrors &&
+            !(
+              getDestinations[index - 1] &&
+              getDestinations[index - 1].delivery_info
+            )
+          "
+          class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+        >
+          <div class="col-1"></div>
+          <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
+        </div>
+        <div
           :class="
             !(
               getDestinations[index - 1] && getDestinations[index - 1].recipient
@@ -147,7 +173,6 @@
             <div>
               <p>{{ $t("inventory.recipientInfo") }}</p>
               <div class="delivery-details-text">
-                <p>{{ getDestinations[index - 1].recipient.recipient_type }}</p>
                 <p>{{ getDestinations[index - 1].recipient.customer_name }}</p>
                 <p>{{ getDestinations[index - 1].recipient.phone }}</p>
               </div>
@@ -162,6 +187,18 @@
               <i class="mdi mdi-chevron-right"></i>
             </span>
           </div>
+        </div>
+        <div
+          v-if="
+            showErrors &&
+            !(
+              getDestinations[index - 1] && getDestinations[index - 1].recipient
+            )
+          "
+          class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+        >
+          <div class="col-1"></div>
+          <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
         </div>
         <div
           class="mb-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
@@ -259,7 +296,15 @@
                     <span class="weight-override">
                       {{
                         $t("inventory.collect", {
-                          Amount: `${getFulfillmentFees.currency} ${getFulfillmentFees.total_product_value}`,
+                          Amount: `${
+                            getFulfillmentFees.pricing.pricing_deliveries[
+                              index - 1
+                            ].currency
+                          } ${
+                            getFulfillmentFees.pricing.pricing_deliveries[
+                              index - 1
+                            ].total_product_value
+                          }`,
                         })
                       }}
                     </span>
@@ -278,8 +323,16 @@
                     <span class="weight-override">
                       {{
                         $t("inventory.collect", {
-                          Amount: `${getFulfillmentFees.currency} ${
-                            parseInt(getFulfillmentFees.total_product_value) +
+                          Amount: `${
+                            getFulfillmentFees.pricing.pricing_deliveries[
+                              index - 1
+                            ].currency
+                          } ${
+                            parseInt(
+                              getFulfillmentFees.pricing.pricing_deliveries[
+                                index - 1
+                              ].total_product_value
+                            ) +
                             parseInt(
                               getDestinations[index - 1].POD.deliveryFee
                                 ? getDestinations[index - 1].POD.deliveryFee
@@ -590,10 +643,12 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
+import placeholder from "../../../../mixins/placeholders";
+
 import moment from "moment";
 
 export default {
-  mixins: [eventsMixin],
+  mixins: [eventsMixin, placeholder],
   data() {
     return {
       amount: 566,
@@ -620,6 +675,7 @@ export default {
         },
       ],
       referenceNumbers: [],
+      showErrors: false,
     };
   },
   watch: {
@@ -635,6 +691,18 @@ export default {
           addPhoneStatus: this.addPhoneStatus,
         });
       }
+    },
+    "$store.state.destinations": {
+      handler() {
+        this.getPricing();
+      },
+      deep: true,
+    },
+    "$store.state.pickUpInfoCD": {
+      handler() {
+        this.getPricing();
+      },
+      deep: true,
     },
   },
   computed: {
@@ -748,71 +816,137 @@ export default {
       return paymentMethod;
     },
     checkoutPayload() {
-      const products = [];
-      this.getSelectedProducts.forEach((row) => {
-        products.push({
-          product_id: row.product_id,
-          product_variant_id: row.selectedOption.product_variant_id,
-          quantity: row.quantity,
-          currency: row.selectedOption.product_variant_currency,
-          unit_price: row.selectedOption.product_variant_unit_price,
-        });
-      });
       const payload = {
-        means_of_payment: {
-          means_of_payment_type: this.getBusinessDetails.settings
-            .payments_enabled
-            ? this.meansOfPayment
-            : "CARD",
-          means_of_payment_identifier: this.getBusinessDetails.settings
-            .payments_enabled
-            ? this.defaultPaymentMethod[0].pay_method_details
-            : "",
-          participant_type: "SELLER",
-          participant_id: this.getBusinessDetails.settings.payments_enabled
-            ? this.defaultPaymentMethod[0].user_id
-            : "",
-        },
-        products,
-        destination: {
-          name: this.name,
-          phone_number: this.phone,
-          secondary_phone_number: this.secPhone,
-          delivery_location: {
-            description: this.location,
-            longitude: this.place.geometry.location.lng(),
-            latitude: this.place.geometry.location.lat(),
-          },
-          house_location: "",
-          delivery_instructions: this.instructions,
-        },
-        promotion_session_id: this.getFulfillmentFees.promotion_session_id
-          ? this.getFulfillmentFees.promotion_session_id
-          : null,
+        means_of_payment: this.defaultPaymentMethod[0]
+          ? this.meansOfPaymentPayload
+          : {},
+        pickups: Object.keys(this.getPickUpInfoCD).length
+          ? this.pickUpPayload
+          : [],
+        deliveries: this.deliveriesPayload,
       };
-      if (
-        (this.getPaymentCollectionStatus.amountToBeCollected === "fee" ||
-          this.getPaymentCollectionStatus.amountToBeCollected === "nofee") &&
-        this.paymentOnDeliveryFlag
-      ) {
-        payload.sale_of_goods_policy = {
-          costs_to_collect: [
-            {
-              cost_type: "SALE_OF_GOOD",
-            },
-          ],
-        };
-        if (this.getPaymentCollectionStatus.amountToBeCollected === "fee") {
-          payload.sale_of_goods_policy.costs_to_collect.push({
-            cost_type: "DELIVERY_FEE",
-            cost_amount: this.getPaymentCollectionStatus.deliveryFee
-              ? this.getPaymentCollectionStatus.deliveryFee
-              : 0,
-            currency: this.getFulfillmentFees.currency,
-          });
-        }
-      }
       return payload;
+    },
+    meansOfPaymentPayload() {
+      return {
+        means_of_payment_type: this.getBusinessDetails.settings.payments_enabled
+          ? this.meansOfPayment
+          : "CARD",
+        means_of_payment_identifier: this.getBusinessDetails.settings
+          .payments_enabled
+          ? this.defaultPaymentMethod[0].pay_method_details
+          : "",
+        participant_type: "SELLER",
+        participant_id: this.getBusinessDetails.settings.payments_enabled
+          ? this.defaultPaymentMethod[0].user_id
+          : "",
+      };
+    },
+    pickUpPayload() {
+      return [
+        {
+          seller_order_reference_id: "",
+          promotion_session_id: "",
+          destination: {
+            name: this.getBusinessDetails.business_name,
+            phone_number: this.getPickUpInfoCD.phone,
+            secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number,
+            delivery_location: {
+              description: this.getPickUpInfoCD.location,
+              longitude: this.getPickUpInfoCD.place.geometry.location.lng(),
+              latitude: this.getPickUpInfoCD.place.geometry.location.lat(),
+            },
+            house_location: "",
+            delivery_instructions: this.getPickUpInfoCD.instructions,
+          },
+          destination_policy: "DROP_AT_HUB",
+        },
+      ];
+    },
+    deliveriesPayload() {
+      const deliveries = [];
+      this.getDestinations.forEach((destination) => {
+        const products = [];
+        const documents = [];
+        const destinationProducts = destination.products
+          ? destination.products
+          : [];
+        destinationProducts.forEach((row) => {
+          products.push({
+            product_id: row.product_id,
+            product_variant_id: row.selectedOption
+              ? row.selectedOption.product_variant_id
+              : row.product_variants[0].product_variant_id,
+            quantity: row.quantity,
+            currency: row.selectedOption
+              ? row.selectedOption.product_variant_currency
+              : row.product_variants[0].product_variant_currency,
+            unit_price: row.selectedOption
+              ? row.selectedOption.product_variant_unit_price
+              : row.product_variants[0].product_variant_unit_price,
+          });
+        });
+        const destinationDocuments = destination.documents
+          ? destination.documents
+          : [];
+        destinationDocuments.forEach((row) => {
+          documents.push({
+            document_type: row.type.toUpperCase(),
+            document_url: row.url,
+            document_description: row.title,
+          });
+        });
+        const delivery = {
+          seller_order_reference_id: destination.reference_number,
+          promotion_session_id: null,
+          products,
+          destination:
+            destination.recipient && destination.delivery_info
+              ? {
+                  name: destination.recipient.customer_name,
+                  phone_number: destination.recipient.phone,
+                  secondary_phone_number:
+                    destination.recipient.secondary_phone_number,
+                  delivery_location: {
+                    description: destination.delivery_info.location,
+                    longitude:
+                      destination.delivery_info.place.geometry.location.lng(),
+                    latitude:
+                      destination.delivery_info.place.geometry.location.lat(),
+                  },
+                  house_location: destination.delivery_info.apartmentName,
+                  delivery_instructions: destination.delivery_info.instructions,
+                }
+              : {},
+          destination_policy: "DELIVER_TO_BUYER",
+          documents,
+        };
+        if (
+          destination.POD &&
+          (destination.POD.amountToBeCollected === "fee" ||
+            destination.POD.amountToBeCollected === "nofee") &&
+          this.paymentOnDeliveryFlag
+        ) {
+          delivery.sale_of_goods_policy = {
+            costs_to_collect: [
+              {
+                cost_type: "SALE_OF_GOOD",
+              },
+            ],
+          };
+          if (destination.POD.amountToBeCollected === "fee") {
+            delivery.sale_of_goods_policy.costs_to_collect.push({
+              cost_type: "DELIVERY_FEE",
+              cost_amount: destination.POD.deliveryFee
+                ? destination.POD.deliveryFee
+                : 0,
+              currency: this.getBusinessDetails.currency,
+            });
+          }
+        }
+        deliveries.push(delivery);
+      });
+      return deliveries;
     },
   },
   beforeMount() {
@@ -830,6 +964,7 @@ export default {
       amountToBeCollected: "",
       deliveryFee: "",
     });
+    this.getPricing();
     this.getDestinations.forEach((row, i) => {
       this.referenceNumbers[i] = row.reference_number;
     });
@@ -856,6 +991,8 @@ export default {
       "setDestinationIndex",
       "setDocumentURL",
       "setSelectedProducts",
+      "setFulfillmentFees",
+      "setLoader",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -971,24 +1108,55 @@ export default {
         }
       });
     },
+    getPricing() {
+      const destinations = this.getDestinations;
+      if (destinations.length && destinations[0].products) {
+        this.setLoader({
+          type: "calculateFee",
+          value: "loading-text",
+        });
+        this.requestAxiosPost({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-fee`,
+          values: this.checkoutPayload,
+        }).then((response) => {
+          this.setLoader({
+            type: "calculateFee",
+            value: "",
+          });
+          this.buttonLoader = false;
+          if (response.status === 200) {
+            this.setFulfillmentFees(response.data.data);
+          }
+        });
+      }
+    },
     createDelivery() {
-      if (
-        this.name &&
-        this.phone &&
-        this.location &&
-        this.getSelectedProducts.length &&
-        (this.paymentOnDeliveryFlag
-          ? (this.getPaymentCollectionStatus.amountToBeCollected !== "none" &&
-              this.getPaymentCollectionStatus.amountToBeCollected !== "") ||
-            this.getPaymentCollectionStatus.amountToBeCollected === "none"
-          : true) &&
-        (this.defaultPaymentMethod.length > 0 ||
-          !this.getBusinessDetails.settings.payments_enabled)
-      ) {
+      let fieldsPresent = [];
+      let submitStatus = false;
+      this.getDestinations.forEach((row) => {
+        if (
+          row.products &&
+          row.products.length &&
+          row.delivery_info &&
+          row.recipient &&
+          row.POD &&
+          (!this.pickUpRequired ||
+            (this.pickUpRequired &&
+              this.getPickUpInfoCD.location &&
+              this.getPickUpInfoCD.phone))
+        ) {
+          fieldsPresent.push(true);
+        } else {
+          fieldsPresent.push(false);
+        }
+      });
+      submitStatus = fieldsPresent.includes(false) ? false : true;
+      if (submitStatus) {
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery`,
           values: this.checkoutPayload,
         }).then((response) => {
           this.buttonLoader = false;
@@ -999,15 +1167,13 @@ export default {
               type: "success",
             });
             this.setSelectedProducts([]);
+            this.setDestinations([{}]);
+            this.setFulfillmentFees(this.placeHolderFees);
             this.sendSegmentEvents({
               event: "Request_Delivery_to_Buyer",
               data: {
                 userId: this.getStorageUserDetails.business_id,
-                SKU: this.getSelectedProducts,
-                deliveryLocation: this.location,
-                deliveryRegion: this.place,
-                deliveryFee: `${this.getFulfillmentFees.currency} ${this.getFulfillmentFees.calculated_fee}`,
-                clientType: "web",
+                deliveries: this.checkoutPayload.deliveries,
                 device: "desktop",
               },
             });
@@ -1016,7 +1182,7 @@ export default {
               this.$router.push("/");
             } else {
               this.$router.push(
-                `/deliveries/tracking/${response.data.data.order_id}`
+                `/deliveries/tracking/${response.data.data.deliveries[0].order_id}`
               );
             }
           } else {
@@ -1028,27 +1194,57 @@ export default {
           }
         });
       } else {
+        this.showErrors = true;
+        this.getDestinations.forEach((row, i) => {
+          const index = `${i + 1}${this.numberSuffix(i + 1)}`;
+          if (!(row.products && row.products.length)) {
+            this.showErrorNotification(
+              this.$t("inventory.addProductsError", { index }),
+              200
+            );
+          }
+          if (!row.delivery_info) {
+            this.showErrorNotification(
+              this.$t("inventory.addDeliveryInfoError", { index }),
+              300
+            );
+          }
+          if (!row.recipient) {
+            this.showErrorNotification(
+              this.$t("inventory.addRecipientInfoError", { index }),
+              400
+            );
+          }
+          if (!row.POD) {
+            this.showErrorNotification(
+              this.$t("inventory.addPODError", { index }),
+              500
+            );
+          }
+        });
         if (
-          this.name &&
-          this.phone &&
-          this.location &&
-          this.getSelectedProducts.length &&
-          this.getPaymentCollectionStatus.amountToBeCollected === "" &&
-          (this.defaultPaymentMethod.length > 0 ||
-            !this.getBusinessDetails.settings.payments_enabled)
+          this.pickUpRequired &&
+          !(this.getPickUpInfoCD.location && this.getPickUpInfoCD.phone)
         ) {
-          this.selectPaymentCollection = true;
-          setTimeout(() => {
-            this.selectPaymentCollection = false;
-          }, 3000);
-        } else {
-          ElNotification({
-            title: this.$t("deliveries.insufficientInformation"),
-            message: this.$t("deliveries.pleaseFillInAllFieldsDefaultPayment"),
-            type: "warning",
-          });
+          this.showErrorNotification(
+            this.$t("inventory.addPickUpInfoError"),
+            100
+          );
         }
       }
+    },
+    numberSuffix(n) {
+      return ["st", "nd", "rd"][((((n + 90) % 100) - 10) % 10) - 1] || "th";
+    },
+    showErrorNotification(message, timeout) {
+      setTimeout(() => {
+        ElNotification({
+          title: this.$t("deliveries.insufficientInformation"),
+          message,
+          type: "warning",
+          duration: 15000,
+        });
+      }, timeout);
     },
     resetInput() {
       this.name = "";
@@ -1276,5 +1472,8 @@ export default {
 .cross-docking-pickup-title {
   font-size: 17px;
   color: #303133;
+}
+.field-required-error {
+  margin-top: -15px !important;
 }
 </style>

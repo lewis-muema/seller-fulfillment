@@ -10,13 +10,13 @@
         <div class="promo-code-row">
           <span>
             <span :class="getLoader.calculateFee">
-              {{ $t("inventory.fulfillmentFee") }}
+              {{ $t("inventory.pickupFees") }}
             </span>
             <i
               @click="
                 setOverlayStatus({
                   overlay: true,
-                  popup: 'fees',
+                  popup: 'pickupfees',
                 })
               "
               v-if="!getLoader.calculateFee"
@@ -24,44 +24,40 @@
             ></i
           ></span>
           <span :class="getLoader.calculateFee" class="promo-code-left-section"
-            >{{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.pre_adjustments_calculated_fee }}</span
+            >{{ getFulfillmentFees.pricing.pricing_deliveries[0].currency }}
+            {{ getFulfillmentFees.pricing.pricing_subtotals.pickup_fee }}</span
           >
         </div>
         <div class="promo-code-row promo-code-divider">
-          <span :class="getLoader.calculateFee">{{
-            $t("inventory.discount")
-          }}</span>
+          <span>
+            <span :class="getLoader.calculateFee">
+              {{ $t("inventory.fulfillmentFees") }}
+            </span>
+            <i
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'fulfillmentFees',
+                })
+              "
+              v-if="!getLoader.calculateFee"
+              class="mdi mdi-information"
+            ></i
+          ></span>
           <span :class="getLoader.calculateFee" class="promo-code-left-section"
-            >{{ getFulfillmentFees.currency }}
+            >{{ getFulfillmentFees.pricing.pricing_deliveries[0].currency }}
             {{
-              getFulfillmentFees.calculated_fee -
-              getFulfillmentFees.pre_adjustments_calculated_fee
+              getFulfillmentFees.pricing.pricing_subtotals.fulfilment_fee
             }}</span
           >
         </div>
       </div>
       <div class="promo-code-row promo-code-bold promo-code-margin-top">
-        <span :class="getLoader.calculateFee">{{
-          $t("inventory.amountToPay")
-        }}</span>
+        <span :class="getLoader.calculateFee">{{ $t("inventory.total") }}</span>
         <span :class="getLoader.calculateFee" class="promo-code-left-section"
-          >{{ getFulfillmentFees.currency }}
-          {{ getFulfillmentFees.calculated_fee }}</span
+          >{{ getFulfillmentFees.pricing.pricing_deliveries[0].currency }}
+          {{ getFulfillmentFees.pricing.pricing_subtotals.total_fee }}</span
         >
-      </div>
-      <div
-        class="promo-code-card"
-        v-for="(notification, i) in getFulfillmentFees.promotion_notifications"
-        :key="i"
-      >
-        <div class="promo-code-card-description">
-          {{ notification.notificationDescription }}
-        </div>
-        <i
-          class="mdi mdi-close promo-code-card-close"
-          @click="removePromoCode()"
-        ></i>
       </div>
     </div>
   </div>
@@ -78,9 +74,7 @@ export default {
     };
   },
   watch: {
-    "$store.state.promoCode": function promoCode() {
-      this.calculateFee();
-    },
+    "$store.state.promoCode": function promoCode() {},
   },
   computed: {
     ...mapGetters([
@@ -121,16 +115,14 @@ export default {
       };
     },
   },
+  beforeMount() {
+    this.setLoader({
+      type: "calculateFee",
+      value: "",
+    });
+  },
   mounted() {
     this.setComponent("common.sendDeliveryToCustomer");
-    if (this.products.length) {
-      this.calculateFee();
-    } else {
-      this.setLoader({
-        type: "calculateFee",
-        value: "",
-      });
-    }
   },
   methods: {
     ...mapMutations([
@@ -141,27 +133,6 @@ export default {
       "setComponent",
     ]),
     ...mapActions(["requestAxiosPost"]),
-    calculateFee() {
-      this.setLoader({
-        type: "calculateFee",
-        value: "loading-text",
-      });
-      this.requestAxiosPost({
-        app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/orders/calculate-fee`,
-        values: this.productPayload,
-      }).then((response) => {
-        if (this.$route.path === `/inventory/create-delivery`) {
-          this.setLoader({
-            type: "calculateFee",
-            value: "",
-          });
-        }
-        if (response.status === 200) {
-          this.setFulfillmentFees(response.data.data);
-        }
-      });
-    },
     option(row) {
       const option = row.selectedOption
         ? row.selectedOption

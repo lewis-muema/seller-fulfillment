@@ -51,42 +51,23 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push Image') {
+        stage('Docker Deploy Staging') {
              when {
-                anyOf {
-                    branch "master"; branch "staging"; branch "beta"
-                }
+                
+                branch "staging"
             }
             steps {
-              script {
-                
-                    if(env.BRANCH_NAME == "master") {
-
-                        env.ENV_TAG = "prod"
-                        env.DOCKER_ENV = "prod"
-                        IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
-                        IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                        docker build -t $IMAGE_NAME . \
-                        --build-arg ENV="${DOCKER_ENV}"
-                        docker push $IMAGE_NAME
-
-
-                    }else {
-
-                        env.ENV_TAG = "dev"
-                        env.DOCKER_ENV = "testing"
-                        IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
-                        IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                        docker build -t $IMAGE_NAME . \
-                        --build-arg ENV="${DOCKER_ENV}"
-                        docker push $IMAGE_NAME
-
-                    }
-            }
-                    sh ''' 
-                   
-                    '''
-              }
+              sh '''                  
+                export ENV_TAG = "dev"
+                export DOCKER_ENV = "testing"
+                export IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
+                export IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                docker build -t $IMAGE_NAME . \
+                --build-arg ENV="${DOCKER_ENV}"
+                docker push $IMAGE_NAME
+                '''                             
+            }            
+        
         }
     }
 }

@@ -1458,11 +1458,6 @@ export default {
       this.instructions = val.order.destination.delivery_instructions;
       this.date = new Date(val.order.scheduled_date);
     },
-    "$store.state.pickUpInfoCD": function orderTrackingData() {
-      if (this.$route.path.includes("checkout")) {
-        this.clearInputs();
-      }
-    },
   },
   components: { Datepicker },
   computed: {
@@ -1570,14 +1565,6 @@ export default {
         {
           title: this.$t("inventory.invoice"),
           value: "Invoice",
-        },
-        {
-          title: this.$t("inventory.deliveryDocuments"),
-          value: "Delivery documents",
-        },
-        {
-          title: this.$t("inventory.LPO"),
-          value: "LPO",
         },
         {
           title: this.$t("inventory.Other"),
@@ -1769,7 +1756,7 @@ export default {
         this.apartmentName = "";
         this.instructions = "";
         this.recepientOption = "";
-        this.locationData = "";
+        this.locationData = {};
         this.v$.$reset();
       }, 500);
     },
@@ -2115,53 +2102,53 @@ export default {
         this.location =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location
-            : this.location;
+            : "";
         this.locationData =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.place
-            : this.locationData;
+            : "";
         this.apartmentName =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.apartmentName
-            : this.apartmentName;
+            : "";
         this.instructions =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.instructions
-            : this.instructions;
+            : "";
       } else if (val.popup === "recepientInfoCrossdock") {
         this.customerName =
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.customer_name
-            : this.customerName;
+            : "";
         this.recepientOption =
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.recipient_type
-            : this.recepientOption;
+            : "";
         this.phone =
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.phone
-            : this.phone;
+            : "";
         this.secondary_phone_number =
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.secondary_phone_number
-            : this.secondary_phone_number;
+            : "";
       } else if (val.popup === "pickUpInfoCrossDock") {
         this.location = this.getPickUpInfoCD.location
           ? this.getPickUpInfoCD.location
-          : this.location;
+          : "";
         this.locationData = this.getPickUpInfoCD.place
           ? this.getPickUpInfoCD.place
-          : this.locationData;
+          : "";
         this.phone = this.getPickUpInfoCD.phone
           ? this.getPickUpInfoCD.phone
-          : this.phone;
+          : "";
         this.secondary_phone_number = this.getPickUpInfoCD
           .secondary_phone_number
           ? this.getPickUpInfoCD.secondary_phone_number
-          : this.secondary_phone_number;
+          : "";
         this.instructions = this.getPickUpInfoCD.instructions
           ? this.getPickUpInfoCD.instructions
-          : this.instructions;
+          : "";
       }
     },
   },

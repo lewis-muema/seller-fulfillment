@@ -38,6 +38,43 @@ const upload = {
         }
       );
     },
+    uploadPDF(id) {
+      this.PDFUploadStatus = true;
+      const files = document.getElementById(id)["files"];
+      if (!files.length) {
+        // eslint-disable-next-line no-alert
+        return alert("Please select image");
+      }
+      const file = files[0];
+      const fileType = files[0]["type"];
+      const fileName = this.sanitizeFilename(file.name);
+      this.fileName = fileName;
+      const albumPhotosKey = `${encodeURIComponent(
+        "fulfillment_delivery_docs"
+      )}/`;
+      const photoKey = albumPhotosKey + fileName;
+      s3.upload(
+        {
+          Key: photoKey,
+          Body: file,
+          ACL: "public-read",
+          ContentType: fileType,
+        },
+        // eslint-disable-next-line no-unused-vars
+        (err, data) => {
+          if (err) {
+            console.log(
+              "There was an error uploading your photo: ",
+              err.message
+            );
+          } else {
+            this.PDF = data.Location;
+            this.PDFUploadStatus = false;
+          }
+          // eslint-disable-next-line comma-dangle
+        }
+      );
+    },
     sanitizeFilename(name) {
       const temp_name = `B-000-1111_${new Date().getTime()}.${name
         .split(".")

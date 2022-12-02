@@ -168,7 +168,7 @@ export default {
         {
           title: "common.deliverToCustomer",
           icon: "mdi-truck-outline",
-          url: "/inventory/send-inventory/customer/select-products",
+          url: "/inventory/send-inventory/create-delivery",
         },
         {
           title: "common.inventoryToSendy",

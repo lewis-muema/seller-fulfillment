@@ -6,7 +6,7 @@
       </span>
       <div class="send-products-container">
         <div
-          @click="redirect(`${customerRoute}/select-products`, customerHeader)"
+          @click="$router.push('/inventory/create-delivery')"
           class="send-products-content"
         >
           <v-card class="send-products-card" variant="outlined">

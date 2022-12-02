@@ -11,87 +11,156 @@
           {{ $t("inventory.checkout") }}
         </v-card-title>
       </div>
-      <div>
-        <div class="">
-          <label for="location" class="form-label">
-            {{ $t("inventory.pickupLocation") }}
-          </label>
-          <GMapAutocomplete
-            id="location"
-            class="businessProfile-address"
-            :value="location"
-            :options="getMapOptions"
-            :placeholder="$t('settings.searchLocation')"
-            @place_changed="setLocation"
-          >
-          </GMapAutocomplete>
-        </div>
-        <div class="mb-4">
-          <label for="price" class="form-label">
-            {{ $t("inventory.pickupInstructions") }}
-          </label>
-          <div>
-            <textarea
-              class="form-control"
-              id=""
-              v-model="instructions"
-              rows="3"
-              :placeholder="
-                $t(
-                  'deliveries.enterInstructionsForTheDriverPickingYourProducts'
-                )
+      <div class="mt-5 mb-5">
+        <p class="payment-collection-title mb-3">
+          {{ $t("inventory.pickUpInfo") }}
+        </p>
+        <div class="row">
+          <div class="col-1">
+            <i class="mdi mdi-store-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div class="col-11">
+            <div>
+              <span class="cross-docking-pickup-title">
+                {{ $t("inventory.howDoYouWantTheUnavailableItemsToBePicked") }}
+              </span>
+            </div>
+            <div
+              class="cross-docking-checkout-text-grey"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'pickItems',
+                })
               "
-            ></textarea>
+            >
+              <span>{{
+                getPickUpOptions.type
+                  ? $t(getPickUpOptions.text)
+                  : $t("inventory.select")
+              }}</span>
+              <span class="cross-docking-checkout-chevrons"
+                ><i class="mdi mdi-chevron-right"></i
+              ></span>
+            </div>
           </div>
         </div>
-        <div class="mb-3">
-          <label for="phoneNumber" class="form-label">
-            {{ $t("inventory.phoneNo") }}
-          </label>
-          <vue-tel-input
-            v-model="phone"
-            id="phoneNumber"
-            v-bind="getSendyPhoneProps"
-          ></vue-tel-input>
+        <div class="row mt-4" v-if="getPickUpOptions.type === 'driver'">
+          <div class="col-1">
+            <i class="mdi mdi-account-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div class="col-11">
+            <div
+              class="cross-docking-checkout-text pb-3"
+              v-if="Object.keys(getPickUpInfoCD).length === 0"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'pickUpInfoCrossDock',
+                })
+              "
+            >
+              <span>{{ $t("inventory.addPickUpInfo") }}</span>
+              <span class="cross-docking-checkout-chevrons"
+                ><i class="mdi mdi-chevron-right"></i
+              ></span>
+            </div>
+            <div
+              class="cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+              v-else
+            >
+              <div>
+                <p>{{ $t("inventory.pickUpInfo") }}</p>
+                <div class="delivery-details-text">
+                  <p>{{ getPickUpInfoCD.location }}</p>
+                  <p>{{ getPickUpInfoCD.phone }}</p>
+                  <p>{{ getPickUpInfoCD.instructions }}</p>
+                </div>
+              </div>
+              <span
+                class="cross-docking-checkout-chevrons"
+                @click="
+                  setOverlayStatus({
+                    overlay: true,
+                    popup: 'pickUpInfoCrossDock',
+                  })
+                "
+              >
+                <span class="cross-docking-checkout-chevrons-text">{{
+                  $t("inventory.change")
+                }}</span>
+                <i class="mdi mdi-chevron-right"></i>
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="mb-3" v-if="addPhoneStatus">
-          <label for="phoneNumber" class="form-label">
-            {{ $t("inventory.phoneNo") }}
-          </label>
-          <vue-tel-input
-            v-model="secPhone"
-            id="phoneNumber"
-            v-bind="getSendyPhoneProps"
-          ></vue-tel-input>
-        </div>
-        <span
-          class="add-phone-number"
-          v-if="!addPhoneStatus"
-          @click="addPhoneStatus = !addPhoneStatus"
-          ><v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
-          {{ $t("inventory.addAnotherPhoneNo") }}
-        </span>
-        <span
-          class="add-phone-number"
-          v-if="addPhoneStatus"
-          @click="addPhoneStatus = !addPhoneStatus"
-          ><v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
-          {{ $t("deliveries.removePhoneNumber") }}
-        </span>
-
-        <div class="mt-6 mb-2">
-          <span>{{ $t("inventory.pickupFee") }}</span>
-          <span class="checkout-amount">{{ currency }} {{ amount }}</span>
-        </div>
-        <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
-          <button
-            class="btn btn-primary mt-2 btn-long submit-order-btn"
-            @click="createConsignment()"
-            v-loading="buttonLoader"
+        <div
+          class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+          v-if="getPickUpOptions.type === 'driver'"
+        >
+          <div class="col-1">
+            <i class="mdi mdi-clock-outline cross-docking-checkout-icons"></i>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
           >
-            {{ $t("inventory.submitOrder") }}
-          </button>
+            <div>
+              <p class="mb-2">{{ $t("inventory.pickUpDate") }}</p>
+              <p>{{ $t("inventory.nextDay") }}</p>
+            </div>
+          </div>
         </div>
+        <div
+          class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+          v-if="getPickUpOptions.type === 'self'"
+        >
+          <div class="col-1">
+            <i class="mdi mdi-warehouse cross-docking-checkout-icons"></i>
+          </div>
+          <div
+            class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+          >
+            <div>
+              <p class="mb-2">
+                {{ $t("inventory.selectTheSendyPickUpStationToTakeTheItems") }}
+              </p>
+              <p>
+                {{
+                  getPickUpStation.name
+                    ? getPickUpStation.name
+                    : $t("inventory.select")
+                }}
+              </p>
+            </div>
+            <span
+              class="cross-docking-checkout-chevrons"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'stations',
+                })
+              "
+            >
+              <span class="cross-docking-checkout-chevrons-text">{{
+                $t("inventory.change")
+              }}</span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 mb-2">
+        <span>{{ $t("inventory.pickupFee") }}</span>
+        <span class="checkout-amount">{{ currency }} {{ amount }}</span>
+      </div>
+      <div class="d-grid gap-2 col-12 mx-auto pt-3 mb-5">
+        <button
+          class="btn btn-primary mt-2 btn-long submit-order-btn"
+          @click="createConsignment()"
+          v-loading="buttonLoader"
+        >
+          {{ $t("inventory.submitOrder") }}
+        </button>
       </div>
     </v-card>
   </div>
@@ -141,6 +210,9 @@ export default {
       "getFulfillmentFees",
       "getMapOptions",
       "getUserDetails",
+      "getPickUpOptions",
+      "getPickUpInfoCD",
+      "getBusinessDetails",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -163,16 +235,16 @@ export default {
         card_id: "",
         products,
         destination: {
-          name: this.getStorageUserDetails.business_name,
-          phone_number: this.phone,
-          secondary_phone_number: this.secPhone,
+          name: this.getBusinessDetails.business_name,
+          phone_number: this.getPickUpInfoCD.phone,
+          secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number,
           delivery_location: {
-            description: this.location,
-            longitude: this.place.geometry.location.lng(),
-            latitude: this.place.geometry.location.lat(),
+            description: this.getPickUpInfoCD.location,
+            longitude: this.getPickUpInfoCD.place.geometry.location.lng(),
+            latitude: this.getPickUpInfoCD.place.geometry.location.lat(),
           },
           house_location: "",
-          delivery_instructions: this.instructions,
+          delivery_instructions: this.getPickUpInfoCD.instructions,
         },
       };
       return payload;
@@ -184,16 +256,14 @@ export default {
       props.defaultCountry = localStorage.country.toLowerCase();
       this.setSendyPhoneProps(props);
     }
-  },
-  mounted() {
-    this.location = this.getCheckoutDetails.location;
-    this.place = this.getCheckoutDetails.place;
-    this.instructions = this.getCheckoutDetails.instructions;
-    this.phone = this.getCheckoutDetails.phone
-      ? this.getCheckoutDetails.phone
-      : this.getUserDetails.phone_number;
-    this.secPhone = this.getCheckoutDetails.secPhone;
-    this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
+    this.setPickUpOptions({
+      type: "",
+      text: "",
+      info: "",
+      date: "",
+      FC: "",
+    });
+    this.setPickUpInfoCD({});
   },
   methods: {
     ...mapMutations([
@@ -201,6 +271,9 @@ export default {
       "setCheckoutDetails",
       "setSendyPhoneProps",
       "setSelectedProducts",
+      "setOverlayStatus",
+      "setPickUpInfoCD",
+      "setPickUpOptions",
     ]),
     ...mapActions(["requestAxiosPost"]),
     addProductStep(val) {
@@ -211,7 +284,11 @@ export default {
       this.location = document.querySelector("#location").value;
     },
     createConsignment() {
-      if (this.phone && this.location && this.getSelectedProducts.length) {
+      if (
+        this.getPickUpInfoCD.location &&
+        this.getPickUpInfoCD.phone &&
+        this.getSelectedProducts.length
+      ) {
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
@@ -225,17 +302,25 @@ export default {
               message: "",
               type: "success",
             });
+            this.setPickUpInfoCD({});
             this.setSelectedProducts([]);
             this.sendSegmentEvents({
               event: "Send_Products_To_Sendy",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getSelectedProducts,
-                pickUpRegion: this.place,
-                pickUpFee: `${this.getFulfillmentFees.currency} ${this.getFulfillmentFees.calculated_fee}`,
+                pickUpRegion: this.getPickUpInfoCD.place,
                 clientType: "web",
                 device: "desktop",
               },
+            });
+            window.gtag("event", "purchase", {
+              transaction_id: response.data.data.order_id,
+              items: [
+                {
+                  item_id: response.data.data.order_id,
+                },
+              ],
             });
             this.resetInputs();
             if (this.onboardingStatus) {

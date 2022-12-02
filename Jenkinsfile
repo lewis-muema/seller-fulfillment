@@ -64,21 +64,27 @@ pipeline {
 
                         env.ENV_TAG = "prod"
                         env.DOCKER_ENV = "prod"
+                        IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
+                        IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                        docker build -t $IMAGE_NAME . \
+                        --build-arg ENV="${DOCKER_ENV}"
+                        docker push $IMAGE_NAME
 
 
                     }else {
 
                         env.ENV_TAG = "dev"
                         env.DOCKER_ENV = "testing"
+                        IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
+                        IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                        docker build -t $IMAGE_NAME . \
+                        --build-arg ENV="${DOCKER_ENV}"
+                        docker push $IMAGE_NAME
 
                     }
             }
                     sh ''' 
-                    IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
-                    IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                    docker build -t $IMAGE_NAME . \
-                    --build-arg ENV="${DOCKER_ENV}"
-                    docker push $IMAGE_NAME
+                   
                     '''
               }
         }

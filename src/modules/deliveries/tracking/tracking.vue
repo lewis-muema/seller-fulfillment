@@ -10,6 +10,16 @@
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
         </span>
+        <span
+          class="tracking-reference-number"
+          v-if="getOrderTrackingData.order.seller_order_reference_id"
+        >
+          {{
+            $t("inventory.referenceNumber", {
+              Ref: getOrderTrackingData.order.seller_order_reference_id,
+            })
+          }}
+        </span>
         <span>
           <v-menu transition="slide-y-transition" anchor="bottom center">
             <template v-slot:activator="{ props }">
@@ -51,6 +61,45 @@
           {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
         </span>
       </p>
+      <div
+        class="tracking-pickup-banner"
+        v-for="(order, i) in getOrderTrackingData.order
+          .cross_dock_linked_orders"
+        :key="i"
+      >
+        <div class="d-flex row">
+          <span class="col-1">
+            <i class="mdi mdi-information tracking-pickup-banner-icon"></i>
+          </span>
+          <span class="tracking-pick-up-banner-text col-11">
+            {{
+              order.order_type === "DELIVERY"
+                ? $t("inventory.thereIsADeliveryLinkedToThisPickUp")
+                : $t("inventory.orderIsPendingBecause", {
+                    Date: "Wed, 25th Jun",
+                  })
+            }}
+          </span>
+        </div>
+        <div class="tracking-pickup-banner-link row">
+          <div class="col-1"></div>
+          <div
+            class="col-11"
+            @click="$router.push(`/deliveries/tracking/${order.order_id}`)"
+          >
+            <span>
+              {{
+                order.order_type === "DELIVERY"
+                  ? $t("inventory.trackDeliveryOrder")
+                  : $t("inventory.trackPickUpOrder")
+              }}
+            </span>
+            <span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tracking-order-failed-delivery">
       <failed-delivery v-if="failedStatus" />
@@ -246,5 +295,32 @@ export default {
 }
 .tracking-order-failed-delivery {
   margin: 0px 40px;
+}
+.tracking-reference-number {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 1px solid #909399;
+  color: #303133;
+  font-weight: 100;
+}
+.tracking-pickup-banner {
+  border: 1px solid #324ba8;
+  border-radius: 5px;
+  margin-right: 55px;
+  padding: 20px 0px;
+}
+.tracking-pickup-banner-icon {
+  font-size: 25px;
+  color: #324ba8;
+  float: right;
+}
+.tracking-pick-up-banner-text {
+  font-size: 18px;
+}
+.tracking-pickup-banner-link {
+  margin-left: 45px;
+  color: #324ba8;
+  font-weight: 600;
+  cursor: pointer;
 }
 </style>

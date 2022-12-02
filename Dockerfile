@@ -1,5 +1,7 @@
 FROM sendy-docker-local.jfrog.io/node:14-alpine AS BUILD
 
+USER root
+
 WORKDIR /build
 
 COPY package*.json ./
@@ -19,6 +21,8 @@ RUN if [ "$ENV" = "testing" ]; \
 
 #####################
 FROM sendy-docker-local.jfrog.io/distroless-nginx-base
+
+USER root
 
 WORKDIR /usr/src/app
 

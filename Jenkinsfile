@@ -67,5 +67,21 @@ pipeline {
             }            
         
         }
+         stage('Docker Deploy Prod') {
+             when {
+                
+                branch "master"
+            }
+            steps {
+              sh '''                  
+                export IMAGE_TAG="prod_$(date +%Y-%m-%d-%H-%M)"
+                export IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                docker build -t $IMAGE_NAME . \
+                --build-arg ENV="prod"
+                docker push $IMAGE_NAME
+                '''                             
+            }            
+        
+        }
     }
 }

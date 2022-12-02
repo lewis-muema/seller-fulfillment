@@ -58,12 +58,10 @@ pipeline {
             }
             steps {
               sh '''                  
-                export ENV_TAG="dev"
-                export DOCKER_ENV="testing"
-                export IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
+                export IMAGE_TAG="dev_$(date +%Y-%m-%d-%H-%M)"
                 export IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
                 docker build -t $IMAGE_NAME . \
-                --build-arg ENV="${DOCKER_ENV}"
+                --build-arg ENV="testing"
                 docker push $IMAGE_NAME
                 '''                             
             }            

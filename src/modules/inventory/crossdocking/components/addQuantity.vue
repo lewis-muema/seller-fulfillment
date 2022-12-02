@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import tableHeader from "@/modules/inventory/tables/tableHeader";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
@@ -241,6 +241,9 @@ export default {
   },
   mounted() {
     this.unavailableStockStatus = false;
+    this.getSelectedProducts.forEach((row, i) => {
+      this.refreshStock(row, i);
+    });
   },
   methods: {
     ...mapMutations([
@@ -250,6 +253,7 @@ export default {
       "setEditedPriceIndex",
       "setDestinations",
     ]),
+    ...mapActions(["requestAxiosGet"]),
     addProductStep() {
       if (this.totalProducts > 0) {
         const destinations = this.getDestinations;
@@ -286,7 +290,9 @@ export default {
         data: {
           userId: this.getStorageUserDetails.business_id,
           SKU: products[val].product_id,
-          variant: products[val].selectedOption.product_variant_id,
+          variant: products[val].selectedOption
+            ? products[val].selectedOption.product_variant_id
+            : products[val].product_variants[0].product_variant_id,
           quantity: quantity,
           product_collection: products[val].product_collection
             ? products[val].product_collection.collection_id
@@ -294,6 +300,29 @@ export default {
           clientType: "web",
           device: "desktop",
         },
+      });
+    },
+    refreshStock(row, i) {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${row.product_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          const selectedProducts = this.getSelectedProducts;
+          if (selectedProducts[i].selectedOption) {
+            selectedProducts[
+              i
+            ].selectedOption.product_variant_stock_levels.available =
+              response.data.data.product.product_variants[
+                selectedProducts[i].optionIndex
+              ].product_variant_stock_levels.available;
+          } else {
+            selectedProducts[
+              i
+            ].product_variants[0].product_variant_stock_levels.available =
+              response.data.data.product.product_variants[0].product_variant_stock_levels.available;
+          }
+        }
       });
     },
     removeProductOption(index) {

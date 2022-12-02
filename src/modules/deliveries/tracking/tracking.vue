@@ -127,11 +127,9 @@ export default {
         let showCancel = true;
         if (row.popup === "cancel") {
           showCancel =
-            [
-              "event.delivery.order.created",
-              "event.delivery.at.hub.processing.for.delivery",
-              "event.delivery.at.hub.waiting.for.partner",
-            ].includes(this.getOrderTrackingData.order.order_event_status) ||
+            ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
+              this.getOrderTrackingData.order.order_status
+            ) ||
             this.getOrderTrackingData.order.order_event_status.includes(
               "pickup"
             );

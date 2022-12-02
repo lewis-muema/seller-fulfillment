@@ -174,6 +174,9 @@ export default {
   width: 60%;
   font-weight: 500;
 }
+.view-products-label-recepient-info {
+  font-size: 16px !important;
+}
 .view-products-close {
   font-size: 20px;
   margin-left: auto;

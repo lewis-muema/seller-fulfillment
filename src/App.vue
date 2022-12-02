@@ -30,10 +30,10 @@ export default {
       ) {
         this.getOnboardingStatus();
       }
-      if (
-        to.path.includes("/inventory/send-inventory/customer") &&
-        this.activeCycle
-      ) {
+      if (to.path.includes("/inventory/send-inventory/customer")) {
+        this.$router.push("/inventory/create-delivery");
+      }
+      if (to.path.includes("/inventory/create-delivery") && this.activeCycle) {
         this.$router.go(-1);
         setTimeout(() => {
           this.setOverlayStatus({

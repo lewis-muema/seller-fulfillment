@@ -232,6 +232,190 @@
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
+    <div
+      v-if="popup === 'deliveryInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("deliveries.deliveryInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.locationOfCustomer") }} {{ $t("inventory.required") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <div
+        v-if="v$.location.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        {{ $t("inventory.locationIsRequired") }}
+      </div>
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.deliveryInstructions") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <div @click="validateFields()">
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isDeliveryFieldsValid"
+          v-loading="buttonLoader"
+          @click="submitDeliveryInfo()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div
+      v-if="popup === 'recepientInfoCrossdock'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.receivingItems") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <div
+        v-if="v$.recepientOption.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        <i class="mdi mdi-alert mr-3"></i>
+        {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+      </div>
+      <el-radio-group v-model="recepientOption" class="">
+        <div class="payment-collection-overlay-border-top padding-override">
+          <el-radio label="individual" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.individual") }}
+            </span>
+          </el-radio>
+        </div>
+        <div class="payment-collection-overlay-border-bottom padding-override">
+          <el-radio label="business" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.business") }}
+            </span>
+          </el-radio>
+        </div>
+      </el-radio-group>
+      <div v-if="recepientOption">
+        <p class="crossdock-recipient-details-text">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.enterRecipientDetails")
+              : $t("deliveries.enterBusinessDetails")
+          }}
+        </p>
+        <label for="customer-name" class="edit-info-label">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.recipientName")
+              : $t("deliveries.businessName")
+          }}
+        </label>
+        <v-text-field
+          class="businessProfile-field"
+          id="customer-name"
+          v-model="customerName"
+          variant="outlined"
+          placeholder="Enter customer name"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+        <label for="phone-number" class="edit-info-label">
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          class="invite-phone"
+          id="phone-number"
+          v-model="phone"
+          mode="international"
+        ></vue-tel-input>
+        <label
+          for="sec-phone-number"
+          v-if="secondaryPhoneStatus"
+          class="edit-info-label"
+        >
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          v-if="secondaryPhoneStatus"
+          class="invite-phone"
+          id="sec-phone-number"
+          v-model="secPhone"
+          mode="international"
+        ></vue-tel-input>
+        <div
+          class="add-phone-number mb-4"
+          v-if="!secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+          {{ $t("inventory.addAnotherPhoneNo") }}
+        </div>
+        <div
+          class="add-phone-number mb-4"
+          v-if="secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+          {{ $t("deliveries.removePhoneNumber") }}
+        </div>
+      </div>
+      <div @click="validateFields()">
+        <v-btn
+          :disabled="!isRecipientFieldsValid"
+          v-loading="buttonLoader"
+          class="edit-info-submit-button"
+          @click="submitRecepientInfo()"
+        >
+          {{ $t("deliveries.saveInfo") }}
+        </v-btn>
+      </div>
+    </div>
     <div v-if="popup === 'viewProducts'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -380,31 +564,44 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="popup === 'fees'" class="view-products-container">
+    <div
+      v-if="popup === 'pickupfees'"
+      class="view-products-container fees-container"
+    >
       <div class="timeline-failed-attempt-section">
         <p class="edit-price-title">
-          {{ $t("inventory.fulfillmentFeeCalculation") }}
+          {{ $t("inventory.pickUpFeeCalculation") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'fees')"
+          @click="overlayStatusSet(false, 'pickupfees')"
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
-      <div>
+      <div
+        class="m-auto"
+        v-if="!getFulfillmentFees.pricing.pricing_pickups.length"
+      >
+        {{ $t("inventory.noFeesCaluclatedYet") }}
+      </div>
+      <div
+        v-for="(fulfillmentFees, i) in getFulfillmentFees.pricing
+          .pricing_pickups"
+        :key="i"
+      >
         <div class="fees-row fees-divider">
           <span>
             {{ $t("inventory.totalValue") }}
           </span>
           <span class="fees-left-override">
-            {{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.total_product_value }}
+            {{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.total_product_value }}
           </span>
         </div>
         <div class="fees-row fees-bold fees-title">
           {{ $t("inventory.fees") }}
         </div>
         <div
-          v-for="(promos, i) in getFulfillmentFees.promotion_adjustments"
+          v-for="(promos, i) in fulfillmentFees.promotion_adjustments"
           :key="i"
           class="fees-row"
         >
@@ -413,14 +610,14 @@
             <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
           </span>
           <span class="fees-left-override">
-            {{ getFulfillmentFees.currency }} {{ promos.adjustment_value }}
+            {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
         </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
           <span class="fees-left-override"
-            >{{ getFulfillmentFees.currency }}
-            {{ getFulfillmentFees.calculated_fee }}</span
+            >{{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.calculated_fee }}</span
           >
         </div>
         <p class="fee-margin-top pricing-docs-link">
@@ -428,6 +625,68 @@
           <i class="mdi mdi-chevron-right"></i>
         </p>
       </div>
+    </div>
+    <div
+      v-if="popup === 'fulfillmentFees'"
+      class="view-products-container fees-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <p class="edit-price-title">
+          {{ $t("inventory.fulfillmentFeeCalculation") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'pickupfees')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div
+        class="m-auto"
+        v-if="!getFulfillmentFees.pricing.pricing_deliveries.length"
+      >
+        {{ $t("inventory.noFeesCaluclatedYet") }}
+      </div>
+      <div
+        v-for="(fulfillmentFees, i) in getFulfillmentFees.pricing
+          .pricing_deliveries"
+        :key="i"
+      >
+        <div class="fees-row fees-divider">
+          <span>
+            {{ $t("inventory.totalValue") }}
+          </span>
+          <span class="fees-left-override">
+            {{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.total_product_value }}
+          </span>
+        </div>
+        <div class="fees-row fees-bold fees-title">
+          {{ $t("inventory.fees") }}
+        </div>
+        <div
+          v-for="(promos, i) in fulfillmentFees.promotion_adjustments"
+          :key="i"
+          class="fees-row"
+        >
+          <span>
+            <div>{{ promos.adjustment_description }}</div>
+            <div class="fees-subtitle">{{ promos.adjustment_subtitle }}</div>
+          </span>
+          <span class="fees-left-override">
+            {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
+          </span>
+        </div>
+        <div class="fees-row fees-bold fees-divider">
+          <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
+          <span class="fees-left-override"
+            >{{ fulfillmentFees.currency }}
+            {{ fulfillmentFees.calculated_fee }}</span
+          >
+        </div>
+      </div>
+      <p class="fee-margin-top pricing-docs-link">
+        {{ $t("inventory.learnMoreAboutOurPricing") }}
+        <i class="mdi mdi-chevron-right"></i>
+      </p>
     </div>
     <div v-if="popup === 'promo'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
@@ -650,6 +909,13 @@
         <p class="payment-collection-overlay-title">
           {{ $t("inventory.doYouWantPaymentToBeCollected") }}
         </p>
+        <div
+          v-if="v$.deliveryFeeCollection.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+        </div>
         <p
           class="select-payment-collection-error"
           v-if="selectPaymentCollection"
@@ -660,123 +926,105 @@
           }}</span>
         </p>
         <el-radio-group
-          v-model="paymentCollection"
+          v-model="deliveryFeeCollection"
           @change="
             setPaymentCollectionStatus({
-              status: paymentCollection,
-              amountToBeCollected:
-                getPaymentCollectionStatus.amountToBeCollected,
+              amountToBeCollected: deliveryFeeCollection,
               deliveryFee: getPaymentCollectionStatus.deliveryFee,
             })
           "
           class=""
         >
-          <div class="payment-collection-overlay-border-top padding-override">
-            <el-radio :label="true" size="large">
-              <p class="mb-0 ml-3 font-override">
-                {{ $t("inventory.yesCollectPaymentOnMyBehalf") }}
+          <div class="payment-collection-overlay-border-top">
+            <el-radio label="nofee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                }}
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].total_product_value
+                }}
               </p>
             </el-radio>
+          </div>
+          <div class="payment-collection-overlay-border-middle">
+            <el-radio label="fee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts&DeliveryFee") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{
+                  $t("inventory.deliveryFeeAmount", {
+                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                  })
+                }}
+              </p>
+            </el-radio>
+            <div
+              class="payment-collection-overlay-amount-field"
+              v-if="getPaymentCollectionStatus.amountToBeCollected === 'fee'"
+            >
+              <p
+                class="select-payment-collection-error"
+                v-if="enterDeliveryFee"
+              >
+                <i class="mdi mdi-alert mr-3"></i>
+                <span class="select-payment-collection-error-text">{{
+                  $t("inventory.pleaseEnterTheDeliveryFeeAmount")
+                }}</span>
+              </p>
+              <p class="delivery-fee-collection-overlay-title">
+                {{ $t("inventory.deliveryFeeToBeCollected") }}
+              </p>
+              <v-text-field
+                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
+                @input="
+                  setPaymentCollectionStatus({
+                    amountToBeCollected:
+                      getPaymentCollectionStatus.amountToBeCollected,
+                    deliveryFee: deliveryFeeAmount,
+                  })
+                "
+                v-model="deliveryFeeAmount"
+                variant="outlined"
+                :prefix="
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                "
+                clearable
+                clear-icon="mdi-close"
+                @click:clear="
+                  setPaymentCollectionStatus({
+                    amountToBeCollected:
+                      getPaymentCollectionStatus.amountToBeCollected,
+                    deliveryFee: deliveryFeeAmount,
+                  })
+                "
+              ></v-text-field>
+            </div>
           </div>
           <div
             class="payment-collection-overlay-border-bottom padding-override"
           >
-            <el-radio :label="false" size="large">
+            <el-radio label="none" size="large">
               <p class="mb-0 ml-3 font-override">
                 {{ $t("inventory.noDontCollectPayment") }}
               </p>
             </el-radio>
           </div>
         </el-radio-group>
-        <div v-if="getPaymentCollectionStatus.status">
-          <p class="payment-collection-overlay-title mt-5">
-            {{ $t("inventory.selectAmountToBeCollected") }}
-          </p>
-          <p class="select-payment-collection-error" v-if="selectDeliveryFee">
-            <i class="mdi mdi-alert mr-3"></i>
-            <span class="select-payment-collection-error-text">{{
-              $t("inventory.pleaseSelectTheAmount")
-            }}</span>
-          </p>
-          <el-radio-group
-            v-model="deliveryFeeCollection"
-            @change="
-              setPaymentCollectionStatus({
-                status: getPaymentCollectionStatus.status,
-                amountToBeCollected: deliveryFeeCollection,
-                deliveryFee: getPaymentCollectionStatus.deliveryFee,
-              })
-            "
-            class=""
-          >
-            <div class="payment-collection-overlay-border-top">
-              <el-radio label="nofee" size="large">
-                <p class="mb-2 ml-3 font-override">
-                  {{ $t("inventory.priceOfProducts") }}
-                </p>
-                <p class="mb-2 ml-3">
-                  {{ getFulfillmentFees.currency }}
-                  {{ getFulfillmentFees.total_product_value }}
-                </p>
-              </el-radio>
-            </div>
-            <div class="payment-collection-overlay-border-bottom">
-              <el-radio label="fee" size="large">
-                <p class="mb-2 ml-3 font-override">
-                  {{ $t("inventory.priceOfProducts&DeliveryFee") }}
-                </p>
-                <p class="mb-2 ml-3">
-                  {{
-                    $t("inventory.deliveryFeeAmount", {
-                      Amount: `${getFulfillmentFees.currency} ${getFulfillmentFees.total_product_value}`,
-                    })
-                  }}
-                </p>
-              </el-radio>
-            </div>
-          </el-radio-group>
-          <div
-            class="payment-collection-overlay-border-bottom"
-            v-if="getPaymentCollectionStatus.amountToBeCollected === 'fee'"
-          >
-            <p class="select-payment-collection-error" v-if="enterDeliveryFee">
-              <i class="mdi mdi-alert mr-3"></i>
-              <span class="select-payment-collection-error-text">{{
-                $t("inventory.pleaseEnterTheDeliveryFeeAmount")
-              }}</span>
-            </p>
-            <p class="delivery-fee-collection-overlay-title">
-              {{ $t("inventory.deliveryFeeToBeCollected") }}
-            </p>
-            <v-text-field
-              :label="`${getFulfillmentFees.currency} 60`"
-              @input="
-                setPaymentCollectionStatus({
-                  status: getPaymentCollectionStatus.status,
-                  amountToBeCollected:
-                    getPaymentCollectionStatus.amountToBeCollected,
-                  deliveryFee: deliveryFeeAmount,
-                })
-              "
-              v-model="deliveryFeeAmount"
-              variant="outlined"
-              :prefix="getFulfillmentFees.currency"
-              clearable
-              clear-icon="mdi-close"
-              @click:clear="
-                setPaymentCollectionStatus({
-                  status: getPaymentCollectionStatus.status,
-                  amountToBeCollected:
-                    getPaymentCollectionStatus.amountToBeCollected,
-                  deliveryFee: deliveryFeeAmount,
-                })
-              "
-            ></v-text-field>
-          </div>
-        </div>
-        <div class="export-popup-buttons mt-3">
+        <div class="export-popup-buttons mt-3" @click="validateFields()">
           <v-btn
-            class="edit-user-save"
+            class="edit-user-save edit-info-submit-button"
+            :disabled="!isPaymentCollectionValid"
             v-loading="buttonLoader"
             @click="setPaymentCollection()"
           >
@@ -785,6 +1033,296 @@
         </div>
       </div>
     </div>
+    <div v-if="popup === 'deliveryDocuments'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'deliveryDocuments')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="payment-collection-overlay-title">
+          {{ $t("inventory.uploadDocument") }}
+        </p>
+        <div
+          v-if="v$.PDF.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseUploadDocumentToProceed") }}
+        </div>
+        <div
+          class="crossdocking-add-document-drop"
+          @click="uploadPDFFile()"
+          v-loading="PDFUploadStatus"
+        >
+          <input
+            type="file"
+            name
+            value
+            class="form-control"
+            placeholder="Upload"
+            accept="application/pdf"
+            id="upload-pdf-card"
+            style="display: none"
+            @change="uploadPDF('upload-pdf-card', 'option')"
+          />
+          <div v-if="PDF">
+            <iframe
+              style="border: 1px solid #666ccc"
+              title="Document"
+              :src="PDF"
+              frameborder="1"
+              scrolling="auto"
+              width="100%"
+              height="300px"
+            ></iframe>
+          </div>
+          <div class="crossdocking-add-document-drop-inner" v-else>
+            <p class="upload">
+              <i class="mdi mdi-upload" aria-hidden="true"></i>
+              {{ $t("inventory.uploadDocuments") }}
+            </p>
+            <p class="crossdocking-add-document-drop-inner-bottom">
+              {{ $t("inventory.PDFonly") }}
+            </p>
+          </div>
+        </div>
+        <div class="mt-3">
+          <p class="crossdocking-add-document-titles">
+            {{ $t("inventory.whatTypeOfDocumentIsThis") }}
+          </p>
+          <v-select
+            v-model="documentType"
+            :items="documentTypes"
+            :label="$t('inventory.select')"
+            return-object
+            density="compact"
+          >
+          </v-select>
+        </div>
+        <div
+          v-if="v$.documentType.$error"
+          class="error-msg withdraw-transaction-error"
+        >
+          {{ $t("inventory.pleaseSelectADocumentTypeToProceed") }}
+        </div>
+        <div v-if="documentType === 'Other'">
+          <p class="crossdocking-add-document-titles">
+            {{ $t("inventory.enterTheTitleOfTheDocument") }}
+          </p>
+          <v-text-field
+            :label="$t('inventory.enterTitle')"
+            v-model="documentTitle"
+            variant="outlined"
+            clearable
+            clear-icon="mdi-close"
+            density="compact"
+          ></v-text-field>
+        </div>
+        <div class="mt-3" @click="validateFields()">
+          <v-btn
+            v-loading="buttonLoader"
+            :disabled="
+              !PDF ||
+              documentType === '' ||
+              (documentType === 'Other' && !documentTitle)
+            "
+            class="cross-docking-upload-doc"
+            @click="addPDFDocument()"
+          >
+            {{ $t("inventory.uploadDocument") }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
+    <div v-if="popup === 'viewDocument'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'viewDocument')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.viewDocument") }}</p>
+        <iframe
+          style="border: 1px solid #666ccc"
+          title="Document"
+          :src="getDocumentURL"
+          frameborder="1"
+          scrolling="auto"
+          width="100%"
+          height="600px"
+        ></iframe>
+      </div>
+    </div>
+    <div v-if="popup === 'pickItems'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'pickItems')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.howDoYouWantTheItemsToBePicked") }}</p>
+        <div>
+          <el-radio-group v-model="pickItems" class="">
+            <div class="payment-collection-overlay-border-top">
+              <el-radio label="driver" size="large">
+                <p class="mb-2 ml-3 font-override crossdocking-pick-items-text">
+                  {{ $t("inventory.sendDriverToPickTheItems") }}
+                </p>
+              </el-radio>
+            </div>
+            <div class="payment-collection-overlay-border-bottom">
+              <el-radio label="self" size="large" disabled>
+                <p class="mb-0 ml-3 font-override crossdocking-pick-items-text">
+                  {{ $t("inventory.IllTakeTheItems") }}
+                </p>
+              </el-radio>
+            </div>
+          </el-radio-group>
+        </div>
+      </div>
+      <div>
+        <v-btn
+          v-loading="buttonLoader"
+          :disabled="!pickItems"
+          class="cross-docking-upload-doc mt-3"
+          @click="selectPickUpOption()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div v-if="popup === 'stations'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'stations')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.selectThePickUpStation") }}</p>
+        <div class="crossdocking-stations-container">
+          <el-radio-group v-model="pickUpStation">
+            <div
+              class="crossdocking-pickup-stations"
+              v-for="(station, i) in getStations"
+              :key="i"
+            >
+              <el-radio :label="i" size="large">
+                <p class="mb-2 ml-3 font-override crossdocking-pick-items-text">
+                  {{ station.name }}
+                </p>
+                <p class="mb-2 ml-3 font-override crossdocking-pick-items-text">
+                  {{ station.location }}
+                </p>
+                <p class="mb-2 ml-3 font-override crossdocking-pick-items-text">
+                  {{ station.room }}
+                </p>
+                <p class="mb-2 ml-3 font-override crossdocking-pick-items-text">
+                  {{ station.hours }}
+                </p>
+              </el-radio>
+            </div>
+          </el-radio-group>
+        </div>
+      </div>
+      <v-btn
+        class="edit-info-submit-button"
+        :disabled="pickUpStation === ''"
+        v-loading="buttonLoader"
+        @click="submitPickStation()"
+      >
+        {{ $t("inventory.done") }}
+      </v-btn>
+    </div>
+    <div v-if="popup === 'pickUpInfoCrossDock'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("inventory.pickUpInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'pickUpInfoCrossDock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.pickupInfo") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <label for="phone-number" class="edit-info-label">
+        {{ $t("inventory.phoneNumberOfTheContactPerson") }}
+      </label>
+      <vue-tel-input
+        v-bind="getSendyPhoneProps"
+        class="invite-phone"
+        id="phone-number"
+        v-model="phone"
+        mode="international"
+      ></vue-tel-input>
+      <label
+        for="sec-phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("inventory.phoneNumberOfTheContactPerson") }}
+      </label>
+      <vue-tel-input
+        v-bind="getSendyPhoneProps"
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="sec-phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <div
+        class="add-phone-number mb-4"
+        v-if="!secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+        {{ $t("inventory.addAnotherPhoneNo") }}
+      </div>
+      <div
+        class="add-phone-number mb-4"
+        v-if="secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+        {{ $t("deliveries.removePhoneNumber") }}
+      </div>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.pickupInstructionsOptional") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <v-btn
+        class="edit-info-submit-button"
+        :disabled="!isPickUpFieldsValid"
+        v-loading="buttonLoader"
+        @click="submitPickUpInfo()"
+      >
+        {{ $t("inventory.done") }}
+      </v-btn>
+    </div>
+
     <div v-if="popup === 'paymentBreakdown'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <i
@@ -862,28 +1400,52 @@
 import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
+import upload_img from "../../mixins/upload_img";
 import moment from "moment";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   props: ["overlayVal", "editInfo"],
+  mixins: [upload_img],
+  validations() {
+    return {
+      location: { required },
+      recepientOption: { required },
+      deliveryFeeCollection: { required },
+      PDF: { required },
+      documentType: { required },
+    };
+  },
   watch: {
     "$store.state.overlayStatus": function (val) {
       this.overlay = val.overlay;
       this.popup = val.popup;
-      this.newCurrency =
-        val.popup === "editPrice"
+      if (this.getSelectedProducts[this.getEditedPriceIndex]) {
+        const optionCurrency = this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].selectedOption
           ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
               .product_variant_currency
-          : "";
-      this.newPrice =
-        val.popup === "editPrice"
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_currency;
+        const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
+          .selectedOption
           ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
               .product_variant_unit_price
-          : "";
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_unit_price;
+        this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
+        this.newPrice = val.popup === "editPrice" ? optionPrice : "";
+      }
       this.paymentCollection = this.getPaymentCollectionStatus.status;
       this.deliveryFeeCollection =
         this.getPaymentCollectionStatus.amountToBeCollected;
       this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
+      this.preloadDeliveryDetails(val);
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
       this.customerName = val.order.destination.name;
@@ -895,6 +1457,11 @@ export default {
       this.secPhone = val.order.destination.secondary_phone_number;
       this.instructions = val.order.destination.delivery_instructions;
       this.date = new Date(val.order.scheduled_date);
+    },
+    "$store.state.pickUpInfoCD": function orderTrackingData() {
+      if (this.$route.path.includes("checkout")) {
+        this.clearInputs();
+      }
     },
   },
   components: { Datepicker },
@@ -917,6 +1484,11 @@ export default {
       "getActiveUser",
       "getExportDataType",
       "getPaymentCollectionStatus",
+      "getDestinations",
+      "getDestinationIndex",
+      "getDocumentURL",
+      "getStations",
+      "getPickUpInfoCD",
     ]),
     partnerNotAssigned() {
       return (
@@ -935,6 +1507,18 @@ export default {
       );
       return fee;
     },
+    isDeliveryFieldsValid() {
+      return this.location.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
+    },
+    isPickUpFieldsValid() {
+      return this.location.length && this.phone.length;
+    },
+    isPaymentCollectionValid() {
+      return this.deliveryFeeCollection;
+    },
   },
   data() {
     return {
@@ -951,6 +1535,10 @@ export default {
       location: "",
       locationData: {},
       instructions: "",
+      apartmentName: "",
+      recepientOption: "",
+      PDFUploadStatus: "",
+      PDF: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
@@ -977,6 +1565,28 @@ export default {
       buttonLoader: false,
       secPhone: "",
       secondaryPhoneStatus: false,
+      documentType: "",
+      documentTypes: [
+        {
+          title: this.$t("inventory.invoice"),
+          value: "Invoice",
+        },
+        {
+          title: this.$t("inventory.deliveryDocuments"),
+          value: "Delivery documents",
+        },
+        {
+          title: this.$t("inventory.LPO"),
+          value: "LPO",
+        },
+        {
+          title: this.$t("inventory.Other"),
+          value: "Other",
+        },
+      ],
+      documentTitle: "",
+      pickItems: "",
+      pickUpStation: "",
     };
   },
   beforeMount() {
@@ -985,6 +1595,7 @@ export default {
       props.defaultCountry = localStorage.country.toLowerCase();
       this.setSendyPhoneProps(props);
     }
+    this.initiateS3();
   },
   methods: {
     ...mapActions([
@@ -1002,7 +1613,83 @@ export default {
       "setProductsToSubmit",
       "setSendyPhoneProps",
       "setPaymentCollectionStatus",
+      "setDeliveryInfo",
+      "setRecepientInfo",
+      "setDestinations",
+      "setPickUpOptions",
+      "setPickUpInfoCD",
+      "setPickUpStation",
     ]),
+    validateFields() {
+      this.v$.$validate();
+      if (this.v$.$errors.length > 0) {
+        return;
+      }
+    },
+    uploadPDFFile() {
+      document.querySelector("#upload-pdf-card").click();
+    },
+    selectPickUpOption() {
+      this.setPickUpOptions({
+        type: this.pickItems,
+        text:
+          this.pickItems === "driver"
+            ? "inventory.sendDriverToPickTheItems"
+            : "inventory.IllTakeTheItems",
+        info: "",
+        date: "",
+        FC: "",
+      });
+      this.overlayStatusSet(false, "pickItems");
+      if (this.pickItems === "self") {
+        this.overlayStatusSet(true, "stations");
+      }
+    },
+    addPDFDocument() {
+      const destinations = this.getDestinations;
+      const index = this.getDestinationIndex;
+      const documents =
+        destinations[index] &&
+        destinations[index].documents &&
+        destinations[index].documents.length
+          ? destinations[index].documents
+          : [];
+      if (destinations[index] && destinations[index].documents) {
+        const existingDoc = destinations[index].documents.filter((row) => {
+          return row.url === this.PDF && row.type === this.documentType;
+        });
+        if (!existingDoc.length) {
+          documents.push({
+            title: this.documentTitle,
+            url: this.PDF,
+            type: this.documentType,
+          });
+          destinations[index].documents = documents;
+          this.setDestinations(destinations);
+        }
+      } else {
+        documents.push({
+          title: this.documentTitle,
+          url: this.PDF,
+          type: this.documentType,
+        });
+        if (destinations[index]) {
+          destinations[index].documents = documents;
+        } else {
+          destinations.splice(index, 0, {
+            documents,
+          });
+        }
+        this.setDestinations(destinations);
+      }
+      this.overlayStatusSet(false, "deliveryDocuments");
+      setTimeout(() => {
+        this.documentTitle = "";
+        this.PDF = "";
+        this.documentType = "";
+        this.v$.$reset();
+      }, 500);
+    },
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
       this.popup = popup;
@@ -1014,6 +1701,77 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+    },
+    submitPickStation() {
+      this.setPickUpStation(this.getStations[this.pickUpStation]);
+      this.overlayStatusSet(false, "stations");
+    },
+    submitPickUpInfo() {
+      const pickUpDetails = {
+        location: this.location,
+        place: this.locationData,
+        phone: this.phone,
+        secondary_phone_number: this.secPhone,
+        instructions: this.instructions,
+      };
+      this.overlayStatusSet(false, "pickUpInfoCrossDock");
+      this.setPickUpInfoCD(pickUpDetails);
+      this.clearInputs();
+    },
+    submitDeliveryInfo() {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      const deliveryDetails = {
+        location: this.location,
+        apartmentName: this.apartmentName,
+        instructions: this.instructions,
+        place: this.locationData,
+      };
+      this.overlayStatusSet(false, "deliveryInfoCrossdock");
+      this.setDeliveryInfo(deliveryDetails);
+      if (destinations[index]) {
+        destinations[index].delivery_info = deliveryDetails;
+      } else {
+        destinations.splice(index, 0, {
+          delivery_info: deliveryDetails,
+        });
+      }
+      this.setDestinations(destinations);
+      this.clearInputs();
+    },
+    submitRecepientInfo() {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      const recepientDetails = {
+        customer_name: this.customerName,
+        phone: this.phone,
+        secondary_phone_number: this.secPhone,
+        recipient_type: this.recepientOption,
+      };
+      this.overlayStatusSet(false, "recepientInfoCrossdock");
+      this.setRecepientInfo(recepientDetails);
+      if (destinations[index]) {
+        destinations[index].recipient = recepientDetails;
+      } else {
+        destinations.splice(index, 0, {
+          recipient: recepientDetails,
+        });
+      }
+      this.setDestinations(destinations);
+      this.clearInputs();
+    },
+    clearInputs() {
+      setTimeout(() => {
+        this.customerName = "";
+        this.phone = "";
+        this.secPhone = "";
+        this.location = "";
+        this.apartmentName = "";
+        this.instructions = "";
+        this.recepientOption = "";
+        this.locationData = "";
+        this.v$.$reset();
+      }, 500);
     },
     setPaymentCollection() {
       if (this.getPaymentCollectionStatus.status === "") {
@@ -1040,6 +1798,18 @@ export default {
       } else {
         this.overlayStatusSet(false, "paymentCollection");
       }
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      if (destinations[index]) {
+        destinations[index].POD = this.getPaymentCollectionStatus;
+      } else {
+        destinations.splice(index, 0, {
+          POD: this.getPaymentCollectionStatus,
+        });
+      }
+      setTimeout(() => {
+        this.v$.$reset();
+      }, 500);
     },
     exportData() {
       this.buttonLoader = true;
@@ -1322,15 +2092,77 @@ export default {
       return moment(time).format("Do MMM h:mm a");
     },
     updatePrice() {
-      this.getSelectedProducts[
-        this.getEditedPriceIndex
-      ].selectedOption.product_variant_unit_price = this.newPrice;
+      if (this.getSelectedProducts[this.getEditedPriceIndex].selectedOption) {
+        this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].selectedOption.product_variant_unit_price = this.newPrice;
+      } else {
+        this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].product_variants[0].product_variant_unit_price = this.newPrice;
+      }
       this.overlayStatusSet(false, "editPrice");
     },
     enterPromoCode() {
       this.setPromoCode(this.promoCode);
       this.promoCode = "";
       this.overlayStatusSet(false, "promo");
+    },
+    preloadDeliveryDetails(val) {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      if (val.popup === "deliveryInfoCrossdock") {
+        this.location =
+          destinations[index] && destinations[index].delivery_info
+            ? destinations[index].delivery_info.location
+            : this.location;
+        this.locationData =
+          destinations[index] && destinations[index].delivery_info
+            ? destinations[index].delivery_info.place
+            : this.locationData;
+        this.apartmentName =
+          destinations[index] && destinations[index].delivery_info
+            ? destinations[index].delivery_info.apartmentName
+            : this.apartmentName;
+        this.instructions =
+          destinations[index] && destinations[index].delivery_info
+            ? destinations[index].delivery_info.instructions
+            : this.instructions;
+      } else if (val.popup === "recepientInfoCrossdock") {
+        this.customerName =
+          destinations[index] && destinations[index].recipient
+            ? destinations[index].recipient.customer_name
+            : this.customerName;
+        this.recepientOption =
+          destinations[index] && destinations[index].recipient
+            ? destinations[index].recipient.recipient_type
+            : this.recepientOption;
+        this.phone =
+          destinations[index] && destinations[index].recipient
+            ? destinations[index].recipient.phone
+            : this.phone;
+        this.secondary_phone_number =
+          destinations[index] && destinations[index].recipient
+            ? destinations[index].recipient.secondary_phone_number
+            : this.secondary_phone_number;
+      } else if (val.popup === "pickUpInfoCrossDock") {
+        this.location = this.getPickUpInfoCD.location
+          ? this.getPickUpInfoCD.location
+          : this.location;
+        this.locationData = this.getPickUpInfoCD.place
+          ? this.getPickUpInfoCD.place
+          : this.locationData;
+        this.phone = this.getPickUpInfoCD.phone
+          ? this.getPickUpInfoCD.phone
+          : this.phone;
+        this.secondary_phone_number = this.getPickUpInfoCD
+          .secondary_phone_number
+          ? this.getPickUpInfoCD.secondary_phone_number
+          : this.secondary_phone_number;
+        this.instructions = this.getPickUpInfoCD.instructions
+          ? this.getPickUpInfoCD.instructions
+          : this.instructions;
+      }
     },
   },
 };
@@ -1464,6 +2296,9 @@ export default {
   align-items: center;
   font-size: 15px;
 }
+.crossdock-recipient-details-text {
+  margin: 1rem 0px 1rem 0px !important;
+}
 .fees-title {
   display: flex;
   align-items: flex-end;
@@ -1475,6 +2310,10 @@ export default {
   color: #324ba8;
   text-align: center;
   margin: 30px;
+}
+.recepient-info-icons {
+  font-size: 20px !important;
+  padding-right: 6px !important;
 }
 .user-added-container {
   background: white;
@@ -1606,6 +2445,9 @@ export default {
 .resend-invite-img {
   width: 40px;
 }
+.recepient-info-label {
+  padding-left: 10px !important;
+}
 .resend-invite-close {
   width: 100%;
   display: flex;
@@ -1630,6 +2472,7 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .deactivate-user-title {
   margin-top: -50px;
   font-size: 18px;
@@ -1643,6 +2486,30 @@ export default {
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
+}
+.edit-info-submit-button:disabled {
+  margin-top: 40px;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: #324ba8 !important;
+  background: #d3ddf6 !important;
+  width: -webkit-fill-available;
+}
+.cross-docking-upload-doc:disabled {
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: #324ba8 !important;
+  background: #d3ddf6 !important;
+  width: -webkit-fill-available;
+  height: 50px !important;
+}
+.cross-docking-upload-doc {
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: white !important;
+  background: #324ba8;
+  width: -webkit-fill-available;
+  height: 50px !important;
 }
 .get-help-button {
   width: 100%;
@@ -1721,5 +2588,60 @@ export default {
   align-items: center;
   justify-content: center;
   height: 25px;
+}
+.payment-collection-overlay-border-middle {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  padding: 20px;
+  border-top: none;
+}
+.payment-collection-overlay-amount-field {
+  margin-top: 25px;
+  margin-left: 35px;
+  margin-bottom: -30px;
+}
+.crossdocking-add-document-drop {
+  height: max-content;
+  width: 100%;
+  border: 1px dashed grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  border-radius: 5px;
+}
+.crossdocking-add-document-drop-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+.crossdocking-add-document-drop-inner-bottom {
+  color: #324ba8 !important;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: -10px;
+}
+.crossdocking-add-document-titles {
+  font-size: 15px;
+}
+.crossdocking-pick-items-text {
+  white-space: normal;
+}
+.crossdocking-pickup-stations {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e2e7ed;
+}
+.crossdocking-stations-container {
+  height: 350px;
+  overflow: scroll;
+}
+.fees-container {
+  max-height: 700px;
+  overflow-y: scroll;
 }
 </style>

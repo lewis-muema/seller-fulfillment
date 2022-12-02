@@ -36,6 +36,9 @@ import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
+import AddDeliveryProducts from "../modules/inventory/crossdocking/components/productSelect.vue";
+import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 
 const routes = [
@@ -116,6 +119,21 @@ const routes = [
     path: "/inventory/send-inventory/:path?/:page?",
     name: "Send Inventory",
     component: SendProducts,
+  },
+  {
+    path: "/inventory/create-delivery",
+    name: "Create Delivery",
+    component: CreateDelivery,
+  },
+  {
+    path: "/inventory/add-delivery-products",
+    name: "Add Delivery Products",
+    component: AddDeliveryProducts,
+  },
+  {
+    path: "/inventory/add-delivery-quantities",
+    name: "Add Delivery Quantities",
+    component: AddDeliveryQuantities,
   },
   {
     path: "/deliveries/customer/:tab?/:date?",

@@ -26,6 +26,9 @@ export default {
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },
+  setRecepientInfo(state, val) {
+    state.recepientInfo = val;
+  },
   setPickupInfo(state, val) {
     state.pickupInfo = val;
   },
@@ -328,5 +331,32 @@ export default {
   },
   setWithDrawalAmount(state, val) {
     state.withDrawalAmount = val;
+  },
+  setPagination(state, val) {
+    state.pagination = val;
+  },
+  setSearchedProducts(state, val) {
+    state.searchedProducts = val;
+  },
+  setDestinations(state, val) {
+    state.destinations = val;
+  },
+  setDestinationIndex(state, val) {
+    state.destinationIndex = val;
+  },
+  setDocumentURL(state, val) {
+    state.documentURL = val;
+  },
+  setPickUpOptions(state, val) {
+    state.pickUpOptions = val;
+  },
+  setPickUpInfoCD(state, val) {
+    state.pickUpInfoCD = val;
+  },
+  setStations(state, val) {
+    state.stations = val;
+  },
+  setPickUpStation(state, val) {
+    state.pickUpStation = val;
   },
 };

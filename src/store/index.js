@@ -671,7 +671,7 @@ export default createStore({
           route: ["/deliveries/customer", "/deliveries/tracking"],
         },
         CAN_CREATE_DELIVERIES: {
-          route: ["/inventory/send-inventory/customer"],
+          route: ["/inventory/create-delivery"],
         },
         CAN_ACCESS_CONSIGNMENTS_MODULE: {
           route: ["/deliveries/sendy", "/deliveries/tracking"],

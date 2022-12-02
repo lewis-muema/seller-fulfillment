@@ -437,7 +437,11 @@
           </div>
         </div>
       </div>
-      <div class="cross-docking-checkout-add-location" @click="addLocation()">
+      <div
+        class="cross-docking-checkout-add-location"
+        @click="addLocation()"
+        v-if="multidestination"
+      >
         <i class="mdi mdi-plus cross-docking-checkout-add-location-plus"></i>
         {{ $t("inventory.addAnotherDeliveryLocation") }}
       </div>
@@ -631,6 +635,7 @@
           class="btn btn-primary mt-2 btn-long submit-order-btn"
           @click="createDelivery()"
           v-loading="buttonLoader"
+          :disabled="buttonLoader"
         >
           {{ $t("inventory.submitOrder") }}
         </button>
@@ -676,6 +681,7 @@ export default {
       ],
       referenceNumbers: [],
       showErrors: false,
+      multidestination: false,
     };
   },
   watch: {
@@ -993,6 +999,8 @@ export default {
       "setSelectedProducts",
       "setFulfillmentFees",
       "setLoader",
+      "setPickUpInfoCD",
+      "setPickUpOptions",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1124,7 +1132,6 @@ export default {
             type: "calculateFee",
             value: "",
           });
-          this.buttonLoader = false;
           if (response.status === 200) {
             this.setFulfillmentFees(response.data.data);
           }
@@ -1168,6 +1175,14 @@ export default {
             });
             this.setSelectedProducts([]);
             this.setDestinations([{}]);
+            this.setPickUpInfoCD({});
+            this.setPickUpOptions({
+              type: "",
+              text: "",
+              info: "",
+              date: "",
+              FC: "",
+            });
             this.setFulfillmentFees(this.placeHolderFees);
             this.sendSegmentEvents({
               event: "Request_Delivery_to_Buyer",

@@ -67,7 +67,7 @@ export default {
   mixins: [eventsMixin],
   data() {
     return {
-      customerRoute: "/inventory/send-inventory/customer",
+      customerRoute: "/inventory/create-delivery",
       sendyRoute: "/inventory/send-inventory/sendy",
       mainRoute: "/inventory/send-inventory",
       customerHeader: "common.sendDeliveryToCustomer",

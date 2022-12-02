@@ -229,5 +229,20 @@
   "fulfillmentFees": "Fulfillment fees",
   "pickupFees": "Pick up fees",
   "pickUpFeeCalculation": "Pick up fee calculation",
-  "noFeesCaluclatedYet": "No Fees Calculated Yet"
+  "noFeesCaluclatedYet": "No Fees Calculated Yet",
+  "referenceNumber": "Reference number: {Ref}",
+  "orderIsPendingBecause": "Order is pending because some items will be picked at Marsabit Plaza on {Date}",
+  "trackPickUpOrder": "Track pick up order",
+  "thereIsADeliveryLinkedToThisPickUp": "There is a delivery linked to this pick up order",
+  "trackDeliveryOrder": "Track delivery order",
+  "noInstructionsAdded": "No instructions added for this order",
+  "editDeliveryInfo": "Edit delivery info",
+  "editRecipientInfo": "Edit recipient info",
+  "deliveryDate": "Delivery date",
+  "documentsYouveUploaded": "Documents you’ve uploaded",
+  "noDocuments": "No documents",
+  "editDeliveryDate": "Edit delivery date",
+  "otherDocuments": "{Doc} and {Count} other documents",
+  "viewLess": "View less",
+  "viewMore": "View more"
 }

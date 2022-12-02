@@ -295,11 +295,9 @@ export default {
     },
     redirect() {
       this.$router.push(
-        `/inventory/send-inventory/${
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "customer"
-            : "sendy"
-        }/select-products?`
+        this.getSelectedTab === "dashboard.toYourCustomers"
+          ? "/inventory/create-delivery"
+          : "/inventory/send-inventory/sendy/select-products"
       );
     },
   },

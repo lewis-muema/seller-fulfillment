@@ -399,7 +399,7 @@
         <div
           class="add-phone-number mb-4"
           v-if="secondaryPhoneStatus"
-          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+          @click="removePhoneNumber()"
         >
           <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
           {{ $t("deliveries.removePhoneNumber") }}
@@ -1296,7 +1296,7 @@
       <div
         class="add-phone-number mb-4"
         v-if="secondaryPhoneStatus"
-        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        @click="removePhoneNumber()"
       >
         <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
         {{ $t("deliveries.removePhoneNumber") }}
@@ -1613,6 +1613,10 @@ export default {
         return;
       }
     },
+    removePhoneNumber() {
+      this.secondaryPhoneStatus = !this.secondaryPhoneStatus;
+      this.secPhone = "";
+    },
     uploadPDFFile() {
       document.querySelector("#upload-pdf-card").click();
     },
@@ -1757,6 +1761,7 @@ export default {
         this.instructions = "";
         this.recepientOption = "";
         this.locationData = {};
+        this.secondaryPhoneStatus = false;
         this.v$.$reset();
       }, 500);
     },
@@ -2128,7 +2133,15 @@ export default {
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.phone
             : "";
-        this.secondary_phone_number =
+        this.secPhone =
+          destinations[index] && destinations[index].recipient
+            ? destinations[index].recipient.secondary_phone_number
+            : "";
+        this.secondaryPhoneStatus =
+          destinations[index] &&
+          destinations[index].recipient &&
+          destinations[index].recipient.secondary_phone_number;
+        this.secPhone =
           destinations[index] && destinations[index].recipient
             ? destinations[index].recipient.secondary_phone_number
             : "";
@@ -2142,8 +2155,9 @@ export default {
         this.phone = this.getPickUpInfoCD.phone
           ? this.getPickUpInfoCD.phone
           : "";
-        this.secondary_phone_number = this.getPickUpInfoCD
-          .secondary_phone_number
+        this.secondaryPhoneStatus =
+          this.getPickUpInfoCD && this.getPickUpInfoCD.secondary_phone_number;
+        this.secPhone = this.getPickUpInfoCD.secondary_phone_number
           ? this.getPickUpInfoCD.secondary_phone_number
           : "";
         this.instructions = this.getPickUpInfoCD.instructions

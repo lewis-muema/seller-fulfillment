@@ -105,7 +105,7 @@
           >
             <div>
               <p>{{ $t("deliveries.deliveryInfo") }}</p>
-              <div class="delivery-details-text">
+              <div class="crossdocking-items-line-height">
                 <p>{{ getDestinations[index - 1].delivery_info.location }}</p>
                 <p>
                   {{ getDestinations[index - 1].delivery_info.apartmentName }}
@@ -505,7 +505,7 @@
             >
               <div>
                 <p>{{ $t("inventory.pickUpInfo") }}</p>
-                <div class="delivery-details-text">
+                <div class="crossdocking-items-line-height">
                   <p>{{ getPickUpInfoCD.location }}</p>
                   <p>{{ getPickUpInfoCD.phone }}</p>
                   <p>{{ getPickUpInfoCD.instructions }}</p>
@@ -1173,6 +1173,28 @@ export default {
               message: "",
               type: "success",
             });
+
+            this.setFulfillmentFees(this.placeHolderFees);
+            this.sendSegmentEvents({
+              event: "Request_Delivery_to_Buyer",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                deliveries: this.checkoutPayload.deliveries,
+                device: "desktop",
+              },
+            });
+            window.gtag("event", "purchase", {
+              transaction_id: response.data.data.order_id,
+              items: [
+                {
+                  currency: this.getBusinessDetails.currency,
+                  price:
+                    this.getFulfillmentFees.pricing.pricing_subtotals
+                      .fulfilment_fee,
+                  quantity: 1,
+                },
+              ],
+            });
             this.setSelectedProducts([]);
             this.setDestinations([{}]);
             this.setPickUpInfoCD({});
@@ -1182,15 +1204,6 @@ export default {
               info: "",
               date: "",
               FC: "",
-            });
-            this.setFulfillmentFees(this.placeHolderFees);
-            this.sendSegmentEvents({
-              event: "Request_Delivery_to_Buyer",
-              data: {
-                userId: this.getStorageUserDetails.business_id,
-                deliveries: this.checkoutPayload.deliveries,
-                device: "desktop",
-              },
             });
             this.resetInput();
             if (this.onboardingStatus) {
@@ -1490,5 +1503,9 @@ export default {
 }
 .field-required-error {
   margin-top: -15px !important;
+}
+.crossdocking-items-line-height {
+  line-height: 20px !important;
+  font-weight: 400 !important;
 }
 </style>

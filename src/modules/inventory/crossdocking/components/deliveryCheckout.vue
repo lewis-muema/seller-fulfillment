@@ -744,7 +744,7 @@ export default {
           row.products.forEach((product) => {
             if (product.selectedOption) {
               status =
-                product.selectedOption.quantity >
+                product.quantity >
                 product.selectedOption.product_variant_stock_levels.available;
             } else {
               status =

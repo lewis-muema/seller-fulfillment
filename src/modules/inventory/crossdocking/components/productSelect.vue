@@ -60,18 +60,8 @@
                         class="product-select-checkbox"
                         @click="
                           product.status
-                            ? removeProduct(
-                                product,
-                                i,
-                                product.product_variants[0],
-                                0
-                              )
-                            : addProduct(
-                                product,
-                                i,
-                                product.product_variants[0],
-                                0
-                              )
+                            ? removeProduct(product, i)
+                            : addProduct(product, i)
                         "
                         :checked="product.status"
                         :disabled="disabledStatus(product)"

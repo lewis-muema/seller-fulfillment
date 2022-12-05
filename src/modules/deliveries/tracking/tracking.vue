@@ -318,7 +318,6 @@ export default {
   font-size: 18px;
 }
 .tracking-pickup-banner-link {
-  margin-left: 45px;
   color: #324ba8;
   font-weight: 600;
   cursor: pointer;

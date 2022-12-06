@@ -154,7 +154,7 @@
   "whiteCoats": "E.g White coat, Shea butter",
   "noDescriptionProvided": "No description provided",
   "paymentCollection": "Payment collection",
-  "doYouWantPaymentForThisDelivery": "Do you want payment for this delivery to be collected on your behalf ? (Required)",
+  "doYouWantPaymentForThisDelivery": "Do you want payment for this delivery to be collected on your behalf?",
   "paymentOfFulfillmentFees": "Payment of fulfillment fees",
   "weWillChargeYourWallet": "We will charge your wallet on {Date}, if it has insufficient funds, we’ll use your default payment method below",
   "doYouWantPaymentToBeCollected": "Do you want payment to be collected?",
@@ -216,6 +216,7 @@
   "selectThePickUpStation": "Select the pick up station",
   "selectTheSendyPickUpStationToTakeTheItems": "Select the Sendy pick up station to take the items",
   "nextDay": "Next Day Delivery",
+  "nextDayPickUp": "Next Day Pick Up",
   "locationIsRequired": "Location is required",
   "pleaseSelectAnOptionToProceed": "Please select an option to proceed",
   "pleaseUploadDocumentToProceed": "Please upload document to proceed",
@@ -231,7 +232,7 @@
   "pickUpFeeCalculation": "Pick up fee calculation",
   "noFeesCaluclatedYet": "No Fees Calculated Yet",
   "referenceNumber": "Reference number: {Ref}",
-  "orderIsPendingBecause": "Order is pending because some items will be picked at Marsabit Plaza on {Date}",
+  "orderIsPendingBecause": "Order is pending because some items will be picked at {Location} on {Date}",
   "trackPickUpOrder": "Track pick up order",
   "thereIsADeliveryLinkedToThisPickUp": "There is a delivery linked to this pick up order",
   "trackDeliveryOrder": "Track delivery order",
@@ -244,5 +245,6 @@
   "editDeliveryDate": "Edit delivery date",
   "otherDocuments": "{Doc} and {Count} other documents",
   "viewLess": "View less",
-  "viewMore": "View more"
+  "viewMore": "View more",
+  "YourNextBillingCycle": "your next billing cycle"
 }

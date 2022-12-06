@@ -125,7 +125,7 @@
                       <el-input-number
                         class="crossdocking-product-counter"
                         v-model="selectedProduct.quantity"
-                        :min="0"
+                        :min="1"
                         @change="addQuantity(index, selectedProduct.quantity)"
                         required
                       />
@@ -285,42 +285,49 @@ export default {
     },
     addQuantity(val, quantity) {
       const products = this.getSelectedProducts;
-      this.sendSegmentEvents({
-        event: "Review_Added_Items",
-        data: {
-          userId: this.getStorageUserDetails.business_id,
-          SKU: products[val].product_id,
-          variant: products[val].selectedOption
-            ? products[val].selectedOption.product_variant_id
-            : products[val].product_variants[0].product_variant_id,
-          quantity: quantity,
-          product_collection: products[val].product_collection
-            ? products[val].product_collection.collection_id
-            : "",
-          clientType: "web",
-          device: "desktop",
-        },
-      });
+      if (products[val]) {
+        this.sendSegmentEvents({
+          event: "Review_Added_Items",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            SKU: products[val].product_id,
+            variant: products[val].selectedOption
+              ? products[val].selectedOption.product_variant_id
+              : products[val].product_variants[0].product_variant_id,
+            quantity: quantity,
+            product_collection: products[val].product_collection
+              ? products[val].product_collection.collection_id
+              : "",
+            clientType: "web",
+            device: "desktop",
+          },
+        });
+      }
     },
     refreshStock(row, i) {
+      const productIndex = this.getSelectedProducts[i].productIndex;
+      const productOption = this.getSelectedProducts[i].productOption;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${row.product_id}`,
       }).then((response) => {
         if (response.status === 200) {
-          const selectedProducts = this.getSelectedProducts;
-          if (selectedProducts[i].selectedOption) {
-            selectedProducts[
-              i
-            ].selectedOption.product_variant_stock_levels.available =
-              response.data.data.product.product_variants[
-                selectedProducts[i].optionIndex
-              ].product_variant_stock_levels.available;
-          } else {
-            selectedProducts[
-              i
-            ].product_variants[0].product_variant_stock_levels.available =
-              response.data.data.product.product_variants[0].product_variant_stock_levels.available;
+          const selectedProducts = this.getSelectedProducts.filter((row) => {
+            return (
+              row.productIndex === productIndex &&
+              row.productOption === productOption
+            );
+          });
+          if (selectedProducts.length) {
+            if (selectedProducts[0].selectedOption) {
+              selectedProducts[0].selectedOption.product_variant_stock_levels.available =
+                response.data.data.product.product_variants[
+                  selectedProducts[0].optionIndex
+                ].product_variant_stock_levels.available;
+            } else {
+              selectedProducts[0].product_variants[0].product_variant_stock_levels.available =
+                response.data.data.product.product_variants[0].product_variant_stock_levels.available;
+            }
           }
         }
       });

@@ -55,17 +55,7 @@
                 >
                   <div class="product-select-column row">
                     <div class="col-7 crossdocking-product-select-titles">
-                      <input
-                        type="checkbox"
-                        class="product-select-checkbox"
-                        @click="
-                          product.status
-                            ? removeProduct(product, i)
-                            : addProduct(product, i)
-                        "
-                        :checked="product.status"
-                        :disabled="disabledStatus(product)"
-                      />
+                      <div class="product-select-checkbox"></div>
                       <span>
                         <img
                           :src="
@@ -100,7 +90,9 @@
                         class="crossdocking-product-counter"
                         v-model="product.quantity"
                         :min="0"
+                        placeholder="0"
                         @change="addCount(product.quantity, product, i)"
+                        :disabled="disabledStatus(product)"
                       />
                     </div>
                   </div>
@@ -179,17 +171,9 @@
                           :key="x"
                         >
                           <div class="col-7 crossdocking-product-select-titles">
-                            <input
-                              type="checkbox"
+                            <div
                               class="product-select-checkbox-inner ml-0"
-                              @click="
-                                option.status
-                                  ? removeProduct(product, i, option, x)
-                                  : addProduct(product, i, option, x)
-                              "
-                              :checked="option.status"
-                              :disabled="disabledVariantStatus(option)"
-                            />
+                            ></div>
                             <img
                               :src="option.product_variant_image_link"
                               alt=""
@@ -217,9 +201,11 @@
                               class="crossdocking-product-counter"
                               v-model="option.quantity"
                               :min="0"
+                              placeholder="0"
                               @change="
                                 addCount(option.quantity, product, i, option, x)
                               "
+                              :disabled="disabledVariantStatus(option)"
                             />
                           </div>
                         </div>
@@ -261,14 +247,14 @@
         >
           <div class="items-selected-container">
             <p>
-              {{ `${itemsSelectedCount} ${$t("inventory.itemsSelected")}` }}
+              {{ `${totalProducts} ${$t("inventory.itemsSelected")}` }}
             </p>
             <button
               type="submit"
               @click="addProductStep()"
               class="btn btn-primary"
             >
-              {{ $t("inventory.continueWith") }} {{ itemsSelectedCount }}
+              {{ $t("inventory.continueWith") }} {{ totalProducts }}
               {{ $t("inventory.itemsAdded") }}
             </button>
           </div></v-card
@@ -346,26 +332,26 @@ export default {
         this.addProduct(product, i, option, z);
         this.productMapping();
       }
+      if (val === 0) {
+        this.removeProduct(product, i, option, z);
+      }
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels.available
         : 0;
-      return (
-        this.$route.params.path === "customer" &&
-        quantity === 0 &&
-        process.env.DOCKER_ENV === "production"
-      );
+      return quantity === 0 && this.crossDockingFlag();
     },
     disabledVariantStatus(option) {
       const quantity = option
         ? option.product_variant_stock_levels.available
         : 0;
-      return (
-        this.$route.params.path === "customer" &&
-        quantity === 0 &&
-        process.env.DOCKER_ENV === "production"
-      );
+      return quantity === 0 && this.crossDockingFlag();
+    },
+    crossDockingFlag() {
+      return this.getBusinessDetails.settings
+        ? !this.getBusinessDetails.settings.cross_docking_enabled
+        : true;
     },
     fetchProducts() {
       this.setLoader({
@@ -392,7 +378,7 @@ export default {
       });
     },
     addProductStep() {
-      if (this.getSelectedProducts.length > 0) {
+      if (this.totalProducts > 0) {
         this.$router.push(`/inventory/add-delivery-quantities`);
       } else {
         ElNotification({
@@ -525,9 +511,16 @@ export default {
       "getProductsToSubmit",
       "getMappedSelectedProducts",
       "getSearchedProducts",
+      "getBusinessDetails",
     ]),
-    itemsSelectedCount() {
-      return this.getSelectedProducts.length;
+    totalProducts() {
+      let total = 0;
+      this.getSelectedProducts.forEach((row) => {
+        if (row.quantity) {
+          total = parseInt(row.quantity) + total;
+        }
+      });
+      return total;
     },
     getProducts() {
       return this.getProductLists;
@@ -671,5 +664,12 @@ export default {
 .crossdocking-product-select-header {
   width: auto !important;
   padding: 0px !important;
+}
+.crossdocking-product-counter
+  .el-input
+  .el-input__wrapper
+  .el-input__inner::placeholder {
+  color: black !important;
+  font-size: 14px;
 }
 </style>

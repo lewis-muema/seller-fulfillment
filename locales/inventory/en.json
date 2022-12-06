@@ -154,7 +154,7 @@
   "whiteCoats": "E.g White coat, Shea butter",
   "noDescriptionProvided": "No description provided",
   "paymentCollection": "Payment collection",
-  "doYouWantPaymentForThisDelivery": "Do you want payment for this delivery to be collected on your behalf ? (Required)",
+  "doYouWantPaymentForThisDelivery": "Do you want payment for this delivery to be collected on your behalf?",
   "paymentOfFulfillmentFees": "Payment of fulfillment fees",
   "weWillChargeYourWallet": "We will charge your wallet on {Date}, if it has insufficient funds, we’ll use your default payment method below",
   "doYouWantPaymentToBeCollected": "Do you want payment to be collected?",
@@ -245,5 +245,6 @@
   "editDeliveryDate": "Edit delivery date",
   "otherDocuments": "{Doc} and {Count} other documents",
   "viewLess": "View less",
-  "viewMore": "View more"
+  "viewMore": "View more",
+  "YourNextBillingCycle": "your next billing cycle"
 }

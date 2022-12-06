@@ -1,15 +1,14 @@
 <template>
   <div>
     <v-card variant="outlined" class="send-inventory-checkout-card">
-      <div class="enter-quantity-container desktop-header-title d-flex p-3">
+      <div
+        class="enter-quantity-container desktop-header-title d-flex pt-3 pb-3"
+      >
         <i
           class="mdi mdi-arrow-left"
           aria-hidden="true"
           @click="this.$router.go(-1)"
         ></i>
-        <v-card-title class="text-center send-products-title">
-          {{ $t("inventory.checkout") }}
-        </v-card-title>
       </div>
       <div class="payment-collection-title">
         {{ $t("deliveries.deliveryInfo") }}
@@ -236,7 +235,8 @@
                 @click="preferences[index - 1] = !preferences[index - 1]"
                 >{{ $t("inventory.view") }}</span
               >
-              <i class="mdi mdi-chevron-right"></i>
+              <i class="mdi mdi-chevron-up" v-if="preferences[index - 1]"></i>
+              <i class="mdi mdi-chevron-right" v-else></i>
             </span>
           </div>
         </div>
@@ -445,7 +445,7 @@
         <i class="mdi mdi-plus cross-docking-checkout-add-location-plus"></i>
         {{ $t("inventory.addAnotherDeliveryLocation") }}
       </div>
-      <div class="mt-5 mb-5" v-if="pickUpRequired">
+      <div class="mt-5 mb-4" v-if="pickUpRequired">
         <p class="payment-collection-title mb-3">
           {{ $t("inventory.pickUpInfo") }}
         </p>
@@ -582,6 +582,17 @@
             </span>
           </div>
         </div>
+      </div>
+      <div
+        v-if="
+          showErrors &&
+          pickUpRequired &&
+          !(getPickUpInfoCD.location && getPickUpInfoCD.phone)
+        "
+        class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+      >
+        <div class="col-1"></div>
+        <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
       </div>
       <hr class="mt-3" />
       <div class="mt-3">
@@ -742,15 +753,12 @@ export default {
       this.getDestinations.forEach((row) => {
         if (row.products) {
           row.products.forEach((product) => {
-            if (product.selectedOption) {
-              status =
-                product.quantity >
-                product.selectedOption.product_variant_stock_levels.available;
-            } else {
-              status =
-                product.quantity >
-                product.product_variants[0].product_variant_stock_levels
+            const availableStock = product.selectedOption
+              ? product.selectedOption.product_variant_stock_levels.available
+              : product.product_variants[0].product_variant_stock_levels
                   .available;
+            if (availableStock < product.quantity) {
+              status = true;
             }
           });
         }
@@ -773,7 +781,9 @@ export default {
         this.getBillingCycles.length && this.getBillingCycles[0].active > 0
           ? this.getBillingCycles[0].billing_cycle_end_date
           : "";
-      return moment(date).format("dddd, Do MMM");
+      return date
+        ? moment(date).format("dddd, Do MMM")
+        : this.$t("inventory.YourNextBillingCycle");
     },
     defaultPaymentMethod() {
       const method = [];
@@ -1007,10 +1017,11 @@ export default {
       this.setDestinationIndex(index);
       if (this.getDestinations[index].products) {
         this.setSelectedProducts(this.getDestinations[index].products);
+        this.$router.push("/inventory/add-delivery-quantities");
       } else {
         this.setSelectedProducts([]);
+        this.$router.push("/inventory/add-delivery-products");
       }
-      this.$router.push("/inventory/add-delivery-products");
     },
     changeIndex(index) {
       this.setDestinationIndex(index - 1);
@@ -1147,7 +1158,6 @@ export default {
           row.products.length &&
           row.delivery_info &&
           row.recipient &&
-          row.POD &&
           (!this.pickUpRequired ||
             (this.pickUpRequired &&
               this.getPickUpInfoCD.location &&
@@ -1223,42 +1233,38 @@ export default {
         });
       } else {
         this.showErrors = true;
-        this.getDestinations.forEach((row, i) => {
-          const index = `${i + 1}${this.numberSuffix(i + 1)}`;
-          if (!(row.products && row.products.length)) {
-            this.showErrorNotification(
-              this.$t("inventory.addProductsError", { index }),
-              200
-            );
-          }
-          if (!row.delivery_info) {
-            this.showErrorNotification(
-              this.$t("inventory.addDeliveryInfoError", { index }),
-              300
-            );
-          }
-          if (!row.recipient) {
-            this.showErrorNotification(
-              this.$t("inventory.addRecipientInfoError", { index }),
-              400
-            );
-          }
-          if (!row.POD) {
-            this.showErrorNotification(
-              this.$t("inventory.addPODError", { index }),
-              500
-            );
-          }
-        });
-        if (
-          this.pickUpRequired &&
-          !(this.getPickUpInfoCD.location && this.getPickUpInfoCD.phone)
-        ) {
+      }
+    },
+    showNotification() {
+      this.getDestinations.forEach((row, i) => {
+        const index = `${i + 1}${this.numberSuffix(i + 1)}`;
+        if (!(row.products && row.products.length)) {
           this.showErrorNotification(
-            this.$t("inventory.addPickUpInfoError"),
-            100
+            this.$t("inventory.addProductsError", { index }),
+            200
           );
         }
+        if (!row.delivery_info) {
+          this.showErrorNotification(
+            this.$t("inventory.addDeliveryInfoError", { index }),
+            300
+          );
+        }
+        if (!row.recipient) {
+          this.showErrorNotification(
+            this.$t("inventory.addRecipientInfoError", { index }),
+            400
+          );
+        }
+      });
+      if (
+        this.pickUpRequired &&
+        !(this.getPickUpInfoCD.location && this.getPickUpInfoCD.phone)
+      ) {
+        this.showErrorNotification(
+          this.$t("inventory.addPickUpInfoError"),
+          100
+        );
       }
     },
     numberSuffix(n) {

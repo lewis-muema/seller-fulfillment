@@ -1931,7 +1931,7 @@ export default createStore({
           business_id: "B-AEB-0000",
           cycle_interval_type: "DAILY",
           billing_cycle_start_date: 1655729668000,
-          billing_cycle_end_date: 1655830800000,
+          billing_cycle_end_date: "",
           active: true,
           grace_period_interval: 2,
           grace_period_interval_type: "HOUR",

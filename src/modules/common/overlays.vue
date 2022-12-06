@@ -250,7 +250,7 @@
       </label>
       <GMapAutocomplete
         id="location"
-        class="businessProfile-address"
+        class="businessProfile-address crossdocking-input-fields"
         :value="location"
         :options="getMapOptions"
         :placeholder="$t('settings.searchLocation')"
@@ -267,7 +267,7 @@
         {{ $t("deliveries.apartmentName") }}
       </label>
       <v-text-field
-        class="businessProfile-field"
+        class="businessProfile-field crossdocking-input-fields-v-text"
         id="customer-name"
         v-model="apartmentName"
         variant="outlined"
@@ -355,7 +355,7 @@
           }}
         </label>
         <v-text-field
-          class="businessProfile-field"
+          class="businessProfile-field crossdocking-input-fields-v-text"
           id="customer-name"
           v-model="customerName"
           variant="outlined"
@@ -2644,5 +2644,11 @@ export default {
 .fees-container {
   max-height: 700px;
   overflow-y: scroll;
+}
+.crossdocking-input-fields {
+  height: 40px !important;
+}
+.crossdocking-input-fields-v-text {
+  zoom: 80% !important;
 }
 </style>

@@ -660,7 +660,6 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
 import placeholder from "../../../../mixins/placeholders";
-
 import moment from "moment";
 
 export default {

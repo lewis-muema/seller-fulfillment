@@ -392,6 +392,7 @@ export default createStore({
         logs: "loading-text",
         transactions: "loading-text",
         dpp: "loading-text",
+        pickUpDetails: "loading-text",
       },
       overlay: false,
       userChanged: false,

@@ -72,13 +72,20 @@
             <i class="mdi mdi-information tracking-pickup-banner-icon"></i>
           </span>
           <span class="tracking-pick-up-banner-text col-11">
-            {{
-              order.order_type === "DELIVERY"
-                ? $t("inventory.thereIsADeliveryLinkedToThisPickUp")
-                : $t("inventory.orderIsPendingBecause", {
-                    Date: "Wed, 25th Jun",
-                  })
-            }}
+            <span :class="getLoader.pickUpDetails">
+              {{
+                order.order_type === "DELIVERY"
+                  ? $t("inventory.thereIsADeliveryLinkedToThisPickUp")
+                  : $t("inventory.orderIsPendingBecause", {
+                      Date: linkedPickup.scheduled_date
+                        ? formatLongDate(linkedPickup.scheduled_date)
+                        : "",
+                      Location: linkedPickup.destination
+                        ? linkedPickup.destination.delivery_location.description
+                        : "",
+                    })
+              }}
+            </span>
           </span>
         </div>
         <div class="tracking-pickup-banner-link row">
@@ -137,6 +144,7 @@ export default {
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
       failedStatus: false,
+      linkedPickup: {},
     };
   },
   watch: {
@@ -226,6 +234,10 @@ export default {
         type: "orderTimeline",
         value: "loading-text",
       });
+      this.setLoader({
+        type: "pickUpDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
@@ -239,8 +251,40 @@ export default {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
           this.setProductsToSubmit(response.data.data.order.products);
+          if (response.data.data.order.order_type === "PICKUP") {
+            this.setParent("sendy");
+            this.setLoader({
+              type: "pickUpDetails",
+              value: "",
+            });
+          } else {
+            this.setParent("customer");
+            this.fetchPickup();
+          }
         }
       });
+    },
+    fetchPickup() {
+      const pickups =
+        this.getOrderTrackingData.order.cross_dock_linked_orders.filter(
+          (row) => {
+            return row.order_type === "PICKUP";
+          }
+        );
+      if (pickups.length) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${pickups[0].order_id}`,
+        }).then((response) => {
+          this.setLoader({
+            type: "pickUpDetails",
+            value: "",
+          });
+          if (response.status === 200) {
+            this.linkedPickup = response.data.data.order;
+          }
+        });
+      }
     },
     rescheduleStatus(val) {
       let actions = this.getDeliveryActions;
@@ -252,6 +296,9 @@ export default {
       return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
         "ha"
       )} - ${moment(finalTime).format("ha")}`;
+    },
+    formatLongDate(date) {
+      return moment(date).format("ddd, Do MMM");
     },
     formatDateComplete(date) {
       return moment(date).format("dddd, Do MMM YYYY");

@@ -540,7 +540,7 @@
           >
             <div>
               <p class="mb-2">{{ $t("inventory.pickUpDate") }}</p>
-              <p>{{ $t("inventory.nextDay") }}</p>
+              <p>{{ $t("inventory.nextDayPickUp") }}</p>
             </div>
           </div>
         </div>

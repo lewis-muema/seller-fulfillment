@@ -13,7 +13,7 @@
           density="compact"
           v-model="platform"
           @update:modelValue="onPlatformSet"
-          :items="['Woocommerce', 'Shopify', 'Magento', 'Open Cart']"
+          :items="['Woocommerce', 'Shopify', 'Magento']"
         ></v-select>
       </div>
       <div v-if="platformSet">

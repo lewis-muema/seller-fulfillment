@@ -56,5 +56,6 @@
   "downloadCsvFile": "Download CSV file",
   "fetchingDownloadFile": "Fetching download file",
   "downloadingFile": "Downloading file",
-  "couldNotFetchDownloadFile": "Could not fetch download file"
+  "couldNotFetchDownloadFile": "Could not fetch download file",
+  "integrations": "Integrations"
 }

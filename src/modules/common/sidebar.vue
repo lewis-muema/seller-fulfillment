@@ -236,6 +236,16 @@
             "
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/settings/integrations')"
+            :title="$t('common.integrations')"
+            @click="$router.push('/settings/integrations')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === 'common.integrations'"
+            :append-icon="
+              route === 'common.integrations' ? 'mdi-circle-small' : ''
+            "
+          ></v-list-item>
+          <v-list-item
             v-if="!getAccessDenied.includes('/settings/activity-log')"
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"

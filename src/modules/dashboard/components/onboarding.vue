@@ -144,7 +144,7 @@ export default {
           button: "dashboard.deliverToACustomer",
           icon: "mdi-check-circle",
           key: "created_at_least_one_delivery_order",
-          link: "/inventory/send-inventory/customer/select-products",
+          link: "/inventory/create-delivery",
         },
       ],
       dashboardLinks: [

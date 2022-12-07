@@ -294,7 +294,10 @@
       </v-expansion-panels>
       <v-expansion-panels
         class="notification-expansion-panels"
-        v-if="filteredFields(payment).length"
+        v-if="
+          filteredFields(payment).length ||
+          filteredFields(paymentCollection).length
+        "
       >
         <v-expansion-panel class="product-select-exp-panel">
           <v-expansion-panel-title class="notifications-preferences-title">
@@ -333,9 +336,60 @@
                 </tr>
               </thead>
               <tbody>
+                <div class="notifications-table-header-inner">
+                  {{ $t("inventory.paymentOfFulfillmentFees") }}
+                </div>
                 <tr
                   class="deliveries-table-column"
                   v-for="(row, i) in filteredFields(payment)"
+                  :key="i"
+                >
+                  <td class="deliveries-product-row">
+                    {{ row.item }}
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].FCM"
+                      @change="savePreference(row.id, 'FCM')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'payment'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].SMS"
+                      @change="savePreference(row.id, 'SMS')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'payment'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                  <td class="deliveries-product-row">
+                    <v-switch
+                      v-model="preferences[row.id].EMAIL"
+                      @change="savePreference(row.id, 'EMAIL')"
+                      label=""
+                      color="indigo-darken-3"
+                      hide-details
+                      v-if="preferences[row.id]"
+                      :disabled="loading && button === 'payment'"
+                    ></v-switch>
+                    <v-switch v-else disabled hide-details></v-switch>
+                  </td>
+                </tr>
+                <div class="notifications-table-header-inner">
+                  {{ $t("settings.paymentCollections") }}
+                </div>
+                <tr
+                  class="deliveries-table-column"
+                  v-for="(row, i) in filteredFields(paymentCollection)"
                   :key="i"
                 >
                   <td class="deliveries-product-row">
@@ -493,8 +547,10 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  mixin: [eventsMixin],
   data() {
     return {
       mobilePush: false,
@@ -576,6 +632,20 @@ export default {
         {
           item: this.$t("settings.whenPaymentIsSuccessful"),
           id: "PAYMENT_UPDATES",
+        },
+      ],
+      paymentCollection: [
+        {
+          item: this.$t("settings.whenPaymentIsCollected"),
+          id: "",
+        },
+        {
+          item: this.$t("settings.whenPaymentIsCreditedToYourAccount"),
+          id: "WITHDRAWAL_UPDATES",
+        },
+        {
+          item: this.$t("settings.whenPaymentCollectionFails"),
+          id: "",
         },
       ],
       exportData: [
@@ -677,6 +747,14 @@ export default {
             message: "",
             type: "success",
           });
+          this.sendSegmentEvents({
+            event: "Edit_Notification_Preference",
+            data: {
+              userId: this.getStorageUserDetails.business_id,
+              clientType: "web",
+              device: "desktop",
+            },
+          });
         } else {
           ElNotification({
             title: this.$t("settings.FailedToSaveNotificationPreferences"),
@@ -736,5 +814,9 @@ export default {
 .notification-preferences-save-button {
   float: right;
   margin-bottom: 30px;
+}
+.notifications-table-header-inner {
+  font-weight: 600;
+  margin: 20px 20px 0px 20px;
 }
 </style>

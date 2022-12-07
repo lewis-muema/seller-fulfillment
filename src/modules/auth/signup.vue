@@ -190,7 +190,7 @@ export default {
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
           this.sendSegmentEvents({
-            event: "Sign_up",
+            event: "Sign_Up",
             data: {
               userId: data.data.data.business.business_id,
               email: this.params.businessEmail,

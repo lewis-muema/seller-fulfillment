@@ -223,10 +223,10 @@
           />
         </div>
         <p class="statements-empty-title">
-          {{ $t("payments.noTransactionsYet") }}
+          {{ $t("payments.noInvoicesYet") }}
         </p>
         <p class="statements-empty-label">
-          {{ $t("payments.trackTransactions") }}
+          {{ $t("payments.trackInvoices") }}
         </p>
       </div>
     </div>

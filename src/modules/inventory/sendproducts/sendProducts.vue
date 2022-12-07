@@ -6,7 +6,7 @@
       </span>
       <div class="send-products-container">
         <div
-          @click="redirect(`${customerRoute}/select-products`, customerHeader)"
+          @click="$router.push('/inventory/create-delivery')"
           class="send-products-content"
         >
           <v-card class="send-products-card" variant="outlined">
@@ -67,7 +67,7 @@ export default {
   mixins: [eventsMixin],
   data() {
     return {
-      customerRoute: "/inventory/send-inventory/customer",
+      customerRoute: "/inventory/create-delivery",
       sendyRoute: "/inventory/send-inventory/sendy",
       mainRoute: "/inventory/send-inventory",
       customerHeader: "common.sendDeliveryToCustomer",
@@ -118,7 +118,7 @@ export default {
       if (route === `${this.customerRoute}/select-products`) {
         this.setEditValue("inventory");
         this.sendSegmentEvents({
-          event: "Send_to_customer",
+          event: "Send_to_Customer",
           data: {
             userId: this.getStorageUserDetails.business_id,
             clientType: "web",
@@ -128,7 +128,7 @@ export default {
       } else if (route === `${this.sendyRoute}/select-products`) {
         this.setEditValue("inventory");
         this.sendSegmentEvents({
-          event: "Manage_inventory",
+          event: "Manage_Inventory",
           data: {
             userId: this.getStorageUserDetails.business_id,
             clientType: "web",

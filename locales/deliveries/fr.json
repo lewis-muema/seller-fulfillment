@@ -148,5 +148,14 @@
   "yourPackageFailedToBeDelivered": "Votre colis n’a pas été livré",
   "yourProductsAreOnTheWay": "Vos produits sont en route",
   "yourProductsHaveBeenPicked": "Vos produits ont été récupérés",
-  "yourProductsHaveBeenReceivedAtTheFulfilmentCentre": "Vos produits ont été reçus au centre de traitement des commandes."
+  "yourProductsHaveBeenReceivedAtTheFulfilmentCentre": "Vos produits ont été reçus au centre de traitement des commandes.",
+  "apartmentName": "Apartment/floor/office number",
+  "enterRecipientDetails": "Enter the recipient details",
+  "enterBusinessDetails": "Enter the business details",
+  "recipientName": "Name of the recipient",
+  "businessName": "Name of the business",
+  "receivingItems": "Who is receiving the items ?",
+  "individual": "An individual",
+  "business": "A business",
+  "saveInfo" : "Save info"
 }

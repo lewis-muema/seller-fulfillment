@@ -228,6 +228,15 @@ export default {
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
           });
+          this.sendSegmentEvents({
+            event: "click_submit_edited_order_products",
+            data: {
+              userId: this.getStorageUserDetails.business_id,
+              SKU: response.data.data.order_id,
+              clientType: "web",
+              device: "desktop",
+            },
+          });
           setTimeout(() => {
             this.setSelectedProducts([]);
             this.setProductsToSubmit([]);

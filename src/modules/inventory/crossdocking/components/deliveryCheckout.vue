@@ -355,7 +355,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row" v-if="crossDockingFlag">
             <div class="col-1"></div>
             <div class="mb-10 col-11">
               <p class="cross-docking-checkout-text-subtitle">
@@ -783,6 +783,11 @@ export default {
       return date
         ? moment(date).format("dddd, Do MMM")
         : this.$t("inventory.YourNextBillingCycle");
+    },
+    crossDockingFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.cross_docking_enabled
+        : false;
     },
     defaultPaymentMethod() {
       const method = [];

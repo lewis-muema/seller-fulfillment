@@ -44,6 +44,11 @@ import AddDeliveryProducts from "../modules/inventory/crossdocking/components/pr
 import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 
+// merchant services integrations
+import integrations from "../modules/integrations/integrations.vue";
+import platform from "../modules/integrations/components/storePlatform.vue";
+import storeDetails from "../modules/integrations/components/storeDetails.vue";
+
 const routes = [
   {
     path: "/auth/",
@@ -257,6 +262,21 @@ const routes = [
     path: "/settings/notification-preferences",
     name: "Notifications",
     component: notifications,
+  },
+  {
+    path: "/settings/integrations",
+    name: "Integrations",
+    component: integrations,
+  },
+  {
+    path: "/settings/integrations/store-platform",
+    name: "Platform",
+    component: platform,
+  },
+  {
+    path: "/settings/integrations/store-details",
+    name: "Store Details",
+    component: storeDetails,
   },
   {
     path: "/settings/activity-log",

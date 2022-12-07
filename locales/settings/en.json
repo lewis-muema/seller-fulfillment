@@ -131,6 +131,9 @@
   "whenRiderReachesTheFulfillmentCentreToDropOffItems": "When rider reaches the fulfillment centre to drop off items",
   "whenDeliveryHasBeenCompleted": "When delivery has been completed",
   "whenPaymentIsSuccessful": "When payment is successful or fails",
+  "whenPaymentIsCollected": "When payment is collected",
+  "whenPaymentIsCreditedToYourAccount": "When payment is credited to your account",
+  "whenPaymentCollectionFails": "When payment collection fails",
   "receiveNotificationsForInventoryUpdates": "Receive notifications for inventory updates",
   "receiveNotificationsForDeliveriesToSendy": "Receive notifications for deliveries to Sendy",
   "receiveNotificationsForDeliveriesToYourCustomers": "Receive notifications for deliveries to your customers",
@@ -180,5 +183,6 @@
   "whenAnExportFails": "When an export fails to complete",
   "exportNotificationUpdates": "Export notification updates",
   "exports": "Exports",
-  "canExportSellerData": "Can export seller data"
+  "canExportSellerData": "Can export seller data",
+  "paymentCollections": "Payment collections"
 }

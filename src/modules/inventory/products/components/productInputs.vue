@@ -33,7 +33,6 @@
               :prefix="productVariants[0].product_variant_currency"
               clearable
               clear-icon="mdi-close"
-              :disabled="productVariants.length > 1"
             ></v-text-field>
           </div>
         </div>
@@ -47,7 +46,6 @@
               class="form-control"
               placeholder="0.0"
               v-model="productVariants[0].product_variant_quantity"
-              :disabled="productVariants.length > 1"
             />
           </div>
           <div class="col-4">
@@ -55,7 +53,6 @@
               class="edit-product-weight-field"
               :items="dimensions"
               v-model="productVariants[0].product_variant_quantity_type"
-              :disabled="productVariants.length > 1"
               outlined
             ></v-select>
           </div>
@@ -116,7 +113,10 @@
                     <v-icon>mdi mdi-pencil </v-icon>
                   </div>
                 </v-list-item-avatar>
-                <v-list-item-avatar end>
+                <v-list-item-avatar
+                  end
+                  v-if="$route.path === '/inventory/add-product'"
+                >
                   <div
                     class="desktop-product-options-icon"
                     @click="deleteProductOption(index + 1)"
@@ -276,7 +276,7 @@ export default {
       }
       this.showProductOptions = this.getAddProductStatus;
       this.sendSegmentEvents({
-        event: "Edit_product",
+        event: "Edit_Product",
         data: {
           userId: this.getStorageUserDetails.business_id,
           SKU: this.getProduct.product_id,
@@ -297,16 +297,6 @@ export default {
     },
     "$store.state.businessDetails": function (value) {
       this.productVariants[0].product_variant_currency = value.currency;
-    },
-    productVariants: {
-      handler(val) {
-        if (val.length > 1) {
-          this.productVariants[0].product_variant_unit_price = "0";
-          this.productVariants[0].product_variant_quantity = "0";
-          this.productVariants[0].product_variant_quantity_type = "GRAM";
-        }
-      },
-      deep: true,
     },
   },
   unmounted() {
@@ -409,7 +399,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Save_product_details_edits",
+              event: "Save_Product_Details_Edits",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 SKU: this.getProduct.product_id,
@@ -466,7 +456,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Add_new_product",
+              event: "Add_New_Product",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 variation: this.productVariants,

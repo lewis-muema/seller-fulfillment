@@ -5,9 +5,7 @@
         <span class="product-summary-title">{{ $t("inventory.summary") }}</span>
         <span
           class="product-summary-edit"
-          @click="
-            $router.push('/inventory/send-inventory/customer/add-quantity')
-          "
+          @click="$router.push('/inventory/send-inventory/sendy/add-quantity')"
           ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>
           {{ $t("inventory.edit") }}
         </span>

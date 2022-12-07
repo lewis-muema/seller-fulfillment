@@ -91,8 +91,10 @@
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  mixin: [eventsMixin],
   data() {
     return {
       firstName: "",
@@ -193,6 +195,19 @@ export default {
               type: "success",
             });
             this.$router.go(-1);
+            this.sendSegmentEvents({
+              event: "Edit_Multiuser",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                first_name: this.firstName,
+                last_name: this.lastName,
+                user_role: this.defaultRole,
+                phone_number: this.phone,
+                email: this.emailAddress,
+                clientType: "web",
+                device: "desktop",
+              },
+            });
           } else {
             ElNotification({
               title: response.response.data.errors[0].message.replaceAll(

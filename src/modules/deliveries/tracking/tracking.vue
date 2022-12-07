@@ -3,16 +3,22 @@
     <div class="tracking-order-no">
       <i
         class="mdi mdi-arrow-left tracking-arrow-back"
-        @click="
-          getParent === 'sendy'
-            ? $router.push({ name: 'To Sendy' })
-            : $router.push({ name: 'To Customers' })
-        "
+        @click="$router.back()"
       ></i>
       <p class="tracking-order-title mb-0">
         <span :class="getLoader.orderTracking">
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
+        </span>
+        <span
+          class="tracking-reference-number"
+          v-if="getOrderTrackingData.order.seller_order_reference_id"
+        >
+          {{
+            $t("inventory.referenceNumber", {
+              Ref: getOrderTrackingData.order.seller_order_reference_id,
+            })
+          }}
         </span>
         <span>
           <v-menu transition="slide-y-transition" anchor="bottom center">
@@ -55,6 +61,52 @@
           {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
         </span>
       </p>
+      <div
+        class="tracking-pickup-banner"
+        v-for="(order, i) in getOrderTrackingData.order
+          .cross_dock_linked_orders"
+        :key="i"
+      >
+        <div class="d-flex row">
+          <span class="col-1">
+            <i class="mdi mdi-information tracking-pickup-banner-icon"></i>
+          </span>
+          <span class="tracking-pick-up-banner-text col-11">
+            <span :class="getLoader.pickUpDetails">
+              {{
+                order.order_type === "DELIVERY"
+                  ? $t("inventory.thereIsADeliveryLinkedToThisPickUp")
+                  : $t("inventory.orderIsPendingBecause", {
+                      Date: linkedPickup.scheduled_date
+                        ? formatLongDate(linkedPickup.scheduled_date)
+                        : "",
+                      Location: linkedPickup.destination
+                        ? linkedPickup.destination.delivery_location.description
+                        : "",
+                    })
+              }}
+            </span>
+          </span>
+        </div>
+        <div class="tracking-pickup-banner-link row">
+          <div class="col-1"></div>
+          <div
+            class="col-11"
+            @click="$router.push(`/deliveries/tracking/${order.order_id}`)"
+          >
+            <span>
+              {{
+                order.order_type === "DELIVERY"
+                  ? $t("inventory.trackDeliveryOrder")
+                  : $t("inventory.trackPickUpOrder")
+              }}
+            </span>
+            <span>
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tracking-order-failed-delivery">
       <failed-delivery v-if="failedStatus" />
@@ -92,6 +144,7 @@ export default {
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
       failedStatus: false,
+      linkedPickup: {},
     };
   },
   watch: {
@@ -131,11 +184,9 @@ export default {
         let showCancel = true;
         if (row.popup === "cancel") {
           showCancel =
-            [
-              "event.delivery.order.created",
-              "event.delivery.at.hub.processing.for.delivery",
-              "event.delivery.at.hub.waiting.for.partner",
-            ].includes(this.getOrderTrackingData.order.order_event_status) ||
+            ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
+              this.getOrderTrackingData.order.order_status
+            ) ||
             this.getOrderTrackingData.order.order_event_status.includes(
               "pickup"
             );
@@ -152,7 +203,11 @@ export default {
       this.setParent("sendy");
       this.rescheduleStatus("sendy");
     }
-    if (this.$router.options.history.state.back === "/deliveries/customer") {
+    if (
+      this.$router.options.history.state.back === "/deliveries/customer" ||
+      this.$router.options.history.state.back ===
+        "/payments/transaction-details"
+    ) {
       this.setParent("customer");
       this.rescheduleStatus("customer");
     }
@@ -179,6 +234,10 @@ export default {
         type: "orderTimeline",
         value: "loading-text",
       });
+      this.setLoader({
+        type: "pickUpDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
@@ -192,8 +251,40 @@ export default {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
           this.setProductsToSubmit(response.data.data.order.products);
+          if (response.data.data.order.order_type === "PICKUP") {
+            this.setParent("sendy");
+            this.setLoader({
+              type: "pickUpDetails",
+              value: "",
+            });
+          } else {
+            this.setParent("customer");
+            this.fetchPickup();
+          }
         }
       });
+    },
+    fetchPickup() {
+      const pickups =
+        this.getOrderTrackingData.order.cross_dock_linked_orders.filter(
+          (row) => {
+            return row.order_type === "PICKUP";
+          }
+        );
+      if (pickups.length) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${pickups[0].order_id}`,
+        }).then((response) => {
+          this.setLoader({
+            type: "pickUpDetails",
+            value: "",
+          });
+          if (response.status === 200) {
+            this.linkedPickup = response.data.data.order;
+          }
+        });
+      }
     },
     rescheduleStatus(val) {
       let actions = this.getDeliveryActions;
@@ -205,6 +296,9 @@ export default {
       return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
         "ha"
       )} - ${moment(finalTime).format("ha")}`;
+    },
+    formatLongDate(date) {
+      return moment(date).format("ddd, Do MMM");
     },
     formatDateComplete(date) {
       return moment(date).format("dddd, Do MMM YYYY");
@@ -248,5 +342,31 @@ export default {
 }
 .tracking-order-failed-delivery {
   margin: 0px 40px;
+}
+.tracking-reference-number {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 1px solid #909399;
+  color: #303133;
+  font-weight: 100;
+}
+.tracking-pickup-banner {
+  border: 1px solid #324ba8;
+  border-radius: 5px;
+  margin-right: 55px;
+  padding: 20px 0px;
+}
+.tracking-pickup-banner-icon {
+  font-size: 25px;
+  color: #324ba8;
+  float: right;
+}
+.tracking-pick-up-banner-text {
+  font-size: 18px;
+}
+.tracking-pickup-banner-link {
+  color: #324ba8;
+  font-weight: 600;
+  cursor: pointer;
 }
 </style>

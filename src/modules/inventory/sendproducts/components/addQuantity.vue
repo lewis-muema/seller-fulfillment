@@ -104,8 +104,7 @@
                         selectedProduct.selectedOption
                           .product_variant_stock_levels
                           ? selectedProduct.selectedOption
-                              .product_variant_stock_levels
-                              .quantity_in_inventory
+                              .product_variant_stock_levels.available
                           : "-"
                       }}
                     </div>
@@ -238,8 +237,7 @@ export default {
       if (
         this.$route.params.path === "customer" &&
         event.target.value >
-          products[val].selectedOption.product_variant_stock_levels
-            .quantity_in_inventory &&
+          products[val].selectedOption.product_variant_stock_levels.available &&
         process.env.DOCKER_ENV === "production"
       ) {
         ElNotification({
@@ -259,7 +257,7 @@ export default {
       this.setSelectedProducts(products);
       if (this.$route.params.path === "customer") {
         this.sendSegmentEvents({
-          event: "Review_added_items",
+          event: "Review_Added_Items",
           data: {
             userId: this.getStorageUserDetails.business_id,
             SKU: products[val].product_id,

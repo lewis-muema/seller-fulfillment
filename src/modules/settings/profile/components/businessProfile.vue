@@ -138,7 +138,7 @@ export default {
     this.getBusinesssDetails();
     this.listIndustries();
     this.sendSegmentEvents({
-      event: "Select_business_profile",
+      event: "Select_Business_Profile",
       data: {
         userId: this.getStorageUserDetails.business_id,
         clientType: "web",
@@ -225,7 +225,7 @@ export default {
               type: "success",
             });
             this.sendSegmentEvents({
-              event: "Edit_business_profile",
+              event: "Edit_Business_Profile'",
               data: {
                 userId: this.getStorageUserDetails.business_id,
                 clientType: "web",

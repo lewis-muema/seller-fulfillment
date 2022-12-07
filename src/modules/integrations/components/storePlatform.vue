@@ -6,7 +6,7 @@
           <v-icon large dark left> mdi-arrow-left </v-icon>
         </v-btn>
       </div>
-      <h5>What platform do you use?</h5>
+      <h5>{{ $t("merchant.platformInUse") }}</h5>
       <div>
         <v-select
           label="Select platform"
@@ -17,10 +17,10 @@
         ></v-select>
       </div>
       <div v-if="platformSet">
-        <h6>Is your platform missing?</h6>
+        <h6>{{ $t("merchant.missingPlatform") }}</h6>
         <div class="integrations-actions-inner">
           <v-btn class="sendy-btn-text" variant="text">
-            Integrate my online store manually
+            {{ $t("merchant.manualIntegration") }}
           </v-btn>
           <v-btn
             class="sendy-btn-default"
@@ -31,22 +31,22 @@
               })
             "
           >
-            Continue
+            {{ $t("merchant.continue") }}
           </v-btn>
         </div>
         <div class="integrations-actions">
           <h6>Useful links</h6>
           <v-btn class="sendy-btn-text" variant="text">
-            Learn about integrating with Sendy API
+            {{ $t("merchant.learn") }}
           </v-btn>
           <v-btn class="sendy-btn-text" variant="text">
-            Go to Sendy API documentation
+            {{ $t("merchant.documentation") }}
           </v-btn>
         </div>
         <div>
-          <h6>Is your platform missing?</h6>
+          <h6>{{ $t("merchant.missingPlatform") }}</h6>
           <v-btn class="sendy-btn-text" variant="text">
-            Let us know about it
+            {{ $t("merchant.letsKnow") }}
           </v-btn>
         </div>
       </div>

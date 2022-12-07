@@ -22,16 +22,14 @@
           </v-col>
           <v-col :key="n" cols="12" sm="6">
             <v-sheet class="ma-2 pa-2">
-              <h4>Connect your Online Store</h4>
+              <h4>{{ $t("merchant.connectStore") }}</h4>
               <div>
                 <p class="integrations-text">
-                  Click 'Get started' below to follow the steps to connect your
-                  online store to automate delivery requests and inventory
-                  levels
+                  {{ $t("merchant.clickToStart") }}
                 </p>
                 <div class="integrations-actions-inner">
                   <v-btn class="sendy-btn-text" variant="text">
-                    What do I need?
+                    {{ $t("merchant.requirements") }}
                   </v-btn>
                   <v-btn
                     class="sendy-btn-default"
@@ -39,7 +37,7 @@
                       $router.push('/settings/integrations/store-platform')
                     "
                   >
-                    Get started
+                    {{ $t("merchant.getStarted") }}
                   </v-btn>
                 </div>
               </div>

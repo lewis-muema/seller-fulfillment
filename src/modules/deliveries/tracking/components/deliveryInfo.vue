@@ -5,7 +5,6 @@
         <span :class="getLoader.orderTracking">
           {{ $t("deliveries.pickupInfo") }}
         </span>
-
         <span
           v-if="!showEditIcon"
           :class="getLoader.orderTracking"
@@ -153,7 +152,7 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantEdit ? 'noEdits' : 'deliveryInfo',
+              popup: cantEdit ? 'noEdits' : 'recepientInfoCrossdock',
             })
           "
         >

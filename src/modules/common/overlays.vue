@@ -147,7 +147,7 @@
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
-      <label for="customer-name" class="edit-info-label">
+      <!-- <label for="customer-name" class="edit-info-label">
         {{ $t("deliveries.nameOfCustomer") }}
       </label>
       <v-text-field
@@ -157,7 +157,7 @@
         variant="outlined"
         clearable
         clear-icon="mdi-close"
-      ></v-text-field>
+      ></v-text-field> -->
       <label for="location" class="edit-info-label">
         {{ $t("inventory.locationOfCustomer") }}
       </label>
@@ -171,7 +171,7 @@
         :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
-      <label for="phone-number" class="edit-info-label">
+      <!-- <label for="phone-number" class="edit-info-label">
         {{ $t("deliveries.phoneNumber") }}
       </label>
       <vue-tel-input
@@ -180,8 +180,8 @@
         id="phone-number"
         v-model="phone"
         mode="international"
-      ></vue-tel-input>
-      <label
+      ></vue-tel-input> -->
+      <!-- <label
         for="sec-phone-number"
         v-if="secondaryPhoneStatus"
         class="edit-info-label"
@@ -195,23 +195,34 @@
         id="sec-phone-number"
         v-model="secPhone"
         mode="international"
-      ></vue-tel-input>
-      <div
+      ></vue-tel-input> -->
+      <!-- <div
         class="add-phone-number mb-4"
         v-if="!secondaryPhoneStatus"
         @click="secondaryPhoneStatus = !secondaryPhoneStatus"
       >
         <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
         {{ $t("inventory.addAnotherPhoneNo") }}
-      </div>
-      <div
+      </div> -->
+      <!-- <div
         class="add-phone-number mb-4"
         v-if="secondaryPhoneStatus"
         @click="secondaryPhoneStatus = !secondaryPhoneStatus"
       >
         <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
         {{ $t("deliveries.removePhoneNumber") }}
-      </div>
+      </div> -->
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field crossdocking-input-fields-v-text"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
       <label for="instructions" class="edit-info-label">
         {{ $t("inventory.deliveryInstructions") }}
       </label>
@@ -229,7 +240,7 @@
         v-loading="buttonLoader"
         @click="submitDelivery()"
       >
-        {{ $t("deliveries.submit") }}
+        {{ $t("deliveries.saveDetails") }}
       </v-btn>
     </div>
     <div
@@ -1450,13 +1461,16 @@ export default {
     "$store.state.orderTrackingData": function orderTrackingData(val) {
       this.customerName = val.order.destination.name;
       this.location = val.order.destination.delivery_location.description;
-      this.phone = val.order.destination.phone_number;
-      this.secondaryPhoneStatus =
-        val.order.destination.secondary_phone_number !== null &&
-        val.order.destination.secondary_phone_number !== "";
-      this.secPhone = val.order.destination.secondary_phone_number;
+      // this.phone = val.order.destination.phone_number;
+      // this.secondaryPhoneStatus =
+      //   val.order.destination.secondary_phone_number !== null &&
+      //   val.order.destination.secondary_phone_number !== "";
+      // this.secPhone = val.order.destination.secondary_phone_number;
       this.instructions = val.order.destination.delivery_instructions;
-      this.date = new Date(val.order.scheduled_date);
+      // this.date = new Date(val.order.scheduled_date);
+      this.apartmentName = val.order.destination.house_location;
+      // this.recepientOption = "individual";
+      // this.preloadDeliveryDetails(val);
     },
   },
   components: { Datepicker },
@@ -1955,7 +1969,9 @@ export default {
               ? this.locationData.geometry.location.lat()
               : order.destination.delivery_location.latitude,
           },
-          house_location: order.destination.house_location,
+          house_location: this.apartmentName
+            ? this.apartmentName
+            : order.destination.house_location,
           delivery_instructions: this.instructions
             ? this.instructions
             : order.destination.delivery_instructions,

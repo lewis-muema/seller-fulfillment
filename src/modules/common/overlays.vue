@@ -147,17 +147,6 @@
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
-      <!-- <label for="customer-name" class="edit-info-label">
-        {{ $t("deliveries.nameOfCustomer") }}
-      </label>
-      <v-text-field
-        class="businessProfile-field"
-        id="customer-name"
-        v-model="customerName"
-        variant="outlined"
-        clearable
-        clear-icon="mdi-close"
-      ></v-text-field> -->
       <label for="location" class="edit-info-label">
         {{ $t("inventory.locationOfCustomer") }}
       </label>
@@ -171,47 +160,6 @@
         :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
-      <!-- <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.phoneNumber") }}
-      </label>
-      <vue-tel-input
-        v-bind="getSendyPhoneProps"
-        class="invite-phone"
-        id="phone-number"
-        v-model="phone"
-        mode="international"
-      ></vue-tel-input> -->
-      <!-- <label
-        for="sec-phone-number"
-        v-if="secondaryPhoneStatus"
-        class="edit-info-label"
-      >
-        {{ $t("deliveries.phoneNumber") }}
-      </label>
-      <vue-tel-input
-        v-bind="getSendyPhoneProps"
-        v-if="secondaryPhoneStatus"
-        class="invite-phone"
-        id="sec-phone-number"
-        v-model="secPhone"
-        mode="international"
-      ></vue-tel-input> -->
-      <!-- <div
-        class="add-phone-number mb-4"
-        v-if="!secondaryPhoneStatus"
-        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
-      >
-        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
-        {{ $t("inventory.addAnotherPhoneNo") }}
-      </div> -->
-      <!-- <div
-        class="add-phone-number mb-4"
-        v-if="secondaryPhoneStatus"
-        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
-      >
-        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
-        {{ $t("deliveries.removePhoneNumber") }}
-      </div> -->
       <label for="apartment-name" class="edit-info-label">
         {{ $t("deliveries.apartmentName") }}
       </label>
@@ -242,6 +190,122 @@
       >
         {{ $t("deliveries.saveDetails") }}
       </v-btn>
+    </div>
+    <div v-if="popup === 'recepientInfo'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.receivingItems") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'recepientInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <div
+        v-if="v$.recepientOption.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        <i class="mdi mdi-alert mr-3"></i>
+        {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+      </div>
+      <el-radio-group v-model="recepientOption" class="">
+        <div class="payment-collection-overlay-border-top padding-override">
+          <el-radio label="individual" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.individual") }}
+            </span>
+          </el-radio>
+        </div>
+        <div class="payment-collection-overlay-border-bottom padding-override">
+          <el-radio label="business" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.business") }}
+            </span>
+          </el-radio>
+        </div>
+      </el-radio-group>
+      <div v-if="recepientOption">
+        <p class="crossdock-recipient-details-text">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.enterRecipientDetails")
+              : $t("deliveries.enterBusinessDetails")
+          }}
+        </p>
+        <label for="customer-name" class="edit-info-label">
+          {{
+            recepientOption === "individual"
+              ? $t("deliveries.recipientName")
+              : $t("deliveries.businessName")
+          }}
+        </label>
+        <v-text-field
+          class="businessProfile-field crossdocking-input-fields-v-text"
+          id="customer-name"
+          v-model="customerName"
+          variant="outlined"
+          placeholder="Enter customer name"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+        <label for="phone-number" class="edit-info-label">
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          class="invite-phone"
+          id="phone-number"
+          v-model="phone"
+          mode="international"
+        ></vue-tel-input>
+        <label
+          for="sec-phone-number"
+          v-if="secondaryPhoneStatus"
+          class="edit-info-label"
+        >
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          v-if="secondaryPhoneStatus"
+          class="invite-phone"
+          id="sec-phone-number"
+          v-model="secPhone"
+          mode="international"
+        ></vue-tel-input>
+        <div
+          class="add-phone-number mb-4"
+          v-if="!secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+          {{ $t("inventory.addAnotherPhoneNo") }}
+        </div>
+        <div
+          class="add-phone-number mb-4"
+          v-if="secondaryPhoneStatus"
+          @click="removePhoneNumber()"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+          {{ $t("deliveries.removePhoneNumber") }}
+        </div>
+      </div>
+      <div @click="validateFields()">
+        <v-btn
+          :disabled="!isRecipientFieldsValid"
+          v-loading="buttonLoader"
+          class="edit-info-submit-button"
+          @click="submitDelivery()"
+        >
+          {{ $t("deliveries.saveInfo") }}
+        </v-btn>
+      </div>
     </div>
     <div
       v-if="popup === 'deliveryInfoCrossdock'"
@@ -317,7 +381,7 @@
           {{ $t("deliveries.receivingItems") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          @click="overlayStatusSet(false, 'recepientInfoCrossdock')"
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
@@ -1459,17 +1523,18 @@ export default {
       this.preloadDeliveryDetails(val);
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
+      // this.preloadDeliveryDetails(val);
       this.customerName = val.order.destination.name;
       this.location = val.order.destination.delivery_location.description;
-      // this.phone = val.order.destination.phone_number;
-      // this.secondaryPhoneStatus =
-      //   val.order.destination.secondary_phone_number !== null &&
-      //   val.order.destination.secondary_phone_number !== "";
-      // this.secPhone = val.order.destination.secondary_phone_number;
+      this.phone = val.order.destination.phone_number;
+      this.secondaryPhoneStatus =
+        val.order.destination.secondary_phone_number !== null &&
+        val.order.destination.secondary_phone_number !== "";
+      this.secPhone = val.order.destination.secondary_phone_number;
       this.instructions = val.order.destination.delivery_instructions;
-      // this.date = new Date(val.order.scheduled_date);
+      this.date = new Date(val.order.scheduled_date);
       this.apartmentName = val.order.destination.house_location;
-      // this.recepientOption = "individual";
+      this.recepientOption = "individual";
       // this.preloadDeliveryDetails(val);
     },
   },
@@ -2117,9 +2182,10 @@ export default {
       this.overlayStatusSet(false, "promo");
     },
     preloadDeliveryDetails(val) {
+      console.log("val", val);
       const index = this.getDestinationIndex;
       const destinations = this.getDestinations;
-      if (val.popup === "deliveryInfoCrossdock") {
+      if (val.popup === "deliveryInfoCrossdock" && !val.order) {
         this.location =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location

@@ -152,7 +152,7 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantEdit ? 'noEdits' : 'recepientInfoCrossdock',
+              popup: cantEdit ? 'noEdits' : 'recepientInfo',
             })
           "
         >

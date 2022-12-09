@@ -246,5 +246,9 @@
   "otherDocuments": "{Doc} and {Count} other documents",
   "viewLess": "View less",
   "viewMore": "View more",
-  "YourNextBillingCycle": "your next billing cycle"
+  "YourNextBillingCycle": "your next billing cycle",
+  "areYouSureYouWantToRemoveThisOrder": "Are you sure you want to remove this order?",
+  "removeOrder": "Remove order",
+  "dontRemoveOrder": "Don’t remove order",
+  "orderInfo": "Order info"
 }

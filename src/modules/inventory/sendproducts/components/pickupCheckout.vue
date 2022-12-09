@@ -257,8 +257,8 @@ export default {
       this.setSendyPhoneProps(props);
     }
     this.setPickUpOptions({
-      type: "",
-      text: "",
+      type: "driver",
+      text: "inventory.sendDriverToPickTheItems",
       info: "",
       date: "",
       FC: "",

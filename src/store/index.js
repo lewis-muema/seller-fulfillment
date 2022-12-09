@@ -93,8 +93,8 @@ export default createStore({
         WITHDRAWAL_OF_EARNING_COST: "-",
       },
       pickUpOptions: {
-        type: "",
-        text: "",
+        type: "driver",
+        text: "inventory.sendDriverToPickTheItems",
         info: "",
         date: "",
         FC: "",
@@ -1464,7 +1464,12 @@ export default createStore({
       inventorySelectedTab: "inventory.all",
       stockSelectedTab: "Overview",
       selectedProducts: [],
-      destinations: [{}],
+      destinations: [
+        {
+          expanded: 1,
+          preferences: false,
+        },
+      ],
       destinationIndex: 0,
       sendProductsRoute: "",
       product: {

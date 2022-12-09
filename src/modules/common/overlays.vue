@@ -1238,6 +1238,26 @@
         {{ $t("inventory.done") }}
       </v-btn>
     </div>
+    <div v-if="popup === 'removeDestination'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'removeDestination')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.areYouSureYouWantToRemoveThisOrder") }}</p>
+      </div>
+      <v-btn class="crossdocking-remove-order-button" @click="removeLocation()">
+        {{ $t("inventory.removeOrder") }}
+      </v-btn>
+      <div
+        class="crossdocking-dont-remove-order-button"
+        @click="overlayStatusSet(false, 'removeDestination')"
+      >
+        {{ $t("inventory.dontRemoveOrder") }}
+      </div>
+    </div>
     <div v-if="popup === 'pickUpInfoCrossDock'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -1612,6 +1632,16 @@ export default {
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    removeLocation() {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      if (destinations[index - 1]) {
+        destinations[index - 1].expanded = 1;
+      }
+      destinations.splice(index, 1);
+      this.setDestinations(destinations);
+      this.overlayStatusSet(false, "removeDestination");
     },
     removePhoneNumber() {
       this.secondaryPhoneStatus = !this.secondaryPhoneStatus;
@@ -2650,5 +2680,23 @@ export default {
 }
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
+}
+.crossdocking-remove-order-button {
+  height: 50px;
+  margin: 10px 0px 0px 0px;
+  background: #9b101c;
+  width: -webkit-fill-available;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: white !important;
+  font-size: 16px;
+}
+.crossdocking-dont-remove-order-button {
+  box-shadow: none !important;
+  color: #909399 !important;
+  margin-top: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
 }
 </style>

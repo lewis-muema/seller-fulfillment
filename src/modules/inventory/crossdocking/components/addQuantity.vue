@@ -232,7 +232,7 @@ export default {
         const availableStock = row.selectedOption
           ? row.selectedOption.product_variant_stock_levels.available
           : row.product_variants[0].product_variant_stock_levels.available;
-        if (availableStock < row.quantity) {
+        if (availableStock < this.productQuantities(row)) {
           status = true;
         }
       });
@@ -279,9 +279,65 @@ export default {
       const availableStock = val.selectedOption
         ? val.selectedOption.product_variant_stock_levels.available
         : val.product_variants[0].product_variant_stock_levels.available;
-      if (availableStock < val.quantity) {
-        return `${val.quantity - availableStock} units are unavailable`;
+      if (availableStock < this.productQuantities(val)) {
+        return `${
+          this.productQuantities(val) - availableStock
+        } units are unavailable`;
       }
+    },
+    productQuantities(reference) {
+      let stock = 0;
+      if (
+        this.getDestinations[this.getDestinationIndex].products &&
+        this.existingProduct(reference).length === 0
+      ) {
+        stock = stock + reference.quantity;
+      } else if (!this.getDestinations[this.getDestinationIndex].products) {
+        stock = stock + reference.quantity;
+      }
+      this.getDestinations.forEach((row) => {
+        if (row.products) {
+          row.products.forEach((product) => {
+            if (product.selectedOption && reference.selectedOption) {
+              if (
+                product.selectedOption.product_id ===
+                  reference.selectedOption.product_id &&
+                product.selectedOption.product_variant_id ===
+                  reference.selectedOption.product_variant_id
+              ) {
+                stock = stock + product.quantity;
+              }
+            } else if (!product.selectedOption && !reference.selectedOption) {
+              if (
+                product.product_variants[0].product_id ===
+                  reference.product_variants[0].product_id &&
+                product.product_variants[0].product_variant_id ===
+                  reference.product_variants[0].product_variant_id
+              ) {
+                stock = stock + product.quantity;
+              }
+            }
+          });
+        }
+      });
+      return stock;
+    },
+    existingProduct(reference) {
+      return this.getDestinations[this.getDestinationIndex].products.filter(
+        (row) => {
+          const row_variant = row.selectedOption
+            ? row.selectedOption
+            : row.product_variants[0];
+          const reference_variant = reference.selectedOption
+            ? reference.selectedOption
+            : reference.product_variants[0];
+          return (
+            row.product_id === reference.product_id &&
+            row_variant.product_variant_id ===
+              reference_variant.product_variant_id
+          );
+        }
+      );
     },
     addQuantity(val, quantity) {
       const products = this.getSelectedProducts;

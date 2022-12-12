@@ -1108,6 +1108,122 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="popup === 'editpaymentCollection'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'paymentCollection')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="payment-collection-overlay-title">
+          {{ $t("inventory.doYouWantPaymentToBeCollected") }}
+        </p>
+        <div
+          v-if="v$.deliveryFeeCollection.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+        </div>
+        <p
+          class="select-payment-collection-error"
+          v-if="selectPaymentCollection"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          <span class="select-payment-collection-error-text">{{
+            $t("inventory.pleaseSelectPaymentCollectionOption")
+          }}</span>
+        </p>
+        <el-radio-group v-model="deliveryFeeCollection" class="">
+          <div class="payment-collection-overlay-border-top">
+            <el-radio label="nofee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                }}
+                {{
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].total_product_value
+                }}
+              </p>
+            </el-radio>
+          </div>
+          <div class="payment-collection-overlay-border-middle">
+            <el-radio label="fee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts&DeliveryFee") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{
+                  $t("inventory.deliveryFeeAmount", {
+                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                  })
+                }}
+              </p>
+            </el-radio>
+            <div
+              class="payment-collection-overlay-amount-field"
+              v-if="deliveryFeeCollection === 'fee'"
+            >
+              <p
+                class="select-payment-collection-error"
+                v-if="enterDeliveryFee"
+              >
+                <i class="mdi mdi-alert mr-3"></i>
+                <span class="select-payment-collection-error-text">{{
+                  $t("inventory.pleaseEnterTheDeliveryFeeAmount")
+                }}</span>
+              </p>
+              <p class="delivery-fee-collection-overlay-title">
+                {{ $t("inventory.deliveryFeeToBeCollected") }}
+              </p>
+              <v-text-field
+                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
+                v-model="deliveryFeeAmount"
+                variant="outlined"
+                :prefix="
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                "
+                clearable
+                clear-icon="mdi-close"
+              ></v-text-field>
+            </div>
+          </div>
+          <div
+            class="payment-collection-overlay-border-bottom padding-override"
+          >
+            <el-radio label="none" size="large">
+              <p class="mb-0 ml-3 font-override">
+                {{ $t("inventory.noDontCollectPayment") }}
+              </p>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <div class="export-popup-buttons mt-3" @click="validateFields()">
+          <v-btn
+            class="edit-user-save edit-info-submit-button"
+            :disabled="!isPaymentCollectionValid"
+            v-loading="buttonLoader"
+            @click="submitDelivery()"
+          >
+            {{ $t("inventory.done") }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
     <div v-if="popup === 'deliveryDocuments'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <i
@@ -1485,115 +1601,8 @@ export default {
     return { v$: useVuelidate() };
   },
   props: ["overlayVal", "editInfo"],
-  mixins: [upload_img],
-  validations() {
-    return {
-      location: { required },
-      recepientOption: { required },
-      deliveryFeeCollection: { required },
-      PDF: { required },
-      documentType: { required },
-    };
-  },
-  watch: {
-    "$store.state.overlayStatus": function (val) {
-      this.overlay = val.overlay;
-      this.popup = val.popup;
-      if (this.getSelectedProducts[this.getEditedPriceIndex]) {
-        const optionCurrency = this.getSelectedProducts[
-          this.getEditedPriceIndex
-        ].selectedOption
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_currency
-          : this.getSelectedProducts[this.getEditedPriceIndex]
-              .product_variants[0].product_variant_currency;
-        const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
-          .selectedOption
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_unit_price
-          : this.getSelectedProducts[this.getEditedPriceIndex]
-              .product_variants[0].product_variant_unit_price;
-        this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
-        this.newPrice = val.popup === "editPrice" ? optionPrice : "";
-      }
-      this.paymentCollection = this.getPaymentCollectionStatus.status;
-      this.deliveryFeeCollection =
-        this.getPaymentCollectionStatus.amountToBeCollected;
-      this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
-      this.preloadDeliveryDetails(val);
-    },
-    "$store.state.orderTrackingData": function orderTrackingData(val) {
-      // this.preloadDeliveryDetails(val);
-      this.customerName = val.order.destination.name;
-      this.location = val.order.destination.delivery_location.description;
-      this.phone = val.order.destination.phone_number;
-      this.secondaryPhoneStatus =
-        val.order.destination.secondary_phone_number !== null &&
-        val.order.destination.secondary_phone_number !== "";
-      this.secPhone = val.order.destination.secondary_phone_number;
-      this.instructions = val.order.destination.delivery_instructions;
-      this.date = new Date(val.order.scheduled_date);
-      this.apartmentName = val.order.destination.house_location;
-      this.recepientOption = "individual";
-      // this.preloadDeliveryDetails(val);
-    },
-  },
   components: { Datepicker },
-  computed: {
-    ...mapGetters([
-      "getData",
-      "getDeliveryAttempts",
-      "getOrderTrackingData",
-      "getFulfillmentFees",
-      "getParent",
-      "getStorageUserDetails",
-      "getEditedPriceIndex",
-      "getSelectedProducts",
-      "getActivePayment",
-      "getBusinessDetails",
-      "getUserDetails",
-      "getMapOptions",
-      "getSendyPhoneProps",
-      "getUser",
-      "getActiveUser",
-      "getExportDataType",
-      "getPaymentCollectionStatus",
-      "getDestinations",
-      "getDestinationIndex",
-      "getDocumentURL",
-      "getStations",
-      "getPickUpInfoCD",
-    ]),
-    partnerNotAssigned() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
-      );
-    },
-    deliveryFee() {
-      let fee = 0;
-      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
-        (row) => {
-          if (row.adjustment_type === "DELIVERY_FEE") {
-            fee = row.adjustment_subtotal;
-          }
-        }
-      );
-      return fee;
-    },
-    isDeliveryFieldsValid() {
-      return this.location.length;
-    },
-    isRecipientFieldsValid() {
-      return this.customerName.length && this.phone.length;
-    },
-    isPickUpFieldsValid() {
-      return this.location.length && this.phone.length;
-    },
-    isPaymentCollectionValid() {
-      return this.deliveryFeeCollection;
-    },
-  },
+  mixins: [upload_img],
   data() {
     return {
       overlay: false,
@@ -1655,6 +1664,166 @@ export default {
       pickUpStation: "",
     };
   },
+  validations() {
+    return {
+      location: { required },
+      recepientOption: { required },
+      deliveryFeeCollection: { required },
+      PDF: { required },
+      documentType: { required },
+    };
+  },
+  watch: {
+    "$store.state.overlayStatus": function (val) {
+      this.overlay = val.overlay;
+      this.popup = val.popup;
+      if (this.getSelectedProducts[this.getEditedPriceIndex]) {
+        const optionCurrency = this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].selectedOption
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_currency
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_currency;
+        const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
+          .selectedOption
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_unit_price
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_unit_price;
+        this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
+        this.newPrice = val.popup === "editPrice" ? optionPrice : "";
+      }
+      this.preloadDeliveryDetails(val);
+    },
+    "$store.state.orderTrackingData": function orderTrackingData(val) {
+      this.preloadOrderTrackingData(val);
+    },
+  },
+  computed: {
+    ...mapGetters([
+      "getData",
+      "getDeliveryAttempts",
+      "getOrderTrackingData",
+      "getFulfillmentFees",
+      "getParent",
+      "getStorageUserDetails",
+      "getEditedPriceIndex",
+      "getSelectedProducts",
+      "getActivePayment",
+      "getBusinessDetails",
+      "getUserDetails",
+      "getMapOptions",
+      "getSendyPhoneProps",
+      "getUser",
+      "getActiveUser",
+      "getExportDataType",
+      "getPaymentCollectionStatus",
+      "getDestinations",
+      "getDestinationIndex",
+      "getDocumentURL",
+      "getStations",
+      "getPickUpInfoCD",
+    ]),
+    partnerNotAssigned() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
+    deliveryFee() {
+      let fee = 0;
+      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+        (row) => {
+          if (row.adjustment_type === "DELIVERY_FEE") {
+            fee = row.adjustment_subtotal;
+          }
+        }
+      );
+      return fee;
+    },
+    isDeliveryFieldsValid() {
+      return this.location.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
+    },
+    isPickUpFieldsValid() {
+      return this.location.length && this.phone.length;
+    },
+    isPaymentCollectionValid() {
+      return this.deliveryFeeCollection;
+    },
+    paymentOnDeliveryFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.payments_on_delivery_enabled
+        : false;
+    },
+    podPayload() {
+      const costsToCollect = [];
+      if (
+        (this.deliveryFeeCollection === "fee" ||
+          this.deliveryFeeCollection === "nofee") &&
+        this.paymentOnDeliveryFlag
+      ) {
+        costsToCollect.push({
+          cost_type: "SALE_OF_GOOD",
+        });
+      }
+      if (this.deliveryFeeCollection === "fee") {
+        costsToCollect.push({
+          cost_type: "DELIVERY_FEE",
+          cost_amount: this.deliveryFeeAmount,
+          currency: this.getBusinessDetails.currency,
+        });
+      }
+      return costsToCollect;
+    },
+    destinationPayload() {
+      const order = this.getOrderTrackingData.order;
+      const payload = {
+        name: this.customerName ? this.customerName : order.destination.name,
+        phone_number: this.phone ? this.phone : order.destination.phone_number,
+        secondary_phone_number: this.secPhone
+          ? this.secPhone
+          : order.destination.secondary_phone_number,
+        delivery_location: {
+          description: this.location
+            ? this.location
+            : order.destination.delivery_location.description,
+          longitude: this.locationData.geometry
+            ? this.locationData.geometry.location.lng()
+            : order.destination.delivery_location.longitude,
+          latitude: this.locationData.geometry
+            ? this.locationData.geometry.location.lat()
+            : order.destination.delivery_location.latitude,
+        },
+        house_location: this.apartmentName
+          ? this.apartmentName
+          : order.destination.house_location,
+        delivery_instructions: this.instructions
+          ? this.instructions
+          : order.destination.delivery_instructions,
+      };
+      return payload;
+    },
+    documentsPayload() {
+      return "";
+    },
+    meansOfPaymentsPayload() {
+      const meansOfPayment =
+        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
+      const payload = {
+        means_of_payment_type: meansOfPayment.means_of_payment_type,
+        means_of_payment_identifier: meansOfPayment.means_of_payment_id,
+        participant_type: meansOfPayment.participant_type,
+        participant_id: meansOfPayment.participant_id,
+        meta_data: meansOfPayment.meta_data,
+      };
+      return payload;
+    },
+  },
+
   beforeMount() {
     if (localStorage.country) {
       const props = this.getSendyPhoneProps;
@@ -1845,6 +2014,7 @@ export default {
       }, 500);
     },
     setPaymentCollection() {
+      console.log("pod", this.getPaymentCollectionStatus);
       if (this.getPaymentCollectionStatus.status === "") {
         this.selectPaymentCollection = true;
         setTimeout(() => {
@@ -2003,44 +2173,15 @@ export default {
       }
     },
     async submitDelivery() {
-      const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      const meansOfPayment =
-        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
       const payload = {
-        means_of_payment: {
-          means_of_payment_type: meansOfPayment.means_of_payment_type,
-          means_of_payment_identifier: meansOfPayment.means_of_payment_id,
-          participant_type: meansOfPayment.participant_type,
-          participant_id: meansOfPayment.participant_id,
-          meta_data: meansOfPayment.meta_data,
+        means_of_payment: this.meansOfPaymentsPayload,
+        destination: this.destinationPayload,
+        sale_of_goods_policy: {
+          costs_to_collect: this.podPayload,
         },
-        destination: {
-          name: this.customerName ? this.customerName : order.destination.name,
-          phone_number: this.phone
-            ? this.phone
-            : order.destination.phone_number,
-          secondary_phone_number: this.secPhone
-            ? this.secPhone
-            : order.destination.secondary_phone_number,
-          delivery_location: {
-            description: this.location
-              ? this.location
-              : order.destination.delivery_location.description,
-            longitude: this.locationData.geometry
-              ? this.locationData.geometry.location.lng()
-              : order.destination.delivery_location.longitude,
-            latitude: this.locationData.geometry
-              ? this.locationData.geometry.location.lat()
-              : order.destination.delivery_location.latitude,
-          },
-          house_location: this.apartmentName
-            ? this.apartmentName
-            : order.destination.house_location,
-          delivery_instructions: this.instructions
-            ? this.instructions
-            : order.destination.delivery_instructions,
-        },
+        documents: {},
+        dates: {},
       };
       if (!this.partnerNotAssigned) {
         delete payload.destination.delivery_location;
@@ -2182,10 +2323,9 @@ export default {
       this.overlayStatusSet(false, "promo");
     },
     preloadDeliveryDetails(val) {
-      console.log("val", val);
       const index = this.getDestinationIndex;
       const destinations = this.getDestinations;
-      if (val.popup === "deliveryInfoCrossdock" && !val.order) {
+      if (val.popup === "deliveryInfoCrossdock") {
         this.location =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location
@@ -2245,7 +2385,27 @@ export default {
         this.instructions = this.getPickUpInfoCD.instructions
           ? this.getPickUpInfoCD.instructions
           : "";
+      } else if (val.popup === "paymentCollection") {
+        this.paymentCollection = this.getPaymentCollectionStatus.status;
+        this.deliveryFeeCollection =
+          this.getPaymentCollectionStatus.amountToBeCollected;
+        this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
       }
+    },
+    preloadOrderTrackingData(val) {
+      this.customerName = val.order.destination.name;
+      this.location = val.order.destination.delivery_location.description;
+      this.phone = val.order.destination.phone_number;
+      this.secondaryPhoneStatus =
+        val.order.destination.secondary_phone_number !== null &&
+        val.order.destination.secondary_phone_number !== "";
+      this.secPhone = val.order.destination.secondary_phone_number;
+      this.instructions = val.order.destination.delivery_instructions;
+      this.date = new Date(val.order.scheduled_date);
+      this.apartmentName = val.order.destination.house_location;
+      this.recepientOption = "individual";
+      this.deliveryFeeCollection = "fee";
+      this.deliveryFeeAmount = this.deliveryFee;
     },
   },
 };

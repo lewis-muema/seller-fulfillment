@@ -195,6 +195,19 @@
             {{ $t("inventory.documentsYouveUploaded") }}
           </span>
         </p>
+        <p class="delivery-info-label edit-delivery">
+          <span
+            :class="getLoader.orderTracking"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: cantEdit ? 'noEdits' : 'deliveryInfo',
+              })
+            "
+          >
+            Manage documents
+          </span>
+        </p>
         <p class="delivery-info-data mb-2">
           <span>
             <i class="mdi mdi-text-box-outline delivery-info-marker"></i>
@@ -269,6 +282,19 @@
           >
             <span :class="`payment-${invoiceStatus}-status`">
               {{ $t("deliveries.completed") }}
+            </span>
+          </p>
+          <p class="delivery-info-label edit-delivery">
+            <span
+              :class="getLoader.orderTracking"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: cantEdit ? 'noEdits' : 'editpaymentCollection',
+                })
+              "
+            >
+              Edit payment collection
             </span>
           </p>
         </div>

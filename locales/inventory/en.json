@@ -250,5 +250,13 @@
   "areYouSureYouWantToRemoveThisOrder": "Are you sure you want to remove this order?",
   "removeOrder": "Remove order",
   "dontRemoveOrder": "Don’t remove order",
-  "orderInfo": "Order info"
+  "orderInfo": "Order info",
+  "deliveryOption": "Delivery option",
+  "selectTheDeliveryOption": "Select the delivery option",
+  "selectDeliveryOption": "Select delivery option",
+  "SENDY_NEXT_DAY": "Next day delivery",
+  "SENDY_SAME_DAY": "Same day delivery",
+  "SENDY_EXPRESS": "Express delivery",
+  "SENDY_SCHEDULED": "Schedule delivery",
+  "Select a date of your choice": "Select a date of your choice"
 }

@@ -227,20 +227,72 @@
               </div>
             </div>
             <div
-              class="mb-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+              :class="
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+                  ? 'mb-4 row cross-docking-checkout-row'
+                  : 'mb-4 row cross-docking-checkout-roww'
+              "
             >
               <div class="col-1">
                 <i
-                  class="mdi mdi-clock-outline cross-docking-checkout-icons"
+                  class="mdi mdi-truck-outline cross-docking-checkout-icons"
                 ></i>
               </div>
               <div
+                class="col-11 cross-docking-checkout-text"
+                v-if="
+                  !(
+                    getDestinations[index - 1] &&
+                    getDestinations[index - 1].speed
+                  )
+                "
+                @click="addDeliveryOption(index)"
+              >
+                <span>{{ $t("inventory.selectTheDeliveryOption") }}</span>
+                <span class="cross-docking-checkout-chevrons"
+                  ><i class="mdi mdi-chevron-right"></i
+                ></span>
+              </div>
+              <div
                 class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+                v-else
               >
                 <div>
-                  <p class="mb-2">{{ $t("inventory.deliveryTime") }}</p>
-                  <p>{{ $t("inventory.nextDay") }}</p>
+                  <p>{{ $t("inventory.deliveryOption") }}</p>
+                  <div class="delivery-details-text">
+                    <p>
+                      {{
+                        getDestinations[index - 1].speed
+                          .speed_pricing_description
+                      }}
+                    </p>
+                  </div>
                 </div>
+                <span
+                  class="cross-docking-checkout-chevrons"
+                  @click="addDeliveryOption(index)"
+                >
+                  <span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.change")
+                  }}</span>
+                  <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </div>
+            </div>
+            <div
+              v-if="
+                showErrors &&
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+              "
+              class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                {{ $t("inventory.thisFieldIsRequired") }}
               </div>
             </div>
             <div
@@ -802,6 +854,8 @@ export default {
       "getPickUpOptions",
       "getPickUpInfoCD",
       "getPickUpStation",
+      "getPickUpSpeed",
+      "getDeliverySpeed",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -939,6 +993,12 @@ export default {
             delivery_instructions: this.getPickUpInfoCD.instructions,
           },
           destination_policy: "DROP_AT_HUB",
+          destination_speed_policy: {
+            transport_provider: "SENDY",
+            speed_pricing_type: "SENDY_EXPRESS",
+            speed_pricing_uuid: "string",
+            proposed_scheduled_date: 0,
+          },
         },
       ];
     },
@@ -998,6 +1058,12 @@ export default {
                 }
               : {},
           destination_policy: "DELIVER_TO_BUYER",
+          destination_speed_policy: {
+            transport_provider: "SENDY",
+            speed_pricing_type: "SENDY_EXPRESS",
+            speed_pricing_uuid: "string",
+            proposed_scheduled_date: 0,
+          },
           documents,
         };
         if (
@@ -1074,6 +1140,8 @@ export default {
       "setLoader",
       "setPickUpInfoCD",
       "setPickUpOptions",
+      "setPickUpSpeed",
+      "setDeliverySpeed",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1177,6 +1245,13 @@ export default {
         popup: "recepientInfoCrossdock",
       });
     },
+    addDeliveryOption(index) {
+      this.changeIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryOptionCrossdock",
+      });
+    },
     addPaymentCollection(index) {
       this.changeIndex(index);
       this.setOverlayStatus({
@@ -1230,6 +1305,7 @@ export default {
       });
     },
     getPricing() {
+      this.getSpeed();
       const destinations = this.getDestinations;
       if (destinations.length && destinations[0].products) {
         this.setLoader({
@@ -1250,6 +1326,18 @@ export default {
           }
         });
       }
+    },
+    getSpeed() {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
+        values: this.checkoutPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setPickUpSpeed(response.data.data.pickups);
+          this.setDeliverySpeed(response.data.data.deliveries);
+        }
+      });
     },
     createDelivery() {
       let fieldsPresent = [];

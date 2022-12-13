@@ -359,4 +359,10 @@ export default {
   setPickUpStation(state, val) {
     state.pickUpStation = val;
   },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
+  setPickUpSpeed(state, val) {
+    state.pickUpSpeed = val;
+  },
 };

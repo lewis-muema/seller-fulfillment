@@ -1413,6 +1413,47 @@
         </p>
       </div>
     </div>
+
+    <div
+      v-if="popup === 'deliveryOptionCrossdock'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'deliveryOptionCrossdock')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.selectDeliveryOption") }}</p>
+        <el-radio-group v-model="recepientOption" class="">
+          <div
+            class="payment-collection-overlay-border-top padding-override"
+            v-for="(speed, i) in getDeliverySpeed"
+            :key="i"
+          >
+            <el-radio label="individual" size="large">
+              <span class="mb-0 ml-3 font-override recepient-info-label">
+                <p>
+                  {{
+                    speed.transport_provider === "SENDY"
+                      ? speed.speed_pricing_type
+                      : speed.transport_provider
+                  }}
+                </p>
+                <p>
+                  {{
+                    speed.transport_provider === "SENDY"
+                      ? speed.speed_pricing_upper_limit_date
+                      : speed.speed_pricing_description
+                  }}
+                </p>
+              </span>
+            </el-radio>
+          </div>
+        </el-radio-group>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -1504,6 +1545,8 @@ export default {
       "getDocumentURL",
       "getStations",
       "getPickUpInfoCD",
+      "getPickUpSpeed",
+      "getDeliverySpeed",
     ]),
     partnerNotAssigned() {
       return (

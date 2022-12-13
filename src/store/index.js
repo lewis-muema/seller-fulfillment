@@ -34,6 +34,8 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
       ],
+      deliverySpeed: [],
+      pickUpSpeed: [],
       tabStatuses: {
         All: "",
         Pending: "ORDER_RECEIVED,ORDER_IN_PROCESSING",

@@ -1283,6 +1283,7 @@
           <p class="crossdocking-add-document-titles">
             {{ $t("inventory.whatTypeOfDocumentIsThis") }}
           </p>
+          TT --- {{ documentType }}
           <v-select
             v-model="documentType"
             :items="documentTypes"
@@ -1320,7 +1321,7 @@
               (documentType === 'Other' && !documentTitle)
             "
             class="cross-docking-upload-doc"
-            @click="addPDFDocument()"
+            @click="gettEditStatus ? addPDFDocument() : editPDFDocument()"
           >
             {{ $t("inventory.uploadDocument") }}
           </v-btn>
@@ -1346,6 +1347,52 @@
           height="600px"
         ></iframe>
       </div>
+    </div>
+    <div v-if="popup === 'addRemoveDocument'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          Add/remove documents
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'addRemoveDocument')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <div
+        v-for="(docs, x) in mapEdittedDocuments"
+        :key="x"
+        class="crossdocking-documents-list"
+      >
+        <div class="crossdocking-documents-list-inner">
+          <i class="mdi mdi-text-box-outline"></i>
+          <span class="ml-3 document-type-text">{{ docs.document_type }}</span>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <i
+                class="mdi mdi-dots-vertical payment-method-icon"
+                v-bind="props"
+              ></i>
+            </template>
+            <v-list>
+              <v-list-item v-for="(option, i) in options" :key="i">
+                <v-list-item-title @click="execute(option.action, index, x)">{{
+                  option.title
+                }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </div>
+      <p class="edit-delivery edit-delivery-override">
+        <span @click="uploadAnotherDocument()"> Upload another document </span>
+      </p>
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitDelivery()"
+      >
+        Save
+      </v-btn>
     </div>
     <div v-if="popup === 'pickItems'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
@@ -1621,6 +1668,7 @@ export default {
       apartmentName: "",
       recepientOption: "",
       PDFUploadStatus: "",
+      documents: [],
       PDF: "",
       cancelReasons: [
         {
@@ -1657,6 +1705,16 @@ export default {
         {
           title: this.$t("inventory.Other"),
           value: "Other",
+        },
+      ],
+      options: [
+        {
+          title: this.$t("inventory.viewDocument"),
+          action: "viewDocument",
+        },
+        {
+          title: this.$t("inventory.remove"),
+          action: "removeDocument",
         },
       ],
       documentTitle: "",
@@ -1724,6 +1782,8 @@ export default {
       "getDocumentURL",
       "getStations",
       "getPickUpInfoCD",
+      "getEdittedDocuments",
+      "getEditStatus",
     ]),
     partnerNotAssigned() {
       return (
@@ -1733,7 +1793,7 @@ export default {
     },
     deliveryFee() {
       let fee = 0;
-      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
         (row) => {
           if (row.adjustment_type === "DELIVERY_FEE") {
             fee = row.adjustment_subtotal;
@@ -1808,7 +1868,15 @@ export default {
       return payload;
     },
     documentsPayload() {
-      return "";
+      const documents = [];
+      this.mapEdittedDocuments.forEach((row) => {
+        documents.push({
+          document_type: row.document_type.toUpperCase(),
+          document_url: row.document_url,
+          document_description: row.document_description,
+        });
+      });
+      return documents;
     },
     meansOfPaymentsPayload() {
       const meansOfPayment =
@@ -1821,6 +1889,12 @@ export default {
         meta_data: meansOfPayment.meta_data,
       };
       return payload;
+    },
+    mapEdittedDocuments() {
+      const documents = this.getOrderTrackingData.order.documents.slice();
+      const addedDocuments = this.getEdittedDocuments;
+      const finalDocuments = [...documents, ...addedDocuments];
+      return finalDocuments;
     },
   },
 
@@ -1854,6 +1928,9 @@ export default {
       "setPickUpOptions",
       "setPickUpInfoCD",
       "setPickUpStation",
+      "setOverlayStatus",
+      "setEdittedDocuments",
+      "setEditStatus",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -1928,6 +2005,45 @@ export default {
         this.documentType = "";
         this.v$.$reset();
       }, 500);
+    },
+    editPDFDocument() {
+      const docObj = {
+        document_type: this.documentType.toUpperCase(),
+        document_url: this.PDF,
+        document_description: this.documentTitle,
+      };
+      console.log("documentType", docObj);
+      if (this.documents.length > 0) {
+        this.getEdittedDocuments.forEach((document) => {
+          const existingDoc = this.documents.findIndex(
+            (x) =>
+              x.document_url === document.document_url &&
+              x.document_type === document.document_type
+          );
+          console.log("existing", existingDoc);
+          if (existingDoc === -1) {
+            this.documents.push(docObj);
+          }
+        });
+      } else {
+        this.documents.push(docObj);
+      }
+      this.setEdittedDocuments(this.documents);
+      this.overlayStatusSet(true, "addRemoveDocument");
+      setTimeout(() => {
+        this.documentTitle = "";
+        this.PDF = "";
+        this.documentType = "";
+        this.v$.$reset();
+      }, 300);
+    },
+    uploadAnotherDocument() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryDocuments",
+      });
+      this.setEditStatus(true);
+      this.setEditStatus(false);
     },
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -2180,7 +2296,7 @@ export default {
         sale_of_goods_policy: {
           costs_to_collect: this.podPayload,
         },
-        documents: {},
+        documents: this.documentsPayload,
         dates: {},
       };
       if (!this.partnerNotAssigned) {
@@ -2406,6 +2522,7 @@ export default {
       this.recepientOption = "individual";
       this.deliveryFeeCollection = "fee";
       this.deliveryFeeAmount = this.deliveryFee;
+      // this.documentType = val.order.documents;
     },
   },
 };
@@ -2892,5 +3009,11 @@ export default {
 }
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
+}
+.document-type-text {
+  font-size: 14px;
+}
+.edit-delivery-override {
+  border-bottom: none !important;
 }
 </style>

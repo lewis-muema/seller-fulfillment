@@ -201,7 +201,7 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: cantEdit ? 'noEdits' : 'deliveryInfo',
+                popup: cantEdit ? 'noEdits' : 'addRemoveDocument',
               })
             "
           >
@@ -368,7 +368,7 @@ export default {
     },
     deliveryFee() {
       let fee = 0;
-      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
         (row) => {
           if (row.adjustment_type === "DELIVERY_FEE") {
             fee = row.adjustment_subtotal;

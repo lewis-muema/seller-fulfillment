@@ -359,4 +359,13 @@ export default {
   setPickUpStation(state, val) {
     state.pickUpStation = val;
   },
+  setEdittedDocuments(state, val) {
+    state.edittedDocuments = val;
+  },
+  setEditStatus(state, val) {
+    state.editStatus = val;
+  },
+  setFinalDocumentsToEdit(state, val) {
+    state.finalDocumentsToEdit = val;
+  },
 };

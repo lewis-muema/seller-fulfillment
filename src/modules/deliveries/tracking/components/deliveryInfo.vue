@@ -11,7 +11,7 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantEdit ? 'noEdits' : 'pickupInfo',
+              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'pickupInfo',
             })
           "
         >
@@ -118,7 +118,7 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantEdit ? 'noEdits' : 'deliveryInfo',
+              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'deliveryInfo',
             })
           "
         >
@@ -152,7 +152,7 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantEdit ? 'noEdits' : 'recepientInfo',
+              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'recepientInfo',
             })
           "
         >
@@ -201,10 +201,13 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: cantEdit ? 'noEdits' : 'addRemoveDocument',
+                popup: cantEditDocumentsInfo
+                  ? 'cantEditDocumentsInfo'
+                  : 'addRemoveDocument',
               })
             "
           >
+            {{ cantDeliveryRecipientInfo }}
             Manage documents
           </span>
         </p>
@@ -290,7 +293,7 @@
               @click="
                 setOverlayStatus({
                   overlay: true,
-                  popup: cantEdit ? 'noEdits' : 'editpaymentCollection',
+                  popup: 'editpaymentCollection',
                 })
               "
             >
@@ -345,14 +348,27 @@ export default {
       "getParent",
       "getOrderTimelines",
     ]),
-    cantEdit() {
-      return this.getParent === "sendy"
-        ? this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT" &&
-            this.getOrderTrackingData.order.order_event_status !==
-              "event.pickup.partner.assigned" &&
-            this.getOrderTrackingData.order.order_event_status !==
-              "event.pickup.partner.enroute.to.pickup.location"
-        : "";
+    cantDeliveryRecipientInfo() {
+      const orderInTransit =
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT";
+      if (this.getParent === "sendy") {
+        return (
+          orderInTransit &&
+          this.getOrderTrackingData.order.order_event_status !==
+            "event.pickup.partner.assigned" &&
+          this.getOrderTrackingData.order.order_event_status !==
+            "event.pickup.partner.enroute.to.pickup.location"
+        );
+      } else {
+        const orderCompleted =
+          this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED";
+        const buyerEnroute =
+          this.getOrderTrackingData.order.order_event_status !==
+          "event.delivery.partner.enroute.to.buyer.location";
+        const test = orderInTransit;
+        console.log(test);
+        return (orderInTransit && buyerEnroute) || orderCompleted;
+      }
     },
     showEditIcon() {
       return (
@@ -376,6 +392,17 @@ export default {
         }
       );
       return fee;
+    },
+    cantEditDocumentsInfo() {
+      return (
+        this.getOrderTrackingData.order.order_event_status !==
+          "event.delivery.order.created" &&
+        this.getOrderTrackingData.order.order_event_status !==
+          "event.delivery.at.hub.processing.for.delivery"
+      );
+    },
+    cantEditPod() {
+      return "";
     },
   },
   mounted() {},

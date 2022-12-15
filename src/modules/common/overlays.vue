@@ -170,6 +170,7 @@
         variant="outlined"
         clearable
         clear-icon="mdi-close"
+        :disabled="!partnerNotAssigned"
       ></v-text-field>
       <label for="instructions" class="edit-info-label">
         {{ $t("inventory.deliveryInstructions") }}
@@ -923,6 +924,23 @@
       </p>
       <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
     </div>
+    <div
+      v-if="popup === 'cantEditDocumentsInfo'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
+        <i
+          @click="overlayStatusSet(false, 'cantEditDocumentsInfo')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <p>
+        You can’t edit the documents at the moment because a driver has been
+        assigned to deliver your order.
+      </p>
+      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
+    </div>
     <div v-if="popup === 'noEditsProducts'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
@@ -1113,9 +1131,10 @@
       v-if="popup === 'editpaymentCollection'"
       class="view-products-container"
     >
+      Status -- {{ deliveryFeeCollection }}
       <div class="timeline-failed-attempt-section">
         <i
-          @click="overlayStatusSet(false, 'paymentCollection')"
+          @click="overlayStatusSet(false, 'editpaymentCollection')"
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
@@ -1146,16 +1165,8 @@
                 {{ $t("inventory.priceOfProducts") }}
               </p>
               <p class="mb-2 ml-3">
-                {{
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].currency
-                }}
-                {{
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].total_product_value
-                }}
+                {{ productCurrency }}
+                {{ productPrice }}
               </p>
             </el-radio>
           </div>
@@ -1167,7 +1178,7 @@
               <p class="mb-2 ml-3">
                 {{
                   $t("inventory.deliveryFeeAmount", {
-                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                    Amount: `${currency} ${productPrice}`,
                   })
                 }}
               </p>
@@ -1802,6 +1813,20 @@ export default {
       );
       return fee;
     },
+    productPrice() {
+      let price = 0;
+      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
+        (row) => {
+          if (row.adjustment_type === "SALE_OF_GOOD") {
+            price = row.adjustment_subtotal;
+          }
+        }
+      );
+      return price;
+    },
+    productCurrency() {
+      return this.getOrderTrackingData.order?.sale_of_goods_invoice?.currency;
+    },
     isDeliveryFieldsValid() {
       return this.location.length;
     },
@@ -1896,8 +1921,27 @@ export default {
       const finalDocuments = [...documents, ...addedDocuments];
       return finalDocuments;
     },
+    paymentStatuses() {
+      let paymentStatus = "";
+      if (
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[0].adjustment_type ===
+          "DELIVERY_FEE" &&
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[1].adjustment_type === "SALE_OF_GOOD"
+      ) {
+        paymentStatus = "fee";
+      } else if (
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[0].adjustment_type === "SALE_OF_GOOD"
+      ) {
+        paymentStatus = "nofee";
+      } else {
+        paymentStatus = "none";
+      }
+      return paymentStatus;
+    },
   },
-
   beforeMount() {
     if (localStorage.country) {
       const props = this.getSendyPhoneProps;
@@ -2520,7 +2564,7 @@ export default {
       this.date = new Date(val.order.scheduled_date);
       this.apartmentName = val.order.destination.house_location;
       this.recepientOption = "individual";
-      this.deliveryFeeCollection = "fee";
+      this.deliveryFeeCollection = this.paymentStatuses;
       this.deliveryFeeAmount = this.deliveryFee;
       // this.documentType = val.order.documents;
     },
@@ -2894,6 +2938,9 @@ export default {
   color: #606266;
 }
 .businessProfile-address:disabled {
+  background: #e2e7ed !important;
+}
+.businessProfile-field:disabled {
   background: #e2e7ed !important;
 }
 .payment-collection-overlay-border-top {

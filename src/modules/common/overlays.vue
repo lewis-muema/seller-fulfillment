@@ -916,41 +916,7 @@
         ></i>
       </div>
       <p>
-        {{
-          getParent === "sendy"
-            ? $t("deliveries.cantEditPickups")
-            : $t("deliveries.cantEditDelivery")
-        }}
-      </p>
-      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
-    </div>
-    <div
-      v-if="popup === 'cantEditDocumentsInfo'"
-      class="view-products-container"
-    >
-      <div class="view-products-section">
-        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
-        <i
-          @click="overlayStatusSet(false, 'cantEditDocumentsInfo')"
-          class="mdi mdi-close view-products-close"
-        ></i>
-      </div>
-      <p>
-        You can’t edit the documents at the moment because a driver has been
-        assigned to deliver your order.
-      </p>
-      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
-    </div>
-    <div v-if="popup === 'noEditsProducts'" class="view-products-container">
-      <div class="view-products-section">
-        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
-        <i
-          @click="overlayStatusSet(false, 'noEditsProducts')"
-          class="mdi mdi-close view-products-close"
-        ></i>
-      </div>
-      <p>
-        {{ $t("deliveries.cantEditProducts") }}
+        {{ popText }}
       </p>
       <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
     </div>
@@ -1131,7 +1097,6 @@
       v-if="popup === 'editpaymentCollection'"
       class="view-products-container"
     >
-      Status -- {{ deliveryFeeCollection }}
       <div class="timeline-failed-attempt-section">
         <i
           @click="overlayStatusSet(false, 'editpaymentCollection')"
@@ -1665,6 +1630,7 @@ export default {
     return {
       overlay: false,
       popup: "",
+      popText: "",
       amount: "780",
       currency: "KES",
       name: "Judy",
@@ -1746,6 +1712,7 @@ export default {
     "$store.state.overlayStatus": function (val) {
       this.overlay = val.overlay;
       this.popup = val.popup;
+      this.popText = val.popText;
       if (this.getSelectedProducts[this.getEditedPriceIndex]) {
         const optionCurrency = this.getSelectedProducts[
           this.getEditedPriceIndex

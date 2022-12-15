@@ -17,7 +17,9 @@
         @click="
           setOverlayStatus({
             overlay: true,
-            popup: 'noEditsProducts',
+            popup: 'noEdits',
+            popText:
+              'You can’t edit the products info at the moment because a driver has been assigned to deliver your order.',
           })
         "
         v-else

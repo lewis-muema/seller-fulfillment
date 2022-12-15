@@ -157,5 +157,6 @@
   "receivingItems": "Who is receiving the items ?",
   "individual": "An individual",
   "business": "A business",
-  "saveInfo" : "Save info"
+  "saveInfo" : "Save info",
+  "cantEditDocs":"You can’t edit the documents at the moment because a driver has been assigned to deliver your order."
 }

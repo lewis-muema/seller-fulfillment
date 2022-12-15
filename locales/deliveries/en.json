@@ -159,5 +159,6 @@
   "individual": "An individual",
   "business": "A business",
   "saveInfo" : "Save info",
-  "saveDetails": "Save details"
+  "saveDetails": "Save details",
+  "cantEditDocs": "You can’t edit the documents at the moment because a driver has been assigned to deliver your order."
 }

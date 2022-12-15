@@ -11,7 +11,9 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'pickupInfo',
+              popup: cantEditDeliveryRecipientInfo ? 'noEdits' : 'pickupInfo',
+              popText:
+                'You can’t edit the pickup info at the moment because a driver has been assigned to deliver your order.',
             })
           "
         >
@@ -118,7 +120,9 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'deliveryInfo',
+              popup: cantEditDeliveryRecipientInfo ? 'noEdits' : 'deliveryInfo',
+              popText:
+                'You can’t edit the delivery info at the moment because a driver has been assigned to deliver your order.',
             })
           "
         >
@@ -152,7 +156,11 @@
           @click="
             setOverlayStatus({
               overlay: true,
-              popup: cantDeliveryRecipientInfo ? 'noEdits' : 'recepientInfo',
+              popup: cantEditDeliveryRecipientInfo
+                ? 'noEdits'
+                : 'recepientInfo',
+              popText:
+                'You can’t edit the recipient info at the moment because a driver has been assigned to deliver your order.',
             })
           "
         >
@@ -201,13 +209,12 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: cantEditDocumentsInfo
-                  ? 'cantEditDocumentsInfo'
-                  : 'addRemoveDocument',
+                popup: cantEditDocumentsInfo ? 'noEdits' : 'addRemoveDocument',
+                popText:
+                  'You can’t edit the documents at the moment because a driver has been assigned to deliver your order.',
               })
             "
           >
-            {{ cantDeliveryRecipientInfo }}
             Manage documents
           </span>
         </p>
@@ -294,6 +301,8 @@
                 setOverlayStatus({
                   overlay: true,
                   popup: 'editpaymentCollection',
+                  popText:
+                    'You can’t edit the payments collection at the moment because a driver has been assigned to deliver your order.',
                 })
               "
             >
@@ -348,7 +357,7 @@ export default {
       "getParent",
       "getOrderTimelines",
     ]),
-    cantDeliveryRecipientInfo() {
+    cantEditDeliveryRecipientInfo() {
       const orderInTransit =
         this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT";
       if (this.getParent === "sendy") {
@@ -365,8 +374,6 @@ export default {
         const buyerEnroute =
           this.getOrderTrackingData.order.order_event_status !==
           "event.delivery.partner.enroute.to.buyer.location";
-        const test = orderInTransit;
-        console.log(test);
         return (orderInTransit && buyerEnroute) || orderCompleted;
       }
     },

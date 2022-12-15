@@ -373,6 +373,7 @@ export default createStore({
       overlayStatus: {
         overlay: false,
         popup: "",
+        popText: "",
       },
       tab: "All",
       loader: {

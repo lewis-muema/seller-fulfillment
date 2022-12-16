@@ -365,4 +365,7 @@ export default {
   setPickUpSpeed(state, val) {
     state.pickUpSpeed = val;
   },
+  setMismatchedDates(state, val) {
+    state.mismatchedDates = val;
+  },
 };

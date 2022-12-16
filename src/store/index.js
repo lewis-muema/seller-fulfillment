@@ -36,6 +36,7 @@ export default createStore({
       ],
       deliverySpeed: [],
       pickUpSpeed: [],
+      mismatchedDates: false,
       tabStatuses: {
         All: "",
         Pending: "ORDER_RECEIVED,ORDER_IN_PROCESSING",

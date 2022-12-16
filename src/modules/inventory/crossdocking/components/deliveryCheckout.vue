@@ -227,20 +227,98 @@
               </div>
             </div>
             <div
-              class="mb-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
+              :class="
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+                  ? 'mb-4 row cross-docking-checkout-row'
+                  : 'mb-4 row cross-docking-checkout-roww'
+              "
             >
               <div class="col-1">
                 <i
-                  class="mdi mdi-clock-outline cross-docking-checkout-icons"
+                  class="mdi mdi-truck-outline cross-docking-checkout-icons"
                 ></i>
               </div>
               <div
+                class="col-11 cross-docking-checkout-text"
+                v-if="
+                  !(
+                    getDestinations[index - 1] &&
+                    getDestinations[index - 1].speed
+                  )
+                "
+                @click="addDeliveryOption(index)"
+              >
+                <span>{{ $t("inventory.selectTheDeliveryOption") }}</span>
+                <span class="cross-docking-checkout-chevrons"
+                  ><i class="mdi mdi-chevron-right"></i
+                ></span>
+              </div>
+              <div
                 class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+                v-else
               >
                 <div>
-                  <p class="mb-2">{{ $t("inventory.deliveryTime") }}</p>
-                  <p>{{ $t("inventory.nextDay") }}</p>
+                  <p>{{ $t("inventory.deliveryOption") }}</p>
+                  <div class="delivery-details-text">
+                    <p>
+                      <span class="cross-docking-checkout-delivery-option-top">
+                        {{
+                          getDestinations[index - 1].speed
+                            .transport_provider === "SENDY"
+                            ? $t(
+                                `inventory.${
+                                  getDestinations[index - 1].speed
+                                    .speed_pricing_type
+                                }_DELIVERY`
+                              )
+                            : getDestinations[index - 1].speed
+                                .transport_provider
+                        }}
+                      </span>
+                    </p>
+                    <p>
+                      <span
+                        class="cross-docking-checkout-delivery-option-bottom"
+                      >
+                        {{
+                          getDestinations[index - 1].speed
+                            .transport_provider === "SENDY"
+                            ? formatDate(
+                                getDestinations[index - 1].speed
+                                  .speed_pricing_upper_limit_date
+                              )
+                            : getDestinations[index - 1].speed
+                                .speed_pricing_description
+                        }}
+                      </span>
+                    </p>
+                  </div>
                 </div>
+                <span
+                  class="cross-docking-checkout-chevrons"
+                  @click="addDeliveryOption(index)"
+                >
+                  <span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.change")
+                  }}</span>
+                  <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </div>
+            </div>
+            <div
+              v-if="
+                showErrors &&
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+              "
+              class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                {{ $t("inventory.thisFieldIsRequired") }}
               </div>
             </div>
             <div
@@ -546,7 +624,13 @@
           <div class="col-11">
             <div
               class="cross-docking-checkout-text pb-3"
-              v-if="Object.keys(getPickUpInfoCD).length === 0"
+              v-if="
+                !(
+                  getPickUpInfoCD.location ||
+                  getPickUpInfoCD.phone ||
+                  getPickUpInfoCD.instructions
+                )
+              "
               @click="
                 setOverlayStatus({
                   overlay: true,
@@ -598,9 +682,81 @@
           <div
             class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
           >
-            <div>
-              <p class="mb-2">{{ $t("inventory.pickUpDate") }}</p>
-              <p>{{ $t("inventory.nextDayPickUp") }}</p>
+            <div class="crossdocking-documents-list-inner">
+              <p class="mb-2 d-flex">
+                <span>
+                  {{ $t("inventory.pickUpDate") }}
+                </span>
+                <span
+                  class="cross-docking-checkout-chevrons"
+                  @click="addPickupOption(index)"
+                  v-if="getPickUpInfoCD && getPickUpInfoCD.pickupSpeed"
+                >
+                  <span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.change")
+                  }}</span>
+                  <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </p>
+              <div
+                class="cross-docking-checkout-text"
+                v-if="!(getPickUpInfoCD && getPickUpInfoCD.pickupSpeed)"
+                @click="addPickupOption(index)"
+              >
+                <span>{{ $t("inventory.selectAPickUpDate") }}</span>
+                <span class="cross-docking-checkout-chevrons"
+                  ><i class="mdi mdi-chevron-right"></i
+                ></span>
+              </div>
+              <div
+                class="cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+                v-else
+              >
+                <div>
+                  <div class="delivery-details-text">
+                    <p>
+                      <span class="cross-docking-checkout-delivery-option-top">
+                        {{
+                          getPickUpInfoCD.pickupSpeed.transport_provider ===
+                          "SENDY"
+                            ? $t(
+                                `inventory.${getPickUpInfoCD.pickupSpeed.speed_pricing_type}_PICKUP`
+                              )
+                            : getPickUpInfoCD.pickupSpeed.transport_provider
+                        }}
+                      </span>
+                    </p>
+                    <p>
+                      <span
+                        class="cross-docking-checkout-delivery-option-bottom"
+                      >
+                        {{
+                          getPickUpInfoCD.pickupSpeed.transport_provider ===
+                          "SENDY"
+                            ? formatDate(
+                                getPickUpInfoCD.pickupSpeed
+                                  .speed_pricing_upper_limit_date
+                              )
+                            : getPickUpInfoCD.pickupSpeed
+                                .speed_pricing_description
+                        }}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="
+                  showErrors &&
+                  !(getPickUpInfoCD && getPickUpInfoCD.pickupSpeed)
+                "
+                class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+              >
+                <div class="col-1"></div>
+                <div class="col-11">
+                  {{ $t("inventory.thisFieldIsRequired") }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -802,6 +958,9 @@ export default {
       "getPickUpOptions",
       "getPickUpInfoCD",
       "getPickUpStation",
+      "getPickUpSpeed",
+      "getDeliverySpeed",
+      "getMismatchedDates",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -899,9 +1058,7 @@ export default {
         means_of_payment: this.defaultPaymentMethod[0]
           ? this.meansOfPaymentPayload
           : {},
-        pickups: Object.keys(this.getPickUpInfoCD).length
-          ? this.pickUpPayload
-          : [],
+        pickups: this.pickUpPayload,
         deliveries: this.deliveriesPayload,
       };
       return payload;
@@ -924,21 +1081,45 @@ export default {
     pickUpPayload() {
       return [
         {
+          local_order_uuid: localStorage.local_order_uuid,
           seller_order_reference_id: "",
           promotion_session_id: "",
           destination: {
             name: this.getBusinessDetails.business_name,
-            phone_number: this.getPickUpInfoCD.phone,
-            secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number,
+            phone_number: this.getPickUpInfoCD.phone
+              ? this.getPickUpInfoCD.phone
+              : "",
+            secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number
+              ? this.getPickUpInfoCD.secondary_phone_number
+              : "",
             delivery_location: {
-              description: this.getPickUpInfoCD.location,
-              longitude: this.getPickUpInfoCD.place.geometry.location.lng(),
-              latitude: this.getPickUpInfoCD.place.geometry.location.lat(),
+              description: this.getPickUpInfoCD.location
+                ? this.getPickUpInfoCD.location
+                : "",
+              longitude: this.getPickUpInfoCD.place
+                ? this.getPickUpInfoCD.place.geometry.location.lng()
+                : "",
+              latitude: this.getPickUpInfoCD.place
+                ? this.getPickUpInfoCD.place.geometry.location.lat()
+                : "",
             },
             house_location: "",
-            delivery_instructions: this.getPickUpInfoCD.instructions,
+            delivery_instructions: this.getPickUpInfoCD.instructions
+              ? this.getPickUpInfoCD.instructions
+              : "",
           },
           destination_policy: "DROP_AT_HUB",
+          destination_speed_policy: this.getPickUpInfoCD.pickupSpeed
+            ? {
+                transport_provider:
+                  this.getPickUpInfoCD.pickupSpeed.transport_provider,
+                speed_pricing_type:
+                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_type,
+                speed_pricing_uuid:
+                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid,
+                proposed_scheduled_date: 0,
+              }
+            : {},
         },
       ];
     },
@@ -976,6 +1157,7 @@ export default {
           });
         });
         const delivery = {
+          local_order_uuid: localStorage.local_order_uuid,
           seller_order_reference_id: destination.reference_number,
           promotion_session_id: null,
           products,
@@ -998,6 +1180,12 @@ export default {
                 }
               : {},
           destination_policy: "DELIVER_TO_BUYER",
+          destination_speed_policy: {
+            transport_provider: "SENDY",
+            speed_pricing_type: "SENDY_EXPRESS",
+            speed_pricing_uuid: "string",
+            proposed_scheduled_date: 0,
+          },
           documents,
         };
         if (
@@ -1074,6 +1262,9 @@ export default {
       "setLoader",
       "setPickUpInfoCD",
       "setPickUpOptions",
+      "setPickUpSpeed",
+      "setDeliverySpeed",
+      "setMismatchedDates",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1114,6 +1305,9 @@ export default {
         }
       });
       return stock;
+    },
+    formatDate(date) {
+      return moment(date).format("ddd, Do MMM");
     },
     changeIndex(index) {
       this.setDestinationIndex(index - 1);
@@ -1177,6 +1371,49 @@ export default {
         popup: "recepientInfoCrossdock",
       });
     },
+    addDeliveryOption(index) {
+      this.changeIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryOptionCrossdock",
+      });
+      this.mismatchedDates();
+      if (
+        this.getMismatchedDates &&
+        this.getDestinations[index - 1].products &&
+        this.getDestinations[index - 1].delivery_info
+      ) {
+        this.addPickupOption();
+      } else if (
+        !this.getDestinations[index - 1].products ||
+        !this.getDestinations[index - 1].delivery_info
+      ) {
+        this.setOverlayStatus({
+          overlay: true,
+          popup: "deliveryOptionNotice",
+        });
+      }
+    },
+    mismatchedDates() {
+      const index = this.getDestinationIndex;
+      this.setMismatchedDates(
+        this.pickUpRequired &&
+          ((this.getPickUpInfoCD.pickupSpeed &&
+            this.getDestinations[index].speed &&
+            this.getDestinations[index].speed.speed_pricing_upper_limit_date <=
+              this.getPickUpInfoCD.pickupSpeed
+                .speed_pricing_upper_limit_date) ||
+            (!this.getPickUpInfoCD.pickupSpeed &&
+              !this.getDestinations[index].speed))
+      );
+    },
+    addPickupOption() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "pickupOptionCrossdock",
+      });
+      this.mismatchedDates();
+    },
     addPaymentCollection(index) {
       this.changeIndex(index);
       this.setOverlayStatus({
@@ -1230,6 +1467,7 @@ export default {
       });
     },
     getPricing() {
+      this.getSpeed();
       const destinations = this.getDestinations;
       if (destinations.length && destinations[0].products) {
         this.setLoader({
@@ -1250,6 +1488,32 @@ export default {
           }
         });
       }
+    },
+    getSpeed() {
+      if (!localStorage.local_order_uuid) {
+        localStorage.local_order_uuid = (
+          [1e7] +
+          -1e3 +
+          -4e3 +
+          -8e3 +
+          -1e11
+        ).replace(/[018]/g, (c) =>
+          (
+            c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+          ).toString(16)
+        );
+      }
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
+        values: this.checkoutPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setPickUpSpeed(response.data.data.pickups);
+          this.setDeliverySpeed(response.data.data.deliveries);
+        }
+      });
     },
     createDelivery() {
       let fieldsPresent = [];
@@ -1647,5 +1911,13 @@ export default {
 }
 .el-collapse.el-collapse {
   border: none !important;
+}
+.cross-docking-checkout-delivery-option-top {
+  font-weight: 500 !important;
+  font-size: 19px;
+  margin-bottom: 20px;
+}
+.cross-docking-checkout-delivery-option-bottom {
+  margin-bottom: 20px;
 }
 </style>

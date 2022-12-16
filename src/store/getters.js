@@ -122,4 +122,7 @@ export default {
   getPickUpInfoCD: (state) => state.pickUpInfoCD,
   getStations: (state) => state.stations,
   getPickUpStation: (state) => state.pickUpStation,
+  getPickUpSpeed: (state) => state.pickUpSpeed,
+  getDeliverySpeed: (state) => state.deliverySpeed,
+  getMismatchedDates: (state) => state.mismatchedDates,
 };

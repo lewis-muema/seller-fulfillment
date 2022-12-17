@@ -270,5 +270,6 @@
   "deliveryOptions": "Delivery options",
   "toViewDeliveryOptions": "To view delivery options, select the products to send and fill in the delivery info",
   "scheduleDelivery": "Schedule delivery",
-  "schedulePickup": "Schedule pickup"
+  "schedulePickup": "Schedule pickup",
+  "pleaseMakeSureTheDeliveryDateIsAfter": "Please make sure the delivery date is after {Date}"
 }

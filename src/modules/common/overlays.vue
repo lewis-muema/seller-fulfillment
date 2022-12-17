@@ -1425,6 +1425,12 @@
         ></i>
       </div>
       <div>
+        <p
+          class="error-msg withdraw-transaction-error field-required-error"
+          v-if="misMatchedDatesError"
+        >
+          {{ misMatchedDatesError }}
+        </p>
         <p class="delivery-option-crossdock-title">
           {{ $t("inventory.selectDeliveryOption") }}
         </p>
@@ -1932,6 +1938,7 @@ export default {
         return;
       }
       this.overlayStatusSet(false, "deliveryOptionCrossdock");
+      this.misMatchedDatesError = "";
       if (
         destinations[index].speed &&
         this.getPickUpInfoCD.pickupSpeed &&
@@ -1982,6 +1989,14 @@ export default {
         (this.getPickUpInfoCD.pickupSpeed && !this.activeDestination.speed)
       ) {
         this.overlayStatusSet(true, "deliveryOptionCrossdock");
+        this.misMatchedDatesError = this.$t(
+          "inventory.pleaseMakeSureTheDeliveryDateIsAfter",
+          {
+            Date: this.formatDate(
+              this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+            ),
+          }
+        );
       }
     },
     showReschedulePickUpOption() {
@@ -1990,29 +2005,53 @@ export default {
       this.setPickUpInfoCD(pickUpInfoCD);
       this.overlayStatusSet(false, "reschedulePickupOption");
       this.pickUpDate = new Date();
-      this.validateScheduledDates();
+      this.validateScheduledDates("delivery");
     },
     showRescheduleDeliveryOption() {
       this.activeDestination.speed.speed_pricing_scheduled_date =
         this.deliveryDate;
       this.overlayStatusSet(false, "rescheduleDeliveryOption");
       this.deliveryDate = new Date();
-      this.validateScheduledDates();
+      this.validateScheduledDates("pickup");
     },
-    validateScheduledDates() {
+    validateScheduledDates(source) {
       const destination = this.activeDestination;
       const pickUpInfoCD = this.getPickUpInfoCD;
       if (
         destination.speed &&
         pickUpInfoCD.pickupSpeed &&
-        ((destination.speed_pricing_type === "SENDY_SCHEDULED" &&
+        ((destination.speed.speed_pricing_type === "SENDY_SCHEDULED" &&
+          pickUpInfoCD.pickupSpeed.speed_pricing_type === "SENDY_SCHEDULED" &&
           destination.speed.speed_pricing_scheduled_date <=
             pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date) ||
-          (destination.speed_pricing_type !== "SENDY_SCHEDULED" &&
+          (destination.speed.speed_pricing_type !== "SENDY_SCHEDULED" &&
+            pickUpInfoCD.pickupSpeed.speed_pricing_type === "SENDY_SCHEDULED" &&
             destination.speed.speed_pricing_upper_limit_date <=
-              pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date))
+              pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date) ||
+          (destination.speed.speed_pricing_type === "SENDY_SCHEDULED" &&
+            pickUpInfoCD.pickupSpeed.speed_pricing_type !== "SENDY_SCHEDULED" &&
+            destination.speed.speed_pricing_scheduled_date <=
+              pickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date))
       ) {
-        this.overlayStatusSet(true, "deliveryOptionCrossdock");
+        this.misMatchedDatesError =
+          source === "pickup"
+            ? this.$t("inventory.thePickUpDateCannotBeAheadOfTheDeliveryDate")
+            : this.$t("inventory.pleaseMakeSureTheDeliveryDateIsAfter", {
+                Date:
+                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
+                  "SENDY_SCHEDULED"
+                    ? this.formatDate(
+                        this.getPickUpInfoCD.pickupSpeed
+                          .speed_pricing_scheduled_date
+                      )
+                    : this.formatDate(
+                        this.getPickUpInfoCD.pickupSpeed
+                          .speed_pricing_upper_limit_date
+                      ),
+              });
+        this.overlayStatusSet(true, `${source}OptionCrossdock`);
+      } else {
+        this.misMatchedDatesError = "";
       }
     },
     removeLocation() {

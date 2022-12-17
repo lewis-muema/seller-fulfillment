@@ -676,6 +676,17 @@
           </div>
         </div>
         <div
+          v-if="
+            showErrors &&
+            pickUpRequired &&
+            !(getPickUpInfoCD.location && getPickUpInfoCD.phone)
+          "
+          class="row error-msg withdraw-transaction-error mb-3 field-required-error pt-4"
+        >
+          <div class="col-1"></div>
+          <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
+        </div>
+        <div
           class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
           v-if="getPickUpOptions.type === 'driver'"
         >
@@ -758,10 +769,9 @@
                   showErrors &&
                   !(getPickUpInfoCD && getPickUpInfoCD.pickupSpeed)
                 "
-                class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+                class="error-msg withdraw-transaction-error mb-3 field-required-error pt-4"
               >
-                <div class="col-1"></div>
-                <div class="col-11">
+                <div class="">
                   {{ $t("inventory.thisFieldIsRequired") }}
                 </div>
               </div>
@@ -806,17 +816,6 @@
             </span>
           </div>
         </div>
-      </div>
-      <div
-        v-if="
-          showErrors &&
-          pickUpRequired &&
-          !(getPickUpInfoCD.location && getPickUpInfoCD.phone)
-        "
-        class="row error-msg withdraw-transaction-error mb-3 field-required-error"
-      >
-        <div class="col-1"></div>
-        <div class="col-11">{{ $t("inventory.thisFieldIsRequired") }}</div>
       </div>
       <hr class="mt-3" />
       <div class="mt-3">
@@ -1131,7 +1130,15 @@ export default {
             speed_pricing_uuid: this.getPickUpInfoCD.pickupSpeed
               ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
               : "string",
-            proposed_scheduled_date: 0,
+            proposed_scheduled_date:
+              this.getPickUpInfoCD.pickupSpeed &&
+              this.getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
+                "SENDY_SCHEDULED"
+                ? moment(
+                    this.getPickUpInfoCD.pickupSpeed
+                      .speed_pricing_scheduled_date
+                  ).valueOf()
+                : 0,
           },
         },
       ];
@@ -1211,7 +1218,13 @@ export default {
             speed_pricing_uuid: destination.speed
               ? destination.speed.speed_pricing_uuid
               : "string",
-            proposed_scheduled_date: 0,
+            proposed_scheduled_date:
+              destination.speed &&
+              destination.speed.speed_pricing_type === "SENDY_SCHEDULED"
+                ? moment(
+                    destination.speed.speed_pricing_scheduled_date
+                  ).valueOf()
+                : 0,
           },
           documents,
         };
@@ -1565,10 +1578,12 @@ export default {
           row.products.length &&
           row.delivery_info &&
           row.recipient &&
+          row.speed &&
           (!this.pickUpRequired ||
             (this.pickUpRequired &&
               this.getPickUpInfoCD.location &&
-              this.getPickUpInfoCD.phone))
+              this.getPickUpInfoCD.phone &&
+              this.getPickUpInfoCD.pickupSpeed))
         ) {
           fieldsPresent.push(true);
         } else {
@@ -1590,7 +1605,7 @@ export default {
               message: "",
               type: "success",
             });
-
+            localStorage.removeItem("local_order_uuid");
             this.setFulfillmentFees(this.placeHolderFees);
             this.sendSegmentEvents({
               event: "Request_Delivery_to_Buyer",
@@ -1613,11 +1628,16 @@ export default {
               ],
             });
             this.setSelectedProducts([]);
-            this.setDestinations([{}]);
+            this.setDestinations([
+              {
+                expanded: 1,
+                preferences: false,
+              },
+            ]);
             this.setPickUpInfoCD({});
             this.setPickUpOptions({
-              type: "",
-              text: "",
+              type: "driver",
+              text: "inventory.sendDriverToPickTheItems",
               info: "",
               date: "",
               FC: "",
@@ -1916,6 +1936,7 @@ export default {
 }
 .field-required-error {
   margin-top: -15px !important;
+  font-size: 16px;
 }
 .crossdocking-items-line-height {
   line-height: 20px !important;

@@ -273,8 +273,9 @@
                                     .speed_pricing_type
                                 }_DELIVERY`
                               )
-                            : getDestinations[index - 1].speed
-                                .transport_provider
+                            : getDestinations[
+                                index - 1
+                              ].speed.transport_provider.replace("_", " ")
                         }}
                       </span>
                     </p>
@@ -284,13 +285,15 @@
                       >
                         {{
                           getDestinations[index - 1].speed
-                            .transport_provider === "SENDY"
+                            .speed_pricing_type === "SENDY_SCHEDULED"
                             ? formatDate(
+                                getDestinations[index - 1].speed
+                                  .speed_pricing_scheduled_date
+                              )
+                            : formatDate(
                                 getDestinations[index - 1].speed
                                   .speed_pricing_upper_limit_date
                               )
-                            : getDestinations[index - 1].speed
-                                .speed_pricing_description
                         }}
                       </span>
                     </p>
@@ -722,7 +725,10 @@
                             ? $t(
                                 `inventory.${getPickUpInfoCD.pickupSpeed.speed_pricing_type}_PICKUP`
                               )
-                            : getPickUpInfoCD.pickupSpeed.transport_provider
+                            : getPickUpInfoCD.pickupSpeed.transport_provider.replace(
+                                "_",
+                                " "
+                              )
                         }}
                       </span>
                     </p>
@@ -731,14 +737,16 @@
                         class="cross-docking-checkout-delivery-option-bottom"
                       >
                         {{
-                          getPickUpInfoCD.pickupSpeed.transport_provider ===
-                          "SENDY"
+                          getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
+                          "SENDY_SCHEDULED"
                             ? formatDate(
+                                getPickUpInfoCD.pickupSpeed
+                                  .speed_pricing_scheduled_date
+                              )
+                            : formatDate(
                                 getPickUpInfoCD.pickupSpeed
                                   .speed_pricing_upper_limit_date
                               )
-                            : getPickUpInfoCD.pickupSpeed
-                                .speed_pricing_description
                         }}
                       </span>
                     </p>
@@ -1063,6 +1071,11 @@ export default {
       };
       return payload;
     },
+    deliverySpeeds() {
+      return this.getDeliverySpeed.length
+        ? this.getDeliverySpeed[0].proposed_speeds
+        : [];
+    },
     meansOfPaymentPayload() {
       return {
         means_of_payment_type: this.getBusinessDetails.settings.payments_enabled
@@ -1081,7 +1094,7 @@ export default {
     pickUpPayload() {
       return [
         {
-          local_order_uuid: localStorage.local_order_uuid,
+          local_order_uuid: this.generateUUID("pickup"),
           seller_order_reference_id: "",
           promotion_session_id: "",
           destination: {
@@ -1092,40 +1105,40 @@ export default {
             secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number
               ? this.getPickUpInfoCD.secondary_phone_number
               : "",
-            delivery_location: {
-              description: this.getPickUpInfoCD.location
-                ? this.getPickUpInfoCD.location
-                : "",
-              longitude: this.getPickUpInfoCD.place
-                ? this.getPickUpInfoCD.place.geometry.location.lng()
-                : "",
-              latitude: this.getPickUpInfoCD.place
-                ? this.getPickUpInfoCD.place.geometry.location.lat()
-                : "",
-            },
+            delivery_location:
+              this.getPickUpInfoCD.place && this.getPickUpInfoCD.location
+                ? {
+                    description: this.getPickUpInfoCD.location,
+                    longitude:
+                      this.getPickUpInfoCD.place.geometry.location.lng(),
+                    latitude:
+                      this.getPickUpInfoCD.place.geometry.location.lat(),
+                  }
+                : null,
             house_location: "",
             delivery_instructions: this.getPickUpInfoCD.instructions
               ? this.getPickUpInfoCD.instructions
               : "",
           },
           destination_policy: "DROP_AT_HUB",
-          destination_speed_policy: this.getPickUpInfoCD.pickupSpeed
-            ? {
-                transport_provider:
-                  this.getPickUpInfoCD.pickupSpeed.transport_provider,
-                speed_pricing_type:
-                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_type,
-                speed_pricing_uuid:
-                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid,
-                proposed_scheduled_date: 0,
-              }
-            : {},
+          destination_speed_policy: {
+            transport_provider: this.getPickUpInfoCD.pickupSpeed
+              ? this.getPickUpInfoCD.pickupSpeed.transport_provider
+              : "SENDY",
+            speed_pricing_type: this.getPickUpInfoCD.pickupSpeed
+              ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_type
+              : "SENDY_EXPRESS",
+            speed_pricing_uuid: this.getPickUpInfoCD.pickupSpeed
+              ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
+              : "string",
+            proposed_scheduled_date: 0,
+          },
         },
       ];
     },
     deliveriesPayload() {
       const deliveries = [];
-      this.getDestinations.forEach((destination) => {
+      this.getDestinations.forEach((destination, i) => {
         const products = [];
         const documents = [];
         const destinationProducts = destination.products
@@ -1157,33 +1170,47 @@ export default {
           });
         });
         const delivery = {
-          local_order_uuid: localStorage.local_order_uuid,
+          local_order_uuid: this.generateUUID(`destination_${i}`),
           seller_order_reference_id: destination.reference_number,
-          promotion_session_id: null,
+          promotion_session_id: "",
           products,
-          destination:
-            destination.recipient && destination.delivery_info
+          destination: {
+            name: destination.recipient
+              ? destination.recipient.customer_name
+              : "",
+            phone_number: destination.recipient
+              ? destination.recipient.phone
+              : "",
+            secondary_phone_number: destination.recipient
+              ? destination.recipient.secondary_phone_number
+              : "",
+            delivery_location: destination.delivery_info
               ? {
-                  name: destination.recipient.customer_name,
-                  phone_number: destination.recipient.phone,
-                  secondary_phone_number:
-                    destination.recipient.secondary_phone_number,
-                  delivery_location: {
-                    description: destination.delivery_info.location,
-                    longitude:
-                      destination.delivery_info.place.geometry.location.lng(),
-                    latitude:
-                      destination.delivery_info.place.geometry.location.lat(),
-                  },
-                  house_location: destination.delivery_info.apartmentName,
-                  delivery_instructions: destination.delivery_info.instructions,
+                  description: destination.delivery_info.location,
+                  longitude:
+                    destination.delivery_info.place.geometry.location.lng(),
+                  latitude:
+                    destination.delivery_info.place.geometry.location.lat(),
                 }
-              : {},
+              : null,
+            house_location: destination.delivery_info
+              ? destination.delivery_info.apartmentName
+              : "",
+            delivery_instructions: destination.delivery_info
+              ? destination.delivery_info.instructions
+              : "",
+          },
           destination_policy: "DELIVER_TO_BUYER",
           destination_speed_policy: {
-            transport_provider: "SENDY",
-            speed_pricing_type: "SENDY_EXPRESS",
-            speed_pricing_uuid: "string",
+            transport_provider: destination.speed
+              ? destination.speed.transport_provider
+              : "SENDY",
+            speed_pricing_type: destination.speed
+              ? destination.speed.speed_pricing_type
+              : "SENDY_EXPRESS",
+            speed_pricing_uuid: destination.speed
+              ? destination.speed.speed_pricing_uuid
+              : "string",
             proposed_scheduled_date: 0,
           },
           documents,
@@ -1383,7 +1410,14 @@ export default {
         this.getDestinations[index - 1].products &&
         this.getDestinations[index - 1].delivery_info
       ) {
-        this.addPickupOption();
+        if (this.getPickUpInfoCD.pickupSpeed) {
+          this.addPickupOption();
+        } else {
+          this.setOverlayStatus({
+            overlay: true,
+            popup: "deliveryOptionCrossdock",
+          });
+        }
       } else if (
         !this.getDestinations[index - 1].products ||
         !this.getDestinations[index - 1].delivery_info
@@ -1490,20 +1524,6 @@ export default {
       }
     },
     getSpeed() {
-      if (!localStorage.local_order_uuid) {
-        localStorage.local_order_uuid = (
-          [1e7] +
-          -1e3 +
-          -4e3 +
-          -8e3 +
-          -1e11
-        ).replace(/[018]/g, (c) =>
-          (
-            c ^
-            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-          ).toString(16)
-        );
-      }
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
@@ -1514,6 +1534,27 @@ export default {
           this.setDeliverySpeed(response.data.data.deliveries);
         }
       });
+    },
+    generateUUID(name) {
+      if (!localStorage.local_order_uuid) {
+        localStorage.local_order_uuid = JSON.stringify({});
+      }
+      if (
+        localStorage.local_order_uuid &&
+        !JSON.parse(localStorage.local_order_uuid)[name]
+      ) {
+        const uuid = JSON.parse(localStorage.local_order_uuid);
+        uuid[name] = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(
+          /[018]/g,
+          (c) =>
+            (
+              c ^
+              (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+            ).toString(16)
+        );
+        localStorage.local_order_uuid = JSON.stringify(uuid);
+      }
+      return JSON.parse(localStorage.local_order_uuid)[name];
     },
     createDelivery() {
       let fieldsPresent = [];

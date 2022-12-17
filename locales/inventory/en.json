@@ -268,5 +268,7 @@
   "thePickUpDateCannotBeAheadOfTheDeliveryDate": "The pick up date can not be ahead of the delivery date, Please adjust it",
   "pleaseSelectThePickupTimeForTheUnavailable": "Please select the pickup time for the unavailable items to continue",
   "deliveryOptions": "Delivery options",
-  "toViewDeliveryOptions": "To view delivery options, select the products to send and fill in the delivery info"
+  "toViewDeliveryOptions": "To view delivery options, select the products to send and fill in the delivery info",
+  "scheduleDelivery": "Schedule delivery",
+  "schedulePickup": "Schedule pickup"
 }

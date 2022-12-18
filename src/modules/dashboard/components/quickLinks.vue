@@ -25,7 +25,7 @@ export default {
         {
           icon: "mdi-truck",
           name: "common.sendDeliveryToCustomer",
-          path: "/inventory/send-inventory/customer/select-products",
+          path: "/inventory/create-delivery",
         },
         {
           icon: "mdi-home-city",

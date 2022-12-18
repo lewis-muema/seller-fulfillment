@@ -9,8 +9,12 @@ import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
-import Statements from "../modules/payments/statements/statements.vue";
-// import Invoices from "../modules/payments/invoices/invoices.vue";
+import Transactions from "../modules/payments/transactions/transactions.vue";
+import Wallet from "../modules/payments/wallet/wallet.vue";
+import DeliveriesPendingPayment from "../modules/payments/wallet/components/deliveriesPendingPayment.vue";
+import PendingPaymentCollections from "../modules/payments/wallet/components/pendingPaymentCollections.vue";
+import TransactionDetails from "../modules/payments/wallet/components/transactionDetails.vue";
+import Withdraw from "../modules/payments/wallet/components/withdraw.vue";
 import ManageUsers from "../modules/settings/manageUsers/manageUsers.vue";
 import notifications from "../modules/settings/notifications/notifications.vue";
 import viewUser from "../modules/settings/manageUsers/components/viewUser.vue";
@@ -32,6 +36,9 @@ import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
+import AddDeliveryProducts from "../modules/inventory/crossdocking/components/productSelect.vue";
+import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 
 const routes = [
@@ -114,6 +121,21 @@ const routes = [
     component: SendProducts,
   },
   {
+    path: "/inventory/create-delivery",
+    name: "Create Delivery",
+    component: CreateDelivery,
+  },
+  {
+    path: "/inventory/add-delivery-products",
+    name: "Add Delivery Products",
+    component: AddDeliveryProducts,
+  },
+  {
+    path: "/inventory/add-delivery-quantities",
+    name: "Add Delivery Quantities",
+    component: AddDeliveryQuantities,
+  },
+  {
     path: "/deliveries/customer/:tab?/:date?",
     name: "To Customers",
     component: Customers,
@@ -134,15 +156,35 @@ const routes = [
     component: editOrder,
   },
   {
-    path: "/payments/billings",
-    name: "Billings",
-    component: Statements,
+    path: "/payments/transactions",
+    name: "Transactions",
+    component: Transactions,
   },
-  // {
-  //   path: "/payments/invoices",
-  //   name: "Invoices",
-  //   component: Invoices,
-  // },
+  {
+    path: "/payments/wallet",
+    name: "Wallet",
+    component: Wallet,
+  },
+  {
+    path: "/payments/deliveries-pending-payment/:cycle_id",
+    name: "Deliveries pending payment",
+    component: DeliveriesPendingPayment,
+  },
+  {
+    path: "/payments/pending-payment-collections",
+    name: "Pending payment collections",
+    component: PendingPaymentCollections,
+  },
+  {
+    path: "/payments/transaction-details",
+    name: "Transaction details",
+    component: TransactionDetails,
+  },
+  {
+    path: "/payments/withdraw",
+    name: "Withdraw",
+    component: Withdraw,
+  },
   {
     path: "/payments/view-invoice/:invoice_id?",
     name: "View Invoice",

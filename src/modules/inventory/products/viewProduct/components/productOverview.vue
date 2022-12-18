@@ -103,7 +103,7 @@
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
-                  ? variant.product_variant_stock_levels.quantity_in_inventory
+                  ? variant.product_variant_stock_levels.available
                   : "-"
               }}
             </span>
@@ -127,19 +127,6 @@
               }}
             </span>
           </td>
-          <!-- <td v-if="product.product_variants">
-            <product-variants
-              @close="showProductVariants = false"
-              :visible="showProductVariants"
-              :incoming="
-                variant.product_variant_stock_levels.quantity_in_inventory
-              "
-              :available="variant.product_variant_stock_levels.available"
-              :committed="
-                variant.product_variant_stock_levels.quantity_in_sales_orders
-              "
-            />
-          </td> -->
         </tr>
       </tbody>
     </v-table>
@@ -211,12 +198,8 @@ export default {
     ...mapGetters(["getProduct", "getLoader"]),
     variants() {
       const res = [];
-      this.product.product_variants.forEach((row, i) => {
-        if (
-          (this.product.product_variants.length === 1 ||
-            (this.product.product_variants.length > 1 && i >= 1)) &&
-          !row.product_variant_archived
-        ) {
+      this.product.product_variants.forEach((row) => {
+        if (!row.product_variant_archived) {
           res.push(row);
         }
       });
@@ -232,7 +215,7 @@ export default {
       product.product_variants.forEach((row) => {
         total =
           total + row.product_variant_stock_levels
-            ? row.product_variant_stock_levels.quantity_in_inventory
+            ? row.product_variant_stock_levels.available
             : 0;
       });
       if (product.product_variants.length === 1) {

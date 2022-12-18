@@ -49,11 +49,15 @@
                     {{ content.title ? $t(content.title) : "" }}
                   </div>
                 </v-list-item-title>
-                <v-list-item-subtitle v-if="activeStep === i" class="mt-1">{{
-                  content.text ? $t(content.text) : ""
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-if="buttonVisible(content.key, i)"
+                  class="mt-1"
+                  >{{
+                    content.text ? $t(content.text) : ""
+                  }}</v-list-item-subtitle
+                >
                 <button
-                  v-if="!getAchievements[content.key] && activeStep === i"
+                  v-if="buttonVisible(content.key, i)"
                   type="submit"
                   class="btn btn-primary desktop-content-button"
                   @click="$router.push(content.link)"
@@ -144,7 +148,7 @@ export default {
           button: "dashboard.deliverToACustomer",
           icon: "mdi-check-circle",
           key: "created_at_least_one_delivery_order",
-          link: "/inventory/send-inventory/customer/select-products",
+          link: "/inventory/create-delivery",
         },
       ],
       dashboardLinks: [
@@ -164,7 +168,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserDetails", "getAchievements"]),
+    ...mapGetters(["getUserDetails", "getBusinessDetails", "getAchievements"]),
     activeStep() {
       let step = 0;
       this.dashboardContent.forEach((row, i) => {
@@ -173,6 +177,11 @@ export default {
         }
       });
       return step;
+    },
+    crossDockingFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.cross_docking_enabled
+        : false;
     },
   },
   mounted() {
@@ -185,6 +194,14 @@ export default {
     },
     redirect(link) {
       window.open(link);
+    },
+    buttonVisible(key, i) {
+      return (
+        (!this.getAchievements[key] && this.activeStep === i) ||
+        (key === "created_at_least_one_delivery_order" &&
+          this.activeStep + 1 === i &&
+          this.crossDockingFlag)
+      );
     },
   },
 };

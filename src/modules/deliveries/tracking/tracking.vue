@@ -130,6 +130,7 @@ import deliveryInfo from "./components/deliveryInfo.vue";
 import products from "./components/products.vue";
 import failedDelivery from "./components/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import trackingPayloadMixin from "../../../mixins/tracking_payload";
 
 export default {
   components: {
@@ -138,6 +139,7 @@ export default {
     products,
     failedDelivery,
   },
+  mixins: [trackingPayloadMixin],
   data() {
     return {
       orderNo: "AQW4567787",
@@ -224,7 +226,7 @@ export default {
       "setDeliveryActions",
       "setProductsToSubmit",
     ]),
-    ...mapActions(["requestAxiosGet"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
       this.setLoader({
         type: "orderTracking",
@@ -250,6 +252,7 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.calculateSpeed();
           this.setProductsToSubmit(response.data.data.order.products);
           if (response.data.data.order.order_type === "PICKUP") {
             this.setParent("sendy");
@@ -302,6 +305,18 @@ export default {
     },
     formatDateComplete(date) {
       return moment(date).format("dddd, Do MMM YYYY");
+    },
+    calculateSpeed() {
+      console.log("speed", this.calculateSpeedPayload);
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
+        values: this.calculateSpeedPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliverySpeed(response.data.data.deliveries);
+        }
+      });
     },
   },
 };

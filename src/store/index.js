@@ -58,7 +58,7 @@ export default createStore({
       loginData: {},
       googleConfirmData: {},
       session: {},
-      editStatus: false,
+      editedDocuments: [],
       signUpwithGoogle: false,
       OTPRedirectUrl: "",
       allProductCount: 0,
@@ -374,6 +374,7 @@ export default createStore({
         overlay: false,
         popup: "",
         popText: "",
+        editStatus: false,
       },
       tab: "All",
       loader: {

@@ -15,7 +15,7 @@ export default {
   getRecepientInfo: (state) => state.recepientInfo,
   getEdittedDocuments: (state) => state.edittedDocuments,
   getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
-  getEditStatus: (state) => state.editStatus,
+  getEditedDocuments: (state) => state.editedDocuments,
   getPickupInfo: (state) => state.pickupInfo,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,

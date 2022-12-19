@@ -1259,7 +1259,6 @@
           <p class="crossdocking-add-document-titles">
             {{ $t("inventory.whatTypeOfDocumentIsThis") }}
           </p>
-          TT --- {{ documentType }}
           <v-select
             v-model="documentType"
             :items="documentTypes"
@@ -1297,7 +1296,7 @@
               (documentType === 'Other' && !documentTitle)
             "
             class="cross-docking-upload-doc"
-            @click="gettEditStatus ? addPDFDocument() : editPDFDocument()"
+            @click="editStatus === true ? editPDFDocument() : addPDFDocument()"
           >
             {{ $t("inventory.uploadDocument") }}
           </v-btn>
@@ -1327,7 +1326,7 @@
     <div v-if="popup === 'addRemoveDocument'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label view-products-label-recepient-info">
-          Add/remove documents
+          {{ $t("deliveries.addRemoveDocuments") }}
         </p>
         <i
           @click="overlayStatusSet(false, 'addRemoveDocument')"
@@ -1351,7 +1350,7 @@
             </template>
             <v-list>
               <v-list-item v-for="(option, i) in options" :key="i">
-                <v-list-item-title @click="execute(option.action, index, x)">{{
+                <v-list-item-title @click="execute(option.action, x)">{{
                   option.title
                 }}</v-list-item-title>
               </v-list-item>
@@ -1360,14 +1359,16 @@
         </div>
       </div>
       <p class="edit-delivery edit-delivery-override">
-        <span @click="uploadAnotherDocument()"> Upload another document </span>
+        <span @click="uploadAnotherDocument()"
+          >+ {{ $t("deliveries.uploadAnotherDocument") }}
+        </span>
       </p>
       <v-btn
         class="edit-info-submit-button"
         v-loading="buttonLoader"
         @click="submitDelivery()"
       >
-        Save
+        {{ $t("deliveries.save") }}
       </v-btn>
     </div>
     <div v-if="popup === 'pickItems'" class="view-products-container">
@@ -1448,6 +1449,42 @@
         :disabled="pickUpStation === ''"
         v-loading="buttonLoader"
         @click="submitPickStation()"
+      >
+        {{ $t("inventory.done") }}
+      </v-btn>
+    </div>
+    <div v-if="popup === 'editspeed'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'editspeed')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>Edit delivery date</p>
+        <el-radio-group v-model="deliverySpeed">
+          <div
+            class="delivery-speed-overlay-border-top padding-override"
+            v-for="(speed, i) in speedOptions"
+            :key="i"
+          >
+            <el-radio :label="i" size="large">
+              <div class="d-flex delivery-speed-container">
+                <span>
+                  <div class="delivery-speed-text">{{ speed.name }}</div>
+                  <div class="delivery-speed-text-day">{{ speed.day }}</div>
+                </span>
+                <div class="delivery-speed-kes">{{ speed.price }}</div>
+              </div>
+            </el-radio>
+          </div>
+        </el-radio-group>
+      </div>
+      <v-btn
+        class="edit-info-submit-button"
+        :disabled="pickUpStation === ''"
+        v-loading="buttonLoader"
+        @click="test()"
       >
         {{ $t("inventory.done") }}
       </v-btn>
@@ -1615,6 +1652,7 @@ import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
+import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
@@ -1625,18 +1663,20 @@ export default {
   },
   props: ["overlayVal", "editInfo"],
   components: { Datepicker },
-  mixins: [upload_img],
+  mixins: [upload_img, trackingPayloadMixin],
   data() {
     return {
       overlay: false,
       popup: "",
       popText: "",
+      editStatus: false,
       amount: "780",
       currency: "KES",
       name: "Judy",
       orders: 3,
       promoCode: "",
       newPrice: "",
+      deliverySpeed: "",
       newCurrency: "",
       date: new Date(),
       location: "",
@@ -1659,6 +1699,28 @@ export default {
         {
           label: "deliveries.duplicateOrder",
           value: "deliveries.duplicateOrder",
+        },
+      ],
+      speedOptions: [
+        {
+          name: "Same day delivery",
+          day: "Wed 25th",
+          price: "350",
+        },
+        {
+          name: "Same day delivery",
+          day: "Wed 25th",
+          price: "350",
+        },
+        {
+          name: "Same day delivery",
+          day: "Wed 25th",
+          price: "350",
+        },
+        {
+          name: "Same day delivery",
+          day: "Wed 25th",
+          price: "350",
         },
       ],
       paymentCollection: "",
@@ -1713,6 +1775,7 @@ export default {
       this.overlay = val.overlay;
       this.popup = val.popup;
       this.popText = val.popText;
+      this.editStatus = val.editStatus;
       if (this.getSelectedProducts[this.getEditedPriceIndex]) {
         const optionCurrency = this.getSelectedProducts[
           this.getEditedPriceIndex
@@ -1811,83 +1874,6 @@ export default {
         ? this.getBusinessDetails.settings.payments_on_delivery_enabled
         : false;
     },
-    podPayload() {
-      const costsToCollect = [];
-      if (
-        (this.deliveryFeeCollection === "fee" ||
-          this.deliveryFeeCollection === "nofee") &&
-        this.paymentOnDeliveryFlag
-      ) {
-        costsToCollect.push({
-          cost_type: "SALE_OF_GOOD",
-        });
-      }
-      if (this.deliveryFeeCollection === "fee") {
-        costsToCollect.push({
-          cost_type: "DELIVERY_FEE",
-          cost_amount: this.deliveryFeeAmount,
-          currency: this.getBusinessDetails.currency,
-        });
-      }
-      return costsToCollect;
-    },
-    destinationPayload() {
-      const order = this.getOrderTrackingData.order;
-      const payload = {
-        name: this.customerName ? this.customerName : order.destination.name,
-        phone_number: this.phone ? this.phone : order.destination.phone_number,
-        secondary_phone_number: this.secPhone
-          ? this.secPhone
-          : order.destination.secondary_phone_number,
-        delivery_location: {
-          description: this.location
-            ? this.location
-            : order.destination.delivery_location.description,
-          longitude: this.locationData.geometry
-            ? this.locationData.geometry.location.lng()
-            : order.destination.delivery_location.longitude,
-          latitude: this.locationData.geometry
-            ? this.locationData.geometry.location.lat()
-            : order.destination.delivery_location.latitude,
-        },
-        house_location: this.apartmentName
-          ? this.apartmentName
-          : order.destination.house_location,
-        delivery_instructions: this.instructions
-          ? this.instructions
-          : order.destination.delivery_instructions,
-      };
-      return payload;
-    },
-    documentsPayload() {
-      const documents = [];
-      this.mapEdittedDocuments.forEach((row) => {
-        documents.push({
-          document_type: row.document_type.toUpperCase(),
-          document_url: row.document_url,
-          document_description: row.document_description,
-        });
-      });
-      return documents;
-    },
-    meansOfPaymentsPayload() {
-      const meansOfPayment =
-        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
-      const payload = {
-        means_of_payment_type: meansOfPayment.means_of_payment_type,
-        means_of_payment_identifier: meansOfPayment.means_of_payment_id,
-        participant_type: meansOfPayment.participant_type,
-        participant_id: meansOfPayment.participant_id,
-        meta_data: meansOfPayment.meta_data,
-      };
-      return payload;
-    },
-    mapEdittedDocuments() {
-      const documents = this.getOrderTrackingData.order.documents.slice();
-      const addedDocuments = this.getEdittedDocuments;
-      const finalDocuments = [...documents, ...addedDocuments];
-      return finalDocuments;
-    },
     paymentStatuses() {
       let paymentStatus = "";
       if (
@@ -1942,6 +1928,7 @@ export default {
       "setOverlayStatus",
       "setEdittedDocuments",
       "setEditStatus",
+      "setDocumentURL",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2023,7 +2010,6 @@ export default {
         document_url: this.PDF,
         document_description: this.documentTitle,
       };
-      console.log("documentType", docObj);
       if (this.documents.length > 0) {
         this.getEdittedDocuments.forEach((document) => {
           const existingDoc = this.documents.findIndex(
@@ -2031,7 +2017,6 @@ export default {
               x.document_url === document.document_url &&
               x.document_type === document.document_type
           );
-          console.log("existing", existingDoc);
           if (existingDoc === -1) {
             this.documents.push(docObj);
           }
@@ -2052,9 +2037,8 @@ export default {
       this.setOverlayStatus({
         overlay: true,
         popup: "deliveryDocuments",
+        editStatus: true,
       });
-      this.setEditStatus(true);
-      this.setEditStatus(false);
     },
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -2301,15 +2285,7 @@ export default {
     },
     async submitDelivery() {
       this.buttonLoader = true;
-      const payload = {
-        means_of_payment: this.meansOfPaymentsPayload,
-        destination: this.destinationPayload,
-        sale_of_goods_policy: {
-          costs_to_collect: this.podPayload,
-        },
-        documents: this.documentsPayload,
-        dates: {},
-      };
+      const payload = this.submitDeliveryPayload;
       if (!this.partnerNotAssigned) {
         delete payload.destination.delivery_location;
       }
@@ -2533,7 +2509,28 @@ export default {
       this.recepientOption = "individual";
       this.deliveryFeeCollection = this.paymentStatuses;
       this.deliveryFeeAmount = this.deliveryFee;
-      // this.documentType = val.order.documents;
+    },
+    execute(option, index) {
+      if (option === "viewDocument") {
+        this.setDocumentURL(
+          this.getOrderTrackingData.order.documents[index].document_url
+        );
+        this.setOverlayStatus({
+          overlay: true,
+          popup: "viewDocument",
+        });
+      } else {
+        console.log("here");
+        const data = this.mapEdittedDocuments;
+        console.log(data);
+        // const newArray = [...data];
+        // let key = newArray.findIndex((i) => index === i);
+
+        // newArray.splice(key, 1);
+
+        // this.mapEdittedDocuments = newArray;
+        data.splice(index, 1);
+      }
     },
   },
 };
@@ -2916,6 +2913,27 @@ export default {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   padding: 20px;
+}
+.delivery-speed-overlay-border-top {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 15px;
+}
+.delivery-speed-kes {
+  margin-left: 120px;
+}
+.delivery-speed-text {
+  font-size: 17px !important;
+  font-weight: 300;
+}
+.delivery-speed-text-day {
+  font-size: 15px !important;
+  font-weight: 300;
+}
+.delivery-speed-container {
+  padding-left: 10px;
 }
 .payment-collection-overlay-border-bottom {
   width: 100%;

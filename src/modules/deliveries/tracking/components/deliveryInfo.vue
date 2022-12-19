@@ -12,8 +12,7 @@
             setOverlayStatus({
               overlay: true,
               popup: cantEditDeliveryRecipientInfo ? 'noEdits' : 'pickupInfo',
-              popText:
-                'You can’t edit the pickup info at the moment because a driver has been assigned to deliver your order.',
+              popText: this.pickups,
             })
           "
         >
@@ -121,8 +120,7 @@
             setOverlayStatus({
               overlay: true,
               popup: cantEditDeliveryRecipientInfo ? 'noEdits' : 'deliveryInfo',
-              popText:
-                'You can’t edit the delivery info at the moment because a driver has been assigned to deliver your order.',
+              popText: this.deliveryInfo,
             })
           "
         >
@@ -159,8 +157,7 @@
               popup: cantEditDeliveryRecipientInfo
                 ? 'noEdits'
                 : 'recepientInfo',
-              popText:
-                'You can’t edit the recipient info at the moment because a driver has been assigned to deliver your order.',
+              popText: this.recipientInfo,
             })
           "
         >
@@ -191,7 +188,7 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: 'reschedule',
+                popup: 'editspeed',
               })
             "
           >
@@ -209,13 +206,12 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: cantEditDocumentsInfo ? 'noEdits' : 'addRemoveDocument',
-                popText:
-                  'You can’t edit the documents at the moment because a driver has been assigned to deliver your order.',
+                popup: cantEditDocumentsInfo ? 'addRemoveDocument' : 'noEdits',
+                popText: this.documentsInfo,
               })
             "
           >
-            Manage documents
+            {{ $t("deliveries.manageDocuments") }}
           </span>
         </p>
         <p class="delivery-info-data mb-2">
@@ -301,12 +297,11 @@
                 setOverlayStatus({
                   overlay: true,
                   popup: 'editpaymentCollection',
-                  popText:
-                    'You can’t edit the payments collection at the moment because a driver has been assigned to deliver your order.',
+                  popText: this.pod,
                 })
               "
             >
-              Edit payment collection
+              {{ $t("deliveries.editPOD") }}
             </span>
           </p>
         </div>
@@ -346,6 +341,11 @@ export default {
       overlay: false,
       editInfo: false,
       view: false,
+      pickups: this.$t("deliveries.cantEditPickups"),
+      deliveryInfo: this.$t("deliveries.cantEditDelivery"),
+      recipientInfo: this.$t("deliveries.cantEditRecipient"),
+      documentsInfo: this.$t("deliveries.cantEditDocs"),
+      pod: this.$t("deliveries.cantEditPod"),
     };
   },
   computed: {

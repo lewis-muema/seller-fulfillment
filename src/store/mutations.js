@@ -362,8 +362,8 @@ export default {
   setEdittedDocuments(state, val) {
     state.edittedDocuments = val;
   },
-  setEditStatus(state, val) {
-    state.editStatus = val;
+  setEditedDocuments(state, val) {
+    state.editedDocuments = val;
   },
   setFinalDocumentsToEdit(state, val) {
     state.finalDocumentsToEdit = val;

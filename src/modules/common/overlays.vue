@@ -1021,7 +1021,8 @@
               <p class="mb-2 ml-3">
                 {{
                   $t("inventory.deliveryFeeAmount", {
-                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency}
+                                ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
                   })
                 }}
               </p>
@@ -1453,41 +1454,65 @@
         {{ $t("inventory.done") }}
       </v-btn>
     </div>
-    <div v-if="popup === 'editspeed'" class="view-products-container">
+    <div v-if="popup === 'editSpeed'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <i
-          @click="overlayStatusSet(false, 'editspeed')"
+          @click="overlayStatusSet(false, 'editSpeed')"
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
       <div>
-        <p>Edit delivery date</p>
-        <el-radio-group v-model="deliverySpeed">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.selectDeliveryOption") }}
+        </p>
+        <el-radio-group
+          v-model="deliveryOption"
+          class="delivery-option-crossdock-radio-group"
+        >
           <div
-            class="delivery-speed-overlay-border-top padding-override"
-            v-for="(speed, i) in speedOptions"
+            class="delivery-option-crossdock-radio padding-override"
+            v-for="(speed, i) in deliverySpeedOptions"
             :key="i"
           >
-            <el-radio :label="i" size="large">
-              <div class="d-flex delivery-speed-container">
-                <span>
-                  <div class="delivery-speed-text">{{ speed.name }}</div>
-                  <div class="delivery-speed-text-day">{{ speed.day }}</div>
-                </span>
-                <div class="delivery-speed-kes">{{ speed.price }}</div>
+            <el-radio
+              :label="i"
+              size="large"
+              class="delivery-option-crossdock-radio-group"
+            >
+              <div class="font-override recepient-info-label">
+                <div class="delivery-option-crossdock-radio-group">
+                  <span>
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
+                        : speed.transport_provider.replace("_", " ")
+                    }}
+                  </span>
+                  <span class="delivery-option-crossdock-radio-right">
+                    {{ speed.currency }} {{ speed.price }}
+                  </span>
+                </div>
+                <div class="delivery-option-crossdock-radio-group-bottom">
+                  {{
+                    speed.transport_provider === "SENDY"
+                      ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                        ? $t("inventory.selectADateOfYourChoice")
+                        : formatDate(speed.speed_pricing_upper_limit_date)
+                      : formatDate(speed.speed_pricing_upper_limit_date)
+                  }}
+                </div>
               </div>
             </el-radio>
           </div>
         </el-radio-group>
+        <v-btn
+          class="edit-info-submit-button"
+          v-loading="buttonLoader"
+          @click="submitDeliveryOption()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
       </div>
-      <v-btn
-        class="edit-info-submit-button"
-        :disabled="pickUpStation === ''"
-        v-loading="buttonLoader"
-        @click="test()"
-      >
-        {{ $t("inventory.done") }}
-      </v-btn>
     </div>
     <div v-if="popup === 'pickUpInfoCrossDock'" class="view-products-container">
       <div class="view-products-section">
@@ -1675,6 +1700,7 @@ export default {
       name: "Judy",
       orders: 3,
       promoCode: "",
+      deliveryOption: "",
       newPrice: "",
       deliverySpeed: "",
       newCurrency: "",
@@ -1825,6 +1851,7 @@ export default {
       "getPickUpInfoCD",
       "getEdittedDocuments",
       "getEditStatus",
+      "getDeliverySpeed",
     ]),
     partnerNotAssigned() {
       return (
@@ -1894,6 +1921,9 @@ export default {
       }
       return paymentStatus;
     },
+    deliverySpeedOptions() {
+      return this.getDeliverySpeed[0]?.proposed_speeds;
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -1929,6 +1959,7 @@ export default {
       "setEdittedDocuments",
       "setEditStatus",
       "setDocumentURL",
+      "setDeliverySpeed",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2345,6 +2376,12 @@ export default {
         }
       });
     },
+    formatTime(time) {
+      return moment(time).format("Do MMM h:mm a");
+    },
+    formatDate(date) {
+      return moment(date).format("ddd, Do MMM");
+    },
     cancel() {
       this.buttonLoader = true;
       this.requestAxiosPut({
@@ -2404,9 +2441,6 @@ export default {
     redirect(status, popup, link) {
       this.overlayStatusSet(status, popup);
       this.$router.push(link);
-    },
-    formatTime(time) {
-      return moment(time).format("Do MMM h:mm a");
     },
     updatePrice() {
       if (this.getSelectedProducts[this.getEditedPriceIndex].selectedOption) {
@@ -2506,7 +2540,10 @@ export default {
       this.instructions = val.order.destination.delivery_instructions;
       this.date = new Date(val.order.scheduled_date);
       this.apartmentName = val.order.destination.house_location;
-      this.recepientOption = "individual";
+      this.recepientOption =
+        val.order.destination.buyer_type !== null
+          ? val.order.destination.buyer_type
+          : "individual";
       this.deliveryFeeCollection = this.paymentStatuses;
       this.deliveryFeeAmount = this.deliveryFee;
     },
@@ -2520,15 +2557,7 @@ export default {
           popup: "viewDocument",
         });
       } else {
-        console.log("here");
         const data = this.mapEdittedDocuments;
-        console.log(data);
-        // const newArray = [...data];
-        // let key = newArray.findIndex((i) => index === i);
-
-        // newArray.splice(key, 1);
-
-        // this.mapEdittedDocuments = newArray;
         data.splice(index, 1);
       }
     },
@@ -2544,22 +2573,27 @@ export default {
   padding: 40px;
   font-family: "DM Sans";
 }
+
 .vuejs3-datepicker div:first-child {
   display: none !important;
 }
+
 .tracking-reschedule-title-section {
   margin-bottom: 20px;
   display: flex;
 }
+
 .tracking-reschedule-title-label {
   font-size: 15px;
   width: 60%;
 }
+
 .tracking-reschedule-title-close {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .tracking-reschedule-submit-button {
   margin-top: 40px;
   width: 150px;
@@ -2569,9 +2603,11 @@ export default {
   background: #324ba8;
   margin-left: auto;
 }
+
 .vuejs3-datepicker__calendar {
   box-shadow: none !important;
 }
+
 .tracking-order-actions-btn {
   float: right;
   margin-right: 5%;
@@ -2580,10 +2616,12 @@ export default {
   letter-spacing: 0px;
   border: 1px solid #e0e0e0;
 }
+
 .tracking-cancel-title-label {
   font-size: 15px;
   width: 80%;
 }
+
 .tracking-cancel-button {
   width: -webkit-fill-available;
   text-transform: capitalize;
@@ -2592,6 +2630,7 @@ export default {
   background: #9b101c;
   margin-left: auto;
 }
+
 .make-payment-label {
   font-size: 18px;
   width: 100%;
@@ -2600,63 +2639,80 @@ export default {
   margin-left: 20px;
   margin-top: 40px;
 }
+
 .make-payment-lower-section {
   text-align: center;
 }
+
 .make-payment-upper-section {
   margin-bottom: 0px !important;
 }
+
 .make-payment-alert-icon {
   color: #ee7d00;
   font-size: 60px;
 }
+
 .make-payment-description {
   color: #606266;
   margin-top: 0px;
 }
+
 .make-payment-amount {
   font-weight: 700;
 }
+
 .edit-price-title {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .edit-price-description {
   display: flex;
   color: #7f3b02;
 }
+
 .edit-price-description-text {
   margin-left: 10px;
 }
+
 .margin-override {
   margin: 0px !important;
 }
+
 .fees-left-override {
   float: right;
   margin-left: auto;
 }
+
 .fees-row {
   display: flex;
   height: 70px;
   align-items: center;
 }
+
 .fee-margin-top {
   margin-top: 40px;
 }
+
 .fee-padding-bottom {
   padding-bottom: 40px;
 }
+
 .fees-bold {
   font-weight: 500;
 }
+
 .fees-subtitle {
   font-size: 12px;
   color: #606266;
 }
+
 .fees-divider {
   border-bottom: 1px solid #e2e7ed;
 }
+
 .pricing-docs-link {
   color: #324ba8;
   cursor: pointer;
@@ -2664,14 +2720,17 @@ export default {
   align-items: center;
   font-size: 15px;
 }
+
 .crossdock-recipient-details-text {
   margin: 1rem 0px 1rem 0px !important;
 }
+
 .fees-title {
   display: flex;
   align-items: flex-end;
   padding-bottom: 10px;
 }
+
 .delivery-code {
   font-size: 40px;
   font-weight: 500;
@@ -2679,10 +2738,12 @@ export default {
   text-align: center;
   margin: 30px;
 }
+
 .recepient-info-icons {
   font-size: 20px !important;
   padding-right: 6px !important;
 }
+
 .user-added-container {
   background: white;
   display: flex;
@@ -2692,51 +2753,63 @@ export default {
   border-radius: 5px;
   font-family: "DM Sans";
 }
+
 .user-added-section {
   display: flex;
 }
+
 .user-added-label {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .user-added-close-icon {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .user-added-row-top {
   display: flex;
   padding-bottom: 15px;
   border-bottom: 0.6px solid #c0c4cc78;
   margin-bottom: 15px;
 }
+
 .user-added-row-top-name {
   margin-bottom: 0px;
 }
+
 .user-added-row-top-variant {
   color: #606266;
 }
+
 .user-added-row-top-left {
   margin-left: 20px;
 }
+
 .user-added-row-top-right {
   font-weight: 500;
   font-size: 16px;
   margin-left: auto;
 }
+
 .user-added-row-bottom {
   color: #606266;
   margin-bottom: 20px;
 }
+
 .user-added-img {
   width: 40px;
 }
+
 .user-added-close {
   width: 100%;
   display: flex;
   align-items: flex-end;
 }
+
 .user-added-check {
   font-size: 60px;
   color: #116f28;
@@ -2749,21 +2822,25 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .user-added-section-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .user-added-title {
   color: #303133;
   font-weight: 500;
 }
+
 .user-added-description {
   color: #303133;
   font-size: 14px;
   width: 75%;
   text-align: center;
 }
+
 .resend-invite-container {
   background: white;
   display: flex;
@@ -2773,68 +2850,84 @@ export default {
   border-radius: 5px;
   font-family: "DM Sans";
 }
+
 .resend-invite-section {
   display: flex;
 }
+
 .resend-invite-label {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .resend-invite-close-icon {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .resend-invite-row-top {
   display: flex;
   padding-bottom: 15px;
   border-bottom: 0.6px solid #c0c4cc78;
   margin-bottom: 15px;
 }
+
 .resend-invite-row-top-name {
   margin-bottom: 0px;
 }
+
 .resend-invite-row-top-variant {
   color: #606266;
 }
+
 .resend-invite-row-top-left {
   margin-left: 20px;
 }
+
 .resend-invite-row-top-right {
   font-weight: 500;
   font-size: 16px;
   margin-left: auto;
 }
+
 .resend-invite-row-bottom {
   color: #606266;
   margin-bottom: 20px;
 }
+
 .resend-invite-img {
   width: 40px;
 }
+
 .recepient-info-label {
   padding-left: 10px !important;
 }
+
 .resend-invite-close {
   width: 100%;
   display: flex;
   align-items: flex-end;
 }
+
 .resend-invite-check {
   font-size: 60px;
   color: #116f28;
   margin-bottom: 20px;
 }
+
 .resend-invite-section-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .resend-invite-title {
   color: #303133;
   margin-bottom: 0px;
 }
+
 .resend-invite-description {
   color: #303133;
   font-size: 18px;
@@ -2846,15 +2939,18 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .deactivate-user-description {
   color: #909399;
 }
+
 .deactivate-user-no {
   color: #909399;
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
 }
+
 .edit-info-submit-button:disabled {
   margin-top: 40px;
   text-transform: capitalize;
@@ -2863,6 +2959,7 @@ export default {
   background: #d3ddf6 !important;
   width: -webkit-fill-available;
 }
+
 .cross-docking-upload-doc:disabled {
   text-transform: capitalize;
   letter-spacing: 0px;
@@ -2871,6 +2968,7 @@ export default {
   width: -webkit-fill-available;
   height: 50px !important;
 }
+
 .cross-docking-upload-doc {
   text-transform: capitalize;
   letter-spacing: 0px;
@@ -2879,6 +2977,7 @@ export default {
   width: -webkit-fill-available;
   height: 50px !important;
 }
+
 .get-help-button {
   width: 100%;
   margin-top: 20px;
@@ -2890,23 +2989,29 @@ export default {
   font-size: 16px;
   font-weight: 400 !important;
 }
+
 .export-popup-buttons {
   display: flex;
   align-items: center;
 }
+
 .export-CSV-button {
   margin-left: 70px;
   width: 260px;
 }
+
 .export-CSV-description {
   color: #606266;
 }
+
 .businessProfile-address:disabled {
   background: #e2e7ed !important;
 }
+
 .businessProfile-field:disabled {
   background: #e2e7ed !important;
 }
+
 .payment-collection-overlay-border-top {
   width: 100%;
   border: 1px solid #e2e7ed;
@@ -2914,27 +3019,82 @@ export default {
   border-top-left-radius: 10px;
   padding: 20px;
 }
-.delivery-speed-overlay-border-top {
+
+.crossdocking-remove-order-button {
+  height: 50px;
+  margin: 10px 0px 0px 0px;
+  background: #9b101c;
+  width: -webkit-fill-available;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: white !important;
+  font-size: 16px;
+}
+
+.crossdocking-dont-remove-order-button {
+  box-shadow: none !important;
+  color: #909399 !important;
+  margin-top: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delivery-option-crossdock-radio {
   width: 100%;
   border: 1px solid #e2e7ed;
   border-radius: 10px;
   padding: 20px;
-  margin-top: 15px;
+  height: 75px;
+  margin: 5px 0px;
 }
-.delivery-speed-kes {
-  margin-left: 120px;
+
+.delivery-option-crossdock-radio-group,
+.delivery-option-crossdock-radio-group .el-radio__label {
+  width: 100%;
 }
-.delivery-speed-text {
+
+.delivery-option-crossdock-radio-right {
+  float: right;
+}
+
+.delivery-option-crossdock-radio-group .el-radio__label {
   font-size: 17px !important;
-  font-weight: 300;
+  color: #303133;
+  margin-top: 10px !important;
+  margin-bottom: 2px !important;
 }
-.delivery-speed-text-day {
-  font-size: 15px !important;
-  font-weight: 300;
+
+.delivery-option-crossdock-radio-group-bottom {
+  color: #909399;
+  font-size: 14px;
+  padding-top: 3px;
 }
-.delivery-speed-container {
-  padding-left: 10px;
+
+.delivery-option-crossdock-title {
+  font-weight: 500;
+  font-size: 17px;
 }
+
+.delivery-option-notice-icon {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border-radius: 40px;
+  background: #d3ddf6;
+  color: #324ba8;
+  margin: 20px auto;
+}
+
+.delivery-option-notice-message {
+  text-align: center;
+  font-size: 19px;
+  margin-bottom: -10px;
+}
+
 .payment-collection-overlay-border-bottom {
   width: 100%;
   border: 1px solid #e2e7ed;
@@ -2943,37 +3103,46 @@ export default {
   padding: 20px;
   border-top: none;
 }
+
 .el-radio__input.is-checked + .el-radio__label {
   color: var(--el-radio-text-color) !important;
 }
+
 .el-radio__input.is-checked .el-radio__inner {
   border-color: #0062db !important;
   background: #0062db !important;
 }
+
 .payment-collection-overlay-title {
   font-size: 16px;
   font-weight: 500;
 }
+
 .padding-override {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
 }
+
 .font-override {
   font-weight: 400 !important;
 }
+
 .delivery-fee-collection-overlay-title {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
 }
+
 .payment-breakdown-amount {
   color: #909399;
   font-size: 15px;
   margin-bottom: 5px;
 }
+
 .payment-breakdown-title {
   font-size: 15px;
 }
+
 .payment-breakdown-products-count {
   background: #e2e7ed;
   display: flex;
@@ -2981,17 +3150,20 @@ export default {
   justify-content: center;
   height: 25px;
 }
+
 .payment-collection-overlay-border-middle {
   width: 100%;
   border: 1px solid #e2e7ed;
   padding: 20px;
   border-top: none;
 }
+
 .payment-collection-overlay-amount-field {
   margin-top: 25px;
   margin-left: 35px;
   margin-bottom: -30px;
 }
+
 .crossdocking-add-document-drop {
   height: max-content;
   width: 100%;
@@ -3002,24 +3174,29 @@ export default {
   padding: 25px;
   border-radius: 5px;
 }
+
 .crossdocking-add-document-drop-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
 }
+
 .crossdocking-add-document-drop-inner-bottom {
   color: #324ba8 !important;
   font-size: 14px;
   cursor: pointer;
   margin-top: -10px;
 }
+
 .crossdocking-add-document-titles {
   font-size: 15px;
 }
+
 .crossdocking-pick-items-text {
   white-space: normal;
 }
+
 .crossdocking-pickup-stations {
   height: 140px;
   display: flex;
@@ -3028,23 +3205,29 @@ export default {
   padding: 10px 20px;
   border-bottom: 1px solid #e2e7ed;
 }
+
 .crossdocking-stations-container {
   height: 350px;
   overflow: scroll;
 }
+
 .fees-container {
   max-height: 700px;
   overflow-y: scroll;
 }
+
 .crossdocking-input-fields {
   height: 40px !important;
 }
+
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
 }
+
 .document-type-text {
   font-size: 14px;
 }
+
 .edit-delivery-override {
   border-bottom: none !important;
 }

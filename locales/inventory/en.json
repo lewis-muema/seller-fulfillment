@@ -246,5 +246,11 @@
   "otherDocuments": "{Doc} and {Count} other documents",
   "viewLess": "View less",
   "viewMore": "View more",
-  "YourNextBillingCycle": "your next billing cycle"
+  "selectADateOfYourChoice": "Select a date of your choice",
+  "selectDeliveryOption": "Select delivery option",
+  "YourNextBillingCycle": "your next billing cycle",
+  "SENDY_NEXT_DAY_DELIVERY": "Next day delivery",
+  "SENDY_SAME_DAY_DELIVERY": "Same day delivery",
+  "SENDY_EXPRESS_DELIVERY": "Express delivery",
+  "SENDY_SCHEDULED_DELIVERY": "Schedule delivery"
 }

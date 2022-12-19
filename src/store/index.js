@@ -48,6 +48,7 @@ export default createStore({
       },
       supportedCountries: [],
       userData: {},
+      deliverySpeed: [],
       updatedData: {},
       confirmedUser: {},
       businessUserDetails: {},

@@ -14,6 +14,9 @@ export default {
   setLoader(state, val) {
     state.loader[val.type] = val.value;
   },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
   setData(state, val) {
     state.data = val;
   },

@@ -225,6 +225,7 @@ export default {
       "setParent",
       "setDeliveryActions",
       "setProductsToSubmit",
+      "setDeliverySpeed",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
@@ -307,13 +308,13 @@ export default {
       return moment(date).format("dddd, Do MMM YYYY");
     },
     calculateSpeed() {
-      console.log("speed", this.calculateSpeedPayload);
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
         values: this.calculateSpeedPayload,
       }).then((response) => {
         if (response.status === 200) {
+          console.log("speed", response.data.data.deliveries);
           this.setDeliverySpeed(response.data.data.deliveries);
         }
       });

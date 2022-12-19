@@ -188,7 +188,7 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: 'editspeed',
+                popup: 'editSpeed',
               })
             "
           >

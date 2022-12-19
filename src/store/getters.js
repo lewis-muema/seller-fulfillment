@@ -25,6 +25,7 @@ export default {
   getTotalDue: (state) => state.totalDue,
   getTransationHistory: (state) => state.transationHistory,
   getUsers: (state) => state.users,
+  getDeliverySpeed: (state) => state.deliverySpeed,
   getLanguages: (state) => state.languages,
   getEditValue: (state) => state.editValue,
   getDefaultLanguage: (state) => state.defaultLanguage,

@@ -89,6 +89,15 @@ const trackingPayloadMixin = {
       };
       return payload;
     },
+    deliveryOptionPayload() {
+      const payload = {
+        transport_provider: "SENDY",
+        speed_pricing_type: "SENDY_EXPRESS",
+        speed_pricing_uuid: "",
+        proposed_scheduled_date: 0,
+      };
+      return payload;
+    },
     submitDeliveryPayload() {
       const payload = {
         means_of_payment: this.meansOfPaymentsPayload,
@@ -97,7 +106,7 @@ const trackingPayloadMixin = {
           costs_to_collect: this.podPayload,
         },
         documents: this.documentsPayload,
-        dates: {},
+        destination_speed_policy: this.deliveryOptionPayload,
       };
       return payload;
     },

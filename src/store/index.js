@@ -34,6 +34,9 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
       ],
+      deliverySpeed: [],
+      pickUpSpeed: [],
+      mismatchedDates: false,
       tabStatuses: {
         All: "",
         Pending: "ORDER_RECEIVED,ORDER_IN_PROCESSING",
@@ -93,8 +96,8 @@ export default createStore({
         WITHDRAWAL_OF_EARNING_COST: "-",
       },
       pickUpOptions: {
-        type: "",
-        text: "",
+        type: "driver",
+        text: "inventory.sendDriverToPickTheItems",
         info: "",
         date: "",
         FC: "",
@@ -1464,7 +1467,12 @@ export default createStore({
       inventorySelectedTab: "inventory.all",
       stockSelectedTab: "Overview",
       selectedProducts: [],
-      destinations: [{}],
+      destinations: [
+        {
+          expanded: 1,
+          preferences: false,
+        },
+      ],
       destinationIndex: 0,
       sendProductsRoute: "",
       product: {

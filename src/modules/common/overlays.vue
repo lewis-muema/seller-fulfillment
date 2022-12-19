@@ -1758,7 +1758,7 @@ export default {
     },
     deliverySpeeds() {
       return this.getDeliverySpeed.length
-        ? this.getDeliverySpeed[0].proposed_speeds
+        ? this.getDeliverySpeed[this.getDestinationIndex].proposed_speeds
         : [];
     },
     pickUpSpeeds() {

@@ -211,7 +211,7 @@
       </div>
       <el-radio-group v-model="recepientOption" class="">
         <div class="payment-collection-overlay-border-top padding-override">
-          <el-radio label="individual" size="large">
+          <el-radio label="INDIVIDUAL" size="large">
             <span class="mb-0 ml-3 font-override recepient-info-label">
               <i
                 class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
@@ -221,7 +221,7 @@
           </el-radio>
         </div>
         <div class="payment-collection-overlay-border-bottom padding-override">
-          <el-radio label="business" size="large">
+          <el-radio label="BUSINESS" size="large">
             <span class="mb-0 ml-3 font-override recepient-info-label">
               <i
                 class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
@@ -234,14 +234,14 @@
       <div v-if="recepientOption">
         <p class="crossdock-recipient-details-text">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.enterRecipientDetails")
               : $t("deliveries.enterBusinessDetails")
           }}
         </p>
         <label for="customer-name" class="edit-info-label">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.recipientName")
               : $t("deliveries.businessName")
           }}
@@ -395,7 +395,7 @@
       </div>
       <el-radio-group v-model="recepientOption" class="">
         <div class="payment-collection-overlay-border-top padding-override">
-          <el-radio label="individual" size="large">
+          <el-radio label="INDIVIDUAL" size="large">
             <span class="mb-0 ml-3 font-override recepient-info-label">
               <i
                 class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
@@ -418,14 +418,14 @@
       <div v-if="recepientOption">
         <p class="crossdock-recipient-details-text">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.enterRecipientDetails")
               : $t("deliveries.enterBusinessDetails")
           }}
         </p>
         <label for="customer-name" class="edit-info-label">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.recipientName")
               : $t("deliveries.businessName")
           }}
@@ -1341,7 +1341,11 @@
       >
         <div class="crossdocking-documents-list-inner">
           <i class="mdi mdi-text-box-outline"></i>
-          <span class="ml-3 document-type-text">{{ docs.document_type }}</span>
+          <span class="ml-3 document-type-text">{{
+            docs.document_type === "OTHER"
+              ? docs.document_description
+              : docs.document_type
+          }}</span>
           <v-menu>
             <template v-slot:activator="{ props }">
               <i
@@ -1508,7 +1512,7 @@
         <v-btn
           class="edit-info-submit-button"
           v-loading="buttonLoader"
-          @click="submitDeliveryOption()"
+          @click="submitDelivery()"
         >
           {{ $t("inventory.done") }}
         </v-btn>
@@ -1960,6 +1964,7 @@ export default {
       "setEditStatus",
       "setDocumentURL",
       "setDeliverySpeed",
+      "setFinalDocumentsToEdit",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2041,21 +2046,13 @@ export default {
         document_url: this.PDF,
         document_description: this.documentTitle,
       };
-      if (this.documents.length > 0) {
-        this.getEdittedDocuments.forEach((document) => {
-          const existingDoc = this.documents.findIndex(
-            (x) =>
-              x.document_url === document.document_url &&
-              x.document_type === document.document_type
-          );
-          if (existingDoc === -1) {
-            this.documents.push(docObj);
-          }
-        });
-      } else {
-        this.documents.push(docObj);
-      }
+      this.documents.push(docObj);
       this.setEdittedDocuments(this.documents);
+      this.setFinalDocumentsToEdit[{}];
+      this.setFinalDocumentsToEdit([
+        ...this.getOrderTrackingData.order.documents,
+        ...this.getEdittedDocuments,
+      ]);
       this.overlayStatusSet(true, "addRemoveDocument");
       setTimeout(() => {
         this.documentTitle = "";
@@ -2156,7 +2153,6 @@ export default {
       }, 500);
     },
     setPaymentCollection() {
-      console.log("pod", this.getPaymentCollectionStatus);
       if (this.getPaymentCollectionStatus.status === "") {
         this.selectPaymentCollection = true;
         setTimeout(() => {
@@ -2543,7 +2539,7 @@ export default {
       this.recepientOption =
         val.order.destination.buyer_type !== null
           ? val.order.destination.buyer_type
-          : "individual";
+          : "INDIVIDUAL";
       this.deliveryFeeCollection = this.paymentStatuses;
       this.deliveryFeeAmount = this.deliveryFee;
     },

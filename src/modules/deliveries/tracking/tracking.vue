@@ -226,6 +226,7 @@ export default {
       "setDeliveryActions",
       "setProductsToSubmit",
       "setDeliverySpeed",
+      "setFinalDocumentsToEdit",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
@@ -254,6 +255,9 @@ export default {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
           this.calculateSpeed();
+          this.setFinalDocumentsToEdit(
+            this.getOrderTrackingData.order.documents
+          );
           this.setProductsToSubmit(response.data.data.order.products);
           if (response.data.data.order.order_type === "PICKUP") {
             this.setParent("sendy");
@@ -314,7 +318,6 @@ export default {
         values: this.calculateSpeedPayload,
       }).then((response) => {
         if (response.status === 200) {
-          console.log("speed", response.data.data.deliveries);
           this.setDeliverySpeed(response.data.data.deliveries);
         }
       });

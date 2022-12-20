@@ -6,6 +6,7 @@ const trackingPayloadMixin = {
       "getOrderStatuses",
       "getOrderTrackingData",
       "getEdittedDocuments",
+      "getFinalDocumentsToEdit",
     ]),
     podPayload() {
       const costsToCollect = [];
@@ -28,7 +29,6 @@ const trackingPayloadMixin = {
       return costsToCollect;
     },
     destinationPayload() {
-      console.log(this.getOrderTrackingData);
       const order = this.getOrderTrackingData.order;
       const payload = {
         name: this.customerName ? this.customerName : order.destination.name,
@@ -57,14 +57,7 @@ const trackingPayloadMixin = {
       return payload;
     },
     mapEdittedDocuments() {
-      const documents = this.getOrderTrackingData.order.documents.slice();
-      const addedDocuments = this.getEdittedDocuments;
-      // this.setEditedDocuments([
-      //   ...documents
-      //   ...addedDocuments
-      // ])
-      const finalDocuments = [...documents, ...addedDocuments];
-      return finalDocuments;
+      return this.getFinalDocumentsToEdit;
     },
     documentsPayload() {
       const documents = [];

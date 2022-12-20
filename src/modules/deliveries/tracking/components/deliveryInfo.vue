@@ -206,7 +206,7 @@
             @click="
               setOverlayStatus({
                 overlay: true,
-                popup: cantEditDocumentsInfo ? 'addRemoveDocument' : 'noEdits',
+                popup: cantEditDocumentsInfo ? 'noEdits' : 'addRemoveDocument',
                 popText: this.documentsInfo,
               })
             "
@@ -296,7 +296,7 @@
               @click="
                 setOverlayStatus({
                   overlay: true,
-                  popup: 'editpaymentCollection',
+                  popup: cantEditPod ? 'noEdits' : 'editpaymentCollection',
                   popText: this.pod,
                 })
               "
@@ -401,15 +401,14 @@ export default {
       return fee;
     },
     cantEditDocumentsInfo() {
-      return (
-        this.getOrderTrackingData.order.order_event_status !==
-          "event.delivery.order.created" &&
-        this.getOrderTrackingData.order.order_event_status !==
-          "event.delivery.at.hub.processing.for.delivery"
-      );
+      return this.getOrderTrackingData.order.order_status !== "ORDER_RECEIVED";
     },
     cantEditPod() {
-      return "";
+      return (
+        this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_status ===
+          "INVOICE_COMPLETELY_PAID" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED"
+      );
     },
   },
   mounted() {},
@@ -454,20 +453,24 @@ export default {
   font-size: 14px;
   background: white;
 }
+
 .delivery-info-title-top {
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 10px;
 }
+
 .delivery-info-label {
   color: #606266;
   margin-bottom: 0px;
 }
+
 .delivery-info-data {
   color: #303133;
   margin-bottom: 10px;
   display: flex;
 }
+
 .delivery-info-edit {
   float: right;
   font-size: 14px;
@@ -475,10 +478,12 @@ export default {
   font-weight: 300;
   color: #324ba8;
 }
+
 .edit-info-label {
   font-size: 14px;
   font-weight: 500;
 }
+
 .edit-info-instructions {
   border: 1px solid #c0c4cc;
   border-radius: 5px;
@@ -486,6 +491,7 @@ export default {
   padding: 10px;
   margin-bottom: 30px;
 }
+
 .edit-info-add-phone {
   color: #324ba8;
   font-size: 14px;
@@ -493,6 +499,7 @@ export default {
   cursor: pointer;
   font-weight: 500;
 }
+
 .edit-info-submit-button {
   margin-top: 40px;
   text-transform: capitalize;
@@ -501,30 +508,36 @@ export default {
   background: #324ba8;
   width: -webkit-fill-available;
 }
+
 .delivery-info-data-float {
   float: right;
   margin-left: auto;
 }
+
 .payment-INVOICE_WAITING_PAYMENT-status {
   background: #fbdf9a;
   padding: 2px 20px;
   border-radius: 10px;
   color: #7f3b02;
 }
+
 .payment-INVOICE_COMPLETELY_PAID-status {
   background: #b8f5a8;
   padding: 2px 20px;
   border-radius: 10px;
   color: #064a23;
 }
+
 .delivery-info-marker {
   font-size: 20px;
   margin-right: 10px;
   color: #909399;
 }
+
 .delivery-house-location {
   margin-left: 30px;
 }
+
 .edit-delivery {
   color: #324ba8;
   font-weight: 500;
@@ -533,14 +546,17 @@ export default {
   border-bottom: 1px solid #e2e7ed;
   margin-bottom: 15px !important;
 }
+
 .delivery-info-title {
   font-size: 16px;
 }
+
 .delivery-info-view-toggle {
   color: #606266;
   font-size: 16px;
   cursor: pointer;
 }
+
 .delivery-info-view-icon {
   font-size: 25px;
   cursor: pointer;

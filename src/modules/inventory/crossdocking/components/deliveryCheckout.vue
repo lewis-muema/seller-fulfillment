@@ -924,6 +924,7 @@ export default {
             destination.recipient && destination.delivery_info
               ? {
                   name: destination.recipient.customer_name,
+                  buyer_type: destination.recipient.recipient_type,
                   phone_number: destination.recipient.phone,
                   secondary_phone_number:
                     destination.recipient.secondary_phone_number,

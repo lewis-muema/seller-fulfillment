@@ -951,6 +951,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getPaymnetMethods",
+      "getLoader",
       "getStorageUserDetails",
       "getAchievements",
       "getCheckoutDetails",
@@ -1185,6 +1186,9 @@ export default {
             name: destination.recipient
               ? destination.recipient.customer_name
               : "",
+            buyer_type: destination.recipient
+              ? destination.recipient.recipient_type.toUpperCase()
+              : null,
             phone_number: destination.recipient
               ? destination.recipient.phone
               : "",
@@ -1492,9 +1496,13 @@ export default {
         app: process.env.AUTH,
         endpoint: "payment-gateway/payment_methods",
         values: {
-          country_code: this.getBusinessDetails.country_code,
+          country_code: this.getBusinessDetails.country_code
+            ? this.getBusinessDetails.country_code
+            : localStorage.country,
           entity_id: "6",
-          user_id: this.getBusinessDetails.business_id,
+          user_id: this.getBusinessDetails.business_id
+            ? this.getBusinessDetails.business_id
+            : JSON.parse(localStorage.userDetails).business_id,
           pay_direction: "PAY_IN",
         },
       }).then((response) => {
@@ -1537,16 +1545,60 @@ export default {
       }
     },
     getSpeed() {
+      this.setLoader({
+        type: "speed",
+        value: "loading-text",
+      });
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
         values: this.checkoutPayload,
       }).then((response) => {
+        this.setLoader({
+          type: "speed",
+          value: "",
+        });
         if (response.status === 200) {
           this.setPickUpSpeed(response.data.data.pickups);
           this.setDeliverySpeed(response.data.data.deliveries);
+          this.speedValidation(response.data.data);
         }
       });
+    },
+    speedValidation(speeds) {
+      if (this.getPickUpInfoCD.pickupSpeed) {
+        const pickUpValidationList = speeds.pickups[0].proposed_speeds.filter(
+          (speed) => {
+            return (
+              speed.speed_pricing_type ===
+                this.getPickUpInfoCD.pickupSpeed.speed_pricing_type &&
+              speed.speed_pricing_uuid ===
+                this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
+            );
+          }
+        );
+        if (pickUpValidationList.length === 0) {
+          const pickupInfo = this.getPickUpInfoCD;
+          delete pickupInfo.pickupSpeed;
+          this.setPickUpInfoCD(pickupInfo);
+        }
+      }
+      const destination = this.getDestinations[this.getDestinationIndex];
+      if (destination.speed) {
+        const destinationValidationList = speeds.deliveries[
+          this.getDestinationIndex
+        ].proposed_speeds.filter((speed) => {
+          return (
+            speed.speed_pricing_type === destination.speed.speed_pricing_type &&
+            speed.speed_pricing_uuid === destination.speed.speed_pricing_uuid
+          );
+        });
+        if (destinationValidationList.length === 0) {
+          const destinations = this.getDestinations;
+          delete destinations[this.getDestinationIndex].speed;
+          this.setDestinations(destinations);
+        }
+      }
     },
     generateUUID(name) {
       if (!localStorage.local_order_uuid) {

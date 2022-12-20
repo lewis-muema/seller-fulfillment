@@ -158,5 +158,14 @@
   "receivingItems": "Who is receiving the items ?",
   "individual": "An individual",
   "business": "A business",
-  "saveInfo" : "Save info"
+  "saveInfo" : "Save info",
+  "save": "Save",
+  "saveDetails": "Save details",
+  "cantEditDocs": "You can’t edit the documents at the moment because a driver has been assigned to deliver your order.",
+  "cantEditRecipient" : "You can’t edit the recipient info at the moment because a driver has been assigned to deliver your order.",
+  "cantEditPod": "You can’t edit the payments collection at the moment because a driver has been assigned to deliver your order.",
+  "editPOD": "Edit payment collection",
+  "manageDocuments": "Manage documents",
+  "uploadAnotherDocument": "Upload another document",
+  "addRemoveDocuments": "Add/remove documents"
 }

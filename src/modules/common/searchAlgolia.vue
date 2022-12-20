@@ -197,7 +197,12 @@ export default {
       return productsList;
     },
     productTrigger(item) {
-      if (this.$route.path.includes("/inventory/send-inventory/")) {
+      if (
+        [
+          "/inventory/send-inventory/",
+          "/inventory/add-delivery-products",
+        ].includes(this.$route.path)
+      ) {
         const productsList = this.getProductLists;
         const searchedList = this.getSearchedProducts;
         const existingProduct = productsList.filter((row) => {

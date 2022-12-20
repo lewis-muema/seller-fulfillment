@@ -25,7 +25,6 @@ export default {
   getTotalDue: (state) => state.totalDue,
   getTransationHistory: (state) => state.transationHistory,
   getUsers: (state) => state.users,
-  getDeliverySpeed: (state) => state.deliverySpeed,
   getLanguages: (state) => state.languages,
   getEditValue: (state) => state.editValue,
   getDefaultLanguage: (state) => state.defaultLanguage,
@@ -126,4 +125,7 @@ export default {
   getPickUpInfoCD: (state) => state.pickUpInfoCD,
   getStations: (state) => state.stations,
   getPickUpStation: (state) => state.pickUpStation,
+  getPickUpSpeed: (state) => state.pickUpSpeed,
+  getDeliverySpeed: (state) => state.deliverySpeed,
+  getMismatchedDates: (state) => state.mismatchedDates,
 };

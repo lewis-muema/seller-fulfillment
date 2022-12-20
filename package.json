@@ -11,8 +11,7 @@
     "lint": "cross-env DOCKER_ENV=\"development\" vue-cli-service lint",
     "beta": "cross-env DOCKER_ENV=\"beta\" vue-cli-service build",
     "dev": "cross-env DOCKER_ENV=\"development\" vue-cli-service serve",
-    "staging": "cross-env DOCKER_ENV=\"staging\"  vue-cli-service build",
-    "prod": "cross-env DOCKER_ENV=\"production\"  vue-cli-service serve"
+    "staging": "cross-env DOCKER_ENV=\"staging\"  vue-cli-service build"
   },
   "dependencies": {
     "@datadog/browser-rum": "^4.19.1",

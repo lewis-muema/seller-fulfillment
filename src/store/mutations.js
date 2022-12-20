@@ -14,9 +14,6 @@ export default {
   setLoader(state, val) {
     state.loader[val.type] = val.value;
   },
-  setDeliverySpeed(state, val) {
-    state.deliverySpeed = val;
-  },
   setData(state, val) {
     state.data = val;
   },
@@ -361,6 +358,15 @@ export default {
   },
   setPickUpStation(state, val) {
     state.pickUpStation = val;
+  },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
+  setPickUpSpeed(state, val) {
+    state.pickUpSpeed = val;
+  },
+  setMismatchedDates(state, val) {
+    state.mismatchedDates = val;
   },
   setEdittedDocuments(state, val) {
     state.edittedDocuments = val;

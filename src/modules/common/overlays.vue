@@ -1518,6 +1518,26 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="popup === 'removeDestination'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'removeDestination')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p>{{ $t("inventory.areYouSureYouWantToRemoveThisOrder") }}</p>
+      </div>
+      <v-btn class="crossdocking-remove-order-button" @click="removeLocation()">
+        {{ $t("inventory.removeOrder") }}
+      </v-btn>
+      <div
+        class="crossdocking-dont-remove-order-button"
+        @click="overlayStatusSet(false, 'removeDestination')"
+      >
+        {{ $t("inventory.dontRemoveOrder") }}
+      </div>
+    </div>
     <div v-if="popup === 'pickUpInfoCrossDock'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -1673,6 +1693,257 @@
         </p>
       </div>
     </div>
+
+    <div
+      v-if="popup === 'deliveryOptionCrossdock'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'deliveryOptionCrossdock')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p
+          class="error-msg withdraw-transaction-error field-required-error"
+          v-if="misMatchedDatesError"
+        >
+          {{ misMatchedDatesError }}
+        </p>
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.selectDeliveryOption") }}
+        </p>
+        <el-radio-group
+          v-model="deliveryOption"
+          class="delivery-option-crossdock-radio-group"
+        >
+          <div
+            class="delivery-option-crossdock-radio padding-override"
+            v-for="(speed, i) in deliverySpeeds"
+            :key="i"
+          >
+            <el-radio
+              :label="i"
+              size="large"
+              class="delivery-option-crossdock-radio-group"
+            >
+              <div class="font-override recepient-info-label">
+                <div class="delivery-option-crossdock-radio-group">
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
+                        : speed.transport_provider.replace("_", " ")
+                    }}
+                  </span>
+                  <span
+                    :class="getLoader.speed"
+                    class="delivery-option-crossdock-radio-right"
+                  >
+                    {{ speed.currency }} {{ speed.price }}
+                  </span>
+                </div>
+                <div class="delivery-option-crossdock-radio-group-bottom">
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                          ? $t("inventory.selectADateOfYourChoice")
+                          : formatDate(speed.speed_pricing_upper_limit_date)
+                        : formatDate(speed.speed_pricing_upper_limit_date)
+                    }}
+                  </span>
+                </div>
+              </div>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isDeliveryOptionValid"
+          v-loading="buttonLoader"
+          @click="submitDeliveryOption()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div
+      v-if="popup === 'pickupOptionCrossdock'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'pickupOptionCrossdock')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p
+          class="error-msg withdraw-transaction-error field-required-error"
+          v-if="misMatchedDatesError"
+        >
+          {{ misMatchedDatesError }}
+        </p>
+        <p class="delivery-option-crossdock-title">
+          {{
+            getMismatchedDates
+              ? $t("inventory.pleaseSelectThePickupTimeForTheUnavailable")
+              : $t("inventory.selectThePickupOption")
+          }}
+        </p>
+        <el-radio-group
+          v-model="pickUpOption"
+          class="delivery-option-crossdock-radio-group"
+        >
+          <div
+            class="delivery-option-crossdock-radio padding-override"
+            v-for="(speed, i) in pickUpSpeeds"
+            :key="i"
+          >
+            <el-radio
+              :label="i"
+              size="large"
+              class="delivery-option-crossdock-radio-group"
+            >
+              <div class="font-override recepient-info-label">
+                <div class="delivery-option-crossdock-radio-group">
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? $t(`inventory.${speed.speed_pricing_type}_PICKUP`)
+                        : speed.transport_provider.replace("_", " ")
+                    }}
+                  </span>
+                  <span
+                    :class="getLoader.speed"
+                    class="delivery-option-crossdock-radio-right"
+                  >
+                    {{ speed.currency }} {{ speed.price }}
+                  </span>
+                </div>
+                <div class="delivery-option-crossdock-radio-group-bottom">
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                          ? $t("inventory.selectADateOfYourChoice")
+                          : formatDate(speed.speed_pricing_upper_limit_date)
+                        : formatDate(speed.speed_pricing_upper_limit_date)
+                    }}
+                  </span>
+                </div>
+              </div>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isPickUpOptionValid"
+          v-loading="buttonLoader"
+          @click="submitPickUpOption()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div
+      v-if="popup === 'deliveryOptionNotice'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'deliveryOptionNotice')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.deliveryOptions") }}
+        </p>
+        <div class="delivery-option-notice-icon">
+          <i class="mdi mdi-information-outline"></i>
+        </div>
+        <p class="delivery-option-notice-message">
+          {{ $t("inventory.toViewDeliveryOptions") }}
+        </p>
+        <v-btn
+          class="edit-info-submit-button"
+          @click="overlayStatusSet(false, 'deliveryOptionNotice')"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'reschedulePickupOption'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.schedulePickup") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'reschedulePickupOption')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(
+            getPickUpInfoCD.pickupSpeed.speed_pricing_lower_limit_date
+          ),
+          from: new Date(
+            getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+          ),
+        }"
+        v-model="pickUpDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        :disabled="!isScheduledPickUpDateValid"
+        v-loading="buttonLoader"
+        @click="showReschedulePickUpOption()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'rescheduleDeliveryOption'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.scheduleDelivery") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'rescheduleDeliveryOption')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(activeDestination.speed.speed_pricing_lower_limit_date),
+          from: new Date(
+            activeDestination.speed.speed_pricing_upper_limit_date
+          ),
+        }"
+        v-model="deliveryDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        :disabled="!isScheduledDeliveryDateValid"
+        v-loading="buttonLoader"
+        @click="showRescheduleDeliveryOption()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
   </v-overlay>
 </template>
 
@@ -1767,6 +2038,10 @@ export default {
       documentTitle: "",
       pickItems: "",
       pickUpStation: "",
+      pickUpOption: "",
+      misMatchedDatesError: "",
+      deliveryDate: new Date(),
+      pickUpDate: new Date(),
     };
   },
   validations() {
@@ -1802,6 +2077,7 @@ export default {
         this.newPrice = val.popup === "editPrice" ? optionPrice : "";
       }
       this.preloadDeliveryDetails(val);
+      this.preloadDeliveryOption(val);
     },
     "$store.state.orderTrackingData": function orderTrackingData(val) {
       this.preloadOrderTrackingData(val);
@@ -1823,6 +2099,7 @@ export default {
       "getMapOptions",
       "getSendyPhoneProps",
       "getUser",
+      "getLoader",
       "getActiveUser",
       "getExportDataType",
       "getPaymentCollectionStatus",
@@ -1831,15 +2108,27 @@ export default {
       "getDocumentURL",
       "getStations",
       "getPickUpInfoCD",
+      "getPickUpSpeed",
       "getEdittedDocuments",
       "getEditStatus",
       "getDeliverySpeed",
+      "getMismatchedDates",
     ]),
     partnerNotAssigned() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
+    },
+    deliverySpeeds() {
+      return this.getDeliverySpeed.length
+        ? this.getDeliverySpeed[this.getDestinationIndex].proposed_speeds
+        : [];
+    },
+    pickUpSpeeds() {
+      return this.getPickUpSpeed.length
+        ? this.getPickUpSpeed[0].proposed_speeds
+        : [];
     },
     deliveryFee() {
       let fee = 0;
@@ -1851,6 +2140,33 @@ export default {
         }
       );
       return fee;
+    },
+    activeDestination() {
+      return this.getDestinations[this.getDestinationIndex];
+    },
+    isDeliveryFieldsValid() {
+      return this.location.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
+    },
+    isPickUpFieldsValid() {
+      return this.location.length && this.phone.length;
+    },
+    isPaymentCollectionValid() {
+      return this.deliveryFeeCollection;
+    },
+    isDeliveryOptionValid() {
+      return this.deliveryOption !== "";
+    },
+    isPickUpOptionValid() {
+      return this.pickUpOption !== "";
+    },
+    isScheduledPickUpDateValid() {
+      return this.pickUpDate !== "";
+    },
+    isScheduledDeliveryDateValid() {
+      return this.deliveryDate !== "";
     },
     productPrice() {
       let price = 0;
@@ -1865,18 +2181,6 @@ export default {
     },
     productCurrency() {
       return this.getOrderTrackingData.order?.sale_of_goods_invoice?.currency;
-    },
-    isDeliveryFieldsValid() {
-      return this.location.length;
-    },
-    isRecipientFieldsValid() {
-      return this.customerName.length && this.phone.length;
-    },
-    isPickUpFieldsValid() {
-      return this.location.length && this.phone.length;
-    },
-    isPaymentCollectionValid() {
-      return this.deliveryFeeCollection;
     },
     paymentOnDeliveryFlag() {
       return this.getBusinessDetails.settings
@@ -1937,6 +2241,7 @@ export default {
       "setPickUpOptions",
       "setPickUpInfoCD",
       "setPickUpStation",
+      "setMismatchedDates",
       "setOverlayStatus",
       "setEdittedDocuments",
       "setEditStatus",
@@ -1949,6 +2254,160 @@ export default {
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    submitDeliveryOption() {
+      const destinations = this.getDestinations;
+      const index = this.getDestinationIndex;
+      const scheduledDate =
+        destinations[index].speed &&
+        destinations[index].speed.speed_pricing_scheduled_date
+          ? new Date(destinations[index].speed.speed_pricing_scheduled_date)
+          : new Date();
+      const speed = this.deliverySpeeds[this.deliveryOption];
+      speed.index = this.deliveryOption;
+      if (destinations[index]) {
+        destinations[index].speed = speed;
+      } else {
+        destinations.splice(index, 0, {
+          speed,
+        });
+      }
+      this.setDestinations(destinations);
+      setTimeout(() => {
+        this.deliveryOption = "";
+      }, 500);
+      if (destinations[index].speed.speed_pricing_type === "SENDY_SCHEDULED") {
+        this.deliveryDate = scheduledDate ? scheduledDate : new Date();
+        this.deliverySpeeds[this.deliveryOption].speed_pricing_scheduled_date =
+          scheduledDate;
+        this.overlayStatusSet(true, "rescheduleDeliveryOption");
+        return;
+      }
+      this.overlayStatusSet(false, "deliveryOptionCrossdock");
+      this.misMatchedDatesError = "";
+      if (
+        destinations[index].speed &&
+        this.getPickUpInfoCD.pickupSpeed &&
+        destinations[index].speed.speed_pricing_upper_limit_date >
+          this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+      ) {
+        this.setMismatchedDates(false);
+      } else if (
+        destinations[index].speed &&
+        this.getPickUpInfoCD.pickupSpeed &&
+        destinations[index].speed.speed_pricing_upper_limit_date <=
+          this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+      ) {
+        this.overlayStatusSet(true, "pickupOptionCrossdock");
+        this.misMatchedDatesError = this.$t(
+          "inventory.thePickUpDateCannotBeAheadOfTheDeliveryDate"
+        );
+      }
+    },
+    submitPickUpOption() {
+      const pickUpInfoCD = this.getPickUpInfoCD;
+      const pickup = pickUpInfoCD;
+      const scheduledDate =
+        pickup.pickupSpeed && pickup.pickupSpeed.speed_pricing_scheduled_date
+          ? new Date(pickup.pickupSpeed.speed_pricing_scheduled_date)
+          : new Date();
+      pickup.pickupSpeed = this.pickUpSpeeds[this.pickUpOption];
+      pickup.pickupSpeed.index = this.pickUpOption;
+      this.setPickUpInfoCD(pickup);
+      this.clearInputs();
+      setTimeout(() => {
+        this.pickUpOption = "";
+      }, 500);
+      if (pickup.pickupSpeed.speed_pricing_type === "SENDY_SCHEDULED") {
+        this.pickUpDate = scheduledDate ? scheduledDate : new Date();
+        this.pickUpSpeeds[this.pickUpOption].speed_pricing_scheduled_date =
+          scheduledDate;
+        this.overlayStatusSet(true, "reschedulePickupOption");
+        return;
+      }
+      this.overlayStatusSet(false, "pickupOptionCrossdock");
+      this.misMatchedDatesError = "";
+      if (
+        this.activeDestination.speed &&
+        this.getPickUpInfoCD.pickupSpeed &&
+        this.activeDestination.speed.speed_pricing_upper_limit_date <=
+          this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+      ) {
+        this.overlayStatusSet(true, "deliveryOptionCrossdock");
+        this.misMatchedDatesError = this.$t(
+          "inventory.pleaseMakeSureTheDeliveryDateIsAfter",
+          {
+            Date: this.formatDate(
+              this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
+            ),
+          }
+        );
+      }
+    },
+    showReschedulePickUpOption() {
+      const pickUpInfoCD = this.getPickUpInfoCD;
+      pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date = this.pickUpDate;
+      this.setPickUpInfoCD(pickUpInfoCD);
+      this.overlayStatusSet(false, "reschedulePickupOption");
+      this.pickUpDate = new Date();
+      this.validateScheduledDates("delivery");
+    },
+    showRescheduleDeliveryOption() {
+      this.activeDestination.speed.speed_pricing_scheduled_date =
+        this.deliveryDate;
+      this.overlayStatusSet(false, "rescheduleDeliveryOption");
+      this.deliveryDate = new Date();
+      this.validateScheduledDates("pickup");
+    },
+    validateScheduledDates(source) {
+      const destination = this.activeDestination;
+      const pickUpInfoCD = this.getPickUpInfoCD;
+      if (
+        destination.speed &&
+        pickUpInfoCD.pickupSpeed &&
+        ((destination.speed.speed_pricing_type === "SENDY_SCHEDULED" &&
+          pickUpInfoCD.pickupSpeed.speed_pricing_type === "SENDY_SCHEDULED" &&
+          destination.speed.speed_pricing_scheduled_date <=
+            pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date) ||
+          (destination.speed.speed_pricing_type !== "SENDY_SCHEDULED" &&
+            pickUpInfoCD.pickupSpeed.speed_pricing_type === "SENDY_SCHEDULED" &&
+            destination.speed.speed_pricing_upper_limit_date <=
+              pickUpInfoCD.pickupSpeed.speed_pricing_scheduled_date) ||
+          (destination.speed.speed_pricing_type === "SENDY_SCHEDULED" &&
+            pickUpInfoCD.pickupSpeed.speed_pricing_type !== "SENDY_SCHEDULED" &&
+            destination.speed.speed_pricing_scheduled_date <=
+              pickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date))
+      ) {
+        this.misMatchedDatesError =
+          source === "pickup"
+            ? this.$t("inventory.thePickUpDateCannotBeAheadOfTheDeliveryDate")
+            : this.$t("inventory.pleaseMakeSureTheDeliveryDateIsAfter", {
+                Date:
+                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
+                  "SENDY_SCHEDULED"
+                    ? this.formatDate(
+                        this.getPickUpInfoCD.pickupSpeed
+                          .speed_pricing_scheduled_date
+                      )
+                    : this.formatDate(
+                        this.getPickUpInfoCD.pickupSpeed
+                          .speed_pricing_upper_limit_date
+                      ),
+              });
+        this.overlayStatusSet(true, `${source}OptionCrossdock`);
+      } else {
+        this.misMatchedDatesError = "";
+      }
+    },
+    removeLocation() {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      if (destinations[index - 1]) {
+        destinations[index - 1].expanded = 1;
+      }
+      destinations.splice(index, 1);
+      this.setDestinations(destinations);
+      this.overlayStatusSet(false, "removeDestination");
     },
     removePhoneNumber() {
       this.secondaryPhoneStatus = !this.secondaryPhoneStatus;
@@ -2063,12 +2522,14 @@ export default {
       this.overlayStatusSet(false, "stations");
     },
     submitPickUpInfo() {
+      const pickupSpeed = this.getPickUpInfoCD.pickupSpeed;
       const pickUpDetails = {
         location: this.location,
         place: this.locationData,
         phone: this.phone,
         secondary_phone_number: this.secPhone,
         instructions: this.instructions,
+        pickupSpeed,
       };
       this.overlayStatusSet(false, "pickUpInfoCrossDock");
       this.setPickUpInfoCD(pickUpDetails);
@@ -2432,6 +2893,21 @@ export default {
       this.setPromoCode(this.promoCode);
       this.promoCode = "";
       this.overlayStatusSet(false, "promo");
+    },
+    preloadDeliveryOption(val) {
+      const index = this.getDestinationIndex;
+      const destinations = this.getDestinations;
+      if (val.popup === "deliveryOptionCrossdock") {
+        this.deliveryOption =
+          destinations[index] && destinations[index].speed
+            ? destinations[index].speed.index
+            : "";
+      } else if (val.popup === "pickupOptionCrossdock") {
+        this.pickUpOption =
+          this.getPickUpInfoCD && this.getPickUpInfoCD.pickupSpeed
+            ? this.getPickUpInfoCD.pickupSpeed.index
+            : "";
+      }
     },
     preloadDeliveryDetails(val) {
       const index = this.getDestinationIndex;
@@ -3196,6 +3672,71 @@ export default {
 
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
+}
+.crossdocking-remove-order-button {
+  height: 50px;
+  margin: 10px 0px 0px 0px;
+  background: #9b101c;
+  width: -webkit-fill-available;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: white !important;
+  font-size: 16px;
+}
+.crossdocking-dont-remove-order-button {
+  box-shadow: none !important;
+  color: #909399 !important;
+  margin-top: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+.delivery-option-crossdock-radio {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  border-radius: 10px;
+  padding: 20px;
+  height: 75px;
+  margin: 5px 0px;
+}
+.delivery-option-crossdock-radio-group,
+.delivery-option-crossdock-radio-group .el-radio__label {
+  width: 100%;
+}
+.delivery-option-crossdock-radio-right {
+  float: right;
+}
+.delivery-option-crossdock-radio-group .el-radio__label {
+  font-size: 17px !important;
+  color: #303133;
+  margin-top: 10px !important;
+  margin-bottom: 2px !important;
+}
+.delivery-option-crossdock-radio-group-bottom {
+  color: #909399;
+  font-size: 14px;
+  padding-top: 3px;
+}
+.delivery-option-crossdock-title {
+  font-weight: 500;
+  font-size: 17px;
+}
+.delivery-option-notice-icon {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border-radius: 40px;
+  background: #d3ddf6;
+  color: #324ba8;
+  margin: 20px auto;
+}
+.delivery-option-notice-message {
+  text-align: center;
+  font-size: 19px;
+  margin-bottom: -10px;
 }
 
 .document-type-text {

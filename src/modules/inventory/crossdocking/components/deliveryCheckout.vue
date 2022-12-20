@@ -951,6 +951,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getPaymnetMethods",
+      "getLoader",
       "getStorageUserDetails",
       "getAchievements",
       "getCheckoutDetails",
@@ -1492,9 +1493,13 @@ export default {
         app: process.env.AUTH,
         endpoint: "payment-gateway/payment_methods",
         values: {
-          country_code: this.getBusinessDetails.country_code,
+          country_code: this.getBusinessDetails.country_code
+            ? this.getBusinessDetails.country_code
+            : localStorage.country,
           entity_id: "6",
-          user_id: this.getBusinessDetails.business_id,
+          user_id: this.getBusinessDetails.business_id
+            ? this.getBusinessDetails.business_id
+            : JSON.parse(localStorage.userDetails).business_id,
           pay_direction: "PAY_IN",
         },
       }).then((response) => {
@@ -1537,11 +1542,19 @@ export default {
       }
     },
     getSpeed() {
+      this.setLoader({
+        type: "speed",
+        value: "loading-text",
+      });
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
         values: this.checkoutPayload,
       }).then((response) => {
+        this.setLoader({
+          type: "speed",
+          value: "",
+        });
         if (response.status === 200) {
           this.setPickUpSpeed(response.data.data.pickups);
           this.setDeliverySpeed(response.data.data.deliveries);

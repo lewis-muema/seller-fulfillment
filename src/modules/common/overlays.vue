@@ -1450,25 +1450,30 @@
             >
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
-                  <span>
+                  <span :class="getLoader.speed">
                     {{
                       speed.transport_provider === "SENDY"
                         ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
                         : speed.transport_provider.replace("_", " ")
                     }}
                   </span>
-                  <span class="delivery-option-crossdock-radio-right">
+                  <span
+                    :class="getLoader.speed"
+                    class="delivery-option-crossdock-radio-right"
+                  >
                     {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
-                  {{
-                    speed.transport_provider === "SENDY"
-                      ? speed.speed_pricing_type === "SENDY_SCHEDULED"
-                        ? $t("inventory.selectADateOfYourChoice")
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                          ? $t("inventory.selectADateOfYourChoice")
+                          : formatDate(speed.speed_pricing_upper_limit_date)
                         : formatDate(speed.speed_pricing_upper_limit_date)
-                      : formatDate(speed.speed_pricing_upper_limit_date)
-                  }}
+                    }}
+                  </span>
                 </div>
               </div>
             </el-radio>
@@ -1524,25 +1529,30 @@
             >
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
-                  <span>
+                  <span :class="getLoader.speed">
                     {{
                       speed.transport_provider === "SENDY"
                         ? $t(`inventory.${speed.speed_pricing_type}_PICKUP`)
                         : speed.transport_provider.replace("_", " ")
                     }}
                   </span>
-                  <span class="delivery-option-crossdock-radio-right">
+                  <span
+                    :class="getLoader.speed"
+                    class="delivery-option-crossdock-radio-right"
+                  >
                     {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
-                  {{
-                    speed.transport_provider === "SENDY"
-                      ? speed.speed_pricing_type === "SENDY_SCHEDULED"
-                        ? $t("inventory.selectADateOfYourChoice")
+                  <span :class="getLoader.speed">
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                          ? $t("inventory.selectADateOfYourChoice")
+                          : formatDate(speed.speed_pricing_upper_limit_date)
                         : formatDate(speed.speed_pricing_upper_limit_date)
-                      : formatDate(speed.speed_pricing_upper_limit_date)
-                  }}
+                    }}
+                  </span>
                 </div>
               </div>
             </el-radio>
@@ -1738,6 +1748,7 @@ export default {
       "getMapOptions",
       "getSendyPhoneProps",
       "getUser",
+      "getLoader",
       "getActiveUser",
       "getExportDataType",
       "getPaymentCollectionStatus",

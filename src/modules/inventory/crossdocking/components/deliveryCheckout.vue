@@ -1558,8 +1558,44 @@ export default {
         if (response.status === 200) {
           this.setPickUpSpeed(response.data.data.pickups);
           this.setDeliverySpeed(response.data.data.deliveries);
+          this.speedValidation(response.data.data);
         }
       });
+    },
+    speedValidation(speeds) {
+      if (this.getPickUpInfoCD.pickupSpeed) {
+        const pickUpValidationList = speeds.pickups[0].proposed_speeds.filter(
+          (speed) => {
+            return (
+              speed.speed_pricing_type ===
+                this.getPickUpInfoCD.pickupSpeed.speed_pricing_type &&
+              speed.speed_pricing_uuid ===
+                this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
+            );
+          }
+        );
+        if (pickUpValidationList.length === 0) {
+          const pickupInfo = this.getPickUpInfoCD;
+          delete pickupInfo.pickupSpeed;
+          this.setPickUpInfoCD(pickupInfo);
+        }
+      }
+      const destination = this.getDestinations[this.getDestinationIndex];
+      if (destination.speed) {
+        const destinationValidationList = speeds.deliveries[
+          this.getDestinationIndex
+        ].proposed_speeds.filter((speed) => {
+          return (
+            speed.speed_pricing_type === destination.speed.speed_pricing_type &&
+            speed.speed_pricing_uuid === destination.speed.speed_pricing_uuid
+          );
+        });
+        if (destinationValidationList.length === 0) {
+          const destinations = this.getDestinations;
+          delete destinations[this.getDestinationIndex].speed;
+          this.setDestinations(destinations);
+        }
+      }
     },
     generateUUID(name) {
       if (!localStorage.local_order_uuid) {

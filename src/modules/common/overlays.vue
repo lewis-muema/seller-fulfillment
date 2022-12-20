@@ -1993,11 +1993,10 @@ export default {
       this.overlayStatusSet(false, "pickupOptionCrossdock");
       this.misMatchedDatesError = "";
       if (
-        (this.activeDestination.speed &&
-          this.getPickUpInfoCD.pickupSpeed &&
-          this.activeDestination.speed.speed_pricing_upper_limit_date <=
-            this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date) ||
-        (this.getPickUpInfoCD.pickupSpeed && !this.activeDestination.speed)
+        this.activeDestination.speed &&
+        this.getPickUpInfoCD.pickupSpeed &&
+        this.activeDestination.speed.speed_pricing_upper_limit_date <=
+          this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
       ) {
         this.overlayStatusSet(true, "deliveryOptionCrossdock");
         this.misMatchedDatesError = this.$t(

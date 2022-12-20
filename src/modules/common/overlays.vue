@@ -147,17 +147,6 @@
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
-      <label for="customer-name" class="edit-info-label">
-        {{ $t("deliveries.nameOfCustomer") }}
-      </label>
-      <v-text-field
-        class="businessProfile-field"
-        id="customer-name"
-        v-model="customerName"
-        variant="outlined"
-        clearable
-        clear-icon="mdi-close"
-      ></v-text-field>
       <label for="location" class="edit-info-label">
         {{ $t("inventory.locationOfCustomer") }}
       </label>
@@ -171,47 +160,18 @@
         :disabled="!partnerNotAssigned"
       >
       </GMapAutocomplete>
-      <label for="phone-number" class="edit-info-label">
-        {{ $t("deliveries.phoneNumber") }}
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
       </label>
-      <vue-tel-input
-        v-bind="getSendyPhoneProps"
-        class="invite-phone"
-        id="phone-number"
-        v-model="phone"
-        mode="international"
-      ></vue-tel-input>
-      <label
-        for="sec-phone-number"
-        v-if="secondaryPhoneStatus"
-        class="edit-info-label"
-      >
-        {{ $t("deliveries.phoneNumber") }}
-      </label>
-      <vue-tel-input
-        v-bind="getSendyPhoneProps"
-        v-if="secondaryPhoneStatus"
-        class="invite-phone"
-        id="sec-phone-number"
-        v-model="secPhone"
-        mode="international"
-      ></vue-tel-input>
-      <div
-        class="add-phone-number mb-4"
-        v-if="!secondaryPhoneStatus"
-        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
-      >
-        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
-        {{ $t("inventory.addAnotherPhoneNo") }}
-      </div>
-      <div
-        class="add-phone-number mb-4"
-        v-if="secondaryPhoneStatus"
-        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
-      >
-        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
-        {{ $t("deliveries.removePhoneNumber") }}
-      </div>
+      <v-text-field
+        class="businessProfile-field crossdocking-input-fields-v-text"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+        :disabled="!partnerNotAssigned"
+      ></v-text-field>
       <label for="instructions" class="edit-info-label">
         {{ $t("inventory.deliveryInstructions") }}
       </label>
@@ -229,8 +189,124 @@
         v-loading="buttonLoader"
         @click="submitDelivery()"
       >
-        {{ $t("deliveries.submit") }}
+        {{ $t("deliveries.saveDetails") }}
       </v-btn>
+    </div>
+    <div v-if="popup === 'recepientInfo'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.receivingItems") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'recepientInfoCrossdock')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <div
+        v-if="v$.recepientOption.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        <i class="mdi mdi-alert mr-3"></i>
+        {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+      </div>
+      <el-radio-group v-model="recepientOption" class="">
+        <div class="payment-collection-overlay-border-top padding-override">
+          <el-radio label="INDIVIDUAL" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.individual") }}
+            </span>
+          </el-radio>
+        </div>
+        <div class="payment-collection-overlay-border-bottom padding-override">
+          <el-radio label="BUSINESS" size="large">
+            <span class="mb-0 ml-3 font-override recepient-info-label">
+              <i
+                class="mdi mdi-domain cross-docking-checkout-icons recepient-info-icons"
+              ></i
+              >{{ $t("deliveries.business") }}
+            </span>
+          </el-radio>
+        </div>
+      </el-radio-group>
+      <div v-if="recepientOption">
+        <p class="crossdock-recipient-details-text">
+          {{
+            recepientOption === "INDIVIDUAL"
+              ? $t("deliveries.enterRecipientDetails")
+              : $t("deliveries.enterBusinessDetails")
+          }}
+        </p>
+        <label for="customer-name" class="edit-info-label">
+          {{
+            recepientOption === "INDIVIDUAL"
+              ? $t("deliveries.recipientName")
+              : $t("deliveries.businessName")
+          }}
+        </label>
+        <v-text-field
+          class="businessProfile-field crossdocking-input-fields-v-text"
+          id="customer-name"
+          v-model="customerName"
+          variant="outlined"
+          placeholder="Enter customer name"
+          clearable
+          clear-icon="mdi-close"
+        ></v-text-field>
+        <label for="phone-number" class="edit-info-label">
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          class="invite-phone"
+          id="phone-number"
+          v-model="phone"
+          mode="international"
+        ></vue-tel-input>
+        <label
+          for="sec-phone-number"
+          v-if="secondaryPhoneStatus"
+          class="edit-info-label"
+        >
+          {{ $t("deliveries.phoneNumber") }}
+        </label>
+        <vue-tel-input
+          v-bind="getSendyPhoneProps"
+          v-if="secondaryPhoneStatus"
+          class="invite-phone"
+          id="sec-phone-number"
+          v-model="secPhone"
+          mode="international"
+        ></vue-tel-input>
+        <div
+          class="add-phone-number mb-4"
+          v-if="!secondaryPhoneStatus"
+          @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+          {{ $t("inventory.addAnotherPhoneNo") }}
+        </div>
+        <div
+          class="add-phone-number mb-4"
+          v-if="secondaryPhoneStatus"
+          @click="removePhoneNumber()"
+        >
+          <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+          {{ $t("deliveries.removePhoneNumber") }}
+        </div>
+      </div>
+      <div @click="validateFields()">
+        <v-btn
+          :disabled="!isRecipientFieldsValid"
+          v-loading="buttonLoader"
+          class="edit-info-submit-button"
+          @click="submitDelivery()"
+        >
+          {{ $t("deliveries.saveInfo") }}
+        </v-btn>
+      </div>
     </div>
     <div
       v-if="popup === 'deliveryInfoCrossdock'"
@@ -306,7 +382,7 @@
           {{ $t("deliveries.receivingItems") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
+          @click="overlayStatusSet(false, 'recepientInfoCrossdock')"
           class="mdi mdi-close view-products-close"
         ></i>
       </div>
@@ -319,7 +395,7 @@
       </div>
       <el-radio-group v-model="recepientOption" class="">
         <div class="payment-collection-overlay-border-top padding-override">
-          <el-radio label="individual" size="large">
+          <el-radio label="INDIVIDUAL" size="large">
             <span class="mb-0 ml-3 font-override recepient-info-label">
               <i
                 class="mdi mdi-account-outline cross-docking-checkout-icons recepient-info-icons"
@@ -342,14 +418,14 @@
       <div v-if="recepientOption">
         <p class="crossdock-recipient-details-text">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.enterRecipientDetails")
               : $t("deliveries.enterBusinessDetails")
           }}
         </p>
         <label for="customer-name" class="edit-info-label">
           {{
-            recepientOption === "individual"
+            recepientOption === "INDIVIDUAL"
               ? $t("deliveries.recipientName")
               : $t("deliveries.businessName")
           }}
@@ -840,24 +916,7 @@
         ></i>
       </div>
       <p>
-        {{
-          getParent === "sendy"
-            ? $t("deliveries.cantEditPickups")
-            : $t("deliveries.cantEditDelivery")
-        }}
-      </p>
-      <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
-    </div>
-    <div v-if="popup === 'noEditsProducts'" class="view-products-container">
-      <div class="view-products-section">
-        <p class="view-products-label">{{ $t("deliveries.weAreSorry") }}</p>
-        <i
-          @click="overlayStatusSet(false, 'noEditsProducts')"
-          class="mdi mdi-close view-products-close"
-        ></i>
-      </div>
-      <p>
-        {{ $t("deliveries.cantEditProducts") }}
+        {{ popText }}
       </p>
       <v-btn class="get-help-button">{{ $t("deliveries.getHelp") }} </v-btn>
     </div>
@@ -962,7 +1021,8 @@
               <p class="mb-2 ml-3">
                 {{
                   $t("inventory.deliveryFeeAmount", {
-                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency}
+                                ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
                   })
                 }}
               </p>
@@ -1027,6 +1087,114 @@
             :disabled="!isPaymentCollectionValid"
             v-loading="buttonLoader"
             @click="setPaymentCollection()"
+          >
+            {{ $t("inventory.done") }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
+
+    <div
+      v-if="popup === 'editpaymentCollection'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'editpaymentCollection')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <p class="payment-collection-overlay-title">
+          {{ $t("inventory.doYouWantPaymentToBeCollected") }}
+        </p>
+        <div
+          v-if="v$.deliveryFeeCollection.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseSelectAnOptionToProceed") }}
+        </div>
+        <p
+          class="select-payment-collection-error"
+          v-if="selectPaymentCollection"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          <span class="select-payment-collection-error-text">{{
+            $t("inventory.pleaseSelectPaymentCollectionOption")
+          }}</span>
+        </p>
+        <el-radio-group v-model="deliveryFeeCollection" class="">
+          <div class="payment-collection-overlay-border-top">
+            <el-radio label="nofee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{ productCurrency }}
+                {{ productPrice }}
+              </p>
+            </el-radio>
+          </div>
+          <div class="payment-collection-overlay-border-middle">
+            <el-radio label="fee" size="large">
+              <p class="mb-2 ml-3 font-override">
+                {{ $t("inventory.priceOfProducts&DeliveryFee") }}
+              </p>
+              <p class="mb-2 ml-3">
+                {{
+                  $t("inventory.deliveryFeeAmount", {
+                    Amount: `${currency} ${productPrice}`,
+                  })
+                }}
+              </p>
+            </el-radio>
+            <div
+              class="payment-collection-overlay-amount-field"
+              v-if="deliveryFeeCollection === 'fee'"
+            >
+              <p
+                class="select-payment-collection-error"
+                v-if="enterDeliveryFee"
+              >
+                <i class="mdi mdi-alert mr-3"></i>
+                <span class="select-payment-collection-error-text">{{
+                  $t("inventory.pleaseEnterTheDeliveryFeeAmount")
+                }}</span>
+              </p>
+              <p class="delivery-fee-collection-overlay-title">
+                {{ $t("inventory.deliveryFeeToBeCollected") }}
+              </p>
+              <v-text-field
+                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
+                v-model="deliveryFeeAmount"
+                variant="outlined"
+                :prefix="
+                  getFulfillmentFees.pricing.pricing_deliveries[
+                    getDestinationIndex
+                  ].currency
+                "
+                clearable
+                clear-icon="mdi-close"
+              ></v-text-field>
+            </div>
+          </div>
+          <div
+            class="payment-collection-overlay-border-bottom padding-override"
+          >
+            <el-radio label="none" size="large">
+              <p class="mb-0 ml-3 font-override">
+                {{ $t("inventory.noDontCollectPayment") }}
+              </p>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <div class="export-popup-buttons mt-3" @click="validateFields()">
+          <v-btn
+            class="edit-user-save edit-info-submit-button"
+            :disabled="!isPaymentCollectionValid"
+            v-loading="buttonLoader"
+            @click="submitDelivery()"
           >
             {{ $t("inventory.done") }}
           </v-btn>
@@ -1129,7 +1297,7 @@
               (documentType === 'Other' && !documentTitle)
             "
             class="cross-docking-upload-doc"
-            @click="addPDFDocument()"
+            @click="editStatus === true ? editPDFDocument() : addPDFDocument()"
           >
             {{ $t("inventory.uploadDocument") }}
           </v-btn>
@@ -1155,6 +1323,58 @@
           height="600px"
         ></iframe>
       </div>
+    </div>
+    <div v-if="popup === 'addRemoveDocument'" class="view-products-container">
+      <div class="view-products-section">
+        <p class="view-products-label view-products-label-recepient-info">
+          {{ $t("deliveries.addRemoveDocuments") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'addRemoveDocument')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <div
+        v-for="(docs, x) in mapEdittedDocuments"
+        :key="x"
+        class="crossdocking-documents-list"
+      >
+        <div class="crossdocking-documents-list-inner">
+          <i class="mdi mdi-text-box-outline"></i>
+          <span class="ml-3 document-type-text">{{
+            docs.document_type === "OTHER"
+              ? docs.document_description
+              : docs.document_type
+          }}</span>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <i
+                class="mdi mdi-dots-vertical payment-method-icon"
+                v-bind="props"
+              ></i>
+            </template>
+            <v-list>
+              <v-list-item v-for="(option, i) in options" :key="i">
+                <v-list-item-title @click="execute(option.action, x)">{{
+                  option.title
+                }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </div>
+      <p class="edit-delivery edit-delivery-override">
+        <span @click="uploadAnotherDocument()"
+          >+ {{ $t("deliveries.uploadAnotherDocument") }}
+        </span>
+      </p>
+      <v-btn
+        class="edit-info-submit-button"
+        v-loading="buttonLoader"
+        @click="submitDelivery()"
+      >
+        {{ $t("deliveries.save") }}
+      </v-btn>
     </div>
     <div v-if="popup === 'pickItems'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
@@ -1237,6 +1457,66 @@
       >
         {{ $t("inventory.done") }}
       </v-btn>
+    </div>
+    <div v-if="popup === 'editSpeed'" class="view-products-container">
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'editSpeed')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.selectDeliveryOption") }}
+        </p>
+        <el-radio-group
+          v-model="deliveryOption"
+          class="delivery-option-crossdock-radio-group"
+        >
+          <div
+            class="delivery-option-crossdock-radio padding-override"
+            v-for="(speed, i) in deliverySpeedOptions"
+            :key="i"
+          >
+            <el-radio
+              :label="i"
+              size="large"
+              class="delivery-option-crossdock-radio-group"
+            >
+              <div class="font-override recepient-info-label">
+                <div class="delivery-option-crossdock-radio-group">
+                  <span>
+                    {{
+                      speed.transport_provider === "SENDY"
+                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
+                        : speed.transport_provider.replace("_", " ")
+                    }}
+                  </span>
+                  <span class="delivery-option-crossdock-radio-right">
+                    {{ speed.currency }} {{ speed.price }}
+                  </span>
+                </div>
+                <div class="delivery-option-crossdock-radio-group-bottom">
+                  {{
+                    speed.transport_provider === "SENDY"
+                      ? speed.speed_pricing_type === "SENDY_SCHEDULED"
+                        ? $t("inventory.selectADateOfYourChoice")
+                        : formatDate(speed.speed_pricing_upper_limit_date)
+                      : formatDate(speed.speed_pricing_upper_limit_date)
+                  }}
+                </div>
+              </div>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <v-btn
+          class="edit-info-submit-button"
+          v-loading="buttonLoader"
+          @click="submitDelivery()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
     </div>
     <div v-if="popup === 'removeDestination'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
@@ -1672,6 +1952,7 @@ import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
+import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
@@ -1681,151 +1962,22 @@ export default {
     return { v$: useVuelidate() };
   },
   props: ["overlayVal", "editInfo"],
-  mixins: [upload_img],
-  validations() {
-    return {
-      location: { required },
-      recepientOption: { required },
-      deliveryFeeCollection: { required },
-      PDF: { required },
-      documentType: { required },
-    };
-  },
-  watch: {
-    "$store.state.overlayStatus": function (val) {
-      this.overlay = val.overlay;
-      this.popup = val.popup;
-      if (this.getSelectedProducts[this.getEditedPriceIndex]) {
-        const optionCurrency = this.getSelectedProducts[
-          this.getEditedPriceIndex
-        ].selectedOption
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_currency
-          : this.getSelectedProducts[this.getEditedPriceIndex]
-              .product_variants[0].product_variant_currency;
-        const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
-          .selectedOption
-          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
-              .product_variant_unit_price
-          : this.getSelectedProducts[this.getEditedPriceIndex]
-              .product_variants[0].product_variant_unit_price;
-        this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
-        this.newPrice = val.popup === "editPrice" ? optionPrice : "";
-      }
-      this.paymentCollection = this.getPaymentCollectionStatus.status;
-      this.deliveryFeeCollection =
-        this.getPaymentCollectionStatus.amountToBeCollected;
-      this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
-      this.preloadDeliveryDetails(val);
-      this.preloadDeliveryOption(val);
-    },
-    "$store.state.orderTrackingData": function orderTrackingData(val) {
-      this.customerName = val.order.destination.name;
-      this.location = val.order.destination.delivery_location.description;
-      this.phone = val.order.destination.phone_number;
-      this.secondaryPhoneStatus =
-        val.order.destination.secondary_phone_number !== null &&
-        val.order.destination.secondary_phone_number !== "";
-      this.secPhone = val.order.destination.secondary_phone_number;
-      this.instructions = val.order.destination.delivery_instructions;
-      this.date = new Date(val.order.scheduled_date);
-    },
-  },
   components: { Datepicker },
-  computed: {
-    ...mapGetters([
-      "getData",
-      "getDeliveryAttempts",
-      "getOrderTrackingData",
-      "getFulfillmentFees",
-      "getParent",
-      "getStorageUserDetails",
-      "getEditedPriceIndex",
-      "getSelectedProducts",
-      "getActivePayment",
-      "getBusinessDetails",
-      "getUserDetails",
-      "getMapOptions",
-      "getSendyPhoneProps",
-      "getUser",
-      "getLoader",
-      "getActiveUser",
-      "getExportDataType",
-      "getPaymentCollectionStatus",
-      "getDestinations",
-      "getDestinationIndex",
-      "getDocumentURL",
-      "getStations",
-      "getPickUpInfoCD",
-      "getPickUpSpeed",
-      "getDeliverySpeed",
-      "getMismatchedDates",
-    ]),
-    partnerNotAssigned() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
-      );
-    },
-    deliverySpeeds() {
-      return this.getDeliverySpeed.length
-        ? this.getDeliverySpeed[this.getDestinationIndex].proposed_speeds
-        : [];
-    },
-    pickUpSpeeds() {
-      return this.getPickUpSpeed.length
-        ? this.getPickUpSpeed[0].proposed_speeds
-        : [];
-    },
-    deliveryFee() {
-      let fee = 0;
-      this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
-        (row) => {
-          if (row.adjustment_type === "DELIVERY_FEE") {
-            fee = row.adjustment_subtotal;
-          }
-        }
-      );
-      return fee;
-    },
-    activeDestination() {
-      return this.getDestinations[this.getDestinationIndex];
-    },
-    isDeliveryFieldsValid() {
-      return this.location.length;
-    },
-    isRecipientFieldsValid() {
-      return this.customerName.length && this.phone.length;
-    },
-    isPickUpFieldsValid() {
-      return this.location.length && this.phone.length;
-    },
-    isPaymentCollectionValid() {
-      return this.deliveryFeeCollection;
-    },
-    isDeliveryOptionValid() {
-      return this.deliveryOption !== "";
-    },
-    isPickUpOptionValid() {
-      return this.pickUpOption !== "";
-    },
-    isScheduledPickUpDateValid() {
-      return this.pickUpDate !== "";
-    },
-    isScheduledDeliveryDateValid() {
-      return this.deliveryDate !== "";
-    },
-  },
+  mixins: [upload_img, trackingPayloadMixin],
   data() {
     return {
       overlay: false,
       popup: "",
+      popText: "",
+      editStatus: false,
       amount: "780",
       currency: "KES",
       name: "Judy",
       orders: 3,
       promoCode: "",
+      deliveryOption: "",
       newPrice: "",
+      deliverySpeed: "",
       newCurrency: "",
       date: new Date(),
       location: "",
@@ -1834,6 +1986,7 @@ export default {
       apartmentName: "",
       recepientOption: "",
       PDFUploadStatus: "",
+      documents: [],
       PDF: "",
       cancelReasons: [
         {
@@ -1872,15 +2025,191 @@ export default {
           value: "Other",
         },
       ],
+      options: [
+        {
+          title: this.$t("inventory.viewDocument"),
+          action: "viewDocument",
+        },
+        {
+          title: this.$t("inventory.remove"),
+          action: "removeDocument",
+        },
+      ],
       documentTitle: "",
       pickItems: "",
       pickUpStation: "",
-      deliveryOption: "",
       pickUpOption: "",
       misMatchedDatesError: "",
       deliveryDate: new Date(),
       pickUpDate: new Date(),
     };
+  },
+  validations() {
+    return {
+      location: { required },
+      recepientOption: { required },
+      deliveryFeeCollection: { required },
+      PDF: { required },
+      documentType: { required },
+    };
+  },
+  watch: {
+    "$store.state.overlayStatus": function (val) {
+      this.overlay = val.overlay;
+      this.popup = val.popup;
+      this.popText = val.popText;
+      this.editStatus = val.editStatus;
+      if (this.getSelectedProducts[this.getEditedPriceIndex]) {
+        const optionCurrency = this.getSelectedProducts[
+          this.getEditedPriceIndex
+        ].selectedOption
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_currency
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_currency;
+        const optionPrice = this.getSelectedProducts[this.getEditedPriceIndex]
+          .selectedOption
+          ? this.getSelectedProducts[this.getEditedPriceIndex].selectedOption
+              .product_variant_unit_price
+          : this.getSelectedProducts[this.getEditedPriceIndex]
+              .product_variants[0].product_variant_unit_price;
+        this.newCurrency = val.popup === "editPrice" ? optionCurrency : "";
+        this.newPrice = val.popup === "editPrice" ? optionPrice : "";
+      }
+      this.preloadDeliveryDetails(val);
+      this.preloadDeliveryOption(val);
+    },
+    "$store.state.orderTrackingData": function orderTrackingData(val) {
+      this.preloadOrderTrackingData(val);
+    },
+  },
+  computed: {
+    ...mapGetters([
+      "getData",
+      "getDeliveryAttempts",
+      "getOrderTrackingData",
+      "getFulfillmentFees",
+      "getParent",
+      "getStorageUserDetails",
+      "getEditedPriceIndex",
+      "getSelectedProducts",
+      "getActivePayment",
+      "getBusinessDetails",
+      "getUserDetails",
+      "getMapOptions",
+      "getSendyPhoneProps",
+      "getUser",
+      "getLoader",
+      "getActiveUser",
+      "getExportDataType",
+      "getPaymentCollectionStatus",
+      "getDestinations",
+      "getDestinationIndex",
+      "getDocumentURL",
+      "getStations",
+      "getPickUpInfoCD",
+      "getPickUpSpeed",
+      "getEdittedDocuments",
+      "getEditStatus",
+      "getDeliverySpeed",
+      "getMismatchedDates",
+    ]),
+    partnerNotAssigned() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
+    deliverySpeeds() {
+      return this.getDeliverySpeed.length
+        ? this.getDeliverySpeed[this.getDestinationIndex].proposed_speeds
+        : [];
+    },
+    pickUpSpeeds() {
+      return this.getPickUpSpeed.length
+        ? this.getPickUpSpeed[0].proposed_speeds
+        : [];
+    },
+    deliveryFee() {
+      let fee = 0;
+      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
+        (row) => {
+          if (row.adjustment_type === "DELIVERY_FEE") {
+            fee = row.adjustment_subtotal;
+          }
+        }
+      );
+      return fee;
+    },
+    activeDestination() {
+      return this.getDestinations[this.getDestinationIndex];
+    },
+    isDeliveryFieldsValid() {
+      return this.location.length;
+    },
+    isRecipientFieldsValid() {
+      return this.customerName.length && this.phone.length;
+    },
+    isPickUpFieldsValid() {
+      return this.location.length && this.phone.length;
+    },
+    isPaymentCollectionValid() {
+      return this.deliveryFeeCollection;
+    },
+    isDeliveryOptionValid() {
+      return this.deliveryOption !== "";
+    },
+    isPickUpOptionValid() {
+      return this.pickUpOption !== "";
+    },
+    isScheduledPickUpDateValid() {
+      return this.pickUpDate !== "";
+    },
+    isScheduledDeliveryDateValid() {
+      return this.deliveryDate !== "";
+    },
+    productPrice() {
+      let price = 0;
+      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
+        (row) => {
+          if (row.adjustment_type === "SALE_OF_GOOD") {
+            price = row.adjustment_subtotal;
+          }
+        }
+      );
+      return price;
+    },
+    productCurrency() {
+      return this.getOrderTrackingData.order?.sale_of_goods_invoice?.currency;
+    },
+    paymentOnDeliveryFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.payments_on_delivery_enabled
+        : false;
+    },
+    paymentStatuses() {
+      let paymentStatus = "";
+      if (
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[0].adjustment_type ===
+          "DELIVERY_FEE" &&
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[1].adjustment_type === "SALE_OF_GOOD"
+      ) {
+        paymentStatus = "fee";
+      } else if (
+        this.getOrderTrackingData.order?.sale_of_goods_invoice
+          ?.invoice_adjustments_subtotals[0].adjustment_type === "SALE_OF_GOOD"
+      ) {
+        paymentStatus = "nofee";
+      } else {
+        paymentStatus = "none";
+      }
+      return paymentStatus;
+    },
+    deliverySpeedOptions() {
+      return this.getDeliverySpeed[0]?.proposed_speeds;
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -1913,6 +2242,12 @@ export default {
       "setPickUpInfoCD",
       "setPickUpStation",
       "setMismatchedDates",
+      "setOverlayStatus",
+      "setEdittedDocuments",
+      "setEditStatus",
+      "setDocumentURL",
+      "setDeliverySpeed",
+      "setFinalDocumentsToEdit",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2141,6 +2476,34 @@ export default {
         this.documentType = "";
         this.v$.$reset();
       }, 500);
+    },
+    editPDFDocument() {
+      const docObj = {
+        document_type: this.documentType.toUpperCase(),
+        document_url: this.PDF,
+        document_description: this.documentTitle,
+      };
+      this.documents.push(docObj);
+      this.setEdittedDocuments(this.documents);
+      this.setFinalDocumentsToEdit[{}];
+      this.setFinalDocumentsToEdit([
+        ...this.getOrderTrackingData.order.documents,
+        ...this.getEdittedDocuments,
+      ]);
+      this.overlayStatusSet(true, "addRemoveDocument");
+      setTimeout(() => {
+        this.documentTitle = "";
+        this.PDF = "";
+        this.documentType = "";
+        this.v$.$reset();
+      }, 300);
+    },
+    uploadAnotherDocument() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "deliveryDocuments",
+        editStatus: true,
+      });
     },
     overlayStatusSet(overlay, popup) {
       this.overlay = overlay;
@@ -2387,43 +2750,8 @@ export default {
       }
     },
     async submitDelivery() {
-      const order = this.getOrderTrackingData.order;
       this.buttonLoader = true;
-      const meansOfPayment =
-        this.getOrderTrackingData.order.fulfilment_cost_means_of_payment;
-      const payload = {
-        means_of_payment: {
-          means_of_payment_type: meansOfPayment.means_of_payment_type,
-          means_of_payment_identifier: meansOfPayment.means_of_payment_id,
-          participant_type: meansOfPayment.participant_type,
-          participant_id: meansOfPayment.participant_id,
-          meta_data: meansOfPayment.meta_data,
-        },
-        destination: {
-          name: this.customerName ? this.customerName : order.destination.name,
-          phone_number: this.phone
-            ? this.phone
-            : order.destination.phone_number,
-          secondary_phone_number: this.secPhone
-            ? this.secPhone
-            : order.destination.secondary_phone_number,
-          delivery_location: {
-            description: this.location
-              ? this.location
-              : order.destination.delivery_location.description,
-            longitude: this.locationData.geometry
-              ? this.locationData.geometry.location.lng()
-              : order.destination.delivery_location.longitude,
-            latitude: this.locationData.geometry
-              ? this.locationData.geometry.location.lat()
-              : order.destination.delivery_location.latitude,
-          },
-          house_location: order.destination.house_location,
-          delivery_instructions: this.instructions
-            ? this.instructions
-            : order.destination.delivery_instructions,
-        },
-      };
+      const payload = this.submitDeliveryPayload;
       if (!this.partnerNotAssigned) {
         delete payload.destination.delivery_location;
       }
@@ -2482,6 +2810,12 @@ export default {
           this.buttonLoader = false;
         }
       });
+    },
+    formatTime(time) {
+      return moment(time).format("Do MMM h:mm a");
+    },
+    formatDate(date) {
+      return moment(date).format("ddd, Do MMM");
     },
     cancel() {
       this.buttonLoader = true;
@@ -2542,12 +2876,6 @@ export default {
     redirect(status, popup, link) {
       this.overlayStatusSet(status, popup);
       this.$router.push(link);
-    },
-    formatTime(time) {
-      return moment(time).format("Do MMM h:mm a");
-    },
-    formatDate(date) {
-      return moment(date).format("ddd, Do MMM");
     },
     updatePrice() {
       if (this.getSelectedProducts[this.getEditedPriceIndex].selectedOption) {
@@ -2644,6 +2972,43 @@ export default {
         this.instructions = this.getPickUpInfoCD.instructions
           ? this.getPickUpInfoCD.instructions
           : "";
+      } else if (val.popup === "paymentCollection") {
+        this.paymentCollection = this.getPaymentCollectionStatus.status;
+        this.deliveryFeeCollection =
+          this.getPaymentCollectionStatus.amountToBeCollected;
+        this.deliveryFeeAmount = this.getPaymentCollectionStatus.deliveryFee;
+      }
+    },
+    preloadOrderTrackingData(val) {
+      this.customerName = val.order.destination.name;
+      this.location = val.order.destination.delivery_location.description;
+      this.phone = val.order.destination.phone_number;
+      this.secondaryPhoneStatus =
+        val.order.destination.secondary_phone_number !== null &&
+        val.order.destination.secondary_phone_number !== "";
+      this.secPhone = val.order.destination.secondary_phone_number;
+      this.instructions = val.order.destination.delivery_instructions;
+      this.date = new Date(val.order.scheduled_date);
+      this.apartmentName = val.order.destination.house_location;
+      this.recepientOption =
+        val.order.destination.buyer_type !== null
+          ? val.order.destination.buyer_type
+          : "INDIVIDUAL";
+      this.deliveryFeeCollection = this.paymentStatuses;
+      this.deliveryFeeAmount = this.deliveryFee;
+    },
+    execute(option, index) {
+      if (option === "viewDocument") {
+        this.setDocumentURL(
+          this.getOrderTrackingData.order.documents[index].document_url
+        );
+        this.setOverlayStatus({
+          overlay: true,
+          popup: "viewDocument",
+        });
+      } else {
+        const data = this.mapEdittedDocuments;
+        data.splice(index, 1);
       }
     },
   },
@@ -2658,22 +3023,27 @@ export default {
   padding: 40px;
   font-family: "DM Sans";
 }
+
 .vuejs3-datepicker div:first-child {
   display: none !important;
 }
+
 .tracking-reschedule-title-section {
   margin-bottom: 20px;
   display: flex;
 }
+
 .tracking-reschedule-title-label {
   font-size: 15px;
   width: 60%;
 }
+
 .tracking-reschedule-title-close {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .tracking-reschedule-submit-button {
   margin-top: 40px;
   width: 150px;
@@ -2683,9 +3053,11 @@ export default {
   background: #324ba8;
   margin-left: auto;
 }
+
 .vuejs3-datepicker__calendar {
   box-shadow: none !important;
 }
+
 .tracking-order-actions-btn {
   float: right;
   margin-right: 5%;
@@ -2694,10 +3066,12 @@ export default {
   letter-spacing: 0px;
   border: 1px solid #e0e0e0;
 }
+
 .tracking-cancel-title-label {
   font-size: 15px;
   width: 80%;
 }
+
 .tracking-cancel-button {
   width: -webkit-fill-available;
   text-transform: capitalize;
@@ -2706,6 +3080,7 @@ export default {
   background: #9b101c;
   margin-left: auto;
 }
+
 .make-payment-label {
   font-size: 18px;
   width: 100%;
@@ -2714,63 +3089,80 @@ export default {
   margin-left: 20px;
   margin-top: 40px;
 }
+
 .make-payment-lower-section {
   text-align: center;
 }
+
 .make-payment-upper-section {
   margin-bottom: 0px !important;
 }
+
 .make-payment-alert-icon {
   color: #ee7d00;
   font-size: 60px;
 }
+
 .make-payment-description {
   color: #606266;
   margin-top: 0px;
 }
+
 .make-payment-amount {
   font-weight: 700;
 }
+
 .edit-price-title {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .edit-price-description {
   display: flex;
   color: #7f3b02;
 }
+
 .edit-price-description-text {
   margin-left: 10px;
 }
+
 .margin-override {
   margin: 0px !important;
 }
+
 .fees-left-override {
   float: right;
   margin-left: auto;
 }
+
 .fees-row {
   display: flex;
   height: 70px;
   align-items: center;
 }
+
 .fee-margin-top {
   margin-top: 40px;
 }
+
 .fee-padding-bottom {
   padding-bottom: 40px;
 }
+
 .fees-bold {
   font-weight: 500;
 }
+
 .fees-subtitle {
   font-size: 12px;
   color: #606266;
 }
+
 .fees-divider {
   border-bottom: 1px solid #e2e7ed;
 }
+
 .pricing-docs-link {
   color: #324ba8;
   cursor: pointer;
@@ -2778,14 +3170,17 @@ export default {
   align-items: center;
   font-size: 15px;
 }
+
 .crossdock-recipient-details-text {
   margin: 1rem 0px 1rem 0px !important;
 }
+
 .fees-title {
   display: flex;
   align-items: flex-end;
   padding-bottom: 10px;
 }
+
 .delivery-code {
   font-size: 40px;
   font-weight: 500;
@@ -2793,10 +3188,12 @@ export default {
   text-align: center;
   margin: 30px;
 }
+
 .recepient-info-icons {
   font-size: 20px !important;
   padding-right: 6px !important;
 }
+
 .user-added-container {
   background: white;
   display: flex;
@@ -2806,51 +3203,63 @@ export default {
   border-radius: 5px;
   font-family: "DM Sans";
 }
+
 .user-added-section {
   display: flex;
 }
+
 .user-added-label {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .user-added-close-icon {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .user-added-row-top {
   display: flex;
   padding-bottom: 15px;
   border-bottom: 0.6px solid #c0c4cc78;
   margin-bottom: 15px;
 }
+
 .user-added-row-top-name {
   margin-bottom: 0px;
 }
+
 .user-added-row-top-variant {
   color: #606266;
 }
+
 .user-added-row-top-left {
   margin-left: 20px;
 }
+
 .user-added-row-top-right {
   font-weight: 500;
   font-size: 16px;
   margin-left: auto;
 }
+
 .user-added-row-bottom {
   color: #606266;
   margin-bottom: 20px;
 }
+
 .user-added-img {
   width: 40px;
 }
+
 .user-added-close {
   width: 100%;
   display: flex;
   align-items: flex-end;
 }
+
 .user-added-check {
   font-size: 60px;
   color: #116f28;
@@ -2863,21 +3272,25 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .user-added-section-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .user-added-title {
   color: #303133;
   font-weight: 500;
 }
+
 .user-added-description {
   color: #303133;
   font-size: 14px;
   width: 75%;
   text-align: center;
 }
+
 .resend-invite-container {
   background: white;
   display: flex;
@@ -2887,68 +3300,84 @@ export default {
   border-radius: 5px;
   font-family: "DM Sans";
 }
+
 .resend-invite-section {
   display: flex;
 }
+
 .resend-invite-label {
   font-size: 16px;
   width: 60%;
   font-weight: 500;
 }
+
 .resend-invite-close-icon {
   font-size: 20px;
   margin-left: auto;
   cursor: pointer;
 }
+
 .resend-invite-row-top {
   display: flex;
   padding-bottom: 15px;
   border-bottom: 0.6px solid #c0c4cc78;
   margin-bottom: 15px;
 }
+
 .resend-invite-row-top-name {
   margin-bottom: 0px;
 }
+
 .resend-invite-row-top-variant {
   color: #606266;
 }
+
 .resend-invite-row-top-left {
   margin-left: 20px;
 }
+
 .resend-invite-row-top-right {
   font-weight: 500;
   font-size: 16px;
   margin-left: auto;
 }
+
 .resend-invite-row-bottom {
   color: #606266;
   margin-bottom: 20px;
 }
+
 .resend-invite-img {
   width: 40px;
 }
+
 .recepient-info-label {
   padding-left: 10px !important;
 }
+
 .resend-invite-close {
   width: 100%;
   display: flex;
   align-items: flex-end;
 }
+
 .resend-invite-check {
   font-size: 60px;
   color: #116f28;
   margin-bottom: 20px;
 }
+
 .resend-invite-section-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .resend-invite-title {
   color: #303133;
   margin-bottom: 0px;
 }
+
 .resend-invite-description {
   color: #303133;
   font-size: 18px;
@@ -2960,15 +3389,18 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .deactivate-user-description {
   color: #909399;
 }
+
 .deactivate-user-no {
   color: #909399;
   text-align: center;
   margin-top: 25px;
   cursor: pointer;
 }
+
 .edit-info-submit-button:disabled {
   margin-top: 40px;
   text-transform: capitalize;
@@ -2977,6 +3409,7 @@ export default {
   background: #d3ddf6 !important;
   width: -webkit-fill-available;
 }
+
 .cross-docking-upload-doc:disabled {
   text-transform: capitalize;
   letter-spacing: 0px;
@@ -2985,6 +3418,7 @@ export default {
   width: -webkit-fill-available;
   height: 50px !important;
 }
+
 .cross-docking-upload-doc {
   text-transform: capitalize;
   letter-spacing: 0px;
@@ -2993,6 +3427,7 @@ export default {
   width: -webkit-fill-available;
   height: 50px !important;
 }
+
 .get-help-button {
   width: 100%;
   margin-top: 20px;
@@ -3004,20 +3439,29 @@ export default {
   font-size: 16px;
   font-weight: 400 !important;
 }
+
 .export-popup-buttons {
   display: flex;
   align-items: center;
 }
+
 .export-CSV-button {
   margin-left: 70px;
   width: 260px;
 }
+
 .export-CSV-description {
   color: #606266;
 }
+
 .businessProfile-address:disabled {
   background: #e2e7ed !important;
 }
+
+.businessProfile-field:disabled {
+  background: #e2e7ed !important;
+}
+
 .payment-collection-overlay-border-top {
   width: 100%;
   border: 1px solid #e2e7ed;
@@ -3025,6 +3469,82 @@ export default {
   border-top-left-radius: 10px;
   padding: 20px;
 }
+
+.crossdocking-remove-order-button {
+  height: 50px;
+  margin: 10px 0px 0px 0px;
+  background: #9b101c;
+  width: -webkit-fill-available;
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  color: white !important;
+  font-size: 16px;
+}
+
+.crossdocking-dont-remove-order-button {
+  box-shadow: none !important;
+  color: #909399 !important;
+  margin-top: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delivery-option-crossdock-radio {
+  width: 100%;
+  border: 1px solid #e2e7ed;
+  border-radius: 10px;
+  padding: 20px;
+  height: 75px;
+  margin: 5px 0px;
+}
+
+.delivery-option-crossdock-radio-group,
+.delivery-option-crossdock-radio-group .el-radio__label {
+  width: 100%;
+}
+
+.delivery-option-crossdock-radio-right {
+  float: right;
+}
+
+.delivery-option-crossdock-radio-group .el-radio__label {
+  font-size: 17px !important;
+  color: #303133;
+  margin-top: 10px !important;
+  margin-bottom: 2px !important;
+}
+
+.delivery-option-crossdock-radio-group-bottom {
+  color: #909399;
+  font-size: 14px;
+  padding-top: 3px;
+}
+
+.delivery-option-crossdock-title {
+  font-weight: 500;
+  font-size: 17px;
+}
+
+.delivery-option-notice-icon {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border-radius: 40px;
+  background: #d3ddf6;
+  color: #324ba8;
+  margin: 20px auto;
+}
+
+.delivery-option-notice-message {
+  text-align: center;
+  font-size: 19px;
+  margin-bottom: -10px;
+}
+
 .payment-collection-overlay-border-bottom {
   width: 100%;
   border: 1px solid #e2e7ed;
@@ -3033,37 +3553,46 @@ export default {
   padding: 20px;
   border-top: none;
 }
+
 .el-radio__input.is-checked + .el-radio__label {
   color: var(--el-radio-text-color) !important;
 }
+
 .el-radio__input.is-checked .el-radio__inner {
   border-color: #0062db !important;
   background: #0062db !important;
 }
+
 .payment-collection-overlay-title {
   font-size: 16px;
   font-weight: 500;
 }
+
 .padding-override {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
 }
+
 .font-override {
   font-weight: 400 !important;
 }
+
 .delivery-fee-collection-overlay-title {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
 }
+
 .payment-breakdown-amount {
   color: #909399;
   font-size: 15px;
   margin-bottom: 5px;
 }
+
 .payment-breakdown-title {
   font-size: 15px;
 }
+
 .payment-breakdown-products-count {
   background: #e2e7ed;
   display: flex;
@@ -3071,17 +3600,20 @@ export default {
   justify-content: center;
   height: 25px;
 }
+
 .payment-collection-overlay-border-middle {
   width: 100%;
   border: 1px solid #e2e7ed;
   padding: 20px;
   border-top: none;
 }
+
 .payment-collection-overlay-amount-field {
   margin-top: 25px;
   margin-left: 35px;
   margin-bottom: -30px;
 }
+
 .crossdocking-add-document-drop {
   height: max-content;
   width: 100%;
@@ -3092,24 +3624,29 @@ export default {
   padding: 25px;
   border-radius: 5px;
 }
+
 .crossdocking-add-document-drop-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
 }
+
 .crossdocking-add-document-drop-inner-bottom {
   color: #324ba8 !important;
   font-size: 14px;
   cursor: pointer;
   margin-top: -10px;
 }
+
 .crossdocking-add-document-titles {
   font-size: 15px;
 }
+
 .crossdocking-pick-items-text {
   white-space: normal;
 }
+
 .crossdocking-pickup-stations {
   height: 140px;
   display: flex;
@@ -3118,17 +3655,21 @@ export default {
   padding: 10px 20px;
   border-bottom: 1px solid #e2e7ed;
 }
+
 .crossdocking-stations-container {
   height: 350px;
   overflow: scroll;
 }
+
 .fees-container {
   max-height: 700px;
   overflow-y: scroll;
 }
+
 .crossdocking-input-fields {
   height: 40px !important;
 }
+
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
 }
@@ -3196,5 +3737,13 @@ export default {
   text-align: center;
   font-size: 19px;
   margin-bottom: -10px;
+}
+
+.document-type-text {
+  font-size: 14px;
+}
+
+.edit-delivery-override {
+  border-bottom: none !important;
 }
 </style>

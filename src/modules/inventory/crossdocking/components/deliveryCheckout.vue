@@ -1186,6 +1186,9 @@ export default {
             name: destination.recipient
               ? destination.recipient.customer_name
               : "",
+            buyer_type: destination.recipient
+              ? destination.recipient.recipient_type
+              : "",
             phone_number: destination.recipient
               ? destination.recipient.phone
               : "",

@@ -1731,28 +1731,6 @@ export default {
           value: "deliveries.duplicateOrder",
         },
       ],
-      speedOptions: [
-        {
-          name: "Same day delivery",
-          day: "Wed 25th",
-          price: "350",
-        },
-        {
-          name: "Same day delivery",
-          day: "Wed 25th",
-          price: "350",
-        },
-        {
-          name: "Same day delivery",
-          day: "Wed 25th",
-          price: "350",
-        },
-        {
-          name: "Same day delivery",
-          day: "Wed 25th",
-          price: "350",
-        },
-      ],
       paymentCollection: "",
       deliveryFeeCollection: "",
       selectPaymentCollection: false,

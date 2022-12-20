@@ -1187,8 +1187,8 @@ export default {
               ? destination.recipient.customer_name
               : "",
             buyer_type: destination.recipient
-              ? destination.recipient.recipient_type
-              : "",
+              ? destination.recipient.recipient_type.toUpperCase()
+              : null,
             phone_number: destination.recipient
               ? destination.recipient.phone
               : "",

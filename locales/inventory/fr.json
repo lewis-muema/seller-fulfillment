@@ -151,5 +151,11 @@
   "view": "Afficher",
   "weight": "Poids ou volume du produit",
   "whiteCoats": "Ex : Veste blanche, Beurre de Karité",
-  "youveNotAddedAnyProductYet": "Vous n’avez pas encore ajouté de produit"
+  "youveNotAddedAnyProductYet": "Vous n’avez pas encore ajouté de produit",
+  "selectADateOfYourChoice": "Select a date of your choice",
+  "selectDeliveryOption": "Select delivery option",
+  "SENDY_NEXT_DAY_DELIVERY": "Next day delivery",
+  "SENDY_SAME_DAY_DELIVERY": "Same day delivery",
+  "SENDY_EXPRESS_DELIVERY": "Express delivery",
+  "SENDY_SCHEDULED_DELIVERY": "Schedule delivery"
 }

@@ -1,15 +1,15 @@
 <template>
   <div>
-    <addStore />
+    <integrations />
   </div>
 </template>
 
 <script>
-import addStore from "./components/addStore.vue";
+import integrations from "./components/integrations.vue";
 import { mapMutations } from "vuex";
 
 export default {
-  components: { addStore },
+  components: { integrations },
   data() {
     return {};
   },

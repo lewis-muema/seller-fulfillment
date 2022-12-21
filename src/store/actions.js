@@ -25,6 +25,9 @@ export default {
       headers: {
         "Content-Type": "application/json",
         Authorization: localStorage.accessToken ? localStorage.accessToken : "",
+        "Fulfilment-Token": localStorage.accessToken
+          ? localStorage.accessToken
+          : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -282,6 +285,14 @@ export default {
     try {
       const res = await dispatch("requestAxiosPatch", payload);
       commit("setUpdatedData", res.data.data);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async connectStore({ dispatch }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPost", payload);
       return res;
     } catch (error) {
       return error.response;

@@ -199,7 +199,7 @@ export default {
     productTrigger(item) {
       if (
         [
-          "/inventory/send-inventory/",
+          "/inventory/send-inventory/sendy/select-products",
           "/inventory/add-delivery-products",
         ].includes(this.$route.path)
       ) {

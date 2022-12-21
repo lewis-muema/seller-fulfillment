@@ -1,85 +1,110 @@
 <template>
   <div>
-    <div class="integrations-container">
-      <v-container>
-        <v-row no-gutters>
-          <v-col :key="n" cols="12" sm="6">
-            <v-sheet class="ma-2 pa-2">
-              <div
-                class="d-flex justify-space-around align-center bg-grey-lighten-4"
-              >
-                <div class="ma-4">
-                  <v-img
-                    class="bg-white"
-                    width="400"
-                    :aspect-ratio="1"
-                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    cover
-                  ></v-img>
+    <v-dialog v-model="dialog" :retain-focus="false">
+      <div>
+        <v-card class="integration-card">
+          <v-btn
+            class="ma-2"
+            variant="text"
+            icon="mdi-close"
+            size="small"
+            @click="$emit('clicked', false)"
+          ></v-btn>
+          <v-row>
+            <v-col :key="n" cols="12" sm="6">
+              <v-img
+                class="bg-white"
+                :aspect-ratio="1"
+                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/image.png"
+              ></v-img>
+            </v-col>
+            <v-col :key="n" cols="12" sm="6">
+              <div class="integrations-content">
+                <div>
+                  <h4>{{ $t("merchant.connectStore") }}</h4>
+                  <p>
+                    {{ $t("merchant.clickToStart") }}
+                  </p>
+                  <div class="integrations-actions-inner">
+                    <v-btn
+                      class="sendy-btn-default"
+                      @click="storePlatformDialog = true"
+                    >
+                      {{ $t("merchant.getStarted") }}
+                    </v-btn>
+                  </div>
                 </div>
               </div>
-            </v-sheet>
-          </v-col>
-          <v-col :key="n" cols="12" sm="6">
-            <v-sheet class="ma-2 pa-2">
-              <h4>{{ $t("merchant.connectStore") }}</h4>
-              <div>
-                <p class="integrations-text">
-                  {{ $t("merchant.clickToStart") }}
-                </p>
-                <div class="integrations-actions-inner">
-                  <v-btn class="sendy-btn-text" variant="text">
-                    {{ $t("merchant.requirements") }}
-                  </v-btn>
-                  <v-btn
-                    class="sendy-btn-default"
-                    @click="
-                      $router.push('/settings/integrations/store-platform')
-                    "
-                  >
-                    {{ $t("merchant.getStarted") }}
-                  </v-btn>
-                </div>
-              </div>
-            </v-sheet>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </div>
+    </v-dialog>
+    <storePlatform
+      v-if="storePlatformDialog"
+      :displayDialog="storePlatformDialog"
+      @selected="onSelectChild"
+    />
   </div>
 </template>
 <script>
-export default {};
+import storePlatform from "./storePlatform.vue";
+
+export default {
+  components: { storePlatform },
+  props: {
+    showDialog: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data: () => ({
+    dialog: false,
+    storePlatformDialog: false,
+  }),
+  mounted() {
+    this.dialog = this.showDialog;
+  },
+  watch: {
+    showDialog() {
+      if (this.showDialog) this.dialog = true;
+    },
+  },
+  methods: {
+    onSelectChild() {
+      this.storePlatformDialog = false;
+    },
+  },
+};
 </script>
-<style>
-.integrations-container {
-  margin: 40px;
+<style scoped>
+.ma-2 {
+  float: right;
+  margin-top: -15px !important;
+  margin-right: -15px !important;
+}
+.integration-card {
+  width: 850px;
+  min-height: 400px;
+  padding: 25px;
 }
 .integrations-actions-inner {
   display: grid;
   grid-auto-flow: column;
 }
-.integrations-text {
-  margin-top: 30px;
-  margin-bottom: 160px;
-}
-.sendy-btn-text {
-  text-transform: capitalize;
-  text-decoration: underline;
-  justify-content: left;
-  color: #324ba8 !important;
-  margin: 8px 25px;
-  text-transform: inherit;
-  font-size: 14px;
-  letter-spacing: 0px;
+.integrations-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 .sendy-btn-default {
-  margin: 8px 25px;
   text-transform: inherit;
   font-size: 14px;
   letter-spacing: 0px;
   color: #ffffff !important;
   border: 1px solid #324ba8 !important;
   background-color: #324ba8 !important;
+  width: 50%;
 }
 </style>

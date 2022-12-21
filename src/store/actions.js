@@ -19,8 +19,7 @@ export default {
     commit("setAccessToken", token);
     commit("setRefreshToken", refreshToken);
   },
-
-  requestAxiosPost({ dispatch }, payload) {
+  requestAxiosPostMerchant({ dispatch }, payload) {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -28,6 +27,27 @@ export default {
         "Fulfilment-Token": localStorage.accessToken
           ? localStorage.accessToken
           : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch("handleErrors", error);
+          resolve(error);
+          return false;
+        });
+    });
+  },
+
+  requestAxiosPost({ dispatch }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
       },
     };
     return new Promise((resolve, reject) => {
@@ -292,7 +312,7 @@ export default {
   },
   async connectStore({ dispatch }, payload) {
     try {
-      const res = await dispatch("requestAxiosPost", payload);
+      const res = await dispatch("requestAxiosPostMerchant", payload);
       return res;
     } catch (error) {
       return error.response;

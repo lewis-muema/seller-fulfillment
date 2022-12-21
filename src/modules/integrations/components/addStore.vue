@@ -15,7 +15,7 @@
               <v-img
                 class="bg-white"
                 :aspect-ratio="1"
-                src="../assets/image.png"
+                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/image.png"
               ></v-img>
             </v-col>
             <v-col :key="n" cols="12" sm="6">

@@ -1697,10 +1697,12 @@ export default {
             this.resetInput();
             if (this.onboardingStatus) {
               this.$router.push("/");
-            } else {
+            } else if (response.data.data.deliveries.length === 1) {
               this.$router.push(
                 `/deliveries/tracking/${response.data.data.deliveries[0].order_id}`
               );
+            } else if (response.data.data.deliveries.length > 1) {
+              this.$router.push(`/deliveries/customer`);
             }
           } else {
             ElNotification({

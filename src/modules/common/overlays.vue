@@ -198,7 +198,7 @@
           {{ $t("deliveries.receivingItems") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'recepientInfoCrossdock')"
+          @click="overlayStatusSet(false, 'recepientInfo')"
           class="mdi mdi-close view-products-close"
         ></i>
       </div>

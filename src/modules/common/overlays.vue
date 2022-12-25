@@ -507,7 +507,6 @@
           <v-badge
             color="#324BA8"
             text-color="white"
-            max="10"
             :content="`${product.received_quantity}`"
           >
             <img

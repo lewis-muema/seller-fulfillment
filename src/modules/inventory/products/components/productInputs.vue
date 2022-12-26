@@ -76,6 +76,53 @@
             {{ $t("inventory.aShortDescriptionToHelp") }}
           </div>
         </div>
+        <div class="">
+          <p>Preference (optional)</p>
+          <p>
+            Set preferences for photo sensitivity, fragility and temperature
+            Sensitivity
+          </p>
+          View -- {{ productPreference }}
+          <div v-if="!view">
+            <span class="add-product-preference" @click="view = true">
+              <span class="">
+                {{ $t("inventory.viewMore") }}
+              </span>
+              <i class="mdi mdi-chevron-down add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-else>
+            <span class="add-product-preference" @click="view = false">
+              <span class="">
+                {{ $t("inventory.viewLess") }}
+              </span>
+              <i class="mdi mdi-chevron-up add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-if="view">
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="productPreference"
+                label="The product is photo sensitive"
+                value="photosensitive"
+              ></v-checkbox>
+            </div>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="productPreference"
+                label="The product is fragile"
+                value="fragile"
+              ></v-checkbox>
+            </div>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="productPreference"
+                label="The product is temperature sensitive"
+                value="temperaturesensitive"
+              ></v-checkbox>
+            </div>
+          </div>
+        </div>
         <div class="desktop-product-options-container mt-3 mb-3">
           <div class="desktop-product-options-content">
             <p class="optional-text">{{ $t("inventory.productOptions") }}</p>
@@ -235,6 +282,8 @@ export default {
       image: "",
       name: "",
       price: "",
+      view: false,
+      productPreference: [],
       quantity: "",
       productUploadStatus: false,
       dimensions: [
@@ -597,5 +646,15 @@ label {
 }
 .img-container .el-loading-mask {
   padding-top: 35%;
+}
+.add-product-preference {
+  cursor: pointer;
+  color: #324ba8;
+}
+.add-product-preference-checkbox {
+  height: 45px !important;
+}
+.v-selection-control--dirty .v-icon {
+  color: #324ba8 !important;
 }
 </style>

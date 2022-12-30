@@ -17,10 +17,7 @@
     <div class="dashboard-wallet-container">
       <p class="dashboard-wallet-title">Wallet</p>
       <v-card class="mt-3 dashboard-wallet-card" variant="outlined">
-        <v-list-item
-          two-line
-          @click="$router.push('/inventory/import-products')"
-        >
+        <v-list-item two-line @click="$router.push('/payments/wallet')">
           <v-list-item-avatar>
             <v-icon class="mr-5 desktop-quick-links-icon">mdi-wallet</v-icon>
           </v-list-item-avatar>

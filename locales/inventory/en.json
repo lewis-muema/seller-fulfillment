@@ -57,6 +57,7 @@
   "available":"Available",
   "committed":"Committed",
   "incoming":"Incoming",
+  "provisional":"Provisional",
   "productDetails": "Product Details",
   "actions":"Actions",
   "edit":"Edit",

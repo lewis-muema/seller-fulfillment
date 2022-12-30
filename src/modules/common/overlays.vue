@@ -750,6 +750,13 @@
             {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
         </div>
+        <div class="fees-row">
+          <span>
+            <div>Payment collection fees</div>
+            <div class="fees-subtitle">1.9% of the amount to be collected</div>
+          </span>
+          <span class="fees-left-override"> KES 49 </span>
+        </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
           <span class="fees-left-override"
@@ -967,6 +974,13 @@
         <p class="payment-collection-overlay-title">
           {{ $t("inventory.doYouWantPaymentToBeCollected") }}
         </p>
+        <div class="payment-charges-communication">
+          <i class="mdi mdi-information payment-charges-info-icon"></i>
+          <span class="payment-charges-communication-desc"
+            >We charge a collection fee of 1.9% of the total amount to be
+            collected for this order</span
+          >
+        </div>
         <div
           v-if="v$.deliveryFeeCollection.$error"
           class="error-msg withdraw-transaction-error mt-2 mb-3"
@@ -1107,6 +1121,13 @@
         <p class="payment-collection-overlay-title">
           {{ $t("inventory.doYouWantPaymentToBeCollected") }}
         </p>
+        <div class="payment-charges-communication">
+          <i class="mdi mdi-information payment-charges-info-icon"></i>
+          <span class="payment-charges-communication-desc"
+            >We charge a collection fee of 1.9% of the total amount to be
+            collected for this order</span
+          >
+        </div>
         <div
           v-if="v$.deliveryFeeCollection.$error"
           class="error-msg withdraw-transaction-error mt-2 mb-3"
@@ -2138,6 +2159,10 @@ export default {
           }
         }
       );
+      return fee;
+    },
+    calculatePaymentCollectionFee() {
+      let fee = 0;
       return fee;
     },
     activeDestination() {
@@ -3173,7 +3198,10 @@ export default {
 .crossdock-recipient-details-text {
   margin: 1rem 0px 1rem 0px !important;
 }
-
+.payment-charges-info-icon {
+  padding-right: 5px;
+  color: #324ba8;
+}
 .fees-title {
   display: flex;
   align-items: flex-end;
@@ -3349,7 +3377,17 @@ export default {
 .resend-invite-img {
   width: 40px;
 }
-
+.payment-charges-communication {
+  background-color: #f7f9fc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.payment-charges-communication-desc {
+  font-size: 12px;
+  color: #606266;
+  font-weight: 500;
+}
 .recepient-info-label {
   padding-left: 10px !important;
 }
@@ -3566,7 +3604,6 @@ export default {
   font-size: 16px;
   font-weight: 500;
 }
-
 .padding-override {
   padding-top: 10px !important;
   padding-bottom: 10px !important;

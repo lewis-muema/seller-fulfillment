@@ -54,6 +54,36 @@
         </span>
       </p>
     </div>
+    <div class="product-details-content mb-3">
+      <p class="product-header">UPC Code</p>
+      <p>
+        <span :class="getLoader.productDetails"> 1030 </span>
+      </p>
+    </div>
+    <div class="product-details-content mb-3">
+      <p class="product-header">Photo sensitive</p>
+      <p>
+        <span :class="getLoader.productDetails"
+          >This product is photosensitive
+        </span>
+      </p>
+    </div>
+    <div class="product-details-content mb-3">
+      <p class="product-header">Fragility</p>
+      <p>
+        <span :class="getLoader.productDetails">
+          This product is not fragile
+        </span>
+      </p>
+    </div>
+    <div class="product-details-content mb-3">
+      <p class="product-header">Temperature sensitivity</p>
+      <p>
+        <span :class="getLoader.productDetails">
+          This product is not temparature sensitve
+        </span>
+      </p>
+    </div>
     <v-table v-if="product.product_variants">
       <table-header
         :header="product.product_variants ? tableHeaders2 : tableHeaders"
@@ -103,6 +133,15 @@
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.quantity_in_inventory
+                  : "-"
+              }}
+            </span>
+          </td>
+          <td>
+            <span :class="getLoader.productDetails">
+              {{
+                variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels.available
                   : "-"
               }}
@@ -121,8 +160,8 @@
           <td>
             <span :class="getLoader.productDetails">
               {{
-                false
-                  ? variant.product_variant_stock_level.quantity_in_sales_orders
+                variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.quantity_incoming
                   : "-"
               }}
             </span>
@@ -149,6 +188,10 @@ export default {
           description: "",
         },
         {
+          title: "inventory.provisional",
+          description: "inventory.availableProducts",
+        },
+        {
           title: "inventory.available",
           description: "inventory.availableProducts",
         },
@@ -171,6 +214,10 @@ export default {
           description: "",
         },
         {
+          title: "inventory.provisional",
+          description: "inventory.availableProducts",
+        },
+        {
           title: "inventory.available",
           description: "inventory.availableProducts",
         },
@@ -181,14 +228,6 @@ export default {
         {
           title: "inventory.incoming",
           description: "inventory.IncomingProducts",
-        },
-      ],
-      pSummary: [
-        {
-          fulfillmentCenter: "Marsabit Plaza",
-          available: "23",
-          committed: "3",
-          incoming: "0",
         },
       ],
     };

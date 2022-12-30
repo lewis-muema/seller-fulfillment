@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="">
-        <div class="mb-2">
+        <div class="">
           <label for="productName" class="form-label">
             {{ $t("inventory.nameOfProduct") }}</label
           >
@@ -19,7 +19,7 @@
             {{ $t("inventory.enterTheNameOnThePackage") }}
           </div>
         </div>
-        <div class="row mb-2">
+        <div class="">
           <label for="price" class="form-label">{{
             $t("inventory.sellingPrice")
           }}</label>
@@ -36,8 +36,8 @@
             ></v-text-field>
           </div>
         </div>
-        <div class="row mb-2">
-          <label for="price" class="form-label">
+        <div class="row">
+          <label for="weight" class="form-label">
             {{ $t("inventory.weight") }}
           </label>
           <div class="col-8">
@@ -60,7 +60,7 @@
             {{ $t("inventory.thisHelpsUsToKnow") }}
           </div>
         </div>
-        <div class="mb-2">
+        <div class="">
           <label for="desc" class="form-label">
             {{ $t("inventory.description") }}</label
           >
@@ -82,7 +82,6 @@
             Set preferences for photo sensitivity, fragility and temperature
             Sensitivity
           </p>
-          View -- {{ productPreference }}
           <div v-if="!view">
             <span class="add-product-preference" @click="view = true">
               <span class="">
@@ -120,6 +119,20 @@
                 label="The product is temperature sensitive"
                 value="temperaturesensitive"
               ></v-checkbox>
+            </div>
+            <div class="mt-2">
+              <label for="upc" class="form-label"
+                >UPC code of the product</label
+              >
+              <div class="">
+                <v-text-field
+                  class="businessProfile-field"
+                  v-model="productVariants[0].product_variant_unit_price"
+                  variant="outlined"
+                  clearable
+                  clear-icon="mdi-close"
+                ></v-text-field>
+              </div>
             </div>
           </div>
         </div>

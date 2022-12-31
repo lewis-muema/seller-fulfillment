@@ -49,21 +49,25 @@
                   </td>
                   <td style="width: 300px">
                     <div class="product-select-product-column">
-                      <img
-                        v-if="selectedProduct.selectedOption"
-                        :src="
-                          selectedProduct.selectedOption
-                            .product_variant_image_link
-                        "
-                        alt=""
-                        class="product-select-img"
-                      />
-                      <img
-                        v-else
-                        :src="selectedProduct.product_link"
-                        alt=""
-                        class="product-select-img"
-                      />
+                      <span class="product-image-frame-container">
+                        <div class="product-image-frame">
+                          <img
+                            v-if="selectedProduct.selectedOption"
+                            :src="
+                              selectedProduct.selectedOption
+                                .product_variant_image_link
+                            "
+                            alt=""
+                            class="product-select-img"
+                          />
+                          <img
+                            v-else
+                            :src="selectedProduct.product_link"
+                            alt=""
+                            class="product-select-img"
+                          />
+                        </div>
+                      </span>
                       <div>
                         <p class="product-select-product-name">
                           {{
@@ -361,25 +365,35 @@ export default {
       }
     },
     refreshStock(row, i) {
-      const productIndex = this.getSelectedProducts[i].productIndex;
-      const productOption = this.getSelectedProducts[i].productOption;
+      const product = this.getSelectedProducts[i];
+      const productId = product.product_id;
+      const productVariantId = product.selectedOption
+        ? product.selectedOption.product_variant_id
+        : product.product_variants[0].product_variant_id;
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/${row.product_id}`,
       }).then((response) => {
         if (response.status === 200) {
           const selectedProducts = this.getSelectedProducts.filter((row) => {
+            const rowVariantId = row.selectedOption
+              ? row.selectedOption.product_variant_id
+              : row.product_variants[0].product_variant_id;
             return (
-              row.productIndex === productIndex &&
-              row.productOption === productOption
+              row.product_id === productId && rowVariantId === productVariantId
             );
           });
           if (selectedProducts.length) {
             if (selectedProducts[0].selectedOption) {
-              selectedProducts[0].selectedOption.product_variant_stock_levels.available =
-                response.data.data.product.product_variants[
-                  selectedProducts[0].optionIndex
-                ].product_variant_stock_levels.available;
+              response.data.data.product.product_variants.forEach((row) => {
+                if (
+                  row.product_variant_id ===
+                  selectedProducts[0].selectedOption.product_variant_id
+                ) {
+                  selectedProducts[0].selectedOption.product_variant_stock_levels.available =
+                    row.product_variant_stock_levels.available;
+                }
+              });
             } else {
               selectedProducts[0].product_variants[0].product_variant_stock_levels.available =
                 response.data.data.product.product_variants[0].product_variant_stock_levels.available;

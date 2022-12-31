@@ -56,16 +56,20 @@
                   <div class="product-select-column row">
                     <div class="col-7 crossdocking-product-select-titles">
                       <div class="product-select-checkbox"></div>
-                      <span>
-                        <img
-                          :src="
-                            product.product_variants[0]
-                              .product_variant_image_link
-                          "
-                          v-if="!getLoader.products"
-                          alt=""
-                          class="product-select-img"
-                        />
+                      <span class="d-flex">
+                        <span class="product-image-frame-container">
+                          <div class="product-image-frame">
+                            <img
+                              :src="
+                                product.product_variants[0]
+                                  .product_variant_image_link
+                              "
+                              v-if="!getLoader.products"
+                              alt=""
+                              class="product-select-img"
+                            />
+                          </div>
+                        </span>
                         <span :class="getLoader.products">
                           {{ product.product_name }}
                         </span>
@@ -111,15 +115,19 @@
                             ></i>
                           </span>
                           <span class="d-flex">
-                            <img
-                              :src="
-                                product.product_variants[0]
-                                  .product_variant_image_link
-                              "
-                              v-if="!getLoader.products"
-                              alt=""
-                              class="product-select-img"
-                            />
+                            <span class="product-image-frame-container">
+                              <div class="product-image-frame">
+                                <img
+                                  :src="
+                                    product.product_variants[0]
+                                      .product_variant_image_link
+                                  "
+                                  v-if="!getLoader.products"
+                                  alt=""
+                                  class="product-select-img"
+                                />
+                              </div>
+                            </span>
                             <span class="product-select-expansion-title">
                               <div>
                                 <span :class="getLoader.products">
@@ -174,11 +182,15 @@
                             <div
                               class="product-select-checkbox-inner ml-0"
                             ></div>
-                            <img
-                              :src="option.product_variant_image_link"
-                              alt=""
-                              class="product-select-img"
-                            />
+                            <span class="product-image-frame-container">
+                              <div class="product-image-frame">
+                                <img
+                                  :src="option.product_variant_image_link"
+                                  alt=""
+                                  class="product-select-img"
+                                />
+                              </div>
+                            </span>
                             <span :class="getLoader.products">{{
                               option.product_variant_description
                             }}</span>
@@ -239,6 +251,15 @@
             </v-btn>
           </div>
         </v-card>
+        <div class="inventory-pagination">
+          <v-pagination
+            class="mt-3"
+            v-model="page"
+            :length="getPagination.page_count"
+            rounded="0"
+            :disabled="getLoader.products !== ''"
+          ></v-pagination>
+        </div>
       </v-col>
       <v-col cols="4">
         <v-card
@@ -269,7 +290,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
 import placeholder from "../../../../mixins/placeholders";
-import searchAlgolia from "../../../common/searchAlgolia.vue";
+import searchAlgolia from "../../../common/searchAlgoliaProductSelect.vue";
 
 export default {
   mixins: [eventsMixin, placeholder],
@@ -280,6 +301,7 @@ export default {
       searchProduct: "",
       mappedSelectedProducts: [],
       count: 0,
+      page: 1,
     };
   },
   components: {
@@ -288,6 +310,9 @@ export default {
   watch: {
     searchProduct(val) {
       this.filterProducts(val.replace(" ", ""));
+    },
+    page() {
+      this.fetchProducts();
     },
   },
   mounted() {
@@ -306,6 +331,7 @@ export default {
       "setProductLists",
       "setProductsToSubmit",
       "setMappedSelectedProducts",
+      "setPagination",
     ]),
     ...mapActions(["requestAxiosGet"]),
     variantFilter(variants) {
@@ -317,14 +343,28 @@ export default {
     },
     addCount(val, product, i, option, z) {
       const products = this.getSelectedProducts;
-      const addedProduct = products.filter((row, x) => {
-        if (row.productIndex === i && !option) {
-          products[x].quantity = val;
-        } else if (row.productIndex === i && option && row.optionIndex === z) {
-          products[x].quantity = option.quantity;
+      const addedProduct = products.filter((row) => {
+        if (row.product_id === product.product_id && !option) {
+          row.quantity = val;
+        } else if (row.product_id === product.product_id && option) {
+          row.product_variants.forEach((variant) => {
+            if (variant.product_variant_id === option.product_variant_id) {
+              if (
+                row.selectedOption.product_variant_id ===
+                option.product_variant_id
+              ) {
+                row.quantity = option.quantity;
+              }
+              variant.quantity = option.quantity;
+            }
+          });
         }
         return (
-          row.productIndex === i && (option ? row.optionIndex === z : true)
+          row.product_id === product.product_id &&
+          (option
+            ? row.selectedOption?.product_variant_id ===
+              option.product_variant_id
+            : true)
         );
       });
       if (!addedProduct.length) {
@@ -340,13 +380,19 @@ export default {
       const quantity = product.product_variants[0].product_variant_stock_levels
         ? product.product_variants[0].product_variant_stock_levels.available
         : 0;
-      return quantity === 0 && this.crossDockingFlag();
+      return (
+        (quantity === 0 && this.crossDockingFlag()) ||
+        this.getLoader.products !== ""
+      );
     },
     disabledVariantStatus(option) {
       const quantity = option
         ? option.product_variant_stock_levels.available
         : 0;
-      return quantity === 0 && this.crossDockingFlag();
+      return (
+        (quantity === 0 && this.crossDockingFlag()) ||
+        this.getLoader.products !== ""
+      );
     },
     crossDockingFlag() {
       return this.getBusinessDetails.settings
@@ -360,7 +406,9 @@ export default {
       });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/products?max=10`,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/products?max=6&offset=${this.page - 1}`,
       }).then((response) => {
         if (this.$route.path === `/inventory/add-delivery-products`) {
           this.setLoader({
@@ -371,8 +419,10 @@ export default {
 
         if (response.status === 200) {
           const products = response.data.data.products;
-          products.push(...this.getSearchedProducts);
+          products.unshift(...this.getSearchedProducts);
           this.setProductLists(products);
+          this.setPagination(response.data.data.pagination);
+          this.page = response.data.data.pagination.current_page + 1;
           this.productMapping();
         }
       });
@@ -390,33 +440,29 @@ export default {
     },
     productMapping() {
       this.products = this.getProducts;
-      this.products.forEach((row) => {
-        row.status = false;
-        if (row.product_variants) {
-          row.product_variants.forEach((option) => {
-            option.status = false;
-          });
-        }
-      });
       if (
         this.getSelectedProducts.length > 0 &&
         this.products[0].product_id !== "P-KXG-0000" &&
         this.products[0].product_name !== "name"
       ) {
         this.getSelectedProducts.forEach((row) => {
-          this.products[row.productIndex].status = true;
-          if (row.selectedOption) {
-            this.products[row.productIndex].product_variants[
-              row.optionIndex
-            ].quantity = parseInt(row.quantity);
-          } else {
-            this.products[row.productIndex].quantity = parseInt(row.quantity);
-          }
-          if (row.selectedOption) {
-            this.products[row.productIndex].product_variants[
-              row.optionIndex
-            ].status = true;
-          }
+          this.products.forEach((product) => {
+            if (row.selectedOption && product.product_id === row.product_id) {
+              product.product_variants.forEach((variant) => {
+                if (
+                  variant.product_variant_id ===
+                  row.selectedOption.product_variant_id
+                ) {
+                  variant.quantity = parseInt(row.quantity);
+                }
+              });
+            } else if (
+              !row.selectedOption &&
+              product.product_id === row.product_id
+            ) {
+              product.quantity = parseInt(row.quantity);
+            }
+          });
         });
         this.selectedProducts = this.getSelectedProducts;
       }
@@ -424,65 +470,51 @@ export default {
     handleSelectionChange(val) {
       this.setSelectedProducts(val);
     },
-    addProduct(product, i, option, x) {
+    addProduct(product, i, option) {
       let newProduct = {};
       Object.keys(product).forEach((row) => {
         newProduct[row] = product[row];
       });
-      product.status = true;
       if (option) {
-        newProduct.optionIndex = x;
         newProduct.selectedOption = option;
-        option.status = true;
       }
-      newProduct.productIndex = i;
       this.selectedProducts.push(newProduct);
       this.setSelectedProducts(this.selectedProducts);
-      if (this.$route.params.path === "customer") {
-        this.sendSegmentEvents({
-          event: "Product_Selection",
-          data: {
-            userId: this.getStorageUserDetails.business_id,
-            SKU: this.products[i].product_id,
-            variant: this.products[i].product_variants[x].product_variant_id,
-            product_collection: this.products[i].product_collection
-              ? this.products[i].product_collection.collection_id
-              : "",
-            clientType: "web",
-            device: "desktop",
-          },
-        });
-      }
+      this.sendSegmentEvents({
+        event: "Product_Selection",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          SKU: product.product_id,
+          variant: option?.product_variant_id,
+          product_collection: product.product_collection?.collection_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     },
-    removeProduct(product, i, option, x) {
+    removeProduct(product, i, option) {
       this.selectedProducts.forEach((row, p) => {
-        if (row.productIndex === i && row.product_variants.length === 1) {
-          this.products[i].status = false;
-          this.selectedProducts.splice(p, 1);
-        } else if (
-          row.productIndex === i &&
-          row.product_variants.length > 1 &&
-          row.optionIndex === x
+        if (
+          product.product_id === row.product_id &&
+          ((row.selectedOption &&
+            row.selectedOption.product_variant_id ===
+              option.product_variant_id) ||
+            !row.selectedOption)
         ) {
-          this.products[i].product_variants[x].status = false;
           this.selectedProducts.splice(p, 1);
         }
       });
-      if (this.$route.params.path === "customer") {
-        this.sendSegmentEvents({
-          event: "Remove_from_Product_Selection",
-          data: {
-            userId: this.getStorageUserDetails.business_id,
-            SKU: this.products[i].product_id,
-            variant: this.products[i].product_variants[x].product_variant_id,
-            product_collection: this.products[i].product_collection
-              ? this.products[i].product_collection.collection_id
-              : "",
-            clientType: "web",
-            device: "desktop",
-          },
-        });
-      }
+      this.sendSegmentEvents({
+        event: "Product_Selection",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          SKU: product.product_id,
+          variant: option?.product_variant_id,
+          product_collection: product.product_collection?.collection_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     },
     sanitizeName(name) {
       return name.replace(" ", "");
@@ -512,6 +544,7 @@ export default {
       "getMappedSelectedProducts",
       "getSearchedProducts",
       "getBusinessDetails",
+      "getPagination",
     ]),
     totalProducts() {
       let total = 0;
@@ -569,8 +602,9 @@ export default {
   width: 18px !important;
 }
 .product-select-img {
-  height: 40px;
-  margin-right: 20px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 .product-select-column {
   display: flex;
@@ -671,5 +705,27 @@ export default {
   .el-input__inner::placeholder {
   color: black !important;
   font-size: 14px;
+}
+.v-pagination__item--is-active {
+  background: #324ba8 !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+.inventory-pagination {
+  zoom: 90%;
+}
+.product-image-frame {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-image-frame-container {
+  margin-right: 20px;
+  background: #e0e0e07a;
+  border-radius: 5px;
+  height: 40px;
+  width: 40px;
 }
 </style>

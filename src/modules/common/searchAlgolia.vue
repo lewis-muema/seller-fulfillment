@@ -212,8 +212,8 @@ export default {
           return row.product_id === item.product_id;
         });
         if (!existingProduct.length && !existingList.length) {
-          searchedList.push(item);
-          productsList.push(item);
+          searchedList.unshift(item);
+          productsList.unshift(item);
           this.clearItems();
           ElNotification({
             title: this.$t("common.productAddedToList"),
@@ -265,5 +265,8 @@ export default {
 }
 .search-item-name {
   font-size: 14px;
+}
+.v-overlay__content {
+  position: sticky !important;
 }
 </style>

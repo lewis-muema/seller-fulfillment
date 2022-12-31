@@ -575,10 +575,6 @@ export default {
   height: 70px;
   width: 18px !important;
 }
-.product-select-img {
-  height: 40px;
-  margin-right: 20px;
-}
 .product-select-column {
   display: flex;
   align-items: center;

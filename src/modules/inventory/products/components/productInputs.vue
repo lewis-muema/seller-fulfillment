@@ -77,6 +77,7 @@
           </div>
         </div>
         <div class="">
+          {{ productPayload }}
           <p>Preference (optional)</p>
           <p>
             Set preferences for photo sensitivity, fragility and temperature
@@ -99,26 +100,25 @@
             </span>
           </div>
           <div v-if="view">
-            <div class="add-product-preference-checkbox">
+            <div
+              class="add-product-preference-checkbox"
+              v-for="(pref, i) in productPreference"
+              :key="i"
+            >
               <v-checkbox
-                v-model="productPreference"
-                label="The product is photo sensitive"
-                value="photosensitive"
+                v-model="productVariants[0].product_variant_properties"
+                :label="pref.product_property_type"
+                :value="productPreference[i]"
               ></v-checkbox>
             </div>
-            <div class="add-product-preference-checkbox">
-              <v-checkbox
-                v-model="productPreference"
-                label="The product is fragile"
-                value="fragile"
-              ></v-checkbox>
-            </div>
-            <div class="add-product-preference-checkbox">
-              <v-checkbox
-                v-model="productPreference"
-                label="The product is temperature sensitive"
-                value="temperaturesensitive"
-              ></v-checkbox>
+            <div v-if="tempPreferenceChecked">
+              <p>What temperature should the items be stored?</p>
+              <div class="slider-demo-block">
+                <span class="d-flex">
+                  <el-slider v-model="tempRange" range show-stops :step="10" />
+                  <span class="ml-3">°C</span>
+                </span>
+              </div>
             </div>
             <div class="mt-2">
               <label for="upc" class="form-label"
@@ -127,7 +127,7 @@
               <div class="">
                 <v-text-field
                   class="businessProfile-field"
-                  v-model="productVariants[0].product_variant_unit_price"
+                  v-model="productVariants[0].upcCode"
                   variant="outlined"
                   clearable
                   clear-icon="mdi-close"
@@ -289,14 +289,36 @@ export default {
           product_variant_quantity_type: "GRAM",
           product_variant_stock_levels: {},
           product_variant_unit_price: "",
+          upcCode: "",
+          product_variant_properties: [],
         },
       ],
+      tempRange: [0, 100],
       showProductOptions: false,
       image: "",
       name: "",
       price: "",
       view: false,
-      productPreference: [],
+      productPreference: [
+        {
+          product_property_type: "PHOTO_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "CELSIUS",
+        },
+        {
+          product_property_type: "FRAGILE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "FAHRENHEIT",
+        },
+        {
+          product_property_type: "TEMPERATURE_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "CELSIUS",
+        },
+      ],
       quantity: "",
       productUploadStatus: false,
       dimensions: [
@@ -389,6 +411,64 @@ export default {
       });
       return variants;
     },
+    sensitivityRange() {
+      const data = [];
+      this.productVariants[0].product_variant_properties.forEach(
+        (sensitivity) => {
+          if (sensitivity.product_property_type === "TEMPERATURE_SENSITIVE") {
+            sensitivity.sensitivity_lower_limit = this.tempRange[0];
+            sensitivity.sensitivity_upper_limit = this.tempRange[1];
+          }
+          data.push(sensitivity);
+        }
+      );
+      return data;
+    },
+    productPayload() {
+      const products = [];
+      const {
+        business_id,
+        product_id,
+        product_variant_archived,
+        product_variant_currency,
+        product_variant_description,
+        product_variant_expiry_date,
+        product_variant_id,
+        product_variant_image_link,
+        product_variant_quantity,
+        product_variant_quantity_type,
+        product_variant_stock_levels,
+        product_variant_unit_price,
+        upcCode,
+      } = this.productVariants[0];
+      const productProperties = {
+        business_id,
+        product_id,
+        product_variant_archived,
+        product_variant_currency,
+        product_variant_description,
+        product_variant_expiry_date,
+        product_variant_id,
+        product_variant_image_link,
+        product_variant_quantity,
+        product_variant_quantity_type,
+        product_variant_stock_levels,
+        product_variant_unit_price,
+        universal_product_code: upcCode,
+        product_variant_properties: this.sensitivityRange,
+      };
+      products.push(productProperties);
+      return products;
+    },
+    tempPreferenceChecked() {
+      let checked = false;
+      this.productVariants[0].product_variant_properties.filter((temp) => {
+        if (temp.product_property_type === "TEMPERATURE_SENSITIVE") {
+          checked = true;
+        }
+      });
+      return checked;
+    },
     variants() {
       const res = [];
       this.getProduct.product_variants.forEach((row) => {
@@ -445,7 +525,7 @@ export default {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPut({
@@ -502,7 +582,7 @@ export default {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPost({

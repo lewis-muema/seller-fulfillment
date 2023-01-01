@@ -57,30 +57,24 @@
     <div class="product-details-content mb-3">
       <p class="product-header">UPC Code</p>
       <p>
-        <span :class="getLoader.productDetails"> 1030 </span>
+        <span :class="getLoader.productDetails">
+          {{ product.product_variants[0].universal_product_code }}
+        </span>
       </p>
     </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">Photo sensitive</p>
+    <div
+      class="product-details-content mb-3"
+      v-for="(sensitivity, i) in productSensitivity"
+      :key="i"
+    >
+      <p class="product-header">{{ sensitivity.heading }}</p>
       <p>
         <span :class="getLoader.productDetails"
-          >This product is photosensitive
-        </span>
-      </p>
-    </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">Fragility</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          This product is not fragile
-        </span>
-      </p>
-    </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">Temperature sensitivity</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          This product is not temparature sensitve
+          >{{
+            formatSensitivityText(sensitivity.text)
+              ? sensitivity.name
+              : sensitivity.name2
+          }}
         </span>
       </p>
     </div>
@@ -182,6 +176,26 @@ export default {
   data() {
     return {
       showProductVariants: false,
+      productSensitivity: [
+        {
+          heading: "Photo sensitive",
+          name: "The product is Photosensitive",
+          name2: "The product is not Photosensitive",
+          text: "PHOTO_SENSITIVE",
+        },
+        {
+          heading: "Fragility",
+          name: "The product is Fragile",
+          name2: "The product is not Fragile",
+          text: "FRAGILE",
+        },
+        {
+          heading: "Temperature sensitivity",
+          name: "The product is Temperature sensitive",
+          name2: "The product is not  Temperature sensitive",
+          text: "TEMPERATURE_SENSITIVE",
+        },
+      ],
       tableHeaders: [
         {
           title: "inventory.fulfillmentCenter",
@@ -263,6 +277,17 @@ export default {
         this.tableHeaders2[1].title = "inventory.option";
       }
       return total;
+    },
+    formatSensitivityText(value) {
+      let text = false;
+      this.product.product_variants[0].product_variant_properties?.forEach(
+        (property) => {
+          if (property.product_property_type === value) {
+            text = true;
+          }
+        }
+      );
+      return text;
     },
   },
 };

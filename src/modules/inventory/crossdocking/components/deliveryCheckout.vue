@@ -1,9 +1,7 @@
 <template>
   <div>
     <v-card variant="outlined" class="send-inventory-checkout-card">
-      <div
-        class="enter-quantity-container desktop-header-title d-flex pt-3 pb-3"
-      >
+      <div class="enter-quantity-container desktop-header-title d-flex pt-3">
         <i
           class="mdi mdi-arrow-left"
           aria-hidden="true"
@@ -17,6 +15,11 @@
               indeces > 1 ? `(${index})` : ''
             }`"
             class="payment-collection-title"
+            :class="
+              getDestinations.length <= 1 && getDestinations[index - 1].expanded
+                ? 'delivery-info-collapse'
+                : ''
+            "
             :name="1"
           >
             <div class="mb-4 row cross-docking-checkout-row">
@@ -43,7 +46,9 @@
                       ><i class="mdi mdi-chevron-right"></i
                     ></span>
                   </div>
-                  <div class="mb-3 cross-docking-checkout-product-label-lower">
+                  <div
+                    class="mb-3 cross-docking-checkout-product-label-lower crossdocking-items-line-height"
+                  >
                     {{
                       getDestinations[index - 1].products.length > 1
                         ? $t("inventory.otherProducts", {
@@ -115,7 +120,7 @@
               >
                 <div>
                   <p>{{ $t("deliveries.deliveryInfo") }}</p>
-                  <div class="crossdocking-items-line-height">
+                  <div class="delivery-details-text">
                     <p>
                       {{ getDestinations[index - 1].delivery_info.location }}
                     </p>
@@ -339,20 +344,21 @@
                     {{ $t("inventory.setPreferencesForPayment") }}
                   </p>
                 </div>
-                <span class="cross-docking-checkout-chevrons">
-                  <span
-                    class="cross-docking-checkout-chevrons-text"
-                    @click="
-                      getDestinations[index - 1].preferences =
-                        !getDestinations[index - 1].preferences
-                    "
-                    >{{ $t("inventory.view") }}</span
-                  >
+                <span
+                  class="cross-docking-checkout-chevrons"
+                  @click="
+                    getDestinations[index - 1].preferences =
+                      !getDestinations[index - 1].preferences
+                  "
+                >
+                  <span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.view")
+                  }}</span>
                   <i
                     class="mdi mdi-chevron-up"
                     v-if="getDestinations[index - 1].preferences"
                   ></i>
-                  <i class="mdi mdi-chevron-right" v-else></i>
+                  <i class="mdi mdi-chevron-down" v-else></i>
                 </span>
               </div>
             </div>
@@ -564,15 +570,14 @@
               class="row crossdocking-expansion-panel-remove-border"
               v-if="indeces > 1"
             >
-              <div class="col-10"></div>
-              <div class="col-2">
-                <span
+              <div class="cross-docking-checkout-remove-button">
+                <div
                   class="d-flex crossdocking-expansion-panel-remove"
                   @click="removeLocation(index - 1)"
                 >
                   <i class="mdi mdi-close"></i>
                   <span class="ml-1">{{ $t("inventory.remove") }}</span>
-                </span>
+                </div>
               </div>
             </div>
           </el-collapse-item>
@@ -590,7 +595,7 @@
         <p class="payment-collection-title mb-3">
           {{ $t("inventory.pickUpInfo") }}
         </p>
-        <div class="row">
+        <div class="row" v-if="FCdropoffStatus">
           <div class="col-1">
             <i class="mdi mdi-store-outline cross-docking-checkout-icons"></i>
           </div>
@@ -717,7 +722,7 @@
                 v-if="!(getPickUpInfoCD && getPickUpInfoCD.pickupSpeed)"
                 @click="addPickupOption(index)"
               >
-                <span>{{ $t("inventory.selectAPickUpDate") }}</span>
+                <span>{{ $t("inventory.selectAPickUpOption") }}</span>
                 <span class="cross-docking-checkout-chevrons"
                   ><i class="mdi mdi-chevron-right"></i
                 ></span>
@@ -914,6 +919,7 @@ export default {
       referenceNumbers: [],
       showErrors: false,
       multidestination: true,
+      FCdropoffStatus: false,
     };
   },
   watch: {
@@ -2029,11 +2035,20 @@ export default {
   border: none !important;
 }
 .cross-docking-checkout-delivery-option-top {
-  font-weight: 500 !important;
-  font-size: 19px;
+  font-weight: 400 !important;
   margin-bottom: 20px;
 }
 .cross-docking-checkout-delivery-option-bottom {
   margin-bottom: 20px;
+}
+.delivery-info-collapse div .el-collapse-item__header {
+  pointer-events: none;
+}
+.delivery-info-collapse div .el-collapse-item__header .el-collapse-item__arrow {
+  display: none;
+}
+.cross-docking-checkout-remove-button {
+  width: max-content !important;
+  margin-left: auto;
 }
 </style>

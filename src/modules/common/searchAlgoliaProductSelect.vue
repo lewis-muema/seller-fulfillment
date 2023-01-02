@@ -3,6 +3,7 @@
     transition="slide-y-transition"
     anchor="bottom center"
     v-model="searchToggle"
+    class="search-algolia"
   >
     <template v-slot:activator="{ props }">
       <v-text-field
@@ -413,7 +414,7 @@ export default {
 .search-item-name {
   font-size: 14px;
 }
-.v-overlay__content {
+.search-algolia .v-overlay__content {
   position: sticky !important;
   min-width: 50% !important;
 }

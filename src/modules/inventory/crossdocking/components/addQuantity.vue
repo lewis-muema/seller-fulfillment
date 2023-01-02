@@ -20,11 +20,18 @@
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="$router.push(`/inventory/add-delivery-products`)"
+              @click="this.$router.go(-1)"
             ></i>
             <v-card-title class="text-center send-products-title">
               {{ $t("inventory.enterQuantity") }}
             </v-card-title>
+            <div
+              class="crossdocking-product-add-product"
+              @click="$router.push(`/inventory/add-delivery-products`)"
+            >
+              <v-icon>mdi mdi-plus</v-icon>
+              {{ $t("inventory.addProducts") }}
+            </div>
           </div>
           <div class="products-selected-summary">
             <v-table>
@@ -141,6 +148,14 @@
                 </tr>
               </tbody>
             </v-table>
+          </div>
+          <div v-if="totalProducts === 0">
+            <div class="no-products-selected-card-container">
+              <i class="mdi mdi-store no-products-icon"></i>
+              <div class="no-products-description">
+                {{ $t("inventory.pleaseSelectSomeProductsToProceed") }}
+              </div>
+            </div>
           </div>
         </v-card>
       </v-col>
@@ -488,5 +503,15 @@ export default {
   font-size: 25px;
   margin-right: 20px;
   color: #9b101c;
+}
+.crossdocking-product-add-product {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 20px;
+  cursor: pointer;
+  color: #324aa8;
+  font-weight: 500;
+  font-size: 17px;
 }
 </style>

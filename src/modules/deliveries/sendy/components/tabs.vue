@@ -139,7 +139,7 @@
         color="#324BA8"
         text-color="white"
         size="default"
-        @click="$router.push('/inventory/send-inventory/sendy/select-products')"
+        @click="$router.push('/inventory/add-pickup-products')"
         >{{ $t("deliveries.inventoryToSendy") }}</v-btn
       >
     </div>

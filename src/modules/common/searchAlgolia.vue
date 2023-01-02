@@ -3,6 +3,7 @@
     transition="slide-y-transition"
     anchor="bottom center"
     v-model="searchToggle"
+    class="search-algolia"
   >
     <template v-slot:activator="{ props }">
       <v-text-field
@@ -116,7 +117,6 @@
 <script>
 import algoliaSearch from "../../mixins/algolia_search";
 import eventsMixin from "../../mixins/events_mixin";
-import { ElNotification } from "element-plus";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
@@ -197,41 +197,7 @@ export default {
       return productsList;
     },
     productTrigger(item) {
-      if (
-        [
-          "/inventory/send-inventory/",
-          "/inventory/add-delivery-products",
-        ].includes(this.$route.path)
-      ) {
-        const productsList = this.getProductLists;
-        const searchedList = this.getSearchedProducts;
-        const existingProduct = productsList.filter((row) => {
-          return row.product_id === item.product_id;
-        });
-        const existingList = searchedList.filter((row) => {
-          return row.product_id === item.product_id;
-        });
-        if (!existingProduct.length && !existingList.length) {
-          searchedList.unshift(item);
-          productsList.unshift(item);
-          this.clearItems();
-          ElNotification({
-            title: this.$t("common.productAddedToList"),
-            message: "",
-            type: "success",
-          });
-        } else {
-          ElNotification({
-            title: this.$t("common.productAlreadyInTheList"),
-            message: "",
-            type: "warning",
-          });
-        }
-        this.setSearchedProducts(searchedList);
-        this.setProductLists(productsList);
-      } else {
-        this.$router.push(`/inventory/view-product/${item.product_id}`);
-      }
+      this.$router.push(`/inventory/view-product/${item.product_id}`);
     },
   },
 };
@@ -266,7 +232,7 @@ export default {
 .search-item-name {
   font-size: 14px;
 }
-.v-overlay__content {
+.search-algolia .v-overlay__content {
   position: sticky !important;
 }
 </style>

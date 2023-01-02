@@ -763,13 +763,21 @@ export default createStore({
           route: ["/deliveries/customer", "/deliveries/tracking"],
         },
         CAN_CREATE_DELIVERIES: {
-          route: ["/inventory/create-delivery"],
+          route: [
+            "/inventory/create-delivery",
+            "/inventory/add-delivery-products",
+            "/inventory/add-delivery-quantities",
+          ],
         },
         CAN_ACCESS_CONSIGNMENTS_MODULE: {
           route: ["/deliveries/sendy", "/deliveries/tracking"],
         },
         CAN_CREATE_CONSIGNMENTS: {
-          route: ["/inventory/send-inventory/sendy"],
+          route: [
+            "/inventory/create-pickup",
+            "/inventory/add-pickup-products",
+            "/inventory/add-pickup-quantities",
+          ],
         },
         CAN_ACCESS_BILLING_MODULE: {
           route: [

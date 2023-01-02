@@ -140,7 +140,7 @@ export default {
           button: "dashboard.sendTheInventory",
           icon: "mdi-check-circle",
           key: "created_at_least_one_pickup_order",
-          link: "/inventory/send-inventory/sendy/select-products",
+          link: "/inventory/add-pickup-products",
         },
         {
           title: "dashboard.deliverToCustomer",

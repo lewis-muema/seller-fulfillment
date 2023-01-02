@@ -23,9 +23,7 @@
           <div>
             <span
               class="add-products-span-header"
-              @click="
-                navigateRoute('/inventory/send-inventory/sendy/select-products')
-              "
+              @click="navigateRoute('/inventory/add-pickup-products')"
             >
               <i class="mdi mdi-plus"></i>
               {{ $t("common.addProducts") }}
@@ -93,11 +91,7 @@
                 {{ $t("deliveries.cartEmpty") }}
               </div>
               <span
-                @click="
-                  navigateRoute(
-                    '/inventory/send-inventory/sendy/select-products'
-                  )
-                "
+                @click="navigateRoute('/inventory/add-pickup-products')"
                 class="add-products-span-link"
               >
                 <span class="add-products-span">

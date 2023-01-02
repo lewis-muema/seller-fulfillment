@@ -297,7 +297,7 @@ export default {
       this.$router.push(
         this.getSelectedTab === "dashboard.toYourCustomers"
           ? "/inventory/create-delivery"
-          : "/inventory/send-inventory/sendy/select-products"
+          : "/inventory/add-pickup-products"
       );
     },
   },

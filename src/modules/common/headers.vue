@@ -173,7 +173,7 @@ export default {
         {
           title: "common.inventoryToSendy",
           icon: "mdi-warehouse",
-          url: "/inventory/send-inventory/sendy/select-products",
+          url: "/inventory/add-pickup-products",
         },
       ],
       profile: [

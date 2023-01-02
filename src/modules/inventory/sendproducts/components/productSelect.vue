@@ -1,6 +1,15 @@
 <template>
   <div>
-    <v-row class="mt-5">
+    <v-row>
+      <v-col cols="6" class="mx-auto mt-4 mb-3">
+        <el-steps :active="0" finish-status="success">
+          <el-step :title="$t('inventory.selectProducts')"></el-step>
+          <el-step :title="$t('inventory.enterQuantity')"></el-step>
+          <el-step :title="$t('inventory.checkout')"></el-step>
+        </el-steps>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -8,7 +17,7 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push(`/inventory/create-delivery`)"
+                @click="$router.push(`/inventory/send-inventory`)"
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -317,7 +326,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent("common.sendDeliveryToCustomer");
+    this.setComponent("common.sendInventoryToSendy");
     this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
@@ -409,15 +418,14 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${
           this.getStorageUserDetails.business_id
-        }/products?max=6&offset=${this.page - 1}`,
+        }/products?max=5&offset=${this.page - 1}`,
       }).then((response) => {
-        if (this.$route.path === `/inventory/add-delivery-products`) {
+        if (this.$route.path === `/inventory/add-pickup-products`) {
           this.setLoader({
             type: "products",
             value: "",
           });
         }
-
         if (response.status === 200) {
           const products = response.data.data.products;
           products.unshift(...this.getSearchedProducts);
@@ -430,7 +438,7 @@ export default {
     },
     addProductStep() {
       if (this.totalProducts > 0) {
-        this.$router.push(`/inventory/add-delivery-quantities`);
+        this.$router.push(`/inventory/add-pickup-quantities`);
       } else {
         ElNotification({
           title: "",
@@ -728,8 +736,5 @@ export default {
   border-radius: 5px;
   height: 40px;
   width: 40px;
-}
-.v-pagination__item--is-active .v-btn__overlay {
-  opacity: 0 !important;
 }
 </style>

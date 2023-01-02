@@ -77,11 +77,9 @@
           </div>
         </div>
         <div class="">
-          {{ productPayload }}
-          <p>Preference (optional)</p>
+          <p>{{ $t("inventory.preference") }}</p>
           <p>
-            Set preferences for photo sensitivity, fragility and temperature
-            Sensitivity
+            {{ $t("inventory.setProductPreference") }}
           </p>
           <div v-if="!view">
             <span class="add-product-preference" @click="view = true">
@@ -107,12 +105,12 @@
             >
               <v-checkbox
                 v-model="productVariants[0].product_variant_properties"
-                :label="pref.product_property_type"
+                :label="$t(`inventory.${pref.product_property_type}`)"
                 :value="productPreference[i]"
               ></v-checkbox>
             </div>
             <div v-if="tempPreferenceChecked">
-              <p>What temperature should the items be stored?</p>
+              <p>{{ $t("inventory.temperature") }}</p>
               <div class="slider-demo-block">
                 <span class="d-flex">
                   <el-slider v-model="tempRange" range show-stops :step="10" />
@@ -121,13 +119,13 @@
               </div>
             </div>
             <div class="mt-2">
-              <label for="upc" class="form-label"
-                >UPC code of the product</label
-              >
+              <label for="upc" class="form-label">{{
+                $t("inventory.upcCode")
+              }}</label>
               <div class="">
                 <v-text-field
                   class="businessProfile-field"
-                  v-model="productVariants[0].upcCode"
+                  v-model="productVariants[0].universal_product_code"
                   variant="outlined"
                   clearable
                   clear-icon="mdi-close"
@@ -289,7 +287,7 @@ export default {
           product_variant_quantity_type: "GRAM",
           product_variant_stock_levels: {},
           product_variant_unit_price: "",
-          upcCode: "",
+          universal_product_code: "",
           product_variant_properties: [],
         },
       ],
@@ -439,7 +437,7 @@ export default {
         product_variant_quantity_type,
         product_variant_stock_levels,
         product_variant_unit_price,
-        upcCode,
+        universal_product_code,
       } = this.productVariants[0];
       const productProperties = {
         business_id,
@@ -454,7 +452,7 @@ export default {
         product_variant_quantity_type,
         product_variant_stock_levels,
         product_variant_unit_price,
-        universal_product_code: upcCode,
+        universal_product_code,
         product_variant_properties: this.sensitivityRange,
       };
       products.push(productProperties);
@@ -748,6 +746,9 @@ label {
   height: 45px !important;
 }
 .v-selection-control--dirty .v-icon {
+  color: #324ba8 !important;
+}
+.el-slider {
   color: #324ba8 !important;
 }
 </style>

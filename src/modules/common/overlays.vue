@@ -710,7 +710,7 @@
           {{ $t("inventory.fulfillmentFeeCalculation") }}
         </p>
         <i
-          @click="overlayStatusSet(false, 'pickupfees')"
+          @click="overlayStatusSet(false, 'fulfillmentFees')"
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
@@ -749,13 +749,6 @@
           <span class="fees-left-override">
             {{ fulfillmentFees.currency }} {{ promos.adjustment_value }}
           </span>
-        </div>
-        <div class="fees-row">
-          <span>
-            <div>Payment collection fees</div>
-            <div class="fees-subtitle">1.9% of the amount to be collected</div>
-          </span>
-          <span class="fees-left-override"> KES 49 </span>
         </div>
         <div class="fees-row fees-bold fees-divider">
           <span>{{ $t("inventory.totalFulfillmentFee") }}</span>
@@ -976,9 +969,8 @@
         </p>
         <div class="payment-charges-communication">
           <i class="mdi mdi-information payment-charges-info-icon"></i>
-          <span class="payment-charges-communication-desc"
-            >We charge a collection fee of 1.9% of the total amount to be
-            collected for this order</span
+          <span class="payment-charges-communication-desc">
+            {{ $t("inventory.collectionFee") }}</span
           >
         </div>
         <div

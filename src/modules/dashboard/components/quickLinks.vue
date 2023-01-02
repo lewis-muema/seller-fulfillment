@@ -15,14 +15,16 @@
       </span>
     </v-card>
     <div class="dashboard-wallet-container">
-      <p class="dashboard-wallet-title">Wallet</p>
+      <p class="dashboard-wallet-title">{{ $t("payments.wallet") }}</p>
       <v-card class="mt-3 dashboard-wallet-card" variant="outlined">
         <v-list-item two-line @click="$router.push('/payments/wallet')">
           <v-list-item-avatar>
             <v-icon class="mr-5 desktop-quick-links-icon">mdi-wallet</v-icon>
           </v-list-item-avatar>
           <v-list-item-header>
-            <v-list-item-title> Available balance</v-list-item-title>
+            <v-list-item-title>
+              {{ $t("dashboard.availableBalance") }}</v-list-item-title
+            >
             <v-list-item-subtitle>
               <span class="mr-1 desktop-quick-links-balance">{{
                 this.getWallets[0].currency

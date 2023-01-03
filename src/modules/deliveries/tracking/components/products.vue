@@ -18,8 +18,7 @@
           setOverlayStatus({
             overlay: true,
             popup: 'noEdits',
-            popText:
-              'You can’t edit the products info at the moment because a driver has been assigned to deliver your order.',
+            popText: this.cantEditProducts,
           })
         "
         v-else
@@ -66,6 +65,7 @@ export default {
   data() {
     return {
       viewProducts: false,
+      cantEditProducts: this.$t("deliveries.cantEditProducts"),
     };
   },
   computed: {

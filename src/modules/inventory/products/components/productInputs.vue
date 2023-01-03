@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="">
-        <div class="mb-2">
+        <div class="">
           <label for="productName" class="form-label">
             {{ $t("inventory.nameOfProduct") }}</label
           >
@@ -19,7 +19,7 @@
             {{ $t("inventory.enterTheNameOnThePackage") }}
           </div>
         </div>
-        <div class="row mb-2">
+        <div class="">
           <label for="price" class="form-label">{{
             $t("inventory.sellingPrice")
           }}</label>
@@ -36,8 +36,8 @@
             ></v-text-field>
           </div>
         </div>
-        <div class="row mb-2">
-          <label for="price" class="form-label">
+        <div class="row">
+          <label for="weight" class="form-label">
             {{ $t("inventory.weight") }}
           </label>
           <div class="col-8">
@@ -60,7 +60,7 @@
             {{ $t("inventory.thisHelpsUsToKnow") }}
           </div>
         </div>
-        <div class="mb-2">
+        <div class="">
           <label for="desc" class="form-label">
             {{ $t("inventory.description") }}</label
           >
@@ -74,6 +74,64 @@
           </div>
           <div class="add-product-helper-text">
             {{ $t("inventory.aShortDescriptionToHelp") }}
+          </div>
+        </div>
+        <div class="">
+          <p>{{ $t("inventory.preference") }}</p>
+          <p>
+            {{ $t("inventory.setProductPreference") }}
+          </p>
+          <div v-if="!view">
+            <span class="add-product-preference" @click="view = true">
+              <span class="">
+                {{ $t("inventory.viewMore") }}
+              </span>
+              <i class="mdi mdi-chevron-down add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-else>
+            <span class="add-product-preference" @click="view = false">
+              <span class="">
+                {{ $t("inventory.viewLess") }}
+              </span>
+              <i class="mdi mdi-chevron-up add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-if="view">
+            <div
+              class="add-product-preference-checkbox"
+              v-for="(pref, i) in productPreference"
+              :key="i"
+            >
+              <v-checkbox
+                v-model="productVariants[0].product_variant_properties"
+                :label="$t(`inventory.${pref.product_property_type}`)"
+                :value="productPreference[i]"
+              ></v-checkbox>
+            </div>
+            <div v-if="tempPreferenceChecked">
+              <p>{{ $t("inventory.temperature") }}</p>
+              <div class="slider-demo-block">
+                <span class="d-flex">
+                  <el-slider v-model="tempRange" range show-stops :step="10" />
+                  <span class="ml-3">°C</span>
+                </span>
+              </div>
+            </div>
+            <div class="mt-2">
+              <label for="upc" class="form-label">{{
+                $t("inventory.upcCode")
+              }}</label>
+              <div class="">
+                <v-text-field
+                  class="businessProfile-field"
+                  v-model="productVariants[0].universal_product_code"
+                  variant="outlined"
+                  clearable
+                  clear-icon="mdi-close"
+                ></v-text-field>
+              </div>
+            </div>
           </div>
         </div>
         <div class="desktop-product-options-container mt-3 mb-3">
@@ -229,12 +287,36 @@ export default {
           product_variant_quantity_type: "GRAM",
           product_variant_stock_levels: {},
           product_variant_unit_price: "",
+          universal_product_code: "",
+          product_variant_properties: [],
         },
       ],
+      tempRange: [0, 100],
       showProductOptions: false,
       image: "",
       name: "",
       price: "",
+      view: false,
+      productPreference: [
+        {
+          product_property_type: "PHOTO_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "FRAGILE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "TEMPERATURE_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "CELSIUS",
+        },
+      ],
       quantity: "",
       productUploadStatus: false,
       dimensions: [
@@ -327,6 +409,64 @@ export default {
       });
       return variants;
     },
+    sensitivityRange() {
+      const data = [];
+      this.productVariants[0].product_variant_properties.forEach(
+        (sensitivity) => {
+          if (sensitivity.product_property_type === "TEMPERATURE_SENSITIVE") {
+            sensitivity.sensitivity_lower_limit = this.tempRange[0];
+            sensitivity.sensitivity_upper_limit = this.tempRange[1];
+          }
+          data.push(sensitivity);
+        }
+      );
+      return data;
+    },
+    productPayload() {
+      const products = [];
+      const {
+        business_id,
+        product_id,
+        product_variant_archived,
+        product_variant_currency,
+        product_variant_description,
+        product_variant_expiry_date,
+        product_variant_id,
+        product_variant_image_link,
+        product_variant_quantity,
+        product_variant_quantity_type,
+        product_variant_stock_levels,
+        product_variant_unit_price,
+        universal_product_code,
+      } = this.productVariants[0];
+      const productProperties = {
+        business_id,
+        product_id,
+        product_variant_archived,
+        product_variant_currency,
+        product_variant_description,
+        product_variant_expiry_date,
+        product_variant_id,
+        product_variant_image_link,
+        product_variant_quantity,
+        product_variant_quantity_type,
+        product_variant_stock_levels,
+        product_variant_unit_price,
+        universal_product_code,
+        product_variant_properties: this.sensitivityRange,
+      };
+      products.push(productProperties);
+      return products;
+    },
+    tempPreferenceChecked() {
+      let checked = false;
+      this.productVariants[0].product_variant_properties.filter((temp) => {
+        if (temp.product_property_type === "TEMPERATURE_SENSITIVE") {
+          checked = true;
+        }
+      });
+      return checked;
+    },
     variants() {
       const res = [];
       this.getProduct.product_variants.forEach((row) => {
@@ -383,7 +523,7 @@ export default {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPut({
@@ -440,7 +580,7 @@ export default {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPost({
@@ -597,5 +737,18 @@ label {
 }
 .img-container .el-loading-mask {
   padding-top: 35%;
+}
+.add-product-preference {
+  cursor: pointer;
+  color: #324ba8;
+}
+.add-product-preference-checkbox {
+  height: 45px !important;
+}
+.v-selection-control--dirty .v-icon {
+  color: #324ba8 !important;
+}
+.el-slider {
+  --el-slider-main-bg-color: #324ba8 !important;
 }
 </style>

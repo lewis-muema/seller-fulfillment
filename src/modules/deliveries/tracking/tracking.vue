@@ -254,7 +254,6 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
-          this.calculateSpeed();
           this.setFinalDocumentsToEdit(
             this.getOrderTrackingData.order.documents
           );

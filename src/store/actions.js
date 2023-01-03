@@ -274,7 +274,6 @@ export default {
   async updateOrderTrackingData({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPatch", payload);
-      commit("setUpdatedData", res.data.data);
       return res;
     } catch (error) {
       return error.response;

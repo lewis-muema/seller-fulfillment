@@ -36,6 +36,7 @@
   "setProductPreference": "Set preferences for photo sensitivity, fragility and temperature Sensitivity",
   "temperature": "What temperature should the items be stored?",
   "upcCode": "UPC code of the product",
+  "upcCod": "UPC Code",
   "PHOTO_SENSITIVE": "The product is photo sensitive",
   "FRAGILE": "The product is fragile",
   "TEMPERATURE_SENSITIVE": "The product is temperature sensitive",

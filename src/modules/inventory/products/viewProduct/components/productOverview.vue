@@ -55,7 +55,7 @@
       </p>
     </div>
     <div class="product-details-content mb-3">
-      <p class="product-header">UPC Code</p>
+      <p class="product-header">{{ $t("inventory.upcCod") }}</p>
       <p>
         <span :class="getLoader.productDetails">
           {{ product.product_variants[0].universal_product_code }}

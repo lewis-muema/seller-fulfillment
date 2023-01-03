@@ -183,46 +183,51 @@
           </span>
         </p>
         <p class="delivery-info-label edit-delivery"></p>
-        <p class="delivery-info-label delivery-info-title mb-2">
-          <span :class="getLoader.orderTracking">
-            {{ $t("inventory.documentsYouveUploaded") }}
-          </span>
-        </p>
-        <p class="delivery-info-data mb-2">
-          <span>
-            <i class="mdi mdi-text-box-outline delivery-info-marker"></i>
-          </span>
-          <span :class="getLoader.orderTracking">
-            {{
-              getOrderTrackingData.order.documents &&
-              getOrderTrackingData.order.documents.length > 0
-                ? $t("inventory.otherDocuments", {
-                    Doc:
-                      getOrderTrackingData.order.documents[0].document_type ===
-                      "OTHER"
-                        ? getOrderTrackingData.order.documents[0]
-                            .document_description
-                        : getOrderTrackingData.order.documents[0].document_type,
-                    Count: getOrderTrackingData.order.documents.length - 1,
-                  })
-                : $t("inventory.noDocuments")
-            }}
-          </span>
-        </p>
-        <p class="delivery-info-label edit-delivery">
-          <span
-            :class="getLoader.orderTracking"
-            @click="
-              setOverlayStatus({
-                overlay: true,
-                popup: cantEditDocumentsInfo ? 'noEdits' : 'addRemoveDocument',
-                popText: this.documentsInfo,
-              })
-            "
-          >
-            {{ $t("deliveries.manageDocuments") }}
-          </span>
-        </p>
+        <div v-if="crossDockingFlag">
+          <p class="delivery-info-label delivery-info-title mb-2">
+            <span :class="getLoader.orderTracking">
+              {{ $t("inventory.documentsYouveUploaded") }}
+            </span>
+          </p>
+          <p class="delivery-info-data mb-2">
+            <span>
+              <i class="mdi mdi-text-box-outline delivery-info-marker"></i>
+            </span>
+            <span :class="getLoader.orderTracking">
+              {{
+                getOrderTrackingData.order.documents &&
+                getOrderTrackingData.order.documents.length > 0
+                  ? $t("inventory.otherDocuments", {
+                      Doc:
+                        getOrderTrackingData.order.documents[0]
+                          .document_type === "OTHER"
+                          ? getOrderTrackingData.order.documents[0]
+                              .document_description
+                          : getOrderTrackingData.order.documents[0]
+                              .document_type,
+                      Count: getOrderTrackingData.order.documents.length - 1,
+                    })
+                  : $t("inventory.noDocuments")
+              }}
+            </span>
+          </p>
+          <p class="delivery-info-label edit-delivery">
+            <span
+              :class="getLoader.orderTracking"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: cantEditDocumentsInfo
+                    ? 'noEdits'
+                    : 'addRemoveDocument',
+                  popText: this.documentsInfo,
+                })
+              "
+            >
+              {{ $t("deliveries.manageDocuments") }}
+            </span>
+          </p>
+        </div>
         <div v-if="getParent === 'customer'" class="delivery-info-label mt-4">
           <p :class="getLoader.orderTracking" class="delivery-info-title mb-2">
             {{ $t("inventory.paymentCollection") }}
@@ -287,7 +292,10 @@
               </span>
             </p>
           </div>
-          <p class="delivery-info-label edit-delivery">
+          <p
+            class="delivery-info-label edit-delivery"
+            v-if="paymentOnDeliveryFlag"
+          >
             <span
               :class="getLoader.orderTracking"
               @click="
@@ -344,6 +352,7 @@ export default {
       "getDeliveryInfo",
       "getPickupInfo",
       "getOrderTrackingData",
+      "getBusinessDetails",
       "getParent",
       "getOrderTimelines",
     ]),
@@ -399,6 +408,16 @@ export default {
           ?.invoice_status === "INVOICE_COMPLETELY_PAID" ||
         this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED"
       );
+    },
+    paymentOnDeliveryFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.payments_on_delivery_enabled
+        : false;
+    },
+    crossDockingFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.cross_docking_enabled
+        : false;
     },
   },
   mounted() {},

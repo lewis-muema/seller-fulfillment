@@ -2186,7 +2186,7 @@ export default {
     productPrice() {
       let price = 0;
       if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
-        this.getOrderTrackingData.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+        this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
           (row) => {
             if (row.adjustment_type === "SALE_OF_GOOD") {
               price = row.adjustment_subtotal;
@@ -2199,7 +2199,11 @@ export default {
       return price;
     },
     productCurrency() {
-      return this.getOrderTrackingData.order?.sale_of_goods_invoice?.currency;
+      if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
+        return this.getOrderTrackingData.order.sale_of_goods_invoice.currency;
+      } else {
+        return this.getOrderTrackingData.order.invoice_summary.currency;
+      }
     },
     paymentOnDeliveryFlag() {
       return this.getBusinessDetails.settings

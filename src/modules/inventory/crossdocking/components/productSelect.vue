@@ -80,13 +80,7 @@
                       <span
                         :class="getLoader.products"
                         class="product-select-units"
-                        >{{
-                          product.product_variants[0]
-                            .product_variant_stock_levels
-                            ? product.product_variants[0]
-                                .product_variant_stock_levels.available
-                            : "-"
-                        }}
+                        >{{ totalStock(product.product_variants) }}
                         {{ $t("inventory.units") }}</span
                       >
                     </div>
@@ -151,13 +145,7 @@
                           <span
                             :class="getLoader.products"
                             class="product-select-units"
-                            >{{
-                              product.product_variants[0]
-                                .product_variant_stock_levels
-                                ? product.product_variants[0]
-                                    .product_variant_stock_levels.available
-                                : "-"
-                            }}
+                            >{{ totalStock(product.product_variants) }}
                             {{ $t("inventory.units") }}</span
                           >
                         </div>
@@ -341,6 +329,13 @@ export default {
         variant.push(row);
       });
       return variant;
+    },
+    totalStock(val) {
+      let total = 0;
+      val.forEach((element) => {
+        total = element.product_variant_stock_levels.available + total;
+      });
+      return total;
     },
     addCount(val, product, i, option, z) {
       const products = this.getSelectedProducts;

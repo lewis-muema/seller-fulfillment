@@ -44,12 +44,7 @@
               </td>
               <td>
                 <span :class="getLoader.products">
-                  {{
-                    product.product_variants[0].product_variant_stock_levels
-                      ? product.product_variants[0].product_variant_stock_levels
-                          .available
-                      : "-"
-                  }}
+                  {{ totalStock(product.product_variants) }}
                   {{ $t("inventory.inStock") }}
                 </span>
               </td>
@@ -144,6 +139,13 @@ export default {
       "setPagination",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    totalStock(val) {
+      let total = 0;
+      val.forEach((element) => {
+        total = element.product_variant_stock_levels.available + total;
+      });
+      return total;
+    },
     fetchProducts() {
       this.setLoader({
         type: "products",

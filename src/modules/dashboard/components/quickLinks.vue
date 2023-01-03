@@ -14,10 +14,34 @@
         </div>
       </span>
     </v-card>
+    <div class="dashboard-wallet-container">
+      <p class="dashboard-wallet-title">{{ $t("payments.wallet") }}</p>
+      <v-card class="mt-3 dashboard-wallet-card" variant="outlined">
+        <v-list-item two-line @click="$router.push('/payments/wallet')">
+          <v-list-item-avatar>
+            <v-icon class="mr-5 desktop-quick-links-icon">mdi-wallet</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-header>
+            <v-list-item-title>
+              {{ $t("dashboard.availableBalance") }}</v-list-item-title
+            >
+            <v-list-item-subtitle>
+              <span class="mr-1 desktop-quick-links-balance">{{
+                this.getWallets[0].currency
+              }}</span>
+              <span class="desktop-quick-links-balance">{{
+                this.getWallets[0].wallet_balance
+              }}</span>
+            </v-list-item-subtitle>
+          </v-list-item-header>
+        </v-list-item>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -39,6 +63,28 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.getUserWallets();
+  },
+  computed: {
+    ...mapGetters(["getWallets", "getStorageUserDetails"]),
+  },
+  methods: {
+    ...mapActions(["requestAxiosGet"]),
+    ...mapMutations(["setWallets"]),
+    getUserWallets() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/wallets`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setWallets(response.data.data.wallets);
+        } else {
+          this.setWallets([]);
+        }
+      });
+    },
   },
 };
 </script>
@@ -68,5 +114,17 @@ export default {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+}
+.dashboard-wallet-title {
+  margin-top: 1rem;
+}
+.desktop-quick-links-balance {
+  font-size: 15px;
+  font-weight: 400;
+}
+.dashboard-wallet-card {
+  border-color: #e2e7ed;
+  background: white;
+  padding: 5px;
 }
 </style>

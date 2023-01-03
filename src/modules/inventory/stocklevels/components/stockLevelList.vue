@@ -56,6 +56,13 @@
                 </span>
               </td>
               <td>
+                <span :class="badgeAllocation(provisionalTally(product))">
+                  <span :class="getLoader.products">
+                    {{ provisionalTally(product) }}
+                  </span>
+                </span>
+              </td>
+              <td>
                 <span :class="badgeAllocation(incomingTally(product))">
                   <span :class="getLoader.products">
                     {{ incomingTally(product) }}
@@ -141,6 +148,10 @@ export default {
         {
           title: "inventory.committed",
           description: "inventory.CommittedProducts",
+        },
+        {
+          title: "inventory.provisional",
+          description: "inventory.IncomingProducts",
         },
         {
           title: "inventory.incoming",
@@ -295,7 +306,19 @@ export default {
       product.product_variants.forEach((row) => {
         if (row.product_variant_stock_levels) {
           tally =
-            row.product_variant_stock_levels.quantity_in_sales_orders + tally;
+            row.product_variant_stock_levels.quantity_held_locally +
+            row.product_variant_stock_levels.quantity_in_sales_orders +
+            tally;
+        }
+      });
+      return tally;
+    },
+    provisionalTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally =
+            row.product_variant_stock_levels.quantity_in_inventory + tally;
         }
       });
       return tally;
@@ -304,11 +327,10 @@ export default {
       let tally = 0;
       product.product_variants.forEach((row) => {
         if (row.product_variant_stock_levels) {
-          tally =
-            row.product_variant_stock_levels.quantity_in_sales_orders + tally;
+          tally = row.product_variant_stock_levels.quantity_incoming + tally;
         }
       });
-      return "-";
+      return tally;
     },
   },
 };

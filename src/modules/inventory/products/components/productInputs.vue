@@ -302,13 +302,13 @@ export default {
           product_property_type: "PHOTO_SENSITIVE",
           sensitivity_lower_limit: 0,
           sensitivity_upper_limit: 0,
-          sensitivity_unit_of_measure: "CELSIUS",
+          sensitivity_unit_of_measure: null,
         },
         {
           product_property_type: "FRAGILE",
           sensitivity_lower_limit: 0,
           sensitivity_upper_limit: 0,
-          sensitivity_unit_of_measure: "FAHRENHEIT",
+          sensitivity_unit_of_measure: null,
         },
         {
           product_property_type: "TEMPERATURE_SENSITIVE",
@@ -749,6 +749,6 @@ label {
   color: #324ba8 !important;
 }
 .el-slider {
-  color: #324ba8 !important;
+  --el-slider-main-bg-color: #324ba8 !important;
 }
 </style>

@@ -146,7 +146,8 @@
               {{
                 variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels
-                      .quantity_in_sales_orders
+                      .quantity_in_sales_orders +
+                    variant.product_variant_stock_levels.quantity_held_locally
                   : "-"
               }}
             </span>

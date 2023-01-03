@@ -182,19 +182,7 @@
             }}
           </span>
         </p>
-        <p class="delivery-info-label edit-delivery">
-          <span
-            :class="getLoader.orderTracking"
-            @click="
-              setOverlayStatus({
-                overlay: true,
-                popup: 'editSpeed',
-              })
-            "
-          >
-            {{ $t("inventory.editDeliveryDate") }}
-          </span>
-        </p>
+        <p class="delivery-info-label edit-delivery"></p>
         <p class="delivery-info-label delivery-info-title mb-2">
           <span :class="getLoader.orderTracking">
             {{ $t("inventory.documentsYouveUploaded") }}

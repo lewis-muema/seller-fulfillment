@@ -1115,9 +1115,8 @@
         </p>
         <div class="payment-charges-communication">
           <i class="mdi mdi-information payment-charges-info-icon"></i>
-          <span class="payment-charges-communication-desc"
-            >We charge a collection fee of 1.9% of the total amount to be
-            collected for this order</span
+          <span class="payment-charges-communication-desc">
+            {{ $t("inventory.collectionFee") }}</span
           >
         </div>
         <div
@@ -2186,13 +2185,17 @@ export default {
     },
     productPrice() {
       let price = 0;
-      this.getOrderTrackingData.order?.sale_of_goods_invoice?.invoice_adjustments_subtotals?.forEach(
-        (row) => {
-          if (row.adjustment_type === "SALE_OF_GOOD") {
-            price = row.adjustment_subtotal;
+      if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
+        this.getOrderTrackingData.sale_of_goods_invoice.invoice_adjustments_subtotals.forEach(
+          (row) => {
+            if (row.adjustment_type === "SALE_OF_GOOD") {
+              price = row.adjustment_subtotal;
+            }
           }
-        }
-      );
+        );
+      } else {
+        price = this.getOrderTrackingData.order.invoice_summary.total_cost;
+      }
       return price;
     },
     productCurrency() {

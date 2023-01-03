@@ -54,7 +54,7 @@ export default {
         {
           icon: "mdi-home-city",
           name: "common.sendInventoryToSendy",
-          path: "/inventory/send-inventory/sendy/select-products",
+          path: "/inventory/add-pickup-products",
         },
         {
           icon: "mdi-plus-thick",

@@ -121,13 +121,6 @@ export default {
       dispatch("refreshToken", error);
       errorRefreshStatus = false;
     }
-    if (
-      error.response.status === 500 &&
-      router.currentRoute.value.path ===
-        "/inventory/send-inventory/customer/checkout"
-    ) {
-      router.push("/inventory/send-inventory/customer/select-products");
-    }
     if (error.response.status === 502) {
       console.log(error);
     }

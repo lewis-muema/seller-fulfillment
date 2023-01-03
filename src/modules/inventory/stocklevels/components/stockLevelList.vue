@@ -84,7 +84,6 @@
             class="mt-3"
             v-model="page"
             :length="getPagination.page_count"
-            :total-visible="7"
             rounded="circle"
           ></v-pagination>
         </div>
@@ -115,9 +114,7 @@
           </p>
           <v-btn
             class="deliveries-btn"
-            @click="
-              $router.push('/inventory/send-inventory/sendy/select-products')
-            "
+            @click="$router.push('/inventory/add-pickup-products')"
             size="default"
           >
             {{ $t("inventory.sendInventoryToSendy") }}

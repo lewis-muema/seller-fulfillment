@@ -275,11 +275,13 @@
   "SENDY_SCHEDULED_PICKUP": "Schedule pickup",
   "selectADateOfYourChoice": "Select a date of your choice",
   "selectAPickUpDate": "Select a pick up date", 
+  "selectAPickUpOption": "Select a pick up option",
   "thePickUpDateCannotBeAheadOfTheDeliveryDate": "The pick up date can not be ahead of the delivery date, Please adjust it",
   "pleaseSelectThePickupTimeForTheUnavailable": "Please select the pickup time for the unavailable items to continue",
   "deliveryOptions": "Delivery options",
   "toViewDeliveryOptions": "To view delivery options, select the products to send and fill in the delivery info",
   "scheduleDelivery": "Schedule delivery",
   "schedulePickup": "Schedule pickup",
-  "pleaseMakeSureTheDeliveryDateIsAfter": "Please make sure the delivery date is after {Date}"
+  "pleaseMakeSureTheDeliveryDateIsAfter": "Please make sure the delivery date is after {Date}",
+  "pleaseSelectSomeProductsToProceed": "Please select some products to proceed"
 }

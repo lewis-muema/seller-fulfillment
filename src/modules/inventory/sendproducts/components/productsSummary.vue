@@ -5,7 +5,7 @@
         <span class="product-summary-title">{{ $t("inventory.summary") }}</span>
         <span
           class="product-summary-edit"
-          @click="$router.push('/inventory/send-inventory/sendy/add-quantity')"
+          @click="$router.push('/inventory/add-pickup-products')"
           ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>
           {{ $t("inventory.edit") }}
         </span>
@@ -23,24 +23,26 @@
                 class="mdi mdi-close product-summary-list-item-close"
               ></i>
             </span>
-            <span>
+            <span class="product-image-frame-container">
               <v-badge
                 color="#324BA8"
                 text-color="white"
                 :content="`${summary.quantity}`"
               >
-                <img
-                  v-if="summary.selectedOption"
-                  :src="summary.selectedOption.product_variant_image_link"
-                  alt=""
-                  class="summary-select-img"
-                />
-                <img
-                  v-else
-                  :src="summary.product_link"
-                  alt=""
-                  class="summary-select-img"
-                />
+                <div class="product-image-frame">
+                  <img
+                    v-if="summary.selectedOption"
+                    :src="summary.selectedOption.product_variant_image_link"
+                    alt=""
+                    class="product-select-img"
+                  />
+                  <img
+                    v-else
+                    :src="summary.product_link"
+                    alt=""
+                    class="product-select-img"
+                  />
+                </div>
               </v-badge>
             </span>
           </v-list-item-avatar>

@@ -504,24 +504,25 @@
       </div>
       <div v-for="(product, i) in getOrderTrackingData.order.products" :key="i">
         <div class="view-products-row-top">
-          <v-badge
-            color="#324BA8"
-            text-color="white"
-            :content="`${product.received_quantity}`"
-          >
-            <img
-              :src="product.product_variant_image_link"
-              class="view-products-img"
-              alt=""
-            />
-          </v-badge>
+          <span class="product-image-frame-container">
+            <v-badge
+              color="#324BA8"
+              text-color="white"
+              :content="`${product.received_quantity}`"
+            >
+              <div class="product-image-frame">
+                <img
+                  :src="product.product_variant_image_link"
+                  class="product-select-img"
+                  alt=""
+                />
+              </div>
+            </v-badge>
+          </span>
           <div class="view-products-row-top-left">
             <div class="view-products-row-top-name">
               {{ product.product_variant_description }}
             </div>
-            <!-- <div class="view-products-row-top-variant">
-              {{ product.product_variant_description }}
-            </div> -->
           </div>
           <p class="view-products-row-top-right">
             {{ product.currency }}
@@ -2252,7 +2253,6 @@ export default {
     ]),
     ...mapMutations([
       "setLoader",
-      "setOrderTrackingData",
       "setPromoCode",
       "setUserAction",
       "setProductsToSubmit",

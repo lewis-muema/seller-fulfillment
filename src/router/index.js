@@ -35,7 +35,10 @@ import EditProduct from "../modules/inventory/products/components/editProduct";
 import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
-import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import SendInventory from "../modules/inventory/sendProducts.vue";
+import CreatePickup from "../modules/inventory/sendproducts/checkout.vue";
+import AddPickupProducts from "../modules/inventory/sendproducts/components/productSelect.vue";
+import AddPickupQuantities from "../modules/inventory/sendproducts/components/addQuantity.vue";
 import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
 import AddDeliveryProducts from "../modules/inventory/crossdocking/components/productSelect.vue";
 import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
@@ -116,9 +119,24 @@ const routes = [
     component: ViewProduct,
   },
   {
-    path: "/inventory/send-inventory/:path?/:page?",
+    path: "/inventory/send-inventory",
     name: "Send Inventory",
-    component: SendProducts,
+    component: SendInventory,
+  },
+  {
+    path: "/inventory/create-pickup",
+    name: "Create pickup",
+    component: CreatePickup,
+  },
+  {
+    path: "/inventory/add-pickup-products",
+    name: "Add pickup Inventory",
+    component: AddPickupProducts,
+  },
+  {
+    path: "/inventory/add-pickup-quantities",
+    name: "Add pickup Quantities",
+    component: AddPickupQuantities,
   },
   {
     path: "/inventory/create-delivery",

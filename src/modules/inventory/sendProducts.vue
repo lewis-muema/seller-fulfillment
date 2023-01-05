@@ -51,6 +51,7 @@ export default {
   mounted() {
     this.setComponent("common.sendInventory");
     this.setSelectedProducts([]);
+    this.setEditValue("");
   },
   methods: {
     ...mapMutations([

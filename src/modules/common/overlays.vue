@@ -2253,6 +2253,7 @@ export default {
     ]),
     ...mapMutations([
       "setLoader",
+      "setOrderTrackingData",
       "setPromoCode",
       "setUserAction",
       "setProductsToSubmit",

@@ -423,38 +423,40 @@ export default {
     },
     productPayload() {
       const products = [];
-      const {
-        business_id,
-        product_id,
-        product_variant_archived,
-        product_variant_currency,
-        product_variant_description,
-        product_variant_expiry_date,
-        product_variant_id,
-        product_variant_image_link,
-        product_variant_quantity,
-        product_variant_quantity_type,
-        product_variant_stock_levels,
-        product_variant_unit_price,
-        universal_product_code,
-      } = this.productVariants[0];
-      const productProperties = {
-        business_id,
-        product_id,
-        product_variant_archived,
-        product_variant_currency,
-        product_variant_description,
-        product_variant_expiry_date,
-        product_variant_id,
-        product_variant_image_link,
-        product_variant_quantity,
-        product_variant_quantity_type,
-        product_variant_stock_levels,
-        product_variant_unit_price,
-        universal_product_code,
-        product_variant_properties: this.sensitivityRange,
-      };
-      products.push(productProperties);
+      this.productVariants.forEach((variant) => {
+        const {
+          business_id,
+          product_id,
+          product_variant_archived,
+          product_variant_currency,
+          product_variant_description,
+          product_variant_expiry_date,
+          product_variant_id,
+          product_variant_image_link,
+          product_variant_quantity,
+          product_variant_quantity_type,
+          product_variant_stock_levels,
+          product_variant_unit_price,
+          universal_product_code,
+        } = variant;
+        const productProperties = {
+          business_id,
+          product_id,
+          product_variant_archived,
+          product_variant_currency,
+          product_variant_description,
+          product_variant_expiry_date,
+          product_variant_id,
+          product_variant_image_link,
+          product_variant_quantity,
+          product_variant_quantity_type,
+          product_variant_stock_levels,
+          product_variant_unit_price,
+          universal_product_code,
+          product_variant_properties: this.sensitivityRange,
+        };
+        products.push(productProperties);
+      });
       return products;
     },
     sensitivityRange() {

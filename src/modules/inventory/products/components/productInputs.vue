@@ -98,18 +98,25 @@
             </span>
           </div>
           <div v-if="view">
-            <div
-              class="add-product-preference-checkbox"
-              v-for="(pref, i) in productPreference"
-              :key="i"
-            >
+            <div class="add-product-preference-checkbox">
               <v-checkbox
-                v-model="productVariants[0].product_variant_properties"
-                :label="$t(`inventory.${pref.product_property_type}`)"
-                :value="productPreference[i]"
+                v-model="prodPref.isPhotosensitive"
+                :label="$t(`inventory.PHOTO_SENSITIVE`)"
               ></v-checkbox>
             </div>
-            <div v-if="tempPreferenceChecked">
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="prodPref.isFragile"
+                :label="$t(`inventory.FRAGILE`)"
+              ></v-checkbox>
+            </div>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="prodPref.isTemperaturesensitive"
+                :label="$t(`inventory.TEMPERATURE_SENSITIVE`)"
+              ></v-checkbox>
+            </div>
+            <div v-if="prodPref.isTemperaturesensitive">
               <p>{{ $t("inventory.temperature") }}</p>
               <div class="slider-demo-block">
                 <span class="d-flex">
@@ -297,26 +304,11 @@ export default {
       name: "",
       price: "",
       view: false,
-      productPreference: [
-        {
-          product_property_type: "PHOTO_SENSITIVE",
-          sensitivity_lower_limit: 0,
-          sensitivity_upper_limit: 0,
-          sensitivity_unit_of_measure: null,
-        },
-        {
-          product_property_type: "FRAGILE",
-          sensitivity_lower_limit: 0,
-          sensitivity_upper_limit: 0,
-          sensitivity_unit_of_measure: null,
-        },
-        {
-          product_property_type: "TEMPERATURE_SENSITIVE",
-          sensitivity_lower_limit: 0,
-          sensitivity_upper_limit: 0,
-          sensitivity_unit_of_measure: "CELSIUS",
-        },
-      ],
+      prodPref: {
+        isPhotosensitive: false,
+        isFragile: false,
+        isTemperaturesensitive: false,
+      },
       quantity: "",
       productUploadStatus: false,
       dimensions: [
@@ -380,6 +372,27 @@ export default {
     "$store.state.businessDetails": function (value) {
       this.productVariants[0].product_variant_currency = value.currency;
     },
+    productVariants: {
+      handler(val) {
+        val[0].product_variant_properties.length
+          ? val[0].product_variant_properties.forEach((sensitivity) => {
+              console.log(sensitivity);
+              if (sensitivity.product_property_type === "PHOTO_SENSITIVE") {
+                this.prodPref.isPhotosensitive = true;
+              }
+              if (sensitivity.product_property_type === "FRAGILE") {
+                this.prodPref.isFragile = true;
+              }
+              if (
+                sensitivity.product_property_type === "TEMPERATURE_SENSITIVE"
+              ) {
+                this.prodPref.isTemperaturesensitive = true;
+              }
+            })
+          : [];
+      },
+      deep: true,
+    },
   },
   unmounted() {
     this.setAddProductStatus(false);
@@ -408,19 +421,6 @@ export default {
         }
       });
       return variants;
-    },
-    sensitivityRange() {
-      const data = [];
-      this.productVariants[0].product_variant_properties.forEach(
-        (sensitivity) => {
-          if (sensitivity.product_property_type === "TEMPERATURE_SENSITIVE") {
-            sensitivity.sensitivity_lower_limit = this.tempRange[0];
-            sensitivity.sensitivity_upper_limit = this.tempRange[1];
-          }
-          data.push(sensitivity);
-        }
-      );
-      return data;
     },
     productPayload() {
       const products = [];
@@ -458,14 +458,40 @@ export default {
       products.push(productProperties);
       return products;
     },
-    tempPreferenceChecked() {
-      let checked = false;
-      this.productVariants[0].product_variant_properties.filter((temp) => {
-        if (temp.product_property_type === "TEMPERATURE_SENSITIVE") {
-          checked = true;
-        }
-      });
-      return checked;
+    sensitivityRange() {
+      const data = [];
+      const productPreference = [
+        {
+          product_property_type: "PHOTO_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "FRAGILE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "TEMPERATURE_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "CELSIUS",
+        },
+      ];
+      if (this.prodPref.isPhotosensitive) {
+        data.push(productPreference[0]);
+      }
+      if (this.prodPref.isFragile) {
+        data.push(productPreference[1]);
+      }
+      if (this.prodPref.isTemperaturesensitive) {
+        productPreference[2].sensitivity_lower_limit = this.tempRange[0];
+        productPreference[2].sensitivity_upper_limit = this.tempRange[1];
+        data.push(productPreference[2]);
+      }
+      return data;
     },
     variants() {
       const res = [];

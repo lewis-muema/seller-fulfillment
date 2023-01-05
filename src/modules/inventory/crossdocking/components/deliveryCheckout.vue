@@ -1276,6 +1276,7 @@ export default {
   mounted() {
     this.getDefaultPaymentMethod();
     this.activeBillingCycle();
+    this.setEditValue("");
     this.setPaymentCollectionStatus({
       status: "",
       amountToBeCollected: "",
@@ -1315,6 +1316,7 @@ export default {
       "setPickUpSpeed",
       "setDeliverySpeed",
       "setMismatchedDates",
+      "setEditValue",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {

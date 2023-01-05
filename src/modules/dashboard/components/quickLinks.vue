@@ -14,7 +14,6 @@
         </div>
       </span>
     </v-card>
-    {{ getWallets }}
     <div class="dashboard-wallet-container">
       <p class="dashboard-wallet-title">{{ $t("payments.wallet") }}</p>
       <v-card class="mt-3 dashboard-wallet-card" variant="outlined">

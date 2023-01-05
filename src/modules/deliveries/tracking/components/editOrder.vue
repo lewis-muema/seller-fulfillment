@@ -48,11 +48,15 @@
                   </td>
                   <td style="width: 300px">
                     <div class="product-select-product-column">
-                      <img
-                        :src="orderedProduct.product_variant_image_link"
-                        alt=""
-                        class="product-select-img"
-                      />
+                      <span class="product-image-frame-container">
+                        <div class="product-image-frame">
+                          <img
+                            :src="orderedProduct.product_variant_image_link"
+                            alt=""
+                            class="product-select-img"
+                          />
+                        </div>
+                      </span>
                       <div>
                         <p class="product-select-product-name">
                           {{ orderedProduct.product_variant_description }}

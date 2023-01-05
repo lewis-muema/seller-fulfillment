@@ -376,7 +376,6 @@ export default {
       handler(val) {
         val[0].product_variant_properties.length
           ? val[0].product_variant_properties.forEach((sensitivity) => {
-              console.log(sensitivity);
               if (sensitivity.product_property_type === "PHOTO_SENSITIVE") {
                 this.prodPref.isPhotosensitive = true;
               }

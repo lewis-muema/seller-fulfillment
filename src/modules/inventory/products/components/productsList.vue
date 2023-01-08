@@ -43,9 +43,31 @@
                 </v-list-item>
               </td>
               <td>
-                <span :class="getLoader.products">
-                  {{ totalStock(product.product_variants) }}
-                  {{ $t("inventory.inStock") }}
+                <span :class="badgeAllocation(availableleTally(product))">
+                  <span :class="getLoader.products">
+                    {{ availableleTally(product) }}
+                  </span>
+                </span>
+              </td>
+              <td>
+                <span :class="badgeAllocation(committedTally(product))">
+                  <span :class="getLoader.products">
+                    {{ committedTally(product) }}
+                  </span>
+                </span>
+              </td>
+              <td>
+                <span :class="badgeAllocation(provisionalTally(product))">
+                  <span :class="getLoader.products">
+                    {{ provisionalTally(product) }}
+                  </span>
+                </span>
+              </td>
+              <td>
+                <span :class="badgeAllocation(incomingTally(product))">
+                  <span :class="getLoader.products">
+                    {{ incomingTally(product) }}
+                  </span>
                 </span>
               </td>
               <td>
@@ -92,53 +114,113 @@ export default {
       headers: [
         {
           title: "inventory.product",
+          description: "",
         },
         {
-          title: "inventory.availableProduct",
+          title: "inventory.available",
+          description: "inventory.availableProducts",
+        },
+        {
+          title: "inventory.committed",
+          description: "inventory.CommittedProducts",
+        },
+        {
+          title: "inventory.provisional",
+          description: "inventory.IncomingProducts",
+        },
+        {
+          title: "inventory.incoming",
+          description: "inventory.IncomingProducts",
         },
         {
           title: "inventory.actions",
+          description: "",
         },
       ],
+      params: "?max=5",
       max: 5,
       page: 1,
     };
   },
-  computed: {
-    ...mapGetters([
-      "getProductLists",
-      "getLoader",
-      "getInventorySelectedTab",
-      "getStorageUserDetails",
-      "getPagination",
-    ]),
-    tableHeaders() {
-      return this.headers;
-    },
-  },
   watch: {
-    "$store.state.inventorySelectedTab": function inventorySelectedTab() {
-      this.setProductLists(this.placeholderProducts);
-      this.page = 1;
-      this.fetchProducts();
+    searchParam(val) {
+      this.initiateAlgolia(val);
+    },
+    "$store.state.inventorySelectedTab": function inventorySelectedTab(val) {
+      if (val === "inventory.lowStock") {
+        this.params = `/lowstock?max=${this.max}`;
+      } else if (val === "inventory.outOfStock") {
+        this.params = `/outofstock?max=${this.max}`;
+      } else {
+        this.params = `?max=${this.max}`;
+      }
+      if (this.page === 1) {
+        this.fetchProducts();
+      } else {
+        this.page = 1;
+      }
     },
     page() {
       this.fetchProducts();
     },
   },
   mounted() {
+    this.setComponent("common.stocks");
     this.setProductLists(this.placeholderProducts);
+    this.getStockStats();
     this.fetchProducts();
+    this.getStockSettings();
+    if (this.$route.params.tab === "noStock") {
+      this.params = `/lowstock?max=${this.max}`;
+      this.setInventorySelectedTab("inventory.outOfStock");
+    } else if (this.$route.params.tab === "lowStock") {
+      this.params = `/outofstock?max=${this.max}`;
+      this.setInventorySelectedTab("inventory.lowStock");
+    } else {
+      this.params = `?max=${this.max}`;
+      this.setInventorySelectedTab("inventory.all");
+    }
+  },
+  computed: {
+    ...mapGetters([
+      "getLoader",
+      "getProductLists",
+      "getInventorySelectedTab",
+      "getStorageUserDetails",
+      "getSettings",
+      "getPagination",
+    ]),
+    tableHeaders() {
+      return this.headers;
+    },
+    filteredProducts() {
+      return this.getProductLists;
+    },
   },
   methods: {
     ...mapMutations([
+      "setComponent",
       "setLoader",
+      "setTab",
       "setProductLists",
-      "setAllProductCount",
-      "setArchivedProductCount",
+      "setStockStatistics",
+      "setSettings",
+      "setInventorySelectedTab",
       "setPagination",
     ]),
     ...mapActions(["requestAxiosGet"]),
+    badgeAllocation(val) {
+      if (val > this.getSettings.global_low_stock_threshhold) {
+        return "available-badge";
+      } else if (
+        val <= this.getSettings.global_low_stock_threshhold &&
+        val > 0
+      ) {
+        return "low-stock-badge";
+      } else if (val === 0) {
+        return "no-stock-badge";
+      }
+    },
     totalStock(val) {
       let total = 0;
       val.forEach((element) => {
@@ -164,16 +246,78 @@ export default {
           value: "",
         });
         if (response.status === 200) {
-          if (this.getInventorySelectedTab === "inventory.all") {
-            this.setAllProductCount(response.data.data.products.length);
-          } else {
-            this.setArchivedProductCount(response.data.data.products.length);
-          }
+          // if (this.getInventorySelectedTab === "inventory.all") {
+          //   this.setAllProductCount(response.data.data.products.length);
+          // } else {
+          //   this.setArchivedProductCount(response.data.data.products.length);
+          // }
           this.setProductLists(response.data.data.products);
           this.setPagination(response.data.data.pagination);
           this.page = response.data.data.pagination.current_page + 1;
         }
       });
+    },
+    getStockSettings() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/settings`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setSettings(response.data.data);
+        }
+      });
+    },
+    getStockStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setStockStatistics(
+            response.data.data.grouped_by_stock_level_count
+          );
+        }
+      });
+    },
+    availableleTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally = row.product_variant_stock_levels.available + tally;
+        }
+      });
+      return tally;
+    },
+    committedTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally =
+            row.product_variant_stock_levels.quantity_held_locally +
+            row.product_variant_stock_levels.quantity_in_sales_orders +
+            tally;
+        }
+      });
+      return tally;
+    },
+    provisionalTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally =
+            row.product_variant_stock_levels.quantity_in_inventory + tally;
+        }
+      });
+      return tally;
+    },
+    incomingTally(product) {
+      let tally = 0;
+      product.product_variants.forEach((row) => {
+        if (row.product_variant_stock_levels) {
+          tally = row.product_variant_stock_levels.quantity_incoming + tally;
+        }
+      });
+      return tally;
     },
     loadMore() {
       this.max = this.max + 10;
@@ -211,5 +355,23 @@ export default {
 .product-img {
   width: 40px;
   height: inherit;
+}
+.available-badge {
+  background: #f0f3f7;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #303133;
+}
+.low-stock-badge {
+  background: #fdf1cc;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #7f3b02;
+}
+.no-stock-badge {
+  background: #fbdecf;
+  padding: 5px 15px;
+  border-radius: 15px;
+  color: #9b101c;
 }
 </style>

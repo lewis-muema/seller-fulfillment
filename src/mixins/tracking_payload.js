@@ -83,11 +83,12 @@ const trackingPayloadMixin = {
       return payload;
     },
     deliveryOptionPayload() {
+      const deliveryoption = this.deliverySpeedOptions[this.deliveryOption];
       const payload = {
-        transport_provider: "SENDY",
-        speed_pricing_type: "SENDY_EXPRESS",
-        speed_pricing_uuid: "",
-        proposed_scheduled_date: 0,
+        transport_provider: deliveryoption.transport_provider,
+        speed_pricing_type: deliveryoption.speed_pricing_type,
+        speed_pricing_uuid: deliveryoption.speed_pricing_uuid,
+        proposed_scheduled_date: this.deliveryDate.valueOf(),
       };
       return payload;
     },

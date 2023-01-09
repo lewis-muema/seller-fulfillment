@@ -39,7 +39,9 @@
                   >
                     {{ $t("inventory.availableInventory") }}
                   </div>
-                  <div class="col-3"></div>
+                  <div class="col-3 quantity-to-send-header">
+                    {{ $t("inventory.quantityToSend") }}
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -257,6 +259,7 @@
             class="mt-3"
             v-model="page"
             :length="getPagination.page_count"
+            :total-visible="getPagination.page_count < 10 ? '' : 10"
             rounded="0"
             :disabled="getLoader.products !== ''"
           ></v-pagination>

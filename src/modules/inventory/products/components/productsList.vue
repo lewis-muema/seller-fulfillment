@@ -71,6 +71,7 @@
             class="mt-3"
             v-model="page"
             :length="getPagination.page_count"
+            :total-visible="getPagination.page_count < 10 ? '' : 10"
             rounded="circle"
           ></v-pagination>
         </div>

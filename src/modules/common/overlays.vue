@@ -1524,7 +1524,7 @@
         <v-btn
           class="edit-info-submit-button"
           v-loading="buttonLoader"
-          @click="submitDelivery()"
+          @click="editDeliverySpeed()"
         >
           {{ $t("inventory.done") }}
         </v-btn>
@@ -1952,6 +1952,40 @@
         :disabled="!isScheduledDeliveryDateValid"
         v-loading="buttonLoader"
         @click="showRescheduleDeliveryOption()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'editRescheduleDeliveryOption'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.scheduleDelivery") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'editRescheduleDeliveryOption')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(
+            deliverySpeedOptions[deliveryOption].speed_pricing_lower_limit_date
+          ),
+          from: new Date(
+            deliverySpeedOptions[deliveryOption].speed_pricing_upper_limit_date
+          ),
+        }"
+        v-model="deliveryDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        v-loading="buttonLoader"
+        @click="submitDelivery()"
       >
         {{ $t("deliveries.submit") }}
       </v-btn>
@@ -2772,6 +2806,21 @@ export default {
         });
         this.buttonLoader = false;
       }
+    },
+    editDeliverySpeed() {
+      if (
+        this.deliverySpeedOptions[this.deliveryOption].speed_pricing_type ===
+        "SENDY_SCHEDULED"
+      ) {
+        this.deliveryDate = this.getOrderTrackingData.order.scheduled_date;
+        this.overlayStatusSet(true, "editRescheduleDeliveryOption");
+        return;
+      }
+      this.deliveryDate =
+        this.deliverySpeedOptions[
+          this.deliveryOption
+        ].speed_pricing_upper_limit_date;
+      this.submitDelivery();
     },
     async submitDelivery() {
       this.buttonLoader = true;

@@ -219,8 +219,6 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setWallets(response.data.data.wallets);
-        } else {
-          this.setWallets([]);
         }
       });
     },

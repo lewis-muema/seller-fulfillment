@@ -157,8 +157,6 @@ export default {
         this.loading = false;
         if (response.status === 200) {
           this.setWallets(response.data.data.wallets);
-        } else {
-          this.setWallets([]);
         }
       });
     },

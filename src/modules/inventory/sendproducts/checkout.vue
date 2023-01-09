@@ -5,7 +5,7 @@
         <v-col cols="6" class="mx-auto mt-4 mb-3">
           <el-steps :active="2" finish-status="success">
             <el-step :title="$t('inventory.selectProducts')"></el-step>
-            <el-step :title="$t('inventory.enterQuantity')"></el-step>
+            <el-step :title="$t('inventory.review')"></el-step>
             <el-step :title="$t('inventory.checkout')"></el-step>
           </el-steps>
         </v-col>

@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-row>
+    <v-row v-if="getEditValue !== 'consignment'">
       <v-col cols="6" class="mx-auto mt-4 mb-3">
         <el-steps :active="0" finish-status="success">
           <el-step :title="$t('inventory.selectProducts')"></el-step>
-          <el-step :title="$t('inventory.enterQuantity')"></el-step>
+          <el-step :title="$t('inventory.review')"></el-step>
           <el-step :title="$t('inventory.checkout')"></el-step>
         </el-steps>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row :class="getEditValue === 'consignment' ? 'mt-5' : ''">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -48,7 +48,9 @@
                   >
                     {{ $t("inventory.availableInventory") }}
                   </div>
-                  <div class="col-3"></div>
+                  <div class="col-3 quantity-to-send-header">
+                    {{ $t("inventory.quantityToSend") }}
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -266,6 +268,7 @@
             class="mt-3"
             v-model="page"
             :length="getPagination.page_count"
+            :total-visible="getPagination.page_count < 10 ? '' : 10"
             rounded="0"
             :disabled="getLoader.products !== ''"
           ></v-pagination>
@@ -795,5 +798,8 @@ export default {
   border-radius: 5px;
   height: 40px;
   width: 40px;
+}
+.quantity-to-send-header {
+  text-align: right;
 }
 </style>

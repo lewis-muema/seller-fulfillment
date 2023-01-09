@@ -283,5 +283,7 @@
   "scheduleDelivery": "Schedule delivery",
   "schedulePickup": "Schedule pickup",
   "pleaseMakeSureTheDeliveryDateIsAfter": "Please make sure the delivery date is after {Date}",
-  "pleaseSelectSomeProductsToProceed": "Please select some products to proceed"
+  "pleaseSelectSomeProductsToProceed": "Please select some products to proceed",
+  "review": "Review",
+  "reviewProductsAdded": "Review products added"
 }

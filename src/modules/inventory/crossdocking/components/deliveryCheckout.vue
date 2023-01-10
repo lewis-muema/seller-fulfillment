@@ -1032,7 +1032,7 @@ export default {
     },
     speedPolicyFlag() {
       return this.getBusinessDetails.settings
-        ? !this.getBusinessDetails.settings.attach_speed_policy_enabled
+        ? this.getBusinessDetails.settings.attach_speed_policy_enabled
         : false;
     },
     defaultPaymentMethod() {

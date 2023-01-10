@@ -36,33 +36,6 @@
             {{ $t(action.label) }}</span
           >
         </div>
-        <!-- <span>
-          <v-menu transition="slide-y-transition" anchor="bottom center">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                class="tracking-order-actions-btn elevation-0"
-                append-icon="mdi-chevron-down"
-                v-bind="props"
-              >
-                {{ $t("deliveries.actions") }}
-              </v-btn>
-            </template>
-            <v-list class="users-actions-popup">
-              <v-list-item v-for="(action, i) in deliveryActions" :key="i">
-                <v-list-item-title
-                  @click="
-                    setOverlayStatus({
-                      overlay: true,
-                      popup: action.popup,
-                    })
-                  "
-                >
-                  {{ $t(action.label) }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </span> -->
       </div>
       <p class="tracking-order-time-est">
         <span

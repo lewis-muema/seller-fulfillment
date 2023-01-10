@@ -239,6 +239,7 @@
                   ? 'mb-4 row cross-docking-checkout-row'
                   : 'mb-4 row cross-docking-checkout-roww'
               "
+              v-if="speedPolicyFlag"
             >
               <div class="col-1">
                 <i
@@ -319,7 +320,10 @@
               v-if="
                 showErrors &&
                 !(
-                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                  (getDestinations[index - 1] &&
+                    getDestinations[index - 1].speed &&
+                    speedPolicyFlag) ||
+                  !speedPolicyFlag
                 )
               "
               class="row error-msg withdraw-transaction-error mb-3 field-required-error"
@@ -693,7 +697,7 @@
         </div>
         <div
           class="mb-4 mt-4 row cross-docking-checkout-row cross-docking-checkout-text-override"
-          v-if="getPickUpOptions.type === 'driver'"
+          v-if="getPickUpOptions.type === 'driver' && speedPolicyFlag"
         >
           <div class="col-1">
             <i class="mdi mdi-clock-outline cross-docking-checkout-icons"></i>
@@ -772,7 +776,12 @@
               <div
                 v-if="
                   showErrors &&
-                  !(getPickUpInfoCD && getPickUpInfoCD.pickupSpeed)
+                  !(
+                    (getPickUpInfoCD &&
+                      getPickUpInfoCD.pickupSpeed &&
+                      speedPolicyFlag) ||
+                    !speedPolicyFlag
+                  )
                 "
                 class="error-msg withdraw-transaction-error mb-3 field-required-error pt-4"
               >
@@ -1019,6 +1028,11 @@ export default {
     crossDockingFlag() {
       return this.getBusinessDetails.settings
         ? this.getBusinessDetails.settings.cross_docking_enabled
+        : false;
+    },
+    speedPolicyFlag() {
+      return this.getBusinessDetails.settings
+        ? !this.getBusinessDetails.settings.attach_speed_policy_enabled
         : false;
     },
     defaultPaymentMethod() {
@@ -1638,12 +1652,13 @@ export default {
           row.products.length &&
           row.delivery_info &&
           row.recipient &&
-          row.speed &&
+          ((row.speed && this.speedPolicyFlag) || !this.speedPolicyFlag) &&
           (!this.pickUpRequired ||
             (this.pickUpRequired &&
               this.getPickUpInfoCD.location &&
               this.getPickUpInfoCD.phone &&
-              this.getPickUpInfoCD.pickupSpeed))
+              ((this.getPickUpInfoCD.pickupSpeed && this.speedPolicyFlag) ||
+                !this.speedPolicyFlag)))
         ) {
           fieldsPresent.push(true);
         } else {

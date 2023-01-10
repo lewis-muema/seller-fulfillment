@@ -254,8 +254,10 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
-          this.params
-        }&offset=${this.page - 1}`,
+          this.getInventorySelectedTab === "inventory.archived"
+            ? "/archived"
+            : ""
+        }${this.params}&offset=${this.page - 1}`,
       }).then((response) => {
         this.setLoader({
           type: "products",

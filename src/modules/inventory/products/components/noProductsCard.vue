@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <div v-if="noStockCard">
+    <div v-if="noStockCard" class="no-stock-card">
       <div>
         <img
           src="https://images.sendyit.com/fulfilment/seller/track.png"
@@ -60,7 +60,11 @@
         />
       </div>
       <p class="deliveries-empty-title">
-        {{ $t("inventory.noInventoryToTrackYet") }}
+        {{
+          getInventorySelectedTab === "inventory.lowStock"
+            ? $t("inventory.thereAreNoLowStockItems")
+            : $t("inventory.thereAreNoOutOfStockItems")
+        }}
       </p>
       <v-btn
         class="deliveries-btn"
@@ -130,5 +134,11 @@ export default {
   width: 275px;
   text-align: center;
   font-size: 18px;
+}
+.no-stock-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>

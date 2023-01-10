@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ getBusinessDetails.settings }}
     <v-card variant="outlined" class="send-inventory-checkout-card">
       <div class="enter-quantity-container desktop-header-title d-flex pt-3">
         <i
@@ -232,108 +231,102 @@
                 {{ $t("inventory.thisFieldIsRequired") }}
               </div>
             </div>
-            <div v-if="speedEnabledFlag">
-              <div
-                :class="
-                  !(
-                    getDestinations[index - 1] &&
-                    getDestinations[index - 1].speed
-                  )
-                    ? 'mb-4 row cross-docking-checkout-row'
-                    : 'mb-4 row cross-docking-checkout-roww'
-                "
-              >
-                <div class="col-1">
-                  <i
-                    class="mdi mdi-truck-outline cross-docking-checkout-icons"
-                  ></i>
-                </div>
-                <div
-                  class="col-11 cross-docking-checkout-text"
-                  v-if="
-                    !(
-                      getDestinations[index - 1] &&
-                      getDestinations[index - 1].speed
-                    )
-                  "
-                  @click="addDeliveryOption(index)"
-                >
-                  <span>{{ $t("inventory.selectTheDeliveryOption") }}</span>
-                  <span class="cross-docking-checkout-chevrons"
-                    ><i class="mdi mdi-chevron-right"></i
-                  ></span>
-                </div>
-                <div
-                  class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
-                  v-else
-                >
-                  <div>
-                    <p>{{ $t("inventory.deliveryOption") }}</p>
-                    <div class="delivery-details-text">
-                      <p>
-                        <span
-                          class="cross-docking-checkout-delivery-option-top"
-                        >
-                          {{
-                            getDestinations[index - 1].speed
-                              .transport_provider === "SENDY"
-                              ? $t(
-                                  `inventory.${
-                                    getDestinations[index - 1].speed
-                                      .speed_pricing_type
-                                  }_DELIVERY`
-                                )
-                              : getDestinations[
-                                  index - 1
-                                ].speed.transport_provider.replace("_", " ")
-                          }}
-                        </span>
-                      </p>
-                      <p>
-                        <span
-                          class="cross-docking-checkout-delivery-option-bottom"
-                        >
-                          {{
-                            getDestinations[index - 1].speed
-                              .speed_pricing_type === "SENDY_SCHEDULED"
-                              ? formatDate(
-                                  getDestinations[index - 1].speed
-                                    .speed_pricing_scheduled_date
-                                )
-                              : formatDate(
-                                  getDestinations[index - 1].speed
-                                    .speed_pricing_upper_limit_date
-                                )
-                          }}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    class="cross-docking-checkout-chevrons"
-                    @click="addDeliveryOption(index)"
-                  >
-                    <span class="cross-docking-checkout-chevrons-text">{{
-                      $t("inventory.change")
-                    }}</span>
-                    <i class="mdi mdi-chevron-right"></i>
-                  </span>
-                </div>
+            <div
+              :class="
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+                  ? 'mb-4 row cross-docking-checkout-row'
+                  : 'mb-4 row cross-docking-checkout-roww'
+              "
+            >
+              <div class="col-1">
+                <i
+                  class="mdi mdi-truck-outline cross-docking-checkout-icons"
+                ></i>
               </div>
               <div
+                class="col-11 cross-docking-checkout-text"
                 v-if="
-                  showErrors &&
                   !(
                     getDestinations[index - 1] &&
                     getDestinations[index - 1].speed
                   )
                 "
-                class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+                @click="addDeliveryOption(index)"
               >
-                <div class="col-1"></div>
-                <div class="col-11">
-                  {{ $t("inventory.thisFieldIsRequired") }}
+                <span>{{ $t("inventory.selectTheDeliveryOption") }}</span>
+                <span class="cross-docking-checkout-chevrons"
+                  ><i class="mdi mdi-chevron-right"></i
+                ></span>
+              </div>
+              <div
+                class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
+                v-else
+              >
+                <div>
+                  <p>{{ $t("inventory.deliveryOption") }}</p>
+                  <div class="delivery-details-text">
+                    <p>
+                      <span class="cross-docking-checkout-delivery-option-top">
+                        {{
+                          getDestinations[index - 1].speed
+                            .transport_provider === "SENDY"
+                            ? $t(
+                                `inventory.${
+                                  getDestinations[index - 1].speed
+                                    .speed_pricing_type
+                                }_DELIVERY`
+                              )
+                            : getDestinations[
+                                index - 1
+                              ].speed.transport_provider.replace("_", " ")
+                        }}
+                      </span>
+                    </p>
+                    <p>
+                      <span
+                        class="cross-docking-checkout-delivery-option-bottom"
+                      >
+                        {{
+                          getDestinations[index - 1].speed
+                            .speed_pricing_type === "SENDY_SCHEDULED"
+                            ? formatDate(
+                                getDestinations[index - 1].speed
+                                  .speed_pricing_scheduled_date
+                              )
+                            : formatDate(
+                                getDestinations[index - 1].speed
+                                  .speed_pricing_upper_limit_date
+                              )
+                        }}
+                      </span>
+                    </p>
+                  </div>
                 </div>
+                <span
+                  class="cross-docking-checkout-chevrons"
+                  @click="addDeliveryOption(index)"
+                >
+                  <span class="cross-docking-checkout-chevrons-text">{{
+                    $t("inventory.change")
+                  }}</span>
+                  <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </div>
+            </div>
+            <div
+              v-if="
+                showErrors &&
+                !(
+                  getDestinations[index - 1] && getDestinations[index - 1].speed
+                )
+              "
+              class="row error-msg withdraw-transaction-error mb-3 field-required-error"
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                {{ $t("inventory.thisFieldIsRequired") }}
               </div>
             </div>
             <div
@@ -1012,11 +1005,6 @@ export default {
     paymentOnDeliveryFlag() {
       return this.getBusinessDetails.settings
         ? this.getBusinessDetails.settings.payments_on_delivery_enabled
-        : false;
-    },
-    speedEnabledFlag() {
-      return this.getBusinessDetails.settings
-        ? this.getBusinessDetails.settings.attach_speed_policy_enabled
         : false;
     },
     cycleDate() {

@@ -171,6 +171,9 @@ export default {
         this.params = `?max=${this.max}`;
       }
       if (this.page === 1) {
+        if (!this.getProductLists.length) {
+          this.setProductLists(this.placeholderProducts);
+        }
         this.fetchProducts();
       } else {
         this.page = 1;

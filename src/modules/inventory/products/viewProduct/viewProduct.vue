@@ -16,29 +16,16 @@
                 $t("inventory.archived")
               }}</span>
             </v-card-title>
-            <div class="dropdown actions-dropdown mt-2">
-              <v-menu transition="slide-y-transition" anchor="bottom center">
-                <template v-slot:activator="{ props }">
-                  <v-btn
-                    class="product-details-actions-btn elevation-0"
-                    append-icon="mdi-menu-down"
-                    v-bind="props"
-                  >
-                    {{ $t("inventory.actions") }}
-                  </v-btn>
-                </template>
-                <v-list class="users-actions-popup">
-                  <v-list-item
-                    v-for="(action, i) in filteredActions"
-                    @click="trigger(action)"
-                    :key="i"
-                  >
-                    <v-list-item-title>
-                      {{ action.label }}
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+            <div class="product-options-container">
+              <span
+                v-for="(action, i) in filteredActions"
+                :key="i"
+                @click="trigger(action)"
+                class="product-option-content"
+              >
+                <i :class="action.icon" aria-hidden="true"></i>
+                {{ action.label }}</span
+              >
             </div>
           </div>
           <product-details-tabs v-if="stockSelectedTab === 'Overview'">
@@ -71,24 +58,28 @@ export default {
           label: this.$t("inventory.edit"),
           link: "/inventory/edit-product",
           show: true,
+          icon: "mdi mdi-pencil",
         },
         {
           label: this.$t("inventory.archive"),
           link: "",
           action: "archive",
           show: true,
+          icon: "mdi mdi-archive",
         },
         {
           label: this.$t("inventory.unarchive"),
           link: "",
           action: "unarchive",
           show: false,
+          icon: "mdi mdi-archive",
         },
         {
           label: this.$t("inventory.addProductOptions"),
           link: "/inventory/edit-product",
           action: "addProduct",
           show: true,
+          icon: "mdi mdi-plus",
         },
       ],
     };
@@ -241,5 +232,15 @@ export default {
   border-radius: 10px;
   font-size: 14px;
   margin-left: 10px;
+}
+.product-options-container {
+  margin-left: auto;
+  margin-top: 9px;
+}
+.product-option-content {
+  padding-right: 10px;
+  font-size: 1.25rem;
+  color: #324ba8;
+  cursor: pointer;
 }
 </style>

@@ -311,6 +311,7 @@
           </p>
         </div>
       </div>
+      <p class="view-delivery-desc">{{ $t("inventory.viewDelivery") }}</p>
       <div @click="view = !view">
         <span v-if="!view" class="d-flex">
           <span class="delivery-info-view-toggle">
@@ -561,13 +562,17 @@ export default {
 }
 
 .delivery-info-view-toggle {
-  color: #606266;
+  color: #324ba8;
   font-size: 16px;
   cursor: pointer;
 }
 
 .delivery-info-view-icon {
+  color: #324ba8;
   font-size: 25px;
   cursor: pointer;
+}
+.view-delivery-desc {
+  color: #606266;
 }
 </style>

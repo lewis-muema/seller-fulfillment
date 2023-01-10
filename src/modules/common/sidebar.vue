@@ -53,14 +53,6 @@
             "
           ></v-list-item>
           <v-list-item
-            v-if="!getAccessDenied.includes('/inventory/stock-levels')"
-            :title="$t('common.stocks')"
-            @click="$router.push('/inventory/stock-levels')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === 'common.stocks'"
-            :append-icon="route === 'common.stocks' ? 'mdi-circle-small' : ''"
-          ></v-list-item>
-          <v-list-item
             v-if="!getAccessDenied.includes('/inventory/send-inventory')"
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"

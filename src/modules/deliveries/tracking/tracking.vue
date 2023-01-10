@@ -5,7 +5,7 @@
         class="mdi mdi-arrow-left tracking-arrow-back"
         @click="$router.back()"
       ></i>
-      <p class="tracking-order-title mb-0">
+      <div class="tracking-order-title mb-0">
         <span :class="getLoader.orderTracking">
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
@@ -20,34 +20,23 @@
             })
           }}
         </span>
-        <span>
-          <v-menu transition="slide-y-transition" anchor="bottom center">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                class="tracking-order-actions-btn elevation-0"
-                append-icon="mdi-chevron-down"
-                v-bind="props"
-              >
-                {{ $t("deliveries.actions") }}
-              </v-btn>
-            </template>
-            <v-list class="users-actions-popup">
-              <v-list-item v-for="(action, i) in deliveryActions" :key="i">
-                <v-list-item-title
-                  @click="
-                    setOverlayStatus({
-                      overlay: true,
-                      popup: action.popup,
-                    })
-                  "
-                >
-                  {{ $t(action.label) }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </span>
-      </p>
+        <div class="tracking-options-container">
+          <span
+            v-for="(action, i) in deliveryActions"
+            :key="i"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: action.popup,
+              })
+            "
+            class="tracking-option-content"
+          >
+            <i :class="action.icon" aria-hidden="true"></i>
+            {{ $t(action.label) }}</span
+          >
+        </div>
+      </div>
       <p class="tracking-order-time-est">
         <span
           :class="getLoader.orderTracking"
@@ -386,5 +375,18 @@ export default {
   color: #324ba8;
   font-weight: 600;
   cursor: pointer;
+}
+.tracking-options-container {
+  float: right;
+}
+.tracking-option-content {
+  margin-right: 10px;
+  font-size: 1.12rem;
+  color: #324ba8;
+  cursor: pointer;
+  border: 1px #c0c4cc solid;
+  border-radius: 5px;
+  padding: 5px;
+  font-weight: 400;
 }
 </style>

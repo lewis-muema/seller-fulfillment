@@ -112,11 +112,7 @@
                         hide-actions
                       >
                         <div class="col-7 crossdocking-product-select-titles">
-                          <span>
-                            <i
-                              class="mdi mdi-chevron-down product-select-chevron"
-                            ></i>
-                          </span>
+                          <span class="product-select-checkbox-expand"></span>
                           <span class="d-flex">
                             <span class="product-image-frame-container">
                               <div class="product-image-frame">
@@ -603,7 +599,10 @@ export default {
 }
 .product-select-checkbox {
   height: 70px;
-  width: 18px !important;
+  width: 15px !important;
+}
+.product-select-checkbox-expand {
+  width: 15px !important;
 }
 .product-select-img {
   max-width: 100%;
@@ -613,10 +612,6 @@ export default {
 .product-select-column {
   display: flex;
   align-items: center;
-}
-.product-select-checkbox {
-  accent-color: #324ba8;
-  margin-right: 35px;
 }
 .product-select-checkbox-inner {
   accent-color: #324ba8;

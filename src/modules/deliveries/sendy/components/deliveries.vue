@@ -35,6 +35,11 @@
               </th>
               <th class="text-left deliveries-table-header">
                 <span :class="getLoader.consignments">{{
+                  $t("deliveries.platforms")
+                }}</span>
+              </th>
+              <th class="text-left deliveries-table-header">
+                <span :class="getLoader.consignments">{{
                   $t("deliveries.deliveryDate")
                 }}</span>
               </th>
@@ -85,6 +90,27 @@
                     rounded
                   ></v-progress-linear>
                 </div>
+              </td>
+              <td class="deliveries-platform-row">
+                <span
+                  :class="getLoader.consignments"
+                  class="deliveries-platform-tag"
+                >
+                  <span
+                    :class="getLoader.deliveries"
+                    class="deliveries-platform-tag-storefront"
+                    v-if="item.sales_channel_name"
+                  >
+                    {{ $t("dashboard.storefront") }}
+                  </span>
+                  <span
+                    :class="getLoader.consignments"
+                    class="deliveries-platform-tag-fulfillment"
+                    v-else
+                  >
+                    {{ $t("dashboard.fulfillmentApp") }}
+                  </span>
+                </span>
               </td>
               <td class="deliveries-date-row">
                 <div v-if="item.order_status === 'ORDER_COMPLETED'">
@@ -362,14 +388,6 @@ export default {
 }
 .deliveries-table-column {
   height: 60px;
-}
-.deliveries-product-row,
-.deliveries-date-row,
-.deliveries-action-row {
-  width: 20%;
-}
-.deliveries-progress-row {
-  width: 40%;
 }
 .deliveries-product-row {
   font-size: 16px !important;

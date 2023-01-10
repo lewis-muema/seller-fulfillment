@@ -255,6 +255,7 @@
   "editDeliveryDate": "Edit delivery date",
   "otherDocuments": "{Doc} and {Count} other documents",
   "viewLess": "View less",
+  "viewDelivery": "View delivery options, payment collection, and delivery documents details",
   "viewMore": "View more",
   "YourNextBillingCycle": "your next billing cycle",
   "areYouSureYouWantToRemoveThisOrder": "Are you sure you want to remove this order?",

@@ -449,12 +449,14 @@ export default createStore({
           trigger: false,
           popup: "reschedule",
           show: true,
+          icon: "mdi mdi-clock-outline",
         },
         {
           label: "deliveries.cancelOrder",
           trigger: false,
           popup: "cancel",
           show: true,
+          icon: "mdi mdi-close-circle-outline",
         },
       ],
       overlayStatus: {

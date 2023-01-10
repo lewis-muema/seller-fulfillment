@@ -196,12 +196,12 @@ export default {
     "$store.state.loader": {
       handler() {
         this.productTabs[0].content = `${this.getAllProductCount}`;
-        this.productTabs[1].content = `${this.getArchivedProductCount}`;
-        this.productTabs[2].content =
+        this.productTabs[3].content = `${this.getArchivedProductCount}`;
+        this.productTabs[1].content =
           Object.keys(this.getStockStatistics).length > 0
             ? this.getStockStatistics.low_stock_products.toString()
             : "-";
-        this.productTabs[3].content =
+        this.productTabs[2].content =
           Object.keys(this.getStockStatistics).length > 0
             ? this.getStockStatistics.out_of_stock_products.toString()
             : "-";

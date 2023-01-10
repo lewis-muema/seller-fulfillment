@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="getProductLists.length">
+    <div v-if="getProductLists.length > 0">
       <v-card class="desktop-product-details" variant="outlined">
         <div class="products-search">
           <searchAlgolia type="product" />
@@ -93,21 +93,37 @@
         </div>
       </v-card>
     </div>
-    <div v-else>
-      <add-products-card />
+    <div v-else class="deliveries-empty">
+      <div v-if="getProductLists.length">
+        <div class="no-products-card-container">
+          <i class="mdi mdi-store no-products-icon"></i>
+          <div class="no-products-description">
+            {{
+              getInventorySelectedTab === "inventory.lowStock"
+                ? $t("inventory.thereAreNoLowStockItems")
+                : $t("inventory.thereAreNoOutOfStockItems")
+            }}
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div>
+          <no-products-card />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import tableHeader from "@/modules/inventory/tables/tableHeader";
-import addProductsCard from "@/modules/inventory/products/components/addProductsCard";
+import noProductsCard from "@/modules/inventory/products/components/noProductsCard";
 import searchAlgolia from "../../../common/searchAlgolia.vue";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import placeholder from "../../../../mixins/placeholders";
 
 export default {
-  components: { tableHeader, addProductsCard, searchAlgolia },
+  components: { tableHeader, searchAlgolia, noProductsCard },
   mixins: [placeholder],
   data() {
     return {
@@ -207,6 +223,8 @@ export default {
       "setSettings",
       "setInventorySelectedTab",
       "setPagination",
+      "setAllProductCount",
+      "setArchivedProductCount",
     ]),
     ...mapActions(["requestAxiosGet"]),
     badgeAllocation(val) {
@@ -236,21 +254,18 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products${
-          this.getInventorySelectedTab === "inventory.archived"
-            ? "/archived"
-            : ""
-        }?max=${this.max}&offset=${this.page - 1}`,
+          this.params
+        }&offset=${this.page - 1}`,
       }).then((response) => {
         this.setLoader({
           type: "products",
           value: "",
         });
         if (response.status === 200) {
-          // if (this.getInventorySelectedTab === "inventory.all") {
-          //   this.setAllProductCount(response.data.data.products.length);
-          // } else {
-          //   this.setArchivedProductCount(response.data.data.products.length);
-          // }
+          if (this.getInventorySelectedTab === "inventory.all") {
+            this.setAllProductCount(response.data.data.products.length);
+          }
+          this.setArchivedProductCount(response.data.data.products.length);
           this.setProductLists(response.data.data.products);
           this.setPagination(response.data.data.pagination);
           this.page = response.data.data.pagination.current_page + 1;

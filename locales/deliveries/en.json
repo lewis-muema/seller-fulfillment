@@ -167,5 +167,6 @@
   "editPOD": "Edit payment collection",
   "manageDocuments": "Manage documents",
   "uploadAnotherDocument": "Upload another document",
-  "addRemoveDocuments": "Add/remove documents"
+  "addRemoveDocuments": "Add/remove documents",
+  "platforms": "Platform"
 }

@@ -14,7 +14,7 @@
         <v-col cols="7">
           <v-card variant="outlined" class="send-inventory-checkout-card">
             <div
-              class="enter-quantity-container desktop-header-title d-flex p-3"
+              class="enter-quantity-container desktop-header-title checkout-back-button-override d-flex pt-3 pb-3"
             >
               <i
                 class="mdi mdi-arrow-left"
@@ -423,5 +423,8 @@ export default {
 }
 .submit-order-btn {
   height: 55px;
+}
+.checkout-back-button-override {
+  margin-left: -5px;
 }
 </style>

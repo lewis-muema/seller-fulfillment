@@ -16,13 +16,16 @@
                 {{ $t("dashboard.progress") }}
               </th>
               <th class="text-left table-headers">
+                {{ $t("deliveries.platforms") }}
+              </th>
+              <th class="text-left table-headers">
                 {{ $t("dashboard.action") }}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in filteredDeliveries" :key="index">
-              <td>
+              <td class="deliveries-date-row">
                 <v-list-item class="dashboard-customer-columns" lines="two">
                   <v-list-item-header>
                     <v-list-item-title>
@@ -63,7 +66,7 @@
                   </v-list-item-header>
                 </v-list-item>
               </td>
-              <td>
+              <td class="deliveries-product-row">
                 <v-list-item class="dashboard-customer-columns" lines="two">
                   <v-list-item-header
                     v-if="item.order_status === 'ORDER_FAILED'"
@@ -101,7 +104,33 @@
                   </v-list-item-header>
                 </v-list-item>
               </td>
-              <td>
+              <td class="deliveries-platform-row">
+                <span class="deliveries-platform-tag">
+                  <span
+                    :class="
+                      getSelectedTab === 'dashboard.toYourCustomers'
+                        ? getLoader.deliveries
+                        : getLoader.consignments
+                    "
+                    class="deliveries-platform-tag-storefront"
+                    v-if="item.sales_channel_name"
+                  >
+                    {{ $t("dashboard.storefront") }}
+                  </span>
+                  <span
+                    :class="
+                      getSelectedTab === 'dashboard.toYourCustomers'
+                        ? getLoader.deliveries
+                        : getLoader.consignments
+                    "
+                    class="deliveries-platform-tag-fulfillment"
+                    v-else
+                  >
+                    {{ $t("dashboard.fulfillmentApp") }}
+                  </span>
+                </span>
+              </td>
+              <td class="deliveries-date-row">
                 <router-link
                   :to="`/deliveries/tracking/${item.order_id}`"
                   class="dashboard-track-order"
@@ -366,5 +395,15 @@ export default {
 .dashboard-noaccess-container {
   zoom: 80%;
   margin-top: -5%;
+}
+.deliveries-platform-tag {
+  font-weight: 500;
+  font-size: 13px;
+}
+.deliveries-platform-tag-fulfillment {
+  color: #324ba8;
+}
+.deliveries-platform-tag-storefront {
+  color: #ee7d00;
 }
 </style>

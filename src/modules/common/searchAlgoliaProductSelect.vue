@@ -237,6 +237,15 @@ export default {
           }px`;
         }, 10);
       }
+      this.sendSegmentEvents({
+        event: "Search_Consignment",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          searchWord: this.searchParam,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     },
     disabledStatus() {
       return this.crossDockingFlag() || this.getLoader.products !== "";

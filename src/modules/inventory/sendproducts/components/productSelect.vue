@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-3">
                       <el-input-number
-                        class="crossdocking-product-counter"
+                        class="crossdocking-product-counter quantity-to-send-row"
                         v-model="product.quantity"
                         :min="0"
                         placeholder="0"
@@ -169,7 +169,9 @@
                           >
                         </div>
                         <div class="col-3">
-                          <span class="product-select-units">
+                          <span
+                            class="product-select-units quantity-to-send-row"
+                          >
                             <span>{{ $t("inventory.view") }}</span>
                             <i class="mdi mdi-chevron-down ml-2"></i>
                           </span>
@@ -218,7 +220,7 @@
                           </div>
                           <div class="col-3">
                             <el-input-number
-                              class="crossdocking-product-counter"
+                              class="crossdocking-product-counter quantity-to-send-row"
                               v-model="option.quantity"
                               :min="0"
                               placeholder="0"
@@ -572,7 +574,7 @@ export default {
         }
       });
       this.sendSegmentEvents({
-        event: "Product_Selection",
+        event: "Remove_From_Product_Selection",
         data: {
           userId: this.getStorageUserDetails.business_id,
           SKU: product.product_id,
@@ -789,5 +791,9 @@ export default {
 }
 .quantity-to-send-header {
   text-align: right;
+  padding-right: 28px !important;
+}
+.quantity-to-send-row {
+  margin-right: 15px;
 }
 </style>

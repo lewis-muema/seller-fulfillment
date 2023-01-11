@@ -330,6 +330,7 @@ export default {
 .tracking-order-title {
   font-weight: 500;
   font-size: 16px;
+  width: calc(89% + 70px);
 }
 .tracking-order-time-est {
   font-size: 14px;
@@ -360,8 +361,8 @@ export default {
 .tracking-pickup-banner {
   border: 1px solid #324ba8;
   border-radius: 5px;
-  margin-right: 55px;
-  padding: 20px 0px;
+  padding: 20px 30px 20px 0px;
+  width: calc(88% + 70px);
 }
 .tracking-pickup-banner-icon {
   font-size: 25px;
@@ -381,7 +382,7 @@ export default {
 }
 .tracking-option-content {
   margin-right: 10px;
-  font-size: 1.12rem;
+  font-size: 15px;
   color: #324ba8;
   cursor: pointer;
   border: 1px #c0c4cc solid;

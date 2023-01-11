@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-card variant="outlined" class="send-inventory-checkout-card">
-      <div class="enter-quantity-container desktop-header-title d-flex pt-3">
+      <div
+        class="enter-quantity-container desktop-header-title d-flex pt-3 cross-docking-checkout-back-arrow"
+      >
         <i
           class="mdi mdi-arrow-left"
           aria-hidden="true"
@@ -22,8 +24,10 @@
             "
             :name="1"
           >
-            <div class="mb-4 row cross-docking-checkout-row">
-              <div class="col-1">
+            <div
+              class="mb-4 row cross-docking-checkout-row cross-docking-checkout-product-row"
+            >
+              <div class="col-1 cross-docking-checkout-product-icon">
                 <i class="mdi mdi-shape cross-docking-checkout-icons"></i>
               </div>
               <div
@@ -596,8 +600,11 @@
         {{ $t("inventory.addAnotherDeliveryLocation") }}
       </div>
       <div class="mt-5 mb-4" v-if="pickUpRequired">
-        <p class="payment-collection-title mb-3">
+        <p class="payment-collection-title mb-1">
           {{ $t("inventory.pickUpInfo") }}
+        </p>
+        <p class="payment-collection-title mb-3 pickup-let-us-know">
+          ({{ $t("inventory.pleaseLetUsKnow") }})
         </p>
         <div class="row" v-if="FCdropoffStatus">
           <div class="col-1">
@@ -1980,7 +1987,7 @@ export default {
 .cross-docking-checkout-products-label-upper {
   display: flex;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 .cross-docking-checkout-product-underline {
   border-bottom: 1px solid #dcdfe6;
@@ -2067,5 +2074,17 @@ export default {
 .cross-docking-checkout-remove-button {
   width: max-content !important;
   margin-left: auto;
+}
+.cross-docking-checkout-back-arrow {
+  margin-bottom: -20px;
+}
+.cross-docking-checkout-product-row {
+  align-items: flex-start !important;
+}
+.cross-docking-checkout-product-icon {
+  margin-top: 10px !important;
+}
+.pickup-let-us-know {
+  font-size: 14px !important;
 }
 </style>

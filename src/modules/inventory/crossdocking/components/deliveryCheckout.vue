@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-card variant="outlined" class="send-inventory-checkout-card">
-      <div class="enter-quantity-container desktop-header-title d-flex pt-3">
+      <div
+        class="enter-quantity-container desktop-header-title d-flex pt-3 cross-docking-checkout-back-arrow"
+      >
         <i
           class="mdi mdi-arrow-left"
           aria-hidden="true"
@@ -22,8 +24,10 @@
             "
             :name="1"
           >
-            <div class="mb-4 row cross-docking-checkout-row">
-              <div class="col-1">
+            <div
+              class="mb-4 row cross-docking-checkout-row cross-docking-checkout-product-row"
+            >
+              <div class="col-1 cross-docking-checkout-product-icon">
                 <i class="mdi mdi-shape cross-docking-checkout-icons"></i>
               </div>
               <div
@@ -423,13 +427,13 @@
                           {{
                             $t("inventory.collect", {
                               Amount: `${
-                                getFulfillmentFees.pricing.pricing_deliveries[
-                                  index - 1
-                                ].currency
+                                deliveryPricing
+                                  ? deliveryPricing.currency
+                                  : getBusinessDetails.currency
                               } ${
-                                getFulfillmentFees.pricing.pricing_deliveries[
-                                  index - 1
-                                ].total_product_value
+                                deliveryPricing
+                                  ? deliveryPricing.total_product_value
+                                  : 0
                               }`,
                             })
                           }}
@@ -596,8 +600,11 @@
         {{ $t("inventory.addAnotherDeliveryLocation") }}
       </div>
       <div class="mt-5 mb-4" v-if="pickUpRequired">
-        <p class="payment-collection-title mb-3">
+        <p class="payment-collection-title mb-1">
           {{ $t("inventory.pickUpInfo") }}
+        </p>
+        <p class="payment-collection-title mb-3 pickup-let-us-know">
+          ({{ $t("inventory.pleaseLetUsKnow") }})
         </p>
         <div class="row" v-if="FCdropoffStatus">
           <div class="col-1">
@@ -1091,6 +1098,11 @@ export default {
       };
       return payload;
     },
+    deliveryPricing() {
+      return this.getFulfillmentFees.pricing.pricing_deliveries[
+        this.getDestinationIndex
+      ];
+    },
     deliverySpeeds() {
       return this.getDeliverySpeed.length
         ? this.getDeliverySpeed[0].proposed_speeds
@@ -1098,15 +1110,16 @@ export default {
     },
     meansOfPaymentPayload() {
       return {
-        means_of_payment_type: this.getBusinessDetails.settings.payments_enabled
+        means_of_payment_type: this.getBusinessDetails.settings
+          ?.payments_enabled
           ? this.meansOfPayment
           : "CARD",
         means_of_payment_identifier: this.getBusinessDetails.settings
-          .payments_enabled
+          ?.payments_enabled
           ? this.defaultPaymentMethod[0].pay_method_details
           : "",
         participant_type: "SELLER",
-        participant_id: this.getBusinessDetails.settings.payments_enabled
+        participant_id: this.getBusinessDetails.settings?.payments_enabled
           ? this.defaultPaymentMethod[0].user_id
           : "",
       };
@@ -1394,6 +1407,9 @@ export default {
       destinations.push({
         expanded: 1,
         preferences: false,
+        POD: {
+          amountToBeCollected: "none",
+        },
       });
       this.setDestinations(destinations);
     },
@@ -1489,6 +1505,12 @@ export default {
     },
     addPaymentCollection(index) {
       this.changeIndex(index);
+      this.setPaymentCollectionStatus({
+        amountToBeCollected:
+          this.getDestinations[index - 1].POD.amountToBeCollected,
+        status: this.getDestinations[index - 1].POD.status,
+        deliveryFee: this.getDestinations[index - 1].POD.deliveryFee,
+      });
       this.setOverlayStatus({
         overlay: true,
         popup: "paymentCollection",
@@ -1546,7 +1568,10 @@ export default {
     getPricing() {
       this.getSpeed();
       const destinations = this.getDestinations;
-      if (destinations.length && destinations[0].products) {
+      if (
+        destinations.length &&
+        destinations[this.getDestinationIndex].products
+      ) {
         this.setLoader({
           type: "calculateFee",
           value: "loading-text",
@@ -1707,6 +1732,9 @@ export default {
               {
                 expanded: 1,
                 preferences: false,
+                POD: {
+                  amountToBeCollected: "none",
+                },
               },
             ]);
             this.setPickUpInfoCD({});
@@ -1980,7 +2008,7 @@ export default {
 .cross-docking-checkout-products-label-upper {
   display: flex;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 .cross-docking-checkout-product-underline {
   border-bottom: 1px solid #dcdfe6;
@@ -2067,5 +2095,17 @@ export default {
 .cross-docking-checkout-remove-button {
   width: max-content !important;
   margin-left: auto;
+}
+.cross-docking-checkout-back-arrow {
+  margin-bottom: -20px;
+}
+.cross-docking-checkout-product-row {
+  align-items: flex-start !important;
+}
+.cross-docking-checkout-product-icon {
+  margin-top: 10px !important;
+}
+.pickup-let-us-know {
+  font-size: 14px !important;
 }
 </style>

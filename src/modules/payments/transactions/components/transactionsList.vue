@@ -119,6 +119,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 import moment from "moment";
 
 export default {
@@ -137,6 +138,7 @@ export default {
       this.getUserTransactions();
     },
   },
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getWallets",
@@ -192,6 +194,14 @@ export default {
     this.getUserWallets();
     this.getUserTransactions();
     this.allBillingCycle();
+    this.sendSegmentEvents({
+      event: "Select_Transaction_History",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        clientType: "web",
+        device: "desktop",
+      },
+    });
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),

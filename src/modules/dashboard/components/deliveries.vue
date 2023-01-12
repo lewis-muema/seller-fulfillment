@@ -401,7 +401,7 @@ export default {
   font-size: 13px;
 }
 .deliveries-platform-tag-fulfillment {
-  color: #324ba8;
+  color: #303133;
 }
 .deliveries-platform-tag-storefront {
   color: #ee7d00;

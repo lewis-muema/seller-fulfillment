@@ -311,7 +311,11 @@
           </p>
         </div>
       </div>
-      <p class="view-delivery-desc">{{ $t("inventory.viewDelivery") }}</p>
+      <p class="view-delivery-desc">
+        <span :class="getLoader.orderTracking">{{
+          $t("inventory.viewDelivery")
+        }}</span>
+      </p>
       <div @click="view = !view">
         <span v-if="!view" class="d-flex">
           <span class="delivery-info-view-toggle">
@@ -339,7 +343,7 @@ export default {
     return {
       overlay: false,
       editInfo: false,
-      view: false,
+      view: true,
       pickups: this.$t("deliveries.cantEditPickups"),
       deliveryInfo: this.$t("deliveries.cantEditDelivery"),
       recipientInfo: this.$t("deliveries.cantEditRecipient"),

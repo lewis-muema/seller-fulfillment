@@ -84,6 +84,9 @@
   "orderIsNotReady": "My order is not ready",
   "wrongLocation": "Wrong location",
   "duplicateOrder": "Duplicate order",
+  "customerRequestedCancellation": "Customer requested cancellation",
+  "orderDetailsAreNotCorrect": "Order details are not correct",
+  "itemsAreNotAvailable": "Items are not available",
   "editDeliveryInfo": "Edit delivery info",
   "enterInstructionsForTheDeliveryPartner": "Enter instructions for the delivery partner",
   "customerInfo": "Customer info",
@@ -168,5 +171,7 @@
   "manageDocuments": "Manage documents",
   "uploadAnotherDocument": "Upload another document",
   "addRemoveDocuments": "Add/remove documents",
-  "platforms": "Platform"
+  "platforms": "Platform",
+  "cancelled": "Cancelled",
+  "kindlyGiveThisCode": "Kindly give this code to the rider when they recieve your order"
 }

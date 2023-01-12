@@ -124,6 +124,31 @@
           ></v-badge>
         </span>
       </div>
+      <div
+        class="customers-orders-tab-section"
+        :class="activeTab === 'Cancelled' ? 'active-orders-tab' : ''"
+      >
+        <span
+          :class="
+            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+              ? nothing()
+              : passActiveTab('Cancelled')
+          "
+        >
+          {{ $t("deliveries.cancelled") }}
+          <v-badge
+            color="#9B101C"
+            text-color="white"
+            :content="cancelled"
+            inline
+          ></v-badge>
+        </span>
+      </div>
     </div>
     <div class="deliver-btn-container">
       <div v-if="exportStatus" class="export-button" @click="triggerExport()">
@@ -156,6 +181,7 @@ export default {
     transit: "-",
     failed: "-",
     completed: "-",
+    cancelled: "-",
   }),
   watch: {
     "$store.state.loader": {
@@ -176,6 +202,9 @@ export default {
           : "0";
         this.completed = this.getConsignmentStatistics.ORDER_COMPLETED
           ? this.getConsignmentStatistics.ORDER_COMPLETED.toString()
+          : "0";
+        this.cancelled = this.getConsignmentStatistics.ORDER_CANCELED
+          ? this.getConsignmentStatistics.ORDER_CANCELED.toString()
           : "0";
       },
       deep: true,

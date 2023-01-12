@@ -13,7 +13,7 @@
       <datepicker
         :disabled-dates="{
           to: new Date(Date.now() - 1000 * 60 * 60 * 24 * 0),
-          from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
+          from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         }"
         v-model="date"
         :inline="true"
@@ -806,6 +806,9 @@
           class="mdi mdi-close timeline-failed-attempt-close"
         ></i>
       </div>
+      <div class="make-payment-lower-section">
+        {{ $t("deliveries.kindlyGiveThisCode") }}
+      </div>
       <div class="delivery-code">
         {{ getOrderTrackingData.order.confirmation_pin }}
       </div>
@@ -1007,15 +1010,11 @@
               </p>
               <p class="mb-2 ml-3">
                 {{
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].currency
+                  deliveryPricing
+                    ? deliveryPricing.currency
+                    : getBusinessDetails.currency
                 }}
-                {{
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].total_product_value
-                }}
+                {{ deliveryPricing ? deliveryPricing.total_product_value : 0 }}
               </p>
             </el-radio>
           </div>
@@ -1027,8 +1026,16 @@
               <p class="mb-2 ml-3">
                 {{
                   $t("inventory.deliveryFeeAmount", {
-                    Amount: `${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency}
-                                ${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].total_product_value}`,
+                    Amount: `${
+                      deliveryPricing
+                        ? deliveryPricing.currency
+                        : getBusinessDetails.currency
+                    }
+                                ${
+                                  deliveryPricing
+                                    ? deliveryPricing.total_product_value
+                                    : 0
+                                }`,
                   })
                 }}
               </p>
@@ -1050,7 +1057,11 @@
                 {{ $t("inventory.deliveryFeeToBeCollected") }}
               </p>
               <v-text-field
-                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
+                :label="`${
+                  deliveryPricing
+                    ? deliveryPricing.currency
+                    : getBusinessDetails.currency
+                } 60`"
                 @input="
                   setPaymentCollectionStatus({
                     amountToBeCollected:
@@ -1061,9 +1072,9 @@
                 v-model="deliveryFeeAmount"
                 variant="outlined"
                 :prefix="
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].currency
+                  deliveryPricing
+                    ? deliveryPricing.currency
+                    : getBusinessDetails.currency
                 "
                 clearable
                 clear-icon="mdi-close"
@@ -2047,6 +2058,18 @@ export default {
           label: "deliveries.duplicateOrder",
           value: "deliveries.duplicateOrder",
         },
+        {
+          label: "deliveries.customerRequestedCancellation",
+          value: "deliveries.customerRequestedCancellation",
+        },
+        {
+          label: "deliveries.orderDetailsAreNotCorrect",
+          value: "deliveries.orderDetailsAreNotCorrect",
+        },
+        {
+          label: "deliveries.itemsAreNotAvailable",
+          value: "deliveries.itemsAreNotAvailable",
+        },
       ],
       paymentCollection: "",
       deliveryFeeCollection: "",
@@ -2186,6 +2209,11 @@ export default {
         }
       );
       return fee;
+    },
+    deliveryPricing() {
+      return this.getFulfillmentFees.pricing.pricing_deliveries[
+        this.getDestinationIndex
+      ];
     },
     calculatePaymentCollectionFee() {
       let fee = 0;

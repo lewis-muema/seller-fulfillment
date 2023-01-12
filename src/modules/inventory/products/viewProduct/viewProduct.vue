@@ -238,8 +238,8 @@ export default {
   margin-top: 9px;
 }
 .product-option-content {
-  padding-right: 10px;
-  font-size: 1.25rem;
+  padding-right: 20px;
+  font-size: 16px;
   color: #324ba8;
   cursor: pointer;
 }

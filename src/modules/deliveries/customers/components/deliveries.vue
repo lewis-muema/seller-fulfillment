@@ -410,6 +410,7 @@ export default {
 .deliveries-date-row-bottom {
   font-size: 12px;
   color: #606266;
+  margin-bottom: 0px;
 }
 .deliveries-progress-row-top {
   font-size: 12px;

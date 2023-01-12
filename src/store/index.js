@@ -127,6 +127,7 @@ export default createStore({
         inTransit: "ORDER_IN_TRANSIT",
         Failed: "ORDER_FAILED",
         Completed: "ORDER_COMPLETED",
+        Cancelled: "ORDER_CANCELED",
       },
       pagination: {
         current_page: 0,
@@ -351,7 +352,7 @@ export default createStore({
           business_id: "B-XGS-1542",
           scheduled_date: 1644567439000,
           completed_date: null,
-          confirmation_pin: "0000",
+          confirmation_pin: null,
           products: [
             {
               product_id: "P-KXG-0000",
@@ -1569,6 +1570,9 @@ export default createStore({
         {
           expanded: 1,
           preferences: false,
+          POD: {
+            amountToBeCollected: "none",
+          },
         },
       ],
       edittedDocuments: [],

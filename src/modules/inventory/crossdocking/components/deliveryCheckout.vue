@@ -427,13 +427,13 @@
                           {{
                             $t("inventory.collect", {
                               Amount: `${
-                                getFulfillmentFees.pricing.pricing_deliveries[
-                                  index - 1
-                                ].currency
+                                deliveryPricing
+                                  ? deliveryPricing.currency
+                                  : getBusinessDetails.currency
                               } ${
-                                getFulfillmentFees.pricing.pricing_deliveries[
-                                  index - 1
-                                ].total_product_value
+                                deliveryPricing
+                                  ? deliveryPricing.total_product_value
+                                  : 0
                               }`,
                             })
                           }}
@@ -1098,6 +1098,11 @@ export default {
       };
       return payload;
     },
+    deliveryPricing() {
+      return this.getFulfillmentFees.pricing.pricing_deliveries[
+        this.getDestinationIndex
+      ];
+    },
     deliverySpeeds() {
       return this.getDeliverySpeed.length
         ? this.getDeliverySpeed[0].proposed_speeds
@@ -1105,15 +1110,16 @@ export default {
     },
     meansOfPaymentPayload() {
       return {
-        means_of_payment_type: this.getBusinessDetails.settings.payments_enabled
+        means_of_payment_type: this.getBusinessDetails.settings
+          ?.payments_enabled
           ? this.meansOfPayment
           : "CARD",
         means_of_payment_identifier: this.getBusinessDetails.settings
-          .payments_enabled
+          ?.payments_enabled
           ? this.defaultPaymentMethod[0].pay_method_details
           : "",
         participant_type: "SELLER",
-        participant_id: this.getBusinessDetails.settings.payments_enabled
+        participant_id: this.getBusinessDetails.settings?.payments_enabled
           ? this.defaultPaymentMethod[0].user_id
           : "",
       };
@@ -1401,6 +1407,9 @@ export default {
       destinations.push({
         expanded: 1,
         preferences: false,
+        POD: {
+          amountToBeCollected: "none",
+        },
       });
       this.setDestinations(destinations);
     },
@@ -1496,6 +1505,12 @@ export default {
     },
     addPaymentCollection(index) {
       this.changeIndex(index);
+      this.setPaymentCollectionStatus({
+        amountToBeCollected:
+          this.getDestinations[index - 1].POD.amountToBeCollected,
+        status: this.getDestinations[index - 1].POD.status,
+        deliveryFee: this.getDestinations[index - 1].POD.deliveryFee,
+      });
       this.setOverlayStatus({
         overlay: true,
         popup: "paymentCollection",
@@ -1553,7 +1568,10 @@ export default {
     getPricing() {
       this.getSpeed();
       const destinations = this.getDestinations;
-      if (destinations.length && destinations[0].products) {
+      if (
+        destinations.length &&
+        destinations[this.getDestinationIndex].products
+      ) {
         this.setLoader({
           type: "calculateFee",
           value: "loading-text",
@@ -1714,6 +1732,9 @@ export default {
               {
                 expanded: 1,
                 preferences: false,
+                POD: {
+                  amountToBeCollected: "none",
+                },
               },
             ]);
             this.setPickUpInfoCD({});

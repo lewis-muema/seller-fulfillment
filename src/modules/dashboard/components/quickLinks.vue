@@ -27,10 +27,12 @@
             >
             <v-list-item-subtitle>
               <span class="mr-1 desktop-quick-links-balance">{{
-                this.getWallets[0].currency
+                getWallets[0]?.currency
+                  ? getWallets[0].currency
+                  : getBusinessDetails.currency
               }}</span>
               <span class="desktop-quick-links-balance">{{
-                this.getWallets[0].wallet_balance
+                getWallets[0]?.wallet_balance ? getWallets[0].wallet_balance : 0
               }}</span>
             </v-list-item-subtitle>
           </v-list-item-header>
@@ -68,7 +70,11 @@ export default {
     this.getUserWallets();
   },
   computed: {
-    ...mapGetters(["getWallets", "getStorageUserDetails"]),
+    ...mapGetters([
+      "getWallets",
+      "getStorageUserDetails",
+      "getBusinessDetails",
+    ]),
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),

@@ -25,7 +25,7 @@
             <v-expansion-panels>
               <v-expansion-panel class="product-select-exp-panel">
                 <v-expansion-panel-title class="search-row" hide-actions>
-                  <div class="col-8 crossdocking-product-select-titles">
+                  <div class="col-7 crossdocking-product-select-titles">
                     <span class="d-flex">
                       <span class="product-image-frame-container">
                         <div class="product-image-frame">
@@ -65,7 +65,7 @@
                       {{ $t("inventory.units") }}</span
                     >
                   </div>
-                  <div class="col-2">
+                  <div class="col-3">
                     <span class="product-select-units">
                       <span>{{ $t("inventory.view") }}</span>
                       <i class="mdi mdi-chevron-down ml-2"></i>
@@ -118,7 +118,7 @@
             </v-expansion-panels>
           </div>
           <div class="row search-row" v-else>
-            <div class="search-item-flex col-8">
+            <div class="search-item-flex col-7">
               <span class="d-flex">
                 <span class="product-image-frame-container">
                   <div class="product-image-frame">
@@ -155,7 +155,7 @@
                 {{ $t("inventory.units") }}</span
               >
             </div>
-            <div class="col-2 search-columns">
+            <div class="col-3">
               <el-input-number
                 class="crossdocking-product-counter"
                 v-model="item.quantity"

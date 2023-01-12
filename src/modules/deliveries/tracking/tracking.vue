@@ -182,7 +182,13 @@ export default {
               "pickup"
             );
         }
-        if (row.show && showCancel) {
+        let showCode =
+          (row.popup === "code" &&
+            this.getOrderTrackingData.order.confirmation_pin &&
+            this.$route.params.order_id ===
+              this.getOrderTrackingData.order.order_id) ||
+          row.popup !== "code";
+        if (row.show && showCancel && showCode) {
           actions.push(row);
         }
       });

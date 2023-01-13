@@ -429,7 +429,6 @@ export default {
         }
         if (response.status === 200) {
           const products = response.data.data.products;
-          products.unshift(...this.getSearchedProducts);
           this.setProductLists(products);
           this.setPagination(response.data.data.pagination);
           this.page = response.data.data.pagination.current_page + 1;

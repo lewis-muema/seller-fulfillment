@@ -287,5 +287,14 @@
   "pleaseSelectSomeProductsToProceed": "Please select some products to proceed",
   "review": "Review",
   "reviewProductsAdded": "Review products added",
-  "pleaseLetUsKnow": "Please let us know how you would like the unavailable items to be picked"
+  "pleaseLetUsKnow": "Please let us know how you would like the unavailable items to be picked",
+  "photoSensitive": "Photo sensitive",
+  "theProductIsPhotosensitive": "The product is photosensitive",
+  "theProductIsNotPhotosensitive": "The product is not photosensitive",
+  "fragility": "Fragility",
+  "theProductIsFragile": "The product is fragile",
+  "theProductIsNotFragile": "The product is not fragile",
+  "temperatueSensitivity": "Temperature sensitivity",
+  "theProductIsTemperatureSensitive": "The product is temperature sensitive",
+  "theProductIsNotTemperatureSensitive": "The product is not temperature sensitive"
 }

@@ -1189,13 +1189,11 @@
                 {{ $t("inventory.deliveryFeeToBeCollected") }}
               </p>
               <v-text-field
-                :label="`${getFulfillmentFees.pricing.pricing_deliveries[getDestinationIndex].currency} 60`"
+                :label="`${getOrderTrackingData.order.sale_of_goods_invoice.currency} 60`"
                 v-model="deliveryFeeAmount"
                 variant="outlined"
                 :prefix="
-                  getFulfillmentFees.pricing.pricing_deliveries[
-                    getDestinationIndex
-                  ].currency
+                  getOrderTrackingData.order.sale_of_goods_invoice.currency
                 "
                 clearable
                 clear-icon="mdi-close"

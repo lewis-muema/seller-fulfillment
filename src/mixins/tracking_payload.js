@@ -100,7 +100,9 @@ const trackingPayloadMixin = {
           costs_to_collect: this.podPayload,
         },
         documents: this.documentsPayload,
-        destination_speed_policy: this.deliveryOptionPayload,
+        destination_speed_policy: this.deliveryOption
+          ? this.deliveryOptionPayload
+          : null,
       };
       return payload;
     },

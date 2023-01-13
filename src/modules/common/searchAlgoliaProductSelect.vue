@@ -299,10 +299,10 @@ export default {
         product.quantity = val;
         this.addProduct(product, i, option, z);
       }
-      this.productMapping();
       if (val === 0) {
         this.removeProduct(product, i, option, z);
       }
+      this.productMapping();
     },
     productMapping() {
       this.products = this.getProductLists;
@@ -345,6 +345,7 @@ export default {
       });
     },
     addProduct(product, i, option) {
+      this.selectedProducts = this.getSelectedProducts;
       let newProduct = {};
       Object.keys(product).forEach((row) => {
         newProduct[row] = product[row];
@@ -367,6 +368,7 @@ export default {
       });
     },
     removeProduct(product, i, option) {
+      this.selectedProducts = this.getSelectedProducts;
       this.selectedProducts.forEach((row, p) => {
         if (
           product.product_id === row.product_id &&

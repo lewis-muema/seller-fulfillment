@@ -1154,26 +1154,28 @@ export default {
               : "",
           },
           destination_policy: "DROP_AT_HUB",
-          destination_speed_policy: {
-            transport_provider: this.getPickUpInfoCD.pickupSpeed
-              ? this.getPickUpInfoCD.pickupSpeed.transport_provider
-              : "SENDY",
-            speed_pricing_type: this.getPickUpInfoCD.pickupSpeed
-              ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_type
-              : "SENDY_EXPRESS",
-            speed_pricing_uuid: this.getPickUpInfoCD.pickupSpeed
-              ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
-              : "string",
-            proposed_scheduled_date:
-              this.getPickUpInfoCD.pickupSpeed &&
-              this.getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
-                "SENDY_SCHEDULED"
-                ? moment(
-                    this.getPickUpInfoCD.pickupSpeed
-                      .speed_pricing_scheduled_date
-                  ).valueOf()
-                : 0,
-          },
+          destination_speed_policy: this.speedPolicyFlag
+            ? {
+                transport_provider: this.getPickUpInfoCD.pickupSpeed
+                  ? this.getPickUpInfoCD.pickupSpeed.transport_provider
+                  : "SENDY",
+                speed_pricing_type: this.getPickUpInfoCD.pickupSpeed
+                  ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_type
+                  : "SENDY_EXPRESS",
+                speed_pricing_uuid: this.getPickUpInfoCD.pickupSpeed
+                  ? this.getPickUpInfoCD.pickupSpeed.speed_pricing_uuid
+                  : "string",
+                proposed_scheduled_date:
+                  this.getPickUpInfoCD.pickupSpeed &&
+                  this.getPickUpInfoCD.pickupSpeed.speed_pricing_type ===
+                    "SENDY_SCHEDULED"
+                    ? moment(
+                        this.getPickUpInfoCD.pickupSpeed
+                          .speed_pricing_scheduled_date
+                      ).valueOf()
+                    : 0,
+              }
+            : null,
         },
       ];
     },
@@ -1245,24 +1247,26 @@ export default {
               : "",
           },
           destination_policy: "DELIVER_TO_BUYER",
-          destination_speed_policy: {
-            transport_provider: destination.speed
-              ? destination.speed.transport_provider
-              : "SENDY",
-            speed_pricing_type: destination.speed
-              ? destination.speed.speed_pricing_type
-              : "SENDY_EXPRESS",
-            speed_pricing_uuid: destination.speed
-              ? destination.speed.speed_pricing_uuid
-              : "string",
-            proposed_scheduled_date:
-              destination.speed &&
-              destination.speed.speed_pricing_type === "SENDY_SCHEDULED"
-                ? moment(
-                    destination.speed.speed_pricing_scheduled_date
-                  ).valueOf()
-                : 0,
-          },
+          destination_speed_policy: this.speedPolicyFlag
+            ? {
+                transport_provider: destination.speed
+                  ? destination.speed.transport_provider
+                  : "SENDY",
+                speed_pricing_type: destination.speed
+                  ? destination.speed.speed_pricing_type
+                  : "SENDY_EXPRESS",
+                speed_pricing_uuid: destination.speed
+                  ? destination.speed.speed_pricing_uuid
+                  : "string",
+                proposed_scheduled_date:
+                  destination.speed &&
+                  destination.speed.speed_pricing_type === "SENDY_SCHEDULED"
+                    ? moment(
+                        destination.speed.speed_pricing_scheduled_date
+                      ).valueOf()
+                    : 0,
+              }
+            : null,
           documents,
         };
         if (

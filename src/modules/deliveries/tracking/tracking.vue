@@ -5,7 +5,7 @@
         class="mdi mdi-arrow-left tracking-arrow-back"
         @click="$router.back()"
       ></i>
-      <p class="tracking-order-title mb-0">
+      <div class="tracking-order-title mb-0">
         <span :class="getLoader.orderTracking">
           {{ $t("deliveries.orderNo") }}
           {{ getOrderTrackingData.order.order_id }}
@@ -20,34 +20,23 @@
             })
           }}
         </span>
-        <span>
-          <v-menu transition="slide-y-transition" anchor="bottom center">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                class="tracking-order-actions-btn elevation-0"
-                append-icon="mdi-chevron-down"
-                v-bind="props"
-              >
-                {{ $t("deliveries.actions") }}
-              </v-btn>
-            </template>
-            <v-list class="users-actions-popup">
-              <v-list-item v-for="(action, i) in deliveryActions" :key="i">
-                <v-list-item-title
-                  @click="
-                    setOverlayStatus({
-                      overlay: true,
-                      popup: action.popup,
-                    })
-                  "
-                >
-                  {{ $t(action.label) }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </span>
-      </p>
+        <div class="tracking-options-container">
+          <span
+            v-for="(action, i) in deliveryActions"
+            :key="i"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: action.popup,
+              })
+            "
+            class="tracking-option-content"
+          >
+            <i :class="action.icon" aria-hidden="true"></i>
+            {{ $t(action.label) }}</span
+          >
+        </div>
+      </div>
       <p class="tracking-order-time-est">
         <span
           :class="getLoader.orderTracking"
@@ -130,6 +119,7 @@ import deliveryInfo from "./components/deliveryInfo.vue";
 import products from "./components/products.vue";
 import failedDelivery from "./components/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import trackingPayloadMixin from "../../../mixins/tracking_payload";
 
 export default {
   components: {
@@ -138,6 +128,7 @@ export default {
     products,
     failedDelivery,
   },
+  mixins: [trackingPayloadMixin],
   data() {
     return {
       orderNo: "AQW4567787",
@@ -191,7 +182,13 @@ export default {
               "pickup"
             );
         }
-        if (row.show && showCancel) {
+        let showCode =
+          (row.popup === "code" &&
+            this.getOrderTrackingData.order.confirmation_pin &&
+            this.$route.params.order_id ===
+              this.getOrderTrackingData.order.order_id) ||
+          row.popup !== "code";
+        if (row.show && showCancel && showCode) {
           actions.push(row);
         }
       });
@@ -223,8 +220,10 @@ export default {
       "setParent",
       "setDeliveryActions",
       "setProductsToSubmit",
+      "setDeliverySpeed",
+      "setFinalDocumentsToEdit",
     ]),
-    ...mapActions(["requestAxiosGet"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
       this.setLoader({
         type: "orderTracking",
@@ -250,6 +249,9 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setFinalDocumentsToEdit(
+            this.getOrderTrackingData.order.documents
+          );
           this.setProductsToSubmit(response.data.data.order.products);
           if (response.data.data.order.order_type === "PICKUP") {
             this.setParent("sendy");
@@ -303,6 +305,17 @@ export default {
     formatDateComplete(date) {
       return moment(date).format("dddd, Do MMM YYYY");
     },
+    calculateSpeed() {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
+        values: this.calculateSpeedPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliverySpeed(response.data.data.deliveries);
+        }
+      });
+    },
   },
 };
 </script>
@@ -323,6 +336,7 @@ export default {
 .tracking-order-title {
   font-weight: 500;
   font-size: 16px;
+  width: calc(89% + 70px);
 }
 .tracking-order-time-est {
   font-size: 14px;
@@ -353,8 +367,8 @@ export default {
 .tracking-pickup-banner {
   border: 1px solid #324ba8;
   border-radius: 5px;
-  margin-right: 55px;
-  padding: 20px 0px;
+  padding: 20px 30px 20px 0px;
+  width: calc(88% + 70px);
 }
 .tracking-pickup-banner-icon {
   font-size: 25px;
@@ -368,5 +382,18 @@ export default {
   color: #324ba8;
   font-weight: 600;
   cursor: pointer;
+}
+.tracking-options-container {
+  float: right;
+}
+.tracking-option-content {
+  margin-right: 10px;
+  font-size: 15px;
+  color: #324ba8;
+  cursor: pointer;
+  border: 1px #c0c4cc solid;
+  border-radius: 5px;
+  padding: 5px;
+  font-weight: 400;
 }
 </style>

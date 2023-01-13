@@ -23,9 +23,7 @@
           <div>
             <span
               class="add-products-span-header"
-              @click="
-                navigateRoute('/inventory/send-inventory/sendy/select-products')
-              "
+              @click="navigateRoute('/inventory/add-pickup-products')"
             >
               <i class="mdi mdi-plus"></i>
               {{ $t("common.addProducts") }}
@@ -50,11 +48,15 @@
                   </td>
                   <td style="width: 300px">
                     <div class="product-select-product-column">
-                      <img
-                        :src="orderedProduct.product_variant_image_link"
-                        alt=""
-                        class="product-select-img"
-                      />
+                      <span class="product-image-frame-container">
+                        <div class="product-image-frame">
+                          <img
+                            :src="orderedProduct.product_variant_image_link"
+                            alt=""
+                            class="product-select-img"
+                          />
+                        </div>
+                      </span>
                       <div>
                         <p class="product-select-product-name">
                           {{ orderedProduct.product_variant_description }}
@@ -93,11 +95,7 @@
                 {{ $t("deliveries.cartEmpty") }}
               </div>
               <span
-                @click="
-                  navigateRoute(
-                    '/inventory/send-inventory/sendy/select-products'
-                  )
-                "
+                @click="navigateRoute('/inventory/add-pickup-products')"
                 class="add-products-span-link"
               >
                 <span class="add-products-span">

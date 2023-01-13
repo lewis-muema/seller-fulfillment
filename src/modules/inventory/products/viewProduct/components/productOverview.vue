@@ -54,6 +54,30 @@
         </span>
       </p>
     </div>
+    <div class="product-details-content mb-3">
+      <p class="product-header">{{ $t("inventory.upcCod") }}</p>
+      <p>
+        <span :class="getLoader.productDetails">
+          {{ product.product_variants[0].universal_product_code }}
+        </span>
+      </p>
+    </div>
+    <div
+      class="product-details-content mb-3"
+      v-for="(sensitivity, i) in productSensitivity"
+      :key="i"
+    >
+      <p class="product-header">{{ sensitivity.heading }}</p>
+      <p>
+        <span :class="getLoader.productDetails"
+          >{{
+            formatSensitivityText(sensitivity.text)
+              ? sensitivity.name
+              : sensitivity.name2
+          }}
+        </span>
+      </p>
+    </div>
     <v-table v-if="product.product_variants">
       <table-header
         :header="product.product_variants ? tableHeaders2 : tableHeaders"
@@ -103,6 +127,15 @@
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.quantity_in_inventory
+                  : "-"
+              }}
+            </span>
+          </td>
+          <td>
+            <span :class="getLoader.productDetails">
+              {{
+                variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels.available
                   : "-"
               }}
@@ -113,7 +146,8 @@
               {{
                 variant.product_variant_stock_levels
                   ? variant.product_variant_stock_levels
-                      .quantity_in_sales_orders
+                      .quantity_in_sales_orders +
+                    variant.product_variant_stock_levels.quantity_held_locally
                   : "-"
               }}
             </span>
@@ -121,8 +155,8 @@
           <td>
             <span :class="getLoader.productDetails">
               {{
-                false
-                  ? variant.product_variant_stock_level.quantity_in_sales_orders
+                variant.product_variant_stock_levels
+                  ? variant.product_variant_stock_levels.quantity_incoming
                   : "-"
               }}
             </span>
@@ -143,10 +177,34 @@ export default {
   data() {
     return {
       showProductVariants: false,
+      productSensitivity: [
+        {
+          heading: this.$t("inventory.photoSensitive"),
+          name: this.$t("inventory.theProductIsPhotosensitive"),
+          name2: this.$t("inventory.theProductIsNotPhotosensitive"),
+          text: "PHOTO_SENSITIVE",
+        },
+        {
+          heading: this.$t("inventory.fragility"),
+          name: this.$t("inventory.theProductIsFragile"),
+          name2: this.$t("inventory.theProductIsNotFragile"),
+          text: "FRAGILE",
+        },
+        {
+          heading: this.$t("inventory.temperatueSensitivity"),
+          name: this.$t("inventory.theProductIsTemperatureSensitive"),
+          name2: this.$t("inventory.theProductIsNotTemperatureSensitive"),
+          text: "TEMPERATURE_SENSITIVE",
+        },
+      ],
       tableHeaders: [
         {
           title: "inventory.fulfillmentCenter",
           description: "",
+        },
+        {
+          title: "inventory.provisional",
+          description: "inventory.availableProducts",
         },
         {
           title: "inventory.available",
@@ -171,6 +229,10 @@ export default {
           description: "",
         },
         {
+          title: "inventory.provisional",
+          description: "inventory.availableProducts",
+        },
+        {
           title: "inventory.available",
           description: "inventory.availableProducts",
         },
@@ -181,14 +243,6 @@ export default {
         {
           title: "inventory.incoming",
           description: "inventory.IncomingProducts",
-        },
-      ],
-      pSummary: [
-        {
-          fulfillmentCenter: "Marsabit Plaza",
-          available: "23",
-          committed: "3",
-          incoming: "0",
         },
       ],
     };
@@ -224,6 +278,17 @@ export default {
         this.tableHeaders2[1].title = "inventory.option";
       }
       return total;
+    },
+    formatSensitivityText(value) {
+      let text = false;
+      this.product.product_variants[0].product_variant_properties?.forEach(
+        (property) => {
+          if (property.product_property_type === value) {
+            text = true;
+          }
+        }
+      );
+      return text;
     },
   },
 };

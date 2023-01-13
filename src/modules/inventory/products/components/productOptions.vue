@@ -42,6 +42,20 @@
                   ></v-text-field>
                 </div>
               </div>
+              <div class="row mb-2">
+                <label for="upc" class="form-label">{{
+                  $t("inventory.upcCode")
+                }}</label>
+                <div class="">
+                  <v-text-field
+                    class="businessProfile-field add-product-variant-price"
+                    v-model="productOption.universal_product_code"
+                    variant="outlined"
+                    clearable
+                    clear-icon="mdi-close"
+                  ></v-text-field>
+                </div>
+              </div>
               <div class="row mb-5">
                 <label for="price" class="form-label">
                   {{ $t("inventory.weight") }}
@@ -144,6 +158,7 @@ export default {
         product_variant_quantity_type: "GRAM",
         product_variant_stock_levels: {},
         product_variant_unit_price: "",
+        universal_product_code: "",
       },
       dimensions: [
         {
@@ -286,6 +301,7 @@ export default {
         product_variant_quantity_type: "GRAM",
         product_variant_stock_levels: {},
         product_variant_unit_price: "",
+        universal_product_code: "",
       };
     },
     pickImg() {

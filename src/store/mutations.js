@@ -359,4 +359,22 @@ export default {
   setPickUpStation(state, val) {
     state.pickUpStation = val;
   },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
+  setPickUpSpeed(state, val) {
+    state.pickUpSpeed = val;
+  },
+  setMismatchedDates(state, val) {
+    state.mismatchedDates = val;
+  },
+  setEdittedDocuments(state, val) {
+    state.edittedDocuments = val;
+  },
+  setEditedDocuments(state, val) {
+    state.editedDocuments = val;
+  },
+  setFinalDocumentsToEdit(state, val) {
+    state.finalDocumentsToEdit = val;
+  },
 };

@@ -54,22 +54,22 @@ export default {
           icon: "mdi mdi-truck",
           count: 0,
           orderStatus: "dashboard.completedPickups",
-          link: `/deliveries/sendy/Completed/${new Date().valueOf()}`,
+          link: `/deliveries/sendy/Completed`,
           color: "#5287EE",
         },
         {
           icon: "mdi-check-all",
           count: 0,
           orderStatus: "dashboard.completedOrders",
-          link: `/deliveries/customer/Completed/${new Date().valueOf()}`,
+          link: `/deliveries/customer/Completed`,
           color: "#84CC8C",
         },
         {
-          icon: "mdi-home-city",
+          icon: "mdi-message-alert",
           count: 0,
-          orderStatus: "dashboard.availableStock",
-          link: "/inventory/stock-levels",
-          color: "#324BA8",
+          orderStatus: "dashboard.failedOrders",
+          link: `/deliveries/customer/Failed`,
+          color: "#9b101c",
         },
         {
           icon: "mdi-archive",
@@ -88,7 +88,7 @@ export default {
         if (val !== "") {
           this.orders[0].count = this.completedPickups;
           this.orders[1].count = this.completedOrders;
-          this.orders[2].count = this.availableStock;
+          this.orders[2].count = this.failedOrders;
           this.orders[3].count = this.outOfStock;
         }
       },
@@ -112,8 +112,8 @@ export default {
     completedOrders() {
       return this.getDeliveriesStatistics.ORDER_COMPLETED;
     },
-    availableStock() {
-      return this.getStockStatistics.available_products;
+    failedOrders() {
+      return this.getDeliveriesStatistics.ORDER_FAILED;
     },
     outOfStock() {
       return this.getStockStatistics.out_of_stock_products;

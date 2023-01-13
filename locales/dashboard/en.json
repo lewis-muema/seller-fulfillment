@@ -9,6 +9,7 @@
     "completeSteps": "Complete the steps below to fulfilling your first order",
     "getMoreoutOfSendy":"Get more out of Sendy fulfillment",
     "quickLinks": "Quick Links",
+    "availableBalance": "Available balance",
     "whatsHappening": "Here's what's happening to your account today",
     "accountCreated": "Account Created",
     "addYourProducts": "Add your Products",
@@ -37,6 +38,8 @@
     "toYourCustomers": "To your Customers",
     "toSendy": "To Sendy",
     "yourProductsWillBeInsured": "Your products will be insured and stored in our Fulfillment Center to enable faster deliveries to your customers",
-    "weWillPackAndDeliverYourPackageWithin24hrs": "We will pack and deliver your package within 24hrs"
-
+    "weWillPackAndDeliverYourPackageWithin24hrs": "We will pack and deliver your package within 24hrs",
+    "storefront": "Storefront",
+    "fulfillmentApp": "Fulfillment App",
+    "failedOrders": "Failed Orders"
 }

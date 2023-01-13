@@ -84,6 +84,9 @@
   "orderIsNotReady": "My order is not ready",
   "wrongLocation": "Wrong location",
   "duplicateOrder": "Duplicate order",
+  "customerRequestedCancellation": "Customer requested cancellation",
+  "orderDetailsAreNotCorrect": "Order details are not correct",
+  "itemsAreNotAvailable": "Items are not available",
   "editDeliveryInfo": "Edit delivery info",
   "enterInstructionsForTheDeliveryPartner": "Enter instructions for the delivery partner",
   "customerInfo": "Customer info",
@@ -158,5 +161,17 @@
   "receivingItems": "Who is receiving the items ?",
   "individual": "An individual",
   "business": "A business",
-  "saveInfo" : "Save info"
+  "saveInfo" : "Save info",
+  "save": "Save",
+  "saveDetails": "Save details",
+  "cantEditDocs": "You can’t edit the documents at the moment because a driver has been assigned to deliver your order.",
+  "cantEditRecipient" : "You can’t edit the recipient info at the moment because a driver has been assigned to deliver your order.",
+  "cantEditPod": "You can’t edit the payments collection at the moment because a driver has been assigned to deliver your order.",
+  "editPOD": "Edit payment collection",
+  "manageDocuments": "Manage documents",
+  "uploadAnotherDocument": "Upload another document",
+  "addRemoveDocuments": "Add/remove documents",
+  "platforms": "Platform",
+  "cancelled": "Cancelled",
+  "kindlyGiveThisCode": "Kindly give this code to the rider when they recieve your order"
 }

@@ -1,6 +1,15 @@
 <template>
   <div>
-    <v-row class="mt-5">
+    <v-row v-if="getEditValue !== 'consignment'">
+      <v-col cols="6" class="mx-auto mt-4 mb-3">
+        <el-steps :active="0" finish-status="success">
+          <el-step :title="$t('inventory.selectProducts')"></el-step>
+          <el-step :title="$t('inventory.review')"></el-step>
+          <el-step :title="$t('inventory.checkout')"></el-step>
+        </el-steps>
+      </v-col>
+    </v-row>
+    <v-row :class="getEditValue === 'consignment' ? 'mt-5' : ''">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -8,7 +17,7 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push(`/inventory/create-delivery`)"
+                @click="$router.push(`/inventory/send-inventory`)"
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -82,7 +91,13 @@
                       <span
                         :class="getLoader.products"
                         class="product-select-units"
-                        >{{ totalStock(product.product_variants) }}
+                        >{{
+                          product.product_variants[0]
+                            .product_variant_stock_levels
+                            ? product.product_variants[0]
+                                .product_variant_stock_levels.available
+                            : "-"
+                        }}
                         {{ $t("inventory.units") }}</span
                       >
                     </div>
@@ -143,7 +158,13 @@
                           <span
                             :class="getLoader.products"
                             class="product-select-units"
-                            >{{ totalStock(product.product_variants) }}
+                            >{{
+                              product.product_variants[0]
+                                .product_variant_stock_levels
+                                ? product.product_variants[0]
+                                    .product_variant_stock_levels.available
+                                : "-"
+                            }}
                             {{ $t("inventory.units") }}</span
                           >
                         </div>
@@ -306,7 +327,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent("common.sendDeliveryToCustomer");
+    this.setComponent("common.sendInventoryToSendy");
     this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
@@ -330,13 +351,6 @@ export default {
         variant.push(row);
       });
       return variant;
-    },
-    totalStock(val) {
-      let total = 0;
-      val.forEach((element) => {
-        total = element.product_variant_stock_levels.available + total;
-      });
-      return total;
     },
     addCount(val, product, i, option, z) {
       const products = this.getSelectedProducts;
@@ -405,15 +419,14 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${
           this.getStorageUserDetails.business_id
-        }/products?max=6&offset=${this.page - 1}`,
+        }/products?max=5&offset=${this.page - 1}`,
       }).then((response) => {
-        if (this.$route.path === `/inventory/add-delivery-products`) {
+        if (this.$route.path === `/inventory/add-pickup-products`) {
           this.setLoader({
             type: "products",
             value: "",
           });
         }
-
         if (response.status === 200) {
           const products = response.data.data.products;
           products.unshift(...this.getSearchedProducts);
@@ -425,14 +438,73 @@ export default {
       });
     },
     addProductStep() {
-      if (this.totalProducts > 0) {
-        this.$router.push(`/inventory/add-delivery-quantities`);
+      if (this.getSelectedProducts.length > 0) {
+        if (this.getEditValue === "consignment") {
+          this.mapProductsOnOrder();
+          this.setProductsToSubmit([
+            ...this.getProductsToSubmit,
+            ...this.getMappedSelectedProducts,
+          ]);
+          this.setMappedSelectedProducts([]);
+        }
+        this.$router.push(
+          this.getEditValue === "consignment"
+            ? "/deliveries/edit-order"
+            : `/inventory/add-pickup-quantities`
+        );
       } else {
         ElNotification({
           title: "",
           message: this.$t("inventory.pleaseSelectAProduct"),
           type: "error",
         });
+      }
+    },
+    mapProductsOnOrder() {
+      if (this.getEditValue === "consignment") {
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const quantity = product.selectedOption
+              ? product.selectedOption.quantity
+              : product.quantity;
+            const productVariant = product.selectedOption
+              ? product.selectedOption
+              : product.product_variants[0];
+            const existingProductIndex = this.getProductsToSubmit.findIndex(
+              (x) => {
+                x.quantity =
+                  x.product_variant_id === productVariant.product_variant_id
+                    ? quantity
+                    : x.quantity;
+                return (
+                  x.product_variant_id === productVariant.product_variant_id
+                );
+              }
+            );
+            if (existingProductIndex === -1) {
+              const mappedSelectedProduct = {
+                product_id: product.product_id,
+                product_variant_id: productVariant.product_variant_id,
+                product_variant_image_link:
+                  productVariant.product_variant_image_link,
+                product_name: product.product_name,
+                product_variant_description:
+                  productVariant.product_variant_description,
+                product_variant_quantity:
+                  productVariant.product_variant_quantity,
+                product_variant_quantity_type:
+                  productVariant.product_variant_quantity_type,
+                quantity,
+                unit_price: productVariant.product_variant_unit_price,
+                currency: productVariant.product_variant_currency,
+                status: true,
+              };
+              this.mappedSelectedProducts.push(mappedSelectedProduct);
+              this.setMappedSelectedProducts(this.mappedSelectedProducts);
+              this.selectedProducts = [];
+            }
+          });
+        }
       }
     },
     productMapping() {
@@ -594,13 +666,6 @@ export default {
   color: #324ba8;
   margin-top: -40px;
 }
-.product-select-checkbox {
-  height: 70px;
-  width: 15px !important;
-}
-.product-select-checkbox-expand {
-  width: 15px !important;
-}
 .product-select-img {
   max-width: 100%;
   max-height: 100%;
@@ -724,7 +789,11 @@ export default {
   height: 40px;
   width: 40px;
 }
-.v-pagination__item--is-active .v-btn__overlay {
-  opacity: 0 !important;
+.quantity-to-send-header {
+  text-align: right;
+  padding-right: 28px !important;
+}
+.quantity-to-send-row {
+  margin-right: 15px;
 }
 </style>

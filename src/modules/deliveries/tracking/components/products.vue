@@ -17,7 +17,8 @@
         @click="
           setOverlayStatus({
             overlay: true,
-            popup: 'noEditsProducts',
+            popup: 'noEdits',
+            popText: this.cantEditProducts,
           })
         "
         v-else
@@ -64,6 +65,7 @@ export default {
   data() {
     return {
       viewProducts: false,
+      cantEditProducts: this.$t("deliveries.cantEditProducts"),
     };
   },
   computed: {

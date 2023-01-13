@@ -13,6 +13,9 @@ export default {
   getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
   getRecepientInfo: (state) => state.recepientInfo,
+  getEdittedDocuments: (state) => state.edittedDocuments,
+  getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
+  getEditedDocuments: (state) => state.editedDocuments,
   getPickupInfo: (state) => state.pickupInfo,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
@@ -122,4 +125,7 @@ export default {
   getPickUpInfoCD: (state) => state.pickUpInfoCD,
   getStations: (state) => state.stations,
   getPickUpStation: (state) => state.pickUpStation,
+  getPickUpSpeed: (state) => state.pickUpSpeed,
+  getDeliverySpeed: (state) => state.deliverySpeed,
+  getMismatchedDates: (state) => state.mismatchedDates,
 };

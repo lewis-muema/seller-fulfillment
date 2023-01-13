@@ -232,7 +232,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 100px 145px 155px auto;
+  grid-template-columns: 100px 145px 155px 150px;
   margin: 30px;
 }
 .desktop-product-tab {

@@ -367,11 +367,11 @@ export default {
       if (!addedProduct.length) {
         product.quantity = val;
         this.addProduct(product, i, option, z);
-        this.productMapping();
       }
       if (val === 0) {
         this.removeProduct(product, i, option, z);
       }
+      this.productMapping();
     },
     disabledStatus(product) {
       const quantity = product.product_variants[0].product_variant_stock_levels
@@ -467,6 +467,7 @@ export default {
       this.setSelectedProducts(val);
     },
     addProduct(product, i, option) {
+      this.selectedProducts = this.getSelectedProducts;
       let newProduct = {};
       Object.keys(product).forEach((row) => {
         newProduct[row] = product[row];
@@ -489,6 +490,7 @@ export default {
       });
     },
     removeProduct(product, i, option) {
+      this.selectedProducts = this.getSelectedProducts;
       this.selectedProducts.forEach((row, p) => {
         if (
           product.product_id === row.product_id &&

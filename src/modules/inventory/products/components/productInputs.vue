@@ -20,6 +20,20 @@
           </div>
         </div>
         <div class="">
+          <label for="upc" class="form-label">{{
+            $t("inventory.upcCode")
+          }}</label>
+          <div class="">
+            <v-text-field
+              class="businessProfile-field"
+              v-model="productVariants[0].universal_product_code"
+              variant="outlined"
+              clearable
+              clear-icon="mdi-close"
+            ></v-text-field>
+          </div>
+        </div>
+        <div class="">
           <label for="price" class="form-label">{{
             $t("inventory.sellingPrice")
           }}</label>
@@ -123,20 +137,6 @@
                   <el-slider v-model="tempRange" range show-stops :step="10" />
                   <span class="ml-3">°C</span>
                 </span>
-              </div>
-            </div>
-            <div class="mt-2">
-              <label for="upc" class="form-label">{{
-                $t("inventory.upcCode")
-              }}</label>
-              <div class="">
-                <v-text-field
-                  class="businessProfile-field"
-                  v-model="productVariants[0].universal_product_code"
-                  variant="outlined"
-                  clearable
-                  clear-icon="mdi-close"
-                ></v-text-field>
               </div>
             </div>
           </div>

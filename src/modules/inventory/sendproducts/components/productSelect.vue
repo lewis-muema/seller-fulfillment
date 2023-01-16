@@ -387,28 +387,11 @@ export default {
         this.removeProduct(product, i, option, z);
       }
     },
-    disabledStatus(product) {
-      const quantity = product.product_variants[0].product_variant_stock_levels
-        ? product.product_variants[0].product_variant_stock_levels.available
-        : 0;
-      return (
-        (quantity === 0 && this.crossDockingFlag()) ||
-        this.getLoader.products !== ""
-      );
+    disabledStatus() {
+      return this.getLoader.products !== "";
     },
-    disabledVariantStatus(option) {
-      const quantity = option
-        ? option.product_variant_stock_levels.available
-        : 0;
-      return (
-        (quantity === 0 && this.crossDockingFlag()) ||
-        this.getLoader.products !== ""
-      );
-    },
-    crossDockingFlag() {
-      return this.getBusinessDetails.settings
-        ? !this.getBusinessDetails.settings.cross_docking_enabled
-        : true;
+    disabledVariantStatus() {
+      return this.getLoader.products !== "";
     },
     fetchProducts() {
       this.setLoader({

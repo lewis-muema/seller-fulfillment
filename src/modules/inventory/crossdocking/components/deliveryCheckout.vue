@@ -1623,7 +1623,12 @@ export default {
         return speed.speed_pricing_type === "SENDY_NEXT_DAY";
       });
       const pickUpInfoCD = this.getPickUpInfoCD;
-      if (!pickUpInfoCD?.pickupSpeed && pickUpInfoCD.place && nextDay.length) {
+      if (
+        !pickUpInfoCD?.pickupSpeed &&
+        pickUpInfoCD.place &&
+        nextDay.length &&
+        this.speedPolicyFlag
+      ) {
         pickUpInfoCD.pickupSpeed = nextDay[0];
       }
     },
@@ -1638,7 +1643,8 @@ export default {
         !destination?.speed &&
         destination?.delivery_info &&
         destination?.products &&
-        nextDay.length
+        nextDay.length &&
+        this.speedPolicyFlag
       ) {
         destination.speed = nextDay[0];
       }

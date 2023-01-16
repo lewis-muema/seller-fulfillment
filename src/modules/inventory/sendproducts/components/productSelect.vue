@@ -32,7 +32,7 @@
             </router-link>
           </div>
           <div class="search-input-product-select">
-            <searchAlgolia type="product" />
+            <searchAlgolia type="pickup" />
           </div>
           <hr />
           <v-table v-if="products.length > 0">

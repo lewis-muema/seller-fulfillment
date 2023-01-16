@@ -75,7 +75,7 @@
                 <v-expansion-panel-text class="product-select-panel-text">
                   <div
                     class="product-select-option row crossdocking-product-row-inner"
-                    :class="disabledStatus() ? 'disabled-row' : ''"
+                    :class="disabledVariantStatus(option) ? 'disabled-row' : ''"
                     v-for="(option, x) in item.product_variants"
                     :key="x"
                   >
@@ -109,7 +109,7 @@
                         :min="0"
                         placeholder="0"
                         @change="addCount(option.quantity, item, i, option, x)"
-                        :disabled="disabledStatus()"
+                        :disabled="disabledVariantStatus(option)"
                       />
                     </div>
                   </div>
@@ -117,7 +117,11 @@
               </v-expansion-panel>
             </v-expansion-panels>
           </div>
-          <div class="row search-row" v-else>
+          <div
+            class="row search-row"
+            :class="disabledStatus(item) ? 'disabled-row' : ''"
+            v-else
+          >
             <div class="search-item-flex col-7">
               <span class="d-flex">
                 <span class="product-image-frame-container">
@@ -162,7 +166,7 @@
                 :min="0"
                 placeholder="0"
                 @change="addCount(item.quantity, item, i)"
-                :disabled="disabledStatus()"
+                :disabled="disabledStatus(item)"
               />
             </div>
           </div>
@@ -247,9 +251,25 @@ export default {
         },
       });
     },
-    disabledStatus() {
+    disabledStatus(product) {
+      const quantity = product.product_variants[0].product_variant_stock_levels
+        ? product.product_variants[0].product_variant_stock_levels.available
+        : 0;
       return (
-        (this.crossDockingFlag() && this.type === "delivery") ||
+        (quantity === 0 &&
+          this.crossDockingFlag() &&
+          this.type === "delivery") ||
+        this.getLoader.products !== ""
+      );
+    },
+    disabledVariantStatus(option) {
+      const quantity = option
+        ? option.product_variant_stock_levels.available
+        : 0;
+      return (
+        (quantity === 0 &&
+          this.crossDockingFlag() &&
+          this.type === "delivery") ||
         this.getLoader.products !== ""
       );
     },

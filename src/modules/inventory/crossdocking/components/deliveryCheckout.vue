@@ -1613,8 +1613,35 @@ export default {
           this.setPickUpSpeed(response.data.data.pickups);
           this.setDeliverySpeed(response.data.data.deliveries);
           this.speedValidation(response.data.data);
+          this.preselectDestinationSpeed(response.data.data.deliveries);
+          this.preselectPickupSpeed(response.data.data.pickups);
         }
       });
+    },
+    preselectPickupSpeed(speeds) {
+      const nextDay = speeds[0].proposed_speeds.filter((speed) => {
+        return speed.speed_pricing_type === "SENDY_NEXT_DAY";
+      });
+      const pickUpInfoCD = this.getPickUpInfoCD;
+      if (!pickUpInfoCD?.pickupSpeed && pickUpInfoCD.place && nextDay.length) {
+        pickUpInfoCD.pickupSpeed = nextDay[0];
+      }
+    },
+    preselectDestinationSpeed(speeds) {
+      const nextDay = speeds[this.getDestinationIndex].proposed_speeds.filter(
+        (speed) => {
+          return speed.speed_pricing_type === "SENDY_NEXT_DAY";
+        }
+      );
+      const destination = this.getDestinations[this.getDestinationIndex];
+      if (
+        !destination?.speed &&
+        destination?.delivery_info &&
+        destination?.products &&
+        nextDay.length
+      ) {
+        destination.speed = nextDay[0];
+      }
     },
     speedValidation(speeds) {
       if (this.getPickUpInfoCD.pickupSpeed) {

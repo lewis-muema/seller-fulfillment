@@ -203,7 +203,7 @@ export default {
   },
   watch: {
     searchParam(val) {
-      this.initiateAlgolia(val, this.type);
+      this.initiateAlgolia(val, "product");
     },
     searchToggle(val) {
       if (val) {
@@ -248,7 +248,10 @@ export default {
       });
     },
     disabledStatus() {
-      return this.crossDockingFlag() || this.getLoader.products !== "";
+      return (
+        (this.crossDockingFlag() && this.type === "delivery") ||
+        this.getLoader.products !== ""
+      );
     },
     clearItems() {
       this.searchToggle = false;

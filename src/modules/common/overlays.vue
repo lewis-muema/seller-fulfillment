@@ -1720,11 +1720,6 @@
       v-if="popup === 'deliveryOptionCrossdock'"
       class="view-products-container"
     >
-      {{
-        getDestinations[
-          getDestinationIndex
-        ].delivery_info.place.geometry.location.lat()
-      }}
       <div class="timeline-failed-attempt-section">
         <i
           @click="overlayStatusSet(false, 'deliveryOptionCrossdock')"
@@ -2176,7 +2171,6 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getMapOptions",
-      "getDeliveryInfo",
       "getSendyPhoneProps",
       "getUser",
       "getLoader",
@@ -2226,10 +2220,6 @@ export default {
       return this.getFulfillmentFees.pricing.pricing_deliveries[
         this.getDestinationIndex
       ];
-    },
-    calculatePaymentCollectionFee() {
-      let fee = 0;
-      return fee;
     },
     activeDestination() {
       return this.getDestinations[this.getDestinationIndex];
@@ -2646,7 +2636,6 @@ export default {
       this.location = document.querySelector("#pick-up").value;
     },
     setLocation(path) {
-      console.log("data", this.location);
       this.locationData = path;
       this.location = document.querySelector("#location").value;
     },

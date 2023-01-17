@@ -135,6 +135,7 @@ export default createStore({
         page_count: 5,
       },
       supportedCountries: [],
+      geofenceData: [],
       userData: {},
       updatedData: {},
       confirmedUser: {},

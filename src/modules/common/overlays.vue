@@ -316,6 +316,7 @@
         <p class="view-products-label">
           {{ $t("deliveries.deliveryInfo") }}
         </p>
+
         <i
           @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
           class="mdi mdi-close view-products-close"
@@ -1719,6 +1720,11 @@
       v-if="popup === 'deliveryOptionCrossdock'"
       class="view-products-container"
     >
+      {{
+        getDestinations[
+          getDestinationIndex
+        ].delivery_info.place.geometry.location.lat()
+      }}
       <div class="timeline-failed-attempt-section">
         <i
           @click="overlayStatusSet(false, 'deliveryOptionCrossdock')"
@@ -1735,6 +1741,12 @@
         <p class="delivery-option-crossdock-title">
           {{ $t("inventory.selectDeliveryOption") }}
         </p>
+        <div class="payment-charges-communication" v-if="!isWithinGeoFence">
+          <i class="mdi mdi-information payment-charges-info-icon"></i>
+          <span class="speed-charges-communication-desc">
+            {{ $t("inventory.thirdPartyPartner") }}</span
+          >
+        </div>
         <el-radio-group
           v-model="deliveryOption"
           class="delivery-option-crossdock-radio-group"
@@ -2164,6 +2176,7 @@ export default {
       "getBusinessDetails",
       "getUserDetails",
       "getMapOptions",
+      "getDeliveryInfo",
       "getSendyPhoneProps",
       "getUser",
       "getLoader",
@@ -2180,6 +2193,7 @@ export default {
       "getEditStatus",
       "getDeliverySpeed",
       "getMismatchedDates",
+      "getGeofenceData",
     ]),
     partnerNotAssigned() {
       return (
@@ -2294,6 +2308,28 @@ export default {
     deliverySpeedOptions() {
       return this.getDeliverySpeed[0]?.proposed_speeds;
     },
+    geofenceDataPayload() {
+      let payload = {};
+      if (this.getDestinations[this.getDestinationIndex].delivery_info) {
+        payload = {
+          description:
+            this.getDestinations[this.getDestinationIndex].delivery_info
+              .location,
+          longitude:
+            this.getDestinations[
+              this.getDestinationIndex
+            ].delivery_info.place.geometry.location.lng(),
+          latitude:
+            this.getDestinations[
+              this.getDestinationIndex
+            ].delivery_info.place.geometry.location.lat(),
+        };
+      }
+      return payload;
+    },
+    isWithinGeoFence() {
+      return this.getGeofenceData.length;
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -2332,12 +2368,24 @@ export default {
       "setDocumentURL",
       "setDeliverySpeed",
       "setFinalDocumentsToEdit",
+      "setGeofenceData",
     ]),
     validateFields() {
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    setGeofence() {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/location/geofence`,
+        values: this.geofenceDataPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setGeofenceData(response.data.data.geo_fences);
+        }
+      });
     },
     submitDeliveryOption() {
       const destinations = this.getDestinations;
@@ -2598,6 +2646,7 @@ export default {
       this.location = document.querySelector("#pick-up").value;
     },
     setLocation(path) {
+      console.log("data", this.location);
       this.locationData = path;
       this.location = document.querySelector("#location").value;
     },
@@ -2638,6 +2687,7 @@ export default {
         });
       }
       this.setDestinations(destinations);
+      this.setGeofence();
       this.clearInputs();
     },
     submitRecepientInfo() {
@@ -3461,6 +3511,11 @@ export default {
 .payment-charges-communication-desc {
   font-size: 12px;
   color: #606266;
+  font-weight: 500;
+}
+.speed-charges-communication-desc {
+  font-size: 12px;
+  color: #324ba8;
   font-weight: 500;
 }
 .recepient-info-label {

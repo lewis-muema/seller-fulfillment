@@ -2299,22 +2299,11 @@ export default {
       return this.getDeliverySpeed[0]?.proposed_speeds;
     },
     geofenceDataPayload() {
-      let payload = {};
-      if (this.getDestinations[this.getDestinationIndex].delivery_info) {
-        payload = {
-          description:
-            this.getDestinations[this.getDestinationIndex].delivery_info
-              .location,
-          longitude:
-            this.getDestinations[
-              this.getDestinationIndex
-            ].delivery_info.place.geometry.location.lng(),
-          latitude:
-            this.getDestinations[
-              this.getDestinationIndex
-            ].delivery_info.place.geometry.location.lat(),
-        };
-      }
+      const payload = {
+        description: this.locationData.formatted_address,
+        longitude: this.locationData.geometry.location.lng(),
+        latitude: this.locationData.geometry.location.lat(),
+      };
       return payload;
     },
     isWithinGeoFence() {
@@ -2634,10 +2623,12 @@ export default {
     setPickUp(path) {
       this.locationData = path;
       this.location = document.querySelector("#pick-up").value;
+      this.setGeofence();
     },
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+      this.setGeofence();
     },
     submitPickStation() {
       this.setPickUpStation(this.getStations[this.pickUpStation]);
@@ -2676,7 +2667,7 @@ export default {
         });
       }
       this.setDestinations(destinations);
-      this.setGeofence();
+      // this.setGeofence();
       this.clearInputs();
     },
     submitRecepientInfo() {

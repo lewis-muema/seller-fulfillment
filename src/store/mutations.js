@@ -62,6 +62,9 @@ export default {
   setDefaultLanguage(state, val) {
     state.defaultLanguage = val;
   },
+  setGeofenceData(state, val) {
+    state.geofenceData = val;
+  },
   setDownloadActions(state, val) {
     state.downloadActions = val;
   },

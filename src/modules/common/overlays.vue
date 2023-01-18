@@ -316,6 +316,7 @@
         <p class="view-products-label">
           {{ $t("deliveries.deliveryInfo") }}
         </p>
+
         <i
           @click="overlayStatusSet(false, 'deliveryInfoCrossdock')"
           class="mdi mdi-close view-products-close"
@@ -1735,6 +1736,12 @@
         <p class="delivery-option-crossdock-title">
           {{ $t("inventory.selectDeliveryOption") }}
         </p>
+        <div class="payment-charges-communication" v-if="!isWithinGeoFence">
+          <i class="mdi mdi-information payment-charges-info-icon"></i>
+          <span class="speed-charges-communication-desc">
+            {{ $t("inventory.thirdPartyPartner") }}</span
+          >
+        </div>
         <el-radio-group
           v-model="deliveryOption"
           class="delivery-option-crossdock-radio-group"
@@ -2183,6 +2190,7 @@ export default {
       "getEditStatus",
       "getDeliverySpeed",
       "getMismatchedDates",
+      "getGeofenceData",
     ]),
     partnerNotAssigned() {
       return (
@@ -2215,10 +2223,6 @@ export default {
       return this.getFulfillmentFees.pricing.pricing_deliveries[
         this.getDestinationIndex
       ];
-    },
-    calculatePaymentCollectionFee() {
-      let fee = 0;
-      return fee;
     },
     activeDestination() {
       return this.getDestinations[this.getDestinationIndex];
@@ -2297,6 +2301,17 @@ export default {
     deliverySpeedOptions() {
       return this.getDeliverySpeed[0]?.proposed_speeds;
     },
+    geofenceDataPayload() {
+      const payload = {
+        description: this.locationData.formatted_address,
+        longitude: this.locationData.geometry.location.lng(),
+        latitude: this.locationData.geometry.location.lat(),
+      };
+      return payload;
+    },
+    isWithinGeoFence() {
+      return this.getGeofenceData.length;
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -2335,12 +2350,24 @@ export default {
       "setDocumentURL",
       "setDeliverySpeed",
       "setFinalDocumentsToEdit",
+      "setGeofenceData",
     ]),
     validateFields() {
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    setGeofence() {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/location/geofence`,
+        values: this.geofenceDataPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setGeofenceData(response.data.data.geo_fences);
+        }
+      });
     },
     submitDeliveryOption() {
       const destinations = this.getDestinations;
@@ -2603,6 +2630,7 @@ export default {
     setLocation(path) {
       this.locationData = path;
       this.location = document.querySelector("#location").value;
+      this.setGeofence();
     },
     submitPickStation() {
       this.setPickUpStation(this.getStations[this.pickUpStation]);
@@ -3464,6 +3492,11 @@ export default {
 .payment-charges-communication-desc {
   font-size: 12px;
   color: #606266;
+  font-weight: 500;
+}
+.speed-charges-communication-desc {
+  font-size: 12px;
+  color: #324ba8;
   font-weight: 500;
 }
 .recepient-info-label {

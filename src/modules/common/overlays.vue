@@ -2666,7 +2666,6 @@ export default {
         });
       }
       this.setDestinations(destinations);
-      // this.setGeofence();
       this.clearInputs();
     },
     submitRecepientInfo() {

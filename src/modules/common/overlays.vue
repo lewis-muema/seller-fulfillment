@@ -1859,6 +1859,9 @@
             </el-radio>
           </div>
         </el-radio-group>
+        <div class="pick-up-unavailable-error" v-if="!pickUpSpeeds.length">
+          {{ $t("inventory.weCannotPickFromThisLocation") }}
+        </div>
         <v-btn
           class="edit-info-submit-button"
           :disabled="!isPickUpOptionValid"
@@ -3856,5 +3859,16 @@ export default {
 
 .edit-delivery-override {
   border-bottom: none !important;
+}
+.pick-up-unavailable-error {
+  text-align: center;
+  color: #9b101c;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background: #fbdecf;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
 </style>

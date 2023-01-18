@@ -1354,7 +1354,7 @@ export default {
       "setDeliverySpeed",
       "setMismatchedDates",
       "setEditValue",
-      "setGeofenceData"
+      "setGeofenceData",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {

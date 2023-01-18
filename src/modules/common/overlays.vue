@@ -2310,7 +2310,7 @@ export default {
       return payload;
     },
     isWithinGeoFence() {
-      return this.getGeofenceData.length;
+      return this.activeDestination.geofence?.length;
     },
   },
   beforeMount() {
@@ -2366,6 +2366,8 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setGeofenceData(response.data.data.geo_fences);
+          this.getDestinations[this.getDestinationIndex].geofence =
+            response.data.data.geo_fences;
         }
       });
     },

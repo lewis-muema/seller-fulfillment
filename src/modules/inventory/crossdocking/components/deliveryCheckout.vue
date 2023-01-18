@@ -1348,6 +1348,7 @@ export default {
       "setDeliverySpeed",
       "setMismatchedDates",
       "setEditValue",
+      "setGeofenceData"
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1742,6 +1743,7 @@ export default {
               },
             ]);
             this.setPickUpInfoCD({});
+            this.setGeofenceData([]);
             this.setPickUpOptions({
               type: "driver",
               text: "inventory.sendDriverToPickTheItems",

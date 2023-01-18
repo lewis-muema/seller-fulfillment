@@ -2623,7 +2623,6 @@ export default {
     setPickUp(path) {
       this.locationData = path;
       this.location = document.querySelector("#pick-up").value;
-      this.setGeofence();
     },
     setLocation(path) {
       this.locationData = path;

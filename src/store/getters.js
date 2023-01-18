@@ -17,6 +17,7 @@ export default {
   getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
   getEditedDocuments: (state) => state.editedDocuments,
   getPickupInfo: (state) => state.pickupInfo,
+  getGeofenceData: (state) => state.geofenceData,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
   getStatements: (state) => state.statements,

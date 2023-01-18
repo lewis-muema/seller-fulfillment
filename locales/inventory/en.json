@@ -296,5 +296,6 @@
   "theProductIsNotFragile": "The product is not fragile",
   "temperatueSensitivity": "Temperature sensitivity",
   "theProductIsTemperatureSensitive": "The product is temperature sensitive",
-  "theProductIsNotTemperatureSensitive": "The product is not temperature sensitive"
+  "theProductIsNotTemperatureSensitive": "The product is not temperature sensitive",
+  "weCannotPickFromThisLocation": "Sorry, We cannot pick your goods from this location"
 }

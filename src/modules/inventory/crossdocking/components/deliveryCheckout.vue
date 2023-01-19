@@ -386,7 +386,13 @@
                   <p class="cross-docking-checkout-text-subtitle">
                     {{ $t("inventory.doYouWantPaymentForThisDelivery") }}
                   </p>
-                  <div>
+                  <div
+                    :class="
+                      paymentOnDeliveryDisabledStatus(index - 1)
+                        ? 'disabled-POD-row'
+                        : ''
+                    "
+                  >
                     <div
                       class="payment-collection-select"
                       @click="addPaymentCollection(index)"
@@ -1348,6 +1354,7 @@ export default {
       "setDeliverySpeed",
       "setMismatchedDates",
       "setEditValue",
+      "setGeofenceData",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1530,6 +1537,19 @@ export default {
     setLocation(val) {
       this.place = val;
       this.location = document.querySelector("#location").value;
+    },
+    paymentOnDeliveryDisabledStatus(index) {
+      const destination = this.getDestinations[index];
+      if (
+        destination.speed &&
+        destination.speed?.transport_provider !== "SENDY" &&
+        destination.POD.amountToBeCollected !== "none"
+      ) {
+        destination.POD.amountToBeCollected = "none";
+      }
+      return (
+        destination.speed && destination.speed?.transport_provider !== "SENDY"
+      );
     },
     formatPaymentMethod(method) {
       if (method.pay_method_id === 20) {
@@ -1775,6 +1795,7 @@ export default {
               },
             ]);
             this.setPickUpInfoCD({});
+            this.setGeofenceData([]);
             this.setPickUpOptions({
               type: "driver",
               text: "inventory.sendDriverToPickTheItems",
@@ -2144,5 +2165,11 @@ export default {
 }
 .pickup-let-us-know {
   font-size: 14px !important;
+}
+.disabled-POD-row {
+  pointer-events: none;
+  background: #a1a0a017;
+  padding: 0px 10px;
+  margin-left: -10px;
 }
 </style>

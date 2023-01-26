@@ -90,6 +90,7 @@
   "amountToPay":"Amount to Pay",
   "submitOrder":"Submit Order",
   "continueWith":"Continue with",
+  "continue": "Continue",
   "itemsSelected":"items Selected",
   "itemsAdded": "items Added",
   "pickupLocation": "Pickup Location",
@@ -298,5 +299,11 @@
   "temperatueSensitivity": "Temperature sensitivity",
   "theProductIsTemperatureSensitive": "The product is temperature sensitive",
   "theProductIsNotTemperatureSensitive": "The product is not temperature sensitive",
-  "weCannotPickFromThisLocation": "Sorry, We cannot pick your goods from this location"
+  "weCannotPickFromThisLocation": "Sorry, We cannot pick your goods from this location",
+  "thisProcessAllowsYouToRequestInventory": "This process allows you to request inventory that is stored at the Sendy fulfillment centre to be returned back to your address",
+  "unitsAdded": "units added",
+  "availableStock": "Available stock",
+  "unsellableStock": "Unsellable stock",
+  "unitsAvailable": "{Count} units available",
+  "unitsDamaged": "{Count} units damaged"
 }

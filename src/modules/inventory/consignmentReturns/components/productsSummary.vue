@@ -5,7 +5,7 @@
         <span class="product-summary-title">{{ $t("inventory.summary") }}</span>
         <span
           class="product-summary-edit"
-          @click="$router.push('/inventory/add-pickup-products')"
+          @click="$router.push('/inventory/add-consignment-return-products')"
           ><v-icon class="pr-3"> mdi mdi-pencil</v-icon>
           {{ $t("inventory.edit") }}
         </span>
@@ -23,11 +23,11 @@
                 class="mdi mdi-close product-summary-list-item-close"
               ></i>
             </span>
-            <span class="product-image-frame-container">
+            <span class="product-image-frame-container mr-1">
               <v-badge
                 color="#324BA8"
                 text-color="white"
-                :content="`${summary.quantity}`"
+                :content="`${totalSingleProduct(summary)}`"
               >
                 <div class="product-image-frame">
                   <img
@@ -49,27 +49,36 @@
             </span>
           </v-list-item-avatar>
           <v-list-item-header>
-            <v-list-item-title class="desktop-dashboard-link-title">{{
+            <v-list-item-title class="product-summary-list-title">{{
               summary.product_name
             }}</v-list-item-title>
-            <v-list-item-subtitle v-if="summary.selectedOption"
-              >{{ summary.selectedOption.product_variant_quantity }}
-              {{
-                summary.selectedOption.product_variant_quantity_type
-              }}</v-list-item-subtitle
-            >
-            <p v-if="summary.selectedOption" class="product-summary-amount">
-              {{ summary.selectedOption.product_variant_currency }}
-              {{ summary.selectedOption.product_variant_unit_price }}
-            </p>
-            <p v-else class="product-summary-amount">
-              {{ summary.product_currency }} {{ summary.product_price }}
-            </p>
+            <v-list-item-subtitle>
+              <span v-if="summary.quantity">
+                {{
+                  $t("inventory.unitsAvailable", {
+                    Count: summary.quantity,
+                  })
+                }}
+              </span>
+              <span
+                class="mr-2 ml-2"
+                v-if="summary.damaged && summary.quantity"
+              >
+                |
+              </span>
+              <span v-if="summary.damaged">
+                {{
+                  $t("inventory.unitsDamaged", {
+                    Count: summary.damaged,
+                  })
+                }}</span
+              >
+            </v-list-item-subtitle>
           </v-list-item-header>
         </v-list-item>
       </v-list>
-      <div v-if="$route.params.path === 'customer'">
-        <totalAmount :products="getAllProducts" />
+      <div class="product-summary-list-units">
+        {{ totalProducts }} {{ $t("inventory.units") }}
       </div>
     </v-card>
   </div>
@@ -77,10 +86,8 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import totalAmount from "./totalAmount.vue";
 
 export default {
-  components: { totalAmount },
   data() {
     return {};
   },
@@ -89,11 +96,23 @@ export default {
     getAllProducts() {
       let products = [];
       this.getSelectedProducts.forEach((row) => {
-        if (row.quantity) {
+        if (row.quantity || row.damaged) {
           products.push(row);
         }
       });
       return products;
+    },
+    totalProducts() {
+      let total = 0;
+      this.getSelectedProducts.forEach((row) => {
+        if (row.quantity) {
+          total = parseInt(row.quantity) + total;
+        }
+        if (row.damaged) {
+          total = parseInt(row.damaged) + total;
+        }
+      });
+      return total;
     },
   },
   methods: {
@@ -105,6 +124,11 @@ export default {
     },
     addProductStep(val) {
       this.setProductStep(val);
+    },
+    totalSingleProduct(product) {
+      const quantity = product.quantity ? product.quantity : 0;
+      const damaged = product.damaged ? product.damaged : 0;
+      return quantity + damaged;
     },
   },
 };
@@ -145,5 +169,17 @@ hr {
   display: flex;
   align-items: center;
   margin-right: 20px;
+}
+.product-summary-list-title {
+  color: #303133;
+  font-size: 16px !important;
+  margin-bottom: 2px;
+}
+.product-summary-list-units {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-top: 1px solid #e2e7ed;
 }
 </style>

@@ -16,7 +16,9 @@
             <i
               class="mdi mdi-arrow-left"
               aria-hidden="true"
-              @click="$router.push(`/inventory/add-pickup-products`)"
+              @click="
+                $router.push(`/inventory/add-consignment-return-products`)
+              "
             ></i>
             <v-card-title class="text-center send-products-title">
               {{ $t("inventory.reviewProductsAdded") }}
@@ -24,11 +26,7 @@
           </div>
           <div class="products-selected-summary">
             <v-table>
-              <table-header
-                :header="
-                  $route.params.path === 'sendy' ? tableHeaders : tableHeaders2
-                "
-              />
+              <table-header :header="tableHeaders" />
               <tbody>
                 <tr
                   v-for="(selectedProduct, index) in selectedProductsSummary"
@@ -93,45 +91,47 @@
                     </div>
                   </td>
                   <td style="width: 250px">
-                    <div v-if="selectedProduct.selectedOption">
-                      {{
-                        selectedProduct.selectedOption.product_variant_currency
-                      }}
-                      {{
-                        selectedProduct.selectedOption
-                          .product_variant_unit_price
-                      }}
-                    </div>
-                    <div v-else>
-                      {{
-                        selectedProduct.product_variants[0]
-                          .product_variant_currency
-                      }}
-                      {{
-                        selectedProduct.product_variants[0]
-                          .product_variant_unit_price
-                      }}
-                    </div>
-                    <div
-                      @click="openPricingOverlay(index)"
-                      class="add-quantity-price-tag"
-                    >
-                      <i class="mdi mdi-tag-multiple"></i>
-                      {{ $t("inventory.editPrice") }}
+                    <div class="crossdocking-product-quantity-label">
+                      <el-input-number
+                        class="crossdocking-product-counter"
+                        v-model="selectedProduct.quantity"
+                        :min="0"
+                        @change="addQuantity(index, selectedProduct.quantity)"
+                        required
+                      />
+                      <div class="available-units-text">
+                        {{
+                          $t("inventory.unitsAvailable", {
+                            Count: selectedProduct.selectedOption
+                              ? selectedProduct.selectedOption
+                                  .product_variant_stock_levels.available
+                              : selectedProduct.product_variants[0]
+                                  .product_variant_stock_levels.available,
+                          })
+                        }}
+                      </div>
                     </div>
                   </td>
                   <td class="">
                     <div class="crossdocking-product-quantity-label">
-                      <p class="mb-1">
-                        {{ $t("inventory.qty") }}
-                      </p>
                       <el-input-number
                         class="crossdocking-product-counter"
-                        v-model="selectedProduct.quantity"
-                        :min="1"
-                        @change="addQuantity(index, selectedProduct.quantity)"
+                        v-model="selectedProduct.damaged"
+                        :min="0"
+                        @change="addQuantity(index, selectedProduct.damaged)"
                         required
                       />
+                      <div class="available-units-text">
+                        {{
+                          $t("inventory.unitsDamaged", {
+                            Count: selectedProduct.selectedOption
+                              ? selectedProduct.selectedOption
+                                  .product_variant_stock_levels.available
+                              : selectedProduct.product_variants[0]
+                                  .product_variant_stock_levels.available,
+                          })
+                        }}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -155,15 +155,14 @@
         >
           <div class="items-selected-container">
             <p>
-              {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
+              {{ `${totalProducts} ${$t("inventory.unitsAdded")}` }}
             </p>
             <button
               type="submit"
               @click="addProductStep()"
-              class="btn btn-primary"
+              class="btn btn-primary desktop-select-continue-button"
             >
-              {{ $t("inventory.continueWith") }} {{ totalProducts }}
-              {{ $t("inventory.itemsAdded") }}
+              {{ $t("inventory.continue") }}
             </button>
           </div></v-card
         >
@@ -193,24 +192,10 @@ export default {
           title: "inventory.product",
         },
         {
-          title: "inventory.price",
+          title: "inventory.availableStock",
         },
         {
-          title: "inventory.quantityToSend",
-        },
-      ],
-      tableHeaders2: [
-        {
-          title: "",
-        },
-        {
-          title: "inventory.product",
-        },
-        {
-          title: "inventory.price",
-        },
-        {
-          title: "inventory.quantityToSend",
+          title: "inventory.unsellableStock",
         },
       ],
     };
@@ -231,9 +216,15 @@ export default {
         if (row.quantity) {
           total = parseInt(row.quantity) + total;
         }
+        if (row.damaged) {
+          total = parseInt(row.damaged) + total;
+        }
       });
       return total;
     },
+  },
+  mounted() {
+    this.setComponent("common.sendBackInventory");
   },
   methods: {
     ...mapMutations([
@@ -242,11 +233,12 @@ export default {
       "setOverlayStatus",
       "setEditedPriceIndex",
       "setDestinations",
+      "setComponent",
     ]),
     ...mapActions(["requestAxiosGet"]),
     addProductStep() {
       if (this.totalProducts > 0) {
-        this.$router.push(`/inventory/create-pickup`);
+        this.$router.push(`/inventory/create-consignment-return`);
       } else {
         ElNotification({
           title: "",
@@ -257,6 +249,9 @@ export default {
     },
     addQuantity(val, quantity) {
       const products = this.getSelectedProducts;
+      if (products[val]?.quantity + products[val]?.damaged === 0) {
+        this.removeProductOption(val);
+      }
       if (products[val]) {
         this.sendSegmentEvents({
           event: "Review_Added_Items",

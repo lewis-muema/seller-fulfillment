@@ -36,6 +36,9 @@ import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
 import SendInventory from "../modules/inventory/sendProducts.vue";
+import CreateConsignmentReturn from "../modules/inventory/consignmentReturns/checkout.vue";
+import AddConsignmentReturnProducts from "../modules/inventory/consignmentReturns/components/productSelect.vue";
+import AddConsignmentReturnQuantities from "../modules/inventory/consignmentReturns/components/addQuantity.vue";
 import CreatePickup from "../modules/inventory/sendproducts/checkout.vue";
 import AddPickupProducts from "../modules/inventory/sendproducts/components/productSelect.vue";
 import AddPickupQuantities from "../modules/inventory/sendproducts/components/addQuantity.vue";
@@ -122,6 +125,21 @@ const routes = [
     path: "/inventory/send-inventory",
     name: "Send Inventory",
     component: SendInventory,
+  },
+  {
+    path: "/inventory/create-consignment-return",
+    name: "Create Consignment Return",
+    component: CreateConsignmentReturn,
+  },
+  {
+    path: "/inventory/add-consignment-return-products",
+    name: "Add Consignment Return Inventory",
+    component: AddConsignmentReturnProducts,
+  },
+  {
+    path: "/inventory/add-consignment-return-quantities",
+    name: "Add Consignment Return Quantities",
+    component: AddConsignmentReturnQuantities,
   },
   {
     path: "/inventory/create-pickup",

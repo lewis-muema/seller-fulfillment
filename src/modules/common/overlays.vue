@@ -2009,6 +2009,71 @@
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
+    <div
+      v-if="popup === 'consignmentReturndeliveryInfo'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("deliveries.deliveryInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'consignmentReturndeliveryInfo')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.locationOfCustomer") }} {{ $t("inventory.required") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <div
+        v-if="v$.location.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        {{ $t("inventory.locationIsRequired") }}
+      </div>
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field crossdocking-input-fields-v-text"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.deliveryInstructions") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <div @click="validateFields()">
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isDeliveryFieldsValid"
+          v-loading="buttonLoader"
+          @click="submitConsignmentReturn()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -2191,6 +2256,7 @@ export default {
       "getDeliverySpeed",
       "getMismatchedDates",
       "getGeofenceData",
+      "getDeliveryInfo",
     ]),
     partnerNotAssigned() {
       return (
@@ -2694,6 +2760,17 @@ export default {
       this.setDestinations(destinations);
       this.clearInputs();
     },
+    submitConsignmentReturn() {
+      const deliveryDetails = {
+        location: this.location,
+        apartmentName: this.apartmentName,
+        instructions: this.instructions,
+        place: this.locationData,
+      };
+      this.setDeliveryInfo(deliveryDetails);
+      this.overlayStatusSet(false, "consignmentReturndeliveryInfo");
+      this.clearInputs();
+    },
     clearInputs() {
       setTimeout(() => {
         this.customerName = "";
@@ -3044,7 +3121,20 @@ export default {
     preloadDeliveryDetails(val) {
       const index = this.getDestinationIndex;
       const destinations = this.getDestinations;
-      if (val.popup === "deliveryInfoCrossdock") {
+      if (val.popup === "consignmentReturndeliveryInfo") {
+        this.location = this.getDeliveryInfo.location
+          ? this.getDeliveryInfo.location
+          : "";
+        this.locationData = this.getDeliveryInfo.place
+          ? this.getDeliveryInfo.place
+          : "";
+        this.apartmentName = this.getDeliveryInfo.apartmentName
+          ? this.getDeliveryInfo.apartmentName
+          : "";
+        this.instructions = this.getDeliveryInfo.instructions
+          ? this.getDeliveryInfo.instructions
+          : "";
+      } else if (val.popup === "deliveryInfoCrossdock") {
         this.location =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location

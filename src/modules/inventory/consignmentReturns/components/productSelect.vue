@@ -1,6 +1,23 @@
 <template>
   <div>
-    <v-row class="mt-5">
+    <div class="desktop-select-info-card">
+      <span>
+        <i class="mdi mdi-information desktop-select-info-card-icon"></i>
+      </span>
+      <span class="desktop-select-info-card-text">{{
+        $t("inventory.thisProcessAllowsYouToRequestInventory")
+      }}</span>
+    </div>
+    <v-row v-if="getEditValue !== 'consignment'">
+      <v-col cols="6" class="mx-auto mt-4 mb-3">
+        <el-steps :active="0" finish-status="success">
+          <el-step :title="$t('inventory.selectProducts')"></el-step>
+          <el-step :title="$t('inventory.review')"></el-step>
+          <el-step :title="$t('inventory.checkout')"></el-step>
+        </el-steps>
+      </v-col>
+    </v-row>
+    <v-row :class="getEditValue === 'consignment' ? 'mt-5' : ''">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -8,7 +25,7 @@
               <i
                 class="mdi mdi-arrow-left"
                 aria-hidden="true"
-                @click="$router.push(`/inventory/create-delivery`)"
+                @click="$router.push(`/`)"
               ></i>
               <v-card-title class="text-center send-products-title">
                 {{ $t("inventory.selectProducts") }}
@@ -23,7 +40,7 @@
             </router-link>
           </div>
           <div class="search-input-product-select">
-            <searchAlgolia type="delivery" />
+            <searchAlgolia type="pickup" />
           </div>
           <hr />
           <v-table v-if="products.length > 0">
@@ -33,14 +50,20 @@
                   class="product-select-table-titles row crossdocking-product-select-titles"
                 >
                   <div class="col-1"></div>
-                  <div class="col-6">{{ $t("settings.name") }}</div>
+                  <div class="col-3">{{ $t("settings.name") }}</div>
                   <div
-                    class="product-select-units col-2 crossdocking-product-select-header"
+                    class="product-select-units col-4 crossdocking-product-select-header"
                   >
-                    {{ $t("inventory.availableInventory") }}
+                    <span>{{ $t("inventory.availableStock") }}</span>
+                    <span
+                      ><i class="mdi mdi-information-outline ml-1"></i
+                    ></span>
                   </div>
-                  <div class="col-3 quantity-to-send-header">
-                    {{ $t("inventory.quantityToSend") }}
+                  <div class="col-4 quantity-to-send-header">
+                    <span>{{ $t("inventory.unsellableStock") }}</span>
+                    <span
+                      ><i class="mdi mdi-information-outline ml-1"></i
+                    ></span>
                   </div>
                 </th>
               </tr>
@@ -56,8 +79,10 @@
                   :class="disabledStatus(product) ? 'disabled-row' : ''"
                   v-if="product.product_variants.length === 1"
                 >
-                  <div class="product-select-column row">
-                    <div class="col-7 crossdocking-product-select-titles">
+                  <div
+                    class="product-select-column row product-select-height-override"
+                  >
+                    <div class="col-4 crossdocking-product-select-titles">
                       <div class="product-select-checkbox"></div>
                       <span class="d-flex">
                         <span class="product-image-frame-container">
@@ -78,23 +103,51 @@
                         </span>
                       </span>
                     </div>
-                    <div class="col-2 crossdocking-product-select-titles">
-                      <span
-                        :class="getLoader.products"
-                        class="product-select-units"
-                        >{{ totalStock(product.product_variants) }}
-                        {{ $t("inventory.units") }}</span
-                      >
+                    <div class="col-4">
+                      <div class="available-units-row">
+                        <el-input-number
+                          class="crossdocking-product-counter"
+                          v-model="product.quantity"
+                          :min="0"
+                          placeholder="0"
+                          @change="
+                            addCount('quantity', product.quantity, product, i)
+                          "
+                          :disabled="disabledStatus(product)"
+                        />
+                        <div class="available-units-text">
+                          {{
+                            $t("inventory.unitsAvailable", {
+                              Count:
+                                product.product_variants[0]
+                                  .product_variant_stock_levels.available,
+                            })
+                          }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-3">
-                      <el-input-number
-                        class="crossdocking-product-counter quantity-to-send-row"
-                        v-model="product.quantity"
-                        :min="0"
-                        placeholder="0"
-                        @change="addCount(product.quantity, product, i)"
-                        :disabled="disabledStatus(product)"
-                      />
+                    <div class="col-4">
+                      <div class="available-units-row quantity-to-send-row">
+                        <el-input-number
+                          class="crossdocking-product-counter"
+                          v-model="product.damaged"
+                          :min="0"
+                          placeholder="0"
+                          @change="
+                            addCount('damaged', product.damaged, product, i)
+                          "
+                          :disabled="disabledStatus(product)"
+                        />
+                        <div class="available-units-text">
+                          {{
+                            $t("inventory.unitsDamaged", {
+                              Count:
+                                product.product_variants[0]
+                                  .product_variant_stock_levels.available,
+                            })
+                          }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -102,10 +155,10 @@
                   <v-expansion-panels>
                     <v-expansion-panel class="product-select-exp-panel">
                       <v-expansion-panel-title
-                        class="crossdocking-product-row row"
+                        class="crossdocking-product-row row product-select-height-override"
                         hide-actions
                       >
-                        <div class="col-7 crossdocking-product-select-titles">
+                        <div class="col-4 crossdocking-product-select-titles">
                           <span class="product-select-checkbox-expand"></span>
                           <span class="d-flex">
                             <span class="product-image-frame-container">
@@ -139,15 +192,10 @@
                             </span>
                           </span>
                         </div>
-                        <div class="col-2 crossdocking-product-select-titles">
-                          <span
-                            :class="getLoader.products"
-                            class="product-select-units"
-                            >{{ totalStock(product.product_variants) }}
-                            {{ $t("inventory.units") }}</span
-                          >
-                        </div>
-                        <div class="col-3">
+                        <div
+                          class="col-4 crossdocking-product-select-titles"
+                        ></div>
+                        <div class="col-4">
                           <span
                             class="product-select-units quantity-to-send-row"
                           >
@@ -158,7 +206,7 @@
                       </v-expansion-panel-title>
                       <v-expansion-panel-text class="product-select-panel-text">
                         <div
-                          class="product-select-option row crossdocking-product-row-inner"
+                          class="product-select-option row crossdocking-product-row-inner product-select-height-override"
                           :class="
                             disabledVariantStatus(option) ? 'disabled-row' : ''
                           "
@@ -167,7 +215,7 @@
                           )"
                           :key="x"
                         >
-                          <div class="col-7 crossdocking-product-select-titles">
+                          <div class="col-4 crossdocking-product-select-titles">
                             <div
                               class="product-select-checkbox-inner ml-0"
                             ></div>
@@ -184,30 +232,67 @@
                               option.product_variant_description
                             }}</span>
                           </div>
-                          <div class="col-2 crossdocking-product-select-titles">
-                            <span
-                              :class="getLoader.products"
-                              class="product-select-units"
-                              >{{
-                                option.product_variant_stock_levels
-                                  ? option.product_variant_stock_levels
-                                      .available
-                                  : "-"
-                              }}
-                              {{ $t("inventory.units") }}</span
-                            >
+                          <div class="col-4">
+                            <div class="available-units-row">
+                              <el-input-number
+                                class="crossdocking-product-counter"
+                                v-model="option.quantity"
+                                :min="0"
+                                placeholder="0"
+                                @change="
+                                  addCount(
+                                    'quantity',
+                                    option.quantity,
+                                    product,
+                                    i,
+                                    option,
+                                    x
+                                  )
+                                "
+                                :disabled="disabledVariantStatus(option)"
+                              />
+                              <div class="available-units-text">
+                                {{
+                                  $t("inventory.unitsAvailable", {
+                                    Count:
+                                      option.product_variant_stock_levels
+                                        .available,
+                                  })
+                                }}
+                              </div>
+                            </div>
                           </div>
-                          <div class="col-3">
-                            <el-input-number
-                              class="crossdocking-product-counter quantity-to-send-row"
-                              v-model="option.quantity"
-                              :min="0"
-                              placeholder="0"
-                              @change="
-                                addCount(option.quantity, product, i, option, x)
-                              "
-                              :disabled="disabledVariantStatus(option)"
-                            />
+                          <div class="col-4">
+                            <div
+                              class="available-units-row quantity-to-send-row"
+                            >
+                              <el-input-number
+                                class="crossdocking-product-counter"
+                                v-model="option.damaged"
+                                :min="0"
+                                placeholder="0"
+                                @change="
+                                  addCount(
+                                    'damaged',
+                                    option.damaged,
+                                    product,
+                                    i,
+                                    option,
+                                    x
+                                  )
+                                "
+                                :disabled="disabledVariantStatus(option)"
+                              />
+                              <div class="available-units-text">
+                                {{
+                                  $t("inventory.unitsDamaged", {
+                                    Count:
+                                      option.product_variant_stock_levels
+                                        .available,
+                                  })
+                                }}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </v-expansion-panel-text>
@@ -258,15 +343,14 @@
         >
           <div class="items-selected-container">
             <p>
-              {{ `${totalProducts} ${$t("inventory.itemsSelected")}` }}
+              {{ `${totalProducts} ${$t("inventory.unitsAdded")}` }}
             </p>
             <button
               type="submit"
               @click="addProductStep()"
-              class="btn btn-primary"
+              class="btn btn-primary desktop-select-continue-button"
             >
-              {{ $t("inventory.continueWith") }} {{ totalProducts }}
-              {{ $t("inventory.itemsAdded") }}
+              {{ $t("inventory.continue") }}
             </button>
           </div></v-card
         >
@@ -280,7 +364,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../../../mixins/events_mixin";
 import placeholder from "../../../../mixins/placeholders";
-import searchAlgolia from "../../../common/searchAlgoliaProductSelect.vue";
+import searchAlgolia from "../../../common/searchAlgoliaConsignmentReturn.vue";
 
 export default {
   mixins: [eventsMixin, placeholder],
@@ -306,7 +390,7 @@ export default {
     },
   },
   mounted() {
-    this.setComponent("common.sendDeliveryToCustomer");
+    this.setComponent("common.sendBackInventory");
     this.setProductLists(this.placeholderProducts);
     this.productMapping();
     this.fetchProducts();
@@ -331,18 +415,11 @@ export default {
       });
       return variant;
     },
-    totalStock(val) {
-      let total = 0;
-      val.forEach((element) => {
-        total = element.product_variant_stock_levels.available + total;
-      });
-      return total;
-    },
-    addCount(val, product, i, option, z) {
+    addCount(type, val, product, i, option, z) {
       const products = this.getSelectedProducts;
       const addedProduct = products.filter((row) => {
         if (row.product_id === product.product_id && !option) {
-          row.quantity = val;
+          row[type] = val;
         } else if (row.product_id === product.product_id && option) {
           row.product_variants.forEach((variant) => {
             if (variant.product_variant_id === option.product_variant_id) {
@@ -350,9 +427,9 @@ export default {
                 row.selectedOption.product_variant_id ===
                 option.product_variant_id
               ) {
-                row.quantity = option.quantity;
+                row[type] = option[type];
               }
-              variant.quantity = option.quantity;
+              variant[type] = option[type];
             }
           });
         }
@@ -366,36 +443,22 @@ export default {
       });
       this.productMapping();
       if (!addedProduct.length) {
-        product.quantity = val;
+        product[type] = val;
         this.addProduct(product, i, option, z);
       }
-      if (val === 0) {
+      if (
+        (!product?.quantity && !product?.damaged && !option) ||
+        (!option?.quantity && !option?.damaged && option)
+      ) {
         this.removeProduct(product, i, option, z);
       }
       this.productMapping();
     },
-    disabledStatus(product) {
-      const quantity = product.product_variants[0].product_variant_stock_levels
-        ? product.product_variants[0].product_variant_stock_levels.available
-        : 0;
-      return (
-        (quantity === 0 && this.crossDockingFlag()) ||
-        this.getLoader.products !== ""
-      );
+    disabledStatus() {
+      return this.getLoader.products !== "";
     },
-    disabledVariantStatus(option) {
-      const quantity = option
-        ? option.product_variant_stock_levels.available
-        : 0;
-      return (
-        (quantity === 0 && this.crossDockingFlag()) ||
-        this.getLoader.products !== ""
-      );
-    },
-    crossDockingFlag() {
-      return this.getBusinessDetails.settings
-        ? !this.getBusinessDetails.settings.cross_docking_enabled
-        : true;
+    disabledVariantStatus() {
+      return this.getLoader.products !== "";
     },
     fetchProducts() {
       this.setLoader({
@@ -406,15 +469,14 @@ export default {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${
           this.getStorageUserDetails.business_id
-        }/products?max=6&offset=${this.page - 1}`,
+        }/products?max=5&offset=${this.page - 1}`,
       }).then((response) => {
-        if (this.$route.path === `/inventory/add-delivery-products`) {
+        if (this.$route.path === `/inventory/add-consignment-return-products`) {
           this.setLoader({
             type: "products",
             value: "",
           });
         }
-
         if (response.status === 200) {
           const products = response.data.data.products;
           this.setProductLists(products);
@@ -425,8 +487,8 @@ export default {
       });
     },
     addProductStep() {
-      if (this.totalProducts > 0) {
-        this.$router.push(`/inventory/add-delivery-quantities`);
+      if (this.getSelectedProducts.length > 0) {
+        this.$router.push(`/inventory/add-consignment-return-quantities`);
       } else {
         ElNotification({
           title: "",
@@ -451,6 +513,7 @@ export default {
                   row.selectedOption.product_variant_id
                 ) {
                   variant.quantity = parseInt(row.quantity);
+                  variant.damaged = parseInt(row.damaged);
                 }
               });
             } else if (
@@ -458,6 +521,7 @@ export default {
               product.product_id === row.product_id
             ) {
               product.quantity = parseInt(row.quantity);
+              product.damaged = parseInt(row.damaged);
             }
           });
         });
@@ -468,7 +532,6 @@ export default {
       this.setSelectedProducts(val);
     },
     addProduct(product, i, option) {
-      this.selectedProducts = this.getSelectedProducts;
       let newProduct = {};
       Object.keys(product).forEach((row) => {
         newProduct[row] = product[row];
@@ -491,7 +554,6 @@ export default {
       });
     },
     removeProduct(product, i, option) {
-      this.selectedProducts = this.getSelectedProducts;
       this.selectedProducts.forEach((row, p) => {
         if (
           product.product_id === row.product_id &&
@@ -551,6 +613,9 @@ export default {
         if (row.quantity) {
           total = parseInt(row.quantity) + total;
         }
+        if (row.damaged) {
+          total = parseInt(row.damaged) + total;
+        }
       });
       return total;
     },
@@ -595,13 +660,6 @@ export default {
   text-decoration: none;
   color: #324ba8;
   margin-top: -40px;
-}
-.product-select-checkbox {
-  height: 70px;
-  width: 15px !important;
-}
-.product-select-checkbox-expand {
-  width: 15px !important;
 }
 .product-select-img {
   max-width: 100%;
@@ -669,6 +727,8 @@ export default {
 .product-select-table-titles {
   font-weight: 500;
   color: #303133;
+  padding: 0px !important;
+  margin-right: 0px !important;
 }
 .search-input-product-select {
   height: 55px;
@@ -726,7 +786,48 @@ export default {
   height: 40px;
   width: 40px;
 }
-.v-pagination__item--is-active .v-btn__overlay {
-  opacity: 0 !important;
+.quantity-to-send-header {
+  text-align: right;
+  padding-right: 28px !important;
+}
+.quantity-to-send-row {
+  margin-right: 15px;
+}
+.desktop-select-info-card {
+  margin: 30px 50px 10px 50px;
+  padding: 10px 20px;
+  border: 1px solid #c0c4cc;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+.desktop-select-info-card-icon {
+  color: #324ba8;
+  margin-right: 15px;
+  font-size: 20px;
+}
+.desktop-select-info-card-text {
+  font-size: 15px;
+}
+.desktop-select-continue-button {
+  width: 100%;
+}
+.quantity-to-send-row-mid {
+  margin-right: -10px;
+}
+.available-units-row {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  margin-right: -10px;
+  align-items: flex-start;
+}
+.available-units-text {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.product-select-height-override {
+  height: 80px !important;
 }
 </style>

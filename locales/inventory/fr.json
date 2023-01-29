@@ -16,6 +16,7 @@
   "thirdPartyPartner": "A third party partner will deliver your order at an additional delivery cost",
   "all": "Tous",
   "productAttributes":  "Product attributes",
+  "provisionalProducts": "Provisional: Total count of products at the warehouse but at an intermediary state based on unconfirmed open orders, unconfirmed damaged goods, sales and purchase returns",
   "stockLevels": "Stock levels",
   "getNotified": "Get notified when stock gets below",
   "getNotifiedOptional": "Get notified when stock gets below (optional)",

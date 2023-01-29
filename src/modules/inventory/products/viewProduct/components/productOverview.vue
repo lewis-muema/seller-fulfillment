@@ -220,7 +220,7 @@ export default {
         },
         {
           title: "inventory.provisional",
-          description: "inventory.availableProducts",
+          description: "inventory.provisionalProducts",
         },
         {
           title: "inventory.available",
@@ -246,7 +246,7 @@ export default {
         },
         {
           title: "inventory.provisional",
-          description: "inventory.availableProducts",
+          description: "inventory.provisionalProducts",
         },
         {
           title: "inventory.available",

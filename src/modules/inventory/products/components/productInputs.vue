@@ -112,6 +112,9 @@
             </span>
           </div>
           <div v-if="view">
+            <p class="preference-titles-desc">
+              {{ $t("inventory.productAttributes") }}
+            </p>
             <div class="add-product-preference-checkbox">
               <v-checkbox
                 v-model="prodPref.isPhotosensitive"
@@ -137,6 +140,27 @@
                   <el-slider v-model="tempRange" range show-stops :step="10" />
                   <span class="ml-3">°C</span>
                 </span>
+              </div>
+            </div>
+
+            <div>
+              <p class="preference-titles-desc">
+                {{ $t("inventory.stockLevels") }}
+              </p>
+              <div class="">
+                <label for="threshold" class="form-label"
+                  >{{ $t("inventory.getNotified") }}
+                </label>
+                <div class="">
+                  <v-text-field
+                    v-model="productVariants[0].low_stock_threshold"
+                    placeholder="0"
+                    suffix="units"
+                    variant="outlined"
+                    clearable
+                    clear-icon="mdi-close"
+                  ></v-text-field>
+                </div>
               </div>
             </div>
           </div>
@@ -295,6 +319,7 @@ export default {
           product_variant_stock_levels: {},
           product_variant_unit_price: "",
           universal_product_code: "",
+          low_stock_threshold: "",
           product_variant_properties: [],
         },
       ],
@@ -346,6 +371,7 @@ export default {
       this.productDescription = this.getProduct.product_description;
       if (this.variants.length) {
         this.image = this.variants[0].product_variant_image_link;
+        console.log(this.productVariants);
         this.productVariants = this.variants;
       }
       this.showProductOptions = this.getAddProductStatus;
@@ -438,6 +464,7 @@ export default {
           product_variant_stock_levels,
           product_variant_unit_price,
           universal_product_code,
+          low_stock_threshold,
         } = variant;
         const productProperties = {
           business_id,
@@ -453,6 +480,7 @@ export default {
           product_variant_stock_levels,
           product_variant_unit_price,
           universal_product_code,
+          low_stock_threshold,
           product_variant_properties: this.sensitivityRange,
         };
         products.push(productProperties);
@@ -771,6 +799,11 @@ label {
 }
 .add-product-preference-checkbox {
   height: 45px !important;
+}
+.preference-titles-desc {
+  color: #909399;
+  font-size: 14px;
+  margin: 12px 0px 0px;
 }
 .v-selection-control--dirty .v-icon {
   color: #324ba8 !important;

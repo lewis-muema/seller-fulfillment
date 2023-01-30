@@ -82,13 +82,12 @@
             </div>
             <div>
               <div class="">
-                <label for="upc" class="form-label"
-                  >
+                <label for="upc" class="form-label">
                   {{ $t("inventory.getNotifiedOptional") }}
                 </label>
                 <div class="">
                   <v-text-field
-                      v-model="productOption.low_stock_threshold"
+                    v-model="productOption.low_stock_threshold"
                     label="0"
                     suffix="units"
                     variant="outlined"

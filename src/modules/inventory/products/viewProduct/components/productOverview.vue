@@ -3,10 +3,10 @@
     <div class="mb-3">
       <span>
         <img
-            :src="product.product_variants[0].product_variant_image_link"
-            v-if="!getLoader.productDetails"
-            alt="img"
-            class="product-details-img"
+          :src="product.product_variants[0].product_variant_image_link"
+          v-if="!getLoader.productDetails"
+          alt="img"
+          class="product-details-img"
         />
         <span :class="getLoader.productDetails">
           {{ product.product_name }}
@@ -21,8 +21,8 @@
             <span :class="getLoader.productDetails">
               {{
                 product.product_description
-                    ? product.product_description
-                    : $t("inventory.noDescriptionProvided")
+                  ? product.product_description
+                  : $t("inventory.noDescriptionProvided")
               }}
             </span>
           </p>
@@ -62,8 +62,8 @@
             <span :class="getLoader.productDetails">
               {{
                 product.product_variants[0].universal_product_code
-                    ? product.product_variants[0].universal_product_code
-                    : "_"
+                  ? product.product_variants[0].universal_product_code
+                  : "_"
               }}
             </span>
           </p>
@@ -71,17 +71,17 @@
       </div>
       <div class="col-6">
         <div
-            class="product-details-content mb-3"
-            v-for="(sensitivity, i) in productSensitivity"
-            :key="i"
+          class="product-details-content mb-3"
+          v-for="(sensitivity, i) in productSensitivity"
+          :key="i"
         >
           <p class="product-header">{{ sensitivity.heading }}</p>
           <p>
             <span :class="getLoader.productDetails"
-            >{{
+              >{{
                 formatSensitivityText(sensitivity.text)
-                    ? sensitivity.name
-                    : sensitivity.name2
+                  ? sensitivity.name
+                  : sensitivity.name2
               }}
             </span>
           </p>
@@ -89,95 +89,101 @@
         <div class="product-details-content mb-3">
           <p class="product-header">{{ $t("inventory.getNotified") }}</p>
           <p>
-            <span :class="getLoader.productDetails"> {{ product.product_variants[0].low_stock_threshold ? product.product_variants[0].low_stock_threshold : "_" }} </span>
+            <span :class="getLoader.productDetails">
+              {{
+                product.product_variants[0].low_stock_threshold
+                  ? product.product_variants[0].low_stock_threshold
+                  : "_"
+              }}
+            </span>
           </p>
         </div>
       </div>
     </div>
     <v-table v-if="product.product_variants">
       <table-header
-          :header="product.product_variants ? tableHeaders2 : tableHeaders"
+        :header="product.product_variants ? tableHeaders2 : tableHeaders"
       />
       <tbody>
-      <tr v-for="(variant, index) in variants" :key="index">
-        <td>
-          <div v-if="product.product_variants">
-            <img
+        <tr v-for="(variant, index) in variants" :key="index">
+          <td>
+            <div v-if="product.product_variants">
+              <img
                 :src="variant.product_variant_image_link"
                 v-if="!getLoader.productDetails"
                 alt="img"
                 class="product-details-img"
-            />
-          </div>
-          <div v-else>
-            {{ variant.fulfillmentCenter }}
-          </div>
-        </td>
-        <td>
-          <div v-if="product.product_variants.length > 1">
-            <v-list-item lines="two">
-              <v-list-item-header>
-                <v-list-item-title>
+              />
+            </div>
+            <div v-else>
+              {{ variant.fulfillmentCenter }}
+            </div>
+          </td>
+          <td>
+            <div v-if="product.product_variants.length > 1">
+              <v-list-item lines="two">
+                <v-list-item-header>
+                  <v-list-item-title>
                     <span :class="getLoader.productDetails">
                       {{ variant.product_variant_description }}
                     </span></v-list-item-title
-                >
-                <v-list-item-subtitle>
+                  >
+                  <v-list-item-subtitle>
                     <span :class="getLoader.productDetails">
                       {{ variant.product_variant_quantity }}
                       {{ variant.product_variant_quantity_type }}
                     </span>
-                </v-list-item-subtitle>
-                <v-list-item-subtitle>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>
                     <span :class="getLoader.productDetails">
                       {{ variant.product_variant_currency }}
                       {{ variant.product_variant_unit_price }}
                     </span>
-                </v-list-item-subtitle>
-              </v-list-item-header>
-            </v-list-item>
-          </div>
-          <div></div>
-        </td>
-        <td>
+                  </v-list-item-subtitle>
+                </v-list-item-header>
+              </v-list-item>
+            </div>
+            <div></div>
+          </td>
+          <td>
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
-                    ? variant.product_variant_stock_levels.quantity_in_inventory
-                    : "-"
+                  ? variant.product_variant_stock_levels.quantity_in_inventory
+                  : "-"
               }}
             </span>
-        </td>
-        <td>
+          </td>
+          <td>
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
-                    ? variant.product_variant_stock_levels.available
-                    : "-"
+                  ? variant.product_variant_stock_levels.available
+                  : "-"
               }}
             </span>
-        </td>
-        <td>
+          </td>
+          <td>
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
-                    ? variant.product_variant_stock_levels
-                        .quantity_in_sales_orders +
+                  ? variant.product_variant_stock_levels
+                      .quantity_in_sales_orders +
                     variant.product_variant_stock_levels.quantity_held_locally
-                    : "-"
+                  : "-"
               }}
             </span>
-        </td>
-        <td>
+          </td>
+          <td>
             <span :class="getLoader.productDetails">
               {{
                 variant.product_variant_stock_levels
-                    ? variant.product_variant_stock_levels.quantity_incoming
-                    : "-"
+                  ? variant.product_variant_stock_levels.quantity_incoming
+                  : "-"
               }}
             </span>
-        </td>
-      </tr>
+          </td>
+        </tr>
       </tbody>
     </v-table>
   </div>
@@ -284,9 +290,9 @@ export default {
       let total = 0;
       product.product_variants.forEach((row) => {
         total =
-            total + row.product_variant_stock_levels
-                ? row.product_variant_stock_levels.available
-                : 0;
+          total + row.product_variant_stock_levels
+            ? row.product_variant_stock_levels.available
+            : 0;
       });
       if (product.product_variants.length === 1) {
         this.tableHeaders2[1].title = "";
@@ -298,11 +304,11 @@ export default {
     formatSensitivityText(value) {
       let text = false;
       this.product.product_variants[0].product_variant_properties?.forEach(
-          (property) => {
-            if (property.product_property_type === value) {
-              text = true;
-            }
+        (property) => {
+          if (property.product_property_type === value) {
+            text = true;
           }
+        }
       );
       return text;
     },

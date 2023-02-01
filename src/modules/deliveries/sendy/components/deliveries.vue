@@ -101,7 +101,7 @@
                     class="deliveries-platform-tag-storefront"
                     v-if="item.sales_channel_name"
                   >
-                    {{ $t("dashboard.storefront") }}
+                    {{ item.sales_channel_name }}
                   </span>
                   <span
                     :class="getLoader.consignments"

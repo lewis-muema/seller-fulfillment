@@ -371,7 +371,6 @@ export default {
       this.productDescription = this.getProduct.product_description;
       if (this.variants.length) {
         this.image = this.variants[0].product_variant_image_link;
-        console.log(this.productVariants);
         this.productVariants = this.variants;
       }
       this.showProductOptions = this.getAddProductStatus;

@@ -4,6 +4,10 @@ variables:
   IMAGE_BASE_NAME: ${CI_REGISTRY}/seller-fulfillment
   STAGING_IMAGE: $CI_REGISTRY/seller-fulfillment:latest_$CI_COMMIT_SHORT_SHA
   
+
+cache: 
+  paths:
+  - node_modules/
 stages:
   - lint
   - test
@@ -35,6 +39,7 @@ test:
     - npm run test
 
 docker_build:
+  cache: {}
   stage: docker
   tags:
     - shell 
@@ -66,6 +71,7 @@ docker_build:
 
 
 create-preview-env:
+  cache: {}
   stage: deploy
   tags:
     - manta

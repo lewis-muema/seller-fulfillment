@@ -26,6 +26,9 @@ export default {
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },
+  setRecepientInfo(state, val) {
+    state.recepientInfo = val;
+  },
   setPickupInfo(state, val) {
     state.pickupInfo = val;
   },
@@ -58,6 +61,9 @@ export default {
   },
   setDefaultLanguage(state, val) {
     state.defaultLanguage = val;
+  },
+  setGeofenceData(state, val) {
+    state.geofenceData = val;
   },
   setDownloadActions(state, val) {
     state.downloadActions = val;
@@ -298,5 +304,80 @@ export default {
   },
   setExportDataType(state, val) {
     state.exportDataType = val;
+  },
+  setPaymentCollectionStatus(state, val) {
+    state.paymentCollectionStatus = val;
+  },
+  setWallets(state, val) {
+    state.wallets = val;
+  },
+  setTransactions(state, val) {
+    state.transactions = val;
+  },
+  setBillingCycle(state, val) {
+    state.billingCycle = val;
+  },
+  setSignMapping(state, val) {
+    state.signMapping = val;
+  },
+  setStatisticsStats(state, val) {
+    state.statisticsStats = val;
+  },
+  setActiveTransaction(state, val) {
+    state.activeTransaction = val;
+  },
+  setTransactionTypes(state, val) {
+    state.transactionTypes = val;
+  },
+  setWithDrawalMethods(state, val) {
+    state.withDrawalMethods = val;
+  },
+  setWithDrawalAmount(state, val) {
+    state.withDrawalAmount = val;
+  },
+  setPagination(state, val) {
+    state.pagination = val;
+  },
+  setSearchedProducts(state, val) {
+    state.searchedProducts = val;
+  },
+  setDestinations(state, val) {
+    state.destinations = val;
+  },
+  setDestinationIndex(state, val) {
+    state.destinationIndex = val;
+  },
+  setDocumentURL(state, val) {
+    state.documentURL = val;
+  },
+  setPickUpOptions(state, val) {
+    state.pickUpOptions = val;
+  },
+  setPickUpInfoCD(state, val) {
+    state.pickUpInfoCD = val;
+  },
+  setStations(state, val) {
+    state.stations = val;
+  },
+  setPickUpStation(state, val) {
+    state.pickUpStation = val;
+  },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
+  setPickUpSpeed(state, val) {
+    state.pickUpSpeed = val;
+  },
+  setMismatchedDates(state, val) {
+    state.mismatchedDates = val;
+  },
+  setEdittedDocuments(state, val) {
+    state.edittedDocuments = val;
+  },
+  setEditedDocuments(state, val) {
+    state.editedDocuments = val;
+  },
+  setFinalDocumentsToEdit(state, val) {
+    state.finalDocumentsToEdit = val;
   },
 };

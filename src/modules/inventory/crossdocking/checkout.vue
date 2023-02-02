@@ -2,11 +2,10 @@
   <div class="send-inventory-checkout-container">
     <v-row>
       <v-col cols="7">
-        <pickup-checkout v-if="$route.params.path === 'sendy'" />
-        <delivery-checkout v-if="$route.params.path === 'customer'" />
+        <delivery-checkout class="mt-5" />
       </v-col>
       <v-col cols="4">
-        <products-summary />
+        <total-amount class="mt-5" />
       </v-col>
     </v-row>
   </div>
@@ -14,11 +13,13 @@
 
 <script>
 import { mapGetters } from "vuex";
-import pickupCheckout from "@/modules/inventory/sendproducts/components/pickupCheckout";
-import deliveryCheckout from "@/modules/inventory/sendproducts/components/deliveryCheckout";
-import productsSummary from "./productsSummary";
+import deliveryCheckout from "./components/deliveryCheckout.vue";
+import TotalAmount from "./components/totalAmount.vue";
 export default {
-  components: { productsSummary, pickupCheckout, deliveryCheckout },
+  components: {
+    deliveryCheckout,
+    TotalAmount,
+  },
   data() {
     return {};
   },

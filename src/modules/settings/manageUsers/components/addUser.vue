@@ -144,8 +144,10 @@
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       firstName: "",
@@ -232,6 +234,19 @@ export default {
             this.setOverlayStatus({
               overlay: true,
               popup: "user",
+            });
+            this.sendSegmentEvents({
+              event: "Add_Multiuser",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                first_name: this.firstName,
+                last_name: this.lastName,
+                user_role: this.defaultRole,
+                phone_number: this.phone,
+                email: this.emailAddress,
+                clientType: "web",
+                device: "desktop",
+              },
             });
             this.$router.push(
               `/settings/user-permissions/${response.data.data.user.user_id}`

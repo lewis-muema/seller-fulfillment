@@ -200,7 +200,7 @@ export default {
           this.setOTPRedirectUrl("otp/signUp");
           this.$router.push("/auth/otp");
           this.sendSegmentEvents({
-            event: "Sign_up",
+            event: "Sign_Up",
             data: {
               userId: data.data.data.business.business_id,
               email: this.params.businessEmail,
@@ -208,6 +208,12 @@ export default {
               device: "desktop",
               region: this.params.countryOfOperation,
             },
+          });
+          window.fbq("track", "Sign_up", {
+            userId: data.data.data.business.business_id,
+            businessName: this.params.businessName,
+            email: this.params.businessEmail,
+            region: this.params.countryOfOperation,
           });
         }
         this.loading = false;

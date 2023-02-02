@@ -3,6 +3,7 @@
     transition="slide-y-transition"
     anchor="bottom center"
     v-model="searchToggle"
+    class="search-algolia"
   >
     <template v-slot:activator="{ props }">
       <v-text-field
@@ -27,9 +28,7 @@
     </template>
     <v-list class="header-list-popup" v-if="type === 'product'">
       <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title
-          @click="$router.push(`/inventory/view-product/${item.product_id}`)"
-        >
+        <v-list-item-title @click="productTrigger(item)">
           <div class="search-item-flex">
             <div class="search-items-image-container">
               <img
@@ -118,7 +117,7 @@
 <script>
 import algoliaSearch from "../../mixins/algolia_search";
 import eventsMixin from "../../mixins/events_mixin";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   props: ["type"],
@@ -132,7 +131,11 @@ export default {
     searchToggle: false,
   }),
   computed: {
-    ...mapGetters(["getStorageUserDetails"]),
+    ...mapGetters([
+      "getStorageUserDetails",
+      "getProductLists",
+      "getSearchedProducts",
+    ]),
   },
   watch: {
     searchParam(val) {
@@ -146,6 +149,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setProductLists", "setSearchedProducts"]),
     algoliaResults(object) {
       this.searchToggle = true;
       this.searchObject = object;
@@ -168,7 +172,7 @@ export default {
       }
       if (this.type === "delivery") {
         this.sendSegmentEvents({
-          event: "Search_consignment",
+          event: "Search_Consignment",
           data: {
             userId: this.getStorageUserDetails.business_id,
             searchWord: this.searchParam,
@@ -191,6 +195,9 @@ export default {
         }`;
       });
       return productsList;
+    },
+    productTrigger(item) {
+      this.$router.push(`/inventory/view-product/${item.product_id}`);
     },
   },
 };
@@ -224,5 +231,8 @@ export default {
 }
 .search-item-name {
   font-size: 14px;
+}
+.search-algolia .v-overlay__content {
+  position: sticky !important;
 }
 </style>

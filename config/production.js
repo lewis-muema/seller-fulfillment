@@ -15,11 +15,11 @@ module.exports = {
   ELASTIC_APM_DISTRIBUTED_TRACING_ORIGINS: "https://auth.sendyit.com",
   ALGOLIA_APP_ID: "YGZO0B7NVS",
   ALGOLIA_API_KEY: "d19d556ce4b0b3897d5c8956e43428c2",
-  ALGOLIA_INDEX_NAME: "dev_fulfilment",
+  ALGOLIA_INDEX_NAME: "production_fulfillment",
   ALGOLIA_INDEX_NAME_ORDERS: "production_fulfillment_orders",
   FULFILMENT_SERVER: "https://auth.sendyit.com/fulfilment/v1/",
   VUE_APP_BASE_URL: "https://auth.sendyit.com/payment-gateway",
-  VUE_APP_VGS_VAULT_ID: "tnt4d8qyodm",
+  VUE_APP_VGS_VAULT_ID: "tntrt5wb0ic",
   VUE_APP_VGS_ENVIRONMENT: "live",
   EXTREME_IP_KEY: "dmmw1HciGEhld0FiG2ID",
 };

@@ -53,14 +53,6 @@
             "
           ></v-list-item>
           <v-list-item
-            v-if="!getAccessDenied.includes('/inventory/stock-levels')"
-            :title="$t('common.stocks')"
-            @click="$router.push('/inventory/stock-levels')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === 'common.stocks'"
-            :append-icon="route === 'common.stocks' ? 'mdi-circle-small' : ''"
-          ></v-list-item>
-          <v-list-item
             v-if="!getAccessDenied.includes('/inventory/send-inventory')"
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
@@ -148,22 +140,37 @@
             ></v-list-item>
           </template>
           <v-list-item
-            v-if="!getAccessDenied.includes('/payments/billings')"
-            :title="$t('common.billings')"
-            @click="$router.push('/payments/billings')"
+            v-if="!getAccessDenied.includes('/payments/wallet')"
+            :title="$t('payments.wallet')"
+            @click="$router.push('/payments/wallet')"
             class="desktop-sidebar-sub-menu"
-            :active="route === 'common.billings'"
-            :append-icon="route === 'common.billings' ? 'mdi-circle-small' : ''"
-          ></v-list-item>
-          <!-- <v-list-item
-            :title="$t('common.invoices')"
-            @click="$router.push('/payments/invoices')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === $t('common.invoices')"
-            :append-icon="
-              route === $t('common.invoices') ? 'mdi-circle-small' : ''
+            :active="
+              [
+                'payments.wallet',
+                'payments.deliveriesPendingPayment',
+                'payments.pendingPaymentCollections',
+              ].includes(route)
             "
-          ></v-list-item> -->
+            :append-icon="
+              [
+                'payments.wallet',
+                'payments.deliveriesPendingPayment',
+                'payments.pendingPaymentCollections',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
+            "
+          ></v-list-item>
+          <v-list-item
+            v-if="!getAccessDenied.includes('/payments/transactions')"
+            :title="$t('payments.transactions')"
+            @click="$router.push('/payments/transactions')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === 'payments.transactions'"
+            :append-icon="
+              route === 'payments.transactions' ? 'mdi-circle-small' : ''
+            "
+          ></v-list-item>
         </v-list-group>
 
         <v-list-group>

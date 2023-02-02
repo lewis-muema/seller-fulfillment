@@ -112,6 +112,7 @@ import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { ElNotification } from "element-plus";
 import eventsMixin from "../../mixins/events_mixin";
+import axios from "axios";
 // import googleAuth from "@/modules/common/googleAuth";
 
 export default {
@@ -142,10 +143,20 @@ export default {
     },
   },
   mounted() {
-    localStorage.clear();
+    if (localStorage.accessToken) {
+      axios
+        .post(`${process.env.AUTH}logout`, {
+          refresh_token: localStorage.refreshToken,
+        })
+        .then(() => {
+          localStorage.clear();
+        });
+    } else {
+      localStorage.clear();
+    }
   },
   methods: {
-    ...mapActions(["loginUser"]),
+    ...mapActions(["loginUser", "requestAxiosPost"]),
     ...mapMutations(["setOTPRedirectUrl", "setBizDetails"]),
     phoneNumberLogin() {
       this.emailLogin = false;

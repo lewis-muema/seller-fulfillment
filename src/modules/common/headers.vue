@@ -168,12 +168,12 @@ export default {
         {
           title: "common.deliverToCustomer",
           icon: "mdi-truck-outline",
-          url: "/inventory/send-inventory/customer/select-products",
+          url: "/inventory/create-delivery",
         },
         {
           title: "common.inventoryToSendy",
           icon: "mdi-warehouse",
-          url: "/inventory/send-inventory/sendy/select-products",
+          url: "/inventory/add-pickup-products",
         },
       ],
       profile: [
@@ -293,7 +293,7 @@ export default {
       if (notification.message.includes("Please make payment")) {
         return {
           label: this.$t("payments.makePayment"),
-          link: "/payments/billings",
+          link: "/payments/wallet",
         };
       }
       if (notification.notification_type === "EXPORT_DATA_SUCCESS_UPDATES") {
@@ -344,11 +344,6 @@ export default {
           this.profile[1].item = `${this.$t("common.language")}: ${
             this.languageName
           }`;
-          let mapOptions = this.getMapOptions;
-          mapOptions.componentRestrictions.country = [
-            response.data.data.business.country_code.toLowerCase(),
-          ];
-          this.setMapOptions(mapOptions);
           if (!localStorage.country) {
             localStorage.country = response.data.data.business.country_code;
           }

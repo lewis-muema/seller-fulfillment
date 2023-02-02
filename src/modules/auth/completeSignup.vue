@@ -244,7 +244,7 @@ export default {
         this.loading = false;
         if (this.getOTPRedirectUrl === "otp/signUp") {
           this.sendSegmentEvents({
-            event: "Signed_up",
+            event: "Signed_Up",
             data: {
               userId: this.businessId,
               email: this.getUserDetails.email,
@@ -252,6 +252,11 @@ export default {
               device: "desktop",
               industry: this.params.industryOfBusiness,
             },
+          });
+          window.fbq("track", "Complete_Sign_up", {
+            first_name: this.params.firstName,
+            last_name: this.params.lastName,
+            phone_number: this.params.phoneNo,
           });
         }
         this.$router.push("/");

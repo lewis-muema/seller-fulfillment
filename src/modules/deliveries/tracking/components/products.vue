@@ -17,7 +17,8 @@
         @click="
           setOverlayStatus({
             overlay: true,
-            popup: 'noEditsProducts',
+            popup: 'noEdits',
+            popText: this.cantEditProducts,
           })
         "
         v-else
@@ -57,11 +58,14 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       viewProducts: false,
+      cantEditProducts: this.$t("deliveries.cantEditProducts"),
     };
   },
   computed: {
@@ -70,6 +74,7 @@ export default {
       "getProducts",
       "getOrderTrackingData",
       "getParent",
+      "getStorageUserDetails",
     ]),
     checkEdits() {
       return (
@@ -96,6 +101,14 @@ export default {
     nagivateRoute(route) {
       if (this.getParent === "sendy") {
         this.$router.push(route);
+        this.sendSegmentEvents({
+          event: "clicked_edit_order_products",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            clientType: "web",
+            device: "desktop",
+          },
+        });
       }
     },
     formatProducts(products) {
@@ -162,6 +175,9 @@ export default {
   font-size: 20px;
   width: 60%;
   font-weight: 500;
+}
+.view-products-label-recepient-info {
+  font-size: 16px !important;
 }
 .view-products-close {
   font-size: 20px;

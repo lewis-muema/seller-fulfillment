@@ -90,9 +90,40 @@
                 <div
                   class="col-11 cross-docking-checkout-text-grey cross-docking-checkout-text-override"
                 >
-                  <div>
-                    <p class="mb-2">{{ $t("inventory.deliveryDate") }}</p>
-                    <p>{{ $t("inventory.nextDay") }}</p>
+                  <div class="checkout-delivery-date-container">
+                    <div class="d-flex mb-2">
+                      <div>
+                        {{ $t("inventory.deliveryDate") }}
+                      </div>
+                      <div
+                        class="cross-docking-checkout-chevrons"
+                        @click="
+                          setOverlayStatus({
+                            overlay: true,
+                            popup: 'ConsignmentReturnOption',
+                          })
+                        "
+                      >
+                        <span class="cross-docking-checkout-chevrons-text">{{
+                          $t("inventory.change")
+                        }}</span>
+                        <i class="mdi mdi-chevron-right"></i>
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <div>
+                        {{
+                          $t(
+                            `inventory.${getConsignmentReturn?.deliveryDate?.type}_DELIVERY`
+                          )
+                        }}
+                      </div>
+                      <div>
+                        {{
+                          formatDate(getConsignmentReturn?.deliveryDate?.date)
+                        }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -123,6 +154,7 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import moment from "moment";
 import eventsMixin from "../../../mixins/events_mixin";
 import productsSummary from "./components/productsSummary.vue";
 
@@ -171,6 +203,7 @@ export default {
       "getPickUpInfoCD",
       "getBusinessDetails",
       "getDeliveryInfo",
+      "getConsignmentReturn",
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
@@ -240,8 +273,12 @@ export default {
       "setPickUpInfoCD",
       "setPickUpOptions",
       "setComponent",
+      "setConsignmentReturn",
     ]),
     ...mapActions(["requestAxiosPost"]),
+    formatDate(date) {
+      return moment(date).format("dddd, Do MMMM");
+    },
     addProductStep(val) {
       this.setProductStep(val);
     },
@@ -349,5 +386,8 @@ export default {
 }
 .checkout-back-button-override {
   margin-left: -5px;
+}
+.checkout-delivery-date-container {
+  width: -webkit-fill-available;
 }
 </style>

@@ -285,6 +285,7 @@
   "toViewDeliveryOptions": "To view delivery options, select the products to send and fill in the delivery info",
   "scheduleDelivery": "Schedule delivery",
   "schedulePickup": "Schedule pickup",
+  "scheduleConsignmentReturn": "Schedule consignment return",
   "pleaseMakeSureTheDeliveryDateIsAfter": "Please make sure the delivery date is after {Date}",
   "pleaseSelectSomeProductsToProceed": "Please select some products to proceed",
   "review": "Review",

@@ -91,17 +91,19 @@
                     </div>
                   </td>
                   <td style="width: 250px">
-                    <div class="crossdocking-product-quantity-label">
+                    <div
+                      class="crossdocking-product-quantity-label hidden-unsellable-stock"
+                    >
                       <el-input-number
                         class="crossdocking-product-counter"
-                        v-model="selectedProduct.quantity"
+                        v-model="selectedProduct.damaged"
                         :min="0"
-                        @change="addQuantity(index, selectedProduct.quantity)"
+                        @change="addQuantity(index, selectedProduct.damaged)"
                         required
                       />
                       <div class="available-units-text">
                         {{
-                          $t("inventory.unitsAvailable", {
+                          $t("inventory.unitsDamaged", {
                             Count: selectedProduct.selectedOption
                               ? selectedProduct.selectedOption
                                   .product_variant_stock_levels.available
@@ -116,14 +118,14 @@
                     <div class="crossdocking-product-quantity-label">
                       <el-input-number
                         class="crossdocking-product-counter"
-                        v-model="selectedProduct.damaged"
+                        v-model="selectedProduct.quantity"
                         :min="0"
-                        @change="addQuantity(index, selectedProduct.damaged)"
+                        @change="addQuantity(index, selectedProduct.quantity)"
                         required
                       />
                       <div class="available-units-text">
                         {{
-                          $t("inventory.unitsDamaged", {
+                          $t("inventory.unitsAvailable", {
                             Count: selectedProduct.selectedOption
                               ? selectedProduct.selectedOption
                                   .product_variant_stock_levels.available
@@ -192,10 +194,10 @@ export default {
           title: "inventory.product",
         },
         {
-          title: "inventory.availableStock",
+          title: "inventory.unsellableStock",
         },
         {
-          title: "inventory.unsellableStock",
+          title: "inventory.availableStock",
         },
       ],
     };

@@ -90,6 +90,35 @@
                       <span>{{ option.product_variant_description }}</span>
                     </div>
                     <div class="col-4">
+                      <div class="available-units-row hidden-unsellable-stock">
+                        <el-input-number
+                          class="crossdocking-product-counter"
+                          v-model="option.damaged"
+                          :min="0"
+                          placeholder="0"
+                          @change="
+                            addCount(
+                              'damaged',
+                              option.damaged,
+                              item,
+                              i,
+                              option,
+                              x
+                            )
+                          "
+                          :disabled="disabledVariantStatus(option)"
+                        />
+                        <div class="available-units-text">
+                          {{
+                            $t("inventory.unitsDamaged", {
+                              Count:
+                                option.product_variant_stock_levels.available,
+                            })
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4">
                       <div class="available-units-row">
                         <el-input-number
                           class="crossdocking-product-counter"
@@ -111,35 +140,6 @@
                         <div class="available-units-text">
                           {{
                             $t("inventory.unitsAvailable", {
-                              Count:
-                                option.product_variant_stock_levels.available,
-                            })
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="available-units-row">
-                        <el-input-number
-                          class="crossdocking-product-counter"
-                          v-model="option.damaged"
-                          :min="0"
-                          placeholder="0"
-                          @change="
-                            addCount(
-                              'damaged',
-                              option.damaged,
-                              item,
-                              i,
-                              option,
-                              x
-                            )
-                          "
-                          :disabled="disabledVariantStatus(option)"
-                        />
-                        <div class="available-units-text">
-                          {{
-                            $t("inventory.unitsDamaged", {
                               Count:
                                 option.product_variant_stock_levels.available,
                             })
@@ -187,18 +187,18 @@
                 </span>
               </div>
               <div class="col-4">
-                <div class="available-units-row">
+                <div class="available-units-row hidden-unsellable-stock">
                   <el-input-number
                     class="crossdocking-product-counter"
-                    v-model="item.quantity"
+                    v-model="item.damaged"
                     :min="0"
                     placeholder="0"
-                    @change="addCount('quantity', item.quantity, item, i)"
+                    @change="addCount('damaged', item.damaged, item, i)"
                     :disabled="disabledStatus(item)"
                   />
                   <div class="available-units-text">
                     {{
-                      $t("inventory.unitsAvailable", {
+                      $t("inventory.unitsDamaged", {
                         Count:
                           item.product_variants[0].product_variant_stock_levels
                             .available,
@@ -211,15 +211,15 @@
                 <div class="available-units-row mr-0">
                   <el-input-number
                     class="crossdocking-product-counter"
-                    v-model="item.damaged"
+                    v-model="item.quantity"
                     :min="0"
                     placeholder="0"
-                    @change="addCount('damaged', item.damaged, item, i)"
+                    @change="addCount('quantity', item.quantity, item, i)"
                     :disabled="disabledStatus(item)"
                   />
                   <div class="available-units-text">
                     {{
-                      $t("inventory.unitsDamaged", {
+                      $t("inventory.unitsAvailable", {
                         Count:
                           item.product_variants[0].product_variant_stock_levels
                             .available,

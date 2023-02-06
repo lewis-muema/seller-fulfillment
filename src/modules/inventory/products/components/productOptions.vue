@@ -1,138 +1,156 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="show">
-      <v-card class="popup-card">
-        <v-card-title>
-          {{ $t("inventory.addProductOption") }}
-          <span class="add-products-options-close" @click="$emit('close')"
-            ><i class="mdi mdi-close"></i
-          ></span>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="6">
-              <div class="mb-2">
-                <label for="productName" class="form-label">{{
-                  $t("inventory.nameOfOption")
-                }}</label>
-                <div>
-                  <input
-                    v-model="productOption.product_variant_description"
-                    type="text"
-                    class="form-control"
-                    :placeholder="$t('inventory.eg')"
-                  />
-                </div>
-              </div>
-
-              <div class="row mb-2">
-                <label for="price" class="form-label">{{
-                  $t("inventory.price")
-                }}</label>
-                <div class="">
-                  <v-text-field
-                    class="businessProfile-field add-product-variant-price"
-                    id="update-price"
-                    v-model="productOption.product_variant_unit_price"
-                    :label="productOption.product_variant_currency"
-                    variant="outlined"
-                    :prefix="productOption.product_variant_currency"
-                    clearable
-                    clear-icon="mdi-close"
-                  ></v-text-field>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <label for="upc" class="form-label">{{
-                  $t("inventory.upcCode")
-                }}</label>
-                <div class="">
-                  <v-text-field
-                    class="businessProfile-field add-product-variant-price"
-                    v-model="productOption.universal_product_code"
-                    variant="outlined"
-                    clearable
-                    clear-icon="mdi-close"
-                  ></v-text-field>
-                </div>
-              </div>
-              <div class="row mb-5">
-                <label for="price" class="form-label">
-                  {{ $t("inventory.weight") }}
-                </label>
-                <div class="col-7">
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="0"
-                    v-model="productOption.product_variant_quantity"
-                  />
-                </div>
-                <div class="col-5">
-                  <v-select
-                    class="edit-product-weight-field"
-                    :items="dimensions"
-                    v-model="productOption.product_variant_quantity_type"
-                    item-text
-                    outlined
-                  ></v-select>
-                </div>
-              </div>
-              <div v-if="action === 'add'">
-                <div class="d-grid">
-                  <button
-                    class="btn btn-primary mb-3"
-                    @click="addProductOption()"
-                  >
-                    {{ $t("inventory.saveProductOption") }}
-                  </button>
-                </div>
-                <p
-                  @click="saveAndAddProductOption()"
-                  class="text-center mb-5 add-another-option"
-                >
-                  {{ $t("inventory.saveAnother") }}
-                </p>
-              </div>
-              <div v-else>
-                <div class="d-grid">
-                  <button
-                    class="btn btn-primary mb-3"
-                    @click="saveProductOption()"
-                  >
-                    {{ $t("inventory.saveProduct") }}
-                  </button>
-                </div>
-              </div>
-            </v-col>
-            <v-col cols="6">
-              <div
-                class="product-option-img"
-                @click="pickImg()"
-                v-loading="productUploadStatus"
-              >
+    <v-overlay v-model="show" class="align-center justify-center">
+      <div class="options-products-container">
+        <div class="view-products-section">
+          <p class="view-products-label">
+            {{ $t("inventory.addProductOption") }}
+          </p>
+          <i
+            @click="$emit('close')"
+            class="mdi mdi-close view-products-close"
+          ></i>
+        </div>
+        <v-row>
+          <v-col cols="6">
+            <div class="mb-2">
+              <label for="productName" class="form-label">{{
+                $t("inventory.nameOfOption")
+              }}</label>
+              <div>
                 <input
-                  type="file"
-                  name
-                  value
+                  v-model="productOption.product_variant_description"
+                  type="text"
                   class="form-control"
-                  placeholder="Upload"
-                  accept="image/*"
-                  id="upload-img-card"
-                  style="display: none"
-                  @change="uploadImg('upload-img-card', 'option')"
+                  :placeholder="$t('inventory.eg')"
                 />
-                <img class="upload-img" v-if="image" :src="image" alt="" />
-                <span v-else class="upload">
-                  <i class="mdi mdi-upload" aria-hidden="true"></i>
-                  {{ $t("inventory.upload") }}
-                </span>
               </div>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+            </div>
+
+            <div class="row mb-2">
+              <label for="price" class="form-label">{{
+                $t("inventory.price")
+              }}</label>
+              <div class="">
+                <v-text-field
+                  class="businessProfile-field add-product-variant-price"
+                  id="update-price"
+                  v-model="productOption.product_variant_unit_price"
+                  :label="productOption.product_variant_currency"
+                  variant="outlined"
+                  :prefix="productOption.product_variant_currency"
+                  clearable
+                  clear-icon="mdi-close"
+                ></v-text-field>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <label for="upc" class="form-label">{{
+                $t("inventory.upcCode")
+              }}</label>
+              <div class="">
+                <v-text-field
+                  class="businessProfile-field add-product-variant-price"
+                  v-model="productOption.universal_product_code"
+                  variant="outlined"
+                  clearable
+                  clear-icon="mdi-close"
+                ></v-text-field>
+              </div>
+            </div>
+            <div class="row">
+              <label for="price" class="form-label">
+                {{ $t("inventory.weight") }}
+              </label>
+              <div class="col-7">
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="0"
+                  v-model="productOption.product_variant_quantity"
+                />
+              </div>
+              <div class="col-5">
+                <v-select
+                  class="edit-product-weight-field"
+                  :items="dimensions"
+                  v-model="productOption.product_variant_quantity_type"
+                  item-text
+                  outlined
+                ></v-select>
+              </div>
+            </div>
+            <div>
+              <div class="">
+                <label for="upc" class="form-label">
+                  {{ $t("inventory.getNotifiedOptional") }}
+                </label>
+                <div class="">
+                  <v-text-field
+                    v-model="productOption.low_stock_threshold"
+                    label="0"
+                    suffix="units"
+                    variant="outlined"
+                    clearable
+                    clear-icon="mdi-close"
+                  ></v-text-field>
+                </div>
+              </div>
+            </div>
+            <div v-if="action === 'add'">
+              <div class="d-grid">
+                <button
+                  class="btn btn-primary mb-3"
+                  @click="addProductOption()"
+                >
+                  {{ $t("inventory.saveProductOption") }}
+                </button>
+              </div>
+              <p
+                @click="saveAndAddProductOption()"
+                class="text-center mb-5 add-another-option"
+              >
+                {{ $t("inventory.saveAnother") }}
+              </p>
+            </div>
+            <div v-else>
+              <div class="d-grid">
+                <button
+                  class="btn btn-primary mb-3"
+                  @click="saveProductOption()"
+                >
+                  {{ $t("inventory.saveProduct") }}
+                </button>
+              </div>
+            </div>
+          </v-col>
+          <v-col cols="6">
+            <div
+              class="product-option-img"
+              @click="pickImg()"
+              v-loading="productUploadStatus"
+            >
+              <input
+                type="file"
+                name
+                value
+                class="form-control"
+                placeholder="Upload"
+                accept="image/*"
+                id="upload-img-card"
+                style="display: none"
+                @change="uploadImg('upload-img-card', 'option')"
+              />
+              <img class="upload-img" v-if="image" :src="image" alt="" />
+              <span v-else class="upload">
+                <i class="mdi mdi-upload" aria-hidden="true"></i>
+                {{ $t("inventory.upload") }}
+              </span>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
+    </v-overlay>
   </div>
 </template>
 
@@ -159,6 +177,7 @@ export default {
         product_variant_stock_levels: {},
         product_variant_unit_price: "",
         universal_product_code: "",
+        low_stock_threshold: "",
       },
       dimensions: [
         {
@@ -302,6 +321,7 @@ export default {
         product_variant_stock_levels: {},
         product_variant_unit_price: "",
         universal_product_code: "",
+        low_stock_threshold: "",
       };
     },
     pickImg() {
@@ -327,6 +347,15 @@ export default {
   color: #324ba8;
   cursor: pointer;
   font-size: 14px;
+}
+.options-products-container {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  width: 800px;
+  border-radius: 5px;
+  font-family: "DM Sans";
 }
 .product-option-img {
   height: 200px;

@@ -11,6 +11,7 @@
   "availableBalance": "Available balance",
   "completedConsignments": "Envois terminés",
   "completedOrders": "Commandes livrées",
+  "lowStockItems": "Low stock items",
   "completedPickups": "Collectes complétées",
   "completeSteps": "Complétez les étapes ci-dessous pour traiter votre première commande.",
   "deliverToACustomer": "Livrer à un client",

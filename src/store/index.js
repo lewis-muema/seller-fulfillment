@@ -1624,6 +1624,7 @@ export default createStore({
             product_id: "P-KXG-0000",
             product_variant_description: "Item",
             product_variant_currency: "KES",
+            universal_product_code: 0,
             product_variant_unit_price: 0,
             product_variant_image_link:
               "https://images.sendyit.com/fulfilment/seller/shirts.png",

@@ -67,6 +67,7 @@
               @click="confirmOTP()"
               v-loading="loading"
               :class="loading ? 'disabled' : ''"
+              data-test="signin-with-otp"
             >
               {{ $t("auth.confirmCode") }}
             </button>

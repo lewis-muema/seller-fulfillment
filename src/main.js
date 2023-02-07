@@ -57,6 +57,10 @@ if (localStorage.userDetails && localStorage.user) {
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 loadFonts();
+if (window.Cypress) {
+  // Add `store` to the window object only when testing with Cypress
+  window.store = store;
+}
 createApp(App)
   .use(router)
   .use(store)

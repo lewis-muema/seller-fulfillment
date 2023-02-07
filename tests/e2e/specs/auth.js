@@ -1,3 +1,5 @@
+import { expect } from "chai";
+
 describe("Auth pages", () => {
   it("Signin Card contains the correct text", () => {
     cy.get('[data-textId="signin-card-title"]').contains("Welcome Back");
@@ -5,6 +7,7 @@ describe("Auth pages", () => {
   it.only("Allows a user to signin and input a correct otp", () => {
     cy.visit("/auth/sign-in");
     cy.authStubs();
+    cy.dashboardStubs();
     cy.getByData("signin-email-input").type("dorcas@sendyit.com");
     cy.getByData("signin-submit-button").click();
     cy.wait("@generate").then((interception) => {
@@ -18,10 +21,22 @@ describe("Auth pages", () => {
     cy.getByData("signin-with-otp").click();
     cy.wait("@sign-in").then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
-      cy.setTokens();
-      // cy.visit("/");
-      cy.url().should("include", "/");
     });
+    cy.wait("@userDetails");
+    cy.setTokens();
+    // cy.wait("@achievements");
+    // cy.wait("@business");
+    // cy.wait("@consignmentStatistics");
+    // cy.wait("@deliveries");
+    // cy.wait("@deliveriesStatistics");
+    // cy.wait("@languages");
+    // cy.wait("@notifications");
+    // cy.wait("@payments");
+    // cy.wait("@productStatistics");
+    // cy.wait("@statisticsLimit");
+    // cy.wait("@wallet");
+    // cy.visit("/");
+    cy.url().should("include", "/");
   });
   it("Does not allow invalid email address", () => {
     cy.getByData("signin-email-input").type("test");

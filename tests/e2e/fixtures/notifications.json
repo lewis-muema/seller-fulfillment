@@ -1,0 +1,39 @@
+{
+  "message": "notification.list.success",
+  "data": {
+    "notifications": [
+      {
+        "id": 1453215,
+        "title": "SENDY",
+        "message": "1 packages will be delivered to your customers today.",
+        "created_date": 1671598810000,
+        "archived": false,
+        "notification_type": "ORDER_REMINDERS",
+        "entity_type": "ORDER",
+        "entity_identifier": ""
+      },
+      {
+        "id": 1389286,
+        "title": "Payment Successful",
+        "message": "Hi Dorcas Business, You have successfully paid KES 303.2 for 1 completed deliveries.",
+        "created_date": 1669277838000,
+        "archived": false,
+        "notification_type": "PAYMENT_UPDATES",
+        "entity_type": "PAYMENT",
+        "entity_identifier": null
+      },
+      {
+        "id": 1389281,
+        "title": "Payment Successful",
+        "message": "Hi Dorcas Business, You have successfully paid KES 99 for 1 completed deliveries.",
+        "created_date": 1669277788000,
+        "archived": false,
+        "notification_type": "PAYMENT_UPDATES",
+        "entity_type": "PAYMENT",
+        "entity_identifier": null
+      }
+
+    ]
+  },
+  "errors": []
+}

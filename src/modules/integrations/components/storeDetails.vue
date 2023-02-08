@@ -68,6 +68,7 @@
 </template>
 <script>
 import integrationSetup from "./integrationSetup.vue";
+import { isValidUrl } from "@/utils/text-validation";
 
 export default {
   components: { integrationSetup },
@@ -95,7 +96,7 @@ export default {
         (v) => !!v || this.$t("merchant.storeNameRequired"),
         (v) => (v && v.length <= 20) || this.$t("merchant.characterCheck"),
       ],
-      urlRules: [(v) => !!v || this.$t("merchant.storeUrlRequired")],
+      urlRules: [(v) => isValidUrl(v) || this.$t("merchant.storeUrlRequired")],
     };
   },
   mounted() {

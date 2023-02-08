@@ -33,7 +33,7 @@
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
           <div v-if="storePlatform === 'Shopify'">
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form ref="shopify" v-model="valid" lazy-validation>
               <v-text-field
                 v-model="APIKey"
                 :label="$t('merchant.APIKey')"
@@ -66,33 +66,35 @@
                 density="compact"
               ></v-text-field>
             </v-form>
-            <v-btn class="sendy-btn-default" @click="connectShopify">
+            <v-btn class="sendy-btn-default" @click="validateForm('shopify')">
               {{ $t("merchant.continue") }}
             </v-btn>
           </div>
           <div v-else>
-            <v-text-field
-              v-model="storeKey"
-              :label="$t('merchant.storeKey')"
-              :rules="storeKeyRules"
-              required
-              density="compact"
-            ></v-text-field>
-            <v-text-field
-              v-model="bridgeUrl"
-              :label="$t('merchant.bridgeUrl')"
-              :rules="bridgeUrlRules"
-              required
-              density="compact"
-            ></v-text-field>
-            <v-text-field
-              v-model="storeRoot"
-              :label="$t('merchant.storeRoot')"
-              density="compact"
-            ></v-text-field>
-            <v-btn class="sendy-btn-default" @click="connect">
-              {{ $t("merchant.continue") }}
-            </v-btn>
+            <v-form ref="default" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="storeKey"
+                :label="$t('merchant.storeKey')"
+                :rules="storeKeyRules"
+                required
+                density="compact"
+              ></v-text-field>
+              <v-text-field
+                v-model="bridgeUrl"
+                :label="$t('merchant.bridgeUrl')"
+                :rules="bridgeUrlRules"
+                required
+                density="compact"
+              ></v-text-field>
+              <v-text-field
+                v-model="storeRoot"
+                :label="$t('merchant.storeRoot')"
+                density="compact"
+              ></v-text-field>
+              <v-btn class="sendy-btn-default" @click="validateForm('default')">
+                {{ $t("merchant.continue") }}
+              </v-btn>
+            </v-form>
           </div>
           <div class="text-center">
             <v-dialog v-model="connectDialog">
@@ -139,6 +141,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import { isValidUrl } from "@/utils/text-validation";
 
 export default {
   props: {
@@ -195,9 +198,7 @@ export default {
           `${this.$t("merchant.accessToken")}${this.$t("merchant.required")}`,
       ],
       bridgeUrlRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.bridgeUrl")}${this.$t("merchant.required")}`,
+        (v) => isValidUrl(v) || this.$t("merchant.validBridgeURL"),
       ],
       storeKeyRules: [
         (v) =>
@@ -217,12 +218,24 @@ export default {
   computed: {},
   methods: {
     ...mapActions(["connectStore"]),
-    async connectShopify() {
-      const { valid } = await this.$refs.form.validate();
+    async validateForm(formName) {
+      const { valid } = await this.$refs[formName].validate();
       if (valid) {
-        this.connectDialog = true;
-        this.connecting = true;
-        const payload = {
+        this.connect(formName);
+      }
+    },
+    async connect(strategy) {
+      this.connectDialog = true;
+      this.connecting = true;
+      const payload = {
+        default: {
+          storeUrl: this.storeUrl,
+          storeName: this.storeName,
+          cartId: this.storePlatform,
+          // bridgeUrl: this.bridgeUrl ? this.bridgeUrl : "",
+          // storeRoot: this.storeRoot ? this.storeRoot : "",
+        },
+        shopify: {
           storeUrl: this.storeUrl,
           storeName: this.storeName,
           cartId: this.storePlatform,
@@ -230,36 +243,34 @@ export default {
           shopifyApiPassword: this.APIPassword ? this.APIPassword : "",
           shopifyAccessToken: this.accessToken ? this.accessToken : "",
           shopifySharedSecret: this.secret ? this.secret : "",
-        };
-        this.saveStore(payload);
-      }
-    },
-    async connect() {
-      this.connectDialog = true;
-      this.connecting = true;
-      const payload = {
-        storeUrl: this.storeUrl,
-        storeName: this.storeName,
-        cartId: this.storePlatform,
-        // bridgeUrl: this.bridgeUrl ? this.bridgeUrl : "",
-        // storeRoot: this.storeRoot ? this.storeRoot : "",
+        },
       };
-      this.saveStore(payload);
+      this.saveStore(payload[strategy]);
     },
     async saveStore(payload) {
-      const fullPayload = {
-        app: process.env.MERCHANT_GATEWAY,
-        values: payload,
-        storeKey: this.storeKey,
-        endpoint: "api2cart/stores",
-      };
-      const data = await this.connectStore(fullPayload);
-      this.connecting = false;
-      if (data.data.data.return_code === 200) {
-        this.storeConnected = true;
-      } else {
+      try {
+        const fullPayload = {
+          app: process.env.MERCHANT_GATEWAY,
+          values: payload,
+          storeKey: this.storeKey,
+          endpoint: "api2cart/stores",
+        };
+
+        const { status, data } = await this.connectStore(fullPayload);
+        this.connecting = false;
+
+        if (status === 200 && data.data.return_code !== 109) {
+          this.storeConnected = true;
+          this.connecting = false;
+        } else {
+          this.storeConnected = false;
+          this.connecting = false;
+          throw new Error(data.data.return_message);
+        }
+      } catch (error) {
         this.storeConnected = false;
-        this.resultMessage = data.data.data.return_message;
+        this.connecting = false;
+        this.resultMessage = error;
       }
     },
   },

@@ -1,5 +1,7 @@
 import signIn from "../fixtures/signIn.json";
+import signUp from "../fixtures/signUp.json";
 import otp from "../fixtures/OTP.json";
+import completeSignup from "../fixtures/completeSignup.json";
 import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
 import achievements from "../fixtures/achievements.json";
@@ -24,7 +26,7 @@ Cypress.Commands.add("authStubs", () => {
       statusCode: 200,
       body: signIn,
     }
-  ).as("generate");
+  ).as("sign-in");
   cy.intercept(
     "POST",
     `${constants.FULFILMENT_SERVER}seller/business/signin/confirm`,
@@ -32,7 +34,32 @@ Cypress.Commands.add("authStubs", () => {
       statusCode: 200,
       body: otp,
     }
-  ).as("sign-in");
+  ).as("sign-in-OTP");
+
+  cy.intercept(
+    "POST",
+    `${constants.FULFILMENT_SERVER}/seller/business/signup`,
+    {
+      statusCode: 200,
+      body: signUp,
+    }
+  ).as("signupp");
+  cy.intercept(
+    "POST",
+    `${constants.FULFILMENT_SERVER}seller/business/signup/confirm`,
+    {
+      statusCode: 200,
+      body: otp,
+    }
+  ).as("sign-up-OTP");
+  cy.intercept(
+    "POST",
+    `${constants.FULFILMENT_SERVER}seller/business/signup/update`,
+    {
+      statusCode: 200,
+      body: completeSignup,
+    }
+  ).as("complete-signup");
   cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/user`, {
     statusCode: 200,
     body: userDetails,

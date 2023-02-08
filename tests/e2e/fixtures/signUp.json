@@ -1,5 +1,14 @@
 {
-  "businessName": "Test Business",
-  "businessEmail": "dorcas@sendyit.com",
-  "country": "KENYA"
+  "message":"business.create.success",
+  "data":{
+     "business":{
+        "business_id":"B-VMME-4158",
+        "user_id":"U-VUPZ-3796",
+        "business_name":"qwertyui",
+        "business_email":"dorcas+vsoooo@sendyit.com"
+     }
+  },
+  "errors":[
+     
+  ]
 }

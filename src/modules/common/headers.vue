@@ -388,12 +388,16 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
-      }).then((response) => {
-        if (response.status === 200) {
-          this.setNotifications(response.data.data.notifications);
-          this.notificationLoader = "";
-        }
-      });
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.setNotifications(response.data.data.notifications);
+            this.notificationLoader = "";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     archiveNotifications(notificationId) {
       this.notificationLoader = "loading-text";

@@ -139,6 +139,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import { isValidUrl } from "@/utils/text-validation";
 
 export default {
   props: {
@@ -195,9 +196,7 @@ export default {
           `${this.$t("merchant.accessToken")}${this.$t("merchant.required")}`,
       ],
       bridgeUrlRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.bridgeUrl")}${this.$t("merchant.required")}`,
+        (v) => isValidUrl(v) || this.$t("merchant.validBridgeURL"),
       ],
       storeKeyRules: [
         (v) =>
@@ -247,19 +246,29 @@ export default {
       this.saveStore(payload);
     },
     async saveStore(payload) {
-      const fullPayload = {
-        app: process.env.MERCHANT_GATEWAY,
-        values: payload,
-        storeKey: this.storeKey,
-        endpoint: "api2cart/stores",
-      };
-      const data = await this.connectStore(fullPayload);
-      this.connecting = false;
-      if (data.data.data.return_code === 200) {
-        this.storeConnected = true;
-      } else {
+      try {
+        const fullPayload = {
+          app: process.env.MERCHANT_GATEWAY,
+          values: payload,
+          storeKey: this.storeKey,
+          endpoint: "api2cart/stores",
+        };
+
+        const { status, data } = await this.connectStore(fullPayload);
+        this.connecting = false;
+
+        if (status === 200 && data.data.return_code !== 109) {
+          this.storeConnected = true;
+          this.connecting = false;
+        } else {
+          this.storeConnected = false;
+          this.connecting = false;
+          throw new Error(data.data.return_message);
+        }
+      } catch (error) {
         this.storeConnected = false;
-        this.resultMessage = data.data.data.return_message;
+        this.connecting = false;
+        this.resultMessage = error;
       }
     },
   },

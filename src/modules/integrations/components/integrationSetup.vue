@@ -66,10 +66,7 @@
                 density="compact"
               ></v-text-field>
             </v-form>
-            <v-btn
-              class="sendy-btn-default"
-              @click="validateForm('shopify', connectShopify)"
-            >
+            <v-btn class="sendy-btn-default" @click="validateForm('shopify')">
               {{ $t("merchant.continue") }}
             </v-btn>
           </div>
@@ -94,10 +91,7 @@
                 :label="$t('merchant.storeRoot')"
                 density="compact"
               ></v-text-field>
-              <v-btn
-                class="sendy-btn-default"
-                @click="validateForm('default', connect)"
-              >
+              <v-btn class="sendy-btn-default" @click="validateForm('default')">
                 {{ $t("merchant.continue") }}
               </v-btn>
             </v-form>

@@ -151,6 +151,7 @@
   "yourProductsHaveBeenReceivedAtTheFulfilmentCentre": "Vos produits ont été reçus au centre de traitement des commandes.",
   "apartmentName": "Apartment/floor/office number",
   "enterRecipientDetails": "Enter the recipient details",
+  "pendingReasons": "(The collection is pending because payment was made in cash on delivery. We will notify you once we’ve credited the funds to your account.)",
   "enterBusinessDetails": "Enter the business details",
   "recipientName": "Name of the recipient",
   "businessName": "Name of the business",

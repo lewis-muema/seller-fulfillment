@@ -834,7 +834,7 @@ export default {
 .product-select-height-override {
   height: 80px !important;
 }
-/* .hidden-unsellable-stock {
+.hidden-unsellable-stock {
   display: none !important;
-} */
+}
 </style>

@@ -42,14 +42,20 @@ pipeline {
                 arbitraryFileCache(path: '/root/.cache/Cypress,.npm',compressionMethod: 'NONE')
                 ]) {
                     sh '''
+                         npm install istanbul
                          npm ci --prefer-offline
                          npx cypress cache path
                          npx cypress cache list
                          npm run test
                     '''
-                }               
+                }  
+            post {
+              always {
+                 step([$class: 'CoberturaPublisher', coberturaReportFile: 'cobertura-coverage.xml'])}
+              }             
             }
         }
+           
 
         stage('Docker Deploy Staging') {
              when {

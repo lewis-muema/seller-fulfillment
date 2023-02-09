@@ -194,7 +194,7 @@ export default {
           title: "inventory.product",
         },
         {
-          title: "inventory.unsellableStock",
+          title: "",
         },
         {
           title: "inventory.availableStock",

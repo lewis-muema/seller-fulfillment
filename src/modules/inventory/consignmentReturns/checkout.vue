@@ -58,6 +58,8 @@
                       <p>{{ $t("deliveries.deliveryInfo") }}</p>
                       <div class="delivery-details-text">
                         <p>{{ getDeliveryInfo.location }}</p>
+                        <p>{{ getDeliveryInfo.phone }}</p>
+                        <p>{{ getDeliveryInfo.secondary_phone_number }}</p>
                         <p>{{ getDeliveryInfo.apartmentName }}</p>
                         <p>{{ getDeliveryInfo.instructions }}</p>
                       </div>
@@ -233,15 +235,19 @@ export default {
         products,
         destination: {
           name: this.getBusinessDetails.business_name,
-          phone_number: this.getPickUpInfoCD.phone,
-          secondary_phone_number: this.getPickUpInfoCD.secondary_phone_number,
+          phone_number: this.getConsignmentReturn?.deliveryDetails?.phone,
+          secondary_phone_number:
+            this.getConsignmentReturn?.deliveryDetails?.secondary_phone_number,
           delivery_location: {
-            description: this.getPickUpInfoCD.location,
-            longitude: this.getPickUpInfoCD.place.geometry.location.lng(),
-            latitude: this.getPickUpInfoCD.place.geometry.location.lat(),
+            description: this.getConsignmentReturn?.deliveryDetails?.location,
+            longitude:
+              this.getConsignmentReturn?.deliveryDetails?.place.geometry.location.lng(),
+            latitude:
+              this.getConsignmentReturn?.deliveryDetails?.place.geometry.location.lat(),
           },
           house_location: "",
-          delivery_instructions: this.getPickUpInfoCD.instructions,
+          delivery_instructions:
+            this.getConsignmentReturn?.deliveryDetails?.instructions,
         },
       };
       return payload;
@@ -288,8 +294,8 @@ export default {
     },
     createConsignment() {
       if (
-        this.getPickUpInfoCD.location &&
-        this.getPickUpInfoCD.phone &&
+        this.getConsignmentReturn?.deliveryDetails?.location &&
+        this.getConsignmentReturn?.deliveryDetails?.phone &&
         this.getSelectedProducts.length
       ) {
         this.buttonLoader = true;
@@ -301,22 +307,17 @@ export default {
           this.buttonLoader = false;
           if (response.status === 200) {
             ElNotification({
-              title: this.$t("inventory.consignmentCreatedSuccessfully"),
+              title: this.$t("inventory.consignmentReturnCreatedSuccessfully"),
               message: "",
               type: "success",
             });
-            this.setPickUpInfoCD({});
-            this.setSelectedProducts([]);
-            this.sendSegmentEvents({
-              event: "Send_Products_To_Sendy",
-              data: {
-                userId: this.getStorageUserDetails.business_id,
-                SKU: this.getSelectedProducts,
-                pickUpRegion: this.getPickUpInfoCD.place,
-                clientType: "web",
-                device: "desktop",
+            this.setConsignmentReturn({
+              deliveryDate: {
+                date: new Date().setDate(new Date().getDate() + 1).valueOf(),
+                type: "SENDY_NEXT_DAY",
               },
             });
+            this.setSelectedProducts([]);
             window.gtag("event", "purchase", {
               transaction_id: response.data.data.order_id,
               items: [
@@ -335,7 +336,7 @@ export default {
             }
           } else {
             ElNotification({
-              title: this.$t("inventory.consignmentCreationFailed"),
+              title: this.$t("inventory.consignmentReturnCreationFailed"),
               message: "",
               type: "error",
             });

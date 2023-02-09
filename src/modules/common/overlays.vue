@@ -2131,6 +2131,53 @@
       >
         {{ $t("inventory.locationIsRequired") }}
       </div>
+      <label for="phone-number" class="edit-info-label">
+        {{ $t("deliveries.phoneNumber") }}
+      </label>
+      <vue-tel-input
+        class="invite-phone"
+        id="phone-number"
+        v-model="phone"
+        mode="international"
+        v-bind="getSendyPhoneProps"
+      ></vue-tel-input>
+      <div
+        v-if="v$.phone.$error"
+        class="error-msg withdraw-transaction-error mt-0 mb-2"
+      >
+        {{ $t("inventory.phoneIsRequired") }}
+      </div>
+      <label
+        for="phone-number"
+        v-if="secondaryPhoneStatus"
+        class="edit-info-label"
+      >
+        {{ $t("deliveries.phoneNumber") }}
+      </label>
+      <vue-tel-input
+        v-bind="getSendyPhoneProps"
+        v-if="secondaryPhoneStatus"
+        class="invite-phone"
+        id="phone-number"
+        v-model="secPhone"
+        mode="international"
+      ></vue-tel-input>
+      <div
+        class="add-phone-number mb-4"
+        v-if="!secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-plus</v-icon>
+        {{ $t("inventory.addAnotherPhoneNo") }}
+      </div>
+      <div
+        class="add-phone-number mb-4"
+        v-if="secondaryPhoneStatus"
+        @click="secondaryPhoneStatus = !secondaryPhoneStatus"
+      >
+        <v-icon class="add-phone-number-icon">mdi mdi-minus</v-icon>
+        {{ $t("deliveries.removePhoneNumber") }}
+      </div>
       <label for="apartment-name" class="edit-info-label">
         {{ $t("deliveries.apartmentName") }}
       </label>
@@ -2157,7 +2204,7 @@
       <div @click="validateFields()">
         <v-btn
           class="edit-info-submit-button"
-          :disabled="!isDeliveryFieldsValid"
+          :disabled="!isConsignmentReturnFieldsValid"
           v-loading="buttonLoader"
           @click="submitConsignmentReturn()"
         >
@@ -2286,6 +2333,7 @@ export default {
       deliveryFeeCollection: { required },
       PDF: { required },
       documentType: { required },
+      phone: { required },
     };
   },
   watch: {
@@ -2390,6 +2438,9 @@ export default {
     },
     isDeliveryFieldsValid() {
       return this.location.length;
+    },
+    isConsignmentReturnFieldsValid() {
+      return this.location.length && this.phone.length;
     },
     isRecipientFieldsValid() {
       return this.customerName.length && this.phone.length;
@@ -2892,6 +2943,8 @@ export default {
         apartmentName: this.apartmentName,
         instructions: this.instructions,
         place: this.locationData,
+        phone: this.phone,
+        secondary_phone_number: this.secPhone,
       };
       this.getConsignmentReturn.deliveryDetails = deliveryDetails;
       this.setDeliveryInfo(deliveryDetails);
@@ -3262,6 +3315,13 @@ export default {
         this.instructions = this.getConsignmentReturn?.deliveryDetails
           ?.instructions
           ? this.getConsignmentReturn?.deliveryDetails?.instructions
+          : "";
+        this.phone = this.getConsignmentReturn?.deliveryDetails?.phone
+          ? this.getConsignmentReturn?.deliveryDetails?.phone
+          : "";
+        this.secPhone = this.getConsignmentReturn?.deliveryDetails
+          ?.secondary_phone_number
+          ? this.getConsignmentReturn?.deliveryDetails?.secondary_phone_number
           : "";
       } else if (val.popup === "deliveryInfoCrossdock") {
         this.location =

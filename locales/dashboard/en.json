@@ -42,5 +42,6 @@
     "weWillPackAndDeliverYourPackageWithin24hrs": "We will pack and deliver your package within 24hrs",
     "storefront": "Storefront",
     "fulfillmentApp": "Fulfillment App",
-    "failedOrders": "Failed Orders"
+    "failedOrders": "Failed Orders",
+    "failedAttempts": "Failed Attempts"
 }

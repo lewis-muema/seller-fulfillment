@@ -1,0 +1,18 @@
+{
+  "message": "list.geo.fence.success",
+  "data": {
+    "geo_fences": [
+      {
+        "geo_fence_description": "Nairobi Metropolitan",
+        "geo_fence_type": "RADIUS_BASED",
+        "metadata": {
+          "radius": 100.0,
+          "radius_unit_of_measure": "KILOMETER"
+        }
+      }
+    ]
+  },
+  "errors": [
+
+  ]
+}

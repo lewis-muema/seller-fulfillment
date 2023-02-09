@@ -120,6 +120,24 @@ export default createStore({
           ],
         },
       ],
+      consignmentReturnSpeed: [
+        {
+          speed_pricing_type: "SENDY_NEXT_DAY",
+          price: 0.0,
+          currency: "KES",
+          speed_pricing_upper_limit_date: new Date().setDate(
+            new Date().getDate() + 1
+          ),
+        },
+        {
+          speed_pricing_type: "SENDY_SCHEDULED",
+          price: 0.0,
+          currency: "KES",
+          speed_pricing_upper_limit_date: new Date().setDate(
+            new Date().getDate() + 1
+          ),
+        },
+      ],
       mismatchedDates: false,
       tabStatuses: {
         All: "",
@@ -1071,6 +1089,12 @@ export default createStore({
       deliveryInfo: {},
       recepientInfo: {},
       pickUpInfoCD: {},
+      consignmentReturn: {
+        deliveryDate: {
+          date: new Date().setDate(new Date().getDate() + 1).valueOf(),
+          type: "SENDY_NEXT_DAY",
+        },
+      },
       pickupInfo: {
         location: "Windsor Heights",
         phoneNumber: "+2547000000000",

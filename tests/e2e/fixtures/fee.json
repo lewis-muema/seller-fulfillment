@@ -1,0 +1,45 @@
+{
+  "message": "fee.calculate.success",
+  "data": {
+    "pricing": {
+      "pricing_pickups": [
+
+      ],
+      "pricing_deliveries": [
+        {
+          "total_product_value": 60.0,
+          "pre_adjustments_calculated_fee": 8.0,
+          "calculated_fee": 8.0,
+          "currency": "KES",
+          "order_type": "DELIVERY",
+          "promotion_session_id": null,
+          "promotion_adjustments": [
+            {
+              "adjustment_type": "COST_OF_FULFILMENT",
+              "adjustment_description": "Above KES 0.0",
+              "adjustment_subtitle": "5.0% service fee",
+              "adjustment_value": 3.0
+            },
+            {
+              "adjustment_type": "DELIVERY_FEE",
+              "adjustment_description": "Delivery Fee",
+              "adjustment_subtitle": "Delivery Fee for 2 out of 1000 items",
+              "adjustment_value": 5.0
+            }
+          ],
+          "promotion_notifications": [
+
+          ]
+        }
+      ],
+      "pricing_subtotals": {
+        "pickup_fee": 0.0,
+        "fulfilment_fee": 8.0,
+        "total_fee": 8.0
+      }
+    }
+  },
+  "errors": [
+
+  ]
+}

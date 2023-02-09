@@ -67,7 +67,7 @@ export default {
         {
           icon: "mdi-message-alert",
           count: 0,
-          orderStatus: "dashboard.failedOrders",
+          orderStatus: "dashboard.failedAttempts",
           link: `/deliveries/customer/Failed`,
           color: "#9b101c",
         },

@@ -1880,6 +1880,66 @@
       </div>
     </div>
     <div
+      v-if="popup === 'ConsignmentReturnOption'"
+      class="view-products-container"
+    >
+      <div class="timeline-failed-attempt-section">
+        <i
+          @click="overlayStatusSet(false, 'ConsignmentReturnOption')"
+          class="mdi mdi-close timeline-failed-attempt-close"
+        ></i>
+      </div>
+      <div>
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.selectThePickupOption") }}
+        </p>
+        <el-radio-group
+          v-model="consignmentReturnsOption"
+          class="delivery-option-crossdock-radio-group"
+        >
+          <div
+            class="delivery-option-crossdock-radio padding-override"
+            v-for="(speed, i) in getConsignmentReturnSpeed"
+            :key="i"
+          >
+            <el-radio
+              :label="i"
+              size="large"
+              class="delivery-option-crossdock-radio-group"
+            >
+              <div class="font-override recepient-info-label">
+                <div class="delivery-option-crossdock-radio-group">
+                  <span>
+                    {{ $t(`inventory.${speed.speed_pricing_type}_DELIVERY`) }}
+                  </span>
+                  <span class="delivery-option-crossdock-radio-right">
+                    {{ speed.currency }} {{ speed.price }}
+                  </span>
+                </div>
+                <div class="delivery-option-crossdock-radio-group-bottom">
+                  <span>
+                    {{
+                      speed.speed_pricing_type === "SENDY_SCHEDULED"
+                        ? $t("inventory.selectADateOfYourChoice")
+                        : formatDate(speed.speed_pricing_upper_limit_date)
+                    }}
+                  </span>
+                </div>
+              </div>
+            </el-radio>
+          </div>
+        </el-radio-group>
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isConsignmentReturnsOptionValid"
+          v-loading="buttonLoader"
+          @click="submitConsigmentReturnOption()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
+    <div
       v-if="popup === 'deliveryOptionNotice'"
       class="view-products-container"
     >
@@ -2009,6 +2069,102 @@
         {{ $t("deliveries.submit") }}
       </v-btn>
     </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'rescheduleConsignmentReturn'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.scheduleConsignmentReturn") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'rescheduleConsignmentReturn')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(Date.now() - 1000 * 60 * 60 * 24 * 0),
+          from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        }"
+        v-model="consignmentReturnDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        :disabled="!isScheduledConsignmentReturnDateValid"
+        v-loading="buttonLoader"
+        @click="showRescheduleConsignment()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
+    <div
+      v-if="popup === 'consignmentReturndeliveryInfo'"
+      class="view-products-container"
+    >
+      <div class="view-products-section">
+        <p class="view-products-label">
+          {{ $t("deliveries.deliveryInfo") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'consignmentReturndeliveryInfo')"
+          class="mdi mdi-close view-products-close"
+        ></i>
+      </div>
+      <label for="location" class="edit-info-label">
+        {{ $t("inventory.locationOfCustomer") }} {{ $t("inventory.required") }}
+      </label>
+      <GMapAutocomplete
+        id="location"
+        class="businessProfile-address"
+        :value="location"
+        :options="getMapOptions"
+        :placeholder="$t('settings.searchLocation')"
+        @place_changed="setLocation"
+      >
+      </GMapAutocomplete>
+      <div
+        v-if="v$.location.$error"
+        class="error-msg withdraw-transaction-error"
+      >
+        {{ $t("inventory.locationIsRequired") }}
+      </div>
+      <label for="apartment-name" class="edit-info-label">
+        {{ $t("deliveries.apartmentName") }}
+      </label>
+      <v-text-field
+        class="businessProfile-field crossdocking-input-fields-v-text"
+        id="customer-name"
+        v-model="apartmentName"
+        variant="outlined"
+        clearable
+        clear-icon="mdi-close"
+      ></v-text-field>
+      <label for="instructions" class="edit-info-label">
+        {{ $t("inventory.deliveryInstructions") }}
+      </label>
+      <textarea
+        name=""
+        :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
+        class="edit-info-instructions"
+        v-model="instructions"
+        id="instructions"
+        cols="30"
+        rows="5"
+      ></textarea>
+      <div @click="validateFields()">
+        <v-btn
+          class="edit-info-submit-button"
+          :disabled="!isDeliveryFieldsValid"
+          v-loading="buttonLoader"
+          @click="submitConsignmentReturn()"
+        >
+          {{ $t("inventory.done") }}
+        </v-btn>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -2119,6 +2275,8 @@ export default {
       misMatchedDatesError: "",
       deliveryDate: new Date(),
       pickUpDate: new Date(),
+      consignmentReturnDate: new Date(),
+      consignmentReturnsOption: "",
     };
   },
   validations() {
@@ -2191,6 +2349,9 @@ export default {
       "getDeliverySpeed",
       "getMismatchedDates",
       "getGeofenceData",
+      "getDeliveryInfo",
+      "getConsignmentReturnSpeed",
+      "getConsignmentReturn",
     ]),
     partnerNotAssigned() {
       return (
@@ -2250,6 +2411,12 @@ export default {
     },
     isScheduledDeliveryDateValid() {
       return this.deliveryDate !== "";
+    },
+    isConsignmentReturnsOptionValid() {
+      return this.consignmentReturnsOption !== "";
+    },
+    isScheduledConsignmentReturnDateValid() {
+      return this.consignmentReturnDate !== "";
     },
     productPrice() {
       let price = 0;
@@ -2351,6 +2518,7 @@ export default {
       "setDeliverySpeed",
       "setFinalDocumentsToEdit",
       "setGeofenceData",
+      "setConsignmentReturn",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2459,6 +2627,30 @@ export default {
           }
         );
       }
+    },
+    submitConsigmentReturnOption() {
+      const speed =
+        this.getConsignmentReturnSpeed[this.consignmentReturnsOption];
+      const consignmentReturn = this.getConsignmentReturn;
+      consignmentReturn.deliveryDate.type = speed.speed_pricing_type;
+      consignmentReturn.deliveryDate.date =
+        speed.speed_pricing_upper_limit_date;
+      if (consignmentReturn.deliveryDate.type === "SENDY_SCHEDULED") {
+        this.consignmentReturnDate = consignmentReturn.deliveryDate.date;
+        speed.speed_pricing_upper_limit_date =
+          consignmentReturn.deliveryDate.date;
+        this.overlayStatusSet(true, "rescheduleConsignmentReturn");
+        return;
+      }
+      this.overlayStatusSet(false, "ConsignmentReturnOption");
+    },
+    showRescheduleConsignment() {
+      const speed =
+        this.getConsignmentReturnSpeed[this.consignmentReturnsOption];
+      const consignmentReturn = this.getConsignmentReturn;
+      speed.speed_pricing_upper_limit_date = this.consignmentReturnDate;
+      consignmentReturn.deliveryDate.date = this.consignmentReturnDate;
+      this.overlayStatusSet(false, "rescheduleConsignmentReturn");
     },
     showReschedulePickUpOption() {
       const pickUpInfoCD = this.getPickUpInfoCD;
@@ -2692,6 +2884,18 @@ export default {
         });
       }
       this.setDestinations(destinations);
+      this.clearInputs();
+    },
+    submitConsignmentReturn() {
+      const deliveryDetails = {
+        location: this.location,
+        apartmentName: this.apartmentName,
+        instructions: this.instructions,
+        place: this.locationData,
+      };
+      this.getConsignmentReturn.deliveryDetails = deliveryDetails;
+      this.setDeliveryInfo(deliveryDetails);
+      this.overlayStatusSet(false, "consignmentReturndeliveryInfo");
       this.clearInputs();
     },
     clearInputs() {
@@ -3044,7 +3248,22 @@ export default {
     preloadDeliveryDetails(val) {
       const index = this.getDestinationIndex;
       const destinations = this.getDestinations;
-      if (val.popup === "deliveryInfoCrossdock") {
+      if (val.popup === "consignmentReturndeliveryInfo") {
+        this.location = this.getConsignmentReturn?.deliveryDetails?.location
+          ? this.getConsignmentReturn?.deliveryDetails?.location
+          : "";
+        this.locationData = this.getConsignmentReturn?.deliveryDetails?.place
+          ? this.getConsignmentReturn?.deliveryDetails?.place
+          : "";
+        this.apartmentName = this.getConsignmentReturn?.deliveryDetails
+          ?.apartmentName
+          ? this.getConsignmentReturn?.deliveryDetails?.apartmentName
+          : "";
+        this.instructions = this.getConsignmentReturn?.deliveryDetails
+          ?.instructions
+          ? this.getConsignmentReturn?.deliveryDetails?.instructions
+          : "";
+      } else if (val.popup === "deliveryInfoCrossdock") {
         this.location =
           destinations[index] && destinations[index].delivery_info
             ? destinations[index].delivery_info.location

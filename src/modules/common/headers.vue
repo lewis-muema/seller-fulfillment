@@ -175,6 +175,11 @@ export default {
           icon: "mdi-warehouse",
           url: "/inventory/add-pickup-products",
         },
+        {
+          title: "common.inventoryBackToYou",
+          icon: "mdi-undo",
+          url: "/inventory/add-consignment-return-products",
+        },
       ],
       profile: [
         {

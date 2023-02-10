@@ -48,19 +48,7 @@ pipeline {
                          npx cypress cache list
                          npm run test
                     '''
-                }      
-                post {
-                    always {
-                    publishHTML (target: [
-                        allowMissing         : false,
-                        alwaysLinkToLastBuild: false,
-                        keepAll             : true,
-                        reportDir            : 'coverage/lcov-report',
-                        reportFiles          : 'index.html',
-                        reportName           : 'Test Report'
-                    ])
-                    }
-                }      
+                }         
             }
         }
            

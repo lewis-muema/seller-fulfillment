@@ -301,7 +301,7 @@ export default {
         this.buttonLoader = true;
         this.requestAxiosPost({
           app: process.env.FULFILMENT_SERVER,
-          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments`,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignment-returns`,
           values: this.checkoutPayload,
         }).then((response) => {
           this.buttonLoader = false;

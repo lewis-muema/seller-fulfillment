@@ -39,7 +39,7 @@ pipeline {
             } 
             steps {
                 cache(maxCacheSize: 900, caches: [
-                arbitraryFileCache(path: '/root/.cache/Cypress,.npm',compressionMethod: 'NONE')
+                arbitraryFileCache(path: '/var/lib/jenkins/caches/Cypress,.npm',compressionMethod: 'NONE')
                 ]) {
                     sh '''
                         sudo chmod -R ug+w coverage/

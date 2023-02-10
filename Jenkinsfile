@@ -49,11 +49,6 @@ pipeline {
                          npm run test
                     '''
                 }    
-                post {
-                    always {
-                        cobertura coberturaReportFile: '**/coverage/cobertura-coverage.xml'
-                    }
-                }
             }
         }
            

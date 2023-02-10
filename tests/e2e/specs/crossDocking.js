@@ -40,10 +40,9 @@ describe("Crossdocking", () => {
       .click();
     cy.get(".items-selected-container").contains("Continue with").click();
     cy.crossDockingStubs();
+    cy.crossDockingFeeStubs();
     cy.wait("@product", { timeout }).then(() => {
       cy.get(".items-selected-container").contains("Continue with").click();
-      cy.crossDockingStubs();
-      cy.crossDockingFeeStubs();
     });
     cy.wait("@fee", { timeout }).then(() => {
       cy.get(".promo-code-row")

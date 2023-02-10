@@ -43,13 +43,13 @@ describe("Crossdocking", () => {
       cy.get(".items-selected-container").contains("Continue with").click();
       cy.crossDockingStubs();
       cy.crossDockingFeeStubs();
-      cy.wait("@fee", { timeout: 30000 }).then(() => {
-        cy.get(".promo-code-row")
-          .contains("Fulfillment fees")
-          .parent()
-          .parent()
-          .contains("KES 8");
-      });
+    });
+    cy.wait("@fee", { timeout: 30000 }).then(() => {
+      cy.get(".promo-code-row")
+        .contains("Fulfillment fees")
+        .parent()
+        .parent()
+        .contains("KES 8");
     });
   });
   it.only("Checks if all forms have been filled and throws error if some are missing", () => {

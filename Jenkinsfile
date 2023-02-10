@@ -48,7 +48,12 @@ pipeline {
                          npx cypress cache list
                          npm run test
                     '''
-                }         
+                }    
+                post {
+                    always {
+                        step([$class: 'CoberturaPublisher', coberturaReportFile: '**/coverage/cobertura-coverage.xml'])
+                    }
+                }
             }
         }
            

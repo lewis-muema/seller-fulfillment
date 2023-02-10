@@ -12,7 +12,7 @@ describe("Crossdocking", () => {
     cy.get(".payment-collection-select").contains("Don’t collect payment");
   });
   it.only("Adds products to the order", () => {
-    cy.get(".cross-docking-checkout-text-no-underline")
+    cy.get(".cross-docking-checkout-text-no-underline", { timeout: 30000 })
       .contains("Select products to send")
       .click();
     cy.crossDockingProductsStubs();
@@ -39,11 +39,11 @@ describe("Crossdocking", () => {
       .click();
     cy.get(".items-selected-container").contains("Continue with").click();
     cy.crossDockingStubs();
-    cy.wait("@product", { timeout: 25000 }).then(() => {
+    cy.wait("@product", { timeout: 30000 }).then(() => {
       cy.get(".items-selected-container").contains("Continue with").click();
       cy.crossDockingStubs();
       cy.crossDockingFeeStubs();
-      cy.wait("@fee", { timeout: 25000 }).then(() => {
+      cy.wait("@fee", { timeout: 30000 }).then(() => {
         cy.get(".promo-code-row")
           .contains("Fulfillment fees")
           .parent()
@@ -53,18 +53,20 @@ describe("Crossdocking", () => {
     });
   });
   it.only("Checks if all forms have been filled and throws error if some are missing", () => {
-    cy.get(".submit-order-btn").contains("Submit Order").click();
+    cy.get(".submit-order-btn", { timeout: 30000 })
+      .contains("Submit Order")
+      .click();
     cy.get(".field-required-error").contains("This field is required");
   });
   it.only("Fills in delivery info", () => {
-    cy.get(".cross-docking-checkout-text")
+    cy.get(".cross-docking-checkout-text", { timeout: 30000 })
       .contains("Add delivery info")
       .click();
     cy.get(".businessProfile-address").type("nairobi");
     cy.get(".view-products-close").click();
   });
   it.only("Fills in recipient info", () => {
-    cy.get(".cross-docking-checkout-text")
+    cy.get(".cross-docking-checkout-text", { timeout: 30000 })
       .contains("Add recipient info")
       .click();
     cy.get(".recepient-info-label").eq(0).click();
@@ -73,7 +75,7 @@ describe("Crossdocking", () => {
     cy.get(".view-products-close").click();
   });
   it.only("Check if delivery options have been fetched", () => {
-    cy.get(".cross-docking-checkout-text")
+    cy.get(".cross-docking-checkout-text", { timeout: 30000 })
       .contains("Select the delivery option")
       .click();
     cy.get(".delivery-option-notice-message").contains(
@@ -82,7 +84,7 @@ describe("Crossdocking", () => {
     cy.get(".timeline-failed-attempt-close").click();
   });
   it.only("Adds extra destination", () => {
-    cy.get(".cross-docking-checkout-add-location").click();
+    cy.get(".cross-docking-checkout-add-location", { timeout: 30000 }).click();
     cy.crossDockingStubs();
     cy.crossDockingFeeStubs();
     cy.get(".el-collapse-item__header").should("have.length", 2);

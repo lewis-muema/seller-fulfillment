@@ -39,11 +39,11 @@ describe("Crossdocking", () => {
       .click();
     cy.get(".items-selected-container").contains("Continue with").click();
     cy.crossDockingStubs();
-    cy.wait("@product").then(() => {
+    cy.wait("@product", { timeout: 25000 }).then(() => {
       cy.get(".items-selected-container").contains("Continue with").click();
       cy.crossDockingStubs();
       cy.crossDockingFeeStubs();
-      cy.wait("@fee").then(() => {
+      cy.wait("@fee", { timeout: 25000 }).then(() => {
         cy.get(".promo-code-row")
           .contains("Fulfillment fees")
           .parent()

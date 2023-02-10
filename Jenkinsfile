@@ -51,7 +51,7 @@ pipeline {
                 }    
                 post {
                     always {
-                        cobertura coberturaReportFile: 'path-to/coverage/cobertura-coverage.xml'
+                        cobertura coberturaReportFile: '**/coverage/cobertura-coverage.xml'
                     }
                 }
             }

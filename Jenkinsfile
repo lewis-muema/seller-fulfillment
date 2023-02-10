@@ -42,7 +42,6 @@ pipeline {
                 arbitraryFileCache(path: '/var/lib/jenkins/caches/Cypress,.npm',compressionMethod: 'NONE')
                 ]) {
                     sh '''
-                        sudo chmod -R ug+w coverage/
                          npm install istanbul
                          npm ci --prefer-offline
                          npx cypress cache path

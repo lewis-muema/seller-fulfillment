@@ -1,0 +1,58 @@
+{
+  "message": "business.data.retrieve.success",
+  "data": {
+    "business": {
+      "business_id": "B-AEB-9648",
+      "business_name": "Peter Pans",
+      "business_industry": {
+        "name": "Appliances",
+        "industry_id": "IN-LUM-6392",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      "business_tax_identification_number": "WEHFJGKG1",
+      "business_default_address": {
+        "description": "Ruiru",
+        "longitude": 36.9604534,
+        "latitude": -1.14825,
+        "zone_name": null,
+        "zone_id": null
+      },
+      "business_instagram_page": "http://instagram.com/open",
+      "business_website": "http://home.com",
+      "business_facebook_page": "http://Facebook.com/peter",
+      "terms_of_service_accepted": true,
+      "country": "KENYA",
+      "country_code": "KE",
+      "company_code": "FFKE",
+      "currency": "KES",
+      "language": "en",
+      "settings": {
+        "payments_on_delivery_enabled": true,
+        "withdrawals_enabled": true,
+        "payments_enabled": true,
+        "cross_docking_enabled": true,
+        "attach_speed_policy_enabled": true,
+        "payment_methods": [
+          {
+            "payment_method": "MPESA",
+            "sendy_payment_method_id": 1
+          },
+          {
+            "payment_method": "CARD",
+            "sendy_payment_method_id": 2
+          }
+        ]
+      },
+      "sales_channels": [
+        {
+          "sales_channel_name": "Peter Pans",
+          "sales_channel_id": "SC-QGPE-9110"
+        }
+      ]
+    }
+  },
+  "errors": [
+
+  ]
+}

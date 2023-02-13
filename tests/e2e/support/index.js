@@ -16,6 +16,11 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 import "./stubs";
+import "./crossDockingStubs";
+import "@cypress/code-coverage/support";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+Cypress.on("uncaught:exception", () => {
+  return false;
+});

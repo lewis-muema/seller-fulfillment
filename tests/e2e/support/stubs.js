@@ -1,7 +1,6 @@
 import signIn from "../fixtures/signIn.json";
 import signUp from "../fixtures/signUp.json";
 import countries from "../fixtures/countries.json";
-import dateLimits from "../fixtures/dateLimits.json";
 import industries from "../fixtures/industries.json";
 import otp from "../fixtures/OTP.json";
 import completeSignup from "../fixtures/completeSignup.json";

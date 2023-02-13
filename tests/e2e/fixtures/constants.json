@@ -1,3 +1,4 @@
 {
-    "FULFILMENT_SERVER": "https://authtest.sendyit.com/fulfilment/v1/"
+    "FULFILMENT_SERVER": "https://authtest.sendyit.com/fulfilment/v1/",
+    "PAYMENT_GATEWAY": "https://authtest.sendyit.com/payment-gateway/"
 }

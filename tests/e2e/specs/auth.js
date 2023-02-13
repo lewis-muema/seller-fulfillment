@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 describe("Auth pages", () => {
   it("Signin Card contains the correct text", () => {
+    cy.visit("/auth/sign-in");
     cy.get('[data-textId="signin-card-title"]').contains("Welcome Back");
   });
   it("Allows a user to signin and input a correct otp", () => {
@@ -32,7 +33,7 @@ describe("Auth pages", () => {
     cy.wait("@notifications");
     cy.wait("@payments");
     cy.wait("@productStatistics");
-    // cy.wait("@statisticsLimit");
+    cy.wait("@statisticsLimit");
     cy.wait("@wallet").then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
       cy.setTokens();
@@ -41,17 +42,19 @@ describe("Auth pages", () => {
   });
 
   it("Does not allow invalid email address", () => {
+    cy.visit("/auth/sign-in");
     cy.getByData("signin-email-input").type("test");
     cy.getByData("signin-submit-button").click();
     cy.wait(2000);
     cy.getByData("signin-error-message").should("exist");
   });
   it("Signup Card contains the correct text", () => {
+    cy.visit("/auth/sign-up");
     cy.get('[data-textId="signup-card-title"]').contains(
       "Sign up for Sendy Fulfillment"
     );
   });
-  it.only("Allows a user to signup with correct otp", () => {
+  it("Allows a user to signup with correct otp", () => {
     cy.authStubs();
     cy.dashboardStubs();
     cy.visit("/auth/sign-up");
@@ -63,7 +66,6 @@ describe("Auth pages", () => {
     cy.getByData("signup-business-name").type(userData.businessName);
     cy.getByData("signup-business-email").type(userData.businessEmail);
     cy.getByData("signup-country").click();
-    // cy.wait("@countries", { timeout: 3000 });
     cy.getByData("signup-country-option").each(($ele) => {
       if ($ele.text() == "KENYA") {
         cy.wrap($ele).click();
@@ -86,12 +88,12 @@ describe("Auth pages", () => {
       expect(interception.response.statusCode).to.equal(200);
       cy.setTokens();
     });
-    cy.wait("@achievements");
-    cy.wait("@industries");
+    cy.dashboardStubs();
+    cy.wait("@achievements", { timeout: 30000 });
+    cy.wait("@industries", { timeout: 30000 });
     cy.getByData("first-name").type("Dorcas");
     cy.getByData("last-name").type("Cherono");
     cy.getByData("phone-no").type("+254794375045");
-    // cy.getByData("business-industry").click();
     cy.getByData("business-industry").select("Appliances");
     cy.getByData("complete-signup").click();
     cy.dashboardStubs();

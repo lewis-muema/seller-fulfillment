@@ -210,6 +210,7 @@ export default {
       "getNotifications",
       "getStorageUserDetails",
       "getMapOptions",
+      "getAccessDenied",
     ]),
     languageName() {
       let lang = "";
@@ -231,6 +232,11 @@ export default {
       });
       return notifications;
     },
+    consignmentReturnFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.consignment_returns_enabled
+        : false;
+    },
   },
   watch: {
     "$store.state.businessDetails": function businessDetails() {
@@ -238,6 +244,13 @@ export default {
         this.languageName
       }`;
       this.profile[2].actionLabel = this.$t("common.logOut");
+      if (this.consignmentReturnFlag) {
+        this.shortcuts[2] = {
+          title: "common.inventoryBackToYou",
+          icon: "mdi-undo",
+          url: "/inventory/add-consignment-return-products",
+        };
+      }
     },
     "$store.state.userDetails": function businessDetails() {
       this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;

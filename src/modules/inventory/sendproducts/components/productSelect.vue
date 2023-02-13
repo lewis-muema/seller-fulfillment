@@ -378,14 +378,15 @@ export default {
             : true)
         );
       });
+      this.productMapping();
       if (!addedProduct.length) {
         product.quantity = val;
         this.addProduct(product, i, option, z);
-        this.productMapping();
       }
       if (val === 0) {
         this.removeProduct(product, i, option, z);
       }
+      this.productMapping();
     },
     disabledStatus() {
       return this.getLoader.products !== "";

@@ -2041,8 +2041,9 @@ export default {
   align-items: flex-start !important;
 }
 .delivery-details-text > p {
-  line-height: 10px !important;
+  line-height: 20px !important;
   font-weight: 400 !important;
+  margin-bottom: 10px;
 }
 .cross-docking-checkout-text-subtitle {
   font-size: 15px;

@@ -59,6 +59,11 @@ export default {
           path: "/inventory/add-pickup-products",
         },
         {
+          icon: "mdi-undo",
+          name: "common.sendBackInventory",
+          path: "/inventory/add-consignment-return-products",
+        },
+        {
           icon: "mdi-plus-thick",
           name: "common.addProducts",
           path: "/inventory/add-product",

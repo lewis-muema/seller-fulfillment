@@ -24,5 +24,5 @@ module.exports = {
   VUE_APP_VGS_VAULT_ID: "tnt4d8qyodm",
   VUE_APP_VGS_ENVIRONMENT: "sandbox",
   EXTREME_IP_KEY: "dmmw1HciGEhld0FiG2ID",
-  MERCHANT_GATEWAY: "https://merchant-gateway-test.sendyit.com",
+  MERCHANT_GATEWAY: "https://merchant-gateway-test.sendyit.com/",
 };

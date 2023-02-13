@@ -89,12 +89,13 @@ describe("Auth pages", () => {
       cy.setTokens();
     });
     cy.dashboardStubs();
-    cy.wait("@achievements", { timeout: 30000 });
-    cy.wait("@industries", { timeout: 30000 });
+    cy.wait("@achievements");
+    cy.wait("@industries").then(() => {
+      cy.getByData("business-industry").select("Appliances");
+    });
     cy.getByData("first-name").type("Dorcas");
     cy.getByData("last-name").type("Cherono");
     cy.getByData("phone-no").type("+254794375045");
-    cy.getByData("business-industry").select("Appliances");
     cy.getByData("complete-signup").click();
     cy.dashboardStubs();
     cy.wait("@complete-signup").then((interception) => {

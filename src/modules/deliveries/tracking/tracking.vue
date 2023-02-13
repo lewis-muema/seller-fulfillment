@@ -20,7 +20,7 @@
             })
           }}
         </span>
-        <div class="tracking-options-container">
+        <div class="tracking-options-container" v-if="!hideActionButtons">
           <span
             v-for="(action, i) in deliveryActions"
             :key="i"
@@ -193,6 +193,13 @@ export default {
         }
       });
       return actions;
+    },
+    hideActionButtons() {
+      return (
+          this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+          this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+          this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
+      );
     },
   },
   mounted() {

@@ -52,27 +52,28 @@ describe("Auth pages", () => {
     );
   });
   it.only("Allows a user to signup with correct otp", () => {
+    cy.authStubs();
+    cy.dashboardStubs();
     cy.visit("/auth/sign-up");
     const userData = {
       businessName: "Test Business",
-      businessEmail: "dorcas+dcmmmm@sendyit.com",
+      businessEmail: "dorcas+12@sendyit.com",
       country: "KENYA",
     };
     cy.getByData("signup-business-name").type(userData.businessName);
     cy.getByData("signup-business-email").type(userData.businessEmail);
     cy.getByData("signup-country").click();
+    // cy.wait("@countries", { timeout: 3000 });
     cy.getByData("signup-country-option").each(($ele) => {
       if ($ele.text() == "KENYA") {
         cy.wrap($ele).click();
       }
     });
     cy.getByData("signup-submit-button").click();
-    cy.wait(100);
-    cy.wait("@signupp").then((interception) => {
+    cy.wait("@signup", { timeout: 30000 }).then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
       cy.url().should("include", "/auth/otp");
     });
-    cy.wait(2000);
     cy.location().should(function (location) {
       expect(location.pathname).to.eq("/auth/otp");
     });
@@ -85,16 +86,15 @@ describe("Auth pages", () => {
       expect(interception.response.statusCode).to.equal(200);
       cy.setTokens();
     });
+    cy.wait("@achievements");
+    cy.wait("@industries");
     cy.getByData("first-name").type("Dorcas");
     cy.getByData("last-name").type("Cherono");
     cy.getByData("phone-no").type("+254794375045");
-    cy.getByData("business-industry").click();
-    cy.getByData("business-industry-option").each(($ele) => {
-      if ($ele.text() == "Appliances") {
-        cy.wrap($ele).click();
-      }
-    });
+    // cy.getByData("business-industry").click();
+    cy.getByData("business-industry").select("Appliances");
     cy.getByData("complete-signup").click();
+    cy.dashboardStubs();
     cy.wait("@complete-signup").then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
       cy.url().should("include", "/");

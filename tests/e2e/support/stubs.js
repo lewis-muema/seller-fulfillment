@@ -1,5 +1,8 @@
 import signIn from "../fixtures/signIn.json";
 import signUp from "../fixtures/signUp.json";
+import countries from "../fixtures/countries.json";
+import dateLimits from "../fixtures/dateLimits.json";
+import industries from "../fixtures/industries.json";
 import otp from "../fixtures/OTP.json";
 import completeSignup from "../fixtures/completeSignup.json";
 import loginToken from "../fixtures/loginToken.json";
@@ -19,14 +22,10 @@ import userDetails from "../fixtures/userDetails.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("authStubs", () => {
-  cy.intercept(
-    "POST",
-    `${constants.FULFILMENT_SERVER}/seller/business/signin`,
-    {
-      statusCode: 200,
-      body: signIn,
-    }
-  ).as("sign-in");
+  cy.intercept("POST", `${constants.FULFILMENT_SERVER}seller/business/signin`, {
+    statusCode: 200,
+    body: signIn,
+  }).as("sign-in");
   cy.intercept(
     "POST",
     `${constants.FULFILMENT_SERVER}seller/business/signin/confirm`,
@@ -36,14 +35,10 @@ Cypress.Commands.add("authStubs", () => {
     }
   ).as("sign-in-OTP");
 
-  cy.intercept(
-    "POST",
-    `${constants.FULFILMENT_SERVER}/seller/business/signup`,
-    {
-      statusCode: 200,
-      body: signUp,
-    }
-  ).as("signupp");
+  cy.intercept("POST", `${constants.FULFILMENT_SERVER}seller/business/signup`, {
+    statusCode: 200,
+    body: signUp,
+  }).as("signup");
   cy.intercept(
     "POST",
     `${constants.FULFILMENT_SERVER}seller/business/signup/confirm`,
@@ -53,13 +48,21 @@ Cypress.Commands.add("authStubs", () => {
     }
   ).as("sign-up-OTP");
   cy.intercept(
-    "POST",
+    "PUT",
     `${constants.FULFILMENT_SERVER}seller/business/signup/update`,
     {
       statusCode: 200,
       body: completeSignup,
     }
   ).as("complete-signup");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/business/signup/countries`,
+    {
+      statusCode: 200,
+      body: countries,
+    }
+  ).as("countries");
   cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/user`, {
     statusCode: 200,
     body: userDetails,
@@ -74,6 +77,15 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: achievements,
     }
   ).as("achievements");
+
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/industries`,
+    {
+      statusCode: 200,
+      body: industries,
+    }
+  ).as("industries");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/business`,
@@ -90,6 +102,14 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: consignmentStatistics,
     }
   ).as("consignmentStatistics");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/statistics?lower_limit_date=*&upper_limit_date=*`,
+    {
+      statusCode: 200,
+      body: consignmentStatistics,
+    }
+  ).as("consignmentStatisticsLimit");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?max=5`,
@@ -140,7 +160,7 @@ Cypress.Commands.add("dashboardStubs", () => {
   ).as("productStatistics");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/statistics?lower_limit_date=2023-02-07&upper_limit_date=2023-02-07`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/statistics?lower_limit_date=*&upper_limit_date=*`,
     {
       statusCode: 200,
       body: statisticsLimit,

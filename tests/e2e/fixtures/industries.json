@@ -1,0 +1,50 @@
+{
+  "message": "industry.list.success",
+  "data": {
+    "industries": [
+      {
+        "name": "Appliances",
+        "industry_id": "IN-LUM-6392",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Beverage",
+        "industry_id": "IN-AOP-1494",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Fashion",
+        "industry_id": "IN-YBL-3390",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Health and Beauty",
+        "industry_id": "IN-OCW-5276",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Home",
+        "industry_id": "IN-QRG-1527",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Household Care",
+        "industry_id": "IN-CSP-4649",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      },
+      {
+        "name": "Packaged Food",
+        "industry_id": "IN-UNW-6729",
+        "country": "KENYA",
+        "fulfillment_rate": 0.13
+      }
+    ]
+  },
+  "errors": []
+}

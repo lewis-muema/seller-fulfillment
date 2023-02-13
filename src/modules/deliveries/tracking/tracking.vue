@@ -196,9 +196,9 @@ export default {
     },
     hideActionButtons() {
       return (
-          this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-          this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
-          this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
       );
     },
   },

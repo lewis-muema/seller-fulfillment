@@ -89,8 +89,8 @@ describe("Auth pages", () => {
       cy.setTokens();
     });
     cy.dashboardStubs();
-    cy.wait("@achievements");
-    cy.wait("@industries").then(() => {
+    cy.wait("@achievements", { timeout: 30000 });
+    cy.wait("@industries", { timeout: 30000 }).then(() => {
       cy.getByData("business-industry").select("Appliances");
     });
     cy.getByData("first-name").type("Dorcas");

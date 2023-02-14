@@ -64,7 +64,11 @@ pipeline {
            }
         }
 
-           
+        stage("Coverage") {
+            steps {
+                cobertura path: 'coverage/**.xml'
+            }
+        }
 
         stage('Docker Deploy Staging') {
              when {
@@ -97,12 +101,6 @@ pipeline {
                 '''                             
             }            
         
-        }
-    }
-
-    post {
-        always {
-            cobertura path: 'coverage/**.xml'
         }
     }
 }

@@ -63,6 +63,19 @@ pipeline {
               }
            }
         }
+
+        stage('Code Coverage : Cobertura') {
+            steps {
+              sh '''                  
+                npm run coverage
+                '''                             
+            }    
+            post {
+                always {
+                    step([$class: 'CoberturaPublisher', coberturaReportFile: 'coverage/cobertura-coverage.xml'])
+                }
+            }
+        }
            
 
         stage('Docker Deploy Staging') {

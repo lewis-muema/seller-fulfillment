@@ -37,5 +37,6 @@
     "congratulations": "Congratulations!",
     "success": "Your store is now integrated with Sendy.",
     "fail": "Failed",
+    "somethingWentWrong": "Something went wrong",
     "close": "Close"
 }

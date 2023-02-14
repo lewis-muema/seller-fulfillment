@@ -265,7 +265,9 @@ export default {
         } else {
           this.storeConnected = false;
           this.connecting = false;
-          throw new Error(data.data.return_message);
+          throw new Error(
+            data?.data?.return_message || this.$t("merchant.somethingWentWrong")
+          );
         }
       } catch (error) {
         this.storeConnected = false;

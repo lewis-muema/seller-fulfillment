@@ -256,7 +256,7 @@ export default {
     getOnboardingStatus() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `/seller/${this.getStorageUserDetails.business_id}/onboarding/achievements`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/onboarding/achievements`,
       }).then((response) => {
         response.data.data.achievements.account_created = true;
         this.setAchievements(response.data.data.achievements);

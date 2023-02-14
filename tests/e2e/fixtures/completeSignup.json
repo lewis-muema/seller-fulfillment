@@ -1,0 +1,18 @@
+{
+  "message":"business.user.update.success",
+  "data":{
+    "business":{
+      "business_id":"B-VMME-4158",
+      "business_industry_id":"IN-LUM-6392",
+      "terms_of_service_accepted":false
+    },
+    "user":{
+      "first_name":"Dorcas",
+      "last_name":"Cherono",
+      "phone_number":"+254 794 375045"
+    }
+  },
+  "errors":[
+
+  ]
+}

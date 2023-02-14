@@ -15,7 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import "./commands";
-import "./authStubs";
+import "./stubs";
 import "./crossDockingStubs";
 import "@cypress/code-coverage/support";
 

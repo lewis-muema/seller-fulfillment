@@ -99,17 +99,21 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
-      }).then((response) => {
-        this.setLoader({
-          type: "pendingPayment",
-          value: "",
+      })
+        .then((response) => {
+          this.setLoader({
+            type: "pendingPayment",
+            value: "",
+          });
+          if (response.status === 200) {
+            this.setActivePayment(response.data.data);
+          } else {
+            this.setActivePayment({});
+          }
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        if (response.status === 200) {
-          this.setActivePayment(response.data.data);
-        } else {
-          this.setActivePayment({});
-        }
-      });
     },
     getDeliveryStats() {
       this.setLoader({

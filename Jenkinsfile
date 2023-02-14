@@ -58,7 +58,7 @@ pipeline {
                     keepAll             : true,
                     reportDir            : 'coverage/lcov-report',
                     reportFiles          : 'index.html',
-                    reportName           : 'Coverage Report'
+                    reportName           : 'Coverage Report - HTML'
                  ]
               }
            }

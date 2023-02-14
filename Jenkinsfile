@@ -102,9 +102,7 @@ pipeline {
 
     post {
         always {
-            publishers {
-                cobertura('coverage/**.xml') {}
-            }
+            cobertura('coverage/**.xml') {}
         }
     }
 }

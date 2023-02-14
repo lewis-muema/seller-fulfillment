@@ -177,3 +177,6 @@ Cypress.Commands.add("dashboardStubs", () => {
 Cypress.Commands.add("setTokens", () => {
   cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
 });
+Cypress.Commands.add("setUserDetails", () => {
+  cy.setLocalStorage("userDetails", JSON.stringify(signIn.data));
+});

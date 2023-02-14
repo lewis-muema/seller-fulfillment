@@ -55,6 +55,7 @@ describe("Auth pages", () => {
     );
   });
   it("Allows a user to signup with correct otp", () => {
+    cy.setUserDetails();
     cy.authStubs();
     cy.dashboardStubs();
     cy.visit("/auth/sign-up");
@@ -89,8 +90,8 @@ describe("Auth pages", () => {
       cy.setTokens();
     });
     cy.dashboardStubs();
-    cy.wait("@achievements", { timeout: 30000 });
-    cy.wait("@industries", { timeout: 30000 }).then(() => {
+    cy.wait("@achievements");
+    cy.wait("@industries").then(() => {
       cy.getByData("business-industry").select("Appliances");
     });
     cy.getByData("first-name").type("Dorcas");

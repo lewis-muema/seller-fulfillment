@@ -102,7 +102,7 @@ pipeline {
 
     post {
         always {
-            cobertura coberturaReportFile: 'coverage/**.xml', enableNewApi: true, lineCoverageTargets: '80, 60, 70'
+            cobertura path: 'coverage/**.xml', enableNewApi: true, lineCoverageTargets: '80, 60, 70'
         }
     }
 }

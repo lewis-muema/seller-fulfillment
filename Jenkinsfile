@@ -64,9 +64,7 @@ pipeline {
            }
         }
 
-        stage("Code Coverage") {
-            cobertura(coberturaReportFile: 'coverage/**.xml') {}
-        }
+           
 
         stage('Docker Deploy Staging') {
              when {
@@ -99,6 +97,12 @@ pipeline {
                 '''                             
             }            
         
+        }
+    }
+
+    post {
+        always {
+            cobertura(coberturaReportFile: 'coverage/**.xml') {}
         }
     }
 }

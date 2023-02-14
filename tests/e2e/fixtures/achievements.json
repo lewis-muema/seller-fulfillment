@@ -1,0 +1,11 @@
+{
+  "message": "list.seller.achievements.success",
+  "data": {
+    "achievements": {
+      "added_at_least_one_product": true,
+      "created_at_least_one_pickup_order": true,
+      "created_at_least_one_delivery_order": true
+    }
+  },
+  "errors": []
+}

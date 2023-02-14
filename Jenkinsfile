@@ -67,26 +67,26 @@ pipeline {
 
         stage("Publish Coverage") {
             steps {
-                publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: false)]
+                publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
             }
         }
 
-        // stage('Docker Deploy Staging') {
-        //      when {
+        stage('Docker Deploy Staging') {
+             when {
                 
-        //         branch "staging"
-        //     }
-        //     steps {
-        //       sh '''                  
-        //         export IMAGE_TAG="dev_$(date +%Y-%m-%d-%H-%M)"
-        //         export IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-        //         docker build -t $IMAGE_NAME . \
-        //         --build-arg ENV="testing"
-        //         docker push $IMAGE_NAME
-        //         '''                             
-        //     }            
+                branch "staging"
+            }
+            steps {
+              sh '''                  
+                export IMAGE_TAG="dev_$(date +%Y-%m-%d-%H-%M)"
+                export IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                docker build -t $IMAGE_NAME . \
+                --build-arg ENV="testing"
+                docker push $IMAGE_NAME
+                '''                             
+            }            
         
-        // }
+        }
          stage('Docker Deploy Prod') {
              when {
                 

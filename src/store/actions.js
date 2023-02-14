@@ -139,7 +139,15 @@ export default {
 
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
-    dispatch("setErrorAction", error.response.data.errors);
+    if (error.message) {
+      error.response = {
+        data: {
+          errors: [{ message: error.message }],
+        },
+      };
+    }
+    dispatch("setErrorAction", error.response.data?.errors);
+
     if (error.response.status === 403 && errorRefreshStatus) {
       dispatch("refreshToken", error);
       errorRefreshStatus = false;
@@ -307,6 +315,7 @@ export default {
       const res = await dispatch("requestAxiosPostMerchant", payload);
       return res;
     } catch (error) {
+      console.log("connect store ", error);
       return error.response;
     }
   },

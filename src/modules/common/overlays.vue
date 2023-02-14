@@ -2301,6 +2301,14 @@ export default {
           value: "Invoice",
         },
         {
+          title: this.$t("inventory.localPurchaseOrder"),
+          value: "Local Purchase Order",
+        },
+        {
+          title: this.$t("inventory.deliveryNote"),
+          value: "Delivery Note",
+        },
+        {
           title: this.$t("inventory.Other"),
           value: "Other",
         },

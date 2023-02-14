@@ -215,6 +215,8 @@
   "PDFonly": "*PDF only",
   "whatTypeOfDocumentIsThis": "What type of document is this?",
   "invoice": "Invoice",
+  "localPurchaseOrder": "Local purchase order",
+  "deliveryNote": "Delivery note",
   "deliveryDocuments": "Delivery documents",
   "LPO": "LPO",
   "Other": "Other",

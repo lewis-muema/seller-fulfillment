@@ -123,6 +123,7 @@
               popText: this.deliveryInfo,
             })
           "
+          v-if="!showEditIcon"
         >
           {{ $t("inventory.editDeliveryInfo") }}
         </span>
@@ -160,6 +161,7 @@
               popText: this.recipientInfo,
             })
           "
+          v-if="!showEditIcon"
         >
           {{ $t("inventory.editRecipientInfo") }}
         </span>
@@ -223,6 +225,7 @@
                   popText: this.documentsInfo,
                 })
               "
+              v-if="!showEditIcon"
             >
               {{ $t("deliveries.manageDocuments") }}
             </span>
@@ -305,6 +308,7 @@
                   popText: this.pod,
                 })
               "
+              v-if="!showEditIcon"
             >
               {{ $t("deliveries.editPOD") }}
             </span>

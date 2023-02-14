@@ -61,6 +61,7 @@
   "viewProducts": "View products",
   "editPickUpInfo": "Edit pick up info",
   "pickUpInstructionsOptional": "Pick up instructions (optional)",
+  "pendingReasons": "(The collection is pending because payment was made in cash on delivery. We will notify you once we’ve credited the funds to your account.)",
   "enterInstructions": "Enter instructions for the delivery partner",
   "addAnotherPhoneNumber": "Add another phone number",
   "removePhoneNumber": "Remove phone number",

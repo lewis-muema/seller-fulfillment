@@ -64,7 +64,13 @@ pipeline {
            }
         }
 
-        stage("Coverage") {
+        stage("Publish Tests Results") {
+            steps {
+                junit 'results/**.xml'
+            }
+        }
+
+        stage("Publish Coverage") {
             steps {
                 cobertura path: 'coverage/**.xml'
             }

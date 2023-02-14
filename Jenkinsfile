@@ -67,7 +67,7 @@ pipeline {
 
         stage("Publish Coverage") {
             steps {
-                cobertura path: 'coverage/**.xml'
+                publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
             }
         }
 

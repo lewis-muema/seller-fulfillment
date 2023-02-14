@@ -100,13 +100,13 @@
             <v-dialog v-model="connectDialog">
               <v-card class="connect-store">
                 <div v-if="connecting" class="connect-progress">
-                  <span class="dialog-title"> {{ $t("merchant.adding") }}</span>
+                  <div class="dialog-title">{{ $t("merchant.adding") }}</div>
                   <v-progress-circular
                     :width="3"
                     color="indigo-darken-2"
                     indeterminate
                   ></v-progress-circular>
-                  <span class="">{{ $t("merchant.waiting") }}</span>
+                  <div class="">{{ $t("merchant.waiting") }}</div>
                 </div>
                 <div v-else>
                   <div v-if="storeConnected">

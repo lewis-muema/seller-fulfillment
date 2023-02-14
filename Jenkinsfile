@@ -47,6 +47,7 @@ pipeline {
                          npx cypress cache path
                          npx cypress cache list
                          npm run test
+                         npm run coverage
                     '''
                 }    
             }

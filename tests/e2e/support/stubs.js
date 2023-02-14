@@ -77,14 +77,10 @@ Cypress.Commands.add("dashboardStubs", () => {
     }
   ).as("achievements");
 
-  cy.intercept(
-    "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/industries`,
-    {
-      statusCode: 200,
-      body: industries,
-    }
-  ).as("industries");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/industries`, {
+    statusCode: 200,
+    body: industries,
+  }).as("industries");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/business`,
@@ -176,7 +172,4 @@ Cypress.Commands.add("dashboardStubs", () => {
 });
 Cypress.Commands.add("setTokens", () => {
   cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
-});
-Cypress.Commands.add("setUserDetails", () => {
-  cy.setLocalStorage("userDetails", JSON.stringify(signIn.data));
 });

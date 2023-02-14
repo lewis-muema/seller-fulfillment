@@ -55,7 +55,6 @@ describe("Auth pages", () => {
     );
   });
   it("Allows a user to signup with correct otp", () => {
-    cy.setUserDetails();
     cy.authStubs();
     cy.dashboardStubs();
     cy.visit("/auth/sign-up");

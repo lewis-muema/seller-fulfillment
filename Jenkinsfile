@@ -65,14 +65,14 @@ pipeline {
            }
         }
 
-        stage("Publish Tests Results") {
-            steps {
-                sh '''
-                ls -al
-                    '''
-                junit 'test-results.xml'
-            }
-        }
+        // stage("Publish Tests Results") {
+        //     steps {
+        //         sh '''
+        //         ls -al
+        //             '''
+        //         junit 'test-results.xml'
+        //     }
+        // }
 
         stage("Publish Coverage") {
             steps {

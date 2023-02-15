@@ -47,9 +47,8 @@ pipeline {
                          npx cypress cache path
                          npx cypress cache list
                          npm run test
-                         cat test-results.xml
+                         npm run coverage
                     '''
-                    junit "test-results.xml"
                 }    
             }
             post {
@@ -72,15 +71,12 @@ pipeline {
                 ls -al
                 cat test-results.xml
                     '''
-                // junit "test-results.xml"
+                junit "test-results.xml"
             }
         }
 
         stage("Publish Coverage") {
             steps {
-                sh '''
-                    npm run coverage
-                '''
                 publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
             }
         }

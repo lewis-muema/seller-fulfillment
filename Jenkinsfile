@@ -67,7 +67,10 @@ pipeline {
 
         stage("Publish Tests Results") {
             steps {
-                junit 'results.xml'
+                sh '''
+                ls -al
+                    '''
+                // junit 'results.xml'
             }
         }
 

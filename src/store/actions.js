@@ -315,7 +315,6 @@ export default {
       const res = await dispatch("requestAxiosPostMerchant", payload);
       return res;
     } catch (error) {
-      console.log("connect store ", error);
       return error.response;
     }
   },

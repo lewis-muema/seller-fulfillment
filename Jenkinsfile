@@ -65,6 +65,12 @@ pipeline {
            }
         }
 
+        stage("Publish Tests Results") {
+            steps {
+                junit 'results.xml'
+            }
+        }
+
         stage("Publish Coverage") {
             steps {
                 publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]

@@ -7,7 +7,7 @@
     "test:unit": "cross-env DOCKER_ENV=\"development\" vue-cli-service test:unit",
     "test:e2e": "cross-env DOCKER_ENV=\"development\" vue-cli-service test:e2e",
     "cy:run": "cypress run",
-    "test": "start-server-and-test dev 8080 cy:run",
+    "test": "start-server-and-test dev http://localhost:8080 cy:run",
     "lint": "cross-env DOCKER_ENV=\"development\" vue-cli-service lint",
     "beta": "cross-env DOCKER_ENV=\"beta\" vue-cli-service build",
     "dev": "cross-env DOCKER_ENV=\"development\" vue-cli-service serve",

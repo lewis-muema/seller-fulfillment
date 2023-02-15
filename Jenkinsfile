@@ -69,9 +69,9 @@ pipeline {
             steps {
                 sh '''
                 ls -al
-                cat test-results.xml
+                cat results.xml
                     '''
-                junit "test-results.xml"
+                junit "results.xml"
             }
         }
 

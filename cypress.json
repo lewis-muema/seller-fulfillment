@@ -5,5 +5,8 @@
   "screenshot": false,
   "viewportWidth": 1440,
   "viewportHeight": 660,
-  "reporter": "junit"
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "test-results/test-output-[hash].xml"
+  }
 }

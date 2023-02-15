@@ -4,5 +4,6 @@
   "video": false,
   "screenshot": false,
   "viewportWidth": 1440,
-  "viewportHeight": 660
+  "viewportHeight": 660,
+  "reporter": "junit"
 }

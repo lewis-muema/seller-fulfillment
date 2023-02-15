@@ -23,3 +23,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# screenshots
+tests/e2e/screenshots/*
+
+# test results
+test-results.xml
+

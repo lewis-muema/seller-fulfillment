@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="31.6890" tests="5" failures="1">
+  <testsuite name="Root Suite" timestamp="2023-02-15T14:58:44" tests="0" file="tests/e2e/specs/auth.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Auth pages" timestamp="2023-02-15T14:58:44" tests="5" time="31.6890" failures="1">
+    <testcase name="Auth pages Signin Card contains the correct text" time="14.7400" classname="Signin Card contains the correct text">
+    </testcase>
+    <testcase name="Auth pages Allows a user to signin and input a correct otp" time="7.9590" classname="Allows a user to signin and input a correct otp">
+    </testcase>
+    <testcase name="Auth pages Does not allow invalid email address" time="0.0000" classname="Does not allow invalid email address">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-test=signin-error-message]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-test=signin-error-message]`, but never found it.
+    at Context.eval (http://localhost:8080/__cypress/tests?p=tests/e2e/specs/auth.js:11957:42)]]></failure>
+    </testcase>
+    <testcase name="Auth pages Signup Card contains the correct text" time="0.9250" classname="Signup Card contains the correct text">
+    </testcase>
+    <testcase name="Auth pages Allows a user to signup with correct otp" time="8.0650" classname="Allows a user to signup with correct otp">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -29,6 +29,8 @@ tests/e2e/screenshots/*
 
 # test results
 test-results.xml
+test-results
+test-results/*
 
 # some output files
 .nyc_output

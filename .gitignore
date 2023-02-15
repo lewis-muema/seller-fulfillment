@@ -30,3 +30,6 @@ tests/e2e/screenshots/*
 # test results
 test-results.xml
 
+# some output files
+.nyc_output
+.nyc_output/*

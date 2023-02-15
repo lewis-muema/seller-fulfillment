@@ -70,7 +70,7 @@ pipeline {
                 sh '''
                 ls -al
                     '''
-                // junit 'results.xml'
+                junit 'test-results.xml'
             }
         }
 

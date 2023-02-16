@@ -139,13 +139,13 @@ export default {
 
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
-    if (error.message) {
-      error.response = {
-        data: {
-          errors: [{ message: error.message }],
-        },
-      };
-    }
+    // if (error.message) {
+    //   error.response = {
+    //     data: {
+    //       errors: [{ message: error.message }],
+    //     },
+    //   };
+    // }
     dispatch("setErrorAction", error.response.data?.errors);
 
     if (error.response.status === 403 && errorRefreshStatus) {

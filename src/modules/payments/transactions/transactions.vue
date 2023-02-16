@@ -12,7 +12,7 @@
 import tranactionsList from "./components/transactionsList.vue";
 import transcationActions from "./components/transactionActions.vue";
 import makePayment from "../statements/components/makePayment.vue";
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
@@ -22,10 +22,34 @@ export default {
   },
   mounted() {
     this.setComponent("payments.transactions");
+    this.getActiveCycle();
+  },
+  computed: {
+    ...mapGetters(["getStorageUserDetails"]),
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),
-    ...mapMutations(["setComponent"]),
+    ...mapMutations(["setComponent", "setLoader", "setActivePayment"]),
+    getActiveCycle() {
+      this.setLoader({
+        type: "pendingPayment",
+        value: "loading-text",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+      }).then((response) => {
+        this.setLoader({
+          type: "pendingPayment",
+          value: "",
+        });
+        if (response.status === 200) {
+          this.setActivePayment(response.data.data);
+        } else {
+          this.setActivePayment({});
+        }
+      });
+    },
   },
 };
 </script>

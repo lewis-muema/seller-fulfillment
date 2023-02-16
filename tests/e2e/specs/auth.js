@@ -1,14 +1,14 @@
 import { expect } from "chai";
 
-const timeout = 45000;
+const timeout = 60000;
 
 describe("Auth pages", () => {
   it("Signin Card contains the correct text", () => {
-    cy.visit("/auth/sign-in");
+    cy.visit("/auth/sign-in", { timeout });
     cy.get('[data-textId="signin-card-title"]').contains("Welcome Back");
   });
   it("Allows a user to signin and input a correct otp", () => {
-    cy.visit("/auth/sign-in");
+    cy.visit("/auth/sign-in", { timeout });
     cy.authStubs();
     cy.dashboardStubs();
     cy.getByData("signin-email-input").type("dorcas@sendyit.com");

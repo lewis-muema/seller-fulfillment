@@ -1,7 +1,25 @@
 <template>
   <div class="transaction-page-container">
+    <div class="row transaction-list-top">
+      <div class="col-4 billing-cycle-desc">
+        <p>{{ $t("payments.pendingPaymentCollections") }}</p>
+        <p class="billing-cycle-text">{{ $t("payments.weekly") }}</p>
+      </div>
+      <div class="col-4 billing-cycle-desc">
+        <p>{{ $t("payments.currentBillingCycle") }}</p>
+        <p class="billing-cycle-text">7th Jun - 12th Jun</p>
+        <span class="billing-cycle-view" @click="viewBillingCycle">
+          <i class="mdi mdi-eye"></i>
+          {{ $t("payments.view") }}
+        </span>
+      </div>
+      <div class="col-4 billing-cycle-desc">
+        <p>{{ $t("payments.accruedAmount") }}</p>
+        <p class="billing-cycle-text">Kes 34,000</p>
+      </div>
+    </div>
     <div class="row mb-5">
-      <div class="col-2">
+      <div class="col-3">
         <el-select
           class="mb-6 business-details-industry transaction-page-select"
           :disabled="getLoader.transactions !== ''"
@@ -18,7 +36,7 @@
           </el-option>
         </el-select>
       </div>
-      <div class="col-6"></div>
+      <div class="col-5"></div>
       <div class="col-4">
         <el-date-picker
           class="deliveries-date-picker transaction-page-date-range"
@@ -262,17 +280,21 @@ export default {
         }
       });
     },
+    viewBillingCycle() {
+      this.$router.push("/");
+    },
   },
 };
 </script>
 
 <style>
 .transaction-page-container {
-  margin: 40px;
+  margin: 45px 10px 45px 40px !important;
   background: white;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
-  padding: 20px 0px;
+  padding: 0px 0px 20px 0px;
+  /* padding: 20px 0px; */
 }
 .transaction-page-select {
   margin: 5px 20px;
@@ -280,5 +302,21 @@ export default {
 .transaction-page-date-range {
   float: right;
   margin: 5px 20px;
+}
+.transaction-list-top {
+  background: #f0f3f7;
+  padding: 20px;
+  border-bottom: 1px solid #e2e7ed;
+  margin-bottom: 20px;
+}
+.billing-cycle-text {
+  font-weight: 500;
+}
+.billing-cycle-desc > p {
+  margin-bottom: 10px !important;
+}
+.billing-cycle-view {
+  color: #324ba8;
+  cursor: pointer;
 }
 </style>

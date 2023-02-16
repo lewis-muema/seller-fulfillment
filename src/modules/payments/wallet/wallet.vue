@@ -1,24 +1,8 @@
 <template>
   <div>
-    <make-payment
-      class="statements-payment-banner wallet-banner-override"
-      v-if="prompt"
-    />
-    <div class="wallet-banner" v-if="activeCycle">
-      <i class="mdi mdi-alert-circle-outline wallet-alert-icon"></i>
-      {{
-        $t("payments.fulfillmentFeesWillBeCharged", {
-          Amount: billInfo("amount"),
-          Date: billInfo("date"),
-        })
-      }}
-      <span
-        class="wallet-view-more"
-        @click="
-          $router.push(`/payments/deliveries-pending-payment/${activeCycleId}`)
-        "
-        >{{ $t("payments.viewMore") }}</span
-      >
+    <make-payment class="statements-payment-banner wallet-banner-override" />
+    <div>
+      <wallet-banner />
     </div>
     <div class="row">
       <transactions class="col-8" />
@@ -31,6 +15,7 @@
 import transactions from "./components/transactions.vue";
 import statistics from "./components/statistics.vue";
 import makePayment from "../statements/components/makePayment.vue";
+import walletBanner from "../wallet/components/walletBanner.vue";
 
 import { mapMutations, mapActions, mapGetters } from "vuex";
 import eventsMixin from "../../../mixins/events_mixin";
@@ -41,6 +26,7 @@ export default {
     transactions,
     statistics,
     makePayment,
+    walletBanner,
   },
   mixins: [eventsMixin],
   computed: {
@@ -52,20 +38,6 @@ export default {
       "getBillingCycles",
       "getActivePayment",
     ]),
-    activeCycle() {
-      return (
-        this.getBillingCycles.length &&
-        this.getBillingCycles[0].active &&
-        this.getBillingCycles[0].amount_to_charge > 0
-      );
-    },
-    activeCycleId() {
-      return this.getBillingCycles[0].billing_cycle_instance_id;
-    },
-    prompt() {
-      const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
-    },
   },
   data() {
     return {};

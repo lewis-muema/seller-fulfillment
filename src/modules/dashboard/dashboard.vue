@@ -15,7 +15,7 @@
         </h5>
         <p>{{ $t("dashboard.whatsHappening") }}</p>
       </span>
-      <makePayment v-if="activeCycle" />
+      <makePayment />
       <top-card />
       <v-row>
         <v-col cols="8" class="">
@@ -59,10 +59,6 @@ export default {
       "getAchievements",
       "getConsignmentStatistics",
     ]),
-    activeCycle() {
-      const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
-    },
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
         return true;

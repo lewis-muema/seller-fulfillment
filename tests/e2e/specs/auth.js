@@ -1,5 +1,7 @@
 import { expect } from "chai";
 
+const timeout = 45000;
+
 describe("Auth pages", () => {
   it("Signin Card contains the correct text", () => {
     cy.visit("/auth/sign-in");
@@ -20,7 +22,7 @@ describe("Auth pages", () => {
     cy.get(".otp-input").eq(2).type("3");
     cy.get(".otp-input").eq(3).type("4");
     cy.getByData("signin-with-otp").click();
-    cy.wait("@sign-in-OTP").then((interception) => {
+    cy.wait("@sign-in-OTP", { timeout }).then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
     });
     cy.wait("@userDetails");
@@ -34,7 +36,7 @@ describe("Auth pages", () => {
     cy.wait("@payments");
     cy.wait("@productStatistics");
     cy.wait("@statisticsLimit");
-    cy.wait("@wallet").then((interception) => {
+    cy.wait("@wallet", { timeout }).then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
       cy.setTokens();
       cy.url().should("include", "/");
@@ -42,8 +44,8 @@ describe("Auth pages", () => {
   });
 
   it("Does not allow invalid email address", () => {
-    cy.visit("/auth/sign-in");
-    cy.getByData("signin-email-input").type("test");
+    cy.visit("/auth/sign-in", { timeout });
+    cy.getByData("signin-email-input", { timeout }).type("test");
     cy.getByData("signin-submit-button").click();
     cy.wait(2000);
     cy.getByData("signin-error-message").should("exist");

@@ -49,7 +49,8 @@ describe("Auth pages", () => {
     cy.visit("/auth/sign-in", { timeout });
     cy.getByData("signin-email-input", { timeout }).type("test");
     cy.getByData("signin-submit-button").click();
-    cy.getByData("signin-error-message", { timeout }).should("exist");
+    cy.wait(4000);
+    cy.getByData("signin-error-message").should("exist");
   });
   it("Signup Card contains the correct text", () => {
     cy.visit("/auth/sign-up", { timeout });

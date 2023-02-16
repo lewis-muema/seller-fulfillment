@@ -1,10 +1,6 @@
 <template>
   <div>
     <make-payment class="statements-payment-banner wallet-banner-override" />
-    <!--    <div class="row">-->
-    <!--      <tranactionsList class="col-8" />-->
-    <!--      <div class="col-4">test</div>-->
-    <!--    </div>-->
     <div class="row">
       <tranactionsList class="col-7" />
       <transcationActions class="col-4" />

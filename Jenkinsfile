@@ -69,6 +69,7 @@ pipeline {
             steps {
                 sh '''
                 ls -al
+                cat cypress.json
                 ls -al test-results/
                 '''
                 junit "test-results/**.xml"

@@ -1,13 +1,19 @@
 <template>
-  <div class="transaction-page-container">
-    <div class="row transaction-list-top">
+  <div
+    :class="
+      currentCycle ? 'transaction-page-container' : 'transaction-page-top'
+    "
+  >
+    <div class="row transaction-list-top" v-if="currentCycle">
       <div class="col-4 billing-cycle-desc">
-        <p>{{ $t("payments.pendingPaymentCollections") }}</p>
-        <p class="billing-cycle-text">{{ $t("payments.weekly") }}</p>
+        <p>{{ $t("payments.billingCycle") }}</p>
+        <p class="billing-cycle-text">{{ billInfo("cycleType") }}</p>
       </div>
       <div class="col-4 billing-cycle-desc">
         <p>{{ $t("payments.currentBillingCycle") }}</p>
-        <p class="billing-cycle-text">7th Jun - 12th Jun</p>
+        <p class="billing-cycle-text">
+          {{ billInfo("startDate") }} - {{ billInfo("endDate") }}
+        </p>
         <span class="billing-cycle-view" @click="viewBillingCycle">
           <i class="mdi mdi-eye"></i>
           {{ $t("payments.view") }}
@@ -15,7 +21,7 @@
       </div>
       <div class="col-4 billing-cycle-desc">
         <p>{{ $t("payments.accruedAmount") }}</p>
-        <p class="billing-cycle-text">Kes 34,000</p>
+        <p class="billing-cycle-text">KES {{ billInfo("accruedAmount") }}</p>
       </div>
     </div>
     <div class="row mb-5">
@@ -207,6 +213,13 @@ export default {
       });
       return transactions;
     },
+    currentCycle() {
+      return (
+        this.getBillingCycles.length &&
+        this.getBillingCycles[0].active &&
+        this.getBillingCycles[0].amount_to_charge > 0
+      );
+    },
   },
   mounted() {
     this.getUserWallets();
@@ -281,7 +294,28 @@ export default {
       });
     },
     viewBillingCycle() {
-      this.$router.push("/");
+      this.$router.push("/payments/statements");
+    },
+    billInfo(type) {
+      let results = "";
+      const cycle = this.getBillingCycles.length
+        ? this.getBillingCycles[0]
+        : "";
+      if (type === "startDate") {
+        results = moment(cycle.billing_cycle_start_date).format("Do MMM");
+      }
+      if (type === "endDate") {
+        results = moment(cycle.billing_cycle_end_date).format("Do MMM");
+      }
+      if (type === "cycleType") {
+        results =
+          cycle.cycle_interval_type.charAt(0).toUpperCase() +
+          cycle.cycle_interval_type.slice(1).toLowerCase();
+      }
+      if (type === "accruedAmount") {
+        results = cycle.amount_to_charge;
+      }
+      return results;
     },
   },
 };
@@ -293,8 +327,14 @@ export default {
   background: white;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
-  padding: 0px 0px 20px 0px;
-  /* padding: 20px 0px; */
+  padding-bottom: 20px;
+}
+.transaction-page-top {
+  margin: 45px 10px 45px 40px !important;
+  background: white;
+  border: 1px solid #e2e7ed;
+  border-radius: 5px;
+  padding: 20px 0px;
 }
 .transaction-page-select {
   margin: 5px 20px;

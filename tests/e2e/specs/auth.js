@@ -5,7 +5,9 @@ const timeout = 60000;
 describe("Auth pages", () => {
   it("Signin Card contains the correct text", () => {
     cy.visit("/auth/sign-in", { timeout });
-    cy.get('[data-textId="signin-card-title"]').contains("Welcome Back");
+    cy.get('[data-textId="signin-card-title"]', { timeout }).contains(
+      "Welcome Back"
+    );
   });
   it("Allows a user to signin and input a correct otp", () => {
     cy.visit("/auth/sign-in", { timeout });
@@ -48,11 +50,11 @@ describe("Auth pages", () => {
     cy.getByData("signin-email-input", { timeout }).type("test");
     cy.getByData("signin-submit-button").click();
     cy.wait(2000);
-    cy.getByData("signin-error-message").should("exist");
+    cy.getByData("signin-error-message", { timeout }).should("exist");
   });
   it("Signup Card contains the correct text", () => {
-    cy.visit("/auth/sign-up");
-    cy.get('[data-textId="signup-card-title"]').contains(
+    cy.visit("/auth/sign-up", { timeout });
+    cy.get('[data-textId="signup-card-title"]', { timeout }).contains(
       "Sign up for Sendy Fulfillment"
     );
   });

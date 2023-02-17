@@ -70,6 +70,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''
+                    npm run coverage
                     ls -al
                     ls -al test-results/
                     '''

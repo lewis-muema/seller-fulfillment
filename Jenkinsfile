@@ -67,13 +67,13 @@ pipeline {
 
         stage("Publish Tests Results") {
             steps {
-                sh '''
-                ls -al
-                ls -al test-results/
-                '''
-                junit "test-results/**.xml"
+
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "exit 1"
+                    sh '''
+                    ls -al
+                    ls -al test-results/
+                    '''
+                    junit "test-results/**.xml"
                 }
             }
         }

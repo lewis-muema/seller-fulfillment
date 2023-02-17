@@ -6,6 +6,7 @@ import * as external from "../external/en.json";
 import * as auth from "../auth/en.json";
 import * as dashboard from "../dashboard/en.json";
 import * as inventory from "../inventory/en.json";
+import * as merchant from "../merchant/en.json";
 
 const translations = {
   common: common.default,
@@ -16,6 +17,7 @@ const translations = {
   auth: auth.default,
   dashboard: dashboard.default,
   inventory: inventory.default,
+  merchant: merchant.default,
 };
 
 export default translations;

@@ -71,10 +71,6 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     unstash 'appRoot'
-                    sh '''
-                    ls -al
-                    ls -al test-results/
-                    '''
                     junit "test-results/**.xml"
                 }
             }

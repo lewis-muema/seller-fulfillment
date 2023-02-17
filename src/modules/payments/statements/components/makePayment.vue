@@ -1,5 +1,5 @@
 <template>
-  <div class="make-payment-container v-col v-col-11">
+  <div class="make-payment-container v-col v-col-11" v-if="prompt">
     <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">
@@ -32,6 +32,10 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters(["getLoader", "getActivePayment", "getBusinessDetails"]),
+    prompt() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
+    },
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader", "setOverlayStatus"]),

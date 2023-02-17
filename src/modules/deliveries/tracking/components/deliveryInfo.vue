@@ -205,8 +205,10 @@
                           .document_type === "OTHER"
                           ? getOrderTrackingData.order.documents[0]
                               .document_description
-                          : getOrderTrackingData.order.documents[0]
-                              .document_type,
+                          : getOrderTrackingData.order.documents[0].document_type.replace(
+                              /_/g,
+                              " "
+                            ),
                       Count: getOrderTrackingData.order.documents.length - 1,
                     })
                   : $t("inventory.noDocuments")

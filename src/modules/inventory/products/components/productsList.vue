@@ -143,7 +143,7 @@ export default {
         },
         {
           title: "inventory.provisional",
-          description: "inventory.IncomingProducts",
+          description: "inventory.provisionalProducts",
         },
         {
           title: "inventory.incoming",

@@ -211,6 +211,7 @@ export default {
     },
     searchToggle(val) {
       if (val) {
+        this.searchProductMapping();
         this.searchToggle =
           this.searchItems.length > 0 && this.searchParam !== "";
       }
@@ -318,6 +319,7 @@ export default {
             : true)
         );
       });
+      this.productMapping();
       if (!addedProduct.length) {
         product.quantity = val;
         this.addProduct(product, i, option, z);

@@ -364,6 +364,7 @@ export default {
             : true)
         );
       });
+      this.productMapping();
       if (!addedProduct.length) {
         product.quantity = val;
         this.addProduct(product, i, option, z);

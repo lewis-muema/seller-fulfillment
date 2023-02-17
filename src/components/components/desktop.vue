@@ -41,6 +41,7 @@ export default {
       "getExternal",
       "getUserDetails",
       "getUserAccessPermissions",
+      "getBusinessDetails",
     ]),
     external() {
       if (this.getExternal.includes(this.$route.path)) {
@@ -74,6 +75,13 @@ export default {
           );
         }
       });
+      if (!this.getBusinessDetails?.settings?.consignment_returns_enabled) {
+        noAccess = noAccess.concat([
+          "/inventory/add-consignment-return-products",
+          "/inventory/add-consignment-return-quantities",
+          "/inventory/create-consignment-return",
+        ]);
+      }
       this.setAccessDenied(noAccess);
       this.accessDenied = noAccess.find((row) =>
         this.$route.path.includes(row)

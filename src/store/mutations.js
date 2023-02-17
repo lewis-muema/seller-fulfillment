@@ -380,4 +380,10 @@ export default {
   setFinalDocumentsToEdit(state, val) {
     state.finalDocumentsToEdit = val;
   },
+  setConsignmentReturn(state, val) {
+    state.consignmentReturn = val;
+  },
+  setConsignmentReturnSpeed(state, val) {
+    state.consignmentReturnSpeed = val;
+  },
 };

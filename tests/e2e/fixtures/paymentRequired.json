@@ -1,0 +1,11 @@
+{
+  "message": "resource.not.found",
+  "data": null,
+  "errors": [
+    {
+      "message": "billing.cycle.notfound",
+      "source": "billing.service",
+      "value": "No recent billing cycle found for Business B-VSW-5971"
+    }
+  ]
+}

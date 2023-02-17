@@ -1213,7 +1213,7 @@ export default {
           : [];
         destinationDocuments.forEach((row) => {
           documents.push({
-            document_type: row.type.toUpperCase(),
+            document_type: row.type.toUpperCase().replace(/\s/g, "_"),
             document_url: row.url,
             document_description: row.title,
           });

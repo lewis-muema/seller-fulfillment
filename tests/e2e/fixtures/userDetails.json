@@ -1,0 +1,86 @@
+{
+  "message": "business.user.retrieve.success",
+  "data": {
+    "user": {
+      "user_id": "U-MQC-0567",
+      "first_name": "Dorcas",
+      "last_name": "Cherono",
+      "user_role": "ROLE_OWNER",
+      "invitation_status": null,
+      "active_status": null,
+      "phone_number": "+254 794 375045",
+      "email": "dorcas@sendyit.com",
+      "user_access_permissions": [
+        {
+          "permission_id": "CAN_ACCESS_PRODUCTS_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_CREATE_PRODUCTS",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_DELIVERIES_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_CREATE_DELIVERIES",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_CONSIGNMENTS_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_CREATE_CONSIGNMENTS",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_BILLING_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_MANAGE_USERS_MODULE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_ACCESS_USER_ACTION_LOG",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_EDIT_BUSINESS_PROFILE",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_EXPORT_SELLER_DATA",
+          "permission_granted": true
+        },
+        {
+          "permission_id": "CAN_WITHDRAW_EARNINGS",
+          "permission_granted": true
+        }
+      ]
+    }
+  },
+  "errors": []
+}

@@ -10,6 +10,7 @@
     "getMoreoutOfSendy":"Get more out of Sendy fulfillment",
     "quickLinks": "Quick Links",
     "availableBalance": "Available balance",
+    "lowStockItems": "Low stock items",
     "whatsHappening": "Here's what's happening to your account today",
     "accountCreated": "Account Created",
     "addYourProducts": "Add your Products",
@@ -41,5 +42,6 @@
     "weWillPackAndDeliverYourPackageWithin24hrs": "We will pack and deliver your package within 24hrs",
     "storefront": "Storefront",
     "fulfillmentApp": "Fulfillment App",
-    "failedOrders": "Failed Orders"
+    "failedOrders": "Failed Orders",
+    "failedAttempts": "Failed Attempts"
 }

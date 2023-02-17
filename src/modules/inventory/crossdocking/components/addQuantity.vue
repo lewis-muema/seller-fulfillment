@@ -69,7 +69,10 @@
                           />
                           <img
                             v-else
-                            :src="selectedProduct.product_link"
+                            :src="
+                              selectedProduct.product_variants[0]
+                                .product_variant_image_link
+                            "
                             alt=""
                             class="product-select-img"
                           />

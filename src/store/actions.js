@@ -19,6 +19,29 @@ export default {
     commit("setAccessToken", token);
     commit("setRefreshToken", refreshToken);
   },
+  requestAxiosPostMerchant({ dispatch }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
+        "Fulfilment-Token": localStorage.accessToken
+          ? localStorage.accessToken
+          : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch("handleErrors", error);
+          resolve(error);
+          return false;
+        });
+    });
+  },
 
   requestAxiosPost({ dispatch }, payload) {
     const config = {
@@ -116,7 +139,8 @@ export default {
 
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
-    dispatch("setErrorAction", error.response.data.errors);
+    dispatch("setErrorAction", error.response.data?.errors);
+
     if (error.response.status === 403 && errorRefreshStatus) {
       dispatch("refreshToken", error);
       errorRefreshStatus = false;
@@ -274,6 +298,14 @@ export default {
   async updateOrderTrackingData({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPatch", payload);
+      return res;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async connectStore({ dispatch }, payload) {
+    try {
+      const res = await dispatch("requestAxiosPostMerchant", payload);
       return res;
     } catch (error) {
       return error.response;

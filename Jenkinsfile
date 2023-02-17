@@ -62,21 +62,11 @@ pipeline {
                     reportName           : 'Coverage Report - HTML'
                   ]
                   publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
-              }
-           }
-        }
-
-        stage("Publish Tests Results") {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh '''
-                    npm run coverage
-                    ls -al
-                    ls -al test-results/
-                    '''
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     junit "test-results/**.xml"
                 }
-            }
+              }
+           }
         }
 
         stage('Docker Deploy Staging') {

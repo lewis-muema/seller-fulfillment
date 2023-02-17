@@ -71,9 +71,9 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''
                     ls -al
-                    ls -al test-results/
+                    ls -al test-results.xml
                     '''
-                    junit "test-results/**.xml"
+                    junit "test-results.xml"
                 }
             }
         }

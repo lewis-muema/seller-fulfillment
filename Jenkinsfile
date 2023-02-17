@@ -64,7 +64,9 @@ pipeline {
                   publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     junit "test-results/**.xml"
-                    currentBuild.result = 'SUCCESS'
+                    if (currentBuild.result == 'UNSTABLE') {
+                        currentBuild.result = 'SUCCESS'
+                    }     
                 }
               }
            }

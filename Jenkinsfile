@@ -78,12 +78,6 @@ pipeline {
             }
         }
 
-        stage("Publish Coverage") {
-            steps {
-                publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
-            }
-        }
-
         stage('Docker Deploy Staging') {
              when {
                 

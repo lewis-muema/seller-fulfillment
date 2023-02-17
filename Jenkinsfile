@@ -62,11 +62,22 @@ pipeline {
                     reportName           : 'Coverage Report - HTML'
                   ]
                   publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    junit "test-results/**.xml"
-                }
+                  stash includes: '*', name: 'appRoot'
               }
            }
+        }
+
+        stage("Publish Tests Results") {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    unstash 'appRoot'
+                    sh '''
+                    ls -al
+                    ls -al test-results/
+                    '''
+                    junit "test-results/**.xml"
+                }
+            }
         }
 
         stage('Docker Deploy Staging') {

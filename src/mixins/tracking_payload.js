@@ -63,7 +63,7 @@ const trackingPayloadMixin = {
       const documents = [];
       this.mapEdittedDocuments.forEach((row) => {
         documents.push({
-          document_type: row.document_type.toUpperCase(),
+          document_type: row.document_type.toUpperCase().replace(/\s/g, "_"),
           document_url: row.document_url,
           document_description: row.document_description,
         });

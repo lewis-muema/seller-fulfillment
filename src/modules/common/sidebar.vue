@@ -15,7 +15,14 @@
           :value="'common.home'"
           class="desktop-sidebar-icons"
           @click="$router.push('/')"
-          :active="route === 'common.dashboard'"
+          :active="
+            [
+              'common.dashboard',
+              'common.sendInventoryToSendy',
+              'common.sendDeliveryToCustomer',
+              'common.sendBackInventory',
+            ].includes(route)
+          "
         ></v-list-item>
 
         <v-list-group>
@@ -52,7 +59,7 @@
                 : ''
             "
           ></v-list-item>
-          <v-list-item
+          <!-- <v-list-item
             v-if="!getAccessDenied.includes('/inventory/send-inventory')"
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
@@ -73,7 +80,7 @@
                 ? 'mdi-circle-small'
                 : ''
             "
-          ></v-list-item>
+          ></v-list-item> -->
         </v-list-group>
         <v-list-group>
           <template v-slot:activator="{ props }">

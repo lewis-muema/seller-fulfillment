@@ -40,6 +40,15 @@
             >
           </div>
         </div>
+        <p
+          v-if="
+            getActiveTransaction.transaction_type ===
+            'UPCOMING_EARNING_FROM_SALE_OF_GOOD'
+          "
+          class="transaction-pending-text"
+        >
+          {{ $t("deliveries.pendingReasons") }}
+        </p>
         <div>
           <div class="transaction-label">
             {{ $t("payments.transactionID") }}
@@ -398,5 +407,10 @@ export default {
 .transaction-line-items-arrow {
   float: right;
   font-size: 20px;
+}
+.transaction-pending-text {
+  padding-top: 1rem;
+  color: #9d5004;
+  font-style: italic;
 }
 </style>

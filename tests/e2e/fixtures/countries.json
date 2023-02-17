@@ -1,0 +1,48 @@
+{
+  "message": "country.list.success",
+  "data": {
+    "countries": [
+      {
+        "name": "KENYA",
+        "code": "KE",
+        "currency": {
+          "currency_name": "Kenyan Shilling",
+          "currency_id": "KES",
+          "currency_symbol": "Ksh"
+        },
+        "time_zone": "Africa/Nairobi"
+      },
+      {
+        "name": "NIGERIA",
+        "code": "NG",
+        "currency": {
+          "currency_name": "Nigeria Naira",
+          "currency_id": "NGN",
+          "currency_symbol": "₦"
+        },
+        "time_zone": "Africa/Lagos"
+      },
+      {
+        "name": "COTE_D_VOIRE",
+        "code": "CI",
+        "currency": {
+          "currency_name": "Cote d'Ivoire CFA Franc",
+          "currency_id": "XOF",
+          "currency_symbol": "CFA"
+        },
+        "time_zone": "UTC"
+      },
+      {
+        "name": "UGANDA",
+        "code": "UG",
+        "currency": {
+          "currency_name": "Uganda Shilling",
+          "currency_id": "UGX",
+          "currency_symbol": "USh"
+        },
+        "time_zone": "Africa/Kampala"
+      }
+    ]
+  },
+  "errors": []
+}

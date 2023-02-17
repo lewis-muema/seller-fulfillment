@@ -129,4 +129,6 @@ export default {
   getPickUpSpeed: (state) => state.pickUpSpeed,
   getDeliverySpeed: (state) => state.deliverySpeed,
   getMismatchedDates: (state) => state.mismatchedDates,
+  getConsignmentReturn: (state) => state.consignmentReturn,
+  getConsignmentReturnSpeed: (state) => state.consignmentReturnSpeed,
 };

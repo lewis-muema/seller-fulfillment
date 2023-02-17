@@ -13,70 +13,92 @@
         </span>
       </span>
     </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">{{ $t("inventory.desc") }}</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          {{
-            product.product_description
-              ? product.product_description
-              : $t("inventory.noDescriptionProvided")
-          }}
-        </span>
-      </p>
-    </div>
-    <div v-if="product.product_variants.length <= 1">
-      <div class="product-details-content mb-3">
-        <p class="product-header">{{ $t("inventory.price") }}</p>
-        <p>
-          <span :class="getLoader.productDetails">
-            {{ product.product_variants[0].product_variant_currency }}
-            {{ product.product_variants[0].product_variant_unit_price }}
-          </span>
-        </p>
+    <div class="row">
+      <div class="col-6">
+        <div class="product-details-content mb-3">
+          <p class="product-header">{{ $t("inventory.desc") }}</p>
+          <p>
+            <span :class="getLoader.productDetails">
+              {{
+                product.product_description
+                  ? product.product_description
+                  : $t("inventory.noDescriptionProvided")
+              }}
+            </span>
+          </p>
+        </div>
+        <div v-if="product.product_variants.length <= 1">
+          <div class="product-details-content mb-3">
+            <p class="product-header">{{ $t("inventory.price") }}</p>
+            <p>
+              <span :class="getLoader.productDetails">
+                {{ product.product_variants[0].product_variant_currency }}
+                {{ product.product_variants[0].product_variant_unit_price }}
+              </span>
+            </p>
+          </div>
+          <div class="product-details-content mb-3">
+            <p class="product-header">{{ $t("inventory.weight") }}</p>
+            <p>
+              <span :class="getLoader.productDetails">
+                {{ product.product_variants[0].product_variant_quantity }}
+                {{ product.product_variants[0].product_variant_quantity_type }}
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="product-details-content mb-3">
+          <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
+          <p>
+            <span :class="getLoader.productDetails">
+              {{ $t("inventory.totalStockAvailable") }}:
+              {{ totalStock(product) }}
+            </span>
+          </p>
+        </div>
+        <div class="product-details-content mb-3">
+          <p class="product-header">{{ $t("inventory.upcCod") }}</p>
+          <p>
+            <span :class="getLoader.productDetails">
+              {{
+                product.product_variants[0].universal_product_code
+                  ? product.product_variants[0].universal_product_code
+                  : "_"
+              }}
+            </span>
+          </p>
+        </div>
       </div>
-      <div class="product-details-content mb-3">
-        <p class="product-header">{{ $t("inventory.weight") }}</p>
-        <p>
-          <span :class="getLoader.productDetails">
-            {{ product.product_variants[0].product_variant_quantity }}
-            {{ product.product_variants[0].product_variant_quantity_type }}
-          </span>
-        </p>
+      <div class="col-6">
+        <div
+          class="product-details-content mb-3"
+          v-for="(sensitivity, i) in productSensitivity"
+          :key="i"
+        >
+          <p class="product-header">{{ sensitivity.heading }}</p>
+          <p>
+            <span :class="getLoader.productDetails"
+              >{{
+                formatSensitivityText(sensitivity.text)
+                  ? sensitivity.name
+                  : sensitivity.name2
+              }}
+            </span>
+          </p>
+        </div>
+        <div class="product-details-content mb-3">
+          <p class="product-header">{{ $t("inventory.getNotified") }}</p>
+          <p>
+            <span :class="getLoader.productDetails">
+              {{
+                product.product_variants[0].low_stock_threshold
+                  ? product.product_variants[0].low_stock_threshold
+                  : "_"
+              }}
+            </span>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">{{ $t("inventory.inventorySummary") }}</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          {{ $t("inventory.totalStockAvailable") }}:
-          {{ totalStock(product) }}
-        </span>
-      </p>
-    </div>
-    <div class="product-details-content mb-3">
-      <p class="product-header">{{ $t("inventory.upcCod") }}</p>
-      <p>
-        <span :class="getLoader.productDetails">
-          {{ product.product_variants[0].universal_product_code }}
-        </span>
-      </p>
-    </div>
-    <div
-      class="product-details-content mb-3"
-      v-for="(sensitivity, i) in productSensitivity"
-      :key="i"
-    >
-      <p class="product-header">{{ sensitivity.heading }}</p>
-      <p>
-        <span :class="getLoader.productDetails"
-          >{{
-            formatSensitivityText(sensitivity.text)
-              ? sensitivity.name
-              : sensitivity.name2
-          }}
-        </span>
-      </p>
     </div>
     <v-table v-if="product.product_variants">
       <table-header
@@ -204,7 +226,7 @@ export default {
         },
         {
           title: "inventory.provisional",
-          description: "inventory.availableProducts",
+          description: "inventory.provisionalProducts",
         },
         {
           title: "inventory.available",
@@ -230,7 +252,7 @@ export default {
         },
         {
           title: "inventory.provisional",
-          description: "inventory.availableProducts",
+          description: "inventory.provisionalProducts",
         },
         {
           title: "inventory.available",

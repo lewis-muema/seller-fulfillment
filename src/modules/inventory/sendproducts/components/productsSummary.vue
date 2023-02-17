@@ -38,7 +38,9 @@
                   />
                   <img
                     v-else
-                    :src="summary.product_link"
+                    :src="
+                      summary.product_variants[0].product_variant_image_link
+                    "
                     alt=""
                     class="product-select-img"
                   />

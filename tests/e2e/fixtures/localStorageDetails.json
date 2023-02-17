@@ -1,0 +1,99 @@
+{
+  "userDetails": {
+    "business_id": "B-AEB-9648",
+    "business_name": "Peter Pans",
+    "user_id": "U-NOSS-5960",
+    "email": "lewis+vso@sendyit.com",
+    "phone_number": null
+  },
+  "language": "en",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJwYXlsb2FkIjp7Im1lc3NhZ2UiOiJidXNpbmVzcy5zaWdudXAuc3VjY2VzcyIsImlzcyI6ImF1dGgiLCJhdWQiOiJzZW5keS1mdWxmaWxtZW50IiwiZGF0YSI6eyJsb2dpbl9zdWNjZXNzIjp0cnVlLCJidXNpbmVzcyI6eyJidXNpbmVzc19lbWFpbCI6Imxld2lzK3Zzb0BzZW5keWl0LmNvbSIsImJ1c2luZXNzX2lkIjoiQi1BRUItOTY0OCIsInVzZXJfaWQiOiJVLU5PU1MtNTk2MCIsImJ1c2luZXNzX25hbWUiOiJQZXRlciBQYW5zIn19LCJlcnJvcnMiOnt9fSwic3RhdHVzIjp0cnVlfQ.nD9W3QZJUYGFaC1FQpqORiRkFmuN75_Y2bR-KP4rk24",
+  "user": {
+    "user_id": "U-NOSS-5960",
+    "first_name": "Lewis",
+    "last_name": "Muema",
+    "user_role": "ROLE_ADMIN",
+    "invitation_status": "INVITATION_ACCEPTED",
+    "active_status": "ACTIVATED",
+    "phone_number": "+723234",
+    "email": "lewis+vso@sendyit.com",
+    "user_access_permissions": [
+      {
+        "permission_id": "CAN_ACCESS_PRODUCTS_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_CREATE_PRODUCTS",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_DELIVERIES_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_CREATE_DELIVERIES",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_CONSIGNMENTS_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_CREATE_CONSIGNMENTS",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_BILLING_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_PAYMENT_OPTIONS_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_MANAGE_USERS_MODULE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_ACCESS_USER_ACTION_LOG",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_PRODUCTS",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_DELIVERIES",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_CONSIGNMENTS",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_RECEIVE_NOTIFICATIONS_FOR_PAYMENTS",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_EDIT_BUSINESS_PROFILE",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_EXPORT_SELLER_DATA",
+        "permission_granted": true
+      },
+      {
+        "permission_id": "CAN_WITHDRAW_EARNINGS",
+        "permission_granted": true
+      }
+    ]
+  },
+  "sellerTimeLocale": "en",
+  "refreshToken": "refreshToken",
+  "tokenCreated": "1675854334906",
+  "local_order_uuid": {
+    "pickup": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+    "destination_0": "0af649f5-b0c4-4800-8c98-4f4759de9944"
+  },
+  "country": "KE"
+}

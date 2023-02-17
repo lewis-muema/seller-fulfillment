@@ -12,7 +12,7 @@
     "beta": "cross-env DOCKER_ENV=\"beta\" vue-cli-service build",
     "dev": "cross-env DOCKER_ENV=\"development\" vue-cli-service serve",
     "staging": "cross-env DOCKER_ENV=\"staging\"  vue-cli-service build",
-    "coverage": "npx nyc report --reporter=text-summary --reporter=cobertura --extension=.vue"
+    "coverage": "npx nyc report --reporter=text-summary --reporter=cobertura --extension=.vue --reporter-options 'mochaFile=results/my-test-output-[hash].xml'"
   },
   "dependencies": {
     "@datadog/browser-rum": "^4.19.1",

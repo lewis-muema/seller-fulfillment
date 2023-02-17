@@ -60,7 +60,8 @@ pipeline {
                     reportDir            : 'coverage/lcov-report',
                     reportFiles          : 'index.html',
                     reportName           : 'Coverage Report - HTML'
-                 ]
+                  ]
+                  publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
               }
            }
         }

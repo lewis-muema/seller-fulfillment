@@ -67,7 +67,6 @@ pipeline {
 
         stage("Publish Tests Results") {
             steps {
-
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''
                     ls -al

@@ -60,14 +60,14 @@ pipeline {
                     reportDir            : 'coverage/lcov-report',
                     reportFiles          : 'index.html',
                     reportName           : 'Coverage Report - HTML'
-                 ]
+                  ]
+                  publishCoverage adapters: [cobertura(path: 'coverage/**.xml', mergeToOneReport: true)]
               }
            }
         }
 
         stage("Publish Tests Results") {
             steps {
-
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''
                     ls -al

@@ -26,7 +26,7 @@
           </div>
         </div>
       </v-card-item>
-      <v-card-item>
+      <!-- <v-card-item>
         <div class="integration-card-inner">
           <div class="integration-text mb-1">API Keys</div>
           <v-divider></v-divider>
@@ -47,7 +47,7 @@
             </div>
           </div>
         </div>
-      </v-card-item>
+      </v-card-item> -->
     </v-card>
     <addStore
       v-if="addStoreDialog"
@@ -79,7 +79,6 @@ export default {
 .integrations-card {
   padding: 20px !important;
   border-color: #e2e7ed;
-  min-height: 450px;
 }
 .integration-card-inner {
   margin-top: 60px !important;

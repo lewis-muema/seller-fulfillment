@@ -23,6 +23,7 @@ pipeline {
             steps {
                           
                 sh '''
+                    npm i cross-env
                     npm i eslint
                     npm run lint
                 '''

@@ -23,7 +23,13 @@
           <div>
             <span
               class="add-products-span-header"
-              @click="navigateRoute('/inventory/add-pickup-products')"
+              @click="
+                navigateRoute(
+                  getParent === 'sendy'
+                    ? '/inventory/add-pickup-products'
+                    : '/inventory/add-delivery-products'
+                )
+              "
             >
               <i class="mdi mdi-plus"></i>
               {{ $t("common.addProducts") }}

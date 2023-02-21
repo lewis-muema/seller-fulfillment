@@ -24,11 +24,7 @@
         v-else
       >
         <div v-if="!showEditIcon">
-          <span
-            class="delivery-info-edit"
-            :class="getLoader.orderTracking"
-            v-if="getParent === 'sendy'"
-          >
+          <span class="delivery-info-edit" :class="getLoader.orderTracking">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -78,10 +74,8 @@ export default {
     ]),
     checkEdits() {
       return (
-        this.getParent === "sendy" &&
-        (this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
-          this.getOrderTrackingData.order.order_status ===
-            "ORDER_IN_PROCESSING")
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
     showEditIcon() {
@@ -99,17 +93,15 @@ export default {
       "setEditValue",
     ]),
     nagivateRoute(route) {
-      if (this.getParent === "sendy") {
-        this.$router.push(route);
-        this.sendSegmentEvents({
-          event: "clicked_edit_order_products",
-          data: {
-            userId: this.getStorageUserDetails.business_id,
-            clientType: "web",
-            device: "desktop",
-          },
-        });
-      }
+      this.$router.push(route);
+      this.sendSegmentEvents({
+        event: "clicked_edit_order_products",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     },
     formatProducts(products) {
       if (products.length !== 0) {

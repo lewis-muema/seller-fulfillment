@@ -53,6 +53,79 @@
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
     </div>
+    <div class="tracking-reschedule-container" v-if="popup === 'cancelOptions'">
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.cancelOrder") }} ?
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'cancelOptions')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <div class="cancel-options-text">
+        <p>
+          {{ $t("deliveries.cancelText") }}
+        </p>
+      </div>
+      <div class="d-flex cancel-options-container">
+        <i class="mdi mdi-map-marker-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text" v-if="getParent === 'sendy'">
+          <p>{{ $t("deliveries.wrongPickUpInfo") }}</p>
+          <p class="cancel-options-desc">
+            {{ $t("deliveries.editPickupInfo") }}
+          </p>
+        </div>
+        <div class="cancel-options-text" v-else>
+          <p>{{ $t("deliveries.wrongDeliveryInfo") }}</p>
+          <p class="cancel-options-desc">
+            {{ $t("deliveries.editDeliveryInfo") }}
+          </p>
+        </div>
+      </div>
+      <div
+        class="d-flex cancel-options-container"
+        v-if="getParent === 'customer'"
+      >
+        <i class="mdi mdi-account-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.wrongRecipientInfo") }}</p>
+          <p class="cancel-options-desc">
+            {{ $t("deliveries.editRecipientInfo") }}
+          </p>
+        </div>
+      </div>
+      <div class="d-flex cancel-options-container">
+        <i class="mdi mdi-archive-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.wrongQuantity") }}</p>
+          <p class="cancel-options-desc">{{ $t("deliveries.editProducts") }}</p>
+        </div>
+      </div>
+      <div class="d-flex cancel-options-container">
+        <i class="mdi mdi-clock-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.unavailable") }}</p>
+          <p class="cancel-options-desc">
+            {{ $t("deliveries.rescheduleOrder") }}
+          </p>
+        </div>
+      </div>
+      <div class="cancel-options-container">
+        <div class="row">
+          <div class="col-5">
+            <p class="cancel-options-desc dont-cancel-text">
+              {{ $t("deliveries.dontCancel") }}
+            </p>
+          </div>
+          <div class="col-7">
+            <v-btn class="tracking-cancel-button" @click="cancelPopup()">
+              {{ $t("deliveries.continueToCancel") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -4192,5 +4265,19 @@ export default {
   background: #fbdecf;
   font-weight: 500;
   margin-bottom: 10px;
+}
+.cancel-options-text > p {
+  margin-bottom: 2px !important;
+}
+.cancel-options-desc {
+  color: #324ba8;
+  cursor: pointer;
+}
+.cancel-options-container {
+  margin-top: 20px;
+}
+.dont-cancel-text {
+  margin-bottom: 0 !important;
+  border-bottom: 2px solid #324ba8;
 }
 </style>

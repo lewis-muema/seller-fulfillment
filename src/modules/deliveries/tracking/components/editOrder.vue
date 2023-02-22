@@ -101,7 +101,13 @@
                 {{ $t("deliveries.cartEmpty") }}
               </div>
               <span
-                @click="navigateRoute('/inventory/add-pickup-products')"
+                @click="
+                  navigateRoute(
+                    getParent === 'sendy'
+                      ? '/inventory/add-pickup-products'
+                      : '/inventory/add-delivery-products'
+                  )
+                "
                 class="add-products-span-link"
               >
                 <span class="add-products-span">
@@ -135,8 +141,8 @@
             >
               {{ $t("deliveries.submit") }}
             </v-btn>
-          </div></v-card
-        >
+          </div>
+        </v-card>
       </v-col>
     </v-row>
   </div>
@@ -275,13 +281,16 @@ export default {
 .edit-order-container {
   margin-top: 30px !important;
 }
+
 .orderedProductKes {
   float: right;
 }
+
 .edit-order-button {
   margin-top: 10px !important;
   text-transform: uppercase !important;
 }
+
 .add-products-span-header {
   float: right !important;
   margin: -50px 30px 0px 0px;
@@ -289,9 +298,11 @@ export default {
   text-decoration: none !important;
   cursor: pointer !important;
 }
+
 .add-products-span {
   color: #324ba8;
 }
+
 .add-products-span-link {
   text-decoration: none;
 }

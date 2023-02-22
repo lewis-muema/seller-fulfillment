@@ -474,7 +474,7 @@ export default createStore({
         {
           label: "deliveries.cancelOrder",
           trigger: false,
-          popup: "cancel",
+          popup: "cancelOptions",
           show: true,
           icon: "mdi mdi-close-circle-outline",
         },

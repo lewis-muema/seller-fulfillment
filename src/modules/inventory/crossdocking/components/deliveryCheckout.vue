@@ -10,6 +10,31 @@
           @click="this.$router.go(-1)"
         ></i>
       </div>
+      <div class="autofill-container">
+        <div class="mr-auto">
+          <div class="mb-1">
+            {{ $t("inventory.autofillOrderInformation") }}
+          </div>
+          <div class="autofill-bottom-text">
+            {{ $t("inventory.saveTimeByUploadingTheLPO") }}
+          </div>
+        </div>
+        <div>
+          <button
+            class="btn btn-primary btn-long autofill-upload-button"
+            v-loading="buttonLoader"
+            :disabled="buttonLoader"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: 'uploadLPO',
+              })
+            "
+          >
+            {{ $t("inventory.uploadLPO") }}
+          </button>
+        </div>
+      </div>
       <div v-for="index in indeces" :key="index">
         <el-collapse v-model="getDestinations[index - 1].expanded" accordion>
           <el-collapse-item
@@ -71,6 +96,22 @@
                     ><i class="mdi mdi-chevron-right"></i
                   ></span>
                 </div>
+              </div>
+            </div>
+            <div
+              class="row autofill-review-prompt"
+              v-if="
+                getAutofillReviewStatus && getDestinations[index - 1]?.products
+              "
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                <span class="pr-2">
+                  <i class="mdi mdi-information-outline"></i>
+                </span>
+                <span>
+                  {{ $t("inventory.kindlyReviewTheProductsAndQuantities") }}
+                </span>
               </div>
             </div>
             <div
@@ -152,6 +193,27 @@
               </div>
             </div>
             <div
+              class="row autofill-review-prompt"
+              v-if="
+                getAutofillReviewStatus &&
+                !getDestinations[index - 1]?.delivery_info?.location
+              "
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                <span class="pr-2">
+                  <i class="mdi mdi-information-outline"></i>
+                </span>
+                <span>
+                  {{
+                    $t("inventory.kindlyReviewTheDeliveryInfo", {
+                      Fields: "'Location'",
+                    })
+                  }}
+                </span>
+              </div>
+            </div>
+            <div
               v-if="
                 showErrors &&
                 !(
@@ -217,6 +279,29 @@
                     $t("inventory.change")
                   }}</span>
                   <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </div>
+            </div>
+            <div
+              class="row autofill-review-prompt"
+              v-if="
+                getAutofillReviewStatus &&
+                getMissingAutofillFields(getDestinations[index - 1]?.recipient)
+              "
+            >
+              <div class="col-1"></div>
+              <div class="col-11">
+                <span class="pr-2">
+                  <i class="mdi mdi-information-outline"></i>
+                </span>
+                <span>
+                  {{
+                    $t("inventory.kindlyReviewTheRecipientInfo", {
+                      Fields: getMissingAutofillFields(
+                        getDestinations[index - 1]?.recipient
+                      ),
+                    })
+                  }}
                 </span>
               </div>
             </div>
@@ -997,6 +1082,8 @@ export default {
       "getPickUpSpeed",
       "getDeliverySpeed",
       "getMismatchedDates",
+      "getAutofillDetails",
+      "getAutofillReviewStatus",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -1147,11 +1234,11 @@ export default {
             delivery_location:
               this.getPickUpInfoCD.place && this.getPickUpInfoCD.location
                 ? {
-                    description: this.getPickUpInfoCD.location,
+                    description: this.getPickUpInfoCD?.location,
                     longitude:
-                      this.getPickUpInfoCD.place.geometry.location.lng(),
+                      this.getPickUpInfoCD?.place?.geometry?.location?.lng(),
                     latitude:
-                      this.getPickUpInfoCD.place.geometry.location.lat(),
+                      this.getPickUpInfoCD?.place?.geometry?.location?.lat(),
                   }
                 : null,
             house_location: "",
@@ -1238,11 +1325,11 @@ export default {
               : "",
             delivery_location: destination.delivery_info
               ? {
-                  description: destination.delivery_info.location,
+                  description: destination?.delivery_info?.location,
                   longitude:
-                    destination.delivery_info.place.geometry.location.lng(),
+                    destination?.delivery_info?.place?.geometry?.location?.lng(),
                   latitude:
-                    destination.delivery_info.place.geometry.location.lat(),
+                    destination?.delivery_info?.place?.geometry?.location?.lat(),
                 }
               : null,
             house_location: destination.delivery_info
@@ -1355,6 +1442,8 @@ export default {
       "setMismatchedDates",
       "setEditValue",
       "setGeofenceData",
+      "setAutofillDetails",
+      "setAutofillReviewStatus",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1366,6 +1455,11 @@ export default {
         this.setSelectedProducts([]);
         this.$router.push("/inventory/add-delivery-products");
       }
+    },
+    getMissingAutofillFields(fields) {
+      return `${!fields?.recipient_type ? "'Recipient type'" : ""}${
+        !fields?.customer_name ? "'Customer name'" : ""
+      }${!fields?.phone ? "'Phone number'" : ""}`;
     },
     productQuantities(reference) {
       let stock = 0;
@@ -1803,6 +1897,7 @@ export default {
               date: "",
               FC: "",
             });
+            this.setAutofillReviewStatus(false);
             this.resetInput();
             if (this.onboardingStatus) {
               this.$router.push("/");
@@ -2172,5 +2267,33 @@ export default {
   background: #a1a0a017;
   padding: 0px 10px;
   margin-left: -10px;
+}
+.autofill-container {
+  display: flex;
+  width: 100%;
+  height: 80px;
+  border: 1px solid #c0c4cc;
+  align-items: center;
+  border-radius: 5px;
+  margin-top: 25px;
+  margin-bottom: -10px;
+  padding: 10px 25px;
+}
+.autofill-bottom-text {
+  font-size: 15px;
+  color: #909399;
+}
+.autofill-upload-button {
+  color: #314ba8 !important;
+  border: 1px solid #314ba8;
+  background: white !important;
+  font-weight: 500 !important;
+}
+.autofill-review-prompt {
+  color: #7f3b02;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: -15px !important;
+  margin-bottom: 10px !important;
 }
 </style>

@@ -316,5 +316,15 @@
   "availableStock": "Available stock",
   "unsellableStock": "Unsellable stock",
   "unitsAvailable": "{Count} units available",
-  "unitsDamaged": "{Count} units damaged"
+  "unitsDamaged": "{Count} units damaged",
+  "autofillOrderInformation": "Autofill order information",
+  "saveTimeByUploadingTheLPO": "Save time by uploading the LPO",
+  "uploadLPO": "Upload LPO",
+  "uploadLPOdocument": "Upload LPO document",
+  "PDFandimage": "*PDF and image only",
+  "couldNotUploadDocument": "Could not upload document",
+  "autofillCompleted": "Autofill completed. Please review the information",
+  "kindlyReviewTheProductsAndQuantities": "Kindly review the products and quantities",
+  "kindlyReviewTheDeliveryInfo": "Kindly review the delivery info. Missing fields ({Fields})",
+  "kindlyReviewTheRecipientInfo": "Kindly review the recipient info. Missing fields ({Fields})"
 }

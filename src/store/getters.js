@@ -131,4 +131,7 @@ export default {
   getMismatchedDates: (state) => state.mismatchedDates,
   getConsignmentReturn: (state) => state.consignmentReturn,
   getConsignmentReturnSpeed: (state) => state.consignmentReturnSpeed,
+  getAutofillDetails: (state) => state.autofillDetails,
+  getAutoFillVariants: (state) => state.autoFillVariants,
+  getAutofillReviewStatus: (state) => state.autofillReviewStatus,
 };

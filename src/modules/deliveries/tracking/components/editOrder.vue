@@ -129,11 +129,15 @@
               {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
             </p>
             <v-divider />
-            <div class="mt-2">{{ $t("inventory.fees") }}</div>
-            <p class="mt-2">
-              <span>{{ $t("inventory.pickupFee") }}</span>
-              <span class="orderedProductKes">{{ currency }} {{ amount }}</span>
-            </p>
+            <div v-if="getParent === 'sendy'">
+              <div class="mt-2">{{ $t("inventory.fees") }}</div>
+              <p class="mt-2">
+                <span>{{ $t("inventory.pickupFee") }}</span>
+                <span class="orderedProductKes"
+                  >{{ currency }} {{ amount }}</span
+                >
+              </p>
+            </div>
             <v-btn
               v-loading="buttonLoader"
               @click="submitChanges()"

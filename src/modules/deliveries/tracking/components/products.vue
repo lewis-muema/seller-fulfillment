@@ -6,10 +6,7 @@
       </span>
       <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span
-            :class="getLoader.orderTracking"
-            v-if="!showEditIcon || !crossDockedOrder"
-          >
+          <span :class="getLoader.orderTracking" v-if="!showEditIconOnProducts">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -26,8 +23,12 @@
         "
         v-else
       >
-        <div v-if="!showEditIcon">
-          <span class="delivery-info-edit" :class="getLoader.orderTracking">
+        <div>
+          <span
+            class="delivery-info-edit"
+            :class="getLoader.orderTracking"
+            v-if="!showEditIconOnProducts"
+          >
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -81,15 +82,31 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
-    showEditIcon() {
+    cancelledFailedCompletedOrders() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
       );
+    },
+    showEditIconOnProducts() {
+      let result = false;
+      if (this.crossDockedOrder) {
+        result = true;
+      }
+      if (this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
+        result = true;
+      }
+      if (this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
+        result = true;
+      }
+      return result;
     },
     crossDockedOrder() {
       let crossdocked = false;
-      if (this.getOrderTrackingData.cross_dock_linked_orders?.length > 0) {
+      if (
+        this.getOrderTrackingData.order.cross_dock_linked_orders?.length > 0
+      ) {
         crossdocked = true;
       }
       return crossdocked;

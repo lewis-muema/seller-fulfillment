@@ -134,7 +134,7 @@
           </span>
         </div>
       </div>
-      <div class="d-flex cancel-options-container">
+      <div class="d-flex cancel-options-container" v-if="!crossDockedOrder">
         <i class="mdi mdi-archive-outline mr-3 delivery-info-marker"></i>
         <div class="cancel-options-text">
           <p>{{ $t("deliveries.wrongQuantity") }}</p>
@@ -2726,6 +2726,15 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
+    },
+    crossDockedOrder() {
+      let crossdocked = false;
+      if (
+        this.getOrderTrackingData.order.cross_dock_linked_orders?.length > 0
+      ) {
+        crossdocked = true;
+      }
+      return crossdocked;
     },
   },
   beforeMount() {

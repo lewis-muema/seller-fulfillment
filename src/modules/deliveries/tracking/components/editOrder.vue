@@ -209,7 +209,7 @@ export default {
     ]),
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
     navigateRoute(route) {
-      this.setEditValue("consignment");
+      this.setEditValue(true);
       this.$router.push(route);
     },
     async submitChanges() {
@@ -233,7 +233,7 @@ export default {
             type: "success",
           });
           this.buttonLoader = false;
-          this.setEditValue("inventory");
+          this.setEditValue(false);
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },

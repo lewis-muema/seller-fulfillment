@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="getEditValue !== 'consignment'">
+    <v-row v-if="!getEditValue">
       <v-col cols="6" class="mx-auto mt-4 mb-3">
         <el-steps :active="0" finish-status="success">
           <el-step :title="$t('inventory.selectProducts')"></el-step>
@@ -9,7 +9,7 @@
         </el-steps>
       </v-col>
     </v-row>
-    <v-row :class="getEditValue === 'consignment' ? 'mt-5' : ''">
+    <v-row :class="getEditValue ? 'mt-5' : ''">
       <v-col cols="8">
         <v-card variant="outlined" class="desktop-select-products-card">
           <div class="select-products-container">
@@ -422,7 +422,7 @@ export default {
     },
     addProductStep() {
       if (this.getSelectedProducts.length > 0) {
-        if (this.getEditValue === "consignment") {
+        if (this.getEditValue) {
           this.mapProductsOnOrder();
           this.setProductsToSubmit([
             ...this.getProductsToSubmit,
@@ -431,7 +431,7 @@ export default {
           this.setMappedSelectedProducts([]);
         }
         this.$router.push(
-          this.getEditValue === "consignment"
+          this.getEditValue
             ? "/deliveries/edit-order"
             : `/inventory/add-pickup-quantities`
         );
@@ -444,7 +444,7 @@ export default {
       }
     },
     mapProductsOnOrder() {
-      if (this.getEditValue === "consignment") {
+      if (this.getEditValue) {
         if (this.selectedProducts.length) {
           this.selectedProducts.forEach((product) => {
             const quantity = product.selectedOption

@@ -23,7 +23,7 @@ export default createStore({
       ],
       exportDataType: "",
       parent: "",
-      editValue: "inventory",
+      editValue: false,
       defaultLanguage: "en",
       mappedSelectedProducts: [],
       external: [

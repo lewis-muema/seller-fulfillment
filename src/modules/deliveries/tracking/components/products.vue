@@ -6,7 +6,10 @@
       </span>
       <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span :class="getLoader.orderTracking" v-if="!showEditIcon">
+          <span
+            :class="getLoader.orderTracking"
+            v-if="!showEditIcon || !crossDockedOrder"
+          >
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -83,6 +86,13 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
       );
+    },
+    crossDockedOrder() {
+      let crossdocked = false;
+      if (this.getOrderTrackingData.cross_dock_linked_orders?.length > 0) {
+        crossdocked = true;
+      }
+      return crossdocked;
     },
   },
   methods: {

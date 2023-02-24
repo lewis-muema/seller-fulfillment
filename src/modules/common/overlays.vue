@@ -28,14 +28,22 @@
       </v-btn>
     </div>
     <div class="tracking-reschedule-container" v-if="popup === 'cancel'">
-      <div class="tracking-reschedule-title-section">
+      <div>
+        <span
+          class="cancel-back-text"
+          @click="
+            setOverlayStatus({
+              overlay: true,
+              popup: 'cancelOptions',
+            })
+          "
+        >
+          <i class="mdi mdi-arrow-left delivery-info-marker"></i>
+          Back
+        </span>
         <p class="tracking-cancel-title-label">
           {{ $t("deliveries.whyCancel") }}
         </p>
-        <i
-          @click="overlayStatusSet(false, 'cancel')"
-          class="mdi mdi-close tracking-reschedule-title-close"
-        ></i>
       </div>
       <v-radio-group v-model="cancelReason">
         <v-radio
@@ -153,7 +161,10 @@
           </span>
         </div>
       </div>
-      <div class="d-flex cancel-options-container">
+      <div
+        class="d-flex cancel-options-container"
+        v-if="getParent === 'customer'"
+      >
         <i class="mdi mdi-clock-outline mr-3 delivery-info-marker"></i>
         <div class="cancel-options-text">
           <p>{{ $t("deliveries.unavailable") }}</p>
@@ -3673,7 +3684,7 @@ export default {
 
 .tracking-cancel-title-label {
   font-size: 15px;
-  width: 80%;
+  width: 100%;
 }
 
 .tracking-cancel-button {
@@ -4413,5 +4424,8 @@ export default {
 .dont-cancel-text {
   margin-bottom: 0 !important;
   border-bottom: 2px solid #324ba8;
+}
+.cancel-back-text {
+  cursor: pointer;
 }
 </style>

@@ -1313,7 +1313,7 @@ export default {
   mounted() {
     this.getDefaultPaymentMethod();
     this.activeBillingCycle();
-    this.setEditValue("");
+    this.setEditValue(false);
     this.setPaymentCollectionStatus({
       status: "",
       amountToBeCollected: "",

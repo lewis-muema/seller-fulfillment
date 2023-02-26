@@ -15,7 +15,7 @@ pipeline {
         stage('ES Lint') {
             agent { 
                 docker { 
-                    image 'node:14.20.0-alpine'
+                    image 'node:14-alpine'
                     args '--user root'     
                 } 
             }
@@ -23,6 +23,7 @@ pipeline {
             steps {
                           
                 sh '''
+                    npm i cross-env
                     npm i eslint
                     npm run lint
                 '''

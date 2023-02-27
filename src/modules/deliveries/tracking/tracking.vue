@@ -168,19 +168,16 @@ export default {
       "getParent",
       "getStorageUserDetails",
       "getParent",
+      "getEditableFields",
     ]),
     deliveryActions() {
       const actions = [];
       this.getDeliveryActions.forEach((row) => {
         let showCancel = true;
-        if (row.popup === "cancel") {
-          showCancel =
-            ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
-              this.getOrderTrackingData.order.order_status
-            ) ||
-            this.getOrderTrackingData.order.order_event_status.includes(
-              "pickup"
-            );
+        if (row.popup === "cancelOptions") {
+          showCancel = ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
+            this.getOrderTrackingData.order.order_status
+          );
         }
         let showCode =
           (row.popup === "code" &&
@@ -231,6 +228,7 @@ export default {
       "setDeliverySpeed",
       "setFinalDocumentsToEdit",
       "setCancellationReasons",
+      "setEditableFields",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
@@ -262,6 +260,7 @@ export default {
             this.getOrderTrackingData.order.documents
           );
           this.setProductsToSubmit(response.data.data.order.products);
+          this.editableFields();
           if (response.data.data.order.order_type === "PICKUP") {
             this.setParent("sendy");
             this.setLoader({
@@ -284,6 +283,16 @@ export default {
           this.setCancellationReasons(
             response.data.data["cancellation-reasons"]
           );
+        }
+      });
+    },
+    editableFields() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}/editablefields`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setEditableFields(response.data.data.editablefields);
         }
       });
     },

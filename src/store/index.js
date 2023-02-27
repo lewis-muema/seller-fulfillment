@@ -36,6 +36,7 @@ export default createStore({
       ],
       autofillDetails: {},
       cancellationReasons: {},
+      editableFields: {},
       autoFillVariants: [],
       autofillReviewStatus: false,
       deliverySpeed: [

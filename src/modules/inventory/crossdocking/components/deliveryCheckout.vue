@@ -196,7 +196,8 @@
               class="row autofill-review-prompt"
               v-if="
                 getAutofillReviewStatus &&
-                !getDestinations[index - 1]?.delivery_info?.location
+                (!getDestinations[index - 1]?.delivery_info?.location ||
+                  !getDestinations[index - 1]?.delivery_info?.place)
               "
             >
               <div class="col-1"></div>
@@ -1459,7 +1460,11 @@ export default {
     getMissingAutofillFields(fields) {
       return `${!fields?.recipient_type ? "'Recipient type'" : ""}${
         !fields?.customer_name ? "'Customer name'" : ""
-      }${!fields?.phone ? "'Phone number'" : ""}`;
+      }${
+        !fields?.phone || !/^\+([0-9 ]+)$/i.test(fields?.phone)
+          ? "'Phone number'"
+          : ""
+      }`;
     },
     productQuantities(reference) {
       let stock = 0;

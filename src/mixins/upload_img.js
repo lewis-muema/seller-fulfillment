@@ -142,6 +142,10 @@ const upload = {
           this.setAutofillDetails(response.data.deliveries);
           if (response.data.deliveries.products.length) {
             this.fetchAutofillProducts(0);
+          } else {
+            clearInterval(uploadtimer);
+            this.uploadPercentage = 100;
+            this.autoFillFormDetails(0, []);
           }
         } else {
           clearInterval(uploadtimer);
@@ -203,8 +207,7 @@ const upload = {
     },
     autoFillFormDetails(x, finalProducts) {
       const destinationDetails = this.getAutofillDetails?.destination;
-      this.destinations.splice(x, 0, {
-        products: finalProducts,
+      const destinationPayload = {
         expanded: 1,
         preferences: false,
         POD: {
@@ -221,7 +224,11 @@ const upload = {
           secondary_phone_number: "",
           recipient_type: destinationDetails?.buyer_type,
         },
-      });
+      };
+      if (finalProducts.length) {
+        destinationPayload.products = finalProducts;
+      }
+      this.destinations.splice(x, 0, destinationPayload);
     },
     sanitizeFilename(name) {
       const temp_name = `B-000-1111_${new Date().getTime()}.${name

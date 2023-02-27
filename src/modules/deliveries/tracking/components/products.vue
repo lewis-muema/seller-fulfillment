@@ -97,7 +97,7 @@ export default {
       if (this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
         result = true;
       }
-      if (this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
+      if (!this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
         result = true;
       }
       return result;

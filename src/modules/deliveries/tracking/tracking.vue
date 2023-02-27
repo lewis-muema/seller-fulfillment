@@ -216,6 +216,7 @@ export default {
       this.rescheduleStatus("customer");
     }
     this.fetchOrder();
+    this.cancellationReasons();
   },
   methods: {
     ...mapMutations([
@@ -229,6 +230,7 @@ export default {
       "setProductsToSubmit",
       "setDeliverySpeed",
       "setFinalDocumentsToEdit",
+      "setCancellationReasons",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
@@ -270,6 +272,18 @@ export default {
             this.setParent("customer");
             this.fetchPickup();
           }
+        }
+      });
+    },
+    cancellationReasons() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/cancellation-reasons`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCancellationReasons(
+            response.data.data["cancellation-reasons"]
+          );
         }
       });
     },

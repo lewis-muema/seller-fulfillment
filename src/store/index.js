@@ -35,6 +35,7 @@ export default createStore({
         "/external/invite",
       ],
       autofillDetails: {},
+      cancellationReasons: {},
       autoFillVariants: [],
       autofillReviewStatus: false,
       deliverySpeed: [

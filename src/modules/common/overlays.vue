@@ -47,10 +47,10 @@
       </div>
       <v-radio-group v-model="cancelReason">
         <v-radio
-          v-for="(reason, x) in cancelReasons"
+          v-for="(reason, x) in getCancellationReasons"
           :key="x"
-          :label="$t(reason.label)"
-          :value="$t(reason.value)"
+          :label="$t(reason.reason_description)"
+          :value="$t(reason.reason_id)"
         ></v-radio>
       </v-radio-group>
       <v-btn
@@ -2667,6 +2667,7 @@ export default {
       "getConsignmentReturnSpeed",
       "getConsignmentReturn",
       "getAutoFillVariants",
+      "getCancellationReasons",
     ]),
     partnerNotAssigned() {
       return (

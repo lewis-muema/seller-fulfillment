@@ -137,6 +137,9 @@ export default {
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
   },
+  setCancellationReasons(state, val) {
+    state.cancellationReasons = val;
+  },
   setErrors(state, val) {
     state.errors = val;
   },

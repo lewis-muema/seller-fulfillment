@@ -90,9 +90,9 @@
                       required
                     />
                   </td>
-<!--                  <div class="crossdocking-product-counter-error">-->
-<!--                    {{ unavailableProducts(selectedProduct) }}-->
-<!--                  </div>-->
+                  <!--                  <div class="crossdocking-product-counter-error">-->
+                  <!--                    {{ unavailableProducts(selectedProduct) }}-->
+                  <!--                  </div>-->
                 </tr>
               </tbody>
             </v-table>

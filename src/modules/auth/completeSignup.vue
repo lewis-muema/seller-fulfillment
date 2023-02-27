@@ -236,6 +236,7 @@ export default {
         business: {
           business_id: this.businessId,
           business_industry_id: this.params.industryOfBusiness,
+          terms_of_service_accepted: true,
         },
         user: {
           first_name: this.params.firstName,

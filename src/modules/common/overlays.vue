@@ -164,7 +164,10 @@
           </span>
         </div>
       </div>
-      <div class="d-flex cancel-options-container">
+      <div
+        class="d-flex cancel-options-container"
+        v-if="getParent === 'customer'"
+      >
         <i class="mdi mdi-clock-outline mr-3 delivery-info-marker"></i>
         <div class="cancel-options-text">
           <p>{{ $t("deliveries.unavailable") }}</p>

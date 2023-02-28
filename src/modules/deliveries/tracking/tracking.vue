@@ -260,7 +260,9 @@ export default {
             this.getOrderTrackingData.order.documents
           );
           this.setProductsToSubmit(response.data.data.order.products);
-          this.editableFields();
+          this.getParent === "customer"
+            ? this.editableFieldsOnConsignmemts()
+            : this.editableFieldsOnPickups();
           if (response.data.data.order.order_type === "PICKUP") {
             this.setParent("sendy");
             this.setLoader({
@@ -286,10 +288,20 @@ export default {
         }
       });
     },
-    editableFields() {
+    editableFieldsOnConsignmemts() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}/editablefields`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setEditableFields(response.data.data.editablefields);
+        }
+      });
+    },
+    editableFieldsOnPickups() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}/editablefields`,
       }).then((response) => {
         if (response.status === 200) {
           this.setEditableFields(response.data.data.editablefields);

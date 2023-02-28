@@ -16,7 +16,10 @@
                 $t("inventory.archived")
               }}</span>
             </v-card-title>
-            <div class="product-options-container">
+            <div
+              class="product-options-container"
+              v-if="!getLoader.productDetails"
+            >
               <span
                 v-for="(action, i) in filteredActions"
                 :key="i"
@@ -93,6 +96,7 @@ export default {
       "getStockSelectedTab",
       "getProduct",
       "getStorageUserDetails",
+      "getLoader",
     ]),
     stockSelectedTab() {
       return this.getStockSelectedTab;

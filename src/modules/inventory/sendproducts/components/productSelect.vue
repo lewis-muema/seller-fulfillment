@@ -421,7 +421,7 @@ export default {
       });
     },
     addProductStep() {
-      if (this.getSelectedProducts.length > 0) {
+      if (this.totalProducts > 0) {
         if (this.getEditValue) {
           this.mapProductsOnOrder();
           this.setProductsToSubmit([

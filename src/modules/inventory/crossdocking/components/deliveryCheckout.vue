@@ -10,29 +10,40 @@
           @click="this.$router.go(-1)"
         ></i>
       </div>
-      <div class="autofill-container">
-        <div class="mr-auto">
-          <div class="mb-1">
-            {{ $t("inventory.autofillOrderInformation") }}
+      <div class="autofill-container" v-if="LPOAutofillFlag()">
+        <div class="autofill-container-inner">
+          <div class="mr-auto">
+            <div class="mb-1">
+              {{ $t("inventory.autofillOrderInformation") }}
+            </div>
+            <div class="autofill-bottom-text">
+              {{ $t("inventory.saveTimeByUploadingTheLPO") }}
+            </div>
           </div>
-          <div class="autofill-bottom-text">
-            {{ $t("inventory.saveTimeByUploadingTheLPO") }}
+          <div>
+            <button
+              class="btn btn-primary btn-long autofill-upload-button"
+              v-loading="buttonLoader"
+              :disabled="buttonLoader"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'uploadLPO',
+                })
+              "
+            >
+              {{ $t("inventory.uploadLPO") }}
+            </button>
           </div>
         </div>
-        <div>
-          <button
-            class="btn btn-primary btn-long autofill-upload-button"
-            v-loading="buttonLoader"
-            :disabled="buttonLoader"
-            @click="
-              setOverlayStatus({
-                overlay: true,
-                popup: 'uploadLPO',
-              })
-            "
-          >
-            {{ $t("inventory.uploadLPO") }}
-          </button>
+        <div v-if="getLPOUploadError" class="autofill-error">
+          <div>
+            <i
+              class="mdi mdi-alert-outline autofill-error-icon"
+              aria-hidden="true"
+            ></i>
+          </div>
+          <div>{{ getLPOUploadError }}</div>
         </div>
       </div>
       <div v-for="index in indeces" :key="index">
@@ -1085,6 +1096,7 @@ export default {
       "getMismatchedDates",
       "getAutofillDetails",
       "getAutofillReviewStatus",
+      "getLPOUploadError",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -1456,6 +1468,11 @@ export default {
         this.setSelectedProducts([]);
         this.$router.push("/inventory/add-delivery-products");
       }
+    },
+    LPOAutofillFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.lpo_autofill_enabled
+        : false;
     },
     getMissingAutofillFields(fields) {
       return `${!fields?.recipient_type ? "'Recipient type'" : ""}${
@@ -2274,15 +2291,13 @@ export default {
   margin-left: -10px;
 }
 .autofill-container {
-  display: flex;
   width: 100%;
-  height: 80px;
   border: 1px solid #c0c4cc;
   align-items: center;
   border-radius: 5px;
   margin-top: 25px;
   margin-bottom: -10px;
-  padding: 10px 25px;
+  padding: 15px 25px;
 }
 .autofill-bottom-text {
   font-size: 15px;
@@ -2300,5 +2315,20 @@ export default {
   font-weight: 500;
   margin-top: -15px !important;
   margin-bottom: 10px !important;
+}
+.autofill-container-inner {
+  display: flex;
+}
+.autofill-error {
+  margin-top: 10px;
+  color: #9b101c;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.autofill-error-icon {
+  font-size: 20px;
+  margin: 10px;
 }
 </style>

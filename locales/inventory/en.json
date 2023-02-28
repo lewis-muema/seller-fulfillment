@@ -326,5 +326,6 @@
   "autofillCompleted": "Autofill completed. Please review the information",
   "kindlyReviewTheProductsAndQuantities": "Kindly review the products and quantities",
   "kindlyReviewTheDeliveryInfo": "Kindly review the delivery info. Missing fields ({Fields})",
-  "kindlyReviewTheRecipientInfo": "Kindly review the recipient info. Missing fields ({Fields})"
+  "kindlyReviewTheRecipientInfo": "Kindly review the recipient info. Missing fields ({Fields})",
+  "weCouldntUseThisFile": "We couldn’t use this file. Please choose another one or fill in manually"
 }

@@ -2828,15 +2828,6 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
-    crossDockedOrder() {
-      let crossdocked = false;
-      if (
-        this.getOrderTrackingData.order.cross_dock_linked_orders?.length > 0
-      ) {
-        crossdocked = true;
-      }
-      return crossdocked;
-    },
   },
   beforeMount() {
     if (localStorage.country) {

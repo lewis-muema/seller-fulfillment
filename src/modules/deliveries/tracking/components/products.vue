@@ -83,24 +83,8 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
-    cancelledFailedCompletedOrders() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
-      );
-    },
     showEditIconOnProducts() {
       return this.getEditableFields.products;
-    },
-    crossDockedOrder() {
-      let crossdocked = false;
-      if (
-        this.getOrderTrackingData.order.cross_dock_linked_orders?.length > 0
-      ) {
-        crossdocked = true;
-      }
-      return crossdocked;
     },
   },
   methods: {

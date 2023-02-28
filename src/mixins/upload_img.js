@@ -11,7 +11,11 @@ const upload = {
     ...mapGetters(["getAutofillDetails", "getAutoFillVariants"]),
   },
   methods: {
-    ...mapMutations(["setAutofillDetails", "setAutoFillVariants"]),
+    ...mapMutations([
+      "setAutofillDetails",
+      "setAutoFillVariants",
+      "setLPOUploadError",
+    ]),
     uploadImg(id) {
       this.productUploadStatus = true;
       const files = document.getElementById(id)["files"];
@@ -139,6 +143,7 @@ const upload = {
         values: payload,
       }).then((response) => {
         if (response.status === 200) {
+          this.setLPOUploadError("");
           this.setAutofillDetails(response.data.deliveries);
           if (response.data.deliveries.products.length) {
             this.fetchAutofillProducts(0);
@@ -149,10 +154,12 @@ const upload = {
           }
         } else {
           clearInterval(uploadtimer);
+          this.setLPOUploadError(this.$t("inventory.weCouldntUseThisFile"));
+          this.overlayStatusSet(false, "uploadLPO");
           this.LPOUploadStatus = false;
           ElNotification({
             title: this.$t("inventory.couldNotUploadDocument"),
-            message: err.message,
+            message: "",
             type: "error",
           });
         }
@@ -167,43 +174,51 @@ const upload = {
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/products/bulk-create-product-variants`,
         values: { products: this.getAutofillDetails.products },
-      }).then((response) => {
-        if (response.status === 200) {
-          clearInterval(uploadtimer);
-          this.uploadPercentage = 100;
-          const products = response.data.products;
-          const finalProducts = [];
-          this.getAutofillDetails.products.forEach((variants) => {
-            products.forEach((product) => {
-              product.product_variants.filter((row) => {
-                const condition =
-                  row.universal_product_code ===
-                  variants.universal_product_code;
-                if (condition && product.product_variants.length > 1) {
-                  row.quantity = variants.quantity;
-                  const altProduct = Object.assign({}, product);
-                  altProduct.selectedOption = row;
-                  altProduct.quantity = variants.quantity;
-                  finalProducts.push(altProduct);
-                } else if (condition && product.product_variants.length === 1) {
-                  product.quantity = variants.quantity;
-                  finalProducts.push(product);
-                }
-                return condition;
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.setLPOUploadError("");
+            clearInterval(uploadtimer);
+            this.uploadPercentage = 100;
+            const products = response.data.products;
+            const finalProducts = [];
+            this.getAutofillDetails.products.forEach((variants) => {
+              products.forEach((product) => {
+                product.product_variants.filter((row) => {
+                  const condition =
+                    row.universal_product_code ===
+                    variants.universal_product_code;
+                  if (condition && product.product_variants.length > 1) {
+                    row.quantity = variants.quantity;
+                    const altProduct = Object.assign({}, product);
+                    altProduct.selectedOption = row;
+                    altProduct.quantity = variants.quantity;
+                    finalProducts.push(altProduct);
+                  } else if (
+                    condition &&
+                    product.product_variants.length === 1
+                  ) {
+                    product.quantity = variants.quantity;
+                    finalProducts.push(product);
+                  }
+                  return condition;
+                });
               });
             });
-          });
-          this.autoFillFormDetails(x, finalProducts);
-        } else {
-          clearInterval(uploadtimer);
-          this.LPOUploadStatus = false;
-          ElNotification({
-            title: this.$t("inventory.couldNotUploadDocument"),
-            message: err.message,
-            type: "error",
-          });
-        }
-      });
+            this.autoFillFormDetails(x, finalProducts);
+          } else {
+            clearInterval(uploadtimer);
+            this.LPOUploadStatus = false;
+            this.setLPOUploadError(this.$t("inventory.weCouldntUseThisFile"));
+            this.overlayStatusSet(false, "uploadLPO");
+            ElNotification({
+              title: this.$t("inventory.couldNotUploadDocument"),
+              message: this.$t("inventory.weCouldntUseThisFile"),
+              type: "error",
+            });
+          }
+        })
+        .catch(() => {});
     },
     autoFillFormDetails(x, finalProducts) {
       const destinationDetails = this.getAutofillDetails?.destination;
@@ -228,7 +243,7 @@ const upload = {
       if (finalProducts.length) {
         destinationPayload.products = finalProducts;
       }
-      this.destinations.splice(x, 0, destinationPayload);
+      this.destinations.splice(x, 1, destinationPayload);
     },
     sanitizeFilename(name) {
       const temp_name = `B-000-1111_${new Date().getTime()}.${name

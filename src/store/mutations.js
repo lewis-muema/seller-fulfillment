@@ -395,4 +395,7 @@ export default {
   setAutofillReviewStatus(state, val) {
     state.autofillReviewStatus = val;
   },
+  setLPOUploadError(state, val) {
+    state.LPOUploadError = val;
+  },
 };

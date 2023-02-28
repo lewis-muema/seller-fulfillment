@@ -36,6 +36,7 @@ export default createStore({
       ],
       autofillDetails: {},
       autoFillVariants: [],
+      LPOUploadError: "",
       autofillReviewStatus: false,
       deliverySpeed: [
         {

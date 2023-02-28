@@ -47,10 +47,10 @@
       </div>
       <v-radio-group v-model="cancelReason">
         <v-radio
-          v-for="(reason, x) in cancelReasons"
+          v-for="(reason, x) in getCancellationReasons"
           :key="x"
-          :label="$t(reason.label)"
-          :value="$t(reason.value)"
+          :label="$t(reason.reason_description)"
+          :value="$t(reason.reason_id)"
         ></v-radio>
       </v-radio-group>
       <v-btn
@@ -134,7 +134,10 @@
           </span>
         </div>
       </div>
-      <div class="d-flex cancel-options-container" v-if="!crossDockedOrder">
+      <div
+        class="d-flex cancel-options-container"
+        v-if="showEditIconOnProducts"
+      >
         <i class="mdi mdi-archive-outline mr-3 delivery-info-marker"></i>
         <div class="cancel-options-text">
           <p>{{ $t("deliveries.wrongQuantity") }}</p>
@@ -161,10 +164,7 @@
           </span>
         </div>
       </div>
-      <div
-        class="d-flex cancel-options-container"
-        v-if="getParent === 'customer'"
-      >
+      <div class="d-flex cancel-options-container">
         <i class="mdi mdi-clock-outline mr-3 delivery-info-marker"></i>
         <div class="cancel-options-text">
           <p>{{ $t("deliveries.unavailable") }}</p>
@@ -2667,12 +2667,17 @@ export default {
       "getConsignmentReturnSpeed",
       "getConsignmentReturn",
       "getAutoFillVariants",
+      "getCancellationReasons",
+      "getEditableFields",
     ]),
     partnerNotAssigned() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
+    },
+    showEditIconOnProducts() {
+      return this.getEditableFields.products;
     },
     deliverySpeeds() {
       return this.getDeliverySpeed.length

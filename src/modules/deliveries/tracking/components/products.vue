@@ -6,7 +6,7 @@
       </span>
       <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span :class="getLoader.orderTracking" v-if="!showEditIconOnProducts">
+          <span :class="getLoader.orderTracking" v-if="showEditIconOnProducts">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -27,7 +27,7 @@
           <span
             class="delivery-info-edit"
             :class="getLoader.orderTracking"
-            v-if="!showEditIconOnProducts"
+            v-if="showEditIconOnProducts"
           >
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
@@ -75,6 +75,7 @@ export default {
       "getOrderTrackingData",
       "getParent",
       "getStorageUserDetails",
+      "getEditableFields",
     ]),
     checkEdits() {
       return (
@@ -90,17 +91,7 @@ export default {
       );
     },
     showEditIconOnProducts() {
-      let result = false;
-      if (this.crossDockedOrder) {
-        result = true;
-      }
-      if (this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
-        result = true;
-      }
-      if (!this.crossDockedOrder && this.cancelledFailedCompletedOrders) {
-        result = true;
-      }
-      return result;
+      return this.getEditableFields.products;
     },
     crossDockedOrder() {
       let crossdocked = false;

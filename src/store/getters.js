@@ -76,6 +76,8 @@ export default {
       ? JSON.parse(state.storageUserDetails)
       : {},
   getBillingCycles: (state) => state.billingCycles,
+  getCancellationReasons: (state) => state.cancellationReasons,
+  getEditableFields: (state) => state.editableFields,
   getLineItems: (state) => state.lineItems,
   getInvoice: (state) => state.invoice,
   getEditedPriceIndex: (state) => state.editedPriceIndex,

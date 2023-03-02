@@ -195,7 +195,10 @@ export default {
   watch: {
     "$store.state.loader": {
       handler() {
-        this.productTabs[0].content = `${this.getAllProductCount}`;
+        this.productTabs[0].content =
+          this.getStockStatistics.low_stock_products +
+          this.getStockStatistics.out_of_stock_products +
+          this.getStockStatistics.available_products;
         this.productTabs[1].content =
           Object.keys(this.getStockStatistics).length > 0
             ? this.getStockStatistics.low_stock_products.toString()

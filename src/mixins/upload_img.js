@@ -146,26 +146,21 @@ const upload = {
           this.setLPOUploadError("");
           this.setAutofillDetails(response.data.deliveries);
           if (response.data.deliveries.products.length) {
-            this.fetchAutofillProducts(0);
+            this.fetchAutofillProducts(0, photoKey);
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
-            this.autoFillFormDetails(0, []);
+            this.autoFillFormDetails(0, [], photoKey);
+          }
+          if (response.data.status === 400) {
+            this.failUpload();
           }
         } else {
-          clearInterval(uploadtimer);
-          this.setLPOUploadError(this.$t("inventory.weCouldntUseThisFile"));
-          this.overlayStatusSet(false, "uploadLPO");
-          this.LPOUploadStatus = false;
-          ElNotification({
-            title: this.$t("inventory.couldNotUploadDocument"),
-            message: "",
-            type: "error",
-          });
+          this.failUpload();
         }
       });
     },
-    fetchAutofillProducts(x) {
+    fetchAutofillProducts(x, photoKey) {
       this.getAutofillDetails.products.forEach((row) => {
         row.universal_product_code = row.UPC;
         delete row.UPC;
@@ -205,22 +200,25 @@ const upload = {
                 });
               });
             });
-            this.autoFillFormDetails(x, finalProducts);
+            this.autoFillFormDetails(x, finalProducts, photoKey);
           } else {
-            clearInterval(uploadtimer);
-            this.LPOUploadStatus = false;
-            this.setLPOUploadError(this.$t("inventory.weCouldntUseThisFile"));
-            this.overlayStatusSet(false, "uploadLPO");
-            ElNotification({
-              title: this.$t("inventory.couldNotUploadDocument"),
-              message: this.$t("inventory.weCouldntUseThisFile"),
-              type: "error",
-            });
+            this.failUpload();
           }
         })
         .catch(() => {});
     },
-    autoFillFormDetails(x, finalProducts) {
+    failUpload() {
+      clearInterval(uploadtimer);
+      this.setLPOUploadError(this.$t("inventory.weCouldntUseThisFile"));
+      this.overlayStatusSet(false, "uploadLPO");
+      this.LPOUploadStatus = false;
+      ElNotification({
+        title: this.$t("inventory.couldNotUploadDocument"),
+        message: "",
+        type: "error",
+      });
+    },
+    autoFillFormDetails(x, finalProducts, photoKey) {
       const destinationDetails = this.getAutofillDetails?.destination;
       const destinationPayload = {
         expanded: 1,
@@ -239,6 +237,13 @@ const upload = {
           secondary_phone_number: "",
           recipient_type: destinationDetails?.buyer_type,
         },
+        documents: [
+          {
+            title: "",
+            type: "Local Purchase Order",
+            url: `https://sendy-rnd-textextract.s3-eu-west-1.amazonaws.com/${photoKey}`,
+          },
+        ],
       };
       if (finalProducts.length) {
         destinationPayload.products = finalProducts;

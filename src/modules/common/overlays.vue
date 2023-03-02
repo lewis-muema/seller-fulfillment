@@ -2676,6 +2676,7 @@ export default {
       "setConsignmentReturn",
       "setDestinationIndex",
       "setAutofillReviewStatus",
+      "setAutofillProductStatus",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2694,6 +2695,7 @@ export default {
         type: "success",
       });
       this.setAutofillReviewStatus(true);
+      this.setAutofillProductStatus(true);
       this.resetLPO();
     },
     setGeofence() {

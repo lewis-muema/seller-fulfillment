@@ -398,4 +398,7 @@ export default {
   setLPOUploadError(state, val) {
     state.LPOUploadError = val;
   },
+  setAutofillProductStatus(state, val) {
+    state.autofillProductStatus = val;
+  },
 };

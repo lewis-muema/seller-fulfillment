@@ -112,7 +112,9 @@
             <div
               class="row autofill-review-prompt"
               v-if="
-                getAutofillReviewStatus && getDestinations[index - 1]?.products
+                getAutofillReviewStatus &&
+                getDestinations[index - 1]?.products &&
+                getAutofillProductStatus
               "
             >
               <div class="col-1"></div>
@@ -584,6 +586,18 @@
                         class="payment-method-icon payment-collection-select-text"
                         >mdi-chevron-right</v-icon
                       >
+                    </div>
+                    <div
+                      v-if="paymentOnDeliveryDisabledStatus(index - 1)"
+                      class="autofill-error"
+                    >
+                      <div>
+                        <i
+                          class="mdi mdi-alert-outline autofill-error-icon"
+                          aria-hidden="true"
+                        ></i>
+                      </div>
+                      <div>{{ $t("inventory.outsideGeofence") }}</div>
                     </div>
                   </div>
                 </div>
@@ -1097,6 +1111,7 @@ export default {
       "getAutofillDetails",
       "getAutofillReviewStatus",
       "getLPOUploadError",
+      "getAutofillProductStatus",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -1849,7 +1864,11 @@ export default {
           row.products &&
           row.products.length &&
           row.delivery_info &&
+          row?.delivery_info?.location &&
+          row?.delivery_info?.place &&
           row.recipient &&
+          row?.recipient?.phone &&
+          /^\+([0-9 ]+)$/i.test(row?.recipient?.phone) &&
           ((row.speed && this.speedPolicyFlag) || !this.speedPolicyFlag) &&
           (!this.pickUpRequired ||
             (this.pickUpRequired &&

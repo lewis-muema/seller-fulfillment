@@ -137,4 +137,5 @@ export default {
   getAutoFillVariants: (state) => state.autoFillVariants,
   getAutofillReviewStatus: (state) => state.autofillReviewStatus,
   getLPOUploadError: (state) => state.LPOUploadError,
+  getAutofillProductStatus: (state) => state.autofillProductStatus,
 };

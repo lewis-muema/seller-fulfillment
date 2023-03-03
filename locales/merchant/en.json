@@ -23,7 +23,7 @@
     "validBridgeURL": "A valid bridge URL is required",
     "APIPassword": "Shopify API Password",
     "storeKey": "Store Key",
-    "storeRoot": "Store Root (optional)",
+    "storeRoot": "Store Root",
     "storeName": "Store name",
     "storeUrl": "Store URL",
     "integration": "Integration",

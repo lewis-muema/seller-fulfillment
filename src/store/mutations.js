@@ -137,6 +137,12 @@ export default {
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
   },
+  setCancellationReasons(state, val) {
+    state.cancellationReasons = val;
+  },
+  setEditableFields(state, val) {
+    state.editableFields = val;
+  },
   setErrors(state, val) {
     state.errors = val;
   },
@@ -385,5 +391,20 @@ export default {
   },
   setConsignmentReturnSpeed(state, val) {
     state.consignmentReturnSpeed = val;
+  },
+  setAutofillDetails(state, val) {
+    state.autofillDetails = val;
+  },
+  setAutoFillVariants(state, val) {
+    state.autoFillVariants = val;
+  },
+  setAutofillReviewStatus(state, val) {
+    state.autofillReviewStatus = val;
+  },
+  setLPOUploadError(state, val) {
+    state.LPOUploadError = val;
+  },
+  setAutofillProductStatus(state, val) {
+    state.autofillProductStatus = val;
   },
 };

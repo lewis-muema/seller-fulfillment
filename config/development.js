@@ -25,4 +25,5 @@ module.exports = {
   VUE_APP_VGS_ENVIRONMENT: "sandbox",
   EXTREME_IP_KEY: "dmmw1HciGEhld0FiG2ID",
   MERCHANT_GATEWAY: "https://merchant-gateway-test.sendyit.com/",
+  RND_ORDER_PLACEMENT: "https://rnd-order-placement-test.sendyit.com/",
 };

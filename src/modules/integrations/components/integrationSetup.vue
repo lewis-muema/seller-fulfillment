@@ -144,6 +144,7 @@ import { mapActions } from "vuex";
 import { isValidUrl } from "@/utils/text-validation";
 
 export default {
+  name: "integrationSetup",
   props: {
     setupDialog: {
       type: Boolean,
@@ -232,8 +233,8 @@ export default {
           storeUrl: this.storeUrl,
           storeName: this.storeName,
           cartId: this.storePlatform,
-          // bridgeUrl: this.bridgeUrl ? this.bridgeUrl : "",
-          // storeRoot: this.storeRoot ? this.storeRoot : "",
+          bridgeUrl: this.bridgeUrl,
+          storeRoot: this.storeRoot,
         },
         shopify: {
           storeUrl: this.storeUrl,

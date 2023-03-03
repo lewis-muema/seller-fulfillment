@@ -274,7 +274,6 @@ export default {
       "setOverlayStatus",
       "setEditedPriceIndex",
       "setDestinations",
-      "setAutofillProductStatus",
     ]),
     ...mapActions(["requestAxiosGet"]),
     addProductStep() {
@@ -289,7 +288,7 @@ export default {
           });
         }
         this.setDestinations(destinations);
-        this.setAutofillProductStatus(false);
+        destinations[index].autofillProductStatus = false;
         this.$router.push(`/inventory/create-delivery`);
       } else {
         ElNotification({

@@ -655,7 +655,10 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="popup === 'viewProducts'" class="view-products-container">
+    <div
+      v-if="popup === 'viewProducts'"
+      class="view-products-container view-products-container-inner"
+    >
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.products") }}
@@ -2872,8 +2875,6 @@ export default {
       "setGeofenceData",
       "setConsignmentReturn",
       "setDestinationIndex",
-      "setAutofillReviewStatus",
-      "setAutofillProductStatus",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -2891,8 +2892,6 @@ export default {
         message: this.$t("inventory.autofillCompleted"),
         type: "success",
       });
-      this.setAutofillReviewStatus(true);
-      this.setAutofillProductStatus(true);
       this.resetLPO();
     },
     setGeofence() {
@@ -4581,5 +4580,9 @@ export default {
 }
 .upload-lpo-progress-bar-file-img {
   width: 20px;
+}
+.view-products-container-inner {
+  max-height: 600px;
+  overflow-y: scroll;
 }
 </style>

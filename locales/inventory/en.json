@@ -328,5 +328,6 @@
   "kindlyReviewTheDeliveryInfo": "Kindly review the delivery info. Missing fields ({Fields})",
   "kindlyReviewTheRecipientInfo": "Kindly review the recipient info. Missing fields ({Fields})",
   "weCouldntUseThisFile": "We couldn’t use this file. Please choose another one or fill in manually",
-  "outsideGeofence": "You cannot select payment on delivery for this location"
+  "outsideGeofence": "You cannot select payment on delivery for this location",
+  "couldNotReadProducts": "Sorry, We could not read products from this document"
 }

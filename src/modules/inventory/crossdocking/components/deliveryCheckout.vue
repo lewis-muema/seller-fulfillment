@@ -10,42 +10,6 @@
           @click="this.$router.go(-1)"
         ></i>
       </div>
-      <div class="autofill-container" v-if="LPOAutofillFlag()">
-        <div class="autofill-container-inner">
-          <div class="mr-auto">
-            <div class="mb-1">
-              {{ $t("inventory.autofillOrderInformation") }}
-            </div>
-            <div class="autofill-bottom-text">
-              {{ $t("inventory.saveTimeByUploadingTheLPO") }}
-            </div>
-          </div>
-          <div>
-            <button
-              class="btn btn-primary btn-long autofill-upload-button"
-              v-loading="buttonLoader"
-              :disabled="buttonLoader"
-              @click="
-                setOverlayStatus({
-                  overlay: true,
-                  popup: 'uploadLPO',
-                })
-              "
-            >
-              {{ $t("inventory.uploadLPO") }}
-            </button>
-          </div>
-        </div>
-        <div v-if="getLPOUploadError" class="autofill-error">
-          <div>
-            <i
-              class="mdi mdi-alert-outline autofill-error-icon"
-              aria-hidden="true"
-            ></i>
-          </div>
-          <div>{{ getLPOUploadError }}</div>
-        </div>
-      </div>
       <div v-for="index in indeces" :key="index">
         <el-collapse v-model="getDestinations[index - 1].expanded" accordion>
           <el-collapse-item
@@ -60,6 +24,37 @@
             "
             :name="1"
           >
+            <div class="autofill-container" v-if="LPOAutofillFlag()">
+              <div class="autofill-container-inner">
+                <div class="mr-auto">
+                  <div class="mb-1">
+                    {{ $t("inventory.autofillOrderInformation") }}
+                  </div>
+                  <div class="autofill-bottom-text">
+                    {{ $t("inventory.saveTimeByUploadingTheLPO") }}
+                  </div>
+                </div>
+                <div>
+                  <button
+                    class="btn btn-primary btn-long autofill-upload-button"
+                    v-loading="buttonLoader"
+                    :disabled="buttonLoader"
+                    @click="openAutofillPopup(index - 1)"
+                  >
+                    {{ $t("inventory.uploadLPO") }}
+                  </button>
+                </div>
+              </div>
+              <div v-if="getLPOUploadError" class="autofill-error">
+                <div>
+                  <i
+                    class="mdi mdi-alert-outline autofill-error-icon"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+                <div>{{ getLPOUploadError }}</div>
+              </div>
+            </div>
             <div
               class="mb-4 row cross-docking-checkout-row cross-docking-checkout-product-row"
             >
@@ -112,9 +107,9 @@
             <div
               class="row autofill-review-prompt"
               v-if="
-                getAutofillReviewStatus &&
+                getDestinations[index - 1]?.autofillReviewStatus &&
                 getDestinations[index - 1]?.products &&
-                getAutofillProductStatus
+                getDestinations[index - 1]?.autofillProductStatus
               "
             >
               <div class="col-1"></div>
@@ -208,7 +203,7 @@
             <div
               class="row autofill-review-prompt"
               v-if="
-                getAutofillReviewStatus &&
+                getDestinations[index - 1]?.autofillReviewStatus &&
                 (!getDestinations[index - 1]?.delivery_info?.location ||
                   !getDestinations[index - 1]?.delivery_info?.place)
               "
@@ -299,7 +294,7 @@
             <div
               class="row autofill-review-prompt"
               v-if="
-                getAutofillReviewStatus &&
+                getDestinations[index - 1]?.autofillReviewStatus &&
                 getMissingAutofillFields(getDestinations[index - 1]?.recipient)
               "
             >
@@ -1109,9 +1104,7 @@ export default {
       "getDeliverySpeed",
       "getMismatchedDates",
       "getAutofillDetails",
-      "getAutofillReviewStatus",
       "getLPOUploadError",
-      "getAutofillProductStatus",
     ]),
     indeces() {
       return this.getDestinations.length;
@@ -1471,7 +1464,6 @@ export default {
       "setEditValue",
       "setGeofenceData",
       "setAutofillDetails",
-      "setAutofillReviewStatus",
     ]),
     ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     addProducts(index) {
@@ -1483,6 +1475,13 @@ export default {
         this.setSelectedProducts([]);
         this.$router.push("/inventory/add-delivery-products");
       }
+    },
+    openAutofillPopup(index) {
+      this.setDestinationIndex(index);
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "uploadLPO",
+      });
     },
     LPOAutofillFlag() {
       return this.getBusinessDetails.settings
@@ -1724,8 +1723,8 @@ export default {
       this.getSpeed();
       const destinations = this.getDestinations;
       if (
-        destinations.length &&
-        destinations[this.getDestinationIndex].products
+        destinations?.length &&
+        destinations[this.getDestinationIndex]?.products
       ) {
         this.setLoader({
           type: "calculateFee",
@@ -1770,7 +1769,7 @@ export default {
       });
     },
     preselectPickupSpeed(speeds) {
-      const nextDay = speeds[0].proposed_speeds.filter((speed) => {
+      const nextDay = speeds[0]?.proposed_speeds.filter((speed) => {
         return speed.speed_pricing_type === "SENDY_NEXT_DAY";
       });
       const pickUpInfoCD = this.getPickUpInfoCD;
@@ -1784,7 +1783,7 @@ export default {
       }
     },
     preselectDestinationSpeed(speeds) {
-      const nextDay = speeds[this.getDestinationIndex].proposed_speeds.filter(
+      const nextDay = speeds[this.getDestinationIndex]?.proposed_speeds.filter(
         (speed) => {
           return speed.speed_pricing_type === "SENDY_NEXT_DAY";
         }
@@ -1802,7 +1801,7 @@ export default {
     },
     speedValidation(speeds) {
       if (this.getPickUpInfoCD.pickupSpeed) {
-        const pickUpValidationList = speeds.pickups[0].proposed_speeds.filter(
+        const pickUpValidationList = speeds.pickups[0]?.proposed_speeds.filter(
           (speed) => {
             return (
               speed.speed_pricing_type ===
@@ -1819,7 +1818,7 @@ export default {
         }
       }
       const destination = this.getDestinations[this.getDestinationIndex];
-      if (destination.speed) {
+      if (destination?.speed) {
         const destinationValidationList = speeds.deliveries[
           this.getDestinationIndex
         ].proposed_speeds.filter((speed) => {
@@ -1938,7 +1937,6 @@ export default {
               date: "",
               FC: "",
             });
-            this.setAutofillReviewStatus(false);
             this.resetInput();
             if (this.onboardingStatus) {
               this.$router.push("/");
@@ -2314,8 +2312,7 @@ export default {
   border: 1px solid #c0c4cc;
   align-items: center;
   border-radius: 5px;
-  margin-top: 25px;
-  margin-bottom: -10px;
+  margin-bottom: 15px;
   padding: 15px 25px;
 }
 .autofill-bottom-text {

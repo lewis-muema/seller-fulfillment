@@ -146,19 +146,41 @@ const upload = {
           this.setLPOUploadError("");
           this.setAutofillDetails(response.data.deliveries);
           if (response.data.deliveries.products.length) {
-            this.fetchAutofillProducts(0, photoKey);
+            this.fetchAutofillProducts(this.getDestinationIndex, photoKey);
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
-            this.autoFillFormDetails(0, [], photoKey);
+            this.autoFillFormDetails(this.getDestinationIndex, [], photoKey);
+            ElNotification({
+              title: this.$t("inventory.couldNotReadProducts"),
+              message: "",
+              type: "warning",
+            });
           }
-          if (response.data.status === 400) {
+          if (
+            response.data.status === 400 &&
+            this.emptyUploadStatus(response)
+          ) {
             this.failUpload();
           }
         } else {
           this.failUpload();
         }
       });
+    },
+    emptyUploadStatus(response) {
+      const data = response?.data?.deliveries;
+      if (
+        data?.products?.length ||
+        data?.destination?.name ||
+        data?.destination?.phone_number ||
+        data?.destination?.house_location ||
+        data?.destination?.delivery_instructions ||
+        data?.destination?.delivery_location?.description
+      ) {
+        return false;
+      }
+      return true;
     },
     fetchAutofillProducts(x, photoKey) {
       this.getAutofillDetails.products.forEach((row) => {
@@ -202,7 +224,14 @@ const upload = {
             });
             this.autoFillFormDetails(x, finalProducts, photoKey);
           } else {
-            this.failUpload();
+            clearInterval(uploadtimer);
+            this.uploadPercentage = 100;
+            this.autoFillFormDetails(x, [], photoKey);
+            ElNotification({
+              title: this.$t("inventory.couldNotReadProducts"),
+              message: "",
+              type: "warning",
+            });
           }
         })
         .catch(() => {});
@@ -237,6 +266,8 @@ const upload = {
           secondary_phone_number: "",
           recipient_type: destinationDetails?.buyer_type,
         },
+        autofillReviewStatus: true,
+        autofillProductStatus: true,
         documents: [
           {
             title: "",

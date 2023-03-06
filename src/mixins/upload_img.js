@@ -8,7 +8,12 @@ let uploadtimer;
 
 const upload = {
   computed: {
-    ...mapGetters(["getAutofillDetails", "getAutoFillVariants"]),
+    ...mapGetters([
+      "getAutofillDetails",
+      "getAutoFillVariants",
+      "getBusinessDetails",
+      "getUserDetails",
+    ]),
   },
   methods: {
     ...mapMutations([
@@ -136,6 +141,11 @@ const upload = {
     fetchAutofillDetails(photoKey) {
       const payload = {
         invoice_location: photoKey,
+        seller_name: this.getBusinessDetails?.business_name,
+        seller_id: this.getBusinessDetails?.business_id,
+        user_name: `${this.getUserDetails?.first_name} ${this.getUserDetails?.last_name}`,
+        user_id: this.getUserDetails?.user_id,
+        client_app: "Fulfilment Web Seller App",
       };
       this.requestAxiosPost({
         app: process.env.RND_ORDER_PLACEMENT,

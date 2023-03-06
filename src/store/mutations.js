@@ -386,4 +386,19 @@ export default {
   setConsignmentReturnSpeed(state, val) {
     state.consignmentReturnSpeed = val;
   },
+  setAutofillDetails(state, val) {
+    state.autofillDetails = val;
+  },
+  setAutoFillVariants(state, val) {
+    state.autoFillVariants = val;
+  },
+  setAutofillReviewStatus(state, val) {
+    state.autofillReviewStatus = val;
+  },
+  setLPOUploadError(state, val) {
+    state.LPOUploadError = val;
+  },
+  setAutofillProductStatus(state, val) {
+    state.autofillProductStatus = val;
+  },
 };

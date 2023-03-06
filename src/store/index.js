@@ -34,6 +34,11 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
       ],
+      autofillDetails: {},
+      autoFillVariants: [],
+      LPOUploadError: "",
+      autofillReviewStatus: false,
+      autofillProductStatus: false,
       deliverySpeed: [
         {
           local_order_uuid: "42757fc9-ffee-40ba-b965-a493731e9957",

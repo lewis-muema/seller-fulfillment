@@ -288,6 +288,7 @@ export default {
           });
         }
         this.setDestinations(destinations);
+        destinations[index].autofillProductStatus = false;
         this.$router.push(`/inventory/create-delivery`);
       } else {
         ElNotification({

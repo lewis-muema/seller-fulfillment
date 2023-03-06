@@ -172,4 +172,7 @@ export default {
   overflow: visible !important;
   text-overflow: inherit !important;
 }
+.dashboard-cards .v-list-item {
+  padding: 12px 0px !important;
+}
 </style>

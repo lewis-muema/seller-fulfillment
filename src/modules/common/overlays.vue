@@ -493,7 +493,10 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="popup === 'viewProducts'" class="view-products-container">
+    <div
+      v-if="popup === 'viewProducts'"
+      class="view-products-container view-products-container-inner"
+    >
       <div class="view-products-section">
         <p class="view-products-label">
           {{ $t("deliveries.products") }}
@@ -2212,6 +2215,95 @@
         </v-btn>
       </div>
     </div>
+    <div
+      class="tracking-reschedule-container upload-lpo-container"
+      v-if="popup === 'uploadLPO'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="delivery-option-crossdock-title">
+          {{ $t("inventory.uploadLPOdocument") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'uploadLPO')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <div class="deactivate-user-section-bottom">
+        <div
+          v-if="v$.LPO.$error"
+          class="error-msg withdraw-transaction-error mt-2 mb-3"
+        >
+          <i class="mdi mdi-alert mr-3"></i>
+          {{ $t("inventory.pleaseUploadDocumentToProceed") }}
+        </div>
+        <div
+          class="crossdocking-add-document-drop"
+          @click="uploadLPOFile()"
+          v-loading="LPOUploadStatus"
+          v-if="!LPOUploadStatus"
+        >
+          <input
+            type="file"
+            name
+            value
+            class="form-control"
+            placeholder="Upload"
+            accept="image/*,application/pdf"
+            id="upload-lpo-card"
+            style="display: none"
+            @change="uploadLPO('upload-lpo-card', 'option')"
+          />
+          <div class="crossdocking-add-document-drop-inner">
+            <p class="upload mb-1">
+              <i class="mdi mdi-upload" aria-hidden="true"></i>
+              {{ $t("inventory.uploadLPOdocument") }}
+            </p>
+            <p class="autofill-bottom-text">
+              {{ $t("inventory.PDFandimage") }}
+            </p>
+          </div>
+        </div>
+        <div class="d-flex upload-lpo-progress-bar" v-else>
+          <div>
+            <img
+              src="https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/fulfillment_products/B-000-1111_1677076527968.png"
+              alt=""
+              class="upload-lpo-progress-bar-file-img"
+            />
+          </div>
+          <div class="upload-lpo-progress-bar-container">
+            <div class="d-flex">
+              <div class="upload-lpo-progress-bar-file-name">
+                {{ LPOFileName }}
+              </div>
+              <div class="ml-auto">
+                <img
+                  @click="resetLPO()"
+                  src="https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/fulfillment_products/B-000-1111_1677076419299.png"
+                  alt=""
+                  class="upload-lpo-progress-bar-delete"
+                />
+              </div>
+            </div>
+            <el-progress
+              :stroke-width="10"
+              :percentage="uploadPercentage"
+              color="#324BA8"
+            />
+          </div>
+        </div>
+        <div class="mt-5" @click="validateFields()">
+          <v-btn
+            v-loading="buttonLoader"
+            :disabled="uploadPercentage !== 100"
+            class="cross-docking-upload-doc"
+            @click="formatAutofillDetails()"
+          >
+            {{ $t("inventory.continue") }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
   </v-overlay>
 </template>
 
@@ -2254,8 +2346,10 @@ export default {
       apartmentName: "",
       recepientOption: "",
       PDFUploadStatus: "",
+      LPOUploadStatus: "",
       documents: [],
       PDF: "",
+      LPO: "",
       cancelReasons: [
         {
           label: "deliveries.orderIsNotReady",
@@ -2332,6 +2426,9 @@ export default {
       pickUpDate: new Date(),
       consignmentReturnDate: new Date(),
       consignmentReturnsOption: "",
+      uploadPercentage: 0,
+      LPOFileName: "",
+      destinations: [],
     };
   },
   validations() {
@@ -2342,6 +2439,7 @@ export default {
       PDF: { required },
       documentType: { required },
       phone: { required },
+      LPO: { required },
     };
   },
   watch: {
@@ -2408,6 +2506,7 @@ export default {
       "getDeliveryInfo",
       "getConsignmentReturnSpeed",
       "getConsignmentReturn",
+      "getAutoFillVariants",
     ]),
     partnerNotAssigned() {
       return (
@@ -2578,12 +2677,25 @@ export default {
       "setFinalDocumentsToEdit",
       "setGeofenceData",
       "setConsignmentReturn",
+      "setDestinationIndex",
     ]),
     validateFields() {
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    formatAutofillDetails() {
+      this.overlayStatusSet(false, "uploadLPO");
+      this.destinations.forEach((row, i) => {
+        this.getDestinations[i] = row;
+      });
+      ElNotification({
+        title: "",
+        message: this.$t("inventory.autofillCompleted"),
+        type: "success",
+      });
+      this.resetLPO();
     },
     setGeofence() {
       this.requestAxiosPost({
@@ -2782,6 +2894,14 @@ export default {
     },
     uploadPDFFile() {
       document.querySelector("#upload-pdf-card").click();
+    },
+    uploadLPOFile() {
+      document.querySelector("#upload-lpo-card").click();
+    },
+    resetLPO() {
+      this.LPOUploadStatus = false;
+      this.LPO = "";
+      this.uploadPercentage = 0;
     },
     selectPickUpOption() {
       this.setPickUpOptions({
@@ -4192,5 +4312,34 @@ export default {
   background: #fbdecf;
   font-weight: 500;
   margin-bottom: 10px;
+}
+.upload-lpo-container {
+  width: 450px;
+}
+.upload-lpo-progress-bar {
+  height: 80px;
+  align-items: center;
+  border: 1px solid #dcdfe6;
+  padding: 10px;
+  border-radius: 5px;
+}
+.upload-lpo-progress-bar-file-name {
+  font-size: 13px;
+}
+.upload-lpo-progress-bar-container {
+  width: 100%;
+  margin-left: 25px;
+}
+.upload-lpo-progress-bar-delete {
+  width: 13px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.upload-lpo-progress-bar-file-img {
+  width: 20px;
+}
+.view-products-container-inner {
+  max-height: 600px;
+  overflow-y: scroll;
 }
 </style>

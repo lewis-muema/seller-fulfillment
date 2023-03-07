@@ -12,6 +12,7 @@
     "lint": "cross-env DOCKER_ENV=\"development\" vue-cli-service lint",
     "beta": "cross-env DOCKER_ENV=\"beta\" vue-cli-service build",
     "dev": "cross-env DOCKER_ENV=\"development\" vue-cli-service serve",
+    "prod": "cross-env DOCKER_ENV=\"production\" vue-cli-service serve",
     "staging": "cross-env DOCKER_ENV=\"staging\"  vue-cli-service build",
     "coverage": "npx nyc report --reporter=text-summary --reporter=cobertura --extension=.vue --reporter-options 'mochaFile=results/my-test-output-[hash].xml'"
   },

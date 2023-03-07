@@ -559,7 +559,7 @@ export default {
       inventory: [
         {
           item: this.$t("settings.inventoryRunningLow"),
-          id: "",
+          id: "STOCK_LEVEL_THRESHOLD_REACHED",
         },
         {
           item: this.$t("settings.inventoryAcceptedAtTheFulfillmentCentre"),
@@ -692,6 +692,7 @@ export default {
       });
     },
     filteredFields(field) {
+      console.log("field", field);
       const fields = [];
       field.forEach((row) => {
         if (row.id) {

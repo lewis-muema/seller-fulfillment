@@ -135,6 +135,9 @@ export default {
         case "Card":
           paymentMethod = name.toUpperCase();
           break;
+        case "Bank":
+          paymentMethod = name.toUpperCase();
+          break;
         case "Virtual Accounts":
           paymentMethod = (
             name.substring(0, 7) +

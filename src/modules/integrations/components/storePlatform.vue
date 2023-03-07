@@ -26,7 +26,7 @@
               density="compact"
               v-model="platform"
               @update:modelValue="onPlatformSet"
-              :items="['Woocommerce', 'Shopify', 'Magento']"
+              :items="availableStores"
               outlined
             ></v-select>
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
@@ -52,6 +52,7 @@
 </template>
 <script>
 import storeDetails from "./storeDetails.vue";
+import stores from "../constants/storeFields.json";
 
 export default {
   components: { storeDetails },
@@ -59,6 +60,13 @@ export default {
     displayDialog: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    availableStores() {
+      return Object.keys(stores).sort((a, b) => {
+        return a - b;
+      });
     },
   },
   data() {

@@ -15,6 +15,7 @@
         </h5>
         <p>{{ $t("dashboard.whatsHappening") }}</p>
       </span>
+      <wallet-banner class="dashboard-payment-banner" />
       <makePayment />
       <top-card />
       <v-row>
@@ -36,6 +37,7 @@ import onboarding from "./components/onboarding.vue";
 import dashboardTabsContent from "@/modules/dashboard/components/dashboardTabsContent";
 import makePayment from "../payments/statements/components/makePayment.vue";
 import topCard from "@/modules/dashboard/components/topCard";
+import walletBanner from "@/modules/payments/wallet/components/walletBanner.vue";
 import moment from "moment";
 
 export default {
@@ -45,6 +47,7 @@ export default {
     dashboardTabsContent,
     makePayment,
     onboarding,
+    walletBanner,
   },
   data() {
     return {
@@ -74,6 +77,7 @@ export default {
     this.getDeliveryStats();
     this.getPickUpStats();
     this.getStockStats();
+    this.allBillingCycle();
   },
   methods: {
     ...mapMutations([
@@ -85,6 +89,7 @@ export default {
       "setConsignmentStatistics",
       "setDeliveriesStatisticsToday",
       "setConsignmentStatisticsToday",
+      "setBillingCycles",
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
@@ -110,6 +115,16 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    allBillingCycle() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setBillingCycles(response.data.data.billing_cycles);
+        }
+      });
     },
     getDeliveryStats() {
       this.setLoader({
@@ -227,5 +242,10 @@ export default {
 .dashbard-container {
   margin-left: 30px;
   margin-top: 30px;
+}
+.dashboard-payment-banner {
+  max-width: 92% !important;
+  margin: 0px !important;
+  margin-bottom: 30px !important;
 }
 </style>

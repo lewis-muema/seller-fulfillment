@@ -692,7 +692,6 @@ export default {
       });
     },
     filteredFields(field) {
-      console.log("field", field);
       const fields = [];
       field.forEach((row) => {
         if (row.id) {

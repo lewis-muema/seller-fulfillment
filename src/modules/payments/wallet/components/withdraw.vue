@@ -152,7 +152,7 @@ export default {
           ).toUpperCase();
           break;
         default:
-          paymentMethod = name;
+          paymentMethod = name.toUpperCase();
           break;
       }
       return paymentMethod;

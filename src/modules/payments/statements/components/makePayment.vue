@@ -1,10 +1,10 @@
 <template>
-  <div class="make-payment-container v-col v-col-11" v-if="prompt">
+  <div class="make-payment-container v-col v-col-11" v-if="!prompt">
     <i class="mdi mdi-alert-circle-outline make-payment-warning-icon"></i>
     <div>
       <p class="make-payment-title">
         <span :class="getLoader.pendingPayment">
-          {{ $t("payments.pleaseMakePayment") }}
+          {{ $t("payments.paymentOverdue") }}
         </span>
       </p>
       <p class="make-payment-description">
@@ -51,17 +51,19 @@ export default {
 <style>
 .make-payment-container {
   display: flex;
-  border: 1px solid #9b101c;
   padding: 12px;
   border-radius: 10px;
   margin: 30px 30px 30px 0px;
   width: 95%;
-  background: white;
+  background: #fbdecf;
 }
 .make-payment-warning-icon {
   color: #9b101c;
-  margin: 0px 30px;
-  font-size: 25px;
+  margin: 0px 20px;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  height: 60px;
 }
 .make-payment-title {
   color: #9b101c;

@@ -1,101 +1,63 @@
 <template>
-  <div>
-    <div style="color: #303133">{{ $t("dashboard.quickLinks") }}</div>
+  <div class="d-flex">
     <v-card
-      class="mt-3 desktop-quick-links-card q"
+      class="desktop-quick-links-tabs"
       variant="outlined"
       v-for="(link, i) in quickLinks"
       :key="i"
+      @click="$router.push(link.path)"
     >
-      <span class="d-flex quick-links">
-        <v-icon class="desktop-quick-links-icon">{{ link.icon }}</v-icon>
-        <div class="router" @click="$router.push(link.path)">
+      <span class="quick-links-tabs-items">
+        <img
+          v-if="link.new"
+          :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/new.png`"
+          alt=""
+          class="quick-links-tabs-image quick-links-tabs-new-badge"
+        />
+        <img
+          :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/${link.icon}`"
+          alt=""
+          class="quick-links-tabs-image"
+        />
+        <div class="router quick-links-tabs-text">
           {{ $t(link.name) }}
         </div>
       </span>
     </v-card>
-    <div class="dashboard-wallet-container">
-      <p class="dashboard-wallet-title">{{ $t("payments.wallet") }}</p>
-      <v-card class="mt-3 dashboard-wallet-card" variant="outlined">
-        <v-list-item two-line @click="$router.push('/payments/wallet')">
-          <v-list-item-avatar>
-            <v-icon class="mr-5 desktop-quick-links-icon">mdi-wallet</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-header>
-            <v-list-item-title>
-              {{ $t("dashboard.availableBalance") }}</v-list-item-title
-            >
-            <v-list-item-subtitle>
-              <span class="mr-1 desktop-quick-links-balance">{{
-                getWallets[0]?.currency
-                  ? getWallets[0].currency
-                  : getBusinessDetails.currency
-              }}</span>
-              <span class="desktop-quick-links-balance">{{
-                getWallets[0]?.wallet_balance ? getWallets[0].wallet_balance : 0
-              }}</span>
-            </v-list-item-subtitle>
-          </v-list-item-header>
-        </v-list-item>
-      </v-card>
-    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
       quickLinks: [
         {
-          icon: "mdi-truck",
-          name: "common.sendDeliveryToCustomer",
+          icon: "delivery.png",
+          name: "dashboard.deliverToCustomer",
           path: "/inventory/create-delivery",
+          new: false,
         },
         {
-          icon: "mdi-home-city",
-          name: "common.sendInventoryToSendy",
+          icon: "storage.png",
+          name: "dashboard.sendForStorage",
           path: "/inventory/add-pickup-products",
+          new: false,
         },
         {
-          icon: "mdi-undo",
-          name: "common.sendBackInventory",
+          icon: "on-demand.png",
+          name: "dashboard.deliverOnDemand",
           path: "/inventory/add-consignment-return-products",
+          new: true,
         },
         {
-          icon: "mdi-plus-thick",
-          name: "common.addProducts",
+          icon: "hire-vehicle.png",
+          name: "dashboard.addProducts",
           path: "/inventory/add-product",
+          new: false,
         },
       ],
     };
-  },
-  mounted() {
-    this.getUserWallets();
-  },
-  computed: {
-    ...mapGetters([
-      "getWallets",
-      "getStorageUserDetails",
-      "getBusinessDetails",
-    ]),
-  },
-  methods: {
-    ...mapActions(["requestAxiosGet"]),
-    ...mapMutations(["setWallets"]),
-    getUserWallets() {
-      this.requestAxiosGet({
-        app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/wallets`,
-      }).then((response) => {
-        if (response.status === 200) {
-          this.setWallets(response.data.data.wallets);
-        } else {
-          this.setWallets([]);
-        }
-      });
-    },
   },
 };
 </script>
@@ -137,5 +99,37 @@ export default {
   border-color: #e2e7ed;
   background: white;
   padding: 5px;
+}
+.desktop-quick-links-tabs {
+  border: none;
+  height: 95px;
+  width: 180px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  background: #ddf0ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.quick-links-tabs-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.quick-links-tabs-image {
+  width: 35px;
+}
+.quick-links-tabs-text {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 3px;
+}
+.quick-links-tabs-new-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 </style>

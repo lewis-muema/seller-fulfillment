@@ -3,13 +3,14 @@ import { isValidUrl } from "@/utils/text-validation";
 import i18n from "@/i18n";
 
 export default class Stores {
-  constructor(store) {
+  constructor(store, availableStores = storeFields) {
     this.store = store;
     this.storeRequiredFields = [];
+    this.availableStores = availableStores;
   }
 
   getStoreFields() {
-    const fields = JSON.parse(JSON.stringify(storeFields[this.store]));
+    const fields = JSON.parse(JSON.stringify(this.availableStores[this.store]));
     for (const field of fields) {
       const rules = [];
       if (field.required) {

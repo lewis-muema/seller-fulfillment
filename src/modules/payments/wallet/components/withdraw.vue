@@ -126,34 +126,42 @@ export default {
       "setWithDrawalMethods",
       "setWithDrawalAmount",
     ]),
-    meansOfPayment(name) {
+    meansOfPayment(name, val) {
       let paymentMethod = "";
-      switch (name) {
-        case "M-PESA":
-          paymentMethod = name.toUpperCase().replace("-", "");
-          break;
-        case "Card":
-          paymentMethod = name.toUpperCase();
-          break;
-        case "Bank":
-          paymentMethod = name.toUpperCase();
-          break;
-        case "Cheque":
-          paymentMethod = name.toUpperCase();
-          break;
-        case "Cash":
-          paymentMethod = name.toUpperCase();
-          break;
-        case "Virtual Accounts":
-          paymentMethod = (
-            name.substring(0, 7) +
-            "_" +
-            name.substring(8, name.length)
-          ).toUpperCase();
-          break;
-        default:
-          paymentMethod = name.toUpperCase();
-          break;
+      const payMethod =
+        this.getBusinessDetails?.settings?.payment_methods?.filter((row) => {
+          return row.sendy_payment_method_id === val.pay_method_id;
+        });
+      if (payMethod?.length) {
+        paymentMethod = payMethod[0].payment_method;
+      } else {
+        switch (name) {
+          case "M-PESA":
+            paymentMethod = name.toUpperCase().replace("-", "");
+            break;
+          case "Card":
+            paymentMethod = name.toUpperCase();
+            break;
+          case "Bank":
+            paymentMethod = name.toUpperCase();
+            break;
+          case "Cheque":
+            paymentMethod = name.toUpperCase();
+            break;
+          case "Cash":
+            paymentMethod = name.toUpperCase();
+            break;
+          case "Virtual Accounts":
+            paymentMethod = (
+              name.substring(0, 7) +
+              "_" +
+              name.substring(8, name.length)
+            ).toUpperCase();
+            break;
+          default:
+            paymentMethod = name.toUpperCase();
+            break;
+        }
       }
       return paymentMethod;
     },
@@ -182,7 +190,8 @@ export default {
             business_id: this.getBusinessDetails.business_id,
             means_of_payment: {
               means_of_payment_type: this.meansOfPayment(
-                selectedPaymentOption._value.pay_method_name
+                selectedPaymentOption._value.pay_method_name,
+                selectedPaymentOption._value
               ),
               means_of_payment_id: selectedPaymentOption._value.pay_detail_id,
               participant_type: null,

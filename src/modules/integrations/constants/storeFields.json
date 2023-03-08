@@ -1,0 +1,44 @@
+{
+    "Shopify":[
+        {
+            "fieldName":"shopifyApiKey",
+            "required": true
+        },
+        {
+            "fieldName": "shopifyApiPassword",
+            "required": true
+        },
+        {
+            "fieldName":"shopifyAccessToken",
+            "required":true
+        },
+        {
+            "fieldName":"shopifySharedSecret",
+            "required": true
+        }
+    ],
+    "Woocommerce":[
+        {
+            "fieldName":"storeKey",
+            "required": true
+        },
+        {
+            "fieldName":"bridgeUrl"
+        },
+        {
+            "fieldName":"storeRoot"
+        }
+    ],
+    "Magento": [
+         {
+            "fieldName":"bridgeUrl"
+        },
+        {
+            "fieldName":"storeKey",
+            "required": true
+        },
+        {
+            "fieldName":"storeRoot"
+        }
+    ]
+}

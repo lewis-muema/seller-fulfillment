@@ -32,70 +32,20 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
-          <div v-if="storePlatform === 'Shopify'">
-            <v-form ref="shopify" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="APIKey"
-                :label="$t('merchant.APIKey')"
-                :rules="apiRules"
-                required
-                density="compact"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="APIPassword"
-                :label="$t('merchant.APIPassword')"
-                :rules="passwordRules"
-                required
-                density="compact"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="accessToken"
-                :label="$t('merchant.accessToken')"
-                :rules="tokenRules"
-                required
-                density="compact"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="secret"
-                :label="$t('merchant.sharedSecret')"
-                :rules="secretRules"
-                required
-                density="compact"
-              ></v-text-field>
-            </v-form>
-            <v-btn class="sendy-btn-default" @click="validateForm('shopify')">
+          <v-form ref="default" v-model="valid" lazy-validation>
+            <v-text-field
+              v-for="(field, index) in storeObj.storeRequiredFields"
+              :key="index"
+              v-model="field.value"
+              :label="$t(`merchant.${field.fieldName}`)"
+              :required="field.required"
+              :rules="field.rules"
+              density="compact"
+            ></v-text-field>
+            <v-btn class="sendy-btn-default" @click="validateForm('default')">
               {{ $t("merchant.continue") }}
             </v-btn>
-          </div>
-          <div v-else>
-            <v-form ref="default" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="storeKey"
-                :label="$t('merchant.storeKey')"
-                :rules="storeKeyRules"
-                required
-                density="compact"
-              ></v-text-field>
-              <v-text-field
-                v-model="bridgeUrl"
-                :label="$t('merchant.bridgeUrl')"
-                :rules="bridgeUrlRules"
-                required
-                density="compact"
-              ></v-text-field>
-              <v-text-field
-                v-model="storeRoot"
-                :label="$t('merchant.storeRoot')"
-                density="compact"
-              ></v-text-field>
-              <v-btn class="sendy-btn-default" @click="validateForm('default')">
-                {{ $t("merchant.continue") }}
-              </v-btn>
-            </v-form>
-          </div>
+          </v-form>
           <div class="text-center">
             <v-dialog v-model="connectDialog">
               <v-card class="connect-store">
@@ -141,7 +91,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { isValidUrl } from "@/utils/text-validation";
+import Stores from "../classes/stores";
 
 export default {
   name: "integrationSetup",
@@ -166,57 +116,24 @@ export default {
   data() {
     return {
       valid: true,
-      wooValid: true,
       dialog: false,
       connectDialog: false,
       connecting: false,
       storeConnected: false,
       resultMessage: "",
-      bridgeUrl: "",
-      storeRoot: "",
-      storeKey: "",
-      APIKey: "",
-      APIPassword: "",
-      secret: "",
-      accessToken: "",
-      apiRules: [
-        (v) =>
-          !!v || `${this.$t("merchant.APIKey")}${this.$t("merchant.required")}`,
-      ],
-      passwordRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.APIPassword")}${this.$t("merchant.required")}`,
-      ],
-      secretRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.sharedSecret")}${this.$t("merchant.required")}`,
-      ],
-      tokenRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.accessToken")}${this.$t("merchant.required")}`,
-      ],
-      bridgeUrlRules: [
-        (v) => isValidUrl(v) || this.$t("merchant.validBridgeURL"),
-      ],
-      storeKeyRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.storeKey")}${this.$t("merchant.required")}`,
-      ],
+      storeObj: null,
     };
   },
   mounted() {
+    this.storeObj = new Stores(this.storePlatform);
     this.dialog = this.setupDialog;
+    this.storeObj.getStoreFields();
   },
   watch: {
     setupDialog() {
       if (this.setupDialog) this.dialog = true;
     },
   },
-  computed: {},
   methods: {
     ...mapActions(["connectStore"]),
     async validateForm(formName) {
@@ -225,28 +142,23 @@ export default {
         this.connect(formName);
       }
     },
-    async connect(strategy) {
+    async connect() {
       this.connectDialog = true;
       this.connecting = true;
+      const storeFields = {};
+
+      for (const field of this.storeObj.storeRequiredFields) {
+        storeFields[field.fieldName] = field.value;
+      }
+
       const payload = {
-        default: {
-          storeUrl: this.storeUrl,
-          storeName: this.storeName,
-          cartId: this.storePlatform,
-          bridgeUrl: this.bridgeUrl,
-          storeRoot: this.storeRoot,
-        },
-        shopify: {
-          storeUrl: this.storeUrl,
-          storeName: this.storeName,
-          cartId: this.storePlatform,
-          shopifyApiKey: this.APIKey ? this.APIKey : "",
-          shopifyApiPassword: this.APIPassword ? this.APIPassword : "",
-          shopifyAccessToken: this.accessToken ? this.accessToken : "",
-          shopifySharedSecret: this.secret ? this.secret : "",
-        },
+        storeUrl: this.storeUrl,
+        storeName: this.storeName,
+        cartId: this.storePlatform,
+        ...storeFields,
       };
-      this.saveStore(payload[strategy]);
+
+      this.saveStore(payload);
     },
     async saveStore(payload) {
       try {

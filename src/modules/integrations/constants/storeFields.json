@@ -19,30 +19,26 @@
     ],
     "Woocommerce":[
         {
-            "fieldName":"bridgeUrl",
-            "isUrl": true
-        },
-        {
             "fieldName":"storeKey",
             "required": true
         },
         {
-            "fieldName":"storeRoot",
-            "required": true
+            "fieldName":"bridgeUrl"
+        },
+        {
+            "fieldName":"storeRoot"
         }
     ],
     "Magento": [
          {
-            "fieldName":"bridgeUrl",
-            "isUrl": true
+            "fieldName":"bridgeUrl"
         },
         {
             "fieldName":"storeKey",
             "required": true
         },
         {
-            "fieldName":"storeRoot",
-            "required": true
+            "fieldName":"storeRoot"
         }
     ]
 }

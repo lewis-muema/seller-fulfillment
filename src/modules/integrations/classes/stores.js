@@ -11,7 +11,7 @@ export default class Stores {
 
   getStoreFields() {
     const fields = JSON.parse(JSON.stringify(this.availableStores[this.store]));
-    for (const field of fields) {
+    for (const field of fields.sort((a, b) => b.required - a.required)) {
       const rules = [];
       if (field.required) {
         rules.push(
@@ -20,10 +20,10 @@ export default class Stores {
         );
       }
       if (field.isUrl) {
-        rules.push(
-          (v) =>
-            isValidUrl(v) ||
-            `${field.fieldName} ${i18n.global.t("merchant.validUrl")}`
+        rules.push((v) =>
+          v
+            ? isValidUrl(v)
+            : true || `${field.fieldName} ${i18n.global.t("merchant.validUrl")}`
         );
       }
       this.storeRequiredFields.push({
@@ -32,5 +32,9 @@ export default class Stores {
         rules,
       });
     }
+
+    this.storeRequiredFields.sort((a, b) => {
+      return b.required - a.required;
+    });
   }
 }

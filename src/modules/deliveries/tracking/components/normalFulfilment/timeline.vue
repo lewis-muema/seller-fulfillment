@@ -62,11 +62,11 @@
 <script>
 import moment from "moment";
 import { shallowRef } from "vue";
-import statusMixin from "../../../../mixins/status_mixin";
+import statusMixin from "../../../../../mixins/status_mixin";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { Close } from "@element-plus/icons-vue";
-import eventLabels from "../../../../mixins/event_labels";
-import placeholder from "../../../../mixins/placeholders";
+import eventLabels from "../../../../../mixins/event_labels";
+import placeholder from "../../../../../mixins/placeholders";
 
 export default {
   mixins: [statusMixin, eventLabels, placeholder],

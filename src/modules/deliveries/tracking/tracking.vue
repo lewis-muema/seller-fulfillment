@@ -114,10 +114,10 @@
 
 <script>
 import moment from "moment";
-import timeline from "./components/timeline.vue";
-import deliveryInfo from "./components/deliveryInfo.vue";
-import products from "./components/products.vue";
-import failedDelivery from "./components/failedDelivery.vue";
+import timeline from "./components/normalFulfilment/timeline.vue";
+import deliveryInfo from "./components/normalFulfilment/deliveryInfo.vue";
+import products from "./components/normalFulfilment/products.vue";
+import failedDelivery from "./components/normalFulfilment/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import trackingPayloadMixin from "../../../mixins/tracking_payload";
 

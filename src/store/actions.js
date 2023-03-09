@@ -311,4 +311,16 @@ export default {
       return error.response;
     }
   },
+  async getStoreIntegrations({ dispatch }, payload) {
+    try {
+      const response = await dispatch("requestAxiosGet", payload);
+      const { data = null } = response;
+      if (data) {
+        return data;
+      }
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

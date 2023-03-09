@@ -1,4 +1,9 @@
 {
+    "connectedStore": "Connected Store",
+    "noStoreFound":"No store integration found",
+    "learnMoreMsg":"Learn more about connecting your store",
+    "added": "Added",
+    "remove": "Remove",
     "connectStore": "Connect your store",
     "clickToStart": "Click 'Get started' below to follow the steps to connect your online store to automate delivery requests and inventory levels",
     "requirements": "What do I need?",

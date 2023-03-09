@@ -17,6 +17,7 @@ import payments from "../fixtures/paymentRequired.json";
 import productStatistics from "../fixtures/productStatistics.json";
 import statisticsLimit from "../fixtures/statisticsLimit.json";
 import wallets from "../fixtures/wallets.json";
+import transactions from "../fixtures/transactions.json";
 import userDetails from "../fixtures/userDetails.json";
 
 import "cypress-localstorage-commands";
@@ -172,4 +173,28 @@ Cypress.Commands.add("dashboardStubs", () => {
 });
 Cypress.Commands.add("setTokens", () => {
   cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
+});
+Cypress.Commands.add("paymentStubs", () => {
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/transactions`,
+    {
+      statusCode: 200,
+      body: transactions,
+    }
+  ).as("transactions");
+});
+Cypress.Commands.add("setToken", () => {
+  cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));
+  cy.setLocalStorage("language", userDetails.language);
+  cy.setLocalStorage("accessToken", userDetails.accessToken);
+  cy.setLocalStorage("user", JSON.stringify(userDetails.user));
+  cy.setLocalStorage("sellerTimeLocale", userDetails.sellerTimeLocale);
+  cy.setLocalStorage("refreshToken", userDetails.refreshToken);
+  cy.setLocalStorage("tokenCreated", userDetails.tokenCreated);
+  cy.setLocalStorage("country", userDetails.country);
+  cy.setLocalStorage(
+    "local_order_uuid",
+    JSON.stringify(userDetails.local_order_uuid)
+  );
 });

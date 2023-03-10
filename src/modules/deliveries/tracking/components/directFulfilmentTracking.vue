@@ -34,6 +34,7 @@
     </div>
     <div class="col-4">
       <locations />
+      <pickup-info />
     </div>
   </div>
 </template>
@@ -41,9 +42,10 @@
 import moment from "moment";
 import { mapGetters, mapMutations } from "vuex";
 import locations from "../components/directFulfilment/locations.vue";
+import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
 export default {
-  components: { locations, trackingMap },
+  components: { locations, trackingMap, pickupInfo },
   data() {
     return {
       deliveryActions: [
@@ -110,13 +112,13 @@ export default {
 };
 </script>
 <style>
-.direct-fulfilment-location-container {
+.direct-fulfilment-destination-container {
   border: 1px solid #e2e7ed;
   border-radius: 10px;
   width: 100%;
   font-size: 14px;
   background: white;
-  padding: 30px 30px 0px 30px;
+  padding: 30px 30px 20px 30px;
   margin-left: 70px;
   background: #fff;
 }

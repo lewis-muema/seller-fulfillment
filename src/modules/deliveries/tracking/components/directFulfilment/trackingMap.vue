@@ -1,5 +1,7 @@
 <template>
-  <div class="direct-fulfilment-location-container tracking-map-container mt-3">
+  <div
+    class="direct-fulfilment-destination-container tracking-map-container mt-3"
+  >
     Map
   </div>
 </template>

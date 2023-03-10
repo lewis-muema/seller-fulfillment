@@ -1,8 +1,8 @@
 <template>
-  <div class="direct-fulfilment-location-container mt-3">
-    <div class="location-titles-containers">
-      <p class="location-desc-titles">Locations</p>
-      <a class="location-desc-titles add-changes-popup">Add/Change</a>
+  <div class="direct-fulfilment-destination-container mt-3">
+    <div class="destination-titles-containers">
+      <p class="destination-desc-titles">Locations</p>
+      <a class="destination-desc-titles add-changes-popup">Add/Change</a>
     </div>
     <el-timeline class="location-el-timeline-override">
       <el-timeline-item
@@ -12,23 +12,26 @@
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
             <span>Pickup Location</span>
-            <p>Afya Center, Moi Avenue, Nairobi</p>
+            <div class="tttt">Afya Center, Moi Avenue, Nairobi</div>
           </div>
           <div class="destination-delivery-info-container">
             <span>ETA</span>
-            <p>23 May, 9:45am</p>
+            <div>23 May, 9:45am</div>
           </div>
         </div>
       </el-timeline-item>
-      <el-timeline-item :color="color1">
+      <el-timeline-item
+        :color="color1"
+        class="location-el-timeline-item-override"
+      >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
             <span>Pickup Location</span>
-            <p>Afya Center, Moi Avenue, Nairobi</p>
+            <div class="tttt">Afya Center, Moi Avenue, Nairobi</div>
           </div>
           <div class="destination-delivery-info-container">
             <span>ETA</span>
-            <p>23 May, 9:45am</p>
+            <div>23 May, 9:45am</div>
           </div>
         </div>
       </el-timeline-item>
@@ -56,20 +59,21 @@ export default {
 };
 </script>
 <style>
-.location-desc-titles {
+.destination-desc-titles {
   font-size: 17px;
   font-weight: 400;
   margin-bottom: 0px !important;
   color: #606266;
 }
-.location-titles-containers {
+.destination-titles-containers {
   display: flex;
 }
 .location-el-timeline-override {
   padding-left: 0px !important;
   padding-top: 20px;
 }
-.add-changes-popup {
+.add-changes-popup,
+.dest-info-desc {
   margin-left: auto;
 }
 .destination-points-container {
@@ -78,14 +82,14 @@ export default {
 .destination-delivery-info-container {
   margin-left: auto;
 }
-.destination-pickup-info-container > p,
+.destination-pickup-info-container > div,
 .destination-delivery-info-container > span {
   color: #606266;
   font-size: 14px;
   line-height: 18px;
   font-weight: 500;
 }
-destination-delivery-info-container > p {
+.tttt {
   margin-bottom: 0px !important;
 }
 .location-el-timeline-item-override {
@@ -93,5 +97,8 @@ destination-delivery-info-container > p {
 }
 .add-changes-popup {
   color: #324ba8;
+}
+.el-timeline-item__wrapper {
+  top: -13px !important;
 }
 </style>

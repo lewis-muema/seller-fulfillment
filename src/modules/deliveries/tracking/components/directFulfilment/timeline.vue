@@ -1,16 +1,16 @@
 <template>
-  <div class="timline-container">
-    <p class="timeline-title">
+  <div class="direct-fulfilment-destination-container mt-3">
+    <p class="destination-desc-titles">
       {{ $t("deliveries.timeline") }}
     </p>
     <div>
-      <el-timeline>
+      <el-timeline class="location-el-timeline-override">
         <el-timeline-item
-          class="el-timeline-item-desktop"
           v-for="(activity, index) in orderTimelines"
           :key="index"
+          :color="color2"
         >
-          {{ activity.event_code }}
+          {{ activity.translated_event_code }}
         </el-timeline-item>
       </el-timeline>
     </div>
@@ -20,6 +20,7 @@
 export default {
   data() {
     return {
+      color2: "#ee7d00",
       orderTimelines: [
         {
           event_date: 1647870724000,

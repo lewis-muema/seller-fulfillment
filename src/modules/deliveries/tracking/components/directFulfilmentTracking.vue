@@ -34,6 +34,7 @@
     </div>
     <div class="col-4" v-scroll:#scroll-target="onScroll">
       <locations />
+      <timeline />
       <pickup-info />
       <deliveryInfo />
     </div>
@@ -45,9 +46,10 @@ import { mapGetters, mapMutations } from "vuex";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
+import timeline from "../components/directFulfilment/timeline.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
 export default {
-  components: { locations, trackingMap, pickupInfo, deliveryInfo },
+  components: { locations, trackingMap, pickupInfo, deliveryInfo, timeline },
   data() {
     return {
       scrollInvoked: 0,

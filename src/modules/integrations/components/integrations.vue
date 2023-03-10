@@ -5,7 +5,7 @@
       max-width="1000 1   1§  1ES B"
       variant="outlined"
     >
-      <v-card-item>
+      <v-card-item v-loading="storesLoading">
         <div class="integration-text">{{ $t("merchant.connectedStore") }}</div>
         <v-divider class="divider"></v-divider>
         <div
@@ -100,6 +100,7 @@ export default {
   data: () => ({
     addStoreDialog: false,
     connectedStore: {},
+    storesLoading: false,
   }),
   mounted() {
     this.fetchConnectedStores();
@@ -110,6 +111,7 @@ export default {
       this.addStoreDialog = false;
     },
     async fetchConnectedStores() {
+      this.storesLoading = true;
       try {
         const payload = {
           app: process.env.FULFILMENT_API,
@@ -118,6 +120,7 @@ export default {
             channel_id: "2",
           },
         };
+
         const { status, data } = await this.getStoreIntegrations(payload);
         if (status === 200) {
           const { name, created_at } = data.salesChannels.find(
@@ -131,6 +134,8 @@ export default {
         }
       } catch (error) {
         return error;
+      } finally {
+        this.storesLoading = false;
       }
     },
   },
@@ -257,6 +262,12 @@ export default {
     }
   }
 }
+
+.el-loading-mask {
+  opacity: 90%;
+  background-color: white !important;
+}
+
 .v-card-actions {
   display: block !important;
 }

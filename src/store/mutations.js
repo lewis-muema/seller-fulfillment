@@ -137,6 +137,12 @@ export default {
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
   },
+  setCancellationReasons(state, val) {
+    state.cancellationReasons = val;
+  },
+  setEditableFields(state, val) {
+    state.editableFields = val;
+  },
   setErrors(state, val) {
     state.errors = val;
   },

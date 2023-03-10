@@ -46,6 +46,7 @@ import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
 import AddDeliveryProducts from "../modules/inventory/crossdocking/components/productSelect.vue";
 import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
+import statements from "../modules/payments/statements/statements.vue";
 
 // merchant services integrations
 import integrations from "../modules/integrations/integrations.vue";
@@ -225,6 +226,11 @@ const routes = [
     path: "/payments/withdraw",
     name: "Withdraw",
     component: Withdraw,
+  },
+  {
+    path: "/payments/statements",
+    name: "Statements",
+    component: statements,
   },
   {
     path: "/payments/view-invoice/:invoice_id?",

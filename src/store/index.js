@@ -23,7 +23,7 @@ export default createStore({
       ],
       exportDataType: "",
       parent: "",
-      editValue: "inventory",
+      editValue: false,
       defaultLanguage: "en",
       mappedSelectedProducts: [],
       external: [
@@ -35,6 +35,8 @@ export default createStore({
         "/external/invite",
       ],
       autofillDetails: {},
+      cancellationReasons: {},
+      editableFields: {},
       autoFillVariants: [],
       LPOUploadError: "",
       autofillReviewStatus: false,
@@ -479,7 +481,7 @@ export default createStore({
         {
           label: "deliveries.cancelOrder",
           trigger: false,
-          popup: "cancel",
+          popup: "cancelOptions",
           show: true,
           icon: "mdi mdi-close-circle-outline",
         },

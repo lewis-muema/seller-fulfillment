@@ -425,8 +425,20 @@ export default {
       });
     },
     addProductStep() {
-      if (this.totalProducts > 0) {
-        this.$router.push(`/inventory/add-delivery-quantities`);
+      if (this.getSelectedProducts.length > 0) {
+        if (this.getEditValue) {
+          this.mapProductsOnOrder();
+          this.setProductsToSubmit([
+            ...this.getProductsToSubmit,
+            ...this.getMappedSelectedProducts,
+          ]);
+          this.setMappedSelectedProducts([]);
+        }
+        this.$router.push(
+          this.getEditValue
+            ? "/deliveries/edit-order"
+            : `/inventory/add-delivery-quantities`
+        );
       } else {
         ElNotification({
           title: "",
@@ -462,6 +474,53 @@ export default {
           });
         });
         this.selectedProducts = this.getSelectedProducts;
+      }
+    },
+    mapProductsOnOrder() {
+      if (this.getEditValue) {
+        if (this.selectedProducts.length) {
+          this.selectedProducts.forEach((product) => {
+            const quantity = product.selectedOption
+              ? product.selectedOption.quantity
+              : product.quantity;
+            const productVariant = product.selectedOption
+              ? product.selectedOption
+              : product.product_variants[0];
+            const existingProductIndex = this.getProductsToSubmit.findIndex(
+              (x) => {
+                x.quantity =
+                  x.product_variant_id === productVariant.product_variant_id
+                    ? quantity
+                    : x.quantity;
+                return (
+                  x.product_variant_id === productVariant.product_variant_id
+                );
+              }
+            );
+            if (existingProductIndex === -1) {
+              const mappedSelectedProduct = {
+                product_id: product.product_id,
+                product_variant_id: productVariant.product_variant_id,
+                product_variant_image_link:
+                  productVariant.product_variant_image_link,
+                product_name: product.product_name,
+                product_variant_description:
+                  productVariant.product_variant_description,
+                product_variant_quantity:
+                  productVariant.product_variant_quantity,
+                product_variant_quantity_type:
+                  productVariant.product_variant_quantity_type,
+                quantity,
+                unit_price: productVariant.product_variant_unit_price,
+                currency: productVariant.product_variant_currency,
+                status: true,
+              };
+              this.mappedSelectedProducts.push(mappedSelectedProduct);
+              this.setMappedSelectedProducts(this.mappedSelectedProducts);
+              this.selectedProducts = [];
+            }
+          });
+        }
       }
     },
     handleSelectionChange(val) {

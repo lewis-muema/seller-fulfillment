@@ -32,9 +32,10 @@
     <div class="col-7">
       <tracking-map />
     </div>
-    <div class="col-4">
+    <div class="col-4" v-scroll:#scroll-target="onScroll">
       <locations />
       <pickup-info />
+      <deliveryInfo />
     </div>
   </div>
 </template>
@@ -43,11 +44,13 @@ import moment from "moment";
 import { mapGetters, mapMutations } from "vuex";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
+import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
 export default {
-  components: { locations, trackingMap, pickupInfo },
+  components: { locations, trackingMap, pickupInfo, deliveryInfo },
   data() {
     return {
+      scrollInvoked: 0,
       deliveryActions: [
         {
           label: "deliveries.getDeliveryCode",
@@ -105,6 +108,9 @@ export default {
   },
   methods: {
     ...mapMutations(["setOverlayStatus"]),
+    onScroll(e) {
+      this.scrollInvoked = e.target.scrollTop;
+    },
     formatDateComplete(date) {
       return moment(date).format("dddd, Do MMM YYYY");
     },
@@ -121,5 +127,9 @@ export default {
   padding: 30px 30px 20px 30px;
   margin-left: 70px;
   background: #fff;
+}
+.destination-divider-line {
+  margin-top: 20px !important;
+  height: 2px !important;
 }
 </style>

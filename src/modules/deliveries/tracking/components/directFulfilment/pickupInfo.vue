@@ -1,5 +1,5 @@
 <template>
-  <div class="direct-fulfilment-destination-container mt-1">
+  <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles">Pickup Information</p>
       <a class="destination-desc-titles add-changes-popup">Edit</a>
@@ -8,8 +8,8 @@
       <i class="mdi mdi-map-marker-outline delivery-info-marker"></i>
       Afya Centre, Tom Mboya Street, Nairobi
     </span>
-    <hr />
-    <div class="destination-titles-containers mt-1">
+    <hr class="destination-divider-line" />
+    <div class="destination-titles-containers mt-3">
       <p class="destination-desc-titles dest-pickup-title">
         What are you sending?
       </p>

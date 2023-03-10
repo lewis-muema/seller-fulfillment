@@ -1,5 +1,5 @@
 <template>
-  <div class="direct-fulfilment-destination-container mt-3">
+  <div class="direct-fulfilment-destination-container mt-3 mb-5">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles">Delivery Information</p>
       <a class="destination-desc-titles add-changes-popup">Edit</a>

@@ -54,7 +54,7 @@ export default {
           event_code:
             "EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
           translated_event_code:
-            "summarised.event.pickup.partner.submitted.items.at.hub.confirmed.via.code",
+            "summarised.event.pickup.partner.submitted.items.at.hub",
           notes: null,
           event_tense: "FUTURE",
           metadata: {},

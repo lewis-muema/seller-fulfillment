@@ -23,6 +23,9 @@ export default {
   setConsignments(state, val) {
     state.consignments = val;
   },
+  setOnDemandDeliveries(state, val) {
+    state.onDemandDeliveries = val;
+  },
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },

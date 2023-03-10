@@ -513,6 +513,7 @@ export default createStore({
         dpp: "loading-text",
         pickUpDetails: "loading-text",
         speed: "loading-text",
+        onDemandOrders: "loading-text",
       },
       overlay: false,
       userChanged: false,
@@ -1454,6 +1455,7 @@ export default createStore({
           rejection_policy: null,
         },
       ],
+      onDemandDeliveries: [],
       data: {
         message: "order.retrieve.success",
         data: {

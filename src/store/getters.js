@@ -13,6 +13,7 @@ export default {
   getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
   getRecepientInfo: (state) => state.recepientInfo,
+  getOnDemandDeliveries: (state) => state.onDemandDeliveries,
   getEdittedDocuments: (state) => state.edittedDocuments,
   getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
   getEditedDocuments: (state) => state.editedDocuments,

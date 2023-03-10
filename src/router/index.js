@@ -7,6 +7,7 @@ import OTP from "../modules/auth/OTP.vue";
 import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
+import onDemand from "../modules/deliveries/onDemand/onDemand.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
 import DirectFulfilmentTracking from "../modules/deliveries/tracking/components/directFulfilmentTracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
@@ -189,12 +190,17 @@ const routes = [
     component: Sendy,
   },
   {
+    path: "/deliveries/direct-deliveries/",
+    name: "On Demand",
+    component: onDemand,
+  },
+  {
     path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
   },
   {
-    path: "/deliveries/tracking/",
+    path: "/deliveries/track-direct-deliveries/:order_id",
     name: "DirectFulfilmentTracking",
     component: DirectFulfilmentTracking,
   },

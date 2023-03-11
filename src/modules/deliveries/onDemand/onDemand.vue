@@ -1,15 +1,14 @@
 <template>
-  <div>Test</div>
+  <div><deliveries />x</div>
 </template>
 
 <script>
-// import Tabs from "./components/tabs.vue";
-// import Deliveries from "./components/deliveries.vue";
+import Deliveries from "./components/deliveries.vue";
 import { mapMutations, mapGetters } from "vuex";
 import eventsMixin from "../../../mixins/events_mixin";
 
 export default {
-  // components: { Tabs, Deliveries },
+  components: { Deliveries },
   mixins: [eventsMixin],
   data: () => ({}),
   computed: {

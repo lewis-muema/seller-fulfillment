@@ -1,102 +1,6 @@
 <template>
   <div>
-    <div class="tracking-order-no">
-      <i
-        class="mdi mdi-arrow-left tracking-arrow-back"
-        @click="$router.back()"
-      ></i>
-      <div class="tracking-order-title mb-0">
-        <span :class="getLoader.orderTracking">
-          {{ $t("deliveries.orderNo") }}
-          {{ getOrderTrackingData.order.order_id }}
-        </span>
-        <span
-          class="tracking-reference-number"
-          v-if="getOrderTrackingData.order.seller_order_reference_id"
-        >
-          {{
-            $t("inventory.referenceNumber", {
-              Ref: getOrderTrackingData.order.seller_order_reference_id,
-            })
-          }}
-        </span>
-        <div class="tracking-options-container" v-if="!hideActionButtons">
-          <span
-            v-for="(action, i) in deliveryActions"
-            :key="i"
-            @click="
-              setOverlayStatus({
-                overlay: true,
-                popup: action.popup,
-              })
-            "
-            class="tracking-option-content"
-          >
-            <i :class="action.icon" aria-hidden="true"></i>
-            {{ $t(action.label) }}</span
-          >
-        </div>
-      </div>
-      <p class="tracking-order-time-est">
-        <span
-          :class="getLoader.orderTracking"
-          v-if="getOrderTrackingData.order.order_status === 'ORDER_COMPLETED'"
-        >
-          {{ $t("deliveries.dateOfCompletion") }}
-          {{ formatDateComplete(getOrderTrackingData.order.completed_date) }}
-        </span>
-        <span :class="getLoader.orderTracking" v-else>
-          {{ $t("deliveries.timeOfArrival") }}
-          {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
-        </span>
-      </p>
-      <div
-        class="tracking-pickup-banner"
-        v-for="(order, i) in getOrderTrackingData.order
-          .cross_dock_linked_orders"
-        :key="i"
-      >
-        <div class="d-flex row">
-          <span class="col-1">
-            <i class="mdi mdi-information tracking-pickup-banner-icon"></i>
-          </span>
-          <span class="tracking-pick-up-banner-text col-11">
-            <span :class="getLoader.pickUpDetails">
-              {{
-                order.order_type === "DELIVERY"
-                  ? $t("inventory.thereIsADeliveryLinkedToThisPickUp")
-                  : $t("inventory.orderIsPendingBecause", {
-                      Date: linkedPickup.scheduled_date
-                        ? formatLongDate(linkedPickup.scheduled_date)
-                        : "",
-                      Location: linkedPickup.destination
-                        ? linkedPickup.destination.delivery_location.description
-                        : "",
-                    })
-              }}
-            </span>
-          </span>
-        </div>
-        <div class="tracking-pickup-banner-link row">
-          <div class="col-1"></div>
-          <div
-            class="col-11"
-            @click="$router.push(`/deliveries/tracking/${order.order_id}`)"
-          >
-            <span>
-              {{
-                order.order_type === "DELIVERY"
-                  ? $t("inventory.trackDeliveryOrder")
-                  : $t("inventory.trackPickUpOrder")
-              }}
-            </span>
-            <span>
-              <i class="mdi mdi-chevron-right"></i>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <top-tracking-card />
     <div class="tracking-order-failed-delivery">
       <failed-delivery v-if="failedStatus" />
     </div>
@@ -113,9 +17,9 @@
 </template>
 
 <script>
-import moment from "moment";
 import timeline from "./components/normalFulfilment/timeline.vue";
 import deliveryInfo from "./components/normalFulfilment/deliveryInfo.vue";
+import topTrackingCard from "./components/topTrackingCard.vue";
 import products from "./components/normalFulfilment/products.vue";
 import failedDelivery from "./components/normalFulfilment/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
@@ -127,6 +31,7 @@ export default {
     deliveryInfo,
     products,
     failedDelivery,
+    topTrackingCard,
   },
   mixins: [trackingPayloadMixin],
   data() {
@@ -334,18 +239,6 @@ export default {
       let actions = this.getDeliveryActions;
       actions[1].show = val === "customer";
       this.setDeliveryActions(actions);
-    },
-    formatDate(date) {
-      const finalTime = moment(date).add(2, "hours");
-      return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
-        "ha"
-      )} - ${moment(finalTime).format("ha")}`;
-    },
-    formatLongDate(date) {
-      return moment(date).format("ddd, Do MMM");
-    },
-    formatDateComplete(date) {
-      return moment(date).format("dddd, Do MMM YYYY");
     },
     calculateSpeed() {
       this.requestAxiosPost({

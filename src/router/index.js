@@ -9,7 +9,7 @@ import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
 import onDemand from "../modules/deliveries/onDemand/onDemand.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
-import DirectFulfilmentTracking from "../modules/deliveries/tracking/components/directFulfilmentTracking.vue";
+import DirectFulfilmentTracking from "../modules/deliveries/tracking/components/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Transactions from "../modules/payments/transactions/transactions.vue";
 import Wallet from "../modules/payments/wallet/wallet.vue";

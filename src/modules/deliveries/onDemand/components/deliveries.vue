@@ -116,7 +116,11 @@
               <td class="deliveries-action-row">
                 <p
                   class="deliveries-action-row-top"
-                  @click="navigate(`/deliveries/track-direct-deliveries/${item.order_id}`)"
+                  @click="
+                    navigate(
+                      `/deliveries/track-direct-deliveries/${item.order_id}`
+                    )
+                  "
                 >
                   <span :class="getLoader.onDemandOrders">
                     {{ $t("deliveries.trackOrder") }}
@@ -128,19 +132,6 @@
         </v-table>
       </div>
       <div v-else>
-<!--        <div v-if="ongoingDeliveries > 0">-->
-<!--          <div class="no-products-card-container">-->
-<!--            <span class="no-deliveries-icon-halo">-->
-<!--              <i class="mdi mdi-magnify no-products-icon"></i>-->
-<!--            </span>-->
-<!--            <div class="no-products-description">-->
-<!--              {{ $t("deliveries.sorryNoConsignmentsFound") }}-->
-<!--            </div>-->
-<!--            <div class="no-deliveries-description">-->
-<!--              {{ $t("deliveries.weCouldntFindAnyConsignments") }}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
         <div class="deliveries-empty">
           <div>
             <img
@@ -149,16 +140,7 @@
               class="deliveries-empty-img"
             />
           </div>
-          <p class="deliveries-empty-title">
-            No deliveries to track yet
-          </p>
-<!--          <v-btn-->
-<!--            class="deliveries-btn"-->
-<!--            @click="$router.push('/inventory/add-pickup-products')"-->
-<!--            size="default"-->
-<!--          >-->
-<!--            {{ $t("deliveries.deliverToSendy") }}-->
-<!--          </v-btn>-->
+          <p class="deliveries-empty-title">No deliveries to track yet</p>
         </div>
       </div>
       <div>
@@ -217,7 +199,7 @@ export default {
       }
     },
     params() {
-      this.setConsignments(this.placeholderConsignments);
+      this.setOnDemandDeliveries(this.placeholderOnDemandDeliveries);
       this.fetchOrders();
     },
     page() {
@@ -232,8 +214,7 @@ export default {
     },
   },
   mounted() {
-    this.setConsignments(this.placeholderConsignments);
-    // this.getPickUpStats();
+    this.setOnDemandDeliveries(this.placeholderOnDemandDeliveries);
     this.range = this.$route.params.date
       ? [
           new Date(parseInt(this.$route.params.date)),
@@ -313,18 +294,6 @@ export default {
         }
       });
     },
-    // getPickUpStats() {
-    //   this.requestAxiosGet({
-    //     app: process.env.FULFILMENT_SERVER,
-    //     endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/statistics`,
-    //   }).then((response) => {
-    //     if (response.status === 200) {
-    //       this.setConsignmentStatistics(
-    //           response.data.data.grouped_by_status_count
-    //       );
-    //     }
-    //   });
-    // },
     deliveryDate(date) {
       return moment(date).format("MMM M/D/YYYY");
     },
@@ -332,13 +301,6 @@ export default {
       const finalTime = moment(date).add(2, "hours");
       return `${moment(date).format("ha")} - ${moment(finalTime).format("ha")}`;
     },
-    // formatProducts(products) {
-    //   return `${products[0].product_variant_description} ${
-    //       products.length > 1
-    //           ? this.$t("deliveries.otherItems", { count: products.length - 1 })
-    //           : ""
-    //   }`;
-    // },
     formatName(name) {
       const nameArr = name.split(" ");
       nameArr.forEach((name, i) => {

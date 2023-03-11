@@ -101,6 +101,7 @@ import { mapGetters, mapMutations } from "vuex";
 import moment from "moment/moment";
 
 export default {
+  props: ["linkedPickup"],
   computed: {
     ...mapGetters(["getLoader", "getOrderTrackingData", "getDeliveryActions"]),
     deliveryActions() {

@@ -60,6 +60,8 @@ export default {
   isAuthenticated: (state) => state.accessToken !== null,
   getTabStatus: (state) => state.tabStatus,
   getOrderTrackingData: (state) => state.orderTrackingData,
+  getDirectDeliveriesTrackingData: (state) =>
+    state.directDeliveriesTrackingData,
   getTimelineIcons: (state) => state.timelineIcons,
   getDeliveryAttempts: (state) => state.deliveryAttempts,
   getProduct: (state) => state.product,

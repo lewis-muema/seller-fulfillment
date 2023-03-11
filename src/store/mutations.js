@@ -173,6 +173,9 @@ export default {
   setOrderTrackingData(state, val) {
     state.orderTrackingData = val;
   },
+  setDirectDeliveriesTrackingData(state, val) {
+    state.directDeliveriesTrackingData = val;
+  },
   setTimelineIcons(state, val) {
     state.timelineIcons = val;
   },

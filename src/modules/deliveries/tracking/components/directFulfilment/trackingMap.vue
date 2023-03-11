@@ -7,7 +7,7 @@
 </template>
 <script></script>
 <style>
-/*.tracking-map-container {*/
-/*  margin-left: 70px;*/
-/*}*/
+.tracking-map-container {
+  height: 95% !important;
+}
 </style>

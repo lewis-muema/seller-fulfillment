@@ -1,6 +1,6 @@
 <template>
   <div>
-    <top-tracking-card />
+    <top-tracking-card :linkedPickup="this.linkedPickup" />
     <div class="tracking-order-failed-delivery">
       <failed-delivery v-if="failedStatus" />
     </div>
@@ -19,7 +19,7 @@
 <script>
 import timeline from "./components/normalFulfilment/timeline.vue";
 import deliveryInfo from "./components/normalFulfilment/deliveryInfo.vue";
-import topTrackingCard from "./components/topTrackingCard.vue";
+import topTrackingCard from "./components/normalFulfilment/topTrackingCard.vue";
 import products from "./components/normalFulfilment/products.vue";
 import failedDelivery from "./components/normalFulfilment/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";

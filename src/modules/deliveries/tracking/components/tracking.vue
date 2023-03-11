@@ -1,33 +1,5 @@
 <template>
-  <div class="tracking-order-no">
-    <i
-      class="mdi mdi-arrow-left tracking-arrow-back"
-      @click="$router.back()"
-    ></i>
-    <div class="tracking-order-title mb-0">
-      <span> {{ $t("deliveries.orderNo") }}1234556 </span>
-      <div class="tracking-options-container">
-        <span
-          v-for="(action, i) in deliveryActions"
-          :key="i"
-          @click="
-            setOverlayStatus({
-              overlay: true,
-              popup: action.popup,
-            })
-          "
-          class="tracking-option-content"
-        >
-          <i :class="action.icon" aria-hidden="true"></i>
-          {{ $t(action.label) }}</span
-        >
-      </div>
-    </div>
-    <p class="tracking-order-time-est">
-      {{ $t("deliveries.dateOfCompletion") }}
-      <span> 12/2/2020 </span>
-    </p>
-  </div>
+  <tracking-top-card />
   <div class="row">
     <div class="col-7">
       <tracking-map />
@@ -41,80 +13,70 @@
   </div>
 </template>
 <script>
-import moment from "moment";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
 import timeline from "../components/directFulfilment/timeline.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
+import trackingTopCard from "./directFulfilment/topTrackingCard.vue"
 export default {
-  components: { locations, trackingMap, pickupInfo, deliveryInfo, timeline },
+  components: { locations, trackingMap, pickupInfo, deliveryInfo, timeline, trackingTopCard },
   data() {
     return {
       scrollInvoked: 0,
-      deliveryActions: [
-        {
-          label: "deliveries.getDeliveryCode",
-          trigger: false,
-          popup: "code",
-          show: true,
-        },
-        {
-          label: "deliveries.rescheduleOrder",
-          trigger: false,
-          popup: "reschedule",
-          show: true,
-          icon: "mdi mdi-clock-outline",
-        },
-        {
-          label: "deliveries.cancelOrder",
-          trigger: false,
-          popup: "cancelOptions",
-          show: true,
-          icon: "mdi mdi-close-circle-outline",
-        },
-      ],
     };
   },
   computed: {
-    ...mapGetters(["getLoader", "getOrderTrackingData", "getDeliveryActions"]),
-    deliveryActionss() {
-      const actions = [];
-      this.getDeliveryActions.forEach((row) => {
-        let showCancel = true;
-        if (row.popup === "cancelOptions") {
-          showCancel = ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
-            this.getOrderTrackingData.order.order_status
-          );
-        }
-        let showCode =
-          (row.popup === "code" &&
-            this.getOrderTrackingData.order.confirmation_pin &&
-            this.$route.params.order_id ===
-              this.getOrderTrackingData.order.order_id) ||
-          row.popup !== "code";
-        if (row.show && showCancel && showCode) {
-          actions.push(row);
-        }
-      });
-      return actions;
-    },
-    hideActionButtons() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
-      );
-    },
+    ...mapGetters([
+      "getLoader",
+      "getOrderTrackingData",
+      "getStorageUserDetails",
+    ]),
+  },
+  mounted() {
+    this.fetchOrder();
   },
   methods: {
-    ...mapMutations(["setOverlayStatus"]),
+    ...mapMutations([
+      "setOverlayStatus",
+      "setLoader",
+      "setOrderTrackingData",
+      "setDirectDeliveriesTrackingData",
+    ]),
+    ...mapActions(["requestAxiosGet"]),
     onScroll(e) {
       this.scrollInvoked = e.target.scrollTop;
     },
-    formatDateComplete(date) {
-      return moment(date).format("dddd, Do MMM YYYY");
+    fetchOrder() {
+      // this.setLoader({
+      //   type: "orderTracking",
+      //   value: "loading-text",
+      // });
+      // this.setLoader({
+      //   type: "orderTimeline",
+      //   value: "loading-text",
+      // });
+      this.setLoader({
+        type: "locationDetails",
+        value: "loading-text",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/${this.$route.params.order_id}`,
+      }).then((response) => {
+        this.setLoader({
+          type: "orderTracking",
+          value: "",
+        });
+        this.setLoader({
+          type: "locationDetails",
+          value: "",
+        });
+        if (response.status === 200) {
+          this.setDirectDeliveriesTrackingData(response.data.data);
+        }
+      });
     },
   },
 };

@@ -13,7 +13,7 @@
       <p class="destination-desc-titles dest-pickup-title">
         What are you sending?
       </p>
-      <p class="dest-pickup-desc">Furniture</p>
+      <p class="dest-pickup-desc">Firniture</p>
     </div>
     <div class="destination-titles-containers mt-1">
       <p class="destination-desc-titles dest-pickup-title">Pickup Time</p>
@@ -36,7 +36,12 @@
   </div>
 </template>
 <script>
-export default {};
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["getDirectDeliveriesTrackingData"]),
+  },
+};
 </script>
 <style>
 .dest-pickup-title {

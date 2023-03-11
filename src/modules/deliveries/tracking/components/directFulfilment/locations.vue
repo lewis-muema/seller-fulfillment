@@ -12,7 +12,12 @@
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
             <span>Pickup Location</span>
-            <div class="tttt">Afya Center, Moi Avenue, Nairobi</div>
+            <div class="dest-desc-loc" :class="getLoader.locationDetails">
+              {{
+                getDirectDeliveriesTrackingData.order?.instructions[0]
+                  .delivery_location.description
+              }}
+            </div>
           </div>
           <div class="destination-delivery-info-container">
             <span>ETA</span>
@@ -26,8 +31,13 @@
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
-            <span>Pickup Location</span>
-            <div class="tttt">Afya Center, Moi Avenue, Nairobi</div>
+            <span>Delivery Location</span>
+            <div class="dest-desc-loc" :class="getLoader.locationDetails">
+              {{
+                getDirectDeliveriesTrackingData.order?.instructions[0]
+                  .delivery_location.description
+              }}
+            </div>
           </div>
           <div class="destination-delivery-info-container">
             <span>ETA</span>
@@ -39,6 +49,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -55,6 +66,9 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(["getDirectDeliveriesTrackingData", "getLoader"]),
   },
 };
 </script>
@@ -89,7 +103,7 @@ export default {
   line-height: 18px;
   font-weight: 500;
 }
-.tttt {
+.dest-desc-loc {
   margin-bottom: 0px !important;
 }
 .location-el-timeline-item-override {

@@ -53,14 +53,14 @@
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
                   <span :class="getLoader.onDemandOrders">
-                    Marsabit Plaza, Ngong Road, Nairobi
+                    {{ item.instructions[0].delivery_location.description }}
                   </span>
                 </div>
               </td>
               <td class="deliveries-product-row">
                 <div class="deliveries-name-row">
                   <span :class="getLoader.onDemandOrders">
-                    Kenya High School, Nairobi
+                    {{ item.instructions[1].delivery_location.description }}
                   </span>
                 </div>
               </td>
@@ -244,6 +244,13 @@ export default {
         orderCount = row + orderCount;
       });
       return orderCount;
+    },
+    filterDirectDeliveries() {
+      let deliveries = [];
+      this.getOnDemandDeliveries.order.forEach((row) => {
+        deliveries.push(row);
+      });
+      return deliveries;
     },
   },
   methods: {

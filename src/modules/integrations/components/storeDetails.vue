@@ -23,8 +23,13 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="
+                require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
+              "
+              class="platform-image"
+            />
+            <span class="store-platform-name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -167,10 +172,18 @@ export default {
 }
 .store-platform {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 .store-platform-name {
   margin-left: 10px;
   font-weight: 500;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
 }
 .connect-store {
   min-width: 400px;
@@ -185,5 +198,9 @@ export default {
 }
 .dialog-title {
   font-size: 25px;
+}
+.platform-image {
+  width: 32px;
+  height: 32px;
 }
 </style>

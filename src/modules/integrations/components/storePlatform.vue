@@ -115,6 +115,12 @@ export default {
   margin: 10px, 3px, 20px;
   margin-top: 20px;
   margin-left: 20px;
+  font-family: "Nunito Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
 }
 .integration-actions {
   margin-top: 20px;

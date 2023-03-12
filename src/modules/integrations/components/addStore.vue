@@ -13,7 +13,7 @@
           <v-row>
             <v-col :key="n" cols="12" sm="6">
               <v-img
-                class="bg-white"
+                class="integration-image bg-white"
                 :aspect-ratio="1"
                 src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/image.png"
               ></v-img>
@@ -84,9 +84,12 @@ export default {
   margin-right: -15px !important;
 }
 .integration-card {
-  width: 850px;
-  min-height: 400px;
-  padding: 25px;
+  padding: 16px;
+  gap: 4px;
+  width: 1024px;
+  min-height: 526px;
+  background: #ffffff;
+  border-radius: 6px;
 }
 .integrations-actions-inner {
   display: grid;
@@ -106,5 +109,9 @@ export default {
   border: 1px solid #324ba8 !important;
   background-color: #324ba8 !important;
   width: 50%;
+}
+.integration-image {
+  width: 573px;
+  height: 394px;
 }
 </style>

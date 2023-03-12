@@ -23,14 +23,23 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="
+                require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
+              "
+              class="platform-image"
+            />
+            <span class="store-platform-name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
           <div class="tag">
-            <h5>{{ $t("merchant.storeDetails") }}</h5>
-            <p>{{ $t("merchant.storeDetailsTagline") }}</p>
+            <h5 class="text__store-details">
+              {{ $t("merchant.storeDetails") }}
+            </h5>
+            <p class="text__store-tagline">
+              {{ $t("merchant.storeDetailsTagline") }}
+            </p>
           </div>
           <v-form ref="default" v-model="valid" lazy-validation>
             <v-text-field
@@ -191,6 +200,28 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.text {
+  &__store-details {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+    color: #303133;
+  }
+
+  &__store-tagline {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #606266;
+  }
+}
+</style>
 <style scoped>
 .integrations-container {
   width: 50%;
@@ -232,10 +263,18 @@ export default {
 }
 .store-platform {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 .store-platform-name {
   margin-left: 10px;
   font-weight: 500;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
 }
 .connect-store {
   min-width: 400px;

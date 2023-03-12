@@ -4,6 +4,7 @@ import countries from "../fixtures/countries.json";
 import industries from "../fixtures/industries.json";
 import otp from "../fixtures/OTP.json";
 import completeSignup from "../fixtures/completeSignup.json";
+import statistics from "../fixtures/statistics.json";
 import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
 import achievements from "../fixtures/achievements.json";
@@ -160,6 +161,15 @@ Cypress.Commands.add("dashboardStubs", () => {
     {
       statusCode: 200,
       body: statisticsLimit,
+    }
+  ).as("statisticsLimit");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/transactions/statistics?transaction_type=UPCOMING_EARNING_FROM_SALE_OF_GOOD
+`,
+    {
+      statusCode: 200,
+      body: statistics,
     }
   ).as("statisticsLimit");
   cy.intercept(

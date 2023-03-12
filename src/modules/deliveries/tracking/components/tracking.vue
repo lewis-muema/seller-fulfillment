@@ -19,9 +19,16 @@ import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
 import timeline from "../components/directFulfilment/timeline.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
-import trackingTopCard from "./directFulfilment/topTrackingCard.vue"
+import trackingTopCard from "./directFulfilment/topTrackingCard.vue";
 export default {
-  components: { locations, trackingMap, pickupInfo, deliveryInfo, timeline, trackingTopCard },
+  components: {
+    locations,
+    trackingMap,
+    pickupInfo,
+    deliveryInfo,
+    timeline,
+    trackingTopCard,
+  },
   data() {
     return {
       scrollInvoked: 0,

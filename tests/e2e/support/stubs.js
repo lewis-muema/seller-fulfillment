@@ -14,6 +14,7 @@ import deliveriesStatistics from "../fixtures/deliveriesStatistics.json";
 import languages from "../fixtures/languages.json";
 import notifications from "../fixtures/notifications.json";
 import payments from "../fixtures/paymentRequired.json";
+import pointToPoint from "../fixtures/pointToPoint.json";
 import productStatistics from "../fixtures/productStatistics.json";
 import statisticsLimit from "../fixtures/statisticsLimit.json";
 import wallets from "../fixtures/wallets.json";
@@ -76,7 +77,14 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: achievements,
     }
   ).as("achievements");
-
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point`,
+    {
+      statusCode: 200,
+      body: pointToPoint,
+    }
+  ).as("pointToPoint");
   cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/industries`, {
     statusCode: 200,
     body: industries,
@@ -170,6 +178,7 @@ Cypress.Commands.add("dashboardStubs", () => {
     }
   ).as("wallet");
 });
+
 Cypress.Commands.add("setTokens", () => {
   cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
 });

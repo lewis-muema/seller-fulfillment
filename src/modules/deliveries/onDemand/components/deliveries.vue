@@ -20,7 +20,7 @@
         </div>
       </div>
       <div v-if="getOnDemandDeliveries.length > 0">
-        <v-table>
+        <v-table data-test="point-to-point-list-container">
           <thead>
             <tr>
               <th class="text-left deliveries-table-header">
@@ -132,7 +132,7 @@
         </v-table>
       </div>
       <div v-else>
-        <div class="deliveries-empty">
+        <div class="deliveries-empty" data-test="no-point-point-deliveries">
           <div>
             <img
               src="https://images.sendyit.com/fulfilment/seller/track.png"

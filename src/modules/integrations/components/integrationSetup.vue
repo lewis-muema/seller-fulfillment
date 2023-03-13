@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('connected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('connected', false)">
@@ -107,9 +100,13 @@
 <script>
 import { mapActions } from "vuex";
 import Stores from "../classes/stores";
+import headerComponent from "./header.vue";
 
 export default {
   name: "integrationSetup",
+  components: {
+    headerComponent,
+  },
   props: {
     setupDialog: {
       type: Boolean,

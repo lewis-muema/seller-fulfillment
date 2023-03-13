@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('selected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <h5>{{ $t("merchant.platformInUse") }}</h5>
@@ -53,9 +46,10 @@
 <script>
 import storeDetails from "./storeDetails.vue";
 import stores from "../constants/storeFields.json";
+import headerComponent from "./header.vue";
 
 export default {
-  components: { storeDetails },
+  components: { storeDetails, headerComponent },
   props: {
     displayDialog: {
       type: Boolean,

@@ -1,33 +1,64 @@
 <template>
   <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
-      <p class="destination-desc-titles">Pickup Information</p>
-      <a class="destination-desc-titles add-changes-popup">Edit</a>
+      <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
+        Pickup Information
+      </p>
+      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
+        >Edit</a
+      >
     </div>
-    <span>
-      <i class="mdi mdi-map-marker-outline delivery-info-marker"></i>
-      {{ pickupLocation }}
+    <span class="d-flex">
+      <i
+        class="mdi mdi-map-marker-outline delivery-info-marker"
+        :class="getLoader.onDemandOrders"
+      ></i>
+      <div :class="getLoader.onDemandOrders" class="destination-location-text">{{ pickupLocation }}</div>
     </span>
     <hr class="destination-divider-line" />
     <div class="destination-titles-containers mt-3">
-      <p class="destination-desc-titles dest-pickup-title">
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
         What are you sending?
       </p>
-      <p class="dest-pickup-desc">{{ products }}</p>
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
+        {{ products }}
+      </p>
     </div>
     <div class="destination-titles-containers mt-1">
-      <p class="destination-desc-titles dest-pickup-title">Bike type?</p>
-      <p class="dest-pickup-desc">Without box</p>
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
+        Bike type?
+      </p>
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
+        Without box
+      </p>
     </div>
     <div class="destination-titles-containers mt-1">
-      <p class="destination-desc-titles dest-pickup-title">Contact person</p>
-      <p class="dest-pickup-desc">{{ contactPerson }}</p>
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
+        Contact person
+      </p>
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
+        {{ contactPerson }}
+      </p>
     </div>
     <div class="destination-titles-containers mt-1">
-      <p class="destination-desc-titles dest-pickup-title">
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
         Pickup instructions
       </p>
-      <p class="dest-pickup-desc">{{ pickInstructions }}</p>
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
+        {{ pickInstructions }}
+      </p>
     </div>
   </div>
 </template>
@@ -35,9 +66,13 @@
 import { mapGetters } from "vuex";
 export default {
   props: ["pickupLocation", "contactPerson", "products", "pickInstructions"],
-  data() {},
+  data() {
+    return {
+      editLocation: false,
+    };
+  },
   computed: {
-    ...mapGetters(["getDirectDeliveriesTrackingData"]),
+    ...mapGetters(["getDirectDeliveriesTrackingData", "getLoader"]),
   },
 };
 </script>
@@ -53,5 +88,8 @@ export default {
   font-size: 14px;
   line-height: 18px;
   font-weight: 500;
+}
+.destination-location-text {
+  margin-top: 5px;
 }
 </style>

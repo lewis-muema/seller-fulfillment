@@ -9,7 +9,7 @@
         {{ $t("deliveries.orderNo") }}
         {{ getDirectDeliveriesTrackingData.order?.order_id }}
       </span>
-      <div class="tracking-options-container" v-if="!hideActionButtons">
+      <div class="tracking-options-container">
         <span
           v-for="(action, i) in deliveryActions"
           :key="i"
@@ -62,32 +62,7 @@ export default {
       "getDirectDeliveriesTrackingData",
     ]),
     deliveryActions() {
-      const actions = [];
-      this.getDeliveryActions.forEach((row) => {
-        let showCancel = true;
-        if (row.popup === "cancelOptions") {
-          showCancel = ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
-            this.getOrderTrackingData.order.order_status
-          );
-        }
-        let showCode =
-          (row.popup === "code" &&
-            this.getOrderTrackingData.order.confirmation_pin &&
-            this.$route.params.order_id ===
-              this.getOrderTrackingData.order.order_id) ||
-          row.popup !== "code";
-        if (row.show && showCancel && showCode) {
-          actions.push(row);
-        }
-      });
-      return actions;
-    },
-    hideActionButtons() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
-      );
+      return this.getDeliveryActions;
     },
   },
   methods: {

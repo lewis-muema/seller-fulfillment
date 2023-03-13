@@ -1,8 +1,12 @@
 <template>
   <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
-      <p class="destination-desc-titles">Locations</p>
-      <a class="destination-desc-titles add-changes-popup" v-if="editLocation">Add/Change</a>
+      <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
+        Locations
+      </p>
+      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
+        >Add/Change</a
+      >
     </div>
     <el-timeline class="location-el-timeline-override">
       <el-timeline-item
@@ -11,8 +15,8 @@
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
-            <span>Pickup Location</span>
-            <div class="dest-desc-loc" :class="getLoader.locationDetails">
+            <span :class="getLoader.onDemandOrders">Pickup Location</span>
+            <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
               {{
                 getDirectDeliveriesTrackingData.order?.instructions[0]
                   .delivery_location.description
@@ -27,8 +31,8 @@
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
-            <span>Delivery Location</span>
-            <div class="dest-desc-loc" :class="getLoader.locationDetails">
+            <span :class="getLoader.onDemandOrders">Delivery Location</span>
+            <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
               {{
                 getDirectDeliveriesTrackingData.order?.instructions[0]
                   .delivery_location.description

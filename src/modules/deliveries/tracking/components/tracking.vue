@@ -8,13 +8,13 @@
       <locations />
       <timeline />
       <pickup-info
-        :pickupLocation="this.pointDestinationLocation.pickLocation"
+        :pickupLocation="this.pickUpLocation"
         :contactPerson="this.pickupContactPerson"
         :products="this.products"
         :pickInstructions="this.pickupInstructions"
       />
       <deliveryInfo
-        :deliveryLocation="this.pointDestinationLocation.deliverLocation"
+        :deliveryLocation="this.deliveryLocation"
         :contactPerson="this.deliveryContactPerson"
         :dropInstructions="this.dropOffInstructions"
       />
@@ -50,6 +50,7 @@ export default {
       dropOffInstructions: "",
     };
   },
+
   computed: {
     ...mapGetters([
       "getLoader",
@@ -57,38 +58,34 @@ export default {
       "getStorageUserDetails",
       "getDirectDeliveriesTrackingData",
     ]),
-    pointDestinationLocation() {
-      this.getDirectDeliveriesTrackingData.orders?.instructions.forEach(
-        (instruction) => {
-          instruction.actions?.forEach((action) => {
-            if (action.action_type === "PICK_PACKAGE") {
-              this.pickUpLocation = instruction.delivery_location.description;
-              this.pickupContactPerson = instruction.phone_number
-                ? instruction.phone_number
-                : "_";
-              this.products = action.package_description;
-              this.pickupInstructions = instruction.delivery_instructions
-                ? instruction.delivery_instructions
-                : "_";
-            }
-            if (action.action_type === "DROP_PACKAGE") {
-              this.deliveryLocation = instruction.delivery_location.description;
-              this.deliveryContactPerson = instruction.phone_number;
-              this.dropOffInstructions = instruction.delivery_instructions
-                ? instruction.delivery_instructions
-                : "_";
-            }
-          });
-        }
-      );
-      return {
-        pickLocation: this.pickUpLocation,
-        deliverLocation: this.deliveryLocation,
-      };
-    },
   },
   mounted() {
     this.fetchOrder();
+  },
+  watch: {
+    "$store.getters.getDirectDeliveriesTrackingData": function pointToPointOrders(val) {
+      val.order?.instructions.forEach((instruction) => {
+        instruction.actions?.forEach((action) => {
+          if (action.action_type === "PICK_PACKAGE") {
+            this.pickUpLocation = instruction.delivery_location.description;
+            this.pickupContactPerson = instruction.phone_number
+              ? instruction.phone_number
+              : "_";
+            this.products = action.package_description;
+            this.pickupInstructions = instruction.delivery_instructions
+              ? instruction.delivery_instructions
+              : "_";
+          }
+          if (action.action_type === "DROP_PACKAGE") {
+            this.deliveryLocation = instruction.delivery_location.description;
+            this.deliveryContactPerson = instruction.phone_number;
+            this.dropOffInstructions = instruction.delivery_instructions
+              ? instruction.delivery_instructions
+              : "_";
+          }
+        });
+      });
+    },
   },
   methods: {
     ...mapMutations([
@@ -123,7 +120,7 @@ export default {
           value: "",
         });
         this.setLoader({
-          type: "locationDetails",
+          type: "onDemandOrders",
           value: "",
         });
         if (response.status === 200) {

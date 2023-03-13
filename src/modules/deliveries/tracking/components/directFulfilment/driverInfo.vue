@@ -1,31 +1,57 @@
 <template>
   <div class="direct-fulfilment-destination-container mt-3 mb-5">
     <div class="destination-titles-containers">
-      <p class="destination-desc-titles">Delivery Information</p>
-      <a class="destination-desc-titles add-changes-popup">Edit</a>
+      <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
+        Delivery Information
+      </p>
+      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
+        >Edit</a
+      >
     </div>
-    <span>
-      <i class="mdi mdi-map-marker-outline delivery-info-marker"></i>
-      {{ deliveryLocation }}
+    <span class="d-flex">
+      <i
+        class="mdi mdi-map-marker-outline delivery-info-marker"
+        :class="getLoader.onDemandOrders"
+      ></i>
+      <div class="destination-location-text" :class="getLoader.onDemandOrders"> {{ deliveryLocation }}</div>
     </span>
     <hr class="destination-divider-line" />
     <div class="destination-titles-containers mt-3">
-      <p class="destination-desc-titles dest-pickup-title">Contact person</p>
-      <p class="dest-pickup-desc">{{ contactPerson }}</p>
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
+        Contact person
+      </p>
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
+        {{ contactPerson }}
+      </p>
     </div>
     <div class="destination-titles-containers mt-1">
-      <p class="destination-desc-titles dest-pickup-title">
+      <p
+        class="destination-desc-titles dest-pickup-title"
+        :class="getLoader.onDemandOrders"
+      >
         Drop off instructions
       </p>
-      <p class="dest-pickup-desc">
+      <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ dropInstructions }}
       </p>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: ["deliveryLocation", "contactPerson", "dropInstructions"],
+  data() {
+    return {
+      editLocation: false,
+    };
+  },
+  computed: {
+    ...mapGetters(["getLoader"]),
+  },
 };
 </script>
 <style>

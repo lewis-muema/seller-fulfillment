@@ -570,6 +570,8 @@ export default createStore({
         speed: "loading-text",
         onDemandOrders: "loading-text",
         locationDetails: "loading-text",
+        pointToPointPickup: "loading-text",
+        pointToPointDeliveries: "loading-text",
       },
       overlay: false,
       userChanged: false,

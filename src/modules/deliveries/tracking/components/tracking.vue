@@ -1,4 +1,5 @@
 <template>
+  <make-payment />
   <tracking-top-card />
   <div class="row">
     <div class="col-7">
@@ -29,6 +30,7 @@ import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
 import timeline from "../components/directFulfilment/timeline.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
 import trackingTopCard from "./directFulfilment/topTrackingCard.vue";
+import makePayment from "../../../payments/statements/components/makePayment.vue"
 export default {
   components: {
     locations,
@@ -37,6 +39,7 @@ export default {
     deliveryInfo,
     timeline,
     trackingTopCard,
+    makePayment,
   },
   data() {
     return {

@@ -1,10 +1,10 @@
 <template>
   <div class="direct-fulfilment-destination-container mt-3">
-    <p class="timeline-title">
+    <p class="destination-desc-titles">
       {{ $t("deliveries.timeline") }}
     </p>
-    <div>
-      <el-timeline>
+    <div class="mt-3">
+      <el-timeline class="point-point-timeline-override">
         <el-timeline-item
             class="el-timeline-item-desktop"
             v-for="(activity, index) in getOrderTimelines"
@@ -175,6 +175,9 @@ export default {
 <style>
 .timeline-title {
   margin-bottom: 20px;
+}
+.point-point-timeline-override {
+  padding-left: 0px !important;
 }
 .timline-container {
   border: 1px solid #e2e7ed;

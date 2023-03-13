@@ -248,6 +248,9 @@ export default {
   setDeliveriesStatistics(state, val) {
     state.deliveriesStatistics = val;
   },
+  setPointToPointStatistics(state, val) {
+    state.pointToPointStatistics = val;
+  },
   setConsignmentStatistics(state, val) {
     state.consignmentStatistics = val;
   },

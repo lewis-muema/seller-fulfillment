@@ -132,7 +132,20 @@
         </v-table>
       </div>
       <div v-else>
-        <div class="deliveries-empty" data-test="no-point-point-deliveries">
+        <div v-if="ongoingDeliveries > 0">
+          <div class="no-products-card-container">
+            <span class="no-deliveries-icon-halo">
+              <i class="mdi mdi-magnify no-products-icon"></i>
+            </span>
+            <div class="no-products-description">
+              {{ $t("deliveries.sorryNoDeliveriesFound") }}
+            </div>
+            <div class="no-deliveries-description">
+              {{ $t("deliveries.weCouldntFindAnyDeliveries") }}
+            </div>
+          </div>
+        </div>
+        <div v-else class="deliveries-empty">
           <div>
             <img
               src="https://images.sendyit.com/fulfilment/seller/track.png"
@@ -140,7 +153,16 @@
               class="deliveries-empty-img"
             />
           </div>
-          <p class="deliveries-empty-title">No deliveries to track yet</p>
+          <p class="deliveries-empty-title">
+            {{ $t("deliveries.noDeliveriesToTrack") }}
+          </p>
+          <v-btn
+            class="deliveries-btn"
+            @click="$router.push('/inventory/create-delivery')"
+            size="default"
+          >
+            {{ $t("deliveries.deliverToACustomer") }}
+          </v-btn>
         </div>
       </div>
       <div>
@@ -215,6 +237,7 @@ export default {
   },
   mounted() {
     this.setOnDemandDeliveries(this.placeholderOnDemandDeliveries);
+    this.getPointToPointStats();
     this.range = this.$route.params.date
       ? [
           new Date(parseInt(this.$route.params.date)),
@@ -240,7 +263,7 @@ export default {
     ]),
     ongoingDeliveries() {
       let orderCount = 0;
-      Object.values(this.getConsignmentStatistics).forEach((row) => {
+      Object.values(this.getPointToPointStats).forEach((row) => {
         orderCount = row + orderCount;
       });
       return orderCount;
@@ -262,6 +285,7 @@ export default {
       "setTab",
       "setTabStatus",
       "setPagination",
+      "setPointToPointStatistics",
     ]),
     navigate(route) {
       this.$router.push(route);
@@ -317,6 +341,18 @@ export default {
     },
     formatStatus(status, item) {
       return this.showEventLabels(status, item);
+    },
+    getPointToPointStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setPointToPointStatistics(
+            response.data.data.grouped_by_status_count
+          );
+        }
+      });
     },
   },
 };

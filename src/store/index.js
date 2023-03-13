@@ -2209,6 +2209,7 @@ export default createStore({
       achievements: {},
       stockStatistics: {},
       deliveriesStatistics: {},
+      pointToPointStatistics: {},
       consignmentStatistics: {},
       deliveriesStatisticsToday: {},
       consignmentStatisticsToday: {},

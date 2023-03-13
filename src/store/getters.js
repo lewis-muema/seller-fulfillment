@@ -89,6 +89,7 @@ export default {
   getCycleLineItems: (state) => state.cycleLineItems,
   getAchievements: (state) => state.achievements,
   getStockStatistics: (state) => state.stockStatistics,
+  getPointToPointStatistics: (state) => state.pointToPointStatistics,
   getDeliveriesStatistics: (state) => state.deliveriesStatistics,
   getConsignmentStatistics: (state) => state.consignmentStatistics,
   getDeliveriesStatisticsToday: (state) => state.deliveriesStatisticsToday,

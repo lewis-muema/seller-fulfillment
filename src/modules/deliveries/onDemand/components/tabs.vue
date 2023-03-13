@@ -180,31 +180,31 @@ export default {
     cancelled: "-",
   }),
   watch: {
-    // "$store.state.loader": {
-    // handler() {
-    //   this.pending =
-    //       parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-    //       parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-    //           ? (
-    //               parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-    //               parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-    //           ).toString()
-    //           : "0";
-    //   this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT
-    //       ? this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString()
-    //       : "0";
-    //   this.failed = this.getDeliveriesStatistics.ORDER_FAILED
-    //       ? this.getDeliveriesStatistics.ORDER_FAILED.toString()
-    //       : "0";
-    //   this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED
-    //       ? this.getDeliveriesStatistics.ORDER_COMPLETED.toString()
-    //       : "0";
-    //   this.cancelled = this.getDeliveriesStatistics.ORDER_CANCELED
-    //       ? this.getDeliveriesStatistics.ORDER_CANCELED.toString()
-    //       : "0";
-    // },
-    // deep: true,
-    // },
+    "$store.state.loader": {
+      handler() {
+        this.pending =
+          parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
+          parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
+            ? (
+                parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
+                parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
+              ).toString()
+            : "0";
+        this.transit = this.getPointToPointStatistics.ORDER_IN_TRANSIT
+          ? this.getPointToPointStatistics.ORDER_IN_TRANSIT.toString()
+          : "0";
+        this.failed = this.getPointToPointStatistics.ORDER_FAILED
+          ? this.getPointToPointStatistics.ORDER_FAILED.toString()
+          : "0";
+        this.completed = this.getPointToPointStatistics.ORDER_COMPLETED
+          ? this.getPointToPointStatistics.ORDER_COMPLETED.toString()
+          : "0";
+        this.cancelled = this.getPointToPointStatistics.ORDER_CANCELED
+          ? this.getPointToPointStatistics.ORDER_CANCELED.toString()
+          : "0";
+      },
+      deep: true,
+    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -215,7 +215,7 @@ export default {
     },
     ...mapGetters([
       "getTab",
-      "getDeliveriesStatistics",
+      "getPointToPointStatistics",
       "getLoader",
       "getTabStatuses",
       "getUserDetails",

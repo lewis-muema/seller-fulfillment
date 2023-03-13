@@ -6,25 +6,27 @@
     </div>
     <span>
       <i class="mdi mdi-map-marker-outline delivery-info-marker"></i>
-      Afya Centre, Tom Mboya Street, Nairobi
+      {{ deliveryLocation }}
     </span>
     <hr class="destination-divider-line" />
     <div class="destination-titles-containers mt-3">
       <p class="destination-desc-titles dest-pickup-title">Contact person</p>
-      <p class="dest-pickup-desc">0789 123 456</p>
+      <p class="dest-pickup-desc">{{ contactPerson }}</p>
     </div>
     <div class="destination-titles-containers mt-1">
       <p class="destination-desc-titles dest-pickup-title">
-        Pickup instructions
+        Drop off instructions
       </p>
       <p class="dest-pickup-desc">
-        Call Jonathan before you get there so that he can open the gate
+        {{ dropInstructions }}
       </p>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: ["deliveryLocation", "contactPerson", "dropInstructions"],
+};
 </script>
 <style>
 .dest-pickup-title {

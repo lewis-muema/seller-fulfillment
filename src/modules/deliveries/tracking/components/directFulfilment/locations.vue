@@ -2,7 +2,7 @@
   <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles">Locations</p>
-      <a class="destination-desc-titles add-changes-popup">Add/Change</a>
+      <a class="destination-desc-titles add-changes-popup" v-if="editLocation">Add/Change</a>
     </div>
     <el-timeline class="location-el-timeline-override">
       <el-timeline-item
@@ -18,10 +18,6 @@
                   .delivery_location.description
               }}
             </div>
-          </div>
-          <div class="destination-delivery-info-container">
-            <span>ETA</span>
-            <div>23 May, 9:45am</div>
           </div>
         </div>
       </el-timeline-item>
@@ -39,10 +35,6 @@
               }}
             </div>
           </div>
-          <div class="destination-delivery-info-container">
-            <span>ETA</span>
-            <div>23 May, 9:45am</div>
-          </div>
         </div>
       </el-timeline-item>
     </el-timeline>
@@ -55,6 +47,7 @@ export default {
     return {
       color1: "#324ba8",
       color2: "#ee7d00",
+      editLocation: false,
       location: [
         {
           heading: "Pickup Location",

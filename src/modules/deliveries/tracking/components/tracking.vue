@@ -7,8 +7,17 @@
     <div class="col-4" v-scroll:#scroll-target="onScroll">
       <locations />
       <timeline />
-      <pickup-info />
-      <deliveryInfo />
+      <pickup-info
+        :pickupLocation="this.pointDestinationLocation.pickLocation"
+        :contactPerson="this.pickupContactPerson"
+        :products="this.products"
+        :pickInstructions="this.pickupInstructions"
+      />
+      <deliveryInfo
+        :deliveryLocation="this.pointDestinationLocation.deliverLocation"
+        :contactPerson="this.deliveryContactPerson"
+        :dropInstructions="this.dropOffInstructions"
+      />
     </div>
   </div>
 </template>
@@ -32,6 +41,13 @@ export default {
   data() {
     return {
       scrollInvoked: 0,
+      pickUpLocation: "",
+      deliveryLocation: "",
+      pickupContactPerson: "",
+      deliveryContactPerson: "",
+      products: "",
+      pickupInstructions: "",
+      dropOffInstructions: "",
     };
   },
   computed: {
@@ -39,7 +55,37 @@ export default {
       "getLoader",
       "getOrderTrackingData",
       "getStorageUserDetails",
+      "getDirectDeliveriesTrackingData",
     ]),
+    pointDestinationLocation() {
+      this.getDirectDeliveriesTrackingData.orders?.instructions.forEach(
+        (instruction) => {
+          instruction.actions?.forEach((action) => {
+            if (action.action_type === "PICK_PACKAGE") {
+              this.pickUpLocation = instruction.delivery_location.description;
+              this.pickupContactPerson = instruction.phone_number
+                ? instruction.phone_number
+                : "_";
+              this.products = action.package_description;
+              this.pickupInstructions = instruction.delivery_instructions
+                ? instruction.delivery_instructions
+                : "_";
+            }
+            if (action.action_type === "DROP_PACKAGE") {
+              this.deliveryLocation = instruction.delivery_location.description;
+              this.deliveryContactPerson = instruction.phone_number;
+              this.dropOffInstructions = instruction.delivery_instructions
+                ? instruction.delivery_instructions
+                : "_";
+            }
+          });
+        }
+      );
+      return {
+        pickLocation: this.pickUpLocation,
+        deliverLocation: this.deliveryLocation,
+      };
+    },
   },
   mounted() {
     this.fetchOrder();

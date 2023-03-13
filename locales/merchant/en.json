@@ -19,7 +19,7 @@
     "documentation": "Go to Sendy API documentation",
     "letsKnow": "Integrate manually (with our API Docs)",
     "connect": "Connect",
-    "adding": "Adding your store",
+    "connecting_your_store": "Connecting to your store",
     "waiting": "This will take a moment...",
     "required": "is required",
     "shopifyApiKey": "Shopify API Key",

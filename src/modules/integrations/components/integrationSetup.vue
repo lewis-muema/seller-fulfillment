@@ -55,16 +55,19 @@
             </v-btn>
           </v-form>
           <div class="text-center">
-            <v-dialog v-model="connectDialog">
+            <v-dialog v-model="connectDialog" class="connecting-dialog">
               <v-card class="connect-store">
                 <div v-if="connecting" class="connect-progress">
-                  <div class="dialog-title">{{ $t("merchant.adding") }}</div>
-                  <v-progress-circular
-                    :width="3"
-                    color="indigo-darken-2"
-                    indeterminate
-                  ></v-progress-circular>
-                  <div class="">{{ $t("merchant.waiting") }}</div>
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.connecting_your_store") }}
+                  </div>
+                  <img
+                    :src="require('../../../assets/loading.gif')"
+                    class="connecting-dialog__icon"
+                  />
+                  <div class="connecting-dialog__msg">
+                    {{ $t("merchant.waiting") }}
+                  </div>
                 </div>
                 <div v-else>
                   <div v-if="storeConnected">
@@ -210,6 +213,38 @@ export default {
 };
 </script>
 <style lang="scss">
+.connecting-dialog {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 16px;
+
+  &__title {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: -0.01em;
+    color: #303133;
+    margin-bottom: 24px;
+  }
+
+  &__icon {
+    margin-bottom: 24px;
+    width: 90px;
+    height: 90px;
+  }
+
+  &__msg {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #606266;
+  }
+}
 .text {
   &__store-details {
     font-family: "Nunito Sans";

@@ -17,7 +17,7 @@
             "required": true
         }
     ],
-    "Woocommerce":[
+    "WooCommerce":[
         {
             "fieldName":"storeKey",
             "required": true

@@ -1,0 +1,138 @@
+<template>
+  <div class="header">
+    <span
+      ><h5 class="header__title">
+        {{ $t("merchant.connectStore") }}
+      </h5>
+    </span>
+    <span>
+      <button>
+        <img :src="require('../../../assets/close-button.svg')" />
+      </button>
+    </span>
+  </div>
+  <div class="container">
+    <div class="congratulations-container">
+      <div class="congratulations-container__logo">
+        <img
+          :src="require('../../../assets/successful-store.svg')"
+          class="congratulations-container__image"
+        />
+      </div>
+      <div class="congratulations-container__heading">
+        {{ $t("merchant.congratulations") }}
+      </div>
+      <div class="congratulations-container__text">
+        {{ $t("merchant.your_store") }} {{ storeName }}
+        {{ $t("merchant.is_now_integrated_with_sendy") }}
+      </div>
+      <div class="congratulations-container__bottom">
+        <v-btn class="congratulations-container__btn" @click="closePage">{{
+          $t("merchant.close")
+        }}</v-btn>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ThankYou",
+  props: {
+    storeName: {
+      type: String,
+      default: "",
+      required: true,
+    },
+  },
+  methods: {
+    closePage() {
+      this.$router.push({ path: "/settings/integrations" });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.header {
+  margin: 16px 16px 0 16px;
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+
+  &__title {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: -0.005em;
+    color: #606266;
+  }
+
+  &__btn {
+    background: #606266;
+    height: 13px;
+    width: 13px;
+  }
+}
+.container {
+  height: 100svmax;
+  align-items: baseline;
+  text-align: -webkit-center;
+}
+.congratulations-container {
+  width: 512px;
+  text-align: center;
+  padding-top: 82px;
+
+  &__logo {
+    text-align: left;
+    margin-bottom: 29px;
+  }
+
+  &__heading {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: -0.01em;
+    color: #303133;
+    margin-bottom: 8px;
+  }
+
+  &__text {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #606266;
+    margin-bottom: 28px;
+  }
+
+  &__bottom {
+    text-align: right;
+  }
+
+  &__btn {
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px !important;
+    width: 96px;
+    height: 46px;
+    background: #324ba8;
+    border-radius: 6px;
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #ffffff;
+  }
+}
+</style>

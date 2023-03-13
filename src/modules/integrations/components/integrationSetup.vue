@@ -42,15 +42,21 @@
             </p>
           </div>
           <v-form ref="default" v-model="valid" lazy-validation>
-            <v-text-field
+            <div
               v-for="(field, index) in storeObj.storeRequiredFields"
               :key="index"
-              v-model="field.value"
-              :label="$t(`merchant.${field.fieldName}`)"
-              :required="field.required"
-              :rules="field.rules"
-              density="compact"
-            ></v-text-field>
+            >
+              <label for="field" class="personalInfo-label">
+                {{ $t(`merchant.${field.fieldName}`) }}
+              </label>
+              <v-text-field
+                v-model="field.value"
+                :required="field.required"
+                :rules="field.rules"
+                variant="outlined"
+                class="personalInfo-field"
+              ></v-text-field>
+            </div>
             <v-btn class="sendy-btn-default" @click="validateForm('default')">
               {{ $t("merchant.continue") }}
             </v-btn>

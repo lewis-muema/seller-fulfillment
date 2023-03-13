@@ -38,19 +38,22 @@
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
           <v-form ref="form" v-model="valid" lazy-validation>
+            <label :for="storeName" class="personalInfo-label">
+              {{ $t("merchant.storeName") }}
+            </label>
             <v-text-field
               v-model="storeName"
               :counter="20"
               :rules="nameRules"
-              :label="$t('merchant.storeName')"
               required
               density="compact"
             ></v-text-field>
-
+            <label :for="storeUrl" class="personalInfo-label">
+              {{ $t("merchant.storeUrl") }}
+            </label>
             <v-text-field
               v-model="storeUrl"
               :rules="urlRules"
-              :label="$t('merchant.storeUrl')"
               required
               density="compact"
             ></v-text-field>

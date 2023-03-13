@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('saved', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('saved', false)">
@@ -77,9 +70,10 @@
 <script>
 import integrationSetup from "./integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
+import headerComponent from "./header.vue";
 
 export default {
-  components: { integrationSetup },
+  components: { integrationSetup, headerComponent },
   props: {
     detailsDialog: {
       type: Boolean,

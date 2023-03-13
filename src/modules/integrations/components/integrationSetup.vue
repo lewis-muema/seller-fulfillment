@@ -69,29 +69,6 @@
                     {{ $t("merchant.waiting") }}
                   </div>
                 </div>
-                <div v-else>
-                  <div v-if="storeConnected">
-                    <v-icon
-                      icon="mdi-success-circle-outline"
-                      color="green-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.congratulations") }}</h4>
-                    <p>{{ $t("merchant.success") }}</p>
-                  </div>
-                  <div v-else>
-                    <v-icon
-                      icon="error-outline"
-                      color="red-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.fail") }}</h4>
-                    <p>{{ resultMessage }}</p>
-                  </div>
-                  <v-btn class="close-btn" @click="$emit('connected', false)">
-                    {{ $t("merchant.close") }}
-                  </v-btn>
-                </div>
               </v-card>
             </v-dialog>
           </div>
@@ -214,7 +191,6 @@ export default {
 </script>
 <style lang="scss">
 .connecting-dialog {
-  background: #ffffff;
   border-radius: 6px;
   padding: 16px;
 

@@ -17,7 +17,7 @@
 export default {
   methods: {
     closePage() {
-      this.$router.push({ path: "/settings/integrations" });
+      this.$router.go("/settings/integrations");
     },
   },
 };

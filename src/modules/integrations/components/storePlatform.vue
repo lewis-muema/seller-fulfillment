@@ -14,14 +14,12 @@
             <h5>{{ $t("merchant.platformInUse") }}</h5>
           </div>
           <div>
-            <v-select
-              label="Select your platform"
-              density="compact"
-              v-model="platform"
-              @update:modelValue="onPlatformSet"
-              :items="availableStores"
-              outlined
-            ></v-select>
+            <selectComponent
+              :availableStores="availableStores"
+              class="dropdown"
+              @update="updateStore"
+            />
+
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
               {{ $t("merchant.continue") }}
             </v-btn>
@@ -47,9 +45,10 @@
 import storeDetails from "./storeDetails.vue";
 import stores from "../constants/storeFields.json";
 import headerComponent from "./header.vue";
+import selectComponent from "./selectComponent.vue";
 
 export default {
-  components: { storeDetails, headerComponent },
+  components: { storeDetails, headerComponent, selectComponent },
   props: {
     displayDialog: {
       type: Boolean,
@@ -81,6 +80,10 @@ export default {
     },
   },
   methods: {
+    updateStore(store) {
+      this.platform = store;
+      this.onPlatformSet();
+    },
     onPlatformSet() {
       this.platformSet = true;
     },
@@ -94,6 +97,9 @@ export default {
 };
 </script>
 <style scoped>
+.dropdown {
+  margin-bottom: 24px;
+}
 .integrations-card {
   margin: auto;
   width: 40%;

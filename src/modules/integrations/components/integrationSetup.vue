@@ -190,6 +190,12 @@ export default {
         if (status === 200 && data.data.return_code !== 109) {
           this.storeConnected = true;
           this.connecting = false;
+          this.$router.push({
+            name: "ThankYou",
+            params: {
+              storeName: this.storeName,
+            },
+          });
         } else {
           this.storeConnected = false;
           this.connecting = false;
@@ -225,6 +231,12 @@ export default {
     font-size: 16px;
     line-height: 22px;
     color: #606266;
+  }
+}
+.v-overlay {
+  &__content {
+    max-width: unset !important;
+    max-height: unset !important;
   }
 }
 </style>

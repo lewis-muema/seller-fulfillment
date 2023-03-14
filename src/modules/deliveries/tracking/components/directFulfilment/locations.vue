@@ -17,7 +17,9 @@
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
-            <span :class="getLoader.onDemandOrders">Pickup Location</span>
+            <span :class="getLoader.onDemandOrders">{{
+              $t("deliveries.pickupLocation")
+            }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
               {{
                 getDirectDeliveriesTrackingData.order?.instructions[0]
@@ -33,10 +35,12 @@
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
-            <span :class="getLoader.onDemandOrders">Delivery Location</span>
+            <span :class="getLoader.onDemandOrders">{{
+              $t("deliveries.deliveryLocation")
+            }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
               {{
-                getDirectDeliveriesTrackingData.order?.instructions[0]
+                getDirectDeliveriesTrackingData.order?.instructions[1]
                   .delivery_location.description
               }}
             </div>

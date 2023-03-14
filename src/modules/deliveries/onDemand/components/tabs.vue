@@ -160,7 +160,7 @@
         color="#324BA8"
         text-color="white"
         size="default"
-        @click="$router.push('/inventory/create-delivery')"
+        @click="$router.push('direct/create-delivery')"
         >{{ $t("deliveries.deliverToACustomer") }}</v-btn
       >
     </div>

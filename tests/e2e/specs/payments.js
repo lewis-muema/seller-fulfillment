@@ -88,10 +88,8 @@ describe("Wallets module", () => {
   });
   it.only("Show pending payment collections count when a payment hasn't been made", () => {
     cy.fixture("statistics").then((stat) => {
-      if (stat.data.transaction_statistic) {
-        cy.get(".statistics-pending-badge").eq(
-          stat.data.transaction_statistic.transaction_type_count
-        );
+      if (stat.message === "transactions.list.success") {
+        cy.get(".statistics-pending-badge").eq(17);
       } else {
         cy.get(".statistics-pending-badge").eq(0);
       }

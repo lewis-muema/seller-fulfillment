@@ -51,7 +51,6 @@ export default {
     dashboardTabsContent,
     makePayment,
     onboarding,
-    walletBanner,
   },
   data() {
     return {

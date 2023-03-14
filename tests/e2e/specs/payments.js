@@ -31,9 +31,9 @@ describe("Transactions module", () => {
   it.only("Show pending payment collections count when a payment hasn't been made", () => {
     cy.fixture("statistics").then((stat) => {
       if (stat.message === "transactions.list.success") {
-        cy.get(".statistics-pending-badge").eq(17);
+        cy.get(".statistics-pending-badge").contains(17);
       } else {
-        cy.get(".statistics-pending-badge").eq(0);
+        cy.get(".statistics-pending-badge").contains(0);
       }
     });
   });
@@ -64,20 +64,13 @@ describe("Wallets module", () => {
   it.only("Loads the wallet page and fetches information else shows the warning description of no transactions available", () => {
     cy.fixture("transactions").then((transaction) => {
       if (transaction.data.transactions.length) {
-        cy.get(".transactions-top-recent-list-container")
-          .find(".transactions-top-recent-list")
-          .should("be.visible");
+        cy.get(".transactions-top-recent-list").should("be.visible");
       } else {
         cy.get(".deliveries-empty").should("be.visible");
       }
     });
   });
   it.only("Show the makepayment popup when the active cycle is true", () => {
-    cy.setToken();
-    cy.crossDockingStubs();
-    cy.dashboardStubs();
-    cy.paymentStubs();
-    cy.visit("/payments/wallet");
     cy.fixture("paymentRequired").then((payment) => {
       if (payment.message === "billing.cycle.list.success") {
         cy.get(".statements-payment-banner").should("be.visible");
@@ -89,19 +82,16 @@ describe("Wallets module", () => {
   it.only("Show pending payment collections count when a payment hasn't been made", () => {
     cy.fixture("statistics").then((stat) => {
       if (stat.message === "transactions.list.success") {
-        cy.get(".statistics-pending-badge").eq(17);
+        cy.get(".statistics-pending-badge").contains(17);
       } else {
-        cy.get(".statistics-pending-badge").eq(0);
+        cy.get(".statistics-pending-badge").contains(0);
       }
     });
   });
   it.only("Shows navigate to a different page when a transaction is clicked else shows the warning description of no transactions available", () => {
     cy.fixture("transactions").then((transaction) => {
       if (transaction.data.transactions.length) {
-        cy.get(".transactions-top-recent-list-container")
-          .find(".transactions-top-recent-list")
-          .eq(0)
-          .click();
+        cy.get(".transactions-top-recent-list").eq(0).click();
         cy.url().should("include", "/payments/transaction-details");
       } else {
         cy.get(".deliveries-empty").should("be.visible");

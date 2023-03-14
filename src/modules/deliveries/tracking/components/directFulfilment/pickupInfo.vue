@@ -83,7 +83,9 @@ export default {
   methods: {
     formatVehicleName(name) {
       let nameToLowerCase = name?.toLowerCase().replace("_", " ");
-      return nameToLowerCase?.charAt(0).toUpperCase() + nameToLowerCase?.slice(1);
+      return (
+        nameToLowerCase?.charAt(0).toUpperCase() + nameToLowerCase?.slice(1)
+      );
     },
   },
 };

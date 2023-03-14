@@ -69,7 +69,7 @@
                     {{ $t("merchant.waiting") }}
                   </div>
                 </div>
-                <div v-if="hasError" class="connect-progress">
+                <div v-if="hasError && !connecting" class="connect-progress">
                   <div class="connecting-dialog__title">
                     {{ $t("merchant.somethingWentWrong") }}
                   </div>
@@ -157,10 +157,13 @@ export default {
         storeFields[field.fieldName] = field.value;
       }
 
+      let cartId = this.storePlatform.replace(" ", "").toLowerCase();
+      cartId = cartId.charAt(0).toUpperCase() + cartId.slice(1);
+
       const payload = {
         storeUrl: this.storeUrl,
         storeName: this.storeName,
-        cartId: this.storePlatform,
+        cartId,
         ...storeFields,
       };
 

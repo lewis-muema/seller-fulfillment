@@ -63,29 +63,30 @@ export default {
     this.fetchOrder();
   },
   watch: {
-    "$store.getters.getDirectDeliveriesTrackingData": function pointToPointOrders(val) {
-      val.order?.instructions.forEach((instruction) => {
-        instruction.actions?.forEach((action) => {
-          if (action.action_type === "PICK_PACKAGE") {
-            this.pickUpLocation = instruction.delivery_location.description;
-            this.pickupContactPerson = instruction.phone_number
-              ? instruction.phone_number
-              : "_";
-            this.products = action.package_description;
-            this.pickupInstructions = instruction.delivery_instructions
-              ? instruction.delivery_instructions
-              : "_";
-          }
-          if (action.action_type === "DROP_PACKAGE") {
-            this.deliveryLocation = instruction.delivery_location.description;
-            this.deliveryContactPerson = instruction.phone_number;
-            this.dropOffInstructions = instruction.delivery_instructions
-              ? instruction.delivery_instructions
-              : "_";
-          }
+    "$store.getters.getDirectDeliveriesTrackingData":
+      function pointToPointOrders(val) {
+        val.order?.instructions.forEach((instruction) => {
+          instruction.actions?.forEach((action) => {
+            if (action.action_type === "PICK_PACKAGE") {
+              this.pickUpLocation = instruction.delivery_location.description;
+              this.pickupContactPerson = instruction.phone_number
+                ? instruction.phone_number
+                : "_";
+              this.products = action.package_description;
+              this.pickupInstructions = instruction.delivery_instructions
+                ? instruction.delivery_instructions
+                : "_";
+            }
+            if (action.action_type === "DROP_PACKAGE") {
+              this.deliveryLocation = instruction.delivery_location.description;
+              this.deliveryContactPerson = instruction.phone_number;
+              this.dropOffInstructions = instruction.delivery_instructions
+                ? instruction.delivery_instructions
+                : "_";
+            }
+          });
         });
-      });
-    },
+      },
   },
   methods: {
     ...mapMutations([
@@ -99,14 +100,10 @@ export default {
       this.scrollInvoked = e.target.scrollTop;
     },
     fetchOrder() {
-      // this.setLoader({
-      //   type: "orderTracking",
-      //   value: "loading-text",
-      // });
-      // this.setLoader({
-      //   type: "orderTimeline",
-      //   value: "loading-text",
-      // });
+      this.setLoader({
+        type: "onDemandOrders",
+        value: "loading-text",
+      });
       this.setLoader({
         type: "locationDetails",
         value: "loading-text",

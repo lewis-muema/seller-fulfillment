@@ -81,7 +81,7 @@
                 <div v-else>
                   <p class="deliveries-progress-row-top">
                     <span :class="getLoader.onDemandOrders">
-                      Order received
+                      {{ formatStatus(item.order_event_status, item) }}
                     </span>
                   </p>
                   <v-progress-linear

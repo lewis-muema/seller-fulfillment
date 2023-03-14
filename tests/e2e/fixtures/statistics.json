@@ -1,0 +1,13 @@
+{
+  "message":"transactions.list.success",
+  "data":{
+    "transaction_statistic":{
+      "currency":"KES",
+      "transaction_type_count":17,
+      "transaction_type_total_value":2003.0
+    }
+  },
+  "errors":[
+
+  ]
+}

@@ -2,10 +2,12 @@
   <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
-        Pickup Information
+        {{ $t("deliveries.pickupInfo") }}
       </p>
-      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
-        >Edit</a
+      <a
+        class="destination-desc-titles add-changes-popup"
+        v-if="editLocation"
+        >{{ $t("deliveries.edit") }}</a
       >
     </div>
     <span class="d-flex">
@@ -13,7 +15,9 @@
         class="mdi mdi-map-marker-outline delivery-info-marker"
         :class="getLoader.onDemandOrders"
       ></i>
-      <div :class="getLoader.onDemandOrders" class="destination-location-text">{{ pickupLocation }}</div>
+      <div :class="getLoader.onDemandOrders" class="destination-location-text">
+        {{ pickupLocation }}
+      </div>
     </span>
     <hr class="destination-divider-line" />
     <div class="destination-titles-containers mt-3">
@@ -21,7 +25,7 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        What are you sending?
+        {{ $t("deliveries.whatAreYouSending") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ products }}
@@ -32,10 +36,12 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        Bike type?
+        {{ $t("deliveries.vehicleType") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
-        Without box
+        {{
+          formatVehicleName(getDirectDeliveriesTrackingData.order?.vehicle_type)
+        }}
       </p>
     </div>
     <div class="destination-titles-containers mt-1">
@@ -43,7 +49,7 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        Contact person
+        {{ $t("deliveries.contactPerson") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ contactPerson }}
@@ -54,7 +60,7 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        Pickup instructions
+        {{ $t("deliveries.pickUpInstructions") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ pickInstructions }}
@@ -73,6 +79,12 @@ export default {
   },
   computed: {
     ...mapGetters(["getDirectDeliveriesTrackingData", "getLoader"]),
+  },
+  methods: {
+    formatVehicleName(name) {
+      let nameToLowerCase = name?.toLowerCase().replace("_", " ");
+      return nameToLowerCase?.charAt(0).toUpperCase() + nameToLowerCase?.slice(1);
+    },
   },
 };
 </script>

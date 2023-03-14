@@ -21,7 +21,6 @@ describe("Transactions module", () => {
   });
   it.only("Show make payment card popup when the active cycle is true", () => {
     cy.fixture("paymentRequired").then((payment) => {
-      cy.log(payment.message);
       if (payment.message === "billing.cycle.list.success") {
         cy.get(".statements-payment-banner").should("be.visible");
       } else {
@@ -31,7 +30,6 @@ describe("Transactions module", () => {
   });
   it.only("Show pending payment collections count when a payment hasn't been made", () => {
     cy.fixture("statistics").then((stat) => {
-      cy.log("count", stat.data.transaction_statistic);
       if (stat.data.transaction_statistic) {
         cy.get(".statistics-pending-badge").eq(17);
       } else {
@@ -81,7 +79,6 @@ describe("Wallets module", () => {
     cy.paymentStubs();
     cy.visit("/payments/transactions");
     cy.fixture("paymentRequired").then((payment) => {
-      cy.log(payment.message);
       if (payment.message === "billing.cycle.list.success") {
         cy.get(".statements-payment-banner").should("be.visible");
       } else {

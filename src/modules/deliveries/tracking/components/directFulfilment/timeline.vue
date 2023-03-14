@@ -6,49 +6,49 @@
     <div class="mt-3">
       <el-timeline class="point-point-timeline-override">
         <el-timeline-item
-            class="el-timeline-item-desktop"
-            v-for="(activity, index) in getOrderTimelines"
-            :key="index"
-            :icon="
+          class="el-timeline-item-desktop"
+          v-for="(activity, index) in getOrderTimelines"
+          :key="index"
+          :icon="
             activity.event_code === 'EVENT_DELIVERY_FAILED'
               ? closeIcon
               : getTimelineIcons[activity.event_tense].icon
           "
-            :type="activity.type"
-            :color="
+          :type="activity.type"
+          :color="
             activity.event_code === 'EVENT_DELIVERY_FAILED'
               ? '#9b101c'
               : getTimelineIcons[activity.event_tense].color
           "
-            :size="activity.size"
-            :hollow="getTimelineIcons[activity.event_tense].hollow"
-            :class="getTimelineIcons[activity.event_tense].iconClass"
+          :size="activity.size"
+          :hollow="getTimelineIcons[activity.event_tense].hollow"
+          :class="getTimelineIcons[activity.event_tense].iconClass"
         >
           <span
-              :class="
+            :class="
               activity.event_code === 'EVENT_DELIVERY_FAILED'
                 ? 'failed-delivery-timeline-text'
                 : `${activity.event_tense}-timeline-text`
             "
           >
-            <span :class="getLoader.orderTimeline">
+            <span :class="getLoader.onDemandOrders">
               {{ formatStatus(activity.translated_event_code, activity) }}
             </span>
           </span>
           <div
-              v-if="
+            v-if="
               getDeliveryAttempts.length > 0 &&
               activity.event_code === 'EVENT_DELIVERY_FAILED'
             "
-              class="timeline-delivery-attempts"
-              @click="
+            class="timeline-delivery-attempts"
+            @click="
               setOverlayStatus({
                 overlay: true,
                 popup: 'attempts',
               })
             "
           >
-            <span :class="getLoader.orderTimeline">
+            <span :class="getLoader.onDemandOrders">
               {{ getDeliveryAttempts.length }} {{ $t("deliveries.attempts") }}
               <i class="mdi mdi-chevron-right"></i>
             </span>
@@ -117,7 +117,7 @@ export default {
     },
     fetchOrder() {
       this.setLoader({
-        type: "orderTimeline",
+        type: "onDemandOrders",
         value: "loading-text",
       });
       this.requestAxiosGet({
@@ -125,21 +125,21 @@ export default {
         endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader({
-          type: "orderTimeline",
+          type: "onDemandOrders",
           value: "",
         });
         if (response.status === 200) {
           this.setOrderTimelines(response.data.data.events);
           const events = response.data.data.events;
           if (
-              events[events.length - 1].event_code === "EVENT_DELIVERY_FAILED"
+            events[events.length - 1].event_code === "EVENT_DELIVERY_FAILED"
           ) {
             this.fetchAttempts();
           }
           if (this.getOrderTimelines[0].event_code.includes("EVENT_DELIVERY")) {
             this.setParent("customer");
           } else if (
-              this.getOrderTimelines[0].event_code.includes("EVENT_PICKUP")
+            this.getOrderTimelines[0].event_code.includes("EVENT_PICKUP")
           ) {
             this.setParent("sendy");
           }

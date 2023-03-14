@@ -2,10 +2,12 @@
   <div class="direct-fulfilment-destination-container mt-3">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
-        Locations
+        {{ $t("deliveries.locations") }}
       </p>
-      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
-        >Add/Change</a
+      <a
+        class="destination-desc-titles add-changes-popup"
+        v-if="editLocation"
+        >{{ $t("deliveries.addOrChange") }}</a
       >
     </div>
     <el-timeline class="location-el-timeline-override">
@@ -52,16 +54,6 @@ export default {
       color1: "#324ba8",
       color2: "#ee7d00",
       editLocation: false,
-      location: [
-        {
-          heading: "Pickup Location",
-          content: "Afya Center, Moi Avenue, Nairobi",
-        },
-        {
-          heading: "Delivery Location",
-          content: "Kenya High School, Nairobi",
-        },
-      ],
     };
   },
   computed: {

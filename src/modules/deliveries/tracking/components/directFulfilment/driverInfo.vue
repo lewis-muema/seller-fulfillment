@@ -2,10 +2,12 @@
   <div class="direct-fulfilment-destination-container mt-3 mb-5">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
-        Delivery Information
+        {{ $t("deliveries.deliveryInfo") }}
       </p>
-      <a class="destination-desc-titles add-changes-popup" v-if="editLocation"
-        >Edit</a
+      <a
+        class="destination-desc-titles add-changes-popup"
+        v-if="editLocation"
+        >{{ $t("deliveries.edit") }}</a
       >
     </div>
     <span class="d-flex">
@@ -13,7 +15,9 @@
         class="mdi mdi-map-marker-outline delivery-info-marker"
         :class="getLoader.onDemandOrders"
       ></i>
-      <div class="destination-location-text" :class="getLoader.onDemandOrders"> {{ deliveryLocation }}</div>
+      <div class="destination-location-text" :class="getLoader.onDemandOrders">
+        {{ deliveryLocation }}
+      </div>
     </span>
     <hr class="destination-divider-line" />
     <div class="destination-titles-containers mt-3">
@@ -21,7 +25,7 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        Contact person
+        {{ $t("deliveries.contactPerson") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ contactPerson }}
@@ -32,7 +36,7 @@
         class="destination-desc-titles dest-pickup-title"
         :class="getLoader.onDemandOrders"
       >
-        Drop off instructions
+        {{ $t("deliveries.dropOffInstructions") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
         {{ dropInstructions }}

@@ -175,6 +175,11 @@ export default {
           icon: "mdi-warehouse",
           url: "/inventory/add-pickup-products",
         },
+        {
+          title: "dashboard.deliverOnDemand",
+          icon: "mdi-truck-outline",
+          url: "/direct/create-delivery",
+        },
       ],
       profile: [
         {
@@ -259,6 +264,7 @@ export default {
   },
   mounted() {
     this.listLanguages();
+    this.listBusinessDetails();
     this.listUsersDetails();
     this.listNotifications();
   },
@@ -360,12 +366,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setBusinessDetails(response.data.data.business);
-          this.profile[1].item = `${this.$t("common.language")}: ${
-            this.languageName
-          }`;
-          if (!localStorage.country) {
-            localStorage.country = response.data.data.business.country_code;
-          }
+          localStorage.country = response.data.data.business.country_code;
+          localStorage.country_name = response.data.data.business.country;
+          window.dispatchEvent(
+            new CustomEvent("country-fetched", { detail: response.data })
+          );
         }
       });
     },
@@ -376,7 +381,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setLanguages(this.languageFormat(response.data.data.languages));
-          this.listBusinessDetails();
+          this.profile[1].item = `${this.$t("common.language")}: ${
+            this.languageName
+          }`;
+        } else {
+          this.profile[1].item = `${this.$t("common.language")}: ${"English"}`;
         }
       });
     },

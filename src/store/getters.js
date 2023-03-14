@@ -142,4 +142,13 @@ export default {
   getAutofillReviewStatus: (state) => state.autofillReviewStatus,
   getLPOUploadError: (state) => state.LPOUploadError,
   getAutofillProductStatus: (state) => state.autofillProductStatus,
+  getMarkers: (state) => state.markers,
+  getPolyline: (state) => state.polyline,
+  getMapStatus: (state) => state.mapStatus,
+  getLocationSuggestions: (state) => state.locationSuggestions,
+  getPricing: (state) => state.pricing,
+  getDirectOrderStep: (state) => state.directOrderStep,
+  getSelectedVehicleType: (state) => state.selectedVehicleType,
+  getDirectOrderDetails: (state) => state.directOrderDetails,
+  getDirectOrderDetailsStep: (state) => state.directOrderDetailsStep,
 };

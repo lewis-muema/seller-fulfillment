@@ -49,6 +49,7 @@ import AddDeliveryProducts from "../modules/inventory/crossdocking/components/pr
 import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 import statements from "../modules/payments/statements/statements.vue";
+import direct from "../modules/deliveries/direct/direct.vue";
 
 // merchant services integrations
 import integrations from "../modules/integrations/integrations.vue";
@@ -323,6 +324,11 @@ const routes = [
     path: "/external/invite",
     name: "Invite",
     component: invite,
+  },
+  {
+    path: "/direct/create-delivery",
+    name: "Direct Fulfilment",
+    component: direct,
   },
 ];
 

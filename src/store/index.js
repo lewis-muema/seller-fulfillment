@@ -39,6 +39,18 @@ export default createStore({
       editableFields: {},
       autoFillVariants: [],
       LPOUploadError: "",
+      markers: [],
+      polyline: {},
+      pricing: [],
+      directOrderStep: 0,
+      directOrderDetailsStep: 0,
+      directOrderDetails: {
+        pickup: {},
+        destinations: [],
+      },
+      selectedVehicleType: {},
+      mapStatus: false,
+      locationSuggestions: [],
       autofillReviewStatus: false,
       autofillProductStatus: false,
       deliverySpeed: [

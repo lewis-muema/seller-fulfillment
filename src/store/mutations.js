@@ -416,4 +416,31 @@ export default {
   setAutofillProductStatus(state, val) {
     state.autofillProductStatus = val;
   },
+  setMarkers(state, val) {
+    state.markers = val;
+  },
+  setPolyline(state, val) {
+    state.polyline = val;
+  },
+  setMapStatus(state, val) {
+    state.mapStatus = val;
+  },
+  setLocationSuggestions(state, val) {
+    state.locationSuggestions = val;
+  },
+  setPricing(state, val) {
+    state.pricing = val;
+  },
+  setDirectOrderStep(state, val) {
+    state.directOrderStep = val;
+  },
+  setSelectedVehicleType(state, val) {
+    state.selectedVehicleType = val;
+  },
+  setDirectOrderDetails(state, val) {
+    state.directOrderDetails = val;
+  },
+  setDirectOrderDetailsStep(state, val) {
+    state.directOrderDetailsStep = val;
+  },
 };

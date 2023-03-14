@@ -30,7 +30,7 @@ describe("Transactions module", () => {
   });
   it.only("Show pending payment collections count when a payment hasn't been made", () => {
     cy.fixture("statistics").then((stat) => {
-      if (stat.data.transaction_statistic) {
+      if (stat.message === "transactions.list.success") {
         cy.get(".statistics-pending-badge").eq(17);
       } else {
         cy.get(".statistics-pending-badge").eq(0);
@@ -77,7 +77,7 @@ describe("Wallets module", () => {
     cy.crossDockingStubs();
     cy.dashboardStubs();
     cy.paymentStubs();
-    cy.visit("/payments/transactions");
+    cy.visit("/payments/wallet");
     cy.fixture("paymentRequired").then((payment) => {
       if (payment.message === "billing.cycle.list.success") {
         cy.get(".statements-payment-banner").should("be.visible");

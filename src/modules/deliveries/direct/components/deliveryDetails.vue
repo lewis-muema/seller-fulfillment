@@ -178,7 +178,17 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setOverlayStatus", "setDirectOrderDetailsStep"]),
+    ...mapMutations([
+      "setOverlayStatus",
+      "setDirectOrderDetailsStep",
+      "setMarkers",
+      "setPolyline",
+      "setPricing",
+      "setDirectOrderStep",
+      "setSelectedVehicleType",
+      "setDirectOrderDetails",
+      "setDirectOrderDetailsStep",
+    ]),
     ...mapActions(["requestAxiosPost"]),
     changeStage(stage) {
       if (stage === 0) {
@@ -295,7 +305,7 @@ export default {
       }).then((response) => {
         this.orderLoadingStatus = false;
         if (response.status === 200) {
-          console.log(response);
+          this.resetFlow();
           this.$router.push(
             `/deliveries/track-direct-deliveries/${response.data.data.order_id}`
           );
@@ -307,6 +317,18 @@ export default {
           });
         }
       });
+    },
+    resetFlow() {
+      this.setMarkers([]);
+      this.setPolyline({});
+      this.setPricing([]);
+      this.setDirectOrderStep(0);
+      this.setSelectedVehicleType({});
+      this.setDirectOrderDetails({
+        pickup: {},
+        destinations: [],
+      });
+      this.setDirectOrderDetailsStep(0);
     },
   },
 };

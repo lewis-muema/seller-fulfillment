@@ -3806,10 +3806,22 @@ export default {
         `${this.directTime.hh}:${this.directTime.mm} ${this.directTime.a}`,
         "h:mm a"
       ).format("HH:mm");
-      this.getDirectOrderDetails.pickup.pickup_date = new Date(
-        moment(`${date} ${time}`, "YYYY-MM-DD HH:mm")
-      );
-      this.overlayStatusSet(false, "rescheduleDirect");
+
+      if (
+        moment(`${date} ${time}`, "YYYY-MM-DD HH:mm").valueOf() >
+        moment().valueOf()
+      ) {
+        this.getDirectOrderDetails.pickup.pickup_date = new Date(
+          moment(`${date} ${time}`, "YYYY-MM-DD HH:mm")
+        );
+        this.overlayStatusSet(false, "rescheduleDirect");
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.scheduledDateCannotBeEarlier"),
+          type: "warning",
+        });
+      }
     },
   },
 };
@@ -4648,5 +4660,10 @@ export default {
 .reschedule-direct-time-picker input {
   border-radius: 5px;
   height: 40px !important;
+}
+.vue__time-picker .dropdown ul li:not([disabled]).active,
+.vue__time-picker .dropdown ul li:not([disabled]).active:focus,
+.vue__time-picker .dropdown ul li:not([disabled]).active:hover {
+  background: #c8e5fc !important;
 }
 </style>

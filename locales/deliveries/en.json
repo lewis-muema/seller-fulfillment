@@ -238,5 +238,6 @@
   "deliveryFees": "Delivery fees",
   "pleaseSelectAPaymentMethod": "Please select a payment method for this order",
   "enterName": "Enter Name of the recipient",
-  "failedToCreateOrder": "Failed to create an order"
+  "failedToCreateOrder": "Failed to create an order",
+  "scheduledDateCannotBeEarlier": "The scheduled date and time cannot be earlier than the current date and time"
 }

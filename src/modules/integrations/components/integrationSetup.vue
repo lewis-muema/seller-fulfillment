@@ -69,6 +69,14 @@
                     {{ $t("merchant.waiting") }}
                   </div>
                 </div>
+                <div v-if="hasError" class="connect-progress">
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.somethingWentWrong") }}
+                  </div>
+                  <div class="connecting-dialog__msg">
+                    {{ resultMessage }}
+                  </div>
+                </div>
               </v-card>
             </v-dialog>
           </div>
@@ -114,6 +122,7 @@ export default {
       storeConnected: false,
       resultMessage: "",
       storeObj: null,
+      hasError: false,
     };
   },
   mounted() {
@@ -124,6 +133,11 @@ export default {
   watch: {
     setupDialog() {
       if (this.setupDialog) this.dialog = true;
+    },
+    connectDialog(value) {
+      if (!value) {
+        this.hasError = false;
+      }
     },
   },
   methods: {
@@ -164,7 +178,7 @@ export default {
         const { status, data } = await this.connectStore(fullPayload);
         this.connecting = false;
 
-        if (status === 200 && data.data.return_code !== 109) {
+        if (status === 200 && data.data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
           this.$router.push({
@@ -181,9 +195,10 @@ export default {
           );
         }
       } catch (error) {
+        this.resultMessage = error;
         this.storeConnected = false;
         this.connecting = false;
-        this.resultMessage = error;
+        this.hasError = true;
       }
     },
   },

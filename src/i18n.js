@@ -1,5 +1,4 @@
 import { createI18n } from "vue-i18n";
-import axios from "axios";
 import moment from "moment";
 
 function loadLocaleMessages() {
@@ -31,19 +30,6 @@ function changeLanguage() {
     i18n.locale = event.detail;
     moment.locale(event.detail);
   });
-  window.addEventListener("country-default", () => {
-    ipLookUp();
-  });
-}
-
-function ipLookUp() {
-  axios(`https://extreme-ip-lookup.com/json/?key=${process.env.EXTREME_IP_KEY}`)
-    .then((response) => {
-      window.dispatchEvent(
-        new CustomEvent("country-fetched", { detail: response.data })
-      );
-    })
-    .catch((error) => error);
 }
 
 changeLanguage();

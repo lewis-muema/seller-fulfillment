@@ -2466,6 +2466,41 @@
         </div>
       </div>
     </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'rescheduleDirect'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-reschedule-title-label">
+          {{ $t("deliveries.pickATime") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'rescheduleDirect')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <vue-timepicker
+        class="reschedule-direct-time-picker"
+        format="hh:mm:ss a"
+        v-model="directTime"
+      ></vue-timepicker>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1),
+          from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        }"
+        v-model="directDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        v-loading="buttonLoader"
+        @click="rescheduleDirect()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
   </v-overlay>
 </template>
 
@@ -2478,13 +2513,15 @@ import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import VueTimepicker from "vue3-timepicker";
+import "vue3-timepicker/dist/VueTimepicker.css";
 
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
   props: ["overlayVal", "editInfo"],
-  components: { Datepicker },
+  components: { Datepicker, VueTimepicker },
   mixins: [upload_img, trackingPayloadMixin],
   data() {
     return {
@@ -2595,6 +2632,13 @@ export default {
       uploadPercentage: 0,
       LPOFileName: "",
       destinations: [],
+      directDate: new Date(),
+      directTime: {
+        hh: "08",
+        mm: "00",
+        ss: "00",
+        a: "am",
+      },
     };
   },
   validations() {
@@ -2675,6 +2719,7 @@ export default {
       "getAutoFillVariants",
       "getCancellationReasons",
       "getEditableFields",
+      "getDirectOrderDetails",
     ]),
     partnerNotAssigned() {
       return (
@@ -2875,6 +2920,7 @@ export default {
       "setGeofenceData",
       "setConsignmentReturn",
       "setDestinationIndex",
+      "setDirectOrderDetails",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -3754,6 +3800,17 @@ export default {
       });
       this.$router.push("/deliveries/edit-order");
     },
+    rescheduleDirect() {
+      const date = moment(this.directDate).format("YYYY-MM-DD");
+      const time = moment(
+        `${this.directTime.hh}:${this.directTime.mm} ${this.directTime.a}`,
+        "h:mm a"
+      ).format("HH:mm");
+      this.getDirectOrderDetails.pickup.pickup_date = new Date(
+        moment(`${date} ${time}`, "YYYY-MM-DD HH:mm")
+      );
+      this.overlayStatusSet(false, "rescheduleDirect");
+    },
   },
 };
 </script>
@@ -4584,5 +4641,12 @@ export default {
 .view-products-container-inner {
   max-height: 600px;
   overflow-y: scroll;
+}
+.reschedule-direct-time-picker {
+  margin: auto;
+}
+.reschedule-direct-time-picker input {
+  border-radius: 5px;
+  height: 40px !important;
 }
 </style>

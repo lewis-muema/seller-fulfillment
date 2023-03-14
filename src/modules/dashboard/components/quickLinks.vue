@@ -47,7 +47,7 @@ export default {
         {
           icon: "on-demand.png",
           name: "dashboard.deliverOnDemand",
-          path: "/inventory/add-consignment-return-products",
+          path: "/direct/create-delivery",
           new: true,
         },
         {

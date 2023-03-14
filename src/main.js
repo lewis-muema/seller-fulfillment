@@ -84,7 +84,7 @@ createApp(App)
   .use(moment)
   .use(VueGoogleMaps, {
     load: {
-      libraries: ["places", "geometry"],
+      libraries: ["places"],
       key: process.env.GOOGLE_API_KEY_TEST,
     },
   })

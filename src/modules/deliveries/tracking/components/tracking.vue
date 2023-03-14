@@ -25,7 +25,7 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
-import deliveryInfo from "../components/directFulfilment/driverInfo.vue";
+import deliveryInfo from "./directFulfilment/deliveryInfo.vue";
 import timeline from "../components/directFulfilment/timeline.vue";
 import trackingMap from "../components/directFulfilment/trackingMap.vue";
 import trackingTopCard from "./directFulfilment/topTrackingCard.vue";

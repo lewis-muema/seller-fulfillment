@@ -175,6 +175,7 @@ export default {
         "others",
       ],
       orderLoadingStatus: false,
+      UUID: [],
     };
   },
   methods: {
@@ -227,16 +228,33 @@ export default {
         type: "warning",
       });
     },
-    generateUUID() {
-      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-        (
-          c ^
-          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-        ).toString(16)
+    generateUUID(x) {
+      const UUIDVal = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(
+        /[018]/g,
+        (c) =>
+          (
+            c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+          ).toString(16)
       );
+      this.UUID[x] = UUIDVal;
+    },
+    getPickUpActions() {
+      const actions = [];
+      this.UUID.forEach((UUID) => {
+        actions.push({
+          action_type: "PICK_PACKAGE",
+          package_uuid: UUID,
+          package_description:
+            this.getDirectOrderDetails?.pickup?.delivery_item,
+        });
+      });
+      return actions;
     },
     placeOrder() {
-      const packageUUID = this.generateUUID();
+      this.getDirectOrderDetails.destinations.forEach((details, x) => {
+        this.generateUUID(x);
+      });
       const payload = {
         instructions: [],
         pricing_uuid: this.getSelectedVehicleType.pricing_uuid,
@@ -264,14 +282,7 @@ export default {
           ?.pickup_instructions
           ? this.getDirectOrderDetails?.pickup?.pickup_instructions
           : "",
-        actions: [
-          {
-            action_type: "PICK_PACKAGE",
-            package_uuid: packageUUID,
-            package_description:
-              this.getDirectOrderDetails?.pickup?.delivery_item,
-          },
-        ],
+        actions: this.getPickUpActions(),
       };
       this.getDirectOrderDetails.destinations.forEach((destination, i) => {
         payload.instructions[i + 1] = {
@@ -290,7 +301,7 @@ export default {
           actions: [
             {
               action_type: "DROP_PACKAGE",
-              package_uuid: packageUUID,
+              package_uuid: this.UUID[i],
               package_description:
                 this.getDirectOrderDetails?.pickup?.delivery_item,
             },

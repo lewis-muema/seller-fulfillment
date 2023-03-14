@@ -129,6 +129,8 @@
   "name": "Name",
   "phone": "Phone",
   "locations": "Locations",
+  "pickupLocation": "Pickup Location",
+  "deliveryLocation": "Delivery Location",
   "addOrChange": "Add/Change",
   "secondaryPhoneNumber": "Secondary phone number",
   "orderPlacedOn": "Order placed on {Date}",

@@ -65,6 +65,8 @@
   "orderCreated": "Votre commande a été créée ",
   "orderFail": "Échec de la livraison",
   "whatAreYouSending": "What are you sending?",
+  "pickupLocation": "Pickup Location",
+  "deliveryLocation": "Delivery Location",
   "vehicleType": "Vehicle Type?",
   "editPickUpInfo": "Edit pick up info",
   "locations": "Locations",

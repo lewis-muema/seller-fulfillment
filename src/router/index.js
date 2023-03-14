@@ -7,7 +7,9 @@ import OTP from "../modules/auth/OTP.vue";
 import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
+import onDemand from "../modules/deliveries/onDemand/onDemand.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
+import DirectFulfilmentTracking from "../modules/deliveries/tracking/components/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Transactions from "../modules/payments/transactions/transactions.vue";
 import Wallet from "../modules/payments/wallet/wallet.vue";
@@ -26,7 +28,7 @@ import addUser from "../modules/settings/manageUsers/components/addUser.vue";
 import userPermissions from "../modules/settings/manageUsers/components/userPermissions.vue";
 import invite from "../modules/external/invite.vue";
 import editUser from "../modules/settings/manageUsers/components/editUser.vue";
-import editOrder from "../modules/deliveries/tracking/components/editOrder.vue";
+import editOrder from "../modules/deliveries/tracking/components/normalFulfilment/editOrder.vue";
 import activityLog from "../modules/settings/activityLog/activityLog.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/inventory/products/components/addProduct.vue";
@@ -189,9 +191,19 @@ const routes = [
     component: Sendy,
   },
   {
+    path: "/deliveries/direct-deliveries/",
+    name: "On Demand",
+    component: onDemand,
+  },
+  {
     path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
+  },
+  {
+    path: "/deliveries/track-direct-deliveries/:order_id",
+    name: "DirectFulfilmentTracking",
+    component: DirectFulfilmentTracking,
   },
   {
     path: "/deliveries/edit-order/",

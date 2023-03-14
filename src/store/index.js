@@ -451,6 +451,61 @@ export default createStore({
           rejection_policy: null,
         },
       },
+      directDeliveriesTrackingData: {
+        orders: {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
+      },
       defaultCountryCode: "KE",
       defaultCountryName: "KENYA",
       sendyPhoneProps: {
@@ -525,6 +580,10 @@ export default createStore({
         dpp: "loading-text",
         pickUpDetails: "loading-text",
         speed: "loading-text",
+        onDemandOrders: "loading-text",
+        locationDetails: "loading-text",
+        pointToPointPickup: "loading-text",
+        pointToPointDeliveries: "loading-text",
       },
       overlay: false,
       userChanged: false,
@@ -1466,6 +1525,7 @@ export default createStore({
           rejection_policy: null,
         },
       ],
+      onDemandDeliveries: [],
       data: {
         message: "order.retrieve.success",
         data: {
@@ -2163,6 +2223,7 @@ export default createStore({
       achievements: {},
       stockStatistics: {},
       deliveriesStatistics: {},
+      pointToPointStatistics: {},
       consignmentStatistics: {},
       deliveriesStatisticsToday: {},
       consignmentStatisticsToday: {},

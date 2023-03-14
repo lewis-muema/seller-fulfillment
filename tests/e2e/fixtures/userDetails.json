@@ -1,6 +1,11 @@
 {
-  "message": "business.user.retrieve.success",
-  "data": {
+    "userDetails": {
+      "business_id": "B-VSW-5971",
+      "business_name": "Peter Pans",
+      "user_id": "U-MQC-0567",
+      "email": "dorcas@sendyit.com",
+      "phone_number": null
+    },
     "user": {
       "user_id": "U-MQC-0567",
       "first_name": "Dorcas",
@@ -80,7 +85,14 @@
           "permission_granted": true
         }
       ]
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJwYXlsb2FkIjp7Im1lc3NhZ2UiOiJidXNpbmVzcy5zaWdudXAuc3VjY2VzcyIsImlzcyI6ImF1dGgiLCJhdWQiOiJzZW5keS1mdWxmaWxtZW50IiwiZGF0YSI6eyJsb2dpbl9zdWNjZXNzIjp0cnVlLCJidXNpbmVzcyI6eyJidXNpbmVzc19lbWFpbCI6ImRvcmNhc0BzZW5keWl0LmNvbSIsImJ1c2luZXNzX2lkIjoiQi1WU1ctNTk3MSIsInVzZXJfaWQiOiJVLU1RQy0wNTY3IiwiYnVzaW5lc3NfbmFtZSI6IkRvcmNhcyBCdXNpbmVzcyJ9fSwiZXJyb3JzIjp7fX0sInN0YXR1cyI6dHJ1ZX0.ILRXfuEWBjFS2Bu9bq95wF8mF1KodTQ01v0Ktm_GU1s",
+    "language": "en",
+    "sellerTimeLocale": "en",
+    "refreshToken": "refreshToken",
+    "tokenCreated": "1675854334906",
+    "local_order_uuid": {
+      "pickup": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+      "destination_0": "0af649f5-b0c4-4800-8c98-4f4759de9944"
     }
-  },
-  "errors": []
 }

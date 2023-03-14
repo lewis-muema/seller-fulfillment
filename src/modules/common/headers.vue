@@ -321,6 +321,12 @@ export default {
           link: "",
         };
       }
+      if (notification.notification_type === "STOCK_LEVEL_THRESHOLD_REACHED") {
+        return {
+          label: this.$t("common.viewProduct"),
+          link: `/inventory/view-product/${notification.entity_identifier}`,
+        };
+      }
       return "";
     },
     triggerAction(notification) {

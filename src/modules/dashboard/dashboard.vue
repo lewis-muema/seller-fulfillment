@@ -51,6 +51,7 @@ export default {
     dashboardTabsContent,
     makePayment,
     onboarding,
+    walletBanner,
   },
   data() {
     return {
@@ -80,6 +81,7 @@ export default {
     this.getDeliveryStats();
     this.getPickUpStats();
     this.getStockStats();
+    this.allBillingCycle();
   },
   methods: {
     ...mapMutations([
@@ -91,6 +93,7 @@ export default {
       "setConsignmentStatistics",
       "setDeliveriesStatisticsToday",
       "setConsignmentStatisticsToday",
+      "setBillingCycles",
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
@@ -116,6 +119,16 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    allBillingCycle() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setBillingCycles(response.data.data.billing_cycles);
+        }
+      });
     },
     getDeliveryStats() {
       this.setLoader({
@@ -233,5 +246,10 @@ export default {
 .dashbard-container {
   margin-left: 30px;
   margin-top: 30px;
+}
+.dashboard-payment-banner {
+  max-width: 92% !important;
+  margin: 0px !important;
+  margin-bottom: 30px !important;
 }
 </style>

@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('saved', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('saved', false)">
@@ -23,8 +16,13 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="
+                require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
+              "
+              class="platform-image"
+            />
+            <span class="store-platform-name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -33,19 +31,22 @@
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
           <v-form ref="form" v-model="valid" lazy-validation>
+            <label :for="storeName" class="personalInfo-label">
+              {{ $t("merchant.storeName") }}
+            </label>
             <v-text-field
               v-model="storeName"
               :counter="20"
               :rules="nameRules"
-              :label="$t('merchant.storeName')"
               required
               density="compact"
             ></v-text-field>
-
+            <label :for="storeUrl" class="personalInfo-label">
+              {{ $t("merchant.storeUrl") }}
+            </label>
             <v-text-field
               v-model="storeUrl"
               :rules="urlRules"
-              :label="$t('merchant.storeUrl')"
               required
               density="compact"
             ></v-text-field>
@@ -69,9 +70,10 @@
 <script>
 import integrationSetup from "./integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
+import headerComponent from "./header.vue";
 
 export default {
-  components: { integrationSetup },
+  components: { integrationSetup, headerComponent },
   props: {
     detailsDialog: {
       type: Boolean,
@@ -167,10 +169,18 @@ export default {
 }
 .store-platform {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 .store-platform-name {
   margin-left: 10px;
   font-weight: 500;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
 }
 .connect-store {
   min-width: 400px;
@@ -185,5 +195,9 @@ export default {
 }
 .dialog-title {
   font-size: 25px;
+}
+.platform-image {
+  width: 32px;
+  height: 32px;
 }
 </style>

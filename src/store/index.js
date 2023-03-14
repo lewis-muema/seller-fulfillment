@@ -33,6 +33,7 @@ export default createStore({
         "/auth/otp",
         "/auth/complete-signup",
         "/external/invite",
+        "/settings/integrations/thank-you",
       ],
       autofillDetails: {},
       cancellationReasons: {},

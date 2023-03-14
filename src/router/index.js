@@ -49,7 +49,6 @@ import paymentSummary from "../modules/payments/statements/components/paymentSum
 import statements from "../modules/payments/statements/statements.vue";
 
 // merchant services integrations
-import integrations from "../modules/integrations/integrations.vue";
 import platform from "../modules/integrations/components/storePlatform.vue";
 import storeDetails from "../modules/integrations/components/storeDetails.vue";
 
@@ -290,7 +289,14 @@ const routes = [
   {
     path: "/settings/integrations",
     name: "Integrations",
-    component: integrations,
+    component: () =>
+      require("../modules/integrations/components/integrations.vue"),
+  },
+  {
+    path: "/settings/integrations/thank-you",
+    name: "ThankYou",
+    component: () => require("../modules/integrations/components/thankYou.vue"),
+    props: true,
   },
   {
     path: "/settings/integrations/store-platform",

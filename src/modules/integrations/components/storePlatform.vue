@@ -8,27 +8,18 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('selected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <h5>{{ $t("merchant.platformInUse") }}</h5>
           </div>
           <div>
-            <v-select
-              label="Select your platform"
-              density="compact"
-              v-model="platform"
-              @update:modelValue="onPlatformSet"
-              :items="availableStores"
-              outlined
-            ></v-select>
+            <selectComponent
+              :availableStores="availableStores"
+              class="dropdown"
+              @update="updateStore"
+            />
+
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
               {{ $t("merchant.continue") }}
             </v-btn>
@@ -53,9 +44,11 @@
 <script>
 import storeDetails from "./storeDetails.vue";
 import stores from "../constants/storeFields.json";
+import headerComponent from "./header.vue";
+import selectComponent from "./selectComponent.vue";
 
 export default {
-  components: { storeDetails },
+  components: { storeDetails, headerComponent, selectComponent },
   props: {
     displayDialog: {
       type: Boolean,
@@ -87,6 +80,10 @@ export default {
     },
   },
   methods: {
+    updateStore(store) {
+      this.platform = store;
+      this.onPlatformSet();
+    },
     onPlatformSet() {
       this.platformSet = true;
     },
@@ -100,6 +97,9 @@ export default {
 };
 </script>
 <style scoped>
+.dropdown {
+  margin-bottom: 24px;
+}
 .integrations-card {
   margin: auto;
   width: 40%;
@@ -115,6 +115,12 @@ export default {
   margin: 10px, 3px, 20px;
   margin-top: 20px;
   margin-left: 20px;
+  font-family: "Nunito Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
 }
 .integration-actions {
   margin-top: 20px;

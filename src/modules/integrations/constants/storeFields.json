@@ -28,7 +28,7 @@
         },
         {
             "fieldName":"storeRoot",
-            "required": true
+            "required": false
         }
     ],
     "Magento": [

@@ -17,7 +17,7 @@
             "required": true
         }
     ],
-    "WooCommerce":[
+    "Woocommerce":[
         {
             "fieldName":"bridgeUrl",
             "isUrl": true
@@ -28,7 +28,7 @@
         },
         {
             "fieldName":"storeRoot",
-            "required": true
+            "required": false
         }
     ],
     "Magento": [

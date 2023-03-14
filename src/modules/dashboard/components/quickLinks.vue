@@ -3,7 +3,7 @@
     <v-card
       class="desktop-quick-links-tabs"
       variant="outlined"
-      v-for="(link, i) in quickLinks"
+      v-for="(link, i) in filteredQuickLinks"
       :key="i"
       @click="$router.push(link.path)"
     >
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -58,6 +60,27 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(["getBusinessDetails"]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredQuickLinks() {
+      const links = [];
+      this.quickLinks.forEach((link) => {
+        if (
+          (this.directFulfillmentFlag &&
+            link.name === "dashboard.deliverOnDemand") ||
+          link.name !== "dashboard.deliverOnDemand"
+        ) {
+          links.push(link);
+        }
+      });
+      return links;
+    },
   },
 };
 </script>

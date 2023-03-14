@@ -134,7 +134,10 @@
             "
           ></v-list-item>
           <v-list-item
-            v-if="!getAccessDenied.includes('/deliveries/direct-deliveries')"
+            v-if="
+              !getAccessDenied.includes('/deliveries/direct-deliveries') &&
+              directFulfillmentFlag
+            "
             :title="$t('common.onDemand')"
             @click="$router.push('/deliveries/direct-deliveries/')"
             class="desktop-sidebar-sub-menu"
@@ -301,7 +304,12 @@ export default {
     route() {
       return this.getComponent;
     },
-    ...mapGetters(["getComponent", "getAccessDenied"]),
+    ...mapGetters(["getComponent", "getAccessDenied", "getBusinessDetails"]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
   },
   watch: {
     $route(to, from) {

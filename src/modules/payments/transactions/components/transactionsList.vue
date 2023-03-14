@@ -54,7 +54,10 @@
         />
       </div>
     </div>
-    <div class="m-4 mt-3" v-if="transactions.length">
+    <div
+      class="m-4 mt-3 transactions-top-recent-list-container"
+      v-if="transactions.length"
+    >
       <div
         class="transactions-top-recent-list"
         v-for="(transaction, i) in transactions"

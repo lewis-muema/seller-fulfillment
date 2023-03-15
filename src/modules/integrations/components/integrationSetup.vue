@@ -220,6 +220,7 @@ export default {
     letter-spacing: -0.01em;
     color: #303133;
     margin-bottom: 24px;
+    text-align: left;
   }
 
   &__icon {
@@ -303,8 +304,8 @@ export default {
 }
 
 .connect-store {
-  min-width: 400px;
-  min-height: 170px;
+  width: 512px;
+  height: 276px;
   font-weight: 500;
   margin: 10px;
   text-align: center !important;

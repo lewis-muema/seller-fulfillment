@@ -30,6 +30,7 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="form" v-model="valid" lazy-validation>
             <label :for="storeName" class="personalInfo-label">
               {{ $t("merchant.storeName") }}
@@ -39,7 +40,8 @@
               :counter="20"
               :rules="nameRules"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
             <label :for="storeUrl" class="personalInfo-label">
               {{ $t("merchant.storeUrl") }}
@@ -48,7 +50,8 @@
               v-model="storeUrl"
               :rules="urlRules"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
             <v-btn class="sendy-btn-default" @click="validate">
               {{ $t("merchant.continue") }}
@@ -129,6 +132,11 @@ export default {
 };
 </script>
 <style scoped>
+.divider {
+  border: 1px solid #e2e7ed !important;
+  margin-top: 40px !important;
+  margin-bottom: 32px !important;
+}
 .integrations-container {
   width: 50%;
   margin: 100px auto;

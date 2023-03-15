@@ -1,12 +1,20 @@
 <template>
   <div class="wrapper">
     <button class="select__button" @click="toggleOptions">
+      <img
+        :src="
+          require(`../../../assets/logos/${selectedStore.toLowerCase()}.svg`)
+        "
+        class="option__icon"
+        v-if="selectedStore"
+      />
       <span
         class="select__button--text"
         :class="selectedStore ? 'select__button--text--selected' : ''"
         >{{ selectedStore ? selectedStore : "Select your platform" }}</span
       >
       <i
+        class="dropdown-icon"
         :class="`mdi ${optionsVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'}`"
       />
     </button>
@@ -68,6 +76,10 @@ export default {
 .wrapper {
   width: 100%;
 }
+.dropdown-icon {
+  width: 24px;
+  height: 24px;
+}
 .select {
   &__button {
     display: flex !important;
@@ -89,7 +101,7 @@ export default {
     order: 1;
     align-self: stretch;
     flex-grow: 0;
-    justify-content: space-between;
+    // justify-content: space-between;
 
     &--text {
       font-family: "DM Sans";
@@ -98,6 +110,8 @@ export default {
       font-size: 18px;
       line-height: 24px;
       color: #909399;
+      width: 432px;
+      text-align: left;
 
       &--selected {
         color: #303133;

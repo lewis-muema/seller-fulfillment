@@ -112,7 +112,7 @@ export default {
   align-items: flex-start;
   padding: 16px 16px 0 16px;
   position: absolute;
-  width: 480px;
+  width: 100%;
   background: #ffffff;
   border: 1px solid #e2e7ed;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);

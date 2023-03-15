@@ -109,5 +109,6 @@
   "withdrawalSuccessful": "Withdrawal Successful",
   "withdrawalFailed": "Withdrawal Failed",
   "withdrawingFunds": "Withdrawing Funds...",
-  "theMinimumAmount": "The minimum amount you can withdraw is {Amount}"
+  "theMinimumAmount": "The minimum amount you can withdraw is {Amount}",
+  "paymentOverdue": "Payment Overdue"
 }

@@ -154,9 +154,9 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import tableHeader from "@/modules/inventory/tables/tableHeader";
+import tableHeader from "@/modules/inventory/tables/tableHeader.vue";
 import { ElNotification } from "element-plus";
-import eventsMixin from "../../../../mixins/events_mixin";
+import eventsMixin from "../../../../../mixins/events_mixin";
 
 export default {
   components: { tableHeader },

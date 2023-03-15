@@ -19,6 +19,7 @@
           />
         </div>
       </div>
+      {{ getOnDemandDeliveries }}
       <div v-if="getOnDemandDeliveries.length > 0">
         <v-table data-test="point-to-point-list-container">
           <thead>
@@ -289,6 +290,13 @@ export default {
     ]),
     navigate(route) {
       this.$router.push(route);
+    },
+    formatDeliveryInfo(text) {
+      if (text.length === 1) {
+        return text[0];
+      } else {
+        return text.join(", ");
+      }
     },
     limitParams() {
       return `?lower_limit_date=${moment(this.range[0]).format(

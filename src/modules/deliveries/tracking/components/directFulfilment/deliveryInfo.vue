@@ -16,7 +16,7 @@
         :class="getLoader.onDemandOrders"
       ></i>
       <div class="destination-location-text" :class="getLoader.onDemandOrders">
-        {{ deliveryLocation }}
+        {{ formatDeliveryInfo(deliveryLocation) }}
       </div>
     </span>
     <hr class="destination-divider-line" />
@@ -55,6 +55,15 @@ export default {
   },
   computed: {
     ...mapGetters(["getLoader"]),
+  },
+  methods: {
+    formatDeliveryInfo(text) {
+      if (text.length === 1) {
+        return text[0];
+      } else {
+        return text.join(", ");
+      }
+    },
   },
 };
 </script>

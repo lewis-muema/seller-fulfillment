@@ -21,10 +21,7 @@
               $t("deliveries.pickupLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{
-                getDirectDeliveriesTrackingData.order?.instructions[0]
-                  .delivery_location.description
-              }}
+              {{ pickupLocation }}
             </div>
           </div>
         </div>
@@ -39,10 +36,7 @@
               $t("deliveries.deliveryLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{
-                getDirectDeliveriesTrackingData.order?.instructions[1]
-                  .delivery_location.description
-              }}
+              {{ formatDeliveryInfo(deliveryLocation) }}
             </div>
           </div>
         </div>
@@ -53,6 +47,7 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  props: ["deliveryLocation", "pickupLocation"],
   data() {
     return {
       color1: "#324ba8",
@@ -62,6 +57,15 @@ export default {
   },
   computed: {
     ...mapGetters(["getDirectDeliveriesTrackingData", "getLoader"]),
+  },
+  methods: {
+    formatDeliveryInfo(text) {
+      if (text.length === 1) {
+        return text[0];
+      } else {
+        return text.join(", ");
+      }
+    },
   },
 };
 </script>

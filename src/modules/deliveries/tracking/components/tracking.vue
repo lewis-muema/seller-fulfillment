@@ -5,7 +5,10 @@
       <tracking-map />
     </div>
     <div class="col-4" v-scroll:#scroll-target="onScroll">
-      <locations />
+      <locations
+        :deliveryLocation="this.deliveryLocation"
+        :pickupLocation="this.pickUpLocation"
+      />
       <timeline />
       <pickup-info
         :pickupLocation="this.pickUpLocation"
@@ -42,7 +45,7 @@ export default {
     return {
       scrollInvoked: 0,
       pickUpLocation: "",
-      deliveryLocation: "",
+      deliveryLocation: [],
       pickupContactPerson: "",
       deliveryContactPerson: "",
       products: "",
@@ -78,7 +81,9 @@ export default {
                 : "_";
             }
             if (action.action_type === "DROP_PACKAGE") {
-              this.deliveryLocation = instruction.delivery_location.description;
+              this.deliveryLocation.push(
+                instruction.delivery_location.description
+              );
               this.deliveryContactPerson = instruction.phone_number;
               this.dropOffInstructions = instruction.delivery_instructions
                 ? instruction.delivery_instructions

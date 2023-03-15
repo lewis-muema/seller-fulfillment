@@ -1,0 +1,27 @@
+.store-platform {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+.store-platform-name {
+  margin-left: 10px;
+  font-weight: 500;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+}
+.divider {
+  border: 1px solid #e2e7ed !important;
+  margin-top: 40px !important;
+  margin-bottom: 32px !important;
+}
+.platform-image {
+  width: 32px;
+  height: 32px;
+}
+.tag {
+  margin-bottom: 30px;
+}

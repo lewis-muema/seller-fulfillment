@@ -21,7 +21,7 @@
             </v-btn>
           </template>
           <v-list class="header-list-popup">
-            <v-list-item v-for="(shrt, i) in shortcuts" :key="i">
+            <v-list-item v-for="(shrt, i) in filteredShortcuts" :key="i">
               <v-list-item-title
                 @click="$router.push(shrt.url)"
                 class="header-list-item"
@@ -217,6 +217,24 @@ export default {
       "getMapOptions",
       "getAccessDenied",
     ]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredShortcuts() {
+      const links = [];
+      this.shortcuts.forEach((shortcut) => {
+        if (
+          (this.directFulfillmentFlag &&
+            shortcut.title === "dashboard.deliverOnDemand") ||
+          shortcut.title !== "dashboard.deliverOnDemand"
+        ) {
+          links.push(shortcut);
+        }
+      });
+      return links;
+    },
     languageName() {
       let lang = "";
       this.getLanguages.forEach((row) => {

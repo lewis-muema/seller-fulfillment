@@ -82,6 +82,16 @@ export default {
           "/inventory/create-consignment-return",
         ]);
       }
+      if (
+        this.getBusinessDetails?.settings &&
+        !this.getBusinessDetails?.settings?.direct_fulfilment_enabled
+      ) {
+        noAccess = noAccess.concat([
+          "/deliveries/direct-deliveries/",
+          "/deliveries/track-direct-deliveries/",
+          "/direct/create-delivery",
+        ]);
+      }
       this.setAccessDenied(noAccess);
       this.accessDenied = noAccess.find((row) =>
         this.$route.path.includes(row)

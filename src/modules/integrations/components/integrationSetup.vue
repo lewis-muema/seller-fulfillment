@@ -20,9 +20,9 @@
               :src="
                 require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
               "
-              class="platform-image"
+              class="store-platform__image"
             />
-            <span class="store-platform-name"
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>

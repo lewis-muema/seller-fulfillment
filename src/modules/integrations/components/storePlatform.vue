@@ -23,14 +23,14 @@
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
               {{ $t("merchant.continue") }}
             </v-btn>
-            <div class="integration-actions">
+            <!-- <div class="integration-actions">
               <span class="integration-actions__text">{{
                 $t("merchant.missingPlatform")
               }}</span>
               <a class="integration-actions__link" @click="redirect()">
                 {{ $t("merchant.letsKnow") }}
               </a>
-            </div>
+            </div> -->
           </div>
         </div>
       </v-card>

@@ -304,6 +304,7 @@ export default {
   border-radius: 5px;
   padding: 20px 30px 20px 0px;
   width: calc(88% + 70px);
+  margin-bottom: 20px;
 }
 .tracking-pickup-banner-icon {
   font-size: 25px;

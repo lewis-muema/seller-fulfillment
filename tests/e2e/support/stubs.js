@@ -21,6 +21,7 @@ import statisticsLimit from "../fixtures/statisticsLimit.json";
 import wallets from "../fixtures/wallets.json";
 import transactions from "../fixtures/transactions.json";
 import userDetails from "../fixtures/userDetails.json";
+import lineItems from "../fixtures/lineItems.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("authStubs", () => {
@@ -200,6 +201,14 @@ Cypress.Commands.add("paymentStubs", () => {
     {
       statusCode: 200,
       body: transactions,
+    }
+  ).as("transactions");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/billingcycles/*/lineitems`,
+    {
+      statusCode: 200,
+      body: lineItems,
     }
   ).as("transactions");
 });

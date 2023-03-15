@@ -21,6 +21,7 @@ import statisticsLimit from "../fixtures/statisticsLimit.json";
 import wallets from "../fixtures/wallets.json";
 import transactions from "../fixtures/transactions.json";
 import userDetails from "../fixtures/userDetails.json";
+import userAlt from "../fixtures/userAlt.json";
 import lineItems from "../fixtures/lineItems.json";
 
 import "cypress-localstorage-commands";
@@ -70,6 +71,10 @@ Cypress.Commands.add("authStubs", () => {
     statusCode: 200,
     body: userDetails,
   }).as("userDetails");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/user`, {
+    statusCode: 200,
+    body: userAlt,
+  }).as("user");
 });
 Cypress.Commands.add("dashboardStubs", () => {
   cy.intercept(

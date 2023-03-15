@@ -4,6 +4,7 @@
       <onboarding />
     </div>
     <div v-else>
+      <wallet-banner class="dashboard-payment-banner" />
       <makePayment />
       <span class="">
         <h5>
@@ -40,6 +41,7 @@ import makePayment from "../payments/statements/components/makePayment.vue";
 import sideCard from "@/modules/dashboard/components/sideCard";
 import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
+import walletBanner from "../payments/wallet/components/walletBanner.vue";
 import moment from "moment";
 
 export default {
@@ -51,6 +53,7 @@ export default {
     dashboardTabsContent,
     makePayment,
     onboarding,
+    walletBanner,
   },
   data() {
     return {
@@ -120,11 +123,19 @@ export default {
         });
     },
     allBillingCycle() {
+      this.setLoader({
+        type: "billingCycle",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
       }).then((response) => {
         if (response.status === 200) {
+          this.setLoader({
+            type: "billingCycle",
+            value: "",
+          });
           this.setBillingCycles(response.data.data.billing_cycles);
         }
       });

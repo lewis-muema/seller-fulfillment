@@ -19,7 +19,6 @@
           />
         </div>
       </div>
-      {{ getOnDemandDeliveries }}
       <div v-if="getOnDemandDeliveries.length > 0">
         <v-table data-test="point-to-point-list-container">
           <thead>

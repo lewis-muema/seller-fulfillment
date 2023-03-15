@@ -1,13 +1,19 @@
 <template>
-  <div v-if="activeCycle" class="wallet-banner">
-    <i class="mdi mdi-alert-circle-outline wallet-alert-icon"></i>
-    {{
-      $t("payments.fulfillmentFeesWillBeCharged", {
-        Amount: billInfo("amount"),
-        Date: billInfo("date"),
-      })
-    }}
+  <div v-if="getBillingCycles[0]?.active" class="wallet-banner">
+    <span :class="getLoader.billingCycle">
+      <i
+        class="mdi mdi-alert-circle-outline wallet-alert-icon"
+        :class="getLoader.billingCycle"
+      ></i>
+      {{
+        $t("payments.fulfillmentFeesWillBeCharged", {
+          Amount: billInfo("amount"),
+          Date: billInfo("date"),
+        })
+      }}
+    </span>
     <span
+      :class="getLoader.billingCycle"
       class="wallet-view-more"
       @click="
         $router.push(`/payments/deliveries-pending-payment/${activeCycleId}`)
@@ -21,22 +27,17 @@ import { mapGetters } from "vuex";
 import moment from "moment";
 export default {
   computed: {
-    ...mapGetters(["getBillingCycles", "getWallets"]),
+    ...mapGetters(["getBillingCycles", "getWallets", "getLoader"]),
     activeCycleId() {
       return this.getBillingCycles[0].billing_cycle_instance_id;
-    },
-    activeCycle() {
-      return (
-        this.getBillingCycles.length &&
-        this.getBillingCycles[0].active &&
-        this.getBillingCycles[0].amount_to_charge > 0
-      );
     },
   },
   methods: {
     billInfo(type) {
       const cycle =
-        this.getBillingCycles.length && this.getBillingCycles[0].active > 0
+        this.getBillingCycles?.length &&
+        this.getBillingCycles[0]?.active &&
+        this.getBillingCycles[0]?.amount_to_charge > 0
           ? this.getBillingCycles[0]
           : "";
       return type === "date"

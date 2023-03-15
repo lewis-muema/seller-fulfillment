@@ -584,6 +584,7 @@ export default createStore({
         locationDetails: "loading-text",
         pointToPointPickup: "loading-text",
         pointToPointDeliveries: "loading-text",
+        billingCycle: "loading-text",
       },
       overlay: false,
       userChanged: false,

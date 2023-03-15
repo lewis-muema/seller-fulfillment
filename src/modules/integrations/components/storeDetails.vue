@@ -131,12 +131,10 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+@import "../assets/styling.scss";
+</style>
 <style scoped>
-.divider {
-  border: 1px solid #e2e7ed !important;
-  margin-top: 40px !important;
-  margin-bottom: 32px !important;
-}
 .integrations-container {
   width: 50%;
   margin: 100px auto;
@@ -157,9 +155,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -175,21 +170,6 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  color: #000000;
-}
 .connect-store {
   min-width: 400px;
   min-height: 170px;
@@ -203,9 +183,5 @@ export default {
 }
 .dialog-title {
   font-size: 25px;
-}
-.platform-image {
-  width: 32px;
-  height: 32px;
 }
 </style>

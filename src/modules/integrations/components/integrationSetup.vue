@@ -27,13 +27,10 @@
             >
           </div>
           <div class="tag">
-            <h5 class="text__store-details">
-              {{ $t("merchant.storeDetails") }}
-            </h5>
-            <p class="text__store-tagline">
-              {{ $t("merchant.storeDetailsTagline") }}
-            </p>
+            <h5>{{ $t("merchant.storeDetails") }}</h5>
+            <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="default" v-model="valid" lazy-validation>
             <div
               v-for="(field, index) in storeObj.storeRequiredFields"
@@ -208,6 +205,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import "../assets/styling.scss";
+
 .connecting-dialog {
   border-radius: 6px;
   padding: 16px;
@@ -287,9 +286,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -305,21 +301,7 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  color: #000000;
-}
+
 .connect-store {
   min-width: 400px;
   min-height: 170px;

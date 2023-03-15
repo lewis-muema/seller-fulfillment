@@ -23,12 +23,14 @@
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
               {{ $t("merchant.continue") }}
             </v-btn>
-            <div class="integration-actions">
-              <h6>{{ $t("merchant.missingPlatform") }}</h6>
-              <v-btn class="sendy-btn-text" variant="text" @click="redirect()">
+            <!-- <div class="integration-actions">
+              <span class="integration-actions__text">{{
+                $t("merchant.missingPlatform")
+              }}</span>
+              <a class="integration-actions__link" @click="redirect()">
                 {{ $t("merchant.letsKnow") }}
-              </v-btn>
-            </div>
+              </a>
+            </div> -->
           </div>
         </div>
       </v-card>
@@ -96,6 +98,33 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.integration-actions {
+  margin-top: 32px;
+
+  &__text {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.005em;
+    color: #000000;
+    display: block;
+  }
+
+  &__link {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.005em;
+    text-decoration-line: underline;
+    color: #324ba8;
+    cursor: pointer;
+  }
+}
+</style>
 <style scoped>
 .dropdown {
   margin-bottom: 24px;
@@ -122,9 +151,7 @@ export default {
   line-height: 32px;
   letter-spacing: -0.01em;
 }
-.integration-actions {
-  margin-top: 20px;
-}
+
 .top-action-bar {
   margin-bottom: 20px;
 }

@@ -20,20 +20,17 @@
               :src="
                 require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
               "
-              class="platform-image"
+              class="store-platform__image"
             />
-            <span class="store-platform-name"
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
           <div class="tag">
-            <h5 class="text__store-details">
-              {{ $t("merchant.storeDetails") }}
-            </h5>
-            <p class="text__store-tagline">
-              {{ $t("merchant.storeDetailsTagline") }}
-            </p>
+            <h5>{{ $t("merchant.storeDetails") }}</h5>
+            <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="default" v-model="valid" lazy-validation>
             <div
               v-for="(field, index) in storeObj.storeRequiredFields"
@@ -69,7 +66,7 @@
                     {{ $t("merchant.waiting") }}
                   </div>
                 </div>
-                <div v-if="hasError" class="connect-progress">
+                <div v-if="hasError && !connecting" class="connect-progress">
                   <div class="connecting-dialog__title">
                     {{ $t("merchant.somethingWentWrong") }}
                   </div>
@@ -157,10 +154,13 @@ export default {
         storeFields[field.fieldName] = field.value;
       }
 
+      let cartId = this.storePlatform.replace(" ", "").toLowerCase();
+      cartId = cartId.charAt(0).toUpperCase() + cartId.slice(1);
+
       const payload = {
         storeUrl: this.storeUrl,
         storeName: this.storeName,
-        cartId: this.storePlatform,
+        cartId,
         ...storeFields,
       };
 
@@ -205,6 +205,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import "../assets/styling.scss";
+
 .connecting-dialog {
   border-radius: 6px;
   padding: 16px;
@@ -218,6 +220,7 @@ export default {
     letter-spacing: -0.01em;
     color: #303133;
     margin-bottom: 24px;
+    text-align: left;
   }
 
   &__icon {
@@ -284,9 +287,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -302,24 +302,10 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  color: #000000;
-}
+
 .connect-store {
-  min-width: 400px;
-  min-height: 170px;
+  width: 512px;
+  height: 276px;
   font-weight: 500;
   margin: 10px;
   text-align: center !important;

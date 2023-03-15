@@ -20,9 +20,9 @@
               :src="
                 require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
               "
-              class="platform-image"
+              class="store-platform__image"
             />
-            <span class="store-platform-name"
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -30,6 +30,7 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="form" v-model="valid" lazy-validation>
             <label :for="storeName" class="personalInfo-label">
               {{ $t("merchant.storeName") }}
@@ -39,7 +40,8 @@
               :counter="20"
               :rules="nameRules"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
             <label :for="storeUrl" class="personalInfo-label">
               {{ $t("merchant.storeUrl") }}
@@ -48,7 +50,8 @@
               v-model="storeUrl"
               :rules="urlRules"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
             <v-btn class="sendy-btn-default" @click="validate">
               {{ $t("merchant.continue") }}
@@ -128,6 +131,9 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+@import "../assets/styling.scss";
+</style>
 <style scoped>
 .integrations-container {
   width: 50%;
@@ -149,9 +155,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -167,21 +170,6 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  color: #000000;
-}
 .connect-store {
   min-width: 400px;
   min-height: 170px;
@@ -195,9 +183,5 @@ export default {
 }
 .dialog-title {
   font-size: 25px;
-}
-.platform-image {
-  width: 32px;
-  height: 32px;
 }
 </style>

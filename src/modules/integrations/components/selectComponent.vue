@@ -15,9 +15,7 @@
       >
       <i
         class="dropdown-icon"
-        :class="`mdi ${
-          optionsVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'
-        } ${!selectedStore ? 'dropdown-icon--margin' : ''}`"
+        :class="`mdi ${optionsVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'}`"
       />
     </button>
     <ul class="options" v-if="optionsVisible">
@@ -81,10 +79,6 @@ export default {
 .dropdown-icon {
   width: 24px;
   height: 24px;
-
-  &--margin {
-    margin-left: 50px;
-  }
 }
 .select {
   &__button {

@@ -23,7 +23,7 @@
               @click="addStoreDialog = true"
             >
               <img
-                :src="require('../../../assets/connect-store.svg')"
+                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/connect-store.svg"
                 class="integration-content__no-integration--btn-logo"
               />
               <span class="integration-content__no-integration--btn-txt"
@@ -52,11 +52,11 @@
             {{ ` ${connectedStore.dateAdded}` }}</span
           >
           <span class="integration-content__columns--remove-btn"
-            ><img :src="require('../../../assets/remove-store.svg')" /><a
-              href="#"
-              class="integration-content__text--remove"
-              >{{ $t("merchant.remove") }}</a
-            ></span
+            ><img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/remove-store.svg"
+            /><a href="#" class="integration-content__text--remove">{{
+              $t("merchant.remove")
+            }}</a></span
           >
         </div>
       </v-card-item>

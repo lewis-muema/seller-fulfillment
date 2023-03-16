@@ -7,7 +7,9 @@
     </span>
     <span>
       <button @click="closePage()">
-        <img :src="require('../../../assets/close-button.svg')" />
+        <img
+          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/close-button.svg"
+        />
       </button>
     </span>
   </div>

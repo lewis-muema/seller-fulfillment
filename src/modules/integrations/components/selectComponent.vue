@@ -2,9 +2,7 @@
   <div class="wrapper">
     <button class="select__button" @click="toggleOptions">
       <img
-        :src="
-          require(`../../../assets/logos/${selectedStore.toLowerCase()}.svg`)
-        "
+        :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${selectedStore.toLowerCase()}.svg`"
         class="option__icon"
         v-if="selectedStore"
       />
@@ -28,7 +26,7 @@
         @click="selectOption(store)"
       >
         <img
-          :src="require(`../../../assets/logos/${store.toLowerCase()}.svg`)"
+          :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${store.toLowerCase()}.svg`"
           class="option__icon"
         />
         <span class="option__text">{{ store }}</span>

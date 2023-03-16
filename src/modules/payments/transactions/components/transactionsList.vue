@@ -238,8 +238,8 @@ export default {
   },
   mounted() {
     this.getUserWallets();
-    this.allBillingCycle();
     this.getUserTransactions();
+    this.allBillingCycle();
     this.sendSegmentEvents({
       event: "Select_Transaction_History",
       data: {

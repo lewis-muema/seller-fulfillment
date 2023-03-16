@@ -18,7 +18,11 @@
         <p class="billing-cycle-text" :class="getLoader.billingCycle">
           {{ billInfo("startDate") }} - {{ billInfo("endDate") }}
         </p>
-        <span class="billing-cycle-view" @click="viewBillingCycle">
+        <span
+          class="billing-cycle-view"
+          @click="viewBillingCycle"
+          :class="getLoader.billingCycle"
+        >
           <i class="mdi mdi-eye" :class="getLoader.billingCycle"></i>
           {{ $t("payments.view") }}
         </span>

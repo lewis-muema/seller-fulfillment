@@ -31,15 +31,17 @@ export default {
     activeCycleId() {
       return this.getBillingCycles[0].billing_cycle_instance_id;
     },
-  },
-  methods: {
-    billInfo(type) {
-      const cycle =
+    currentCycle() {
+      return (
         this.getBillingCycles?.length &&
         this.getBillingCycles[0]?.active &&
         this.getBillingCycles[0]?.amount_to_charge > 0
-          ? this.getBillingCycles[0]
-          : "";
+      );
+    },
+  },
+  methods: {
+    billInfo(type) {
+      const cycle = this.currentCycle ? this.getBillingCycles[0] : "";
       return type === "date"
         ? moment(cycle.billing_cycle_end_date).format("dddd, Do MMM")
         : `${this.getWallets[0].currency} ${cycle.amount_to_charge}`;

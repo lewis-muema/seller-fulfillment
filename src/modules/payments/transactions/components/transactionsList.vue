@@ -4,24 +4,36 @@
       currentCycle ? 'transaction-page-container' : 'transaction-page-top'
     "
   >
-    <div class="row transaction-list-top" v-if="currentCycle">
+    <div class="row transaction-list-top" v-if="getBillingCycles[0]?.active">
       <div class="col-4 billing-cycle-desc">
-        <p>{{ $t("payments.billingCycle") }}</p>
-        <p class="billing-cycle-text">{{ billInfo("cycleType") }}</p>
+        <p :class="getLoader.billingCycle">{{ $t("payments.billingCycle") }}</p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
+          {{ billInfo("cycleType") }}
+        </p>
       </div>
       <div class="col-4 billing-cycle-desc">
-        <p>{{ $t("payments.currentBillingCycle") }}</p>
-        <p class="billing-cycle-text">
+        <p :class="getLoader.billingCycle">
+          {{ $t("payments.currentBillingCycle") }}
+        </p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
           {{ billInfo("startDate") }} - {{ billInfo("endDate") }}
         </p>
-        <span class="billing-cycle-view" @click="viewBillingCycle">
-          <i class="mdi mdi-eye"></i>
+        <span
+          class="billing-cycle-view"
+          @click="viewBillingCycle"
+          :class="getLoader.billingCycle"
+        >
+          <i class="mdi mdi-eye" :class="getLoader.billingCycle"></i>
           {{ $t("payments.view") }}
         </span>
       </div>
       <div class="col-4 billing-cycle-desc">
-        <p>{{ $t("payments.accruedAmount") }}</p>
-        <p class="billing-cycle-text">KES {{ billInfo("accruedAmount") }}</p>
+        <p :class="getLoader.billingCycle">
+          {{ $t("payments.accruedAmount") }}
+        </p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
+          KES {{ billInfo("accruedAmount") }}
+        </p>
       </div>
     </div>
     <div class="row mb-5">
@@ -287,11 +299,19 @@ export default {
       });
     },
     allBillingCycle() {
+      this.setLoader({
+        type: "billingCycle",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
       }).then((response) => {
         if (response.status === 200) {
+          this.setLoader({
+            type: "billingCycle",
+            value: "",
+          });
           this.setBillingCycles(response.data.data.billing_cycles);
         }
       });
@@ -301,9 +321,7 @@ export default {
     },
     billInfo(type) {
       let results = "";
-      const cycle = this.getBillingCycles.length
-        ? this.getBillingCycles[0]
-        : "";
+      const cycle = this.currentCycle ? this.getBillingCycles[0] : "";
       if (type === "startDate") {
         results = moment(cycle.billing_cycle_start_date).format("Do MMM");
       }
@@ -312,8 +330,8 @@ export default {
       }
       if (type === "cycleType") {
         results =
-          cycle.cycle_interval_type.charAt(0).toUpperCase() +
-          cycle.cycle_interval_type.slice(1).toLowerCase();
+          cycle.cycle_interval_type?.charAt(0).toUpperCase() +
+          cycle.cycle_interval_type?.slice(1).toLowerCase();
       }
       if (type === "accruedAmount") {
         results = cycle.amount_to_charge;

@@ -1,23 +1,28 @@
+import integrations from "../components/index.vue";
+import storePlatform from "../components/storePlatform.vue";
+import storeDetails from "../components/storeDetails.vue";
+import thankYou from "../components/thankYou.vue";
+
 const routes = [
   {
     path: "/settings/integrations",
     name: "Integrations",
-    component: () => require("../components/index.vue"),
+    component: integrations,
   },
   {
     path: "/settings/integrations/store-platform",
     name: "Platform",
-    component: () => require("../components/storePlatform.vue"),
+    component: storePlatform,
   },
   {
     path: "/settings/integrations/store-details",
     name: "Store Details",
-    component: () => require("../components/storeDetails.vue"),
+    component: storeDetails,
   },
   {
     path: "/settings/integrations/thank-you",
     name: "ThankYou",
-    component: () => require("../components/thankYou.vue"),
+    component: thankYou,
     props: true,
   },
 ];

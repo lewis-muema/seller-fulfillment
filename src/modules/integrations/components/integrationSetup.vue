@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('connected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('connected', false)">
@@ -23,8 +16,11 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
+              class="store-platform__image"
+            />
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -32,54 +28,49 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="default" v-model="valid" lazy-validation>
-            <v-text-field
+            <div
               v-for="(field, index) in storeObj.storeRequiredFields"
               :key="index"
-              v-model="field.value"
-              :label="$t(`merchant.${field.fieldName}`)"
-              :required="field.required"
-              :rules="field.rules"
-              density="compact"
-            ></v-text-field>
+            >
+              <label for="field" class="personalInfo-label">
+                {{ $t(`merchant.${field.fieldName}`) }}
+              </label>
+              <v-text-field
+                v-model="field.value"
+                :required="field.required"
+                :rules="field.rules"
+                variant="outlined"
+                class="personalInfo-field"
+              ></v-text-field>
+            </div>
             <v-btn class="sendy-btn-default" @click="validateForm('default')">
               {{ $t("merchant.continue") }}
             </v-btn>
           </v-form>
           <div class="text-center">
-            <v-dialog v-model="connectDialog">
+            <v-dialog v-model="connectDialog" class="connecting-dialog">
               <v-card class="connect-store">
                 <div v-if="connecting" class="connect-progress">
-                  <div class="dialog-title">{{ $t("merchant.adding") }}</div>
-                  <v-progress-circular
-                    :width="3"
-                    color="indigo-darken-2"
-                    indeterminate
-                  ></v-progress-circular>
-                  <div class="">{{ $t("merchant.waiting") }}</div>
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.connecting_your_store") }}
+                  </div>
+                  <img
+                    src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
+                    class="connecting-dialog__icon"
+                  />
+                  <div class="connecting-dialog__msg">
+                    {{ $t("merchant.waiting") }}
+                  </div>
                 </div>
-                <div v-else>
-                  <div v-if="storeConnected">
-                    <v-icon
-                      icon="mdi-success-circle-outline"
-                      color="green-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.congratulations") }}</h4>
-                    <p>{{ $t("merchant.success") }}</p>
+                <div v-if="hasError && !connecting" class="connect-progress">
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.somethingWentWrong") }}
                   </div>
-                  <div v-else>
-                    <v-icon
-                      icon="error-outline"
-                      color="red-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.fail") }}</h4>
-                    <p>{{ resultMessage }}</p>
+                  <div class="connecting-dialog__msg">
+                    {{ resultMessage }}
                   </div>
-                  <v-btn class="close-btn" @click="$emit('connected', false)">
-                    {{ $t("merchant.close") }}
-                  </v-btn>
                 </div>
               </v-card>
             </v-dialog>
@@ -92,9 +83,13 @@
 <script>
 import { mapActions } from "vuex";
 import Stores from "../classes/stores";
+import headerComponent from "./header.vue";
 
 export default {
   name: "integrationSetup",
+  components: {
+    headerComponent,
+  },
   props: {
     setupDialog: {
       type: Boolean,
@@ -122,6 +117,7 @@ export default {
       storeConnected: false,
       resultMessage: "",
       storeObj: null,
+      hasError: false,
     };
   },
   mounted() {
@@ -132,6 +128,11 @@ export default {
   watch: {
     setupDialog() {
       if (this.setupDialog) this.dialog = true;
+    },
+    connectDialog(value) {
+      if (!value) {
+        this.hasError = false;
+      }
     },
   },
   methods: {
@@ -151,10 +152,13 @@ export default {
         storeFields[field.fieldName] = field.value;
       }
 
+      let cartId = this.storePlatform.replace(" ", "").toLowerCase();
+      cartId = cartId.charAt(0).toUpperCase() + cartId.slice(1);
+
       const payload = {
         storeUrl: this.storeUrl,
         storeName: this.storeName,
-        cartId: this.storePlatform,
+        cartId,
         ...storeFields,
       };
 
@@ -172,9 +176,15 @@ export default {
         const { status, data } = await this.connectStore(fullPayload);
         this.connecting = false;
 
-        if (status === 200 && data.data.return_code !== 109) {
+        if (status === 200 && data.data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
+          this.$router.push({
+            name: "ThankYou",
+            params: {
+              storeName: this.storeName,
+            },
+          });
         } else {
           this.storeConnected = false;
           this.connecting = false;
@@ -183,14 +193,77 @@ export default {
           );
         }
       } catch (error) {
+        this.resultMessage = error;
         this.storeConnected = false;
         this.connecting = false;
-        this.resultMessage = error;
+        this.hasError = true;
       }
     },
   },
 };
 </script>
+<style lang="scss">
+@import "../assets/styling.scss";
+
+.connecting-dialog {
+  border-radius: 6px;
+  padding: 16px;
+
+  &__title {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: -0.01em;
+    color: #303133;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  &__icon {
+    margin-bottom: 24px;
+    width: 90px;
+    height: 90px;
+  }
+
+  &__msg {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #606266;
+  }
+}
+.text {
+  &__store-details {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+    color: #303133;
+  }
+
+  &__store-tagline {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #606266;
+  }
+}
+.v-overlay {
+  &__content {
+    max-width: unset !important;
+    max-height: unset !important;
+  }
+}
+</style>
 <style scoped>
 .integrations-container {
   width: 50%;
@@ -212,9 +285,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -230,16 +300,10 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-}
+
 .connect-store {
-  min-width: 400px;
-  min-height: 170px;
+  width: 512px;
+  height: 276px;
   font-weight: 500;
   margin: 10px;
   text-align: center !important;

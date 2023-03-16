@@ -39,6 +39,7 @@
     "element-plus": "^2.1.11",
     "firebase": "^9.8.3",
     "istanbul": "^0.4.5",
+    "javascript-time-ago": "^2.5.9",
     "js-base64": "^3.7.2",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",

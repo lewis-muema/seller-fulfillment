@@ -6,7 +6,7 @@
       </h5>
     </span>
     <span>
-      <button @click="closePage">
+      <button @click="closePage()">
         <img :src="require('../../../assets/close-button.svg')" />
       </button>
     </span>
@@ -17,7 +17,7 @@
 export default {
   methods: {
     closePage() {
-      this.$router.push("/settings/integrations");
+      this.$router.go({ path: "/settings/integrations" });
     },
   },
 };

@@ -305,8 +305,21 @@ export default {
   },
   async connectStore({ dispatch }, payload) {
     try {
-      const res = await dispatch("requestAxiosPostMerchant", payload);
-      return res;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const response = await axios.post(
+        `${payload.app}${payload.endpoint}`,
+        payload.values,
+        config
+      );
+      return response;
     } catch (error) {
       return error.response;
     }

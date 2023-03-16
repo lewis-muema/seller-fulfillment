@@ -26,7 +26,6 @@ import addUser from "../modules/settings/manageUsers/components/addUser.vue";
 import userPermissions from "../modules/settings/manageUsers/components/userPermissions.vue";
 import invite from "../modules/external/invite.vue";
 import editUser from "../modules/settings/manageUsers/components/editUser.vue";
-import editOrder from "../modules/deliveries/tracking/components/editOrder.vue";
 import activityLog from "../modules/settings/activityLog/activityLog.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/inventory/products/components/addProduct.vue";
@@ -187,11 +186,6 @@ const routes = [
     path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
-  },
-  {
-    path: "/deliveries/edit-order/",
-    name: "EditOrder",
-    component: editOrder,
   },
   {
     path: "/payments/transactions",

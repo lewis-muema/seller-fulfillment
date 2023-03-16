@@ -6,7 +6,7 @@
     </div>
     <div class="col-4" v-scroll:#scroll-target="onScroll">
       <locations
-        :deliveryLocation="this.deliveryLocation"
+        :deliveryLocation="formatDeliveryLocation"
         :pickupLocation="this.pickUpLocation"
       />
       <timeline />
@@ -17,7 +17,7 @@
         :pickInstructions="this.pickupInstructions"
       />
       <deliveryInfo
-        :deliveryLocation="this.deliveryLocation"
+        :deliveryLocation="formatDeliveryLocation"
         :contactPerson="this.deliveryContactPerson"
         :dropInstructions="this.dropOffInstructions"
       />
@@ -61,6 +61,13 @@ export default {
       "getStorageUserDetails",
       "getDirectDeliveriesTrackingData",
     ]),
+    formatDeliveryLocation() {
+      if (this.deliveryLocation.length === 1) {
+        return this.deliveryLocation[0];
+      } else {
+        return this.deliveryLocation.join(", ");
+      }
+    },
   },
   mounted() {
     this.fetchOrder();

@@ -36,7 +36,7 @@
               $t("deliveries.deliveryLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{ formatDeliveryInfo(deliveryLocation) }}
+              {{ deliveryLocation }}
             </div>
           </div>
         </div>
@@ -57,15 +57,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getDirectDeliveriesTrackingData", "getLoader"]),
-  },
-  methods: {
-    formatDeliveryInfo(text) {
-      if (text.length === 1) {
-        return text[0];
-      } else {
-        return text.join(", ");
-      }
-    },
   },
 };
 </script>

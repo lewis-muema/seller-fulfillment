@@ -2,9 +2,7 @@
   <div class="wrapper">
     <button class="select__button" @click="toggleOptions">
       <img
-        :src="
-          require(`../../../assets/logos/${selectedStore.toLowerCase()}.svg`)
-        "
+        :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${selectedStore.toLowerCase()}.svg`"
         class="option__icon"
         v-if="selectedStore"
       />
@@ -15,7 +13,9 @@
       >
       <i
         class="dropdown-icon"
-        :class="`mdi ${optionsVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'}`"
+        :class="`mdi ${
+          optionsVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'
+        } ${!selectedStore ? 'dropdown-icon--margin' : ''}`"
       />
     </button>
     <ul class="options" v-if="optionsVisible">
@@ -26,7 +26,7 @@
         @click="selectOption(store)"
       >
         <img
-          :src="require(`../../../assets/logos/${store.toLowerCase()}.svg`)"
+          :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${store.toLowerCase()}.svg`"
           class="option__icon"
         />
         <span class="option__text">{{ store }}</span>
@@ -79,6 +79,10 @@ export default {
 .dropdown-icon {
   width: 24px;
   height: 24px;
+
+  &--margin {
+    margin-left: 50px;
+  }
 }
 .select {
   &__button {

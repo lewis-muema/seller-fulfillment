@@ -17,9 +17,7 @@
           </div>
           <div class="store-platform">
             <img
-              :src="
-                require(`../../../assets/logos/${storePlatform.toLowerCase()}.svg`)
-              "
+              :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
               class="store-platform__image"
             />
             <span class="store-platform__name"

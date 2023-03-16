@@ -4,7 +4,7 @@
     <div class="congratulations-container">
       <div class="congratulations-container__logo">
         <img
-          :src="require('../../../assets/successful-store.svg')"
+          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/successful-store.svg"
           class="congratulations-container__image"
         />
       </div>

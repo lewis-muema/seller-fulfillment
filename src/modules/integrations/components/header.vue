@@ -6,8 +6,10 @@
       </h5>
     </span>
     <span>
-      <button @click="closePage">
-        <img :src="require('../../../assets/close-button.svg')" />
+      <button @click="closePage()">
+        <img
+          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/close-button.svg"
+        />
       </button>
     </span>
   </div>
@@ -17,7 +19,7 @@
 export default {
   methods: {
     closePage() {
-      this.$router.go("/settings/integrations");
+      this.$router.go({ path: "/settings/integrations" });
     },
   },
 };

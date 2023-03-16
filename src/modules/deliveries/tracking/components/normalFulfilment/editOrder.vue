@@ -23,7 +23,13 @@
           <div>
             <span
               class="add-products-span-header"
-              @click="navigateRoute('/inventory/add-pickup-products')"
+              @click="
+                navigateRoute(
+                  getParent === 'sendy'
+                    ? '/inventory/add-pickup-products'
+                    : '/inventory/add-delivery-products'
+                )
+              "
             >
               <i class="mdi mdi-plus"></i>
               {{ $t("common.addProducts") }}
@@ -95,7 +101,13 @@
                 {{ $t("deliveries.cartEmpty") }}
               </div>
               <span
-                @click="navigateRoute('/inventory/add-pickup-products')"
+                @click="
+                  navigateRoute(
+                    getParent === 'sendy'
+                      ? '/inventory/add-pickup-products'
+                      : '/inventory/add-delivery-products'
+                  )
+                "
                 class="add-products-span-link"
               >
                 <span class="add-products-span">
@@ -117,11 +129,15 @@
               {{ `${totalProducts} ${$t("inventory.itemsAdded")}` }}
             </p>
             <v-divider />
-            <div class="mt-2">{{ $t("inventory.fees") }}</div>
-            <p class="mt-2">
-              <span>{{ $t("inventory.pickupFee") }}</span>
-              <span class="orderedProductKes">{{ currency }} {{ amount }}</span>
-            </p>
+            <div v-if="getParent === 'sendy'">
+              <div class="mt-2">{{ $t("inventory.fees") }}</div>
+              <p class="mt-2">
+                <span>{{ $t("inventory.pickupFee") }}</span>
+                <span class="orderedProductKes"
+                  >{{ currency }} {{ amount }}</span
+                >
+              </p>
+            </div>
             <v-btn
               v-loading="buttonLoader"
               @click="submitChanges()"
@@ -129,8 +145,8 @@
             >
               {{ $t("deliveries.submit") }}
             </v-btn>
-          </div></v-card
-        >
+          </div>
+        </v-card>
       </v-col>
     </v-row>
   </div>
@@ -138,9 +154,9 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import tableHeader from "@/modules/inventory/tables/tableHeader";
+import tableHeader from "@/modules/inventory/tables/tableHeader.vue";
 import { ElNotification } from "element-plus";
-import eventsMixin from "../../../../mixins/events_mixin";
+import eventsMixin from "../../../../../mixins/events_mixin";
 
 export default {
   components: { tableHeader },
@@ -197,7 +213,7 @@ export default {
     ]),
     ...mapActions(["updateOrderTrackingData", "requestAxiosGet"]),
     navigateRoute(route) {
-      this.setEditValue("consignment");
+      this.setEditValue(true);
       this.$router.push(route);
     },
     async submitChanges() {
@@ -221,7 +237,7 @@ export default {
             type: "success",
           });
           this.buttonLoader = false;
-          this.setEditValue("inventory");
+          this.setEditValue(false);
           this.$router.push({
             name: "Tracking",
             params: { order_id: this.getOrderTrackingData.order.order_id },
@@ -269,13 +285,16 @@ export default {
 .edit-order-container {
   margin-top: 30px !important;
 }
+
 .orderedProductKes {
   float: right;
 }
+
 .edit-order-button {
   margin-top: 10px !important;
   text-transform: uppercase !important;
 }
+
 .add-products-span-header {
   float: right !important;
   margin: -50px 30px 0px 0px;
@@ -283,9 +302,11 @@ export default {
   text-decoration: none !important;
   cursor: pointer !important;
 }
+
 .add-products-span {
   color: #324ba8;
 }
+
 .add-products-span-link {
   text-decoration: none;
 }

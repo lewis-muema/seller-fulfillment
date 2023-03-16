@@ -87,7 +87,7 @@
   "mobilePush": "Mobile push",
   "SMS": "SMS",
   "email": "Email",
-  "inventoryRunningLow": "When inventory runs low below the set threshold of 5 items",
+  "inventoryRunningLow": "When inventory runs low below the set threshold",
   "inventoryAcceptedAtTheFulfillmentCentre": "Inventory accepted at the fulfillment centre",
   "inventoryIsUpdatedAfterFailedDelivery": "Inventory is updated after failed delivery",
   "whenRiderArrivesToPickInventory": "When the rider arrives at pick up location to pick inventory",

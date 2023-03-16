@@ -27,7 +27,7 @@ describe("Auth pages", () => {
     cy.wait("@sign-in-OTP", { timeout }).then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
     });
-    cy.wait("@userDetails");
+    cy.wait("@user");
     cy.wait("@achievements");
     cy.wait("@business");
     cy.wait("@consignmentStatistics");

@@ -1,0 +1,22 @@
+[
+  {
+  "line_item_id": "BCLI-FAR-0000",
+  "created_date": 1655690826000,
+  "line_item_type": "ORDER_INVOICE",
+  "resource_id": "D-UHV-0000",
+  "amount": 0,
+  "line_item_title": "Delivery to User",
+  "line_item_subtitle": "Somewhere",
+  "line_item_grouping": "DELIVERY"
+},
+  {
+    "line_item_id": "BCLI-FAR-0000",
+    "created_date": 1655690826000,
+    "line_item_type": "ORDER_INVOICE",
+    "resource_id": "D-UHV-0000",
+    "amount": 0,
+    "line_item_title": "Delivery to User",
+    "line_item_subtitle": "Somewhere",
+    "line_item_grouping": "DELIVERY"
+  }
+]

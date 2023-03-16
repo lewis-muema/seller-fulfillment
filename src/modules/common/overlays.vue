@@ -28,21 +28,29 @@
       </v-btn>
     </div>
     <div class="tracking-reschedule-container" v-if="popup === 'cancel'">
-      <div class="tracking-reschedule-title-section">
+      <div>
+        <span
+          class="cancel-back-text"
+          @click="
+            setOverlayStatus({
+              overlay: true,
+              popup: 'cancelOptions',
+            })
+          "
+        >
+          <i class="mdi mdi-arrow-left delivery-info-marker"></i>
+          Back
+        </span>
         <p class="tracking-cancel-title-label">
           {{ $t("deliveries.whyCancel") }}
         </p>
-        <i
-          @click="overlayStatusSet(false, 'cancel')"
-          class="mdi mdi-close tracking-reschedule-title-close"
-        ></i>
       </div>
       <v-radio-group v-model="cancelReason">
         <v-radio
-          v-for="(reason, x) in cancelReasons"
+          v-for="(reason, x) in getCancellationReasons"
           :key="x"
-          :label="$t(reason.label)"
-          :value="$t(reason.value)"
+          :label="$t(reason.reason_description)"
+          :value="$t(reason.reason_id)"
         ></v-radio>
       </v-radio-group>
       <v-btn
@@ -52,6 +60,160 @@
       >
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
+    </div>
+    <div class="tracking-reschedule-container" v-if="popup === 'cancelOptions'">
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.cancelOrder") }} ?
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'cancelOptions')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <div class="cancel-options-text">
+        <p>
+          {{ $t("deliveries.cancelText") }}
+        </p>
+      </div>
+      <div class="d-flex cancel-options-container">
+        <i class="mdi mdi-map-marker-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text" v-if="getParent === 'sendy'">
+          <p>{{ $t("deliveries.wrongPickUpInfo") }}</p>
+          <span
+            class="cancel-options-desc"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: cantEditDeliveryRecipientInfo ? 'noEdits' : 'pickupInfo',
+                popText: this.pickups,
+              })
+            "
+          >
+            {{ $t("deliveries.editPickupInfo") }}
+          </span>
+        </div>
+        <div class="cancel-options-text" v-else>
+          <p>{{ $t("deliveries.wrongDeliveryInfo") }}</p>
+          <span
+            class="cancel-options-desc"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: cantEditDeliveryRecipientInfo
+                  ? 'noEdits'
+                  : 'deliveryInfo',
+                popText: this.deliveryInfo,
+              })
+            "
+          >
+            {{ $t("deliveries.editDeliveryInfo") }}
+          </span>
+        </div>
+      </div>
+      <div
+        class="d-flex cancel-options-container"
+        v-if="getParent === 'customer'"
+      >
+        <i class="mdi mdi-account-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.wrongRecipientInfo") }}</p>
+          <span
+            class="cancel-options-desc"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: cantEditDeliveryRecipientInfo
+                  ? 'noEdits'
+                  : 'recepientInfo',
+                popText: this.recipientInfo,
+              })
+            "
+          >
+            {{ $t("deliveries.editRecipientInfo") }}
+          </span>
+        </div>
+      </div>
+      <div
+        class="d-flex cancel-options-container"
+        v-if="showEditIconOnProducts"
+      >
+        <i class="mdi mdi-archive-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.wrongQuantity") }}</p>
+          <p
+            class="cancel-options-desc"
+            @click="navigateToEditProducts"
+            v-if="checkEditProducts"
+          >
+            {{ $t("deliveries.editProducts") }}
+          </p>
+          <span
+            :class="getLoader.orderTracking"
+            class="cancel-options-desc"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: 'noEdits',
+                popText: this.cantEditProducts,
+              })
+            "
+            v-else
+          >
+            {{ $t("deliveries.editProducts") }}
+          </span>
+        </div>
+      </div>
+      <div
+        class="d-flex cancel-options-container"
+        v-if="getParent === 'customer'"
+      >
+        <i class="mdi mdi-clock-outline mr-3 delivery-info-marker"></i>
+        <div class="cancel-options-text">
+          <p>{{ $t("deliveries.unavailable") }}</p>
+          <span
+            class="cancel-options-desc"
+            @click="
+              setOverlayStatus({
+                overlay: true,
+                popup: 'reschedule',
+              })
+            "
+          >
+            {{ $t("deliveries.rescheduleOrder") }}
+          </span>
+        </div>
+      </div>
+      <div class="cancel-options-container">
+        <div class="row">
+          <div class="col-5">
+            <p
+              class="cancel-options-desc dont-cancel-text"
+              @click="
+                setOverlayStatus({
+                  overlay: false,
+                  popup: 'cancelOptions',
+                })
+              "
+            >
+              {{ $t("deliveries.dontCancel") }}
+            </p>
+          </div>
+          <div class="col-7">
+            <v-btn
+              class="tracking-cancel-button"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'cancel',
+                })
+              "
+            >
+              {{ $t("deliveries.continueToCancel") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
@@ -2304,6 +2466,41 @@
         </div>
       </div>
     </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'rescheduleDirect'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-reschedule-title-label">
+          {{ $t("deliveries.pickATime") }}
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'rescheduleDirect')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <vue-timepicker
+        class="reschedule-direct-time-picker"
+        format="hh:mm:ss a"
+        v-model="directTime"
+      ></vue-timepicker>
+      <datepicker
+        :disabled-dates="{
+          to: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1),
+          from: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        }"
+        v-model="directDate"
+        :inline="true"
+        :prevent-disable-date-selection="true"
+      ></datepicker>
+      <v-btn
+        class="tracking-reschedule-submit-button"
+        v-loading="buttonLoader"
+        @click="rescheduleDirect()"
+      >
+        {{ $t("deliveries.submit") }}
+      </v-btn>
+    </div>
   </v-overlay>
 </template>
 
@@ -2316,13 +2513,15 @@ import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import VueTimepicker from "vue3-timepicker";
+import "vue3-timepicker/dist/VueTimepicker.css";
 
 export default {
   setup() {
     return { v$: useVuelidate() };
   },
   props: ["overlayVal", "editInfo"],
-  components: { Datepicker },
+  components: { Datepicker, VueTimepicker },
   mixins: [upload_img, trackingPayloadMixin],
   data() {
     return {
@@ -2337,6 +2536,10 @@ export default {
       promoCode: "",
       deliveryOption: "",
       newPrice: "",
+      deliveryInfo: this.$t("deliveries.cantEditDelivery"),
+      pickups: this.$t("deliveries.cantEditPickups"),
+      recipientInfo: this.$t("deliveries.cantEditRecipient"),
+      cantEditProducts: this.$t("deliveries.cantEditProducts"),
       deliverySpeed: "",
       newCurrency: "",
       date: new Date(),
@@ -2429,6 +2632,13 @@ export default {
       uploadPercentage: 0,
       LPOFileName: "",
       destinations: [],
+      directDate: new Date(),
+      directTime: {
+        hh: "08",
+        mm: "00",
+        ss: "00",
+        a: "am",
+      },
     };
   },
   validations() {
@@ -2507,12 +2717,18 @@ export default {
       "getConsignmentReturnSpeed",
       "getConsignmentReturn",
       "getAutoFillVariants",
+      "getCancellationReasons",
+      "getEditableFields",
+      "getDirectOrderDetails",
     ]),
     partnerNotAssigned() {
       return (
         this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
+    },
+    showEditIconOnProducts() {
+      return this.getEditableFields.products;
     },
     deliverySpeeds() {
       return this.getDeliverySpeed.length
@@ -2637,6 +2853,32 @@ export default {
     isWithinGeoFence() {
       return this.activeDestination.geofence?.length;
     },
+    cantEditDeliveryRecipientInfo() {
+      const orderInTransit =
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_TRANSIT";
+      if (this.getParent === "sendy") {
+        return (
+          orderInTransit &&
+          this.getOrderTrackingData.order.order_event_status !==
+            "event.pickup.partner.assigned" &&
+          this.getOrderTrackingData.order.order_event_status !==
+            "event.pickup.partner.enroute.to.pickup.location"
+        );
+      } else {
+        const orderCompleted =
+          this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED";
+        const buyerEnroute =
+          this.getOrderTrackingData.order.order_event_status !==
+          "event.delivery.partner.enroute.to.buyer.location";
+        return (orderInTransit && buyerEnroute) || orderCompleted;
+      }
+    },
+    checkEditProducts() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
+      );
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -2678,6 +2920,7 @@ export default {
       "setGeofenceData",
       "setConsignmentReturn",
       "setDestinationIndex",
+      "setDirectOrderDetails",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -3550,6 +3793,36 @@ export default {
         data.splice(index, 1);
       }
     },
+    navigateToEditProducts() {
+      this.setOverlayStatus({
+        overlay: false,
+        popup: "cancelOptions",
+      });
+      this.$router.push("/deliveries/edit-order");
+    },
+    rescheduleDirect() {
+      const date = moment(this.directDate).format("YYYY-MM-DD");
+      const time = moment(
+        `${this.directTime.hh}:${this.directTime.mm} ${this.directTime.a}`,
+        "h:mm a"
+      ).format("HH:mm");
+
+      if (
+        moment(`${date} ${time}`, "YYYY-MM-DD HH:mm").valueOf() >
+        moment().valueOf()
+      ) {
+        this.getDirectOrderDetails.pickup.pickup_date = new Date(
+          moment(`${date} ${time}`, "YYYY-MM-DD HH:mm")
+        );
+        this.overlayStatusSet(false, "rescheduleDirect");
+      } else {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.scheduledDateCannotBeEarlier"),
+          type: "warning",
+        });
+      }
+    },
   },
 };
 </script>
@@ -3608,7 +3881,7 @@ export default {
 
 .tracking-cancel-title-label {
   font-size: 15px;
-  width: 80%;
+  width: 100%;
 }
 
 .tracking-cancel-button {
@@ -3713,10 +3986,12 @@ export default {
 .crossdock-recipient-details-text {
   margin: 1rem 0px 1rem 0px !important;
 }
+
 .payment-charges-info-icon {
   padding-right: 5px;
   color: #324ba8;
 }
+
 .fees-title {
   display: flex;
   align-items: flex-end;
@@ -3892,22 +4167,26 @@ export default {
 .resend-invite-img {
   width: 40px;
 }
+
 .payment-charges-communication {
   background-color: #f7f9fc;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 20px;
 }
+
 .payment-charges-communication-desc {
   font-size: 12px;
   color: #606266;
   font-weight: 500;
 }
+
 .speed-charges-communication-desc {
   font-size: 12px;
   color: #324ba8;
   font-weight: 500;
 }
+
 .recepient-info-label {
   padding-left: 10px !important;
 }
@@ -4124,6 +4403,7 @@ export default {
   font-size: 16px;
   font-weight: 500;
 }
+
 .padding-override {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
@@ -4229,6 +4509,7 @@ export default {
 .crossdocking-input-fields-v-text {
   zoom: 80% !important;
 }
+
 .crossdocking-remove-order-button {
   height: 50px;
   margin: 10px 0px 0px 0px;
@@ -4239,6 +4520,7 @@ export default {
   color: white !important;
   font-size: 16px;
 }
+
 .crossdocking-dont-remove-order-button {
   box-shadow: none !important;
   color: #909399 !important;
@@ -4247,6 +4529,7 @@ export default {
   cursor: pointer;
   font-size: 16px;
 }
+
 .delivery-option-crossdock-radio {
   width: 100%;
   border: 1px solid #e2e7ed;
@@ -4255,28 +4538,34 @@ export default {
   height: 75px;
   margin: 5px 0px;
 }
+
 .delivery-option-crossdock-radio-group,
 .delivery-option-crossdock-radio-group .el-radio__label {
   width: 100%;
 }
+
 .delivery-option-crossdock-radio-right {
   float: right;
 }
+
 .delivery-option-crossdock-radio-group .el-radio__label {
   font-size: 17px !important;
   color: #303133;
   margin-top: 10px !important;
   margin-bottom: 2px !important;
 }
+
 .delivery-option-crossdock-radio-group-bottom {
   color: #909399;
   font-size: 14px;
   padding-top: 3px;
 }
+
 .delivery-option-crossdock-title {
   font-weight: 500;
   font-size: 17px;
 }
+
 .delivery-option-notice-icon {
   width: 75px;
   height: 75px;
@@ -4289,6 +4578,7 @@ export default {
   color: #324ba8;
   margin: 20px auto;
 }
+
 .delivery-option-notice-message {
   text-align: center;
   font-size: 19px;
@@ -4302,6 +4592,7 @@ export default {
 .edit-delivery-override {
   border-bottom: none !important;
 }
+
 .pick-up-unavailable-error {
   text-align: center;
   color: #9b101c;
@@ -4312,6 +4603,27 @@ export default {
   background: #fbdecf;
   font-weight: 500;
   margin-bottom: 10px;
+}
+
+.cancel-options-text > p {
+  margin-bottom: 2px !important;
+}
+
+.cancel-options-desc {
+  color: #324ba8;
+  cursor: pointer;
+}
+
+.cancel-options-container {
+  margin-top: 20px;
+}
+
+.dont-cancel-text {
+  margin-bottom: 0 !important;
+  border-bottom: 2px solid #324ba8;
+}
+.cancel-back-text {
+  cursor: pointer;
 }
 .upload-lpo-container {
   width: 450px;
@@ -4341,5 +4653,17 @@ export default {
 .view-products-container-inner {
   max-height: 600px;
   overflow-y: scroll;
+}
+.reschedule-direct-time-picker {
+  margin: auto;
+}
+.reschedule-direct-time-picker input {
+  border-radius: 5px;
+  height: 40px !important;
+}
+.vue__time-picker .dropdown ul li:not([disabled]).active,
+.vue__time-picker .dropdown ul li:not([disabled]).active:focus,
+.vue__time-picker .dropdown ul li:not([disabled]).active:hover {
+  background: #c8e5fc !important;
 }
 </style>

@@ -40,14 +40,10 @@ Cypress.Commands.add("crossDockingStubs", () => {
     statusCode: 200,
     body: user,
   }).as("userDetails");
-  cy.intercept(
-    "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/billingcycles`,
-    {
-      statusCode: 200,
-      body: billingCycles,
-    }
-  ).as("billingCycles");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/billingcycles`, {
+    statusCode: 200,
+    body: billingCycles,
+  }).as("billingCycles");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/business/signup/languages`,

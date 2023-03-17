@@ -206,6 +206,7 @@ export default {
         this.stages[stage - 2].status = "done";
       }
       this.activeStage = stage;
+      document.querySelector(".direct-inputs-container").scrollTop = 0;
     },
     pickupValidationError() {
       ElNotification({

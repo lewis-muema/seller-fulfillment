@@ -279,7 +279,7 @@ export default {
   margin: auto;
   width: 40%;
   padding: 25px;
-  margin-top: 65px;
+  /* margin-top: 65px; */
 }
 .ma-2 {
   float: right;

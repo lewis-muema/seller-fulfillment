@@ -311,6 +311,7 @@ export default {
           Authorization: localStorage.accessToken
             ? localStorage.accessToken
             : "",
+          "fulfilment-token": localStorage.accessToken,
         },
       };
 

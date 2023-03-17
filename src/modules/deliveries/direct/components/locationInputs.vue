@@ -350,10 +350,8 @@ export default {
         },
         location: location.description,
         icon: {
-          url: `https://images.sendyit.com/web_platform/orders/${
-            this.locationType === "pick-up"
-              ? "pickup_placeholder"
-              : "destination_placeholder"
+          url: `https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/${
+            this.locationType === "pick-up" ? "pickup" : "destination"
           }.png`,
           scaledSize: { width: 23, height: 40 },
         },

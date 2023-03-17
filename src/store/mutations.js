@@ -23,6 +23,9 @@ export default {
   setConsignments(state, val) {
     state.consignments = val;
   },
+  setOnDemandDeliveries(state, val) {
+    state.onDemandDeliveries = val;
+  },
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
   },
@@ -170,6 +173,9 @@ export default {
   setOrderTrackingData(state, val) {
     state.orderTrackingData = val;
   },
+  setDirectDeliveriesTrackingData(state, val) {
+    state.directDeliveriesTrackingData = val;
+  },
   setTimelineIcons(state, val) {
     state.timelineIcons = val;
   },
@@ -241,6 +247,9 @@ export default {
   },
   setDeliveriesStatistics(state, val) {
     state.deliveriesStatistics = val;
+  },
+  setPointToPointStatistics(state, val) {
+    state.pointToPointStatistics = val;
   },
   setConsignmentStatistics(state, val) {
     state.consignmentStatistics = val;
@@ -406,5 +415,32 @@ export default {
   },
   setAutofillProductStatus(state, val) {
     state.autofillProductStatus = val;
+  },
+  setMarkers(state, val) {
+    state.markers = val;
+  },
+  setPolyline(state, val) {
+    state.polyline = val;
+  },
+  setMapStatus(state, val) {
+    state.mapStatus = val;
+  },
+  setLocationSuggestions(state, val) {
+    state.locationSuggestions = val;
+  },
+  setPricing(state, val) {
+    state.pricing = val;
+  },
+  setDirectOrderStep(state, val) {
+    state.directOrderStep = val;
+  },
+  setSelectedVehicleType(state, val) {
+    state.selectedVehicleType = val;
+  },
+  setDirectOrderDetails(state, val) {
+    state.directOrderDetails = val;
+  },
+  setDirectOrderDetailsStep(state, val) {
+    state.directOrderDetailsStep = val;
   },
 };

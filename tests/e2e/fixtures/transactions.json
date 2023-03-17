@@ -1,0 +1,65 @@
+{
+  "message":"transactions.list.success",
+  "data":{
+    "transactions":[
+      {
+        "date_created":1676363000000,
+        "transaction_id":"FULFILMENT_FEE_COST-1549459",
+        "transaction_type":"FULFILMENT_FEE_COST",
+        "transaction_description":"Invoice for Fulfilment Services",
+        "transaction_subtitle":"1 completed orders",
+        "transaction_currency":"KES",
+        "transaction_amount":50.39,
+        "resource_id":"BC-HINA-3412"
+      },
+      {
+        "date_created":1676362955000,
+        "transaction_id":"FULFILMENT_FEE_PAYMENT-1549452",
+        "transaction_type":"FULFILMENT_FEE_PAYMENT",
+        "transaction_description":"Payment of Fulfilment Fees",
+        "transaction_subtitle":"1 completed orders",
+        "transaction_currency":"KES",
+        "transaction_amount":49.6,
+        "resource_id":"BC-STGS-3100"
+      },
+      {
+        "date_created":1676361182000,
+        "transaction_id":"FULFILMENT_FEE_COST-1549433",
+        "transaction_type":"FULFILMENT_FEE_COST",
+        "transaction_description":"Invoice for Fulfilment Services",
+        "transaction_subtitle":"1 completed orders",
+        "transaction_currency":"KES",
+        "transaction_amount":49.6,
+        "resource_id":"BC-STGS-3100"
+      },
+      {
+        "date_created":1669277836000,
+        "transaction_id":"FULFILMENT_FEE_PAYMENT-1389282",
+        "transaction_type":"FULFILMENT_FEE_PAYMENT",
+        "transaction_description":"Payment of Fulfilment Fees",
+        "transaction_subtitle":"3 completed orders",
+        "transaction_currency":"KES",
+        "transaction_amount":303.2,
+        "resource_id":"BC-KANA-9074"
+      },
+      {
+        "date_created":1669277785000,
+        "transaction_id":"FULFILMENT_FEE_PAYMENT-1389277",
+        "transaction_type":"FULFILMENT_FEE_PAYMENT",
+        "transaction_description":"Payment of Fulfilment Fees",
+        "transaction_subtitle":"1 completed orders",
+        "transaction_currency":"KES",
+        "transaction_amount":99.0,
+        "resource_id":"BC-QQYM-3561"
+      }
+    ],
+    "pagination":{
+      "current_page":0,
+      "max":5,
+      "page_count":26
+    }
+  },
+  "errors":[
+
+  ]
+}

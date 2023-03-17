@@ -8,36 +8,29 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('selected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <h5>{{ $t("merchant.platformInUse") }}</h5>
           </div>
           <div>
-            <v-select
-              label="Select your platform"
-              density="compact"
-              v-model="platform"
-              @update:modelValue="onPlatformSet"
-              :items="['Woocommerce', 'Shopify', 'Magento']"
-              outlined
-            ></v-select>
+            <selectComponent
+              :availableStores="availableStores"
+              class="dropdown"
+              @update="updateStore"
+            />
+
             <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
               {{ $t("merchant.continue") }}
             </v-btn>
-            <div class="integration-actions">
-              <h6>{{ $t("merchant.missingPlatform") }}</h6>
-              <v-btn class="sendy-btn-text" variant="text" @click="redirect()">
+            <!-- <div class="integration-actions">
+              <span class="integration-actions__text">{{
+                $t("merchant.missingPlatform")
+              }}</span>
+              <a class="integration-actions__link" @click="redirect()">
                 {{ $t("merchant.letsKnow") }}
-              </v-btn>
-            </div>
+              </a>
+            </div> -->
           </div>
         </div>
       </v-card>
@@ -52,13 +45,23 @@
 </template>
 <script>
 import storeDetails from "./storeDetails.vue";
+import stores from "../constants/storeFields.json";
+import headerComponent from "./header.vue";
+import selectComponent from "./selectComponent.vue";
 
 export default {
-  components: { storeDetails },
+  components: { storeDetails, headerComponent, selectComponent },
   props: {
     displayDialog: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    availableStores() {
+      return Object.keys(stores).sort((a, b) => {
+        return a - b;
+      });
     },
   },
   data() {
@@ -79,6 +82,10 @@ export default {
     },
   },
   methods: {
+    updateStore(store) {
+      this.platform = store;
+      this.onPlatformSet();
+    },
     onPlatformSet() {
       this.platformSet = true;
     },
@@ -91,7 +98,37 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.integration-actions {
+  margin-top: 32px;
+
+  &__text {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.005em;
+    color: #000000;
+    display: block;
+  }
+
+  &__link {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.005em;
+    text-decoration-line: underline;
+    color: #324ba8;
+    cursor: pointer;
+  }
+}
+</style>
 <style scoped>
+.dropdown {
+  margin-bottom: 24px;
+}
 .integrations-card {
   margin: auto;
   width: 40%;
@@ -107,10 +144,14 @@ export default {
   margin: 10px, 3px, 20px;
   margin-top: 20px;
   margin-left: 20px;
+  font-family: "Nunito Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
 }
-.integration-actions {
-  margin-top: 20px;
-}
+
 .top-action-bar {
   margin-bottom: 20px;
 }

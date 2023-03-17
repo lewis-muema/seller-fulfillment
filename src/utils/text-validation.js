@@ -1,6 +1,5 @@
 //Checks if a string is a url value
 export function isValidUrl(text) {
-  var pattern =
-    /^(http:\/\/|https:\/\/)?([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)/gi;
+  var pattern = /^(?:(https|http):\/\/)(?:[\w_-]+(?:\.[\w_-]+)){1,}/i;
   return pattern.test(text);
 }

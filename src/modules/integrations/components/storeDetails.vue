@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('saved', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('saved', false)">
@@ -23,8 +16,11 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
+              class="store-platform__image"
+            />
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -32,22 +28,28 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
+          <hr class="divider" />
           <v-form ref="form" v-model="valid" lazy-validation>
+            <label :for="storeName" class="personalInfo-label">
+              {{ $t("merchant.storeName") }}
+            </label>
             <v-text-field
               v-model="storeName"
               :counter="20"
               :rules="nameRules"
-              :label="$t('merchant.storeName')"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
-
+            <label :for="storeUrl" class="personalInfo-label">
+              {{ $t("merchant.storeUrl") }}
+            </label>
             <v-text-field
               v-model="storeUrl"
               :rules="urlRules"
-              :label="$t('merchant.storeUrl')"
               required
-              density="compact"
+              variant="outlined"
+              class="personalInfo-field"
             ></v-text-field>
             <v-btn class="sendy-btn-default" @click="validate">
               {{ $t("merchant.continue") }}
@@ -69,9 +71,10 @@
 <script>
 import integrationSetup from "./integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
+import headerComponent from "./header.vue";
 
 export default {
-  components: { integrationSetup },
+  components: { integrationSetup, headerComponent },
   props: {
     detailsDialog: {
       type: Boolean,
@@ -126,6 +129,9 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+@import "../assets/styling.scss";
+</style>
 <style scoped>
 .integrations-container {
   width: 50%;
@@ -147,9 +153,6 @@ export default {
   float: right;
   margin-top: -40px !important;
 }
-.tag {
-  margin-bottom: 30px;
-}
 .sendy-btn-default {
   text-transform: inherit;
   font-size: 14px;
@@ -164,13 +167,6 @@ export default {
 }
 .back-btn {
   box-shadow: none !important;
-}
-.store-platform {
-  margin-bottom: 20px;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
 }
 .connect-store {
   min-width: 400px;

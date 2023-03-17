@@ -170,18 +170,18 @@ export default {
     },
     countryDefault() {
       window.dispatchEvent(new CustomEvent("country-default"));
-      window.addEventListener("country-fetched", (event) => {
+      window.addEventListener("country-fetched", () => {
         const props = this.getSendyPhoneProps;
-        props.defaultCountry = event.detail.countryCode.toLowerCase();
+        props.defaultCountry = localStorage?.country?.toLowerCase();
         this.setSendyPhoneProps(props);
-        this.setDefaultCountryCode(event.detail.countryCode);
+        this.setDefaultCountryCode(localStorage?.country?.toLowerCase());
         this.setDefaultCountryName(
-          event.detail.country === "Ivory Coast"
+          localStorage?.country_name === "Ivory Coast"
             ? "COTE_D_VOIRE"
-            : event.detail.country.toUpperCase()
+            : localStorage?.country_name
         );
         const francoPhoneCountries = ["FR", "CI"].includes(
-          event.detail.countryCode
+          localStorage?.country
         );
         let locale;
         if (francoPhoneCountries) {

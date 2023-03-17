@@ -6,7 +6,7 @@
       </span>
       <div v-if="checkEdits" class="delivery-info-edit">
         <p @click="nagivateRoute('/deliveries/edit-order')">
-          <span :class="getLoader.orderTracking" v-if="!showEditIcon">
+          <span :class="getLoader.orderTracking" v-if="showEditIconOnProducts">
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
           </span>
@@ -23,11 +23,11 @@
         "
         v-else
       >
-        <div v-if="!showEditIcon">
+        <div>
           <span
             class="delivery-info-edit"
             :class="getLoader.orderTracking"
-            v-if="getParent === 'sendy'"
+            v-if="showEditIconOnProducts"
           >
             <i class="mdi mdi-pencil"></i>
             {{ $t("deliveries.edit") }}
@@ -75,20 +75,16 @@ export default {
       "getOrderTrackingData",
       "getParent",
       "getStorageUserDetails",
+      "getEditableFields",
     ]),
     checkEdits() {
       return (
-        this.getParent === "sendy" &&
-        (this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
-          this.getOrderTrackingData.order.order_status ===
-            "ORDER_IN_PROCESSING")
+        this.getOrderTrackingData.order.order_status === "ORDER_RECEIVED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
-    showEditIcon() {
-      return (
-        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
-        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED"
-      );
+    showEditIconOnProducts() {
+      return this.getEditableFields.products;
     },
   },
   methods: {
@@ -99,17 +95,15 @@ export default {
       "setEditValue",
     ]),
     nagivateRoute(route) {
-      if (this.getParent === "sendy") {
-        this.$router.push(route);
-        this.sendSegmentEvents({
-          event: "clicked_edit_order_products",
-          data: {
-            userId: this.getStorageUserDetails.business_id,
-            clientType: "web",
-            device: "desktop",
-          },
-        });
-      }
+      this.$router.push(route);
+      this.sendSegmentEvents({
+        event: "clicked_edit_order_products",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          clientType: "web",
+          device: "desktop",
+        },
+      });
     },
     formatProducts(products) {
       if (products.length !== 0) {

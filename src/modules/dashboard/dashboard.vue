@@ -4,6 +4,8 @@
       <onboarding />
     </div>
     <div v-else>
+      <wallet-banner class="dashboard-payment-banner" />
+      <makePayment />
       <span class="">
         <h5>
           {{
@@ -15,14 +17,15 @@
         </h5>
         <p>{{ $t("dashboard.whatsHappening") }}</p>
       </span>
-      <makePayment v-if="activeCycle" />
-      <top-card />
       <v-row>
         <v-col cols="8" class="">
+          <quick-links />
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
-          <quick-links />
+          <wallet-balance />
+          <side-card />
+          <articles />
         </v-col>
       </v-row>
     </div>
@@ -35,16 +38,22 @@ import quickLinks from "@/modules/dashboard/components/quickLinks";
 import onboarding from "./components/onboarding.vue";
 import dashboardTabsContent from "@/modules/dashboard/components/dashboardTabsContent";
 import makePayment from "../payments/statements/components/makePayment.vue";
-import topCard from "@/modules/dashboard/components/topCard";
+import sideCard from "@/modules/dashboard/components/sideCard";
+import articles from "@/modules/dashboard/components/articles";
+import walletBalance from "@/modules/dashboard/components/walletBalance";
+import walletBanner from "../payments/wallet/components/walletBanner.vue";
 import moment from "moment";
 
 export default {
   components: {
-    topCard,
+    sideCard,
+    articles,
+    walletBalance,
     quickLinks,
     dashboardTabsContent,
     makePayment,
     onboarding,
+    walletBanner,
   },
   data() {
     return {
@@ -59,10 +68,6 @@ export default {
       "getAchievements",
       "getConsignmentStatistics",
     ]),
-    activeCycle() {
-      const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
-    },
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
         return true;
@@ -78,6 +83,7 @@ export default {
     this.getDeliveryStats();
     this.getPickUpStats();
     this.getStockStats();
+    this.allBillingCycle();
   },
   methods: {
     ...mapMutations([
@@ -89,6 +95,7 @@ export default {
       "setConsignmentStatistics",
       "setDeliveriesStatisticsToday",
       "setConsignmentStatisticsToday",
+      "setBillingCycles",
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
@@ -114,6 +121,24 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    allBillingCycle() {
+      this.setLoader({
+        type: "billingCycle",
+        value: "loading-text",
+      });
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setLoader({
+            type: "billingCycle",
+            value: "",
+          });
+          this.setBillingCycles(response.data.data.billing_cycles);
+        }
+      });
     },
     getDeliveryStats() {
       this.setLoader({
@@ -231,5 +256,10 @@ export default {
 .dashbard-container {
   margin-left: 30px;
   margin-top: 30px;
+}
+.dashboard-payment-banner {
+  max-width: 92% !important;
+  margin: 0px !important;
+  margin-bottom: 30px !important;
 }
 </style>

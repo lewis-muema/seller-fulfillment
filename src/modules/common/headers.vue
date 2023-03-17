@@ -21,7 +21,7 @@
             </v-btn>
           </template>
           <v-list class="header-list-popup">
-            <v-list-item v-for="(shrt, i) in shortcuts" :key="i">
+            <v-list-item v-for="(shrt, i) in filteredShortcuts" :key="i">
               <v-list-item-title
                 @click="$router.push(shrt.url)"
                 class="header-list-item"
@@ -175,6 +175,11 @@ export default {
           icon: "mdi-warehouse",
           url: "/inventory/add-pickup-products",
         },
+        {
+          title: "dashboard.deliverOnDemand",
+          icon: "mdi-truck-outline",
+          url: "/direct/create-delivery",
+        },
       ],
       profile: [
         {
@@ -212,6 +217,24 @@ export default {
       "getMapOptions",
       "getAccessDenied",
     ]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredShortcuts() {
+      const links = [];
+      this.shortcuts.forEach((shortcut) => {
+        if (
+          (this.directFulfillmentFlag &&
+            shortcut.title === "dashboard.deliverOnDemand") ||
+          shortcut.title !== "dashboard.deliverOnDemand"
+        ) {
+          links.push(shortcut);
+        }
+      });
+      return links;
+    },
     languageName() {
       let lang = "";
       this.getLanguages.forEach((row) => {
@@ -259,6 +282,7 @@ export default {
   },
   mounted() {
     this.listLanguages();
+    this.listBusinessDetails();
     this.listUsersDetails();
     this.listNotifications();
   },
@@ -315,6 +339,12 @@ export default {
           link: "",
         };
       }
+      if (notification.notification_type === "STOCK_LEVEL_THRESHOLD_REACHED") {
+        return {
+          label: this.$t("common.viewProduct"),
+          link: `/inventory/view-product/${notification.entity_identifier}`,
+        };
+      }
       return "";
     },
     triggerAction(notification) {
@@ -354,12 +384,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setBusinessDetails(response.data.data.business);
-          this.profile[1].item = `${this.$t("common.language")}: ${
-            this.languageName
-          }`;
-          if (!localStorage.country) {
-            localStorage.country = response.data.data.business.country_code;
-          }
+          localStorage.country = response.data.data.business.country_code;
+          localStorage.country_name = response.data.data.business.country;
+          window.dispatchEvent(
+            new CustomEvent("country-fetched", { detail: response.data })
+          );
         }
       });
     },
@@ -370,7 +399,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setLanguages(this.languageFormat(response.data.data.languages));
-          this.listBusinessDetails();
+          this.profile[1].item = `${this.$t("common.language")}: ${
+            this.languageName
+          }`;
+        } else {
+          this.profile[1].item = `${this.$t("common.language")}: ${"English"}`;
         }
       });
     },

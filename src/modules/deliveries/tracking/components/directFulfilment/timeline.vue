@@ -1,10 +1,10 @@
 <template>
-  <div class="timline-container">
-    <p class="timeline-title">
+  <div class="direct-fulfilment-destination-container mt-3">
+    <p class="destination-desc-titles">
       {{ $t("deliveries.timeline") }}
     </p>
-    <div>
-      <el-timeline>
+    <div class="mt-3">
+      <el-timeline class="point-point-timeline-override">
         <el-timeline-item
           class="el-timeline-item-desktop"
           v-for="(activity, index) in getOrderTimelines"
@@ -31,7 +31,7 @@
                 : `${activity.event_tense}-timeline-text`
             "
           >
-            <span :class="getLoader.orderTimeline">
+            <span :class="getLoader.onDemandOrders">
               {{ formatStatus(activity.translated_event_code, activity) }}
             </span>
           </span>
@@ -48,7 +48,7 @@
               })
             "
           >
-            <span :class="getLoader.orderTimeline">
+            <span :class="getLoader.onDemandOrders">
               {{ getDeliveryAttempts.length }} {{ $t("deliveries.attempts") }}
               <i class="mdi mdi-chevron-right"></i>
             </span>
@@ -58,15 +58,14 @@
     </div>
   </div>
 </template>
-
 <script>
 import moment from "moment";
 import { shallowRef } from "vue";
-import statusMixin from "../../../../mixins/status_mixin";
+import statusMixin from "../../../../../mixins/status_mixin";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 import { Close } from "@element-plus/icons-vue";
-import eventLabels from "../../../../mixins/event_labels";
-import placeholder from "../../../../mixins/placeholders";
+import eventLabels from "../../../../../mixins/event_labels";
+import placeholder from "../../../../../mixins/placeholders";
 
 export default {
   mixins: [statusMixin, eventLabels, placeholder],
@@ -96,7 +95,7 @@ export default {
     ]),
   },
   watch: {
-    "$store.state.orderTrackingData": function orderTrackingData() {
+    "$store.state.directDeliveriesTrackingData": function orderTrackingData() {
       this.fetchOrder();
     },
   },
@@ -118,7 +117,7 @@ export default {
     },
     fetchOrder() {
       this.setLoader({
-        type: "orderTimeline",
+        type: "onDemandOrders",
         value: "loading-text",
       });
       this.requestAxiosGet({
@@ -126,7 +125,7 @@ export default {
         endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader({
-          type: "orderTimeline",
+          type: "onDemandOrders",
           value: "",
         });
         if (response.status === 200) {
@@ -176,6 +175,9 @@ export default {
 <style>
 .timeline-title {
   margin-bottom: 20px;
+}
+.point-point-timeline-override {
+  padding-left: 0px !important;
 }
 .timline-container {
   border: 1px solid #e2e7ed;

@@ -1,7 +1,43 @@
 <template>
-  <div class="transaction-page-container">
+  <div
+    :class="
+      currentCycle ? 'transaction-page-container' : 'transaction-page-top'
+    "
+  >
+    <div class="row transaction-list-top" v-if="getBillingCycles[0]?.active">
+      <div class="col-4 billing-cycle-desc">
+        <p :class="getLoader.billingCycle">{{ $t("payments.billingCycle") }}</p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
+          {{ billInfo("cycleType") }}
+        </p>
+      </div>
+      <div class="col-4 billing-cycle-desc">
+        <p :class="getLoader.billingCycle">
+          {{ $t("payments.currentBillingCycle") }}
+        </p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
+          {{ billInfo("startDate") }} - {{ billInfo("endDate") }}
+        </p>
+        <span
+          class="billing-cycle-view"
+          @click="viewBillingCycle"
+          :class="getLoader.billingCycle"
+        >
+          <i class="mdi mdi-eye" :class="getLoader.billingCycle"></i>
+          {{ $t("payments.view") }}
+        </span>
+      </div>
+      <div class="col-4 billing-cycle-desc">
+        <p :class="getLoader.billingCycle">
+          {{ $t("payments.accruedAmount") }}
+        </p>
+        <p class="billing-cycle-text" :class="getLoader.billingCycle">
+          KES {{ billInfo("accruedAmount") }}
+        </p>
+      </div>
+    </div>
     <div class="row mb-5">
-      <div class="col-2">
+      <div class="col-3">
         <el-select
           class="mb-6 business-details-industry transaction-page-select"
           :disabled="getLoader.transactions !== ''"
@@ -18,7 +54,7 @@
           </el-option>
         </el-select>
       </div>
-      <div class="col-6"></div>
+      <div class="col-5"></div>
       <div class="col-4">
         <el-date-picker
           class="deliveries-date-picker transaction-page-date-range"
@@ -30,7 +66,10 @@
         />
       </div>
     </div>
-    <div class="m-4 mt-3" v-if="transactions.length">
+    <div
+      class="m-4 mt-3 transactions-top-recent-list-container"
+      v-if="transactions.length"
+    >
       <div
         class="transactions-top-recent-list"
         v-for="(transaction, i) in transactions"
@@ -189,6 +228,13 @@ export default {
       });
       return transactions;
     },
+    currentCycle() {
+      return (
+        this.getBillingCycles.length &&
+        this.getBillingCycles[0].active &&
+        this.getBillingCycles[0].amount_to_charge > 0
+      );
+    },
   },
   mounted() {
     this.getUserWallets();
@@ -253,14 +299,44 @@ export default {
       });
     },
     allBillingCycle() {
+      this.setLoader({
+        type: "billingCycle",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
       }).then((response) => {
         if (response.status === 200) {
+          this.setLoader({
+            type: "billingCycle",
+            value: "",
+          });
           this.setBillingCycles(response.data.data.billing_cycles);
         }
       });
+    },
+    viewBillingCycle() {
+      this.$router.push("/payments/statements");
+    },
+    billInfo(type) {
+      let results = "";
+      const cycle = this.currentCycle ? this.getBillingCycles[0] : "";
+      if (type === "startDate") {
+        results = moment(cycle.billing_cycle_start_date).format("Do MMM");
+      }
+      if (type === "endDate") {
+        results = moment(cycle.billing_cycle_end_date).format("Do MMM");
+      }
+      if (type === "cycleType") {
+        results =
+          cycle.cycle_interval_type?.charAt(0).toUpperCase() +
+          cycle.cycle_interval_type?.slice(1).toLowerCase();
+      }
+      if (type === "accruedAmount") {
+        results = cycle.amount_to_charge;
+      }
+      return results;
     },
   },
 };
@@ -268,7 +344,14 @@ export default {
 
 <style>
 .transaction-page-container {
-  margin: 40px;
+  margin: 45px 10px 45px 40px !important;
+  background: white;
+  border: 1px solid #e2e7ed;
+  border-radius: 5px;
+  padding-bottom: 20px;
+}
+.transaction-page-top {
+  margin: 45px 10px 45px 40px !important;
   background: white;
   border: 1px solid #e2e7ed;
   border-radius: 5px;
@@ -280,5 +363,21 @@ export default {
 .transaction-page-date-range {
   float: right;
   margin: 5px 20px;
+}
+.transaction-list-top {
+  background: #f0f3f7;
+  padding: 20px;
+  border-bottom: 1px solid #e2e7ed;
+  margin-bottom: 20px;
+}
+.billing-cycle-text {
+  font-weight: 500;
+}
+.billing-cycle-desc > p {
+  margin-bottom: 10px !important;
+}
+.billing-cycle-view {
+  color: #324ba8;
+  cursor: pointer;
 }
 </style>

@@ -20,10 +20,11 @@ export default class Stores {
         );
       }
       if (field.isUrl) {
-        rules.push((v) =>
-          v
-            ? isValidUrl(v)
-            : true || `${field.fieldName} ${i18n.global.t("merchant.validUrl")}`
+        rules.push(
+          (v) =>
+            !v ||
+            isValidUrl(v) ||
+            `${field.fieldName} ${i18n.global.t("merchant.validUrl")}`
         );
       }
       this.storeRequiredFields.push({

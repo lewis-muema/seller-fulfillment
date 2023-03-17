@@ -293,6 +293,7 @@ export default {
       "setOverlayStatus",
       "setOrderTrackingData",
       "setCycleLineItems",
+      "setActivePayment",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatDate(date) {

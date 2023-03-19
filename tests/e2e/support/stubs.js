@@ -155,7 +155,7 @@ Cypress.Commands.add("dashboardStubs", () => {
   ).as("notifications");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/billingcycles/paymentrequired`,
+    `${constants.FULFILMENT_SERVER}seller/*/billingcycles/paymentrequired`,
     {
       statusCode: 200,
       body: payments,

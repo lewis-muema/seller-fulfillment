@@ -7,7 +7,7 @@
       <wallet-banner class="dashboard-payment-banner" />
       <makePayment />
       <span class="">
-        <h5>
+        <h5 class="dashboard-welcome-message">
           {{
             $t("dashboard.welcome", {
               name: `${getUserDetails.first_name}`,

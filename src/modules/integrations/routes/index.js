@@ -1,5 +1,5 @@
 import integrations from "../components/index.vue";
-import platform from "../components/storePlatform.vue";
+import storePlatform from "../components/storePlatform.vue";
 import storeDetails from "../components/storeDetails.vue";
 import thankYou from "../components/thankYou.vue";
 
@@ -12,7 +12,7 @@ const routes = [
   {
     path: "/settings/integrations/store-platform",
     name: "Platform",
-    component: platform,
+    component: storePlatform,
   },
   {
     path: "/settings/integrations/store-details",

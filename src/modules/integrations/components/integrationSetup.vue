@@ -173,10 +173,10 @@ export default {
           endpoint: "api2cart/stores",
         };
 
-        const { status, data } = await this.connectStore(fullPayload);
+        const { data } = await this.connectStore(fullPayload);
         this.connecting = false;
 
-        if (status === 200 && data.data.return_code === 0) {
+        if (data.data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
           this.$router.push({

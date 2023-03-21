@@ -24,7 +24,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in filteredDeliveries" :key="index">
+            <tr
+              v-for="(item, index) in filteredDeliveries"
+              :key="index"
+              class="dashboard-deliveries-row-container"
+            >
               <td class="deliveries-date-row">
                 <v-list-item class="dashboard-customer-columns" lines="two">
                   <v-list-item-header>

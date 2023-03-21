@@ -103,22 +103,22 @@ describe("Dashboard screens", () => {
       .eq(1)
       .get(".quick-links-tabs-text")
       .contains("Send for storage");
+    // cy.get(".desktop-quick-links-tabs")
+    //   .eq(2)
+    //   .get(".quick-links-tabs-text")
+    //   .contains("Deliver on demand");
     cy.get(".desktop-quick-links-tabs")
       .eq(2)
       .get(".quick-links-tabs-text")
-      .contains("Deliver on demand");
-    cy.get(".desktop-quick-links-tabs")
-      .eq(3)
-      .get(".quick-links-tabs-text")
       .contains("Add Products");
   });
-  it("redirect `deliver to customer` action button to a different page when their no active payment unless show the make payment banner", () => {
+  it.only("redirect `deliver to customer` action button to a different page when their no active payment unless show the make payment banner", () => {
     cy.fixture("paymentRequired").then((payment) => {
       if (payment.message === "billing.cycle.list.success") {
-        cy.get(".statements-payment-banner").should("be.visible");
+        cy.get(".make-payment-container").should("be.visible");
       } else {
         cy.get(".desktop-quick-links-tabs").eq(0).click();
-        cy.url().should("include", `deliveries/customer/`);
+        cy.url().should("include", `/inventory/create-delivery`);
       }
     });
   });

@@ -1,5 +1,3 @@
-import productStatistics from "../fixtures/productStatistics.json";
-
 describe("Dashboard screens", () => {
   it.only("show the welcome screen after a successful signup/login", () => {
     cy.setToken();
@@ -10,6 +8,7 @@ describe("Dashboard screens", () => {
     cy.visit("/");
     cy.fixture("userDetails").then((user) => {
       if (Object.keys(user).length) {
+        //recheck this tests
         cy.get(".dashboard-welcome-message").contains(user.user.first_name);
       }
     });
@@ -43,7 +42,7 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it.only("Can compute deliveries statistics, (completed pickups, completed orders,failed attempts)", () => {
+  it("Can compute deliveries statistics, (completed pickups, completed orders,failed attempts)", () => {
     cy.fixture("deliveriesStatistics").then((stat) => {
       if (Object.keys(stat).length) {
         cy.get(".dashboard-side-card-status")
@@ -88,13 +87,40 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it("Can see sellers account balance", () => {
-    cy.fixture("userDetails").then((user) => {
-      if (Object.keys(user).length) {
-        cy.get(".dashboard-welcome-message").contains(user.user.first_name);
+  it.only("Can see sellers account balance", () => {
+    cy.fixture("wallets").then((wallet) => {
+      if (wallet.data.wallets.length) {
+        cy.get(".dashboard-wallet-balance").should("not.be.null");
       }
     });
   });
-  it("Can show call to action buttons (deliver to customer, send for storage, deliver on demand and add products)", () => {});
+  it.only("Can show call to action buttons (deliver to customer, send for storage, deliver on demand and add products)", () => {
+    cy.get(".desktop-quick-links-tabs")
+      .eq(0)
+      .get(".quick-links-tabs-text")
+      .contains("Deliver to Customer");
+    cy.get(".desktop-quick-links-tabs")
+      .eq(1)
+      .get(".quick-links-tabs-text")
+      .contains("Send for storage");
+    cy.get(".desktop-quick-links-tabs")
+      .eq(2)
+      .get(".quick-links-tabs-text")
+      .contains("Deliver on demand");
+    cy.get(".desktop-quick-links-tabs")
+      .eq(3)
+      .get(".quick-links-tabs-text")
+      .contains("Add Products");
+  });
+  it("redirect `deliver to customer` action button to a different page when their no active payment unless show the make payment banner", () => {
+    cy.fixture("paymentRequired").then((payment) => {
+      if (payment.message === "billing.cycle.list.success") {
+        cy.get(".statements-payment-banner").should("be.visible");
+      } else {
+        cy.get(".desktop-quick-links-tabs").eq(0).click();
+        cy.url().should("include", `deliveries/customer/`);
+      }
+    });
+  });
   it("Can show quick links", () => {});
 });

@@ -94,7 +94,7 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it.only("Can show call to action buttons (deliver to customer, send for storage, deliver on demand and add products)", () => {
+  it("Can show call to action buttons (deliver to customer, send for storage, deliver on demand and add products)", () => {
     cy.fixture("business").then((bus) => {
       if (bus.message === "business.data.retrieve.success") {
         if (bus.data.business.settings.direct_fulfilment_enabled === true) {
@@ -129,5 +129,18 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it("Can dashboard link articles", () => {});
+  it.only("Can show dashboard link articles", () => {
+    cy.get(".dashboard-articles-links")
+      .eq(0)
+      .get(".articles-link-title")
+      .contains("Valentine’s discount");
+    cy.get(".dashboard-articles-links")
+      .eq(1)
+      .get(".articles-link-title")
+      .contains("Hire a vehicle");
+    cy.get(".dashboard-articles-links")
+      .eq(2)
+      .get(".articles-link-title")
+      .contains("Get financing");
+  });
 });

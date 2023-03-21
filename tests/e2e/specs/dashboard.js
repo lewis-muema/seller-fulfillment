@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import productStatistics from "../fixtures/productStatistics.json";
 
 describe("Dashboard screens", () => {
   it.only("show the welcome screen after a successful signup/login", () => {
@@ -43,15 +43,49 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it("Can compute sellers statistics, (completed pickups, completed orders,failed attempts,low stock and items out of stock)", () => {
-    // cy.fixture("deliveriesStatistics").then((user) => {
-    //   if (Object.keys(user).length) {
-    //     cy.get(".dashboard-welcome-message").contains(user.user.first_name);
-    //   }
-    // });
-    cy.wait("@deliveriesStatistics").then((interception) => {
-      expect(interception.response.statusCode).to.equal(200);
-      cy.setTokens();
+  it.only("Can compute deliveries statistics, (completed pickups, completed orders,failed attempts)", () => {
+    cy.fixture("deliveriesStatistics").then((stat) => {
+      if (Object.keys(stat).length) {
+        cy.get(".dashboard-side-card-status")
+          .eq(0)
+          .contains("Completed pickups");
+        cy.get(".dashboard-side-card-status")
+          .eq(1)
+          .contains("Completed orders");
+        cy.get(".dashboard-side-card-status").eq(2).contains("Failed Attempts");
+
+        cy.get(".dashboard-side-card-count")
+          .eq(0)
+          .contains(stat.data.grouped_by_status_count.ORDER_COMPLETED);
+        cy.get(".dashboard-side-card-count")
+          .eq(1)
+          .contains(stat.data.grouped_by_status_count.ORDER_COMPLETED);
+        cy.get(".dashboard-side-card-count")
+          .eq(2)
+          .contains(stat.data.grouped_by_status_count.ORDER_FAILED);
+      }
+    });
+  });
+  it("Can compute deliveries stock levels, (low stock levels,items out of stock)", () => {
+    cy.fixture("productStatistics").then((productStatistic) => {
+      if (Object.keys(productStatistic).length) {
+        cy.get(".dashboard-side-card-status").eq(3).contains("Low stock items");
+        cy.get(".dashboard-side-card-status")
+          .eq(4)
+          .contains("Items out of Stock");
+        cy.get(".dashboard-side-card-count")
+          .eq(3)
+          .contains(
+            productStatistic.data.grouped_by_stock_level_count
+              .low_stock_products
+          );
+        cy.get(".dashboard-side-card-count")
+          .eq(4)
+          .contains(
+            productStatistic.data.grouped_by_stock_level_count
+              .out_of_stock_products
+          );
+      }
     });
   });
   it("Can see sellers account balance", () => {

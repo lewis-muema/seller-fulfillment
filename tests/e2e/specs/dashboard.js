@@ -13,10 +13,10 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it.only("Can see the sidebar on the dashboard screen,  ", () => {
+  it("Can see the sidebar on the dashboard screen,  ", () => {
     //cy.get(".dashboard-welcome-message").contains(user.user.first_name);
   });
-  it.only("Can Load five deliveries each, to sendy and to customers unless show a prompt to make their first deliveries", () => {
+  it("Can Load five deliveries each, to sendy and to customers unless show a prompt to make their first deliveries", () => {
     cy.fixture("deliveries").then((delivery) => {
       if (delivery.data.orders.length) {
         cy.get(".deliveries-container-inner").should("be.visible");
@@ -87,7 +87,7 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it.only("Can see sellers account balance", () => {
+  it("Can see sellers account balance", () => {
     cy.fixture("wallets").then((wallet) => {
       if (wallet.data.wallets.length) {
         cy.get(".dashboard-wallet-balance").should("not.be.null");
@@ -95,24 +95,31 @@ describe("Dashboard screens", () => {
     });
   });
   it.only("Can show call to action buttons (deliver to customer, send for storage, deliver on demand and add products)", () => {
-    cy.get(".desktop-quick-links-tabs")
-      .eq(0)
-      .get(".quick-links-tabs-text")
-      .contains("Deliver to Customer");
-    cy.get(".desktop-quick-links-tabs")
-      .eq(1)
-      .get(".quick-links-tabs-text")
-      .contains("Send for storage");
-    // cy.get(".desktop-quick-links-tabs")
-    //   .eq(2)
-    //   .get(".quick-links-tabs-text")
-    //   .contains("Deliver on demand");
-    cy.get(".desktop-quick-links-tabs")
-      .eq(2)
-      .get(".quick-links-tabs-text")
-      .contains("Add Products");
+    cy.fixture("business").then((bus) => {
+      if (bus.message === "business.data.retrieve.success") {
+        if (bus.data.business.settings.direct_fulfilment_enabled === true) {
+          cy.get(".desktop-quick-links-tabs")
+            .eq(2)
+            .get(".quick-links-tabs-text")
+            .contains("Deliver on demand");
+        } else {
+          cy.get(".desktop-quick-links-tabs")
+            .eq(0)
+            .get(".quick-links-tabs-text")
+            .contains("Deliver to Customer");
+          cy.get(".desktop-quick-links-tabs")
+            .eq(1)
+            .get(".quick-links-tabs-text")
+            .contains("Send for storage");
+          cy.get(".desktop-quick-links-tabs")
+            .eq(2)
+            .get(".quick-links-tabs-text")
+            .contains("Add Products");
+        }
+      }
+    });
   });
-  it.only("redirect `deliver to customer` action button to a different page when their no active payment unless show the make payment banner", () => {
+  it("redirect `deliver to customer` action button to a different page when their no active payment unless show the make payment banner", () => {
     cy.fixture("paymentRequired").then((payment) => {
       if (payment.message === "billing.cycle.list.success") {
         cy.get(".make-payment-container").should("be.visible");
@@ -122,5 +129,5 @@ describe("Dashboard screens", () => {
       }
     });
   });
-  it("Can show quick links", () => {});
+  it("Can dashboard link articles", () => {});
 });

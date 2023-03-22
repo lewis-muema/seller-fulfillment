@@ -69,7 +69,7 @@ describe("Consignment modules", () => {
       .contains("Send Inventory to Sendy")
       .click()
       .url()
-      .should("include", "inventory/add-pickup-products");
+      .should("include", "inventory/add-pickup-productss");
   });
   it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {});
   it("can display linked orders for cross-docked orders ", () => {});

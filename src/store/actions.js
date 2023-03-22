@@ -325,7 +325,7 @@ export default {
       return error.response;
     }
   },
-  async getStoreIntegrations({ dispatch }, payload) {
+  async getIntegrations({ dispatch }, payload) {
     try {
       const { params } = payload;
       const values = {
@@ -341,6 +341,27 @@ export default {
       const response = await axios.get(
         `${payload.app}${payload.endpoint}`,
         values
+      );
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async generateApiKey({ dispatch }, payload) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const response = await axios.post(
+        `${payload.app}${payload.endpoint}`,
+        payload.values,
+        config
       );
       return response;
     } catch (error) {

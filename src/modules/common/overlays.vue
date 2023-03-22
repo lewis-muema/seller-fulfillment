@@ -1114,7 +1114,7 @@
           >
             {{ $t("common.cancel") }}
           </div>
-          <div class="export-CSV-button">
+          <div class="export-CSV-button click-to-export-button">
             <v-btn
               class="edit-user-save"
               v-loading="buttonLoader"

@@ -156,7 +156,7 @@
       </div>
     </div>
     <div class="deliver-btn-container">
-      <div v-if="exportStatus" class="export-button" @click="triggerExport()">
+      <div v-if="exportStatus" class="export-button consignment-export-button" @click="triggerExport()">
         <span>
           <i class="mdi mdi-export-variant export-icon"></i>
         </span>

@@ -3,12 +3,6 @@ import { expect } from "chai";
 const timeout = 30000;
 describe("Consignment modules", () => {
   it("can load consignment deliveries unless show deliveries not found", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.authStubs();
-    cy.paymentStubs();
-    cy.visit("deliveries/sendy");
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -69,9 +63,37 @@ describe("Consignment modules", () => {
       .contains("Send Inventory to Sendy")
       .click()
       .url()
-      .should("include", "inventory/add-pickup-productss");
+      .should("include", "inventory/add-pickup-products");
   });
-  it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {});
+  it.only("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
+    cy.setToken();
+    cy.dashboardStubs();
+    cy.crossDockingStubs();
+    cy.paymentStubs();
+    cy.authStubs();
+    cy.deliveriesStubs();
+    cy.visit("deliveries/sendy");
+    cy.wait("@consignments", { timeout }).then((consignment) => {
+      expect(consignment.response.statusCode).to.equal(200);
+      if (consignment.response.body.data.orders.length) {
+        cy.get(".deliveries-table-column")
+          .eq(0)
+          .find(".consignment-order-id-component")
+          .click();
+        cy.url().should(
+          "include",
+          `deliveries/tracking/${consignment.response.body.data.orders[0].order_id}`
+        );
+        cy.wait("@trackingConsignment", { timeout }).then(
+          (trackConsignment) => {
+            expect(trackConsignment.response.statusCode).to.equal(200);
+          }
+        );
+      } else {
+        cy.get(".no-deliveries-to-sendy-container").should("be.visible");
+      }
+    });
+  });
   it("can display linked orders for cross-docked orders ", () => {});
   it("can display order number of one particular order ", () => {});
   it("can edit an order when its still on transit and disable editting when an order has been completed", () => {});

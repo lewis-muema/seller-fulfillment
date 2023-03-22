@@ -141,7 +141,10 @@
                   class="deliveries-action-row-top"
                   @click="navigate(`/deliveries/tracking/${item.order_id}`)"
                 >
-                  <span :class="getLoader.consignments">
+                  <span
+                    :class="getLoader.consignments"
+                    class="consignment-order-id-component"
+                  >
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </p>

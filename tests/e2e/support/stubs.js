@@ -7,6 +7,10 @@ import completeSignup from "../fixtures/completeSignup.json";
 import statistics from "../fixtures/statistics.json";
 import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
+import cancellationReasons from "../fixtures/cancellationReasons.json";
+import trackingConsignment from "../fixtures/trackingConsignment.json";
+import editableFields from "../fixtures/editableFields.json";
+import trackingSummary from "../fixtures/trackingSummary.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
 // import exportTasks from "../fixtures/exportTasks.json";
@@ -205,18 +209,9 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: wallets,
     }
   ).as("wallet");
-  cy.intercept(
-    "POST",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/exporttasks`,
-    {
-      statusCode: 200,
-      body: exportTasks,
-    }
-  ).as("exportTasks");
-});
-
-Cypress.Commands.add("setTokens", () => {
-  cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
+  Cypress.Commands.add("setTokens", () => {
+    cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
+  });
 });
 Cypress.Commands.add("paymentStubs", () => {
   cy.intercept(
@@ -235,6 +230,48 @@ Cypress.Commands.add("paymentStubs", () => {
       body: lineItems,
     }
   ).as("transactions");
+});
+Cypress.Commands.add("deliveriesStubs", () => {
+  cy.intercept(
+    "POST",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/exporttasks`,
+    {
+      statusCode: 200,
+      body: exportTasks,
+    }
+  ).as("exportTasks");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/cancellation-reasons`,
+    {
+      statusCode: 200,
+      body: cancellationReasons,
+    }
+  ).as("cancellationReasons");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134/editablefields`,
+    {
+      statusCode: 200,
+      body: editableFields,
+    }
+  ).as("editableFields");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: trackingConsignment,
+    }
+  ).as("trackingConsignment");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: trackingSummary,
+    }
+  ).as("trackingSummary");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

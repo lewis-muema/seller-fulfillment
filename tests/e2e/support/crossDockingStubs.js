@@ -16,14 +16,10 @@ import geofence from "../fixtures/geofence.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("crossDockingStubs", () => {
-  cy.intercept(
-    "PUT",
-    `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/user/fcm`,
-    {
-      statusCode: 200,
-      body: fcm,
-    }
-  ).as("fcm");
+  cy.intercept("PUT", `${constants.FULFILMENT_SERVER}seller/*/user/fcm`, {
+    statusCode: 200,
+    body: fcm,
+  }).as("fcm");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/onboarding/achievements`,

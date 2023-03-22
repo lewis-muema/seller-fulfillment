@@ -1116,7 +1116,7 @@
           </div>
           <div class="export-CSV-button click-to-export-button">
             <v-btn
-              class="edit-user-save"
+              class="edit-user-save click-to-export-button"
               v-loading="buttonLoader"
               @click="exportData()"
             >

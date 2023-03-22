@@ -52,10 +52,18 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it.only("can search for an order on the search bar", () => {
+  it("can search for an order on the search bar", () => {
     cy.get(".v-field__input").type("Dorcas");
   });
-  it("can export different consignment deliveries", () => {});
+  it("can export different consignment deliveries", () => {
+    cy.get(".consignment-export-button")
+      .click()
+      .get(".click-to-export-button")
+      .click();
+    cy.wait("@export", { timeout }).then((interception) => {
+      expect(interception.response.statusCode).to.equal(200);
+    });
+  });
   it("can show `send inventory to sendy` button", () => {});
   it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {});
   it("can display linked orders for cross-docked orders ", () => {});

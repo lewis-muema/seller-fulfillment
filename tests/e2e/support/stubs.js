@@ -9,6 +9,7 @@ import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
+import exportTasks from "../fixtures/exportTasks.json";
 import consignmentStatistics from "../fixtures/consignmentStatistics.json";
 import deliveries from "../fixtures/deliveries.json";
 import consignments from "../fixtures/consignments.json";
@@ -203,6 +204,14 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: wallets,
     }
   ).as("wallet");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/exporttasks`,
+    {
+      statusCode: 200,
+      body: exportTasks,
+    }
+  ).as("export");
 });
 
 Cypress.Commands.add("setTokens", () => {

@@ -11,6 +11,7 @@ import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
 import consignmentStatistics from "../fixtures/consignmentStatistics.json";
 import deliveries from "../fixtures/deliveries.json";
+import consignments from "../fixtures/consignments.json";
 import deliveriesStatistics from "../fixtures/deliveriesStatistics.json";
 import languages from "../fixtures/languages.json";
 import notifications from "../fixtures/notifications.json";
@@ -129,6 +130,14 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: deliveries,
     }
   ).as("deliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments?`,
+    {
+      statusCode: 200,
+      body: consignments,
+    }
+  ).as("consignments");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/statistics`,

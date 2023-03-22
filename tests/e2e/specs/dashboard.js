@@ -17,6 +17,7 @@ describe("Dashboard screens", () => {
     //cy.get(".dashboard-welcome-message").contains(user.user.first_name);
   });
   it("Can Load five deliveries each, to sendy and to customers unless show a prompt to make their first deliveries", () => {
+    //consignment orders have not been tested
     cy.fixture("deliveries").then((delivery) => {
       if (delivery.data.orders.length) {
         cy.get(".deliveries-container-inner").should("be.visible");

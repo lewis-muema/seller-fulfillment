@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <div v-if="getConsignments.length > 0">
+      <div v-if="getConsignments.length > 0" class="deliveries-to-sendy-container">
         <v-table>
           <thead>
             <tr>
@@ -147,7 +147,7 @@
           </tbody>
         </v-table>
       </div>
-      <div v-else>
+      <div v-else class="no-deliveries-to-sendy-container">
         <div v-if="ongoingDeliveries > 0">
           <div class="no-products-card-container">
             <span class="no-deliveries-icon-halo">

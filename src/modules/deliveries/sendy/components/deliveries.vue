@@ -19,7 +19,10 @@
           />
         </div>
       </div>
-      <div v-if="getConsignments.length > 0" class="deliveries-to-sendy-container">
+      <div
+        v-if="getConsignments.length > 0"
+        class="deliveries-to-sendy-container"
+      >
         <v-table>
           <thead>
             <tr>

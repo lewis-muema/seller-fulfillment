@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 const timeout = 30000;
 describe("Consignment modules", () => {
-  it.only("can load consignment deliveries unless show deliveries not found", () => {
+  it("can load consignment deliveries unless show deliveries not found", () => {
     cy.setToken();
     cy.dashboardStubs();
     cy.crossDockingStubs();
@@ -18,7 +18,46 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can compute consignment statistics of orders e.g completed, in transit", () => {});
+  it.only("can compute consignment statistics of orders e.g completed, in transit", () => {
+    cy.setToken();
+    cy.dashboardStubs();
+    cy.crossDockingStubs();
+    cy.authStubs();
+    cy.paymentStubs();
+    cy.visit("deliveries/sendy");
+    cy.wait("@consignmentStatistics", { timeout }).then((consignmentStat) => {
+      expect(consignmentStat.response.statusCode).to.equal(200);
+      if (Object.keys(consignmentStat.response.body.data).length) {
+        let pendingCount = (
+          parseInt(
+            consignmentStat.response.body.data.grouped_by_status_count
+              .ORDER_RECEIVED
+          ) +
+          parseInt(
+            consignmentStat.response.body.data.grouped_by_status_count
+              .ORDER_IN_PROCESSING
+          )
+        ).toString();
+
+        let inTransitCount =
+          consignmentStat.response.body.data.grouped_by_status_count.ORDER_IN_TRANSIT.toString();
+
+        let failedCount =
+          consignmentStat.response.body.data.grouped_by_status_count.ORDER_FAILED.toString();
+
+        let completedCount =
+          consignmentStat.response.body.data.grouped_by_status_count.ORDER_COMPLETED.toString();
+
+        let canceledCount =
+          consignmentStat.response.body.data.grouped_by_status_count.ORDER_CANCELED.toString();
+        cy.get(".pending-badge").contains(pendingCount);
+        cy.get(".inTransit-badge").contains(inTransitCount);
+        cy.get(".failed-badge").contains(failedCount);
+        cy.get(".completed-badge").contains(completedCount);
+        cy.get(".cancelled-badge").contains(canceledCount);
+      }
+    });
+  });
   it("can search for an order on the search bar", () => {});
   it("can export different consignment deliveries", () => {});
   it("can show `send inventory to sendy` button", () => {});

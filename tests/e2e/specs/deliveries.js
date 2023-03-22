@@ -18,13 +18,7 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it.only("can compute consignment statistics of orders e.g completed, in transit", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.authStubs();
-    cy.paymentStubs();
-    cy.visit("deliveries/sendy");
+  it("can compute consignment statistics of orders e.g completed, in transit", () => {
     cy.wait("@consignmentStatistics", { timeout }).then((consignmentStat) => {
       expect(consignmentStat.response.statusCode).to.equal(200);
       if (Object.keys(consignmentStat.response.body.data).length) {
@@ -58,7 +52,9 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can search for an order on the search bar", () => {});
+  it.only("can search for an order on the search bar", () => {
+    cy.get(".v-field__input").type("Dorcas");
+  });
   it("can export different consignment deliveries", () => {});
   it("can show `send inventory to sendy` button", () => {});
   it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {});

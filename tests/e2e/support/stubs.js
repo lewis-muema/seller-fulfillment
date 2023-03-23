@@ -10,6 +10,7 @@ import constants from "../fixtures/constants.json";
 import cancellationReasons from "../fixtures/cancellationReasons.json";
 import trackingConsignment from "../fixtures/trackingConsignment.json";
 import editableFields from "../fixtures/editableFields.json";
+import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
 import trackingSummary from "../fixtures/trackingSummary.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
@@ -256,6 +257,14 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: editableFields,
     }
   ).as("editableFields");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/C-HEGTE-05134/editablefields`,
+    {
+      statusCode: 200,
+      body: editableFieldsDeliveries,
+    }
+  ).as("editableFieldsDeliveries");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134`,

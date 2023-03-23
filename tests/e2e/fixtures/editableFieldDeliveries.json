@@ -1,0 +1,19 @@
+{
+  "message":"order.list.success",
+  "data":{
+    "editablefields":{
+      "products":true,
+      "destination.name":true,
+      "destination.phone_number":true,
+      "destination.secondary_phone_number":true,
+      "destination.delivery_location":true,
+      "destination.house_location":true,
+      "destination.delivery_instructions":true,
+      "documents":true,
+      "sale_of_goods_policy":false
+    }
+  },
+  "errors":[
+
+  ]
+}

@@ -28,7 +28,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-desc">
           {{
             getOrderTrackingData.order.destination.delivery_location.description
           }}
@@ -40,7 +40,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-instructions">
           {{
             getOrderTrackingData.order.destination.delivery_instructions
               ? getOrderTrackingData.order.destination.delivery_instructions
@@ -54,7 +54,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-phone-number">
           {{ getOrderTrackingData.order.destination.phone_number }}
         </span>
       </p>

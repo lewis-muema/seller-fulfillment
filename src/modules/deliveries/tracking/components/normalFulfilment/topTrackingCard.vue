@@ -75,7 +75,9 @@
           </span>
         </span>
       </div>
-      <div class="tracking-pickup-banner-link row">
+      <div
+        class="tracking-pickup-banner-link row tracking-crossdocked-pickup-banner"
+      >
         <div class="col-1"></div>
         <div
           class="col-11"

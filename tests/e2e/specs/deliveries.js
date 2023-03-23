@@ -106,23 +106,73 @@ describe("Consignment modules", () => {
     });
   });
   it("can display linked orders for cross-docked orders ", () => {
-    cy.visit("deliveries/tracking/C-HEGTE-05134");
-    cy.wait("@trackingConsignment", { timeout }).then((trackConsignment) => {
-      expect(trackConsignment.response.statusCode).to.equal(200);
-      if (
-        trackConsignment.response.body.data.order.cross_dock_linked_orders
-          ?.order_type === "DELIVERY"
-      ) {
-        cy.get(".tracking-crossdocked-pickup-banner").should("be.visible");
+    cy.wait("@consignments", { timeout }).then((consignment) => {
+      expect(consignment.response.statusCode).to.equal(200);
+      if (consignment.response.body.data.orders.length) {
+        cy.get(".deliveries-table-column")
+          .eq(0)
+          .find(".consignment-order-id-component")
+          .click();
+        cy.url().should(
+          "include",
+          `deliveries/tracking/${consignment.response.body.data.orders[0].order_id}`
+        );
+        cy.wait("@trackingConsignment", { timeout }).then(
+          (trackConsignment) => {
+            expect(trackConsignment.response.statusCode).to.equal(200);
+            if (
+              trackConsignment.response.body.data.order
+                .cross_dock_linked_orders[0].order_type === "DELIVERY"
+            ) {
+              cy.get(".tracking-crossdocked-pickup-banner").should(
+                "be.visible"
+              );
+            } else {
+              cy.get(".tracking-crossdocked-pickup-banner").should(
+                "not.be.visible"
+              );
+            }
+          }
+        );
       } else {
-        cy.get(".tracking-crossdocked-pickup-banner").should("not.be.visible");
+        cy.get(".no-deliveries-to-sendy-container").should("be.visible");
       }
     });
   });
-  it("can display order number of one particular order ", () => {
-    cy.visit("deliveries/tracking/C-HEGTE-05134");
+  it.only("can display order number of one particular order ", () => {
+    cy.wait("@consignments", { timeout }).then((consignment) => {
+      expect(consignment.response.statusCode).to.equal(200);
+      if (consignment.response.body.data.orders.length) {
+        cy.get(".deliveries-table-column")
+          .eq(0)
+          .find(".consignment-order-id-component")
+          .click();
+        cy.url().should(
+          "include",
+          `deliveries/tracking/${consignment.response.body.data.orders[0].order_id}`
+        );
+        cy.wait("@trackingConsignment", { timeout }).then(
+          (trackConsignment) => {
+            expect(trackConsignment.response.statusCode).to.equal(200);
+            cy.get(".tracking-pickup-order-id").contains(
+              trackConsignment.response.body.data.order.order_id
+            );
+          }
+        );
+      } else {
+        cy.get(".no-deliveries-to-sendy-container").should("be.visible");
+      }
+    });
   });
-  it("can edit an order when its still on transit and disable editting when an order has been completed", () => {});
+  it.only("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+    cy.setToken();
+    cy.dashboardStubs();
+    cy.crossDockingStubs();
+    cy.paymentStubs();
+    cy.authStubs();
+    cy.deliveriesStubs();
+    cy.visit("deliveries/sendy");
+  });
   it("can reschedule an order to a later date ", () => {});
   it("can cancel orders when its still on transit and disable cancelling when an order has been completed ", () => {});
 });

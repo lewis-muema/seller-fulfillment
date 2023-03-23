@@ -5,7 +5,7 @@
       @click="$router.back()"
     ></i>
     <div class="tracking-order-title mb-0">
-      <span :class="getLoader.orderTracking">
+      <span :class="getLoader.orderTracking" class="tracking-pickup-order-id">
         {{ $t("deliveries.orderNo") }}
         {{ getOrderTrackingData.order.order_id }}
       </span>

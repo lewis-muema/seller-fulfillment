@@ -12,6 +12,7 @@ import trackingConsignment from "../fixtures/trackingConsignment.json";
 import editableFields from "../fixtures/editableFields.json";
 import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
 import trackingSummary from "../fixtures/trackingSummary.json";
+import updateConsignmentOrder from "../fixtures/updateConsignmentOrder.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
 // import exportTasks from "../fixtures/exportTasks.json";
@@ -273,6 +274,15 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: trackingConsignment,
     }
   ).as("trackingConsignment");
+
+  cy.intercept(
+    "PATCH",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: updateConsignmentOrder,
+    }
+  ).as("updateConsignmentOrder");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/C-HEGTE-05134`,

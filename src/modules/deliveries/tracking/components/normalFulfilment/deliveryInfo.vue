@@ -17,7 +17,7 @@
           "
         >
           <span class="delivery-info-edit" :class="getLoader.orderTracking">
-            <i class="mdi mdi-pencil"></i>
+            <i class="mdi mdi-pencil mdi-pencil-edit-pickup-info"></i>
             {{ $t("deliveries.edit") }}
           </span>
         </span>

@@ -244,7 +244,7 @@
       <textarea
         name=""
         :placeholder="$t('deliveries.enterInstructions')"
-        class="edit-info-instructions"
+        class="edit-info-instructions destination-pickup-instructions"
         v-model="instructions"
         id="instructions"
         cols="30"
@@ -292,7 +292,7 @@
         {{ $t("deliveries.removePhoneNumber") }}
       </div>
       <v-btn
-        class="edit-info-submit-button"
+        class="edit-info-submit-button submit-pickup-button"
         v-loading="buttonLoader"
         @click="submitConsignment()"
       >

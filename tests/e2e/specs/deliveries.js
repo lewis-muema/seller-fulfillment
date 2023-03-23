@@ -66,13 +66,6 @@ describe("Consignment modules", () => {
       .should("include", "inventory/add-pickup-products");
   });
   it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.paymentStubs();
-    cy.authStubs();
-    cy.deliveriesStubs();
-    cy.visit("deliveries/sendy");
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -139,7 +132,7 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it.only("can display order number of one particular order ", () => {
+  it("can display order number of one particular order ", () => {
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -164,7 +157,39 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it.only("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+  it("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+    //capture non editable fields later
+    cy.wait("@consignments", { timeout }).then((consignment) => {
+      expect(consignment.response.statusCode).to.equal(200);
+      if (consignment.response.body.data.orders.length) {
+        cy.get(".deliveries-table-column")
+          .eq(0)
+          .find(".consignment-order-id-component")
+          .click();
+        cy.url().should(
+          "include",
+          `deliveries/tracking/${consignment.response.body.data.orders[0].order_id}`
+        );
+        cy.wait("@trackingConsignment", { timeout }).then(
+          (trackConsignment) => {
+            expect(trackConsignment.response.statusCode).to.equal(200);
+            cy.get(".mdi-pencil-edit-pickup-info")
+              .click()
+              .get(".destination-pickup-instructions")
+              .type("leave at the door")
+              .get(".submit-pickup-button")
+              .click();
+            cy.wait("@updateConsignmentOrder", { timeout }).then((order) => {
+              expect(order.response.statusCode).to.equal(200);
+            });
+          }
+        );
+      } else {
+        cy.get(".no-deliveries-to-sendy-container").should("be.visible");
+      }
+    });
+  });
+  it("can reschedule an order to a later date ", () => {
     cy.setToken();
     cy.dashboardStubs();
     cy.crossDockingStubs();
@@ -173,7 +198,6 @@ describe("Consignment modules", () => {
     cy.deliveriesStubs();
     cy.visit("deliveries/sendy");
   });
-  it("can reschedule an order to a later date ", () => {});
   it("can cancel orders when its still on transit and disable cancelling when an order has been completed ", () => {});
 });
 describe("deliveries modules", () => {});

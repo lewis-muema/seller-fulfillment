@@ -122,6 +122,7 @@
       <p class="delivery-info-label edit-delivery">
         <span
           :class="getLoader.orderTracking"
+          class="mdi-pencil-edit-delivery-info"
           @click="
             setOverlayStatus({
               overlay: true,

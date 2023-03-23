@@ -217,6 +217,13 @@ describe("Consignment modules", () => {
 });
 describe("deliveries modules", () => {
   it("can load  deliveries unless show deliveries not found", () => {
+    cy.setToken();
+    cy.dashboardStubs();
+    cy.crossDockingStubs();
+    cy.paymentStubs();
+    cy.authStubs();
+    cy.deliveriesStubs();
+    cy.visit("deliveries/customer");
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -279,14 +286,7 @@ describe("deliveries modules", () => {
       .url()
       .should("include", "inventory/create-delivery");
   });
-  it.only("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.paymentStubs();
-    cy.authStubs();
-    cy.deliveriesStubs();
-    cy.visit("deliveries/customer");
+  it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -307,7 +307,7 @@ describe("deliveries modules", () => {
           cy.get(".delivery-house-location").contains(
             trackDelivery.response.body.data.order.destination.house_location
           );
-          cy.get(".delivery-info-instructions").contains(
+          cy.get(".delivery-info-instruction").contains(
             trackDelivery.response.body.data.order.destination
               .delivery_instructions
           );
@@ -391,13 +391,13 @@ describe("deliveries modules", () => {
         );
         cy.wait("@trackingDelivery", { timeout }).then((trackDelivery) => {
           expect(trackDelivery.response.statusCode).to.equal(200);
-          cy.get(".mdi-pencil-edit-pickup-info")
+          cy.get(".mdi-pencil-edit-delivery-info")
             .click()
-            .get(".destination-pickup-instructions")
+            .get(".destination-delivery-instructions")
             .type("leave at the door")
-            .get(".submit-pickup-button")
+            .get(".submit-delivery-button")
             .click();
-          cy.wait("@updateDelivery", { timeout }).then((order) => {
+          cy.wait("@updateDeliveryOrder", { timeout }).then((order) => {
             expect(order.response.statusCode).to.equal(200);
           });
         });
@@ -406,7 +406,7 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can cancel an order to a later date ", () => {
+  it.only("can cancel an order to a later date ", () => {
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -420,7 +420,7 @@ describe("deliveries modules", () => {
         );
         cy.wait("@trackingDelivery", { timeout }).then((trackDelivery) => {
           expect(trackDelivery.response.statusCode).to.equal(200);
-          cy.get(".tracking-option-content").eq(1).click();
+          cy.get(".tracking-option-content").eq(2).click();
           cy.get(".dont-cancel-text").click();
           cy.get("cancel-options-contain").should("not.be.visible");
         });

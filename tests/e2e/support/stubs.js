@@ -15,6 +15,7 @@ import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
 import trackingDeliveriesSummary from "../fixtures/trackingDeliveriesSummary.json";
 import trackingSummary from "../fixtures/trackingSummary.json";
 import updateConsignmentOrder from "../fixtures/updateConsignmentOrder.json";
+import updateDeliveryOrder from "../fixtures/updateDeliveryOrder.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
 // import exportTasks from "../fixtures/exportTasks.json";
@@ -262,7 +263,7 @@ Cypress.Commands.add("deliveriesStubs", () => {
   ).as("editableFields");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/C-HEGTE-05134/editablefields`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850/editablefields`,
     {
       statusCode: 200,
       body: editableFieldsDeliveries,
@@ -283,7 +284,7 @@ Cypress.Commands.add("deliveriesStubs", () => {
       statusCode: 200,
       body: trackingDeliveries,
     }
-  ).as("trackingDeliveries");
+  ).as("trackingDelivery");
 
   cy.intercept(
     "PATCH",
@@ -293,6 +294,14 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: updateConsignmentOrder,
     }
   ).as("updateConsignmentOrder");
+  cy.intercept(
+    "PATCH",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: updateDeliveryOrder,
+    }
+  ).as("updateDeliveryOrder");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/C-HEGTE-05134`,

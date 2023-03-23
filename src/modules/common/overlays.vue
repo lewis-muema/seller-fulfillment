@@ -343,14 +343,14 @@
       <textarea
         name=""
         :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
-        class="edit-info-instructions"
+        class="edit-info-instructions destination-delivery-instructions"
         v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
       ></textarea>
       <v-btn
-        class="edit-info-submit-button"
+        class="edit-info-submit-button submit-delivery-button"
         v-loading="buttonLoader"
         @click="submitDelivery()"
       >

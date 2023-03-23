@@ -9,8 +9,10 @@ import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
 import cancellationReasons from "../fixtures/cancellationReasons.json";
 import trackingConsignment from "../fixtures/trackingConsignment.json";
+import trackingDeliveries from "../fixtures/trackingDeliveries.json";
 import editableFields from "../fixtures/editableFields.json";
 import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
+import trackingDeliveriesSummary from "../fixtures/trackingDeliveriesSummary.json";
 import trackingSummary from "../fixtures/trackingSummary.json";
 import updateConsignmentOrder from "../fixtures/updateConsignmentOrder.json";
 import achievements from "../fixtures/achievements.json";
@@ -132,7 +134,7 @@ Cypress.Commands.add("dashboardStubs", () => {
   ).as("consignmentStatisticsLimit");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?max=5`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?`,
     {
       statusCode: 200,
       body: deliveries,
@@ -274,6 +276,14 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: trackingConsignment,
     }
   ).as("trackingConsignment");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: trackingDeliveries,
+    }
+  ).as("trackingDeliveries");
 
   cy.intercept(
     "PATCH",
@@ -291,6 +301,14 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: trackingSummary,
     }
   ).as("trackingSummary");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: trackingDeliveriesSummary,
+    }
+  ).as("trackingDeliveriesSummary");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

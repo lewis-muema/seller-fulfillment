@@ -58,7 +58,7 @@ Cypress.Commands.add("crossDockingStubs", () => {
   ).as("notifications");
   cy.intercept(
     "POST",
-    `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/crossdocked-delivery/calculate-speed`,
+    `${constants.FULFILMENT_SERVER}seller/*/crossdocked-delivery/calculate-speed`,
     {
       statusCode: 200,
       body: calculateSpeed,

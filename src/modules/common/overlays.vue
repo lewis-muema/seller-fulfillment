@@ -61,7 +61,10 @@
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
     </div>
-    <div class="tracking-reschedule-container" v-if="popup === 'cancelOptions'">
+    <div
+      class="tracking-reschedule-container cancel-options-contain"
+      v-if="popup === 'cancelOptions'"
+    >
       <div class="tracking-reschedule-title-section">
         <p class="tracking-cancel-title-label">
           {{ $t("deliveries.cancelOrder") }} ?

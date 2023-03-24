@@ -3213,13 +3213,7 @@ export default {
         document_url: this.PDF,
         document_description: this.documentTitle,
       };
-      this.documents.push(docObj);
-      this.setEdittedDocuments(this.documents);
-      this.setFinalDocumentsToEdit[{}];
-      this.setFinalDocumentsToEdit([
-        ...this.getOrderTrackingData.order.documents,
-        ...this.getEdittedDocuments,
-      ]);
+      this.getFinalDocumentsToEdit.push(docObj);
       this.overlayStatusSet(true, "addRemoveDocument");
       setTimeout(() => {
         this.documentTitle = "";

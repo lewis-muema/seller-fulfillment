@@ -49,6 +49,7 @@ export default createStore({
         pickup: {},
         destinations: [],
       },
+      directOrderPartner: {},
       selectedVehicleType: {},
       mapStatus: false,
       locationSuggestions: [],

@@ -16,6 +16,7 @@ export default {
   watch: {
     "$store.state.directDeliveriesTrackingData": function step() {
       this.setMapMarkers();
+      this.setMapPolyline();
     },
   },
   computed: {
@@ -23,6 +24,12 @@ export default {
   },
   mounted() {
     this.setMapStatus(true);
+    this.setMarkers([]);
+    this.setPolyline({});
+  },
+  beforeUnmount() {
+    this.setMarkers([]);
+    this.setPolyline({});
   },
   methods: {
     ...mapMutations(["setMarkers", "setPolyline", "setMapStatus"]),
@@ -48,7 +55,27 @@ export default {
       );
       this.setMarkers(markers);
     },
-    setPolyline() {},
+    setMapPolyline() {
+      this.getDirectDeliveriesTrackingData.order?.path_data?.path_polyline?.forEach(
+        (polyline) => {
+          this.setPolyline({
+            path: this.decode_path(polyline),
+            geodesic: true,
+            strokeColor: "#324BA8",
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+          });
+        }
+      );
+    },
+    decode_path(path) {
+      const polyline = [];
+      // eslint-disable-next-line no-undef
+      new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
+        polyline.push({ lat: row.lat(), lng: row.lng() });
+      });
+      return polyline;
+    },
   },
 };
 </script>

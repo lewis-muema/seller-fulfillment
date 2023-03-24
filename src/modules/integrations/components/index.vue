@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import integrations from "./components/integrations.vue";
+import integrations from "./integrations.vue";
 import { mapMutations } from "vuex";
 
 export default {

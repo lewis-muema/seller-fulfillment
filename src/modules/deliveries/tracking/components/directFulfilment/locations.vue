@@ -29,6 +29,8 @@
       <el-timeline-item
         :color="color1"
         class="location-el-timeline-item-override"
+        v-for="(location, i) in deliveryLocation"
+        :key="i"
       >
         <div class="destination-points-container">
           <div class="destination-pickup-info-container">
@@ -36,7 +38,7 @@
               $t("deliveries.deliveryLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{ deliveryLocation }}
+              {{ location }}
             </div>
           </div>
         </div>

@@ -8,14 +8,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <h5 class="integration-text">{{ $t("merchant.connectStore") }}</h5>
-        <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-close"
-          size="small"
-          @click="$emit('connected', false)"
-        ></v-btn>
+        <headerComponent />
         <div class="integrations-card">
           <div class="top-action-bar">
             <v-btn class="back-btn" dark @click="$emit('connected', false)">
@@ -23,8 +16,11 @@
             </v-btn>
           </div>
           <div class="store-platform">
-            <v-icon icon="mdi-store" size="x-large"></v-icon
-            ><span class="store-platform-name"
+            <img
+              :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
+              class="store-platform__image"
+            />
+            <span class="store-platform__name"
               >{{ storePlatform }} {{ $t("merchant.integration") }}</span
             >
           </div>
@@ -32,104 +28,49 @@
             <h5>{{ $t("merchant.storeDetails") }}</h5>
             <p>{{ $t("merchant.storeDetailsTagline") }}</p>
           </div>
-          <div v-if="storePlatform === 'Shopify'">
-            <v-form ref="shopify" v-model="valid" lazy-validation>
+          <hr class="divider" />
+          <v-form ref="default" v-model="valid" lazy-validation>
+            <div
+              v-for="(field, index) in storeObj.storeRequiredFields"
+              :key="index"
+            >
+              <label for="field" class="personalInfo-label">
+                {{ $t(`merchant.${field.fieldName}`) }}
+              </label>
               <v-text-field
-                v-model="APIKey"
-                :label="$t('merchant.APIKey')"
-                :rules="apiRules"
-                required
-                density="compact"
+                v-model="field.value"
+                :required="field.required"
+                :rules="field.rules"
+                variant="outlined"
+                class="personalInfo-field"
               ></v-text-field>
-
-              <v-text-field
-                v-model="APIPassword"
-                :label="$t('merchant.APIPassword')"
-                :rules="passwordRules"
-                required
-                density="compact"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="accessToken"
-                :label="$t('merchant.accessToken')"
-                :rules="tokenRules"
-                required
-                density="compact"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="secret"
-                :label="$t('merchant.sharedSecret')"
-                :rules="secretRules"
-                required
-                density="compact"
-              ></v-text-field>
-            </v-form>
-            <v-btn class="sendy-btn-default" @click="validateForm('shopify')">
+            </div>
+            <v-btn class="sendy-btn-default" @click="validateForm('default')">
               {{ $t("merchant.continue") }}
             </v-btn>
-          </div>
-          <div v-else>
-            <v-form ref="default" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="storeKey"
-                :label="$t('merchant.storeKey')"
-                :rules="storeKeyRules"
-                required
-                density="compact"
-              ></v-text-field>
-              <v-text-field
-                v-model="bridgeUrl"
-                :label="$t('merchant.bridgeUrl')"
-                :rules="bridgeUrlRules"
-                required
-                density="compact"
-              ></v-text-field>
-              <v-text-field
-                v-model="storeRoot"
-                :label="$t('merchant.storeRoot')"
-                density="compact"
-              ></v-text-field>
-              <v-btn class="sendy-btn-default" @click="validateForm('default')">
-                {{ $t("merchant.continue") }}
-              </v-btn>
-            </v-form>
-          </div>
+          </v-form>
           <div class="text-center">
-            <v-dialog v-model="connectDialog">
+            <v-dialog v-model="connectDialog" class="connecting-dialog">
               <v-card class="connect-store">
                 <div v-if="connecting" class="connect-progress">
-                  <div class="dialog-title">{{ $t("merchant.adding") }}</div>
-                  <v-progress-circular
-                    :width="3"
-                    color="indigo-darken-2"
-                    indeterminate
-                  ></v-progress-circular>
-                  <div class="">{{ $t("merchant.waiting") }}</div>
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.connecting_your_store") }}
+                  </div>
+                  <img
+                    src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
+                    class="connecting-dialog__icon"
+                  />
+                  <div class="connecting-dialog__msg">
+                    {{ $t("merchant.waiting") }}
+                  </div>
                 </div>
-                <div v-else>
-                  <div v-if="storeConnected">
-                    <v-icon
-                      icon="mdi-success-circle-outline"
-                      color="green-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.congratulations") }}</h4>
-                    <p>{{ $t("merchant.success") }}</p>
+                <div v-if="hasError && !connecting" class="connect-progress">
+                  <div class="connecting-dialog__title">
+                    {{ $t("merchant.somethingWentWrong") }}
                   </div>
-                  <div v-else>
-                    <v-icon
-                      icon="error-outline"
-                      color="red-darken-2"
-                      size="x-large"
-                    ></v-icon>
-                    <h4>{{ $t("merchant.fail") }}</h4>
-                    <p>{{ resultMessage }}</p>
+                  <div class="connecting-dialog__msg">
+                    {{ resultMessage }}
                   </div>
-                  <v-btn class="close-btn" @click="$emit('connected', false)">
-                    {{ $t("merchant.close") }}
-                  </v-btn>
                 </div>
               </v-card>
             </v-dialog>
@@ -141,9 +82,14 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { isValidUrl } from "@/utils/text-validation";
+import Stores from "../classes/stores";
+import headerComponent from "./header.vue";
 
 export default {
+  name: "integrationSetup",
+  components: {
+    headerComponent,
+  },
   props: {
     setupDialog: {
       type: Boolean,
@@ -165,57 +111,30 @@ export default {
   data() {
     return {
       valid: true,
-      wooValid: true,
       dialog: false,
       connectDialog: false,
       connecting: false,
       storeConnected: false,
       resultMessage: "",
-      bridgeUrl: "",
-      storeRoot: "",
-      storeKey: "",
-      APIKey: "",
-      APIPassword: "",
-      secret: "",
-      accessToken: "",
-      apiRules: [
-        (v) =>
-          !!v || `${this.$t("merchant.APIKey")}${this.$t("merchant.required")}`,
-      ],
-      passwordRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.APIPassword")}${this.$t("merchant.required")}`,
-      ],
-      secretRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.sharedSecret")}${this.$t("merchant.required")}`,
-      ],
-      tokenRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.accessToken")}${this.$t("merchant.required")}`,
-      ],
-      bridgeUrlRules: [
-        (v) => isValidUrl(v) || this.$t("merchant.validBridgeURL"),
-      ],
-      storeKeyRules: [
-        (v) =>
-          !!v ||
-          `${this.$t("merchant.storeKey")}${this.$t("merchant.required")}`,
-      ],
+      storeObj: null,
+      hasError: false,
     };
   },
   mounted() {
+    this.storeObj = new Stores(this.storePlatform);
     this.dialog = this.setupDialog;
+    this.storeObj.getStoreFields();
   },
   watch: {
     setupDialog() {
       if (this.setupDialog) this.dialog = true;
     },
+    connectDialog(value) {
+      if (!value) {
+        this.hasError = false;
+      }
+    },
   },
-  computed: {},
   methods: {
     ...mapActions(["connectStore"]),
     async validateForm(formName) {
@@ -224,28 +143,26 @@ export default {
         this.connect(formName);
       }
     },
-    async connect(strategy) {
+    async connect() {
       this.connectDialog = true;
       this.connecting = true;
+      const storeFields = {};
+
+      for (const field of this.storeObj.storeRequiredFields) {
+        storeFields[field.fieldName] = field.value;
+      }
+
+      let cartId = this.storePlatform.replace(" ", "").toLowerCase();
+      cartId = cartId.charAt(0).toUpperCase() + cartId.slice(1);
+
       const payload = {
-        default: {
-          storeUrl: this.storeUrl,
-          storeName: this.storeName,
-          cartId: this.storePlatform,
-          // bridgeUrl: this.bridgeUrl ? this.bridgeUrl : "",
-          // storeRoot: this.storeRoot ? this.storeRoot : "",
-        },
-        shopify: {
-          storeUrl: this.storeUrl,
-          storeName: this.storeName,
-          cartId: this.storePlatform,
-          shopifyApiKey: this.APIKey ? this.APIKey : "",
-          shopifyApiPassword: this.APIPassword ? this.APIPassword : "",
-          shopifyAccessToken: this.accessToken ? this.accessToken : "",
-          shopifySharedSecret: this.secret ? this.secret : "",
-        },
+        storeUrl: this.storeUrl,
+        storeName: this.storeName,
+        cartId,
+        ...storeFields,
       };
-      this.saveStore(payload[strategy]);
+
+      this.saveStore(payload);
     },
     async saveStore(payload) {
       try {
@@ -259,9 +176,15 @@ export default {
         const { status, data } = await this.connectStore(fullPayload);
         this.connecting = false;
 
-        if (status === 200 && data.data.return_code !== 109) {
+        if (status === 200 && data.data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
+          this.$router.push({
+            name: "ThankYou",
+            params: {
+              storeName: this.storeName,
+            },
+          });
         } else {
           this.storeConnected = false;
           this.connecting = false;
@@ -270,14 +193,77 @@ export default {
           );
         }
       } catch (error) {
+        this.resultMessage = error;
         this.storeConnected = false;
         this.connecting = false;
-        this.resultMessage = error;
+        this.hasError = true;
       }
     },
   },
 };
 </script>
+<style lang="scss">
+@import "../assets/styling.scss";
+
+.connecting-dialog {
+  border-radius: 6px;
+  padding: 16px;
+
+  &__title {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: -0.01em;
+    color: #303133;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  &__icon {
+    margin-bottom: 24px;
+    width: 90px;
+    height: 90px;
+  }
+
+  &__msg {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #606266;
+  }
+}
+.text {
+  &__store-details {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+    color: #303133;
+  }
+
+  &__store-tagline {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #606266;
+  }
+}
+.v-overlay {
+  &__content {
+    max-width: unset !important;
+    max-height: unset !important;
+  }
+}
+</style>
 <style scoped>
 .integrations-container {
   width: 50%;
@@ -293,14 +279,11 @@ export default {
   margin: auto;
   width: 40%;
   padding: 25px;
-  margin-top: 65px;
+  /* margin-top: 65px; */
 }
 .ma-2 {
   float: right;
   margin-top: -40px !important;
-}
-.tag {
-  margin-bottom: 30px;
 }
 .sendy-btn-default {
   text-transform: inherit;
@@ -317,16 +300,10 @@ export default {
 .back-btn {
   box-shadow: none !important;
 }
-.store-platform {
-  margin-bottom: 20px;
-}
-.store-platform-name {
-  margin-left: 10px;
-  font-weight: 500;
-}
+
 .connect-store {
-  min-width: 400px;
-  min-height: 170px;
+  width: 512px;
+  height: 276px;
   font-weight: 500;
   margin: 10px;
   text-align: center !important;

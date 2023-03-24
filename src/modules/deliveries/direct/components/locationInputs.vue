@@ -353,7 +353,7 @@ export default {
           url: `https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/${
             this.locationType === "pick-up" ? "pickup" : "destination"
           }.png`,
-          scaledSize: { width: 23, height: 40 },
+          scaledSize: { width: 20, height: 20 },
         },
       };
       this.resetSuggestion();

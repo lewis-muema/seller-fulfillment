@@ -51,10 +51,7 @@ import paymentSummary from "../modules/payments/statements/components/paymentSum
 import statements from "../modules/payments/statements/statements.vue";
 import direct from "../modules/deliveries/direct/direct.vue";
 
-// merchant services integrations
-import integrations from "../modules/integrations/integrations.vue";
-import platform from "../modules/integrations/components/storePlatform.vue";
-import storeDetails from "../modules/integrations/components/storeDetails.vue";
+import integrations from "../modules/integrations/routes/index";
 
 const routes = [
   {
@@ -301,21 +298,6 @@ const routes = [
     component: notifications,
   },
   {
-    path: "/settings/integrations",
-    name: "Integrations",
-    component: integrations,
-  },
-  {
-    path: "/settings/integrations/store-platform",
-    name: "Platform",
-    component: platform,
-  },
-  {
-    path: "/settings/integrations/store-details",
-    name: "Store Details",
-    component: storeDetails,
-  },
-  {
     path: "/settings/activity-log",
     name: "Activity Log",
     component: activityLog,
@@ -330,6 +312,7 @@ const routes = [
     name: "Direct Fulfilment",
     component: direct,
   },
+  ...integrations,
 ];
 
 const router = createRouter({

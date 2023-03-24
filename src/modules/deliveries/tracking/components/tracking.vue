@@ -6,7 +6,7 @@
     </div>
     <div class="col-4" v-scroll:#scroll-target="onScroll">
       <locations
-        :deliveryLocation="formatDeliveryLocation"
+        :deliveryLocation="this.deliveryLocation"
         :pickupLocation="this.pickUpLocation"
       />
       <timeline />
@@ -26,6 +26,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import mqtt from "../../../../mixins/mqtt";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import deliveryInfo from "./directFulfilment/deliveryInfo.vue";
@@ -53,7 +54,7 @@ export default {
       dropOffInstructions: "",
     };
   },
-
+  mixins: [mqtt],
   computed: {
     ...mapGetters([
       "getLoader",
@@ -71,6 +72,8 @@ export default {
   },
   mounted() {
     this.fetchOrder();
+    // this.initiateMQTT();
+    // this.getPartnersLastPosition();
   },
   watch: {
     "$store.getters.getDirectDeliveriesTrackingData":

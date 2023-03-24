@@ -96,6 +96,7 @@ export default {
       "getDirectOrderDetailsStep",
       "getPaymnetMethods",
       "getUserDetails",
+      "getDirectOrderPartner",
     ]),
     pickUpLocation() {
       return this.getMarkers[0]?.location;
@@ -109,7 +110,10 @@ export default {
         pickup.delivery_item &&
         (pickup.schedule_option === 0 ||
           (pickup.schedule_option === 1 && pickup.pickup_date)) &&
-        pickup.pickup_phone
+        pickup.pickup_phone &&
+        ((this.getDirectOrderPartner?.agent_id &&
+          this.getDirectOrderDetails?.selectPartner) ||
+          !this.getDirectOrderDetails?.selectPartner)
       );
     },
     deliveryValidation() {
@@ -189,6 +193,7 @@ export default {
       "setSelectedVehicleType",
       "setDirectOrderDetails",
       "setDirectOrderDetailsStep",
+      "setDirectOrderPartner",
     ]),
     ...mapActions(["requestAxiosPost"]),
     changeStage(stage) {
@@ -309,6 +314,15 @@ export default {
           ],
         };
       });
+      if (
+        this.getDirectOrderPartner?.agent_id &&
+        this.getDirectOrderDetails?.selectPartner
+      ) {
+        payload.proposed_shipping_agent = {
+          agent_id: this.getDirectOrderPartner?.agent_id,
+          agent_phone_number: this.getDirectOrderPartner?.agent_phone_number,
+        };
+      }
       this.orderLoadingStatus = true;
       this.requestAxiosPost({
         app: process.env.FULFILMENT_SERVER,
@@ -341,6 +355,7 @@ export default {
         destinations: [],
       });
       this.setDirectOrderDetailsStep(0);
+      this.setDirectOrderPartner({});
     },
   },
 };

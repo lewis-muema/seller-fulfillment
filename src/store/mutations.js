@@ -443,4 +443,7 @@ export default {
   setDirectOrderDetailsStep(state, val) {
     state.directOrderDetailsStep = val;
   },
+  setDirectOrderPartner(state, val) {
+    state.directOrderPartner = val;
+  },
 };

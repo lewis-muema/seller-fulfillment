@@ -128,6 +128,9 @@ export default {
         const payload = {
           app: process.env.FULFILMENT_API,
           endpoint: "v1/internal/users",
+          params: {
+            enabled: true,
+          },
         };
 
         const { status, data } = await this.getIntegrations(payload);

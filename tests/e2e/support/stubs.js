@@ -18,9 +18,12 @@ import updateConsignmentOrder from "../fixtures/updateConsignmentOrder.json";
 import updateDeliveryOrder from "../fixtures/updateDeliveryOrder.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
+import pointToPointStatistics from "../fixtures/pointToPointStatistics.json";
 // import exportTasks from "../fixtures/exportTasks.json";
 import consignmentStatistics from "../fixtures/consignmentStatistics.json";
 import deliveries from "../fixtures/deliveries.json";
+import onDemandDeliveries from "../fixtures/onDemandDeliveries.json";
+import trackingOnDemand from "../fixtures/trackingOnDemand.json";
 import consignments from "../fixtures/consignments.json";
 import exportTasks from "../fixtures/exportTasks.json";
 import deliveriesStatistics from "../fixtures/deliveriesStatistics.json";
@@ -141,6 +144,22 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: deliveries,
     }
   ).as("deliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point?`,
+    {
+      statusCode: 200,
+      body: onDemandDeliveries,
+    }
+  ).as("onDemandDeliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point/P2P-YZIBU-09912`,
+    {
+      statusCode: 200,
+      body: trackingOnDemand,
+    }
+  ).as("trackingOnDemand");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments?`,
@@ -285,6 +304,15 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: trackingDeliveries,
     }
   ).as("trackingDelivery");
+
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point/statistics`,
+    {
+      statusCode: 200,
+      body: pointToPointStatistics,
+    }
+  ).as("pointToPointStatistics");
 
   cy.intercept(
     "PATCH",

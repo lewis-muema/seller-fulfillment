@@ -1,0 +1,87 @@
+{
+  "message":"order.list.success",
+  "data":{
+    "orders":[
+      {
+        "order_id":"P2P-YZIBU-09912",
+        "order_status":"ORDER_RECEIVED",
+        "order_type":"POINT_TO_POINT",
+        "created_date":1679604144000,
+        "business_id":"B-VSW-5971",
+        "updated_date":1679604146000,
+        "scheduled_date":0,
+        "instructions":[
+          {
+            "name":"Dorcas Cherono",
+            "phone_number":"+254 794 375045",
+            "secondary_phone_number":"",
+            "delivery_location":{
+              "description":"Kinoo, Kikuyu, Kenya",
+              "longitude":36.6930253,
+              "latitude":-1.2526258,
+              "zone_name":null,
+              "zone_id":null
+            },
+            "house_location":"Kinoo, Kikuyu, Kenya",
+            "delivery_instructions":"Test instructions",
+            "actions":[
+              {
+                "package_uuid":"41476ece-86c9-4ce9-be4f-26b5c3e6306a",
+                "package_description":"furniture",
+                "action_type":"PICK_PACKAGE"
+              }
+            ]
+          },
+          {
+            "name":"Dorcas Cherono",
+            "phone_number":"+254 794 375045",
+            "secondary_phone_number":"",
+            "delivery_location":{
+              "description":"Ngong Road, Nairobi, Kenya",
+              "longitude":36.7906854,
+              "latitude":-1.2994605,
+              "zone_name":null,
+              "zone_id":null
+            },
+            "house_location":"Ngong Road, Nairobi, Kenya",
+            "delivery_instructions":"test instructions",
+            "actions":[
+              {
+                "package_uuid":"41476ece-86c9-4ce9-be4f-26b5c3e6306a",
+                "package_description":"furniture",
+                "action_type":"DROP_PACKAGE"
+              }
+            ]
+          }
+        ],
+        "vehicle_type":"MOTOR_BIKE",
+        "vehicle_type_option":"BIKE_WITH_BOX",
+        "delivery_progress_ratio":0.25,
+        "order_event_status":"event.point.to.point.created",
+        "proposed_shipping_agent":null,
+        "assigned_shipping_agent":null,
+        "invoice_summary":{
+          "invoice_id":"P2P-IV-EQOB-4861",
+          "invoiced_amount":0.0,
+          "currency":"KES",
+          "payment_urgency":"PRE_PAY"
+        },
+        "path_data":{
+          "path_polyline":[
+            "lssFgs}~EfCkA`BVbF|@b@gBDQJe@nE}P^}APo@x@uAxA}F|@gDPw@dB_HfBiHrBiIl@_DXoBn@kG~AkPXiCp@yGZgDPkE?aDC{@I}Ae@gCU_B]uBg@sDWmCIiBAgCBkBHoARkCFsAJaAJo@ZwAbAqDrAeDv@eBjA{BjDqGrAiDx@_Dl@mCb@uD^wFn@yIR}DFqE@iH?gDKoMQgLAeFCiFMqIEcEMoFAsBEwG?gAB}BBaNSuDA_CUyC]oJc@mJu@cHWeDKqBo@_F_@wAmF}K{AuC{@aCa@eBwAyKKiBCy@SuAGc@kAcKWeBUmAQw@GCGCMMGQCQBSDQTQXIR?PBRL|AXvBMb@@^FTHh@Zf@n@Vd@vA~CbAtBl@dAn@t@XXZPz@^fARx@Hp@ApAYbBm@bAo@pA{@nCaBvCcBbB_Al@_@^O|@Yd@IbBO`ACtABjCRhBVhAXlAb@n@VbAl@|CbC`E|CpAbAZV\\N\\N^Rn@\\RBF?x@k@jA{@d@Y\\ObA[x@a@h@_@h@i@d@k@Tc@\\eAPkAHkAZuEXaDb@sDHeAPuCJg@Vo@`BwCtC_Fd@w@d@aAT_@lAyBfCsEvBsDhAmBPYJq@DMACAKFSRKH?\\[\\_@rA{Bx@wAbA}Ap@gAZSl@WDEDALB`@h@D@@@fAXJDLHtB`@tIrAt@DtAN@AB?BAF@Zj@HF~@C`@BrDWnCW`@Mn@GbBO|@IjDYfHo@LGl@In@AVHj@Ez@GdDYhD_@O{IEwCjCE~CIVA"
+          ],
+          "path_total_distance":17.0,
+          "path_total_distance_unit_of_measure":"KILOMETER"
+        }
+      }
+    ],
+    "pagination":{
+      "current_page":0,
+      "max":5,
+      "page_count":1
+    }
+  },
+  "errors":[
+
+  ]
+}

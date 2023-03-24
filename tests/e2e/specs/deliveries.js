@@ -406,7 +406,7 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it.only("can cancel an order to a later date ", () => {
+  it("can cancel an order to a later date ", () => {
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -430,4 +430,61 @@ describe("deliveries modules", () => {
     });
   });
 });
-describe("on demand modules", () => {});
+describe("on demand modules", () => {
+  it("can load on demand deliveries unless show deliveries not found", () => {
+    cy.wait("@onDemandDeliveries", { timeout }).then((delivery) => {
+      expect(delivery.response.statusCode).to.equal(200);
+      if (delivery.response.body.data.orders.length) {
+        cy.get(".deliveries-ondemand-to-customers-container").should(
+          "be.visible"
+        );
+      } else {
+        cy.get(".no-deliveries-omdemand-to-customers-container").should(
+          "be.visible"
+        );
+      }
+    });
+  });
+  it.only("can compute customer deliveries statistics of orders e.g completed, in transit", () => {
+    cy.setToken();
+    cy.dashboardStubs();
+    cy.crossDockingStubs();
+    cy.paymentStubs();
+    cy.authStubs();
+    cy.deliveriesStubs();
+    cy.visit("deliveries/direct-deliveries/");
+    cy.wait("@pointToPointStatistics", { timeout }).then((pointToPointStat) => {
+      expect(pointToPointStat.response.statusCode).to.equal(200);
+      if (Object.keys(pointToPointStat.response.body.data).length) {
+        let pendingCount = (
+          parseInt(
+            pointToPointStat.response.body.data.grouped_by_status_count
+              .ORDER_RECEIVED
+          ) +
+          parseInt(
+            pointToPointStat.response.body.data.grouped_by_status_count
+              .ORDER_IN_PROCESSING
+          )
+        ).toString();
+
+        let inTransitCount =
+          pointToPointStat.response.body.data.grouped_by_status_count.ORDER_IN_TRANSIT.toString();
+
+        let failedCount =
+          pointToPointStat.response.body.data.grouped_by_status_count.ORDER_FAILED.toString();
+
+        let completedCount =
+          pointToPointStat.response.body.data.grouped_by_status_count.ORDER_COMPLETED.toString();
+
+        let canceledCount =
+          pointToPointStat.response.body.data.grouped_by_status_count.ORDER_CANCELED.toString();
+        cy.get(".pending-badge").contains(pendingCount);
+        cy.get(".inTransit-badge").contains(inTransitCount);
+        cy.get(".failed-badge").contains(failedCount);
+        cy.get(".completed-badge").contains(completedCount);
+        cy.get(".cancelled-badge").contains(canceledCount);
+      }
+    });
+  });
+  it("can show details of one order when `track order` link is clicked e.g locations, delivery,recipient info, products", () => {});
+});

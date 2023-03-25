@@ -1,5 +1,10 @@
 <template>
   <div class="dashbard-container">
+    <div>
+      <!--      <div>A DOM element on your page</div>-->
+      <!--      <h2 classes="step-1">Blog Post Title</h2>-->
+      <v-tour name="myTour" :steps="steps"></v-tour>
+    </div>
     <div v-if="onboardingStatus">
       <onboarding />
     </div>
@@ -23,7 +28,7 @@
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
-          <wallet-balance />
+          <wallet-balance class="v-step-1" />
           <side-card />
           <articles />
         </v-col>
@@ -58,6 +63,27 @@ export default {
   data() {
     return {
       tab: null,
+      steps: [
+        {
+          header: {
+            title: "Welcome to the new homescreen",
+          },
+          target: '[data-tour-step="1"]',
+          content: `Let’s checkout what we have changed.`,
+        },
+        {
+          target: ".v-step-1",
+          content: `This link will take you to`,
+        },
+        {
+          target: '[data-tour-step="3"]',
+          content: `This is a header element. It's big.`,
+          params: {
+            // tour popup position.
+            placement: "bottom",
+          },
+        },
+      ],
     };
   },
   computed: {
@@ -84,6 +110,8 @@ export default {
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
+    this.$tours["myTour"].start();
+    // this.introJs().start();
   },
   methods: {
     ...mapMutations([
@@ -261,5 +289,10 @@ export default {
   max-width: 92% !important;
   margin: 0px !important;
   margin-bottom: 30px !important;
+}
+.v-step[data-v-da2d894c] {
+  background: none !important;
+  color: #000000 !important;
+  width: 340px !important;
 }
 </style>

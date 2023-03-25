@@ -17,9 +17,7 @@ export default {
   name: "App",
   components: { Canvas },
   mixins: [eventsMixin],
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
   watch: {
     $route(to) {
       if (

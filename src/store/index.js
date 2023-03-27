@@ -50,6 +50,7 @@ export default createStore({
         destinations: [],
       },
       directOrderPartner: {},
+      directOrderNumber: "",
       selectedVehicleType: {},
       mapStatus: false,
       locationSuggestions: [],

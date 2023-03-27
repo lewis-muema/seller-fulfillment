@@ -250,5 +250,6 @@
   "doYouHaveAPreferredRider": "Do you have a preferred rider?",
   "enterDriversPhone": "Enter driver’s phone number or the vehicle’s number plate to pair",
   "vehicleIsNotRegistered": "Vehicle is not registered on the Sendy platform. Try again with a different number plate",
-  "yourOrderWillBePairedWith": "Your order will be paired with:"
+  "yourOrderWillBePairedWith": "Your order will be paired with:",
+  "confirmSubmitOrder": "Confirm & Submit Order"
 }

@@ -59,7 +59,11 @@
         v-loading="orderLoadingStatus"
         @click="paymentValidation ? placeOrder() : paymentValidationError()"
       >
-        {{ $t("deliveries.confirmMakePayment") }}
+        {{
+          postPayEnabled
+            ? $t("deliveries.confirmSubmitOrder")
+            : $t("deliveries.confirmMakePayment")
+        }}
       </button>
     </div>
   </div>
@@ -97,6 +101,8 @@ export default {
       "getPaymnetMethods",
       "getUserDetails",
       "getDirectOrderPartner",
+      "getBusinessDetails",
+      "getDirectOrderNumber",
     ]),
     pickUpLocation() {
       return this.getMarkers[0]?.location;
@@ -140,9 +146,14 @@ export default {
       });
       return method;
     },
+    postPayEnabled() {
+      return this.getBusinessDetails?.settings
+        ?.direct_fulfilment_post_pay_enabled;
+    },
   },
   mounted() {
     this.changeStage(this.getDirectOrderDetailsStep);
+    this.redirectToOrder();
   },
   data() {
     return {
@@ -194,6 +205,7 @@ export default {
       "setDirectOrderDetails",
       "setDirectOrderDetailsStep",
       "setDirectOrderPartner",
+      "setDirectOrderNumber",
     ]),
     ...mapActions(["requestAxiosPost"]),
     changeStage(stage) {
@@ -331,10 +343,18 @@ export default {
       }).then((response) => {
         this.orderLoadingStatus = false;
         if (response.status === 200) {
-          this.resetFlow();
-          this.$router.push(
-            `/deliveries/track-direct-deliveries/${response.data.data.order_id}`
-          );
+          this.setDirectOrderNumber(response.data.data.order_id);
+          if (
+            response?.data?.data?.payment_instruction?.payment_urgency ===
+            "PRE_PAY"
+          ) {
+            const billing_cycle =
+              response?.data?.data?.payment_instruction?.billing_cycle;
+            this.selectPaymentOptions(
+              billing_cycle?.amount_to_charge,
+              billing_cycle?.billing_cycle_instance_id
+            );
+          }
         } else {
           ElNotification({
             title: "",
@@ -343,6 +363,13 @@ export default {
           });
         }
       });
+    },
+    redirectToOrder() {
+      if (this.getDirectOrderNumber) {
+        const orderNumber = this.getDirectOrderNumber;
+        this.resetFlow();
+        this.$router.push(`/deliveries/track-direct-deliveries/${orderNumber}`);
+      }
     },
     resetFlow() {
       this.setMarkers([]);
@@ -356,6 +383,31 @@ export default {
       });
       this.setDirectOrderDetailsStep(0);
       this.setDirectOrderPartner({});
+      this.setDirectOrderNumber("");
+    },
+    selectPaymentOptions(amount, billingCycleId) {
+      const buPayload = {
+        user_id: this.getBusinessDetails.business_id,
+        entity_id: 6,
+        currency: this.getBusinessDetails.currency,
+        country_code: this.getBusinessDetails.country_code,
+        amount: amount,
+        success_callback_url: "",
+        fail_callback_url: "",
+        txref: billingCycleId,
+        bulk: false,
+        paybill_no: "",
+        email: this.getUserDetails.email,
+        authToken: localStorage.accessToken,
+        firstname: this.getUserDetails.first_name,
+        lastname: this.getUserDetails.last_name,
+        payment_options: "",
+        company_code: this.getBusinessDetails.company_code,
+        locale: this.getBusinessDetails.language,
+        pay_direction: "PAY_IN",
+      };
+
+      this.$paymentInit(buPayload, "choose-payment-checkout");
     },
   },
 };

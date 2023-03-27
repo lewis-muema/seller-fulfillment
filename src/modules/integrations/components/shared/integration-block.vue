@@ -17,7 +17,10 @@
       </span>
     </v-col>
     <v-col cols="3" class="integration-content__columns">
-      <span class="integration-content__columns--remove-btn">
+      <span
+        class="integration-content__columns--remove-btn"
+        @click="$emit('revokeSalesChannel', integration)"
+      >
         <img
           src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/remove-store.svg"
         /><a href="#" class="integration-content__text--remove">{{
@@ -60,10 +63,6 @@ export default {
   &__columns {
     display: flex;
     overflow: scroll;
-
-    &--remove-btn {
-      visibility: hidden;
-    }
   }
 
   &__added-by {

@@ -41,7 +41,12 @@
             <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
           </div>
         </div>
-        <integrationBlock :integration="integrations.platform" v-else />
+        <integrationBlock
+          :integration="integrations.platform"
+          :key="integrations.platform.channelId"
+          @revokeSalesChannel="revokeSalesChannel"
+          v-else
+        />
       </v-card-item>
       <v-card-item>
         <div class="integration-text mb-1" data-test="heading-api-keys">
@@ -80,7 +85,12 @@
             <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
           </div>
         </div>
-        <integrationBlock :integration="integrations.apiKey" v-else />
+        <integrationBlock
+          :integration="integrations.apiKey"
+          :key="integrations.apiKey.channelId"
+          @revokeSalesChannel="revokeSalesChannel"
+          v-else
+        />
       </v-card-item>
     </v-card>
     <addStore
@@ -101,6 +111,7 @@ import { getTimeAgo } from "@/utils/time";
 import { mapActions } from "vuex";
 import addApiKeyDialog from "./api/dialog.vue";
 import integrationBlock from "./shared/integration-block.vue";
+import { ElNotification } from "element-plus";
 
 export default {
   components: { addStore, addApiKeyDialog, integrationBlock },
@@ -118,12 +129,18 @@ export default {
     this.getMerchantIntegrations();
   },
   methods: {
-    ...mapActions(["getIntegrations"]),
+    ...mapActions([
+      "getIntegrations",
+      "revokeApiKey",
+      "removePlatformIntegration",
+    ]),
     onClickChild() {
       this.addStoreDialog = false;
     },
     async getMerchantIntegrations() {
       this.loading = true;
+      this.integrations.platform = {};
+      this.integrations.apiKey = {};
       try {
         const payload = {
           app: process.env.FULFILMENT_API,
@@ -144,6 +161,7 @@ export default {
                   name: salesChannel.name,
                   dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
                   channelId: salesChannel.channel_id,
+                  url: salesChannel.salesChannelProperties.url,
                 };
                 break;
               case 3:
@@ -159,6 +177,73 @@ export default {
         }
       } catch (error) {
         return error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    revokeSalesChannel(integration) {
+      const { channelId, url } = integration;
+      switch (channelId) {
+        case 3:
+          this.removeApiKey();
+          break;
+        case 2:
+          this.removeIntegration(url);
+          break;
+      }
+    },
+    async removeIntegration(storeUrl) {
+      this.loading = true;
+      try {
+        const payload = {
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/stores/opt-out",
+          values: {
+            storeUrl,
+          },
+        };
+        const { status } = await this.removePlatformIntegration(payload);
+        if (status === 200) {
+          ElNotification({
+            title: "",
+            message: "Successful removing integration",
+            type: "success",
+          });
+        }
+      } catch (error) {
+        ElNotification({
+          title: "",
+          message: `Unsuccessful removing platform integration ${error}`,
+          type: "error",
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+    async removeApiKey() {
+      this.loading = true;
+      try {
+        const payload = {
+          app: process.env.FULFILMENT_API,
+          endpoint: "v1/internal/api/token",
+          params: {
+            enabled: true,
+          },
+        };
+        const { status } = await this.revokeApiKey(payload);
+        if (status === 200) {
+          ElNotification({
+            title: "",
+            message: "Successful removing API key",
+            type: "success",
+          });
+        }
+      } catch (error) {
+        ElNotification({
+          title: "",
+          message: `Unsuccessful removing API Key ${error}`,
+          type: "error",
+        });
       } finally {
         this.loading = false;
       }

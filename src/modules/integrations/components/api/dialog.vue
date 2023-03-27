@@ -123,6 +123,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import { ElNotification } from "element-plus";
 
 export default {
   props: {
@@ -179,12 +180,20 @@ export default {
 
         if (status === 200) {
           this.apiKey = data.token.token;
+          this.stage = 3;
+        } else {
+          throw data;
         }
       } catch (error) {
+        this.stage = 1;
+        ElNotification({
+          title: "",
+          message: `Error generating API Key ${error.message}`,
+          type: "error",
+        });
         return error;
       } finally {
         this.loading = false;
-        this.stage = 3;
       }
     },
   },

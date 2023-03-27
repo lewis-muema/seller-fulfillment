@@ -446,4 +446,7 @@ export default {
   setDirectOrderPartner(state, val) {
     state.directOrderPartner = val;
   },
+  setDirectOrderNumber(state, val) {
+    state.directOrderNumber = val;
+  },
 };

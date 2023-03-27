@@ -189,8 +189,8 @@ export default {
           this.sendSegmentEvents({
             event: "Sign_in",
             data: {
-              userId: data.data.data.business.business_id,
-              email: this.params.emailAddress,
+              userId: data?.data?.data?.business_id,
+              email: this.params?.emailAddress,
               clientType: "web",
               device: "desktop",
             },

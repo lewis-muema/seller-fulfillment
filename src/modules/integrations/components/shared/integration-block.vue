@@ -23,9 +23,12 @@
       >
         <img
           src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/remove-store.svg"
-        /><a href="#" class="integration-content__text--remove">{{
-          $t("merchant.remove")
-        }}</a>
+        /><a
+          href="#"
+          class="integration-content__text--remove"
+          :data-test="`remove-channel-${integration.channelId}`"
+          >{{ $t("merchant.remove") }}</a
+        >
       </span>
     </v-col>
   </v-row>

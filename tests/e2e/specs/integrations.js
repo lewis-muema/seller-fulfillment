@@ -29,6 +29,26 @@ describe("Integrations Page", () => {
       );
     });
   });
+
+  it("should be able to remove an Platfrom", () => {
+    cy.getByData("remove-channel-2").click();
+    cy.wait("@deleteIntegration").then(() => {
+      cy.get("#notification_1").should(
+        "contain",
+        "Successful removing integration"
+      );
+    });
+  });
+
+  it("should be able to revoke an API key", () => {
+    cy.getByData("remove-channel-3").click();
+    cy.wait("@deleteApiToken").then(() => {
+      cy.get("#notification_1").should(
+        "contain",
+        "Successful removing API key"
+      );
+    });
+  });
 });
 
 describe("Integration Process", () => {

@@ -37,12 +37,23 @@
   </div>
 </template>
 <script>
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
+
 export default {
   name: "SelectComponent",
+  mixins: [eventsMixin],
   watch: {
     selectedStore: {
       handler: function (value) {
         this.$emit("update", value);
+        this.sendSegmentEvents({
+          event: "[merchant] Selected Platform store",
+          data: {
+            userId: this.getUserDetails.user_id,
+            store: value,
+          },
+        });
       },
     },
   },
@@ -56,6 +67,7 @@ export default {
     return {
       selectedStore: null,
       optionsVisible: false,
+      getUserDetails: inject("getUserDetails"),
     };
   },
   methods: {

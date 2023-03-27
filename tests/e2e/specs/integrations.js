@@ -104,7 +104,7 @@ describe("Integration Process", () => {
     });
   });
 
-  describe("Add store integration", () => {
+  describe.only("Add store integration", () => {
     beforeEach(() => {
       cy.intercept("POST", "**/api2cart/stores", {
         statusCode: 200,

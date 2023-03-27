@@ -90,9 +90,12 @@
 import { mapActions } from "vuex";
 import Stores from "../classes/stores";
 import headerComponent from "./header.vue";
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
 
 export default {
   name: "integrationSetup",
+  mixins: [eventsMixin],
   components: {
     headerComponent,
   },
@@ -124,6 +127,7 @@ export default {
       resultMessage: "",
       storeObj: null,
       hasError: false,
+      getUserDetails: inject("getUserDetails"),
     };
   },
   mounted() {
@@ -180,6 +184,16 @@ export default {
         };
 
         const { data } = await this.connectStore(fullPayload);
+
+        this.sendSegmentEvents({
+          event: "[merchant] Integrate Platform store",
+          data: {
+            userId: this.getUserDetails.user_id,
+            payload: fullPayload,
+            response: data,
+          },
+        });
+
         this.connecting = false;
 
         if (data.return_code === 0) {

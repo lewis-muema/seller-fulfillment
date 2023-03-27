@@ -29,11 +29,27 @@
 
 <script>
 import headerComponent from "./header.vue";
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
 
 export default {
   name: "ThankYou",
+  mixins: [eventsMixin],
   components: {
     headerComponent,
+  },
+  mounted() {
+    this.sendSegmentEvents({
+      event: "[merchant] Store integration success page",
+      data: {
+        userId: this.getUserDetails.user_id,
+      },
+    });
+  },
+  data() {
+    return {
+      getUserDetails: inject("getUserDetails"),
+    };
   },
   props: {
     storeName: {

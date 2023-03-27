@@ -80,9 +80,12 @@
 import integrationSetup from "./integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
 import headerComponent from "./header.vue";
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
 
 export default {
   components: { integrationSetup, headerComponent },
+  mixins: [eventsMixin],
   props: {
     detailsDialog: {
       type: Boolean,
@@ -108,6 +111,7 @@ export default {
         (v) => (v && v.length <= 20) || this.$t("merchant.characterCheck"),
       ],
       urlRules: [(v) => isValidUrl(v) || this.$t("merchant.storeUrlRequired")],
+      getUserDetails: inject("getUserDetails"),
     };
   },
   mounted() {
@@ -127,6 +131,16 @@ export default {
     async validate() {
       const { valid } = await this.$refs.form.validate();
       if (valid) this.storeSetupDialog = true;
+      this.sendSegmentEvents({
+        event: "[merchant] Selected store platform from dropdown",
+        data: {
+          userId: this.getUserDetails.user_id,
+          payload: {
+            storeName: this.storeName,
+            storeUrl: this.storeUrl,
+          },
+        },
+      });
     },
     reset() {
       this.$refs.form.reset();

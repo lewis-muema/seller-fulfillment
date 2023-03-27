@@ -1,15 +1,10 @@
 <template>
   <div class="dashbard-container">
-    <div>
-      <!--      <div>A DOM element on your page</div>-->
-      <!--      <h2 classes="step-1">Blog Post Title</h2>-->
-      <v-tour name="myTour" :steps="steps"></v-tour>
-    </div>
     <div v-if="onboardingStatus">
       <onboarding />
     </div>
     <div v-else>
-      <wallet-banner class="dashboard-payment-banner" />
+      <wallet-banner class="dashboard-payment-banner first-element" />
       <makePayment />
       <span class="">
         <h5 class="dashboard-welcome-message">
@@ -28,9 +23,9 @@
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
-          <wallet-balance class="v-step-1" />
-          <side-card />
-          <articles />
+          <wallet-balance class="v-step-2" />
+          <side-card class="v-step-3" />
+          <articles class="v-step-4" />
         </v-col>
       </v-row>
     </div>
@@ -47,6 +42,7 @@ import sideCard from "@/modules/dashboard/components/sideCard";
 import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
 import walletBanner from "../payments/wallet/components/walletBanner.vue";
+import introJs from "intro.js";
 import moment from "moment";
 
 export default {
@@ -63,27 +59,51 @@ export default {
   data() {
     return {
       tab: null,
-      steps: [
-        {
-          header: {
-            title: "Welcome to the new homescreen",
-          },
-          target: '[data-tour-step="1"]',
-          content: `Let’s checkout what we have changed.`,
-        },
-        {
-          target: ".v-step-1",
-          content: `This link will take you to`,
-        },
-        {
-          target: '[data-tour-step="3"]',
-          content: `This is a header element. It's big.`,
-          params: {
-            // tour popup position.
-            placement: "bottom",
-          },
-        },
-      ],
+      // steps: [
+      //   {
+      //     header: {
+      //       title: "Welcome to the new homescreen",
+      //     },
+      //     target: '[data-tour-step="1"]',
+      //     content: `Let’s checkout what we have changed.`,
+      //   },
+      //   {
+      //     header: {
+      //       title: "Choose your action here",
+      //     },
+      //     target: ".v-step-1",
+      //     content: `Click on any item to select.`,
+      //   },
+      //   {
+      //     header: {
+      //       title: "View your account balance",
+      //     },
+      //     target: ".v-step-2",
+      //     content: `Click to access your wallet.`,
+      //   },
+      //   {
+      //     header: {
+      //       title: "View stats summary",
+      //     },
+      //     target: ".v-step-3",
+      //     content: `The stats have moved here. Select a category to view full details.`,
+      //   },
+      //   {
+      //     header: {
+      //       title: "Learn more ways to do more with Sendy",
+      //     },
+      //     target: ".v-step-4",
+      //     content: `Discover offers and products`,
+      //   },
+      //   {
+      //     target: '[data-tour-step="3"]',
+      //     content: `This is a header element. It's big.`,
+      //     params: {
+      //       // tour popup position.
+      //       placement: "bottom",
+      //     },
+      //   },
+      // ],
     };
   },
   computed: {
@@ -110,8 +130,40 @@ export default {
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
-    this.$tours["myTour"].start();
-    // this.introJs().start();
+    // introJs().setOption("nextLabel", " > ");
+    introJs()
+      .setOptions({
+        steps: [
+          {
+            title: "Welcome to the new homescreen",
+            intro: "Let’s checkout what we have changed",
+          },
+          {
+            title: "Choose your action here",
+            element: document.querySelector(".desktop-quick-links-tabs-tour"),
+            intro: "Click on any item to select",
+            position: "bottom",
+          },
+          {
+            title: "Farewell!",
+            element: document.querySelector(".v-step-2"),
+            intro: "And this is our final step!",
+          },
+          {
+            title: "Farewell!",
+            element: document.querySelector(".v-step-3"),
+            intro: "And this is our final step!",
+          },
+          {
+            title: "Farewell!",
+            element: document.querySelector(".v-step-4"),
+            intro: "And this is our final step!",
+          },
+        ],
+        tooltipClass: "introjs-tooltip",
+        showBullets: false,
+      })
+      .start();
   },
   methods: {
     ...mapMutations([
@@ -290,9 +342,52 @@ export default {
   margin: 0px !important;
   margin-bottom: 30px !important;
 }
-.v-step[data-v-da2d894c] {
-  background: none !important;
-  color: #000000 !important;
-  width: 340px !important;
+.introjs-tooltip {
+  background-color: #ffffff !important;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  min-width: 350px !important;
+}
+.introjs-tooltip .introjs-tooltip-title {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 24px;
+  color: #303133;
+  padding-top: 20px;
+}
+.introjs-tooltip .introjs-tooltiptext {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #909399 !important;
+}
+.introjs-tooltip .introjs-nextbutton {
+  background: #324ba8;
+  border-radius: 6px;
+  text-shadow: none;
+  color: white;
+  border: none;
+  float: left;
+  box-sizing: unset !important;
+}
+.introjs-tooltip .introjs-tooltipbuttons {
+  border-top: none;
+}
+.introjs-tooltip .introjs-prevbutton {
+  display: none;
+}
+.introjs-tooltip .introjs-skipbutton {
+  border-radius: 50%;
+  font-size: 20px;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
 }
 </style>

@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import moment from "moment";
 import VueGoogleMaps from "@fawmi/vue-google-maps";
-import Vue3Tour from "vue3-tour";
 
 import "vue3-tour/dist/vue3-tour.css";
 // import { initializeApp } from "firebase/app";
@@ -92,7 +91,6 @@ createApp(App)
     },
   })
   .use(i18n)
-  .use(Vue3Tour)
   .use(payments, {
     store,
     router,

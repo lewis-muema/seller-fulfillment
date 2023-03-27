@@ -23,6 +23,7 @@
           <div class="integration-content__no-integration--section">
             <button
               class="integration-content__no-integration--btn"
+              data-test="add-platform-integration"
               @click="addStoreDialog = true"
             >
               <img

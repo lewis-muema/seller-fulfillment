@@ -1,50 +1,55 @@
 {
-    "availableIntegrations": {
-  "id": "c33bef1f-16fe-424f-a807-4121105b2d11",
-  "business_id": "B-CZOC-0141",
-  "business_email": "jXQB8IhEdc@placeholderemail.com",
-  "business_name": "Eugene Test",
-  "currency": "KES",
-  "country": "KENYA",
-  "phone_number": null,
-  "salesChannels": [
-    {
-      "id": "18675699-8fe9-4d14-8704-4d555681447e",
-      "user_id": "c33bef1f-16fe-424f-a807-4121105b2d11",
-      "channel_id": 2,
-      "name": "Eugene Test - API2Cart",
-      "code": "SC-HJUU-3836",
-      "created_at": "2023-03-14T07:54:08.062+00:00",
-      "updated_at": "2023-03-14T07:54:08.062+00:00",
-      "salesChannelProperties": {
-        "channel_id": "2",
-        "store_key": "$argon2id$v=19$t=3,m=4096,p=1$HjnOWG+kk+0JPp+M5E/RTw$PVibYXjmx4rI64LpfE5JaWu18CICxpM9mJwAJzGHU+s",
-        "name": "Eugene Test",
-        "code": "EUGENE TEST",
-        "email": "jXQB8IhEdc@placeholderemail.com",
-        "defaultCurrency": "KES",
-        "country": "KENYA",
-        "url": "sc-hjuu-3836.fly.dev"
+  "availableIntegrations": {
+    "id": "c33bef1f-16fe-424f-a807-4121105b2d11",
+    "business_id": "B-CZOC-0141",
+    "business_email": "jXQB8IhEdc@placeholderemail.com",
+    "business_name": "Eugene Test",
+    "currency": "KES",
+    "country": "KENYA",
+    "phone_number": null,
+    "salesChannels": [
+      {
+        "id": "18675699-8fe9-4d14-8704-4d555681447e",
+        "user_id": "c33bef1f-16fe-424f-a807-4121105b2d11",
+        "channel_id": 2,
+        "name": "Eugene Test - API2Cart",
+        "code": "SC-HJUU-3836",
+        "created_at": "2023-03-14T07:54:08.062+00:00",
+        "updated_at": "2023-03-14T07:54:08.062+00:00",
+        "salesChannelProperties": {
+          "channel_id": "2",
+          "store_key": "$argon2id$v=19$t=3,m=4096,p=1$HjnOWG+kk+0JPp+M5E/RTw$PVibYXjmx4rI64LpfE5JaWu18CICxpM9mJwAJzGHU+s",
+          "name": "Eugene Test",
+          "code": "EUGENE TEST",
+          "email": "jXQB8IhEdc@placeholderemail.com",
+          "defaultCurrency": "KES",
+          "country": "KENYA",
+          "url": "sc-hjuu-3836.fly.dev"
+        }
+      },
+      {
+        "id": "658ec918-74e3-4039-81c2-9921acbc119d",
+        "user_id": "c33bef1f-16fe-424f-a807-4121105b2d11",
+        "channel_id": 3,
+        "name": "Eugene Test - API",
+        "code": "SC-OJOO-1157",
+        "created_at": "2023-03-22T08:57:43.701+00:00",
+        "updated_at": "2023-03-22T08:57:43.701+00:00",
+        "salesChannelProperties": {
+          "channel_id": "3",
+          "name": "Eugene Test",
+          "code": "EUGENE TEST",
+          "email": "jXQB8IhEdc@placeholderemail.com",
+          "defaultCurrency": "KES",
+          "country": "KENYA",
+          "url": "sc-ojoo-1157.fly.dev"
+        }
       }
-    },
-    {
-      "id": "658ec918-74e3-4039-81c2-9921acbc119d",
-      "user_id": "c33bef1f-16fe-424f-a807-4121105b2d11",
-      "channel_id": 3,
-      "name": "Eugene Test - API",
-      "code": "SC-OJOO-1157",
-      "created_at": "2023-03-22T08:57:43.701+00:00",
-      "updated_at": "2023-03-22T08:57:43.701+00:00",
-      "salesChannelProperties": {
-        "channel_id": "3",
-        "name": "Eugene Test",
-        "code": "EUGENE TEST",
-        "email": "jXQB8IhEdc@placeholderemail.com",
-        "defaultCurrency": "KES",
-        "country": "KENYA",
-        "url": "sc-ojoo-1157.fly.dev"
-      }
+    ]
+  },
+  "createStore": {
+      "data": {
+        "return_code":0
     }
-  ]
-}
+  }
 }

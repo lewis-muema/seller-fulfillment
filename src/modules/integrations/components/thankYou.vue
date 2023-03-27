@@ -8,7 +8,10 @@
           class="congratulations-container__image"
         />
       </div>
-      <div class="congratulations-container__heading">
+      <div
+        class="congratulations-container__heading"
+        data-test="congratulations"
+      >
         {{ $t("merchant.congratulations") }}
       </div>
       <div class="congratulations-container__text">

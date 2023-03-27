@@ -1,4 +1,5 @@
 import integrations from "../fixtures/integrations.json";
+import stores from "../../../src/modules/integrations/constants/storeFields.json";
 
 const { salesChannels } = JSON.parse(
   JSON.stringify(integrations.availableIntegrations)
@@ -101,5 +102,42 @@ describe("Integration Process", () => {
         cy.getByData("key-copied-txt").should("contain", "API Key copied");
       });
     });
+  });
+
+  describe("Add store integration", () => {
+    beforeEach(() => {
+      cy.intercept("POST", "**/api2cart/stores", {
+        statusCode: 200,
+        body: integrations.createStore,
+      }).as("createStores");
+    });
+
+    for (const store of Object.keys(stores)) {
+      it(`should be able to integrate ${store} store`, () => {
+        cy.getByData("add-platform-integration").click();
+        cy.getByData("get-started-btn").click();
+        cy.getByData("select-dropdown").click();
+        cy.getByData(`option-${store.toLowerCase()}`).click();
+        cy.getByData("select-platform-btn").click();
+        cy.get("#store-name-field").type("Test button", { force: true });
+        cy.get("#store-url-field").type("https://www.samplestore", {
+          force: true,
+        });
+        cy.getByData("continue-btn").click();
+        for (const storeField of stores[`${store}`]) {
+          if (storeField.isUrl) {
+            cy.get(`#${storeField.fieldName}`).type("http://test.store.com", {
+              force: true,
+            });
+            continue;
+          }
+          cy.get(`#${storeField.fieldName}`).type("Test", { force: true });
+        }
+        cy.getByData("integrate-btn").click();
+        cy.wait("@createStores").then(() => {
+          cy.getByData("congratulations").should("contain", "Congratulations");
+        });
+      });
+    }
   });
 });

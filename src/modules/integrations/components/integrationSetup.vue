@@ -41,11 +41,16 @@
                 v-model="field.value"
                 :required="field.required"
                 :rules="field.rules"
+                :id="`${field.fieldName}`"
                 variant="outlined"
                 class="personalInfo-field"
               ></v-text-field>
             </div>
-            <v-btn class="sendy-btn-default" @click="validateForm('default')">
+            <v-btn
+              class="sendy-btn-default"
+              @click="validateForm('default')"
+              data-test="integrate-btn"
+            >
               {{ $t("merchant.continue") }}
             </v-btn>
           </v-form>
@@ -59,6 +64,7 @@
                   <img
                     src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
                     class="connecting-dialog__icon"
+                    data-test="loading-gif"
                   />
                   <div class="connecting-dialog__msg">
                     {{ $t("merchant.waiting") }}
@@ -176,7 +182,7 @@ export default {
         const { data } = await this.connectStore(fullPayload);
         this.connecting = false;
 
-        if (data.data.return_code === 0) {
+        if (data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
           this.$router.push({
@@ -189,7 +195,7 @@ export default {
           this.storeConnected = false;
           this.connecting = false;
           throw new Error(
-            data?.data?.return_message || this.$t("merchant.somethingWentWrong")
+            data?.return_message || this.$t("merchant.somethingWentWrong")
           );
         }
       } catch (error) {

@@ -40,6 +40,8 @@
               required
               variant="outlined"
               class="personalInfo-field"
+              id="store-name-field"
+              data-test="store-name-field"
             ></v-text-field>
             <label :for="storeUrl" class="personalInfo-label">
               {{ $t("merchant.storeUrl") }}
@@ -50,8 +52,14 @@
               required
               variant="outlined"
               class="personalInfo-field"
+              data-test="store-url-field"
+              id="store-url-field"
             ></v-text-field>
-            <v-btn class="sendy-btn-default" @click="validate">
+            <v-btn
+              class="sendy-btn-default"
+              @click="validate"
+              data-test="continue-btn"
+            >
               {{ $t("merchant.continue") }}
             </v-btn>
           </v-form>

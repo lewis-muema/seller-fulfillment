@@ -29,6 +29,7 @@
                     <v-btn
                       class="sendy-btn-default"
                       @click="storePlatformDialog = true"
+                      data-test="get-started-btn"
                     >
                       {{ $t("merchant.getStarted") }}
                     </v-btn>

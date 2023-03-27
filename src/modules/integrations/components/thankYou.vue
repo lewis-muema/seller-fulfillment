@@ -19,9 +19,12 @@
         {{ $t("merchant.is_now_integrated_with_sendy") }}
       </div>
       <div class="congratulations-container__bottom">
-        <v-btn class="congratulations-container__btn" @click="closePage">{{
-          $t("merchant.close")
-        }}</v-btn>
+        <v-btn
+          class="congratulations-container__btn"
+          @click="closePage"
+          data-test="close-thank-you"
+          >{{ $t("merchant.close") }}</v-btn
+        >
       </div>
     </div>
   </div>

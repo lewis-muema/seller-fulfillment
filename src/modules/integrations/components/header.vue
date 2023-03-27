@@ -6,7 +6,7 @@
       </h5>
     </span>
     <span>
-      <button @click="closePage()">
+      <button @click="closePage()" data-test="header-close-btn">
         <img
           src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/close-button.svg"
         />

@@ -104,7 +104,7 @@ describe("Integration Process", () => {
     });
   });
 
-  describe.only("Add store integration", () => {
+  describe("Add store integration", () => {
     beforeEach(() => {
       cy.intercept("POST", "**/api2cart/stores", {
         statusCode: 200,
@@ -139,5 +139,46 @@ describe("Integration Process", () => {
         });
       });
     }
+
+    it(`should be return to integrations page after clicking exit`, () => {
+      cy.getByData("add-platform-integration").click();
+      cy.getByData("get-started-btn").click();
+      cy.getByData("select-dropdown").click();
+      cy.getByData(`option-shopify`).click();
+      cy.getByData("select-platform-btn").click();
+      cy.get("#store-name-field").type("Test button", { force: true });
+      cy.get("#store-url-field").type("https://www.samplestore", {
+        force: true,
+      });
+      cy.getByData("continue-btn").click();
+      for (const storeField of stores[`Shopify`]) {
+        if (storeField.isUrl) {
+          cy.get(`#${storeField.fieldName}`).type("http://test.store.com", {
+            force: true,
+          });
+          continue;
+        }
+        cy.get(`#${storeField.fieldName}`).type("Test", { force: true });
+      }
+      cy.getByData("integrate-btn").click();
+      cy.wait("@createStores").then(() => {
+        cy.getByData("congratulations").should("contain", "Congratulations");
+        cy.getByData("close-thank-you").click();
+        cy.url().should("include", "/settings/integrations");
+      });
+    });
+
+    // it.only(`should return to homepage after clicking close button`, () => {
+    //   cy.getByData("add-platform-integration").click();
+    //   cy.getByData("get-started-btn").click();
+    //   cy.getByData("select-dropdown").click();
+    //   cy.getByData(`option-shopify`).click();
+    //   cy.getByData("select-platform-btn").click();
+    //   cy.getByData("header-close-btn")
+    //     .click({ multiple: true, force: true })
+    //     .then(() => {
+    //       cy.url().should("include", "/settings/integrations");
+    //     });
+    // });
   });
 });

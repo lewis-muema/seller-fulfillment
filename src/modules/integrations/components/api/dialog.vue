@@ -124,8 +124,12 @@
 <script>
 import { mapActions } from "vuex";
 import { ElNotification } from "element-plus";
+import { inject } from "vue";
+import eventsMixin from "@/mixins/events_mixin";
 
 export default {
+  name: "AddApiKeyDialog",
+  mixins: [eventsMixin],
   props: {
     generateAPIkeyDialog: {
       type: Boolean,
@@ -133,6 +137,12 @@ export default {
     },
   },
   mounted() {
+    this.sendSegmentEvents({
+      event: "[merchant]-opened-generate-apikey-dialog",
+      data: {
+        userId: this.getUserDetails.user_id,
+      },
+    });
     this.dialog = this.generateAPIkeyDialog;
   },
   watch: {
@@ -150,6 +160,7 @@ export default {
       //Stage 1 - creating(default), 2 - loading, 3 - connected
       stage: 1,
       textCopied: false,
+      getUserDetails: inject("getUserDetails"),
     };
   },
   methods: {
@@ -160,7 +171,6 @@ export default {
     },
     copyToClipboard() {
       const copyText = document.getElementById("text__api-key");
-      console.log("code", navigator.clipboard.readtext);
       navigator.clipboard.writeText(copyText.innerHTML.trim());
       this.textCopied = true;
     },
@@ -178,6 +188,15 @@ export default {
 
         const { status, data } = await this.generateApiKey(payload);
 
+        this.sendSegmentEvents({
+          event: "[merchant]-remove-platform-integration",
+          data: {
+            userId: this.getUserDetails.user_id,
+            payload,
+            status,
+          },
+        });
+
         if (status === 200) {
           this.apiKey = data.token.token;
           this.stage = 3;
@@ -188,7 +207,7 @@ export default {
         this.stage = 1;
         ElNotification({
           title: "",
-          message: `Error generating API Key ${error.message}`,
+          message: `Error generating API Key: ${error.message || error}`,
           type: "error",
         });
         return error;

@@ -106,14 +106,17 @@
   </div>
 </template>
 <script>
-import addStore from "./addStore.vue";
+import addStore from "./platform/addStore.vue";
 import { getTimeAgo } from "@/utils/time";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import addApiKeyDialog from "./api/dialog.vue";
 import integrationBlock from "./shared/integration-block.vue";
 import { ElNotification } from "element-plus";
+import eventsMixin from "@/mixins/events_mixin";
+import { provide } from "vue";
 
 export default {
+  mixins: [eventsMixin],
   components: { addStore, addApiKeyDialog, integrationBlock },
   data: () => ({
     addStoreDialog: false,
@@ -126,6 +129,13 @@ export default {
     },
   }),
   mounted() {
+    this.sendSegmentEvents({
+      event: "[merchant] Visited Integrations Page",
+      data: {
+        userId: this.getUserDetails.business_id,
+      },
+    });
+    provide(/* key */ "getUserDetails", /* value */ this.getUserDetails);
     this.getMerchantIntegrations();
   },
   methods: {
@@ -195,6 +205,7 @@ export default {
     },
     async removeIntegration(storeUrl) {
       this.loading = true;
+
       try {
         const payload = {
           app: process.env.MERCHANT_GATEWAY,
@@ -203,6 +214,13 @@ export default {
             storeUrl,
           },
         };
+        this.sendSegmentEvents({
+          event: "[merchant] Remove platform integration",
+          data: {
+            userId: this.getUserDetails.business_id,
+            payload,
+          },
+        });
         const { status } = await this.removePlatformIntegration(payload);
         if (status === 200) {
           ElNotification({
@@ -231,6 +249,13 @@ export default {
             enabled: true,
           },
         };
+        this.sendSegmentEvents({
+          event: "[merchant] Remove api key",
+          data: {
+            userId: this.getUserDetails.user_id,
+            payload,
+          },
+        });
         const { status } = await this.revokeApiKey(payload);
         if (status === 200) {
           ElNotification({
@@ -257,6 +282,7 @@ export default {
         api: Object.keys(this.integrations.apiKey).length !== 0,
       };
     },
+    ...mapGetters(["getUserDetails"]),
   },
 };
 </script>

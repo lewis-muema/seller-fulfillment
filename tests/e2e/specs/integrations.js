@@ -140,7 +140,7 @@ describe("Integration Process", () => {
       });
     }
 
-    it(`should be return to integrations page after clicking exit`, () => {
+    it(`should be able to return to integrations page after clicking exit`, () => {
       cy.getByData("add-platform-integration").click();
       cy.getByData("get-started-btn").click();
       cy.getByData("select-dropdown").click();

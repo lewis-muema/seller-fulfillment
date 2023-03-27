@@ -171,6 +171,7 @@ export default {
                   name: salesChannel.name,
                   dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
                   channelId: salesChannel.channel_id,
+                  id: salesChannel.id,
                   url: salesChannel.salesChannelProperties.url,
                 };
                 break;
@@ -180,6 +181,7 @@ export default {
                   name: salesChannel.name,
                   dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
                   channelId: salesChannel.channel_id,
+                  id: salesChannel.id,
                 };
                 break;
             }
@@ -192,18 +194,18 @@ export default {
       }
     },
     revokeSalesChannel(integration) {
-      const { channelId, url } = integration;
+      const { channelId, id } = integration;
       switch (channelId) {
         case 3:
           this.removeApiKey();
           break;
         case 2:
-          this.removeIntegration(url);
+          this.removeIntegration(id);
           break;
       }
       this.getMerchantIntegrations();
     },
-    async removeIntegration(storeUrl) {
+    async removeIntegration(salesChannelId) {
       this.loading = true;
 
       try {
@@ -211,7 +213,7 @@ export default {
           app: process.env.MERCHANT_GATEWAY,
           endpoint: "api2cart/stores/opt-out",
           values: {
-            storeUrl,
+            salesChannelId,
           },
         };
         this.sendSegmentEvents({

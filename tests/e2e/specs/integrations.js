@@ -38,6 +38,7 @@ describe("Integrations Page", () => {
         "Successful removing integration"
       );
     });
+    cy.wait("@getAvailableIntegrations");
   });
 
   it("should be able to revoke an API key", () => {
@@ -48,6 +49,7 @@ describe("Integrations Page", () => {
         "Successful removing API key"
       );
     });
+    cy.wait("@getAvailableIntegrations");
   });
 });
 

@@ -191,6 +191,7 @@ export default {
           this.removeIntegration(url);
           break;
       }
+      this.getMerchantIntegrations();
     },
     async removeIntegration(storeUrl) {
       this.loading = true;

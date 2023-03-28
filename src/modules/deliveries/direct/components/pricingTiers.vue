@@ -111,7 +111,7 @@ export default {
   display: flex;
 }
 .pricing-tiers-header-image {
-  width: 30px;
+  width: 25px;
 }
 .pricing-tiers-header-tab {
   display: flex;
@@ -122,7 +122,7 @@ export default {
   cursor: pointer;
 }
 .pricing-tiers-header-text {
-  font-size: 15px;
+  font-size: 14px;
   margin-left: 10px;
 }
 .active-tier {
@@ -154,10 +154,14 @@ export default {
 .pricing-tier-vendors-amount {
   margin-right: 25px;
   text-transform: capitalize;
+  font-size: 15px;
+  width: 100px;
+  text-align: right;
 }
 .pricing-tier-vendors-weight {
-  font-size: 13px;
+  font-size: 11px;
   color: #606266;
+  white-space: nowrap;
 }
 .pricing-tier-active-vendors {
   background: #dcdfe6;

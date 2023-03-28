@@ -5,12 +5,14 @@ import industries from "../fixtures/industries.json";
 import otp from "../fixtures/OTP.json";
 import completeSignup from "../fixtures/completeSignup.json";
 import statistics from "../fixtures/statistics.json";
+import deliveriesLimit from "../fixtures/deliveriesLimit.json";
 import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
 import cancellationReasons from "../fixtures/cancellationReasons.json";
 import trackingConsignment from "../fixtures/trackingConsignment.json";
 import trackingDeliveries from "../fixtures/trackingDeliveries.json";
 import editableFields from "../fixtures/editableFields.json";
+import singleDelivery from "../fixtures/singleDelivery.json";
 import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
 import trackingDeliveriesSummary from "../fixtures/trackingDeliveriesSummary.json";
 import trackingSummary from "../fixtures/trackingSummary.json";
@@ -146,6 +148,22 @@ Cypress.Commands.add("dashboardStubs", () => {
   ).as("deliveries");
   cy.intercept(
     "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: singleDelivery,
+    }
+  ).as("singleDelivery");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?max=5`,
+    {
+      statusCode: 200,
+      body: deliveriesLimit,
+    }
+  ).as("deliveriesLimit");
+  cy.intercept(
+    "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point?`,
     {
       statusCode: 200,
@@ -274,7 +292,7 @@ Cypress.Commands.add("deliveriesStubs", () => {
   ).as("cancellationReasons");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134/editablefields`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/*/editablefields`,
     {
       statusCode: 200,
       body: editableFields,
@@ -282,7 +300,7 @@ Cypress.Commands.add("deliveriesStubs", () => {
   ).as("editableFields");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850/editablefields`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/*/editablefields`,
     {
       statusCode: 200,
       body: editableFieldsDeliveries,

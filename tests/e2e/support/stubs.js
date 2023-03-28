@@ -7,10 +7,25 @@ import completeSignup from "../fixtures/completeSignup.json";
 import statistics from "../fixtures/statistics.json";
 import loginToken from "../fixtures/loginToken.json";
 import constants from "../fixtures/constants.json";
+import cancellationReasons from "../fixtures/cancellationReasons.json";
+import trackingConsignment from "../fixtures/trackingConsignment.json";
+import trackingDeliveries from "../fixtures/trackingDeliveries.json";
+import editableFields from "../fixtures/editableFields.json";
+import editableFieldsDeliveries from "../fixtures/editableFieldDeliveries.json";
+import trackingDeliveriesSummary from "../fixtures/trackingDeliveriesSummary.json";
+import trackingSummary from "../fixtures/trackingSummary.json";
+import updateConsignmentOrder from "../fixtures/updateConsignmentOrder.json";
+import updateDeliveryOrder from "../fixtures/updateDeliveryOrder.json";
 import achievements from "../fixtures/achievements.json";
 import business from "../fixtures/business.json";
+import pointToPointStatistics from "../fixtures/pointToPointStatistics.json";
+// import exportTasks from "../fixtures/exportTasks.json";
 import consignmentStatistics from "../fixtures/consignmentStatistics.json";
 import deliveries from "../fixtures/deliveries.json";
+import onDemandDeliveries from "../fixtures/onDemandDeliveries.json";
+import trackingOnDemand from "../fixtures/trackingOnDemand.json";
+import consignments from "../fixtures/consignments.json";
+import exportTasks from "../fixtures/exportTasks.json";
 import deliveriesStatistics from "../fixtures/deliveriesStatistics.json";
 import languages from "../fixtures/languages.json";
 import notifications from "../fixtures/notifications.json";
@@ -123,12 +138,36 @@ Cypress.Commands.add("dashboardStubs", () => {
   ).as("consignmentStatisticsLimit");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?max=5`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries?`,
     {
       statusCode: 200,
       body: deliveries,
     }
   ).as("deliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point?`,
+    {
+      statusCode: 200,
+      body: onDemandDeliveries,
+    }
+  ).as("onDemandDeliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point/P2P-YZIBU-09912`,
+    {
+      statusCode: 200,
+      body: trackingOnDemand,
+    }
+  ).as("trackingOnDemand");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments?`,
+    {
+      statusCode: 200,
+      body: consignments,
+    }
+  ).as("consignments");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/statistics`,
@@ -194,10 +233,9 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: wallets,
     }
   ).as("wallet");
-});
-
-Cypress.Commands.add("setTokens", () => {
-  cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
+  Cypress.Commands.add("setTokens", () => {
+    cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
+  });
 });
 Cypress.Commands.add("paymentStubs", () => {
   cy.intercept(
@@ -216,6 +254,98 @@ Cypress.Commands.add("paymentStubs", () => {
       body: lineItems,
     }
   ).as("transactions");
+});
+Cypress.Commands.add("deliveriesStubs", () => {
+  cy.intercept(
+    "POST",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/exporttasks`,
+    {
+      statusCode: 200,
+      body: exportTasks,
+    }
+  ).as("exportTasks");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/cancellation-reasons`,
+    {
+      statusCode: 200,
+      body: cancellationReasons,
+    }
+  ).as("cancellationReasons");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134/editablefields`,
+    {
+      statusCode: 200,
+      body: editableFields,
+    }
+  ).as("editableFields");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850/editablefields`,
+    {
+      statusCode: 200,
+      body: editableFieldsDeliveries,
+    }
+  ).as("editableFieldsDeliveries");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: trackingConsignment,
+    }
+  ).as("trackingConsignment");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: trackingDeliveries,
+    }
+  ).as("trackingDelivery");
+
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/point-to-point/statistics`,
+    {
+      statusCode: 200,
+      body: pointToPointStatistics,
+    }
+  ).as("pointToPointStatistics");
+
+  cy.intercept(
+    "PATCH",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/consignments/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: updateConsignmentOrder,
+    }
+  ).as("updateConsignmentOrder");
+  cy.intercept(
+    "PATCH",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/deliveries/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: updateDeliveryOrder,
+    }
+  ).as("updateDeliveryOrder");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/C-HEGTE-05134`,
+    {
+      statusCode: 200,
+      body: trackingSummary,
+    }
+  ).as("trackingSummary");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/tracking/summary/D-TOANU-02850`,
+    {
+      statusCode: 200,
+      body: trackingDeliveriesSummary,
+    }
+  ).as("trackingDeliveriesSummary");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

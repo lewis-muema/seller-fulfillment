@@ -38,6 +38,7 @@
         >
           {{ $t("deliveries.pending") }}
           <v-badge
+            class="pending-badge"
             color="#FBDF9A"
             text-color="#7F3B02"
             :content="pending"
@@ -65,6 +66,7 @@
         >
           {{ $t("deliveries.inTransit") }}
           <v-badge
+            class="inTransit-badge"
             color="#B8F5A8"
             text-color="#7F3B02"
             :content="transit"
@@ -90,6 +92,7 @@
         >
           {{ $t("deliveries.failed") }}
           <v-badge
+            class="failed-badge"
             color="#9B101C"
             text-color="white"
             :content="failed"
@@ -117,6 +120,7 @@
         >
           {{ $t("deliveries.completed") }}
           <v-badge
+            class="completed-badge"
             color="#324BA8"
             text-color="white"
             :content="completed"
@@ -142,6 +146,7 @@
         >
           {{ $t("deliveries.cancelled") }}
           <v-badge
+            class="cancelled-badge"
             color="#9B101C"
             text-color="white"
             :content="cancelled"
@@ -151,7 +156,11 @@
       </div>
     </div>
     <div class="deliver-btn-container">
-      <div v-if="exportStatus" class="export-button" @click="triggerExport()">
+      <div
+        v-if="exportStatus"
+        class="export-button consignment-export-button"
+        @click="triggerExport()"
+      >
         <span>
           <i class="mdi mdi-export-variant export-icon"></i>
         </span>

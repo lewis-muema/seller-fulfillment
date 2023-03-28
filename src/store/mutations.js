@@ -449,4 +449,7 @@ export default {
   setDirectOrderNumber(state, val) {
     state.directOrderNumber = val;
   },
+  setMapReady(state, val) {
+    state.mapReady = val;
+  },
 };

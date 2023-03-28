@@ -76,14 +76,23 @@ export default defineComponent({
   mounted() {
     this.mapLoaded();
   },
+  beforeUnmount() {
+    this.setMapReady(false);
+  },
   methods: {
-    ...mapMutations(["setMarkers", "setPolyline", "setMapStatus"]),
+    ...mapMutations([
+      "setMarkers",
+      "setPolyline",
+      "setMapStatus",
+      "setMapReady",
+    ]),
     mapLoaded() {
       const mapLoaded = setInterval(() => {
         if (this?.$refs?.googleMapCmp?.mapTilesLoaded) {
           // this.setMapElements();
           this.mapLoadedStatus = true;
           clearInterval(mapLoaded);
+          this.setMapReady(true);
           if (this.markers?.length) {
             this.fitMapToBounds();
           }

@@ -198,7 +198,7 @@ export default {
         });
 
         if (status === 200) {
-          this.apiKey = data.token.token;
+          this.apiKey = data.token;
           this.stage = 3;
         } else {
           throw data;

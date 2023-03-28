@@ -85,8 +85,8 @@ describe("Integration Process", () => {
     cy.getByData("no-api-integration").should("contain", "No API Keys found");
   });
 
-  describe.only("API Key", () => {
-    it.only("should be able to generate an API key", () => {
+  describe("API Key", () => {
+    it("should be able to generate an API key", () => {
       cy.getByData("generate-api-key-btn").click();
       cy.getByData("api-description-textbox").type("Sample API Key");
       cy.getByData("create-api-key-button").click({ force: true });

@@ -153,4 +153,5 @@ export default {
   getDirectOrderDetailsStep: (state) => state.directOrderDetailsStep,
   getDirectOrderPartner: (state) => state.directOrderPartner,
   getDirectOrderNumber: (state) => state.directOrderNumber,
+  getmapReady: (state) => state.mapReady,
 };

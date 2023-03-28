@@ -40,6 +40,7 @@ export default createStore({
       editableFields: {},
       autoFillVariants: [],
       LPOUploadError: "",
+      mapReady: false,
       markers: [],
       polyline: {},
       pricing: [],

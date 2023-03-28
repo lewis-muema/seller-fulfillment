@@ -18,7 +18,7 @@ export default {
       this.setMapMarkers();
       this.setMapPolyline();
     },
-    "$store.state.mapStatus": function step() {
+    "$store.state.mapReady": function step() {
       this.setMapMarkers();
       this.setMapPolyline();
     },

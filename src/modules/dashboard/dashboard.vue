@@ -19,13 +19,13 @@
       </span>
       <v-row>
         <v-col cols="8" class="">
-          <quick-links />
+          <quick-links class="v-step-1" />
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
           <wallet-balance class="v-step-2" />
-          <side-card class="v-step-3" />
-          <articles class="v-step-4" />
+          <side-card class="v-step-4" />
+          <articles class="v-step-5" />
         </v-col>
       </v-row>
     </div>
@@ -59,51 +59,6 @@ export default {
   data() {
     return {
       tab: null,
-      // steps: [
-      //   {
-      //     header: {
-      //       title: "Welcome to the new homescreen",
-      //     },
-      //     target: '[data-tour-step="1"]',
-      //     content: `Let’s checkout what we have changed.`,
-      //   },
-      //   {
-      //     header: {
-      //       title: "Choose your action here",
-      //     },
-      //     target: ".v-step-1",
-      //     content: `Click on any item to select.`,
-      //   },
-      //   {
-      //     header: {
-      //       title: "View your account balance",
-      //     },
-      //     target: ".v-step-2",
-      //     content: `Click to access your wallet.`,
-      //   },
-      //   {
-      //     header: {
-      //       title: "View stats summary",
-      //     },
-      //     target: ".v-step-3",
-      //     content: `The stats have moved here. Select a category to view full details.`,
-      //   },
-      //   {
-      //     header: {
-      //       title: "Learn more ways to do more with Sendy",
-      //     },
-      //     target: ".v-step-4",
-      //     content: `Discover offers and products`,
-      //   },
-      //   {
-      //     target: '[data-tour-step="3"]',
-      //     content: `This is a header element. It's big.`,
-      //     params: {
-      //       // tour popup position.
-      //       placement: "bottom",
-      //     },
-      //   },
-      // ],
     };
   },
   computed: {
@@ -130,7 +85,6 @@ export default {
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
-    // introJs().setOption("nextLabel", " > ");
     introJs()
       .setOptions({
         steps: [
@@ -140,24 +94,34 @@ export default {
           },
           {
             title: "Choose your action here",
-            element: document.querySelector(".desktop-quick-links-tabs-tour"),
+            element: document.querySelector(".v-step-1"),
             intro: "Click on any item to select",
             position: "bottom",
           },
           {
-            title: "Farewell!",
+            title: "View your account balance!",
             element: document.querySelector(".v-step-2"),
-            intro: "And this is our final step!",
+            intro: "Click to access your wallet",
           },
           {
-            title: "Farewell!",
-            element: document.querySelector(".v-step-3"),
-            intro: "And this is our final step!",
+            title: "Track Ongoing On-demand deliveries",
+            element: document.querySelector(
+              ".dashboard-deliveries-tab-section"
+            ),
+            intro: "Click to display list of the on-demand deliveries",
           },
           {
-            title: "Farewell!",
+            title: "View stats summary",
             element: document.querySelector(".v-step-4"),
-            intro: "And this is our final step!",
+            intro:
+              "The stats have moved here. Select a category to view full details.",
+            position: "left",
+          },
+          {
+            title: "Learn more ways to do more with Sendy",
+            element: document.querySelector(".v-step-5"),
+            intro: "Discover offers and products",
+            position: "left",
           },
         ],
         tooltipClass: "introjs-tooltip",

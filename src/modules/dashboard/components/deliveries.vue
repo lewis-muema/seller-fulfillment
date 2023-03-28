@@ -177,7 +177,14 @@
         <p class="deliveries-empty-title">
           {{ $t("deliveries.noDeliveriesToTrack") }}
         </p>
-        <v-btn class="deliveries-btn" @click="redirect()" size="default">
+        <v-btn
+          class="deliveries-btn"
+          size="default"
+          v-if="getSelectedTab === 'dashboard.onDemand'"
+        >
+          {{ $t("deliveries.deliverToACustomer") }}
+        </v-btn>
+        <v-btn class="deliveries-btn" @click="redirect()" size="default" v-else>
           {{
             getSelectedTab === "dashboard.toYourCustomers"
               ? $t("deliveries.deliverToACustomer")
@@ -217,6 +224,7 @@ export default {
       "getConsignments",
       "getStorageUserDetails",
       "getAccessDenied",
+      "getOnDemandDeliveries",
     ]),
     getSelectedTab() {
       return this.selectedTab;
@@ -224,6 +232,8 @@ export default {
     filteredDeliveries() {
       if (this.getSelectedTab === "dashboard.toYourCustomers") {
         return this.getDeliveries;
+      } else if (this.getSelectedTab === "dashboard.onDemand") {
+        return this.getOnDemandDeliveries;
       }
       return this.getConsignments;
     },

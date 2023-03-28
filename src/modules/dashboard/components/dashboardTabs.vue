@@ -59,6 +59,11 @@ export default {
           label: "dashboard.toSendy",
           content: "-",
         },
+
+        {
+          label: "dashboard.onDemand",
+          content: "-",
+        },
       ],
       deliveries: [
         {
@@ -92,6 +97,9 @@ export default {
           this.tabs[1].content = this.ongoingConsignments
             ? this.ongoingConsignments
             : 0;
+          this.tabs[2].content = this.ongoingPointToPointDeliveries
+            ? this.ongoingPointToPointDeliveries
+            : 0;
         }
       },
       deep: true,
@@ -106,6 +114,7 @@ export default {
       "getLoader",
       "getDeliveries",
       "getConsignments",
+      "getPointToPointStatistics",
     ]),
     activeTab() {
       return this.getDashboardSelectedTab;
@@ -130,6 +139,16 @@ export default {
         parseInt(this.getConsignmentStatistics.ORDER_CANCELED)
       );
     },
+    ongoingPointToPointDeliveries() {
+      return (
+        parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
+        parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getPointToPointStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getPointToPointStatistics.ORDER_FAILED) +
+        parseInt(this.getPointToPointStatistics.ORDER_COMPLETED) +
+        parseInt(this.getPointToPointStatistics.ORDER_CANCELED)
+      );
+    },
   },
 };
 </script>
@@ -151,7 +170,7 @@ export default {
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: 190px 190px;
+  grid-template-columns: 190px 130px 190px;
   border-bottom: 1px solid #e2e7ed;
 }
 .desktop-dashboard-tab {

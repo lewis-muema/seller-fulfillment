@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex desktop-quick-links-tabs-tour">
+  <div class="d-flex">
     <v-card
       class="desktop-quick-links-tabs"
       variant="outlined"

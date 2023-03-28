@@ -6,6 +6,7 @@
     "sendInventoryToSendy": "Send inventory to sendy and track the progress here",
     "sendInventory": "Send inventory to Sendy",
     "welcome":"Welcome, {name}",
+    "onDemand": "On demand",
     "completeSteps": "Complete the steps below to fulfilling your first order",
     "getMoreoutOfSendy":"Get more out of Sendy fulfillment",
     "quickLinks": "Quick Links",

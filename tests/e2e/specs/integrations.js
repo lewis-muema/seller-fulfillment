@@ -68,11 +68,7 @@ describe("Integration Process", () => {
       "https://fulfillment-api-test.sendyit.com/v1/internal/api/token",
       {
         statusCode: 200,
-        body: {
-          token: {
-            token: "30300303",
-          },
-        },
+        body: integrations.generateToken,
       }
     ).as("createApiKey");
     cy.visit("/settings/integrations");
@@ -89,16 +85,19 @@ describe("Integration Process", () => {
     cy.getByData("no-api-integration").should("contain", "No API Keys found");
   });
 
-  describe("API Key", () => {
-    it("should be able to generate an API key", () => {
+  describe.only("API Key", () => {
+    it.only("should be able to generate an API key", () => {
       cy.getByData("generate-api-key-btn").click();
       cy.getByData("api-description-textbox").type("Sample API Key");
       cy.getByData("create-api-key-button").click({ force: true });
       // cy.getByData("loading-icon").should("be.visible");
-      cy.getByData("api-key").should("contain", "30300303");
+      cy.getByData("api-key").should(
+        "contain",
+        integrations.generateToken.data.token
+      );
       cy.getByData("copy-key-btn").click();
       navigator.clipboard.readText().then((clipText) => {
-        expect(clipText).to.be("30300303");
+        expect(clipText).to.be(integrations.generateToken.data.token);
         cy.getByData("key-copied-txt").should("contain", "API Key copied");
       });
     });

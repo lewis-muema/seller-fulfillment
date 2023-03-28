@@ -51,5 +51,11 @@
       "data": {
         "return_code":0
     }
-  }
+  },
+  "generateToken": {
+      "data": {
+        "token": "apsdiufyoh213489r19872y0r12y9829013h01209nj-12-ii-"
+      },
+    "status": 200
+    }
 }

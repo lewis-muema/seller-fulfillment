@@ -130,6 +130,7 @@ export default {
     },
   }),
   mounted() {
+    this.getMerchantIntegrations();
     this.sendSegmentEvents({
       event: "[merchant] Visited Integrations Page",
       data: {
@@ -137,7 +138,6 @@ export default {
       },
     });
     provide(/* key */ "getUserDetails", /* value */ this.getUserDetails);
-    this.getMerchantIntegrations();
   },
   methods: {
     ...mapActions([
@@ -149,6 +149,7 @@ export default {
       this.addStoreDialog = false;
     },
     async getMerchantIntegrations() {
+      console.log("getting integrations");
       this.loading = true;
       this.integrations.platform = {};
       this.integrations.apiKey = {};
@@ -204,7 +205,6 @@ export default {
           this.removeIntegration(id);
           break;
       }
-      this.getMerchantIntegrations();
     },
     async removeIntegration(salesChannelId) {
       this.loading = true;
@@ -240,6 +240,7 @@ export default {
         });
       } finally {
         this.loading = false;
+        this.getMerchantIntegrations();
       }
     },
     async removeApiKey() {
@@ -275,6 +276,7 @@ export default {
         });
       } finally {
         this.loading = false;
+        this.getMerchantIntegrations();
       }
     },
   },

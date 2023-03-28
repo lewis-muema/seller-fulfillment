@@ -1,0 +1,50 @@
+{
+  "message":"order.tracking.list.success",
+  "data":{
+    "events":[
+      {
+        "event_date":1671524938000,
+        "event_code":"EVENT_PICKUP_ORDER_CREATED",
+        "translated_event_code":"Order placed on Tuesday, Dec 20th",
+        "notes":"",
+        "event_tense":"PAST",
+        "metadata":{
+
+        }
+      },
+      {
+        "event_date":null,
+        "event_code":"EVENT_PICKUP_WAITING_FOR_PARTNER",
+        "translated_event_code":"We are finding a driver for your order",
+        "notes":"",
+        "event_tense":"PRESENT",
+        "metadata":{
+
+        }
+      },
+      {
+        "event_date":null,
+        "event_code":"EVENT_PICKUP_PARTNER_ARRIVED_AT_PICKUP_LOCATION",
+        "translated_event_code":"Your driver has arrived at your pick up location",
+        "notes":"",
+        "event_tense":"FUTURE",
+        "metadata":{
+
+        }
+      },
+      {
+        "event_date":null,
+        "event_code":"EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
+        "translated_event_code":"Your driver has dropped your products at the Fulfillment Centre",
+        "notes":"",
+        "event_tense":"FUTURE",
+        "metadata":{
+
+        }
+      }
+    ]
+  },
+  "errors":[
+
+  ]
+}

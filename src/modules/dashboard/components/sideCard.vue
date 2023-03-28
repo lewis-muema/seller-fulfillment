@@ -12,12 +12,15 @@
                 <v-list-item @click="$router.push(order.link)">
                   <v-list-item-header>
                     <v-list-item-title class="">
-                      <span :class="getLoader.statistics">
+                      <span
+                        :class="getLoader.statistics"
+                        class="dashboard-side-card-status"
+                      >
                         {{ $t(order.orderStatus) }}
                       </span>
                       <span
                         :class="getLoader.statistics"
-                        class="float-right stats-list-count"
+                        class="float-right stats-list-count dashboard-side-card-count"
                       >
                         {{ order.count }}
                       </span>

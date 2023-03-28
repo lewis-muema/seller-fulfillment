@@ -149,7 +149,6 @@ export default {
       this.addStoreDialog = false;
     },
     async getMerchantIntegrations() {
-      console.log("getting integrations");
       this.loading = true;
       this.integrations.platform = {};
       this.integrations.apiKey = {};

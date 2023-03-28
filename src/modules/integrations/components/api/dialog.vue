@@ -62,7 +62,10 @@
           </v-row>
           <div v-if="stage === 3" class="center">
             <v-row class="api-integraion-dialog__api-key">
-              <v-col cols="auto" class="reset">
+              <v-col
+                cols="8"
+                class="reset api-integraion-dialog__api-key--container"
+              >
                 <span id="text__api-key" data-test="api-key">{{ apiKey }}</span>
               </v-col>
               <v-col class="reset api-integraion-dialog__copy-btn">
@@ -351,6 +354,13 @@ export default {
     flex-direction: row;
     align-items: center;
     flex-wrap: nowrap;
+    height: 52px;
+
+    &--container {
+      width: 160px;
+      overflow-y: scroll;
+      white-space: nowrap;
+    }
   }
 
   &__key-copied-txt {

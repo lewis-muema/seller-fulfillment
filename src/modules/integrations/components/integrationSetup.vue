@@ -159,7 +159,9 @@ export default {
       const storeFields = {};
 
       for (const field of this.storeObj.storeRequiredFields) {
-        storeFields[field.fieldName] = field.value;
+        if (field.value !== "") {
+          storeFields[field.fieldName] = field.value;
+        }
       }
 
       let cartId = this.storePlatform.replace(" ", "").toLowerCase();

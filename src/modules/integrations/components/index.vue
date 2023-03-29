@@ -22,4 +22,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.v-dialog--fullscreen .v-overlay__content {
+  overflow-y: scroll !important;
+}
+</style>

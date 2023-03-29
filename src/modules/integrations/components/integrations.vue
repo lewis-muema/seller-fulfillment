@@ -67,7 +67,11 @@
           <div class="integration-content__no-integration--section">
             <button
               class="integration-content__no-integration--btn"
-              @click="generateAPIkeyDialog = true"
+              @click="
+                !generateAPIkeyDialog
+                  ? (generateAPIkeyDialog = true)
+                  : (generateAPIkeyDialog = false)
+              "
               data-test="generate-api-key-btn"
             >
               <img
@@ -102,7 +106,7 @@
     <addApiKeyDialog
       v-if="generateAPIkeyDialog"
       :generateAPIkeyDialog="generateAPIkeyDialog"
-      @closeDialog="generateAPIkeyDialog = false"
+      @closeDialog="closeApiDialog"
     />
   </div>
 </template>
@@ -117,6 +121,7 @@ import eventsMixin from "@/mixins/events_mixin";
 import { provide } from "vue";
 
 export default {
+  inject: ["refreshIntegrationsComponent"],
   mixins: [eventsMixin],
   components: { addStore, addApiKeyDialog, integrationBlock },
   data: () => ({
@@ -140,6 +145,10 @@ export default {
     provide(/* key */ "getUserDetails", /* value */ this.getUserDetails);
   },
   methods: {
+    closeApiDialog() {
+      this.generateAPIkeyDialog = false;
+      this.$parent.refreshIntegrationsComponent();
+    },
     ...mapActions([
       "getIntegrations",
       "revokeApiKey",
@@ -204,6 +213,7 @@ export default {
           this.removeIntegration(id);
           break;
       }
+      this.refreshIntegrationsComponent();
     },
     async removeIntegration(salesChannelId) {
       this.loading = true;

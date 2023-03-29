@@ -83,23 +83,18 @@ describe("Integration Process", () => {
   });
 
   // To-Do: Make it work when using the Electron runner
-  // describe("API Key", () => {
-  //   it("should be able to generate an API key", () => {
-  //     cy.getByData("generate-api-key-btn").click();
-  //     cy.getByData("api-description-textbox").type("Sample API Key");
-  //     cy.getByData("create-api-key-button").click({ force: true });
-  //     // cy.getByData("loading-icon").should("be.visible");
-  //     cy.getByData("api-key").should(
-  //       "contain",
-  //       integrations.generateToken.data.token
-  //     );
-  //     cy.getByData("copy-key-btn").click();
-  //     navigator.clipboard.readText().then((clipText) => {
-  //       expect(clipText).to.be(integrations.generateToken.data.token);
-  //       cy.getByData("key-copied-txt").should("contain", "API Key copied");
-  //     });
-  //   });
-  // });
+  describe("API Key", () => {
+    it("should be able to generate an API key", () => {
+      cy.getByData("generate-api-key-btn").click();
+      cy.getByData("api-description-textbox").type("Sample API Key");
+      cy.getByData("create-api-key-button").click({ force: true });
+      // cy.getByData("loading-icon").should("be.visible");
+      cy.getByData("api-key").should(
+        "contain",
+        integrations.generateToken.data.token
+      );
+    });
+  });
 
   describe("Add store integration", () => {
     beforeEach(() => {

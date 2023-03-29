@@ -9,6 +9,7 @@
       <span
         class="select__button--text"
         :class="selectedStore ? 'select__button--text--selected' : ''"
+        data-test="select-dropdown"
         >{{ selectedStore ? selectedStore : "Select your platform" }}</span
       >
       <i
@@ -24,6 +25,7 @@
         :key="store"
         class="option"
         @click="selectOption(store)"
+        :data-test="`option-${store.toLowerCase()}`"
       >
         <img
           :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${store.toLowerCase()}.svg`"
@@ -35,12 +37,23 @@
   </div>
 </template>
 <script>
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
+
 export default {
   name: "SelectComponent",
+  mixins: [eventsMixin],
   watch: {
     selectedStore: {
       handler: function (value) {
         this.$emit("update", value);
+        this.sendSegmentEvents({
+          event: "[merchant] Selected Platform store",
+          data: {
+            userId: this.getUserDetails.user_id,
+            store: value,
+          },
+        });
       },
     },
   },
@@ -54,6 +67,7 @@ export default {
     return {
       selectedStore: null,
       optionsVisible: false,
+      getUserDetails: inject("getUserDetails"),
     };
   },
   methods: {

@@ -20,7 +20,11 @@
               @update="updateStore"
             />
 
-            <v-btn class="sendy-btn-default" @click="storeDetailsDialog = true">
+            <v-btn
+              class="sendy-btn-default"
+              @click="storeDetailsDialog = true"
+              data-test="select-platform-btn"
+            >
               {{ $t("merchant.continue") }}
             </v-btn>
             <!-- <div class="integration-actions">

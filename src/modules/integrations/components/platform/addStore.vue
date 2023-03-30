@@ -29,6 +29,7 @@
                     <v-btn
                       class="sendy-btn-default"
                       @click="storePlatformDialog = true"
+                      data-test="get-started-btn"
                     >
                       {{ $t("merchant.getStarted") }}
                     </v-btn>
@@ -48,7 +49,7 @@
   </div>
 </template>
 <script>
-import storePlatform from "./storePlatform.vue";
+import storePlatform from "../storePlatform.vue";
 
 export default {
   components: { storePlatform },

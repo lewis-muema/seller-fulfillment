@@ -42,7 +42,7 @@ import sideCard from "@/modules/dashboard/components/sideCard";
 import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
 import walletBanner from "../payments/wallet/components/walletBanner.vue";
-import introJs from "intro.js";
+// import introJs from "intro.js";
 import moment from "moment";
 
 export default {
@@ -85,49 +85,55 @@ export default {
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
-    introJs()
-      .setOptions({
-        steps: [
-          {
-            title: "Welcome to the new homescreen",
-            intro: "Let’s checkout what we have changed",
-          },
-          {
-            title: "Choose your action here",
-            element: document.querySelector(".v-step-1"),
-            intro: "Click on any item to select",
-            position: "bottom",
-          },
-          {
-            title: "View your account balance!",
-            element: document.querySelector(".v-step-2"),
-            intro: "Click to access your wallet",
-          },
-          {
-            title: "Track Ongoing On-demand deliveries",
-            element: document.querySelector(
-              ".dashboard-deliveries-tab-section"
-            ),
-            intro: "Click to display list of the on-demand deliveries",
-          },
-          {
-            title: "View stats summary",
-            element: document.querySelector(".v-step-4"),
-            intro:
-              "The stats have moved here. Select a category to view full details.",
-            position: "left",
-          },
-          {
-            title: "Learn more ways to do more with Sendy",
-            element: document.querySelector(".v-step-5"),
-            intro: "Discover offers and products",
-            position: "left",
-          },
-        ],
-        tooltipClass: "introjs-tooltip",
-        showBullets: false,
-      })
-      .start();
+    this.setOverlayStatus({
+      overlay: true,
+      popup: "tour",
+    });
+    // introJs()
+    //   .setOptions({
+    //     steps: [
+    //       {
+    //         title:
+    //           "<img src='https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png'><p>Welcome to the new homescreen</p>",
+    //         intro: "Let’s checkout what we have changed",
+    //       },
+    //       {
+    //         title: "Choose your action here",
+    //         element: document.querySelector(".v-step-1"),
+    //         intro: "Click on any item to select",
+    //         position: "bottom",
+    //       },
+    //       {
+    //         title: "View your account balance!",
+    //         element: document.querySelector(".v-step-2"),
+    //         intro: "Click to access your wallet",
+    //       },
+    //       {
+    //         title: "Track Ongoing On-demand deliveries",
+    //         element: document.querySelector(
+    //           ".dashboard-deliveries-tab-section"
+    //         ),
+    //         intro: "Click to display list of the on-demand deliveries",
+    //       },
+    //       {
+    //         title: "View stats summary",
+    //         element: document.querySelector(".v-step-4"),
+    //         intro:
+    //           "The stats have moved here. Select a category to view full details.",
+    //         position: "left",
+    //       },
+    //       {
+    //         title: "Learn more ways to do more with Sendy",
+    //         element: document.querySelector(".v-step-5"),
+    //         intro: "Discover offers and products",
+    //         position: "left",
+    //       },
+    //     ],
+    //     tooltipClass: "introjs-tooltip",
+    //     showBullets: false,
+    //   })
+    //   .start();
+    // document.querySelector(".introjs-button .introjs-nextbutton").value="Take a tour"
   },
   methods: {
     ...mapMutations([
@@ -140,6 +146,7 @@ export default {
       "setDeliveriesStatisticsToday",
       "setConsignmentStatisticsToday",
       "setBillingCycles",
+      "setOverlayStatus",
     ]),
     ...mapActions(["requestAxiosGet"]),
     getActiveCycle() {
@@ -312,7 +319,7 @@ export default {
   border-radius: 8px !important;
   min-width: 350px !important;
 }
-.introjs-tooltip .introjs-tooltip-title {
+.introjs-tooltip .introjs-tooltip-title > p {
   font-family: "DM Sans";
   font-style: normal;
   font-weight: 700;
@@ -320,6 +327,9 @@ export default {
   line-height: 24px;
   color: #303133;
   padding-top: 20px;
+}
+.introjs-tooltip .introjs-tooltip-title > img {
+  width: 320px;
 }
 .introjs-tooltip .introjs-tooltiptext {
   font-family: "DM Sans";

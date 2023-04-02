@@ -965,6 +965,30 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="popup === 'tour'" class="">
+      <div>
+        <img
+          class="image-tour-overlay"
+          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png"
+          alt=""
+        />
+      </div>
+      <div class="view-products-container tour-container-override">
+        <p class="tour-container-override-title">
+          Welcome to the new homescreen
+        </p>
+        <p>Let’s checkout what we have changed</p>
+        <div>
+          <v-btn
+            @click="enterPromoCode()"
+            class="edit-info-submit-button margin-override tour-button"
+          >
+            Take a tour
+          </v-btn>
+          <p class="skip-tour-text">Skip tour</p>
+        </div>
+      </div>
+    </div>
     <div v-if="popup === 'code'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <p class="edit-price-title">
@@ -4663,6 +4687,31 @@ export default {
 .reschedule-direct-time-picker input {
   border-radius: 5px;
   height: 40px !important;
+}
+.image-tour-overlay {
+  width: 390px !important;
+}
+.tour-container-override {
+  width: 390px !important;
+  border-radius: 0px 0px 5px 5px !important;
+  padding: 30px !important;
+}
+.tour-container-override-title {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: #303133;
+}
+.tour-button {
+  height: 45px !important;
+  font-size: 16px !important;
+}
+.skip-tour-text {
+  text-align: center;
+  font-size: 16px;
+  color: #324BA8;
+  font-weight: 500;
+  margin-top: 10px;
 }
 .vue__time-picker .dropdown ul li:not([disabled]).active,
 .vue__time-picker .dropdown ul li:not([disabled]).active:focus,

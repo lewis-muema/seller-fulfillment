@@ -174,6 +174,7 @@ export default {
                   channelId: salesChannel.channel_id,
                   id: salesChannel.id,
                   url: salesChannel.salesChannelProperties.url,
+                  addedBy: salesChannel.addedBy,
                 };
                 break;
               case 3:

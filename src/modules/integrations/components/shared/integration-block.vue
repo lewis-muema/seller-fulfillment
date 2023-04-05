@@ -9,7 +9,7 @@
     >
     <v-col cols="4" class="integration-content__columns"
       ><span class="integration-content__added-by"
-        >{{ $t("merchant.added") }} {{ integration.addedBy ? `By ${integration.addedBy}.` : '' }}
+        >{{ $t("merchant.added") }} {{ integration.addedBy ? `By ${integration.addedBy}.` : " " }}
         {{ ` ${integration.dateAdded}` }}
       </span>
     </v-col>

@@ -10,9 +10,7 @@
     <v-col cols="4" class="integration-content__columns"
       ><span class="integration-content__added-by"
         >{{ $t("merchant.added") }}
-        <!-- <v-col v-if="userDetails">{{
-              `By ${userDetails.first_name} ${userDetails.last_name.charAt(0)}.`
-            }}</v-col> -->
+        <v-col v-if="userDetails">{{ `By ${integration.addedBy}.` }}</v-col>
         {{ ` ${integration.dateAdded}` }}
       </span>
     </v-col>

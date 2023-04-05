@@ -2930,10 +2930,7 @@ export default {
       //   new_features_virtual_tour: true,
       // };
       // const business_id = getValue(remoteConfig, "business_id")._value;
-      let newFeaturesTour = getValue(
-        remoteConfig,
-        "card_payment"
-      )
+      let newFeaturesTour = getValue(remoteConfig, "card_payment");
       // let showTour = false;
       // if (business_id === this.getStorageUserDetails.business_id) {
       //   showTour = newFeaturesTour;

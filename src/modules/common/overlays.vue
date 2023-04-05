@@ -975,17 +975,18 @@
       </div>
       <div class="view-products-container tour-container-override">
         <p class="tour-container-override-title">
+          Test remote config {{ getFirebaseRemoteConfig }}
           Welcome to the new homescreen
         </p>
         <p>Let’s checkout what we have changed</p>
         <div>
           <v-btn
-            @click="enterPromoCode()"
+            @click="takeTour()"
             class="edit-info-submit-button margin-override tour-button"
           >
             Take a tour
           </v-btn>
-          <p class="skip-tour-text">Skip tour</p>
+          <p class="skip-tour-text" @click="skipTour()">Skip tour</p>
         </div>
       </div>
     </div>
@@ -2542,6 +2543,11 @@ import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import VueTimepicker from "vue3-timepicker";
 import "vue3-timepicker/dist/VueTimepicker.css";
+import introJs from "intro.js";
+import { initializeApp } from "firebase/app";
+import { getValue } from "firebase/remote-config";
+import { getRemoteConfig } from "firebase/remote-config";
+// import { fetchAndActivate } from "firebase/remote-config";
 
 export default {
   setup() {
@@ -2906,6 +2912,34 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
+    getFirebaseRemoteConfig() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
+        authDomain: "sendy-fulfilment.firebaseapp.com",
+        projectId: "sendy-fulfilment",
+        storageBucket: "sendy-fulfilment.appspot.com",
+        messagingSenderId: "724697801657",
+        appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
+        measurementId: "G-J8KW3YLS1N",
+      };
+      const app = initializeApp(firebaseConfig);
+      const remoteConfig = getRemoteConfig(app);
+      remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+      // remoteConfig.defaultConfig = {
+      //   business_id: this.getStorageUserDetails.business_id,
+      //   new_features_virtual_tour: true,
+      // };
+      // const business_id = getValue(remoteConfig, "business_id")._value;
+      let newFeaturesTour = getValue(
+        remoteConfig,
+        "card_payment"
+      )
+      // let showTour = false;
+      // if (business_id === this.getStorageUserDetails.business_id) {
+      //   showTour = newFeaturesTour;
+      // }
+      return newFeaturesTour;
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -2954,6 +2988,73 @@ export default {
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    takeTour() {
+      this.getFirebaseRemoteConfig = true;
+      this.setOverlayStatus({
+        overlay: false,
+        popup: "tour",
+      });
+      introJs()
+        .setOptions({
+          steps: [
+            {
+              title: "Choose your action here",
+              element: document.querySelector(".v-step-1"),
+              intro: "Click on any item to select",
+              position: "bottom",
+            },
+            {
+              title: "View your account balance!",
+              element: document.querySelector(".v-step-2"),
+              intro: "Click to access your wallet",
+            },
+            {
+              title: "Track Ongoing On-demand deliveries",
+              element: document.querySelector(
+                ".dashboard-deliveries-tab-section"
+              ),
+              intro: "Click to display list of the on-demand deliveries",
+            },
+            {
+              title: "View stats summary",
+              element: document.querySelector(".v-step-4"),
+              intro:
+                "The stats have moved here. Select a category to view full details.",
+              position: "left",
+            },
+            {
+              title: "Learn more ways to do more with Sendy",
+              element: document.querySelector(".v-step-5"),
+              intro: "Discover offers and products",
+              position: "left",
+            },
+          ],
+          tooltipClass: "introjs-tooltip",
+          showBullets: false,
+        })
+        .start();
+    },
+    skipTour() {
+      // const firebaseConfig = {
+      //   apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
+      //   authDomain: "sendy-fulfilment.firebaseapp.com",
+      //   projectId: "sendy-fulfilment",
+      //   storageBucket: "sendy-fulfilment.appspot.com",
+      //   messagingSenderId: "724697801657",
+      //   appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
+      //   measurementId: "G-J8KW3YLS1N",
+      // };
+      // const app = initializeApp(firebaseConfig);
+      // const remoteConfig = getRemoteConfig(app);
+      // fetchAndActivate(remoteConfig)
+      //   .then(() => {
+      //     getValue("new_features_virtual_tour")._value = false;
+      //     console.log(getValue("new_features_virtual_tour"));
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
     formatAutofillDetails() {
       this.overlayStatusSet(false, "uploadLPO");
@@ -4235,7 +4336,6 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
 .resend-invite-title {
   color: #303133;
   margin-bottom: 0px;
@@ -4709,9 +4809,10 @@ export default {
 .skip-tour-text {
   text-align: center;
   font-size: 16px;
-  color: #324BA8;
+  color: #324ba8;
   font-weight: 500;
   margin-top: 10px;
+  cursor: pointer;
 }
 .vue__time-picker .dropdown ul li:not([disabled]).active,
 .vue__time-picker .dropdown ul li:not([disabled]).active:focus,

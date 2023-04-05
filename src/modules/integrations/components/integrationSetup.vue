@@ -170,6 +170,7 @@ export default {
         storeName: this.storeName,
         cartId,
         ...storeFields,
+        addedBy: this.getUserDetails.user_id,
       };
 
       this.saveStore(payload);

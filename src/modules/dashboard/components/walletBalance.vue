@@ -20,9 +20,14 @@
                   ? getWallets[0].currency
                   : getBusinessDetails.currency
               }}</span>
-              <span class="desktop-quick-links-balance">{{
-                getWallets[0]?.wallet_balance ? getWallets[0].wallet_balance : 0
-              }}</span>
+              <span
+                class="desktop-quick-links-balance dashboard-wallet-balance"
+                >{{
+                  getWallets[0]?.wallet_balance
+                    ? getWallets[0].wallet_balance
+                    : 0
+                }}</span
+              >
             </v-list-item-subtitle>
           </v-list-item-header>
           <i class="mdi mdi-chevron-right wallet-balance-arrow-icon"></i>

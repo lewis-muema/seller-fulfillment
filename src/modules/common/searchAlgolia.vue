@@ -7,6 +7,7 @@
   >
     <template v-slot:activator="{ props }">
       <v-text-field
+        class="consignment-input-search"
         color="#324BA8"
         v-bind="props"
         prepend-inner-icon="mdi-magnify"

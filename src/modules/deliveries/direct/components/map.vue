@@ -20,6 +20,24 @@
         position: marker.position,
         icon: marker.icon,
       }"
+    >
+    </Marker>
+    <InfoWindow
+      v-for="marker in markers"
+      :key="JSON.stringify(marker)"
+      :options="{
+        position: infoWindowPosition(marker.position),
+        content: marker.location,
+      }"
+    />
+    <Marker
+      v-for="rider in riders"
+      :key="JSON.stringify(rider)"
+      :options="{
+        title: rider.name,
+        position: rider.position,
+        icon: rider.icon,
+      }"
     />
     <Polyline :options="polyline" />
   </GoogleMap>
@@ -27,7 +45,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { GoogleMap, Marker, Polyline } from "vue3-google-map";
+import { GoogleMap, Marker, Polyline, InfoWindow } from "vue3-google-map";
 import { mapGetters, mapMutations } from "vuex";
 
 export default defineComponent({
@@ -44,6 +62,7 @@ export default defineComponent({
     GoogleMap,
     Marker,
     Polyline,
+    InfoWindow,
   },
   watch: {
     markers: {
@@ -54,9 +73,17 @@ export default defineComponent({
       },
       deep: true,
     },
+    riders: {
+      handler(riders) {
+        if (this.mapLoadedStatus && riders?.length) {
+          this.fitMapToBounds();
+        }
+      },
+      deep: true,
+    },
   },
   computed: {
-    ...mapGetters(["getMarkers", "getPolyline", "getMapStatus"]),
+    ...mapGetters(["getMarkers", "getPolyline", "getMapStatus", "getRiders"]),
     googleApiKey() {
       return process?.env?.GOOGLE_API_KEY_TEST;
     },
@@ -68,6 +95,15 @@ export default defineComponent({
         }
       });
       return markers;
+    },
+    riders() {
+      const riders = [];
+      this.getRiders.forEach((rider) => {
+        if (rider) {
+          riders.push(rider);
+        }
+      });
+      return riders;
     },
     polyline() {
       return this.getPolyline;
@@ -85,6 +121,7 @@ export default defineComponent({
       "setPolyline",
       "setMapStatus",
       "setMapReady",
+      "setRiders",
     ]),
     mapLoaded() {
       const mapLoaded = setInterval(() => {
@@ -116,6 +153,9 @@ export default defineComponent({
       for (const m of this.markers) {
         bounds.extend(m?.position);
       }
+      for (const m of this.riders) {
+        bounds.extend(m?.position);
+      }
       this.$refs.googleMapCmp.map.fitBounds(bounds);
       if (this.getMarkers?.length <= 1) {
         this.$refs.googleMapCmp.map.setZoom(this.$refs.googleMapCmp.zoom - 2);
@@ -128,6 +168,14 @@ export default defineComponent({
         polyline.push({ lat: row.lat(), lng: row.lng() });
       });
       return polyline;
+    },
+    infoWindowPosition(position) {
+      const lat = position.lat + 0.003;
+      const lng = position.lng;
+      return {
+        lat,
+        lng,
+      };
     },
   },
 });

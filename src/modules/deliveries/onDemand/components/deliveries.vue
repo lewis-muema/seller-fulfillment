@@ -19,7 +19,10 @@
           />
         </div>
       </div>
-      <div v-if="getOnDemandDeliveries.length > 0">
+      <div
+        v-if="getOnDemandDeliveries.length > 0"
+        class="deliveries-ondemand-to-customers-container"
+      >
         <v-table data-test="point-to-point-list-container">
           <thead>
             <tr>
@@ -131,7 +134,7 @@
           </tbody>
         </v-table>
       </div>
-      <div v-else>
+      <div v-else class="no-deliveries-omdemand-to-customers-container">
         <div v-if="ongoingDeliveries > 0">
           <div class="no-products-card-container">
             <span class="no-deliveries-icon-halo">

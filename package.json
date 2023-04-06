@@ -40,6 +40,7 @@
     "firebase": "^9.8.3",
     "istanbul": "^0.4.5",
     "javascript-time-ago": "^2.5.9",
+    "jose": "^4.13.1",
     "js-base64": "^3.7.2",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",

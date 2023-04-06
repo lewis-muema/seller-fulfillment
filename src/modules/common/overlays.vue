@@ -61,7 +61,10 @@
         {{ $t("deliveries.cancelOrder") }}
       </v-btn>
     </div>
-    <div class="tracking-reschedule-container" v-if="popup === 'cancelOptions'">
+    <div
+      class="tracking-reschedule-container cancel-options-contain"
+      v-if="popup === 'cancelOptions'"
+    >
       <div class="tracking-reschedule-title-section">
         <p class="tracking-cancel-title-label">
           {{ $t("deliveries.cancelOrder") }} ?
@@ -244,7 +247,7 @@
       <textarea
         name=""
         :placeholder="$t('deliveries.enterInstructions')"
-        class="edit-info-instructions"
+        class="edit-info-instructions destination-pickup-instructions"
         v-model="instructions"
         id="instructions"
         cols="30"
@@ -292,7 +295,7 @@
         {{ $t("deliveries.removePhoneNumber") }}
       </div>
       <v-btn
-        class="edit-info-submit-button"
+        class="edit-info-submit-button submit-pickup-button"
         v-loading="buttonLoader"
         @click="submitConsignment()"
       >
@@ -340,14 +343,14 @@
       <textarea
         name=""
         :placeholder="$t('deliveries.enterInstructionsForTheDeliveryPartner')"
-        class="edit-info-instructions"
+        class="edit-info-instructions destination-delivery-instructions"
         v-model="instructions"
         id="instructions"
         cols="30"
         rows="5"
       ></textarea>
       <v-btn
-        class="edit-info-submit-button"
+        class="edit-info-submit-button submit-delivery-button"
         v-loading="buttonLoader"
         @click="submitDelivery()"
       >
@@ -1114,9 +1117,9 @@
           >
             {{ $t("common.cancel") }}
           </div>
-          <div class="export-CSV-button">
+          <div class="export-CSV-button click-to-export-button">
             <v-btn
-              class="edit-user-save"
+              class="edit-user-save click-to-export-button"
               v-loading="buttonLoader"
               @click="exportData()"
             >

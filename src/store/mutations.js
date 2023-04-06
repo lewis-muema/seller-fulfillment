@@ -452,4 +452,7 @@ export default {
   setMapReady(state, val) {
     state.mapReady = val;
   },
+  setRiders(state, val) {
+    state.riders = val;
+  },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="direct-fulfilment-destination-container mt-3">
+  <div class="direct-fulfilment-destination-container-right mt-3">
     <p class="destination-desc-titles">
       {{ $t("deliveries.timeline") }}
     </p>

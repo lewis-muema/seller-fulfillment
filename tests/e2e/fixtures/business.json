@@ -26,6 +26,7 @@
         "withdrawals_enabled": true,
         "payments_enabled": true,
         "cross_docking_enabled": true,
+        "direct_fulfilment_enabled": true,
         "attach_speed_policy_enabled": true,
         "payment_methods": [
           {

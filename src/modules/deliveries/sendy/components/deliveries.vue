@@ -19,7 +19,10 @@
           />
         </div>
       </div>
-      <div v-if="getConsignments.length > 0">
+      <div
+        v-if="getConsignments.length > 0"
+        class="deliveries-to-sendy-container"
+      >
         <v-table>
           <thead>
             <tr>
@@ -138,7 +141,10 @@
                   class="deliveries-action-row-top"
                   @click="navigate(`/deliveries/tracking/${item.order_id}`)"
                 >
-                  <span :class="getLoader.consignments">
+                  <span
+                    :class="getLoader.consignments"
+                    class="consignment-order-id-component"
+                  >
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </p>
@@ -147,7 +153,7 @@
           </tbody>
         </v-table>
       </div>
-      <div v-else>
+      <div v-else class="no-deliveries-to-sendy-container">
         <div v-if="ongoingDeliveries > 0">
           <div class="no-products-card-container">
             <span class="no-deliveries-icon-halo">

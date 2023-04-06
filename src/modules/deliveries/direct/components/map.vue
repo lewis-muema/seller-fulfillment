@@ -23,11 +23,11 @@
     >
     </Marker>
     <InfoWindow
-      v-for="marker in markers"
-      :key="JSON.stringify(marker)"
+      v-for="infoWindow in infoWindows"
+      :key="JSON.stringify(infoWindow)"
       :options="{
-        position: infoWindowPosition(marker.position),
-        content: marker.location,
+        position: infoWindowPosition(infoWindow.position),
+        content: infoWindow.location,
       }"
     />
     <Marker
@@ -56,6 +56,7 @@ export default defineComponent({
         lng: 36.780982,
       },
       mapLoadedStatus: false,
+      infoWindows: [],
     };
   },
   components: {
@@ -69,6 +70,7 @@ export default defineComponent({
       handler(markers) {
         if (this.mapLoadedStatus && markers?.length) {
           this.fitMapToBounds();
+          this.initializeInfoWindows();
         }
       },
       deep: true,
@@ -80,6 +82,9 @@ export default defineComponent({
         }
       },
       deep: true,
+    },
+    mapLoadedStatus() {
+      this.initializeInfoWindows();
     },
   },
   computed: {
@@ -163,10 +168,12 @@ export default defineComponent({
     },
     decode_path(path) {
       const polyline = [];
-      // eslint-disable-next-line no-undef
-      new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
-        polyline.push({ lat: row.lat(), lng: row.lng() });
-      });
+      if (typeof google === "object") {
+        // eslint-disable-next-line no-undef
+        new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
+          polyline.push({ lat: row.lat(), lng: row.lng() });
+        });
+      }
       return polyline;
     },
     infoWindowPosition(position) {
@@ -176,6 +183,18 @@ export default defineComponent({
         lat,
         lng,
       };
+    },
+    initializeInfoWindows() {
+      const infoWindow = [];
+      this.getMarkers.forEach((marker) => {
+        if (marker) {
+          infoWindow.push({
+            position: marker.position,
+            location: marker.location,
+          });
+        }
+      });
+      this.infoWindows = infoWindow;
     },
   },
 });

@@ -365,10 +365,12 @@ export default {
     },
     decode_path(path) {
       const polyline = [];
-      // eslint-disable-next-line no-undef
-      new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
-        polyline.push({ lat: row.lat(), lng: row.lng() });
-      });
+      if (typeof google === "object") {
+        // eslint-disable-next-line no-undef
+        new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
+          polyline.push({ lat: row.lat(), lng: row.lng() });
+        });
+      }
       return polyline;
     },
   },

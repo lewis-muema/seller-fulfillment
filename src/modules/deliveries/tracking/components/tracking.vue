@@ -142,7 +142,13 @@ export default {
           if (response?.data?.data?.order?.assigned_shipping_agent?.agent_id) {
             this.getPartnersLastPosition();
             this.partnerPolling = setInterval(() => {
-              this.getPartnersLastPosition();
+              if (
+                this.$route.path.includes(
+                  "/deliveries/track-direct-deliveries/"
+                )
+              ) {
+                this.getPartnersLastPosition();
+              }
             }, 30000);
             // this.initiateMQTT();
           }

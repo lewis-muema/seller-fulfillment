@@ -42,6 +42,7 @@ export default createStore({
       LPOUploadError: "",
       mapReady: false,
       markers: [],
+      riders: [],
       polyline: {},
       pricing: [],
       directOrderStep: 0,

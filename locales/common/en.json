@@ -63,5 +63,6 @@
   "couldNotFetchDownloadFile": "Could not fetch download file",
   "integrations": "Integrations",
   "productAddedToList": "Product found, Scroll down to select it",
-  "productAlreadyInTheList": "Product already in the list"
+  "productAlreadyInTheList": "Product already in the list",
+  "analytics": "Analytics"
 }

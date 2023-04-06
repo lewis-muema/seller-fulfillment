@@ -43,7 +43,6 @@ describe("Auth pages", () => {
       cy.url().should("include", "/");
     });
   });
-
   it("Does not allow invalid email address", () => {
     cy.visit("/auth/sign-in", { timeout });
     cy.getByData("signin-email-input", { timeout }).type("test");

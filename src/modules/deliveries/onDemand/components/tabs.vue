@@ -7,12 +7,12 @@
       >
         <span
           :class="
-            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'All' && getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'All' && getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('All')
           "
@@ -26,12 +26,14 @@
       >
         <span
           :class="
-            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Pending' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Pending' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Pending')
           "
@@ -52,12 +54,14 @@
       >
         <span
           :class="
-            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'inTransit' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'inTransit' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('inTransit')
           "
@@ -78,12 +82,14 @@
       >
         <span
           :class="
-            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Failed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Failed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Failed')
           "
@@ -104,12 +110,14 @@
       >
         <span
           :class="
-            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Completed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Completed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Completed')
           "
@@ -130,12 +138,14 @@
       >
         <span
           :class="
-            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Cancelled' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Cancelled' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Cancelled')
           "
@@ -178,38 +188,8 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
-    pending: "-",
-    transit: "-",
-    failed: "-",
-    completed: "-",
-    cancelled: "-",
   }),
   watch: {
-    "$store.state.loader": {
-      handler() {
-        this.pending =
-          parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
-          parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
-            ? (
-                parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
-                parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
-              ).toString()
-            : "0";
-        this.transit = this.getPointToPointStatistics.ORDER_IN_TRANSIT
-          ? this.getPointToPointStatistics.ORDER_IN_TRANSIT.toString()
-          : "0";
-        this.failed = this.getPointToPointStatistics.ORDER_FAILED
-          ? this.getPointToPointStatistics.ORDER_FAILED.toString()
-          : "0";
-        this.completed = this.getPointToPointStatistics.ORDER_COMPLETED
-          ? this.getPointToPointStatistics.ORDER_COMPLETED.toString()
-          : "0";
-        this.cancelled = this.getPointToPointStatistics.ORDER_CANCELED
-          ? this.getPointToPointStatistics.ORDER_CANCELED.toString()
-          : "0";
-      },
-      deep: true,
-    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -230,6 +210,34 @@ export default {
         (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
       );
       return typeof status === "object" ? status.permission_granted : false;
+    },
+    pending() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : (
+            parseInt(this.getPointToPointStatistics?.ORDER_RECEIVED) +
+            parseInt(this.getPointToPointStatistics?.ORDER_IN_PROCESSING)
+          )?.toString();
+    },
+    transit() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_IN_TRANSIT?.toString();
+    },
+    failed() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_FAILED?.toString();
+    },
+    completed() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_COMPLETED?.toString();
+    },
+    cancelled() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_CANCELED?.toString();
     },
   },
   methods: {

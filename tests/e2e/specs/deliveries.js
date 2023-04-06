@@ -72,7 +72,6 @@ describe("Consignment modules", () => {
 
         let canceledCount =
           consignmentStat.response.body.data.grouped_by_status_count.ORDER_CANCELED.toString();
-        cy.wait(2000);
         cy.get(".pending-badge").contains(pendingCount);
         cy.get(".inTransit-badge").contains(inTransitCount);
         cy.get(".failed-badge").contains(failedCount);
@@ -296,7 +295,6 @@ describe("deliveries modules", () => {
 
         let canceledCount =
           deliveryStat.response.body.data.grouped_by_status_count.ORDER_CANCELED.toString();
-        cy.wait(2000);
         cy.get(".pending-badge").contains(pendingCount);
         cy.get(".inTransit-badge").contains(inTransitCount);
         cy.get(".failed-badge").contains(failedCount);
@@ -517,7 +515,6 @@ describe("on demand modules", () => {
 
         let canceledCount =
           pointToPointStat.response.body.data.grouped_by_status_count.ORDER_CANCELED.toString();
-        cy.wait(2000);
         cy.get(".pending-badge").contains(pendingCount);
         cy.get(".inTransit-badge").contains(inTransitCount);
         cy.get(".failed-badge").contains(failedCount);

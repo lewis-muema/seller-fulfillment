@@ -31,7 +31,6 @@ describe("Auth pages", () => {
     cy.wait("@achievements");
     cy.wait("@business");
     cy.wait("@consignmentStatistics");
-    cy.wait("@deliveries");
     cy.wait("@deliveriesStatistics");
     cy.wait("@languages");
     cy.wait("@notifications");

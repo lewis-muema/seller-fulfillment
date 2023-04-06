@@ -26,4 +26,6 @@ module.exports = {
   RND_ORDER_PLACEMENT: "https://rnd-order-placement.sendyit.com/",
   FULFILMENT_API: "https://fulfillment-api.sendyit.com/",
   SOLR_RIDER_SEARCH: "https://auth.sendyit.com/solr/riders/",
+  METABASE_KEY:
+    "baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6",
 };

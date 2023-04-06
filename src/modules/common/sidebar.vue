@@ -285,6 +285,14 @@
             "
           ></v-list-item>
         </v-list-group>
+        <v-list-item
+          prepend-icon="mdi-finance"
+          :title="$t('common.analytics')"
+          :value="'common.analytics'"
+          class="desktop-sidebar-icons"
+          @click="$router.push('/analytics')"
+          :active="['common.analytics'].includes(route)"
+        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>

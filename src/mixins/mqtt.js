@@ -2,21 +2,21 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 
 const mqttClient = {
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(["getRiders", "getDirectDeliveriesTrackingData"]),
   },
   methods: {
-    ...mapMutations([]),
-    ...mapActions(["requestAxiosPost"]),
+    ...mapMutations(["setRiders"]),
+    ...mapActions(["requestAxiosPost", "requestAxiosGet"]),
     initiateMQTT() {
       const script = document.createElement("script");
       script.onload = () => {
-        const trackingNo = "357498525477244728531417";
+        const trackingNo = "358496525477244723017872";
         const cityCode = 1;
         const uri = `${cityCode}/${trackingNo}`;
         const clientId = `mqttjs_wtp_${Math.random()
           .toString(16)
-          .substr(2, 8)}_${Math.random()}_${new Date().getTime()}`;
-        const host = "mqtt://chat.sendyit.com:443";
+          .substr(2, 8)}_${new Date().getTime()}`;
+        const host = "mqtt://mqtttest.sendyit.com:443";
         const options = {
           keepalive: 10,
           clientId,
@@ -39,6 +39,7 @@ const mqttClient = {
         const client = mqtt.connect(host, options);
 
         client.on("error", () => {
+          console.log(`${clientId} closed`);
           // handle error
           client.end();
         });
@@ -65,13 +66,35 @@ const mqttClient = {
       document.head.appendChild(script);
     },
     getPartnersLastPosition() {
-      const payload = { rider_id: [6218] };
+      const payload = {
+        rider_id: [
+          parseInt(
+            this.getDirectDeliveriesTrackingData?.order?.assigned_shipping_agent
+              ?.agent_id
+          ),
+        ],
+      };
       this.requestAxiosPost({
         app: process.env.AUTH,
         endpoint: `positions/partner_cached_position`,
         values: payload,
       }).then((response) => {
-        console.log(response);
+        const riders = [];
+        response?.data?.partnerArray.forEach((rider) => {
+          riders.push({
+            name: "rider",
+            position: {
+              lat: rider.lat,
+              lng: rider.lng,
+            },
+            location: "",
+            icon: {
+              url: `https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/LiveTracking.png`,
+              scaledSize: { width: 40, height: 40 },
+            },
+          });
+        });
+        this.setRiders(riders);
       });
     },
   },

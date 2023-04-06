@@ -42,7 +42,6 @@ export default {
         });
     });
   },
-
   requestAxiosPost({ dispatch }, payload) {
     const config = {
       headers: {

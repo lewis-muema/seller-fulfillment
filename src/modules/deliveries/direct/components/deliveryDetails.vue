@@ -354,6 +354,8 @@ export default {
               billing_cycle?.amount_to_charge,
               billing_cycle?.billing_cycle_instance_id
             );
+          } else {
+            this.redirectToOrder();
           }
         } else {
           ElNotification({

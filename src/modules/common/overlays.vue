@@ -965,28 +965,30 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="popup === 'tour'" class="">
-      <div>
-        <img
-          class="image-tour-overlay"
-          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png"
-          alt=""
-        />
-      </div>
-      <div class="view-products-container tour-container-override">
-        <p class="tour-container-override-title">
-          Test remote config {{ getFirebaseRemoteConfig }}
-          Welcome to the new homescreen
-        </p>
-        <p>Let’s checkout what we have changed</p>
+    <div v-if="getVirtualTour">
+      <div v-if="popup === 'tour'" class="">
         <div>
-          <v-btn
-            @click="takeTour()"
-            class="edit-info-submit-button margin-override tour-button"
-          >
-            Take a tour
-          </v-btn>
-          <p class="skip-tour-text" @click="skipTour()">Skip tour</p>
+          <img
+            class="image-tour-overlay"
+            src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png"
+            alt=""
+          />
+        </div>
+        <div class="view-products-container tour-container-override">
+          <p class="tour-container-override-title">
+            Test remote config {{ getVirtualTour }}
+            Welcome to the new homescreen
+          </p>
+          <p>Let’s checkout what we have changed</p>
+          <div>
+            <v-btn
+              @click="takeTour()"
+              class="edit-info-submit-button margin-override tour-button"
+            >
+              Take a tour
+            </v-btn>
+            <p class="skip-tour-text" @click="skipTour()">Skip tour</p>
+          </div>
         </div>
       </div>
     </div>
@@ -2537,6 +2539,7 @@ import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
+import cookieMixin from "@/mixins/cookie_mixin";
 import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
@@ -2544,10 +2547,6 @@ import { required } from "@vuelidate/validators";
 import VueTimepicker from "vue3-timepicker";
 import "vue3-timepicker/dist/VueTimepicker.css";
 import introJs from "intro.js";
-import { initializeApp } from "firebase/app";
-import { getValue } from "firebase/remote-config";
-import { getRemoteConfig } from "firebase/remote-config";
-// import { fetchAndActivate } from "firebase/remote-config";
 
 export default {
   setup() {
@@ -2555,7 +2554,7 @@ export default {
   },
   props: ["overlayVal", "editInfo"],
   components: { Datepicker, VueTimepicker },
-  mixins: [upload_img, trackingPayloadMixin],
+  mixins: [upload_img, trackingPayloadMixin, cookieMixin],
   data() {
     return {
       overlay: false,
@@ -2912,30 +2911,8 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
-    getFirebaseRemoteConfig() {
-      const firebaseConfig = {
-        apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
-        authDomain: "sendy-fulfilment.firebaseapp.com",
-        projectId: "sendy-fulfilment",
-        storageBucket: "sendy-fulfilment.appspot.com",
-        messagingSenderId: "724697801657",
-        appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
-        measurementId: "G-J8KW3YLS1N",
-      };
-      const app = initializeApp(firebaseConfig);
-      const remoteConfig = getRemoteConfig(app);
-      remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
-      // remoteConfig.defaultConfig = {
-      //   business_id: this.getStorageUserDetails.business_id,
-      //   new_features_virtual_tour: true,
-      // };
-      // const business_id = getValue(remoteConfig, "business_id")._value;
-      let newFeaturesTour = getValue(remoteConfig, "card_payment");
-      // let showTour = false;
-      // if (business_id === this.getStorageUserDetails.business_id) {
-      //   showTour = newFeaturesTour;
-      // }
-      return newFeaturesTour;
+    getVirtualTour() {
+      return JSON.parse(this.getCookie("new_features_virtual_tour"));
     },
   },
   beforeMount() {
@@ -2987,7 +2964,6 @@ export default {
       }
     },
     takeTour() {
-      this.getFirebaseRemoteConfig = true;
       this.setOverlayStatus({
         overlay: false,
         popup: "tour",
@@ -3031,27 +3007,17 @@ export default {
           showBullets: false,
         })
         .start();
+      let closeElement = document.querySelector(".introjs-skipbutton");
+      closeElement.addEventListener('click', function(event) {
+        this.setCookie("new_features_virtual_tour", false, 365);
+      });
     },
     skipTour() {
-      // const firebaseConfig = {
-      //   apiKey: "AIzaSyDAAvZPAgy7HX8JUqxWsFxn28ixGoOnHPs",
-      //   authDomain: "sendy-fulfilment.firebaseapp.com",
-      //   projectId: "sendy-fulfilment",
-      //   storageBucket: "sendy-fulfilment.appspot.com",
-      //   messagingSenderId: "724697801657",
-      //   appId: "1:724697801657:web:25458f9c1a52c4f7430c68",
-      //   measurementId: "G-J8KW3YLS1N",
-      // };
-      // const app = initializeApp(firebaseConfig);
-      // const remoteConfig = getRemoteConfig(app);
-      // fetchAndActivate(remoteConfig)
-      //   .then(() => {
-      //     getValue("new_features_virtual_tour")._value = false;
-      //     console.log(getValue("new_features_virtual_tour"));
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      this.setOverlayStatus({
+        overlay: false,
+        popup: "tour",
+      });
+      this.setCookie("new_features_virtual_tour", false, 365);
     },
     formatAutofillDetails() {
       this.overlayStatusSet(false, "uploadLPO");

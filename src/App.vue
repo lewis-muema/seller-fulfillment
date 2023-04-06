@@ -11,12 +11,13 @@ import Canvas from "./components/canvas.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { initializeApp } from "firebase/app";
 import eventsMixin from "../src/mixins/events_mixin";
+import cookieMixin from "@/mixins/cookie_mixin";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
   name: "App",
   components: { Canvas },
-  mixins: [eventsMixin],
+  mixins: [eventsMixin, cookieMixin],
   data: () => ({}),
   watch: {
     $route(to) {
@@ -78,6 +79,7 @@ export default {
     this.detectMobile();
     this.detectPayments();
     this.countryDefault();
+    this.setVirtualTourCookie();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
@@ -279,6 +281,14 @@ export default {
         }
       }
       return "";
+    },
+    setVirtualTourCookie() {
+      let initialVal = true;
+      if (this.getCookie("new_features_virtual_tour")) {
+        initialVal = (this.getCookie("new_features_virtual_tour"));
+      } else {
+        this.setCookie("new_features_virtual_tour", initialVal, 365);
+      }
     },
   },
 };

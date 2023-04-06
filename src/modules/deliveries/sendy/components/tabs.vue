@@ -186,38 +186,8 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
-    pending: "-",
-    transit: "-",
-    failed: "-",
-    completed: "-",
-    cancelled: "-",
   }),
   watch: {
-    "$store.state.loader": {
-      handler() {
-        this.pending =
-          parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
-          parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
-            ? (
-                parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
-                parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
-              ).toString()
-            : "0";
-        this.transit = this.getConsignmentStatistics.ORDER_IN_TRANSIT
-          ? this.getConsignmentStatistics.ORDER_IN_TRANSIT.toString()
-          : "0";
-        this.failed = this.getConsignmentStatistics.ORDER_FAILED
-          ? this.getConsignmentStatistics.ORDER_FAILED.toString()
-          : "0";
-        this.completed = this.getConsignmentStatistics.ORDER_COMPLETED
-          ? this.getConsignmentStatistics.ORDER_COMPLETED.toString()
-          : "0";
-        this.cancelled = this.getConsignmentStatistics.ORDER_CANCELED
-          ? this.getConsignmentStatistics.ORDER_CANCELED.toString()
-          : "0";
-      },
-      deep: true,
-    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -238,6 +208,34 @@ export default {
         (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
       );
       return typeof status === "object" ? status.permission_granted : false;
+    },
+    pending() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : (
+            parseInt(this.getConsignmentStatistics?.ORDER_RECEIVED) +
+            parseInt(this.getConsignmentStatistics?.ORDER_IN_PROCESSING)
+          )?.toString();
+    },
+    transit() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_IN_TRANSIT?.toString();
+    },
+    failed() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_FAILED?.toString();
+    },
+    completed() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_COMPLETED?.toString();
+    },
+    cancelled() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_CANCELED?.toString();
     },
   },
   methods: {

@@ -2539,7 +2539,7 @@ import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
-import cookieMixin from "@/mixins/cookie_mixin";
+import cookieMixin from "../../mixins/cookie_mixin";
 import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
@@ -2671,6 +2671,8 @@ export default {
         ss: "00",
         a: "am",
       },
+      currentStep: 1,
+      totalSteps:2,
     };
   },
   validations() {
@@ -2976,6 +2978,7 @@ export default {
               element: document.querySelector(".v-step-1"),
               intro: "Click on any item to select",
               position: "bottom",
+              test:"1/2",
             },
             {
               title: "View your account balance!",
@@ -3003,21 +3006,34 @@ export default {
               position: "left",
             },
           ],
+          beforeStepCallback: () => {
+            // Update the tooltip content with custom step number and total steps
+            const tooltipContent = `Step ${this.currentStep}/${this.totalSteps}`;
+            document.querySelector('.introjs-tooltipNumber').textContent = tooltipContent;
+          },
           tooltipClass: "introjs-tooltip",
           showBullets: false,
+          exitOnOverlayClick: false
         })
         .start();
       let closeElement = document.querySelector(".introjs-skipbutton");
+      let doneElement = document.querySelector(".introjs-donebutton");
       closeElement.addEventListener('click', function(event) {
-        this.setCookie("new_features_virtual_tour", false, 365);
+        this.disableTour();
       });
+      doneElement?.addEventListener('click', function(event) {
+        this.disableTour();
+      });
+    },
+    disableTour() {
+      this.setCookie("new_features_virtual_tour", false, 365);
     },
     skipTour() {
       this.setOverlayStatus({
         overlay: false,
         popup: "tour",
       });
-      this.setCookie("new_features_virtual_tour", false, 365);
+      this.disableTour();
     },
     formatAutofillDetails() {
       this.overlayStatusSet(false, "uploadLPO");

@@ -2672,7 +2672,7 @@ export default {
         a: "am",
       },
       currentStep: 1,
-      totalSteps:2,
+      totalSteps: 2,
     };
   },
   validations() {
@@ -2975,33 +2975,34 @@ export default {
           steps: [
             {
               title: "Choose your action here",
-              element: document.querySelector(".v-step-1"),
+              element: document.querySelector(
+                ".dashboard-quicklinks-container"
+              ),
               intro: "Click on any item to select",
               position: "bottom",
-              test:"1/2",
             },
             {
               title: "View your account balance!",
-              element: document.querySelector(".v-step-2"),
+              element: document.querySelector(".dashboard-wallet-container"),
               intro: "Click to access your wallet",
             },
             {
               title: "Track Ongoing On-demand deliveries",
               element: document.querySelector(
-                ".dashboard-deliveries-tab-section"
+                ".dashboard-deliveries-ondemand-section"
               ),
               intro: "Click to display list of the on-demand deliveries",
             },
             {
               title: "View stats summary",
-              element: document.querySelector(".v-step-4"),
+              element: document.querySelector(".dashboard-sidecard-container"),
               intro:
                 "The stats have moved here. Select a category to view full details.",
               position: "left",
             },
             {
               title: "Learn more ways to do more with Sendy",
-              element: document.querySelector(".v-step-5"),
+              element: document.querySelector(".dashboard-articles-container"),
               intro: "Discover offers and products",
               position: "left",
             },
@@ -3009,19 +3010,20 @@ export default {
           beforeStepCallback: () => {
             // Update the tooltip content with custom step number and total steps
             const tooltipContent = `Step ${this.currentStep}/${this.totalSteps}`;
-            document.querySelector('.introjs-tooltipNumber').textContent = tooltipContent;
+            document.querySelector(".introjs-tooltipNumber").textContent =
+              tooltipContent;
           },
           tooltipClass: "introjs-tooltip",
           showBullets: false,
-          exitOnOverlayClick: false
+          exitOnOverlayClick: false,
         })
         .start();
       let closeElement = document.querySelector(".introjs-skipbutton");
       let doneElement = document.querySelector(".introjs-donebutton");
-      closeElement.addEventListener('click', function(event) {
+      closeElement.addEventListener("click", function () {
         this.disableTour();
       });
-      doneElement?.addEventListener('click', function(event) {
+      doneElement?.addEventListener("click", function () {
         this.disableTour();
       });
     },

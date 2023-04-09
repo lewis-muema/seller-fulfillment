@@ -285,7 +285,7 @@ export default {
     setVirtualTourCookie() {
       let initialVal = true;
       if (this.getCookie("new_features_virtual_tour")) {
-        initialVal = (this.getCookie("new_features_virtual_tour"));
+        initialVal = this.getCookie("new_features_virtual_tour");
       } else {
         this.setCookie("new_features_virtual_tour", initialVal, 365);
       }

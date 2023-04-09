@@ -19,13 +19,13 @@
       </span>
       <v-row>
         <v-col cols="8" class="">
-          <quick-links class="v-step-1" />
+          <quick-links class="dashboard-quicklinks-container" />
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
-          <wallet-balance class="v-step-2" />
-          <side-card class="v-step-4" />
-          <articles class="v-step-5" />
+          <wallet-balance class="dashboard-wallet-container" />
+          <side-card class="dashboard-sidecard-container" />
+          <articles class="dashboard-articles-container" />
         </v-col>
       </v-row>
     </div>
@@ -321,6 +321,5 @@ export default {
   cursor: pointer;
   margin: 10px !important;
   font-weight: 400;
-
 }
 </style>

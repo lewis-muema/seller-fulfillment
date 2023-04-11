@@ -53,27 +53,65 @@
           @click="expandCycle(cycle, i)"
         >
           <v-expansion-panel-title>
-            <div class="statements-expansion-title">
-              <p :class="getLoader.billingCycles">
-                {{ formatDate(cycle.billing_cycle_start_date) }}
-              </p>
-              <p
-                class="statements-expansion-title-bottom-row"
-                :class="getLoader.billingCycles"
-              >
-                <span class="statements-expansion-title-amount">
+            <v-row no-gutters>
+              <v-col cols="12" sm="2">
+                <p
+                  class="ma-2 pa-2 statements-expansion-text statement-expansion-date"
+                  :class="getLoader.billingCycles"
+                >
+                  {{ formatDate(cycle.billing_cycle_start_date) }}
+                </p>
+              </v-col>
+              <v-col cols="12" sm="2">
+                <p
+                  class="ma-2 pa-2 statements-expansion-text statement-expansion-ordercount"
+                  :class="getLoader.billingCycles"
+                >
+                  {{ cycle.order_count }}
+                  {{ $t("payments.completedOrders") }}
+                </p>
+              </v-col>
+              <v-col cols="12" sm="2">
+                <p
+                  class="ma-2 pa-2 statements-expansion-text"
+                  :class="getLoader.billingCycles"
+                >
                   {{ getBusinessDetails.currency }}
                   {{ Math.round(cycle.billable_amount * 100) / 100 }}
-                </span>
-                <span>
-                  {{ cycle.order_count }} {{ $t("payments.completedOrders") }}
-                </span>
-              </p>
-            </div>
+                </p>
+              </v-col>
+              <v-col cols="12" sm="2">
+                <div class="ma-2 pa-2">
+                  <p :class="[paidClass(cycle), getLoader.billingCycles]">
+                    {{ billingStatus(cycle.paid_status) }}
+                  </p>
+                </div>
+              </v-col>
+            </v-row>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <v-table>
-              <thead></thead>
+              <thead class="statement-table-titles">
+                <tr>
+                  <th v-for="(head, index) in header" :key="index">
+                    {{ head.title }}
+                    <el-tooltip
+                      v-if="head.description"
+                      class="box-item"
+                      effect="dark"
+                      :content="$t(head.description)"
+                      placement="bottom"
+                      :popper-class="colorTooltipClass"
+                    >
+                      <i
+                        v-if="head.description"
+                        class="mdi mdi-information-outline product-info"
+                      ></i>
+                    </el-tooltip>
+                  </th>
+                </tr>
+              </thead>
+              <hr />
               <tbody>
                 <tr
                   v-for="(row, x) in cycle.lineItems"
@@ -93,6 +131,11 @@
                         $router.push(`/deliveries/tracking/${row.resource_id}`)
                       "
                     >
+                      {{ row.resource_id }}
+                    </span>
+                  </td>
+                  <td class="statements-table-item-row">
+                    <span :class="cycle.loading">
                       {{ row.line_item_title }}
                     </span>
                   </td>
@@ -106,96 +149,136 @@
                       {{ formatLineItemDate(row.created_date) }}
                     </span>
                   </td>
-                  <td class="statements-table-status-row">
-                    <span v-if="cycle.loading" :class="cycle.loading">
-                      {{ billingStatus(cycle.paid_status) }}
-                    </span>
-                    <span v-else :class="paidClass(cycle)">
-                      {{ billingStatus(cycle.paid_status) }}</span
-                    >
-                  </td>
                   <td class="statements-table-price-row">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
-                </tr>
-              </tbody>
-            </v-table>
-            <v-table
-              class="mt-5"
-              v-if="cycle.payments && cycle.payments.length > 0"
-            >
-              <thead>
-                <tr>
-                  <th></th>
-                  <th class="text-left">
-                    <span :class="getLoader.billingCycles">{{
-                      $t("payments.details")
-                    }}</span>
-                  </th>
-                  <th class="text-left">
-                    <span :class="getLoader.billingCycles">{{
-                      $t("payments.paymentDetails")
-                    }}</span>
-                  </th>
-                  <th class="text-left">
-                    <span :class="getLoader.billingCycles">{{
-                      $t("payments.datePaid")
-                    }}</span>
-                  </th>
-                  <th class="text-left">
-                    <span
-                      class="invoices-price-col"
-                      :class="getLoader.billingCycles"
-                      >{{ $t("payments.amountPaid") }}</span
-                    >
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(row, x) in cycle.payments"
-                  :key="x"
-                  class="statements-table-row"
-                >
-                  <td class="statements-table-icon-row">
-                    <span v-if="cycle.loading" :class="cycle.loading">
-                      {{ row.payment_amount }}
-                    </span>
-                    <i v-else :class="`mdi mdi-cash-multiple`"></i>
-                  </td>
-                  <td class="statements-table-item-row">
+                  <td class="statements-table-price-row">
                     <span :class="cycle.loading">
-                      {{ row.payment_attempt_transaction_notes }}
-                    </span>
-                  </td>
-                  <td class="statements-table-item-row">
-                    <span :class="cycle.loading">
-                      {{
-                        $t("payments.paidVia", {
-                          method:
-                            row.used_means_of_payment.means_of_payment_type,
-                          code: row.payment_attempt_transaction_id,
-                        })
-                      }}
-                    </span>
-                  </td>
-                  <td class="statements-table-date-row">
-                    <span :class="cycle.loading">
-                      {{ formatLineItemDate(row.payment_attempt_date) }}
+                      {{ getBusinessDetails.currency }}
+                      100
                     </span>
                   </td>
                   <td class="statements-table-price-row">
-                    <span :class="cycle.loading" class="payments-amount">
+                    <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
-                      {{ Math.round(row.payment_amount * 100) / 100 }}
+                      100
                     </span>
                   </td>
                 </tr>
               </tbody>
             </v-table>
+            <div class="statement-amount-container">
+              <span class="statement-amount-container-total-value"
+                >Total Value
+              </span>
+              <span class="statement-amount-container-currency"
+                >{{ getBusinessDetails.currency }}
+                {{ Math.round(cycle.billable_amount * 100) / 100 }}</span
+              >
+            </div>
+            <div v-if="cycle.payments && cycle.payments.length > 0">
+              <div
+                v-for="(row, i) in cycle.payments"
+                :key="i"
+                class="statement-paid-container"
+              >
+                <span> <i class="mdi mdi-information"></i></span>
+                <span>
+                  {{
+                    $t("payments.paidVia", {
+                      date: formatLineItemDate(row.payment_attempt_date),
+                      means: row.used_means_of_payment.means_of_payment_type,
+                    })
+                  }}</span
+                >
+                <span>
+                  {{ getBusinessDetails.currency
+                  }}{{ row.payment_amount }}</span
+                >
+              </div>
+            </div>
+            <div class="" v-if="prompt">
+              <i class="mdi-alert-rhombus"></i>
+              <span class=""
+                >Payment Overdue. Please pay to continue placing deliveries
+              </span>
+            </div>
+            <!--            <v-table-->
+            <!--              class="mt-5"-->
+            <!--              v-if="cycle.payments && cycle.payments.length > 0"-->
+            <!--            >-->
+            <!--              <thead>-->
+            <!--                <tr>-->
+            <!--                  <th></th>-->
+            <!--                  <th class="text-left">-->
+            <!--                    <span :class="getLoader.billingCycles">{{-->
+            <!--                      $t("payments.details")-->
+            <!--                    }}</span>-->
+            <!--                  </th>-->
+            <!--                  <th class="text-left">-->
+            <!--                    <span :class="getLoader.billingCycles">{{-->
+            <!--                      $t("payments.paymentDetails")-->
+            <!--                    }}</span>-->
+            <!--                  </th>-->
+            <!--                  <th class="text-left">-->
+            <!--                    <span :class="getLoader.billingCycles">{{-->
+            <!--                      $t("payments.datePaid")-->
+            <!--                    }}</span>-->
+            <!--                  </th>-->
+            <!--                  <th class="text-left">-->
+            <!--                    <span-->
+            <!--                      class="invoices-price-col"-->
+            <!--                      :class="getLoader.billingCycles"-->
+            <!--                      >{{ $t("payments.amountPaid") }}</span-->
+            <!--                    >-->
+            <!--                  </th>-->
+            <!--                </tr>-->
+            <!--              </thead>-->
+            <!--              <tbody>-->
+            <!--                <tr-->
+            <!--                  v-for="(row, x) in cycle.payments"-->
+            <!--                  :key="x"-->
+            <!--                  class="statements-table-row"-->
+            <!--                >-->
+            <!--                  <td class="statements-table-icon-row">-->
+            <!--                    <span v-if="cycle.loading" :class="cycle.loading">-->
+            <!--                      {{ row.payment_amount }}-->
+            <!--                    </span>-->
+            <!--                    <i v-else :class="`mdi mdi-cash-multiple`"></i>-->
+            <!--                  </td>-->
+            <!--                  <td class="statements-table-item-row">-->
+            <!--                    <span :class="cycle.loading">-->
+            <!--                      {{ row.payment_attempt_transaction_notes }}-->
+            <!--                    </span>-->
+            <!--                  </td>-->
+            <!--                  <td class="statements-table-item-row">-->
+            <!--                    <span :class="cycle.loading">-->
+            <!--                      {{-->
+            <!--                        $t("payments.paidVia", {-->
+            <!--                          method:-->
+            <!--                            row.used_means_of_payment.means_of_payment_type,-->
+            <!--                          code: row.payment_attempt_transaction_id,-->
+            <!--                        })-->
+            <!--                      }}-->
+            <!--                    </span>-->
+            <!--                  </td>-->
+            <!--                  <td class="statements-table-date-row">-->
+            <!--                    <span :class="cycle.loading">-->
+            <!--                      {{ formatLineItemDate(row.payment_attempt_date) }}-->
+            <!--                    </span>-->
+            <!--                  </td>-->
+            <!--                  <td class="statements-table-price-row">-->
+            <!--                    <span :class="cycle.loading" class="payments-amount">-->
+            <!--                      {{ getBusinessDetails.currency }}-->
+            <!--                      {{ Math.round(row.payment_amount * 100) / 100 }}-->
+            <!--                    </span>-->
+            <!--                  </td>-->
+            <!--                </tr>-->
+            <!--              </tbody>-->
+            <!--            </v-table>-->
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -247,6 +330,45 @@ export default {
       to: "",
       range: "",
       params: "",
+      wht: true,
+      colorTooltipClass: "colorTooltipClass",
+      header: [
+        {
+          title: "",
+          description: "",
+        },
+        {
+          title: "Order No.",
+          description: "",
+        },
+
+        {
+          title: "Order Type.",
+          description: "",
+        },
+
+        {
+          title: "Delivery Location",
+          description: "",
+        },
+
+        {
+          title: "Delivery Date",
+          description: "",
+        },
+        {
+          title: "Total Due",
+          description: "Total value inclusive of 16% sales tax",
+        },
+        {
+          title: "WTH VAT",
+          description: "Withholding tax; 2% of Total Due excluding VAT",
+        },
+        {
+          title: "Net Due",
+          description: "Net total due is the Total Due less Withholding Tax",
+        },
+      ],
     };
   },
   computed: {
@@ -259,7 +381,12 @@ export default {
       "getStorageUserDetails",
       "getLineItems",
       "getExportDataType",
+      "getActivePayment",
     ]),
+    prompt() {
+      const cycle = this.getActivePayment ? this.getActivePayment : {};
+      return Object.keys(cycle).length > 0;
+    },
   },
   watch: {
     range(val) {
@@ -420,12 +547,19 @@ export default {
 .statements-expansion-title {
   text-align: left;
   margin: 15px;
+  display: flex;
 }
-.statements-expansion-title-bottom-row {
+.statements-expansion-text {
+  font-weight: 500;
+}
+.statement-expansion-ordercount {
   color: #606266;
-  font-size: 14px;
-  margin-bottom: 0px;
 }
+/*.statements-expansion-title-bottom-row {*/
+/*  color: #606266;*/
+/*  font-size: 14px;*/
+/*  margin-bottom: 0px;*/
+/*}*/
 .statements-expansion-title-amount {
   margin-right: 15px;
 }
@@ -472,5 +606,38 @@ export default {
 .statement-info-export {
   height: 40px;
   margin-right: 20px;
+}
+.statement-order-no {
+  max-width: 30px !important;
+}
+.statement-table-titles th:nth-last-child(2) {
+  margin-right: 10px; /* Adjust the margin value as needed */
+}
+.colorTooltipClass .el-tooltip__popper {
+  color: #303133;
+}
+.statement-amount-container {
+  float: right;
+  background: #f7f9fc;
+  padding: 7px;
+  border-radius: 5px;
+}
+.statement-amount-container-total-value {
+  color: #909399;
+  font-size: 13px;
+  margin-right: 7px;
+  font-weight: 500;
+}
+.statement-amount-container-currency {
+  color: #303133;
+  font-weight: 700;
+}
+.statement-paid-container {
+  float: right;
+  background: #defad2;
+  padding: 8px;
+  border-radius: 5px;
+  margin-left: 70%;
+  margin-top: 10px;
 }
 </style>

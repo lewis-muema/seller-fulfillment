@@ -50,7 +50,7 @@
   "continueToMakePayment": "Continue to make payment",
   "none": "None",
   "orderNumber": "Order Number",
-  "paidVia": "Paid via {method}. Transaction code: {code}",
+  "paidVia": "Paid on {date} via {means}",
   "sorryNoTransactionsFound": "Sorry! No transactions found",
   "WecouldntFindAnyTransactions": "We couldn’t find any transactions for the selected dates. Please try filtering again",
   "noDefaultPaymentMethodSelected": "No default payment method selected",

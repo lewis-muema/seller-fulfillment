@@ -7,12 +7,12 @@
       >
         <span
           :class="
-            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'All' && getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'All' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'All' && getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('All')
           "
@@ -26,18 +26,21 @@
       >
         <span
           :class="
-            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Pending' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Pending' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Pending' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Pending')
           "
         >
           {{ $t("deliveries.pending") }}
           <v-badge
+            class="pending-badge"
             color="#FBDF9A"
             text-color="#7F3B02"
             :content="pending"
@@ -51,18 +54,21 @@
       >
         <span
           :class="
-            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'inTransit' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'inTransit' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'inTransit' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('inTransit')
           "
         >
           {{ $t("deliveries.inTransit") }}
           <v-badge
+            class="inTransit-badge"
             color="#B8F5A8"
             text-color="#7F3B02"
             :content="transit"
@@ -76,18 +82,21 @@
       >
         <span
           :class="
-            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Failed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Failed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Failed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Failed')
           "
         >
           {{ $t("deliveries.failed") }}
           <v-badge
+            class="failed-badge"
             color="#9B101C"
             text-color="white"
             :content="failed"
@@ -101,18 +110,21 @@
       >
         <span
           :class="
-            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Completed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Completed' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Completed' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Completed')
           "
         >
           {{ $t("deliveries.completed") }}
           <v-badge
+            class="completed-badge"
             color="#324BA8"
             text-color="white"
             :content="completed"
@@ -126,18 +138,21 @@
       >
         <span
           :class="
-            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Cancelled' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? 'inactive-tab'
               : 'customers-orders-tab-section-inner'
           "
           @click="
-            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+            activeTab !== 'Cancelled' &&
+            getLoader.onDemandOrders === 'loading-text'
               ? nothing()
               : passActiveTab('Cancelled')
           "
         >
           {{ $t("deliveries.cancelled") }}
           <v-badge
+            class="cancelled-badge"
             color="#9B101C"
             text-color="white"
             :content="cancelled"
@@ -173,38 +188,8 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
-    pending: "-",
-    transit: "-",
-    failed: "-",
-    completed: "-",
-    cancelled: "-",
   }),
   watch: {
-    "$store.state.loader": {
-      handler() {
-        this.pending =
-          parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
-          parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
-            ? (
-                parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
-                parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING)
-              ).toString()
-            : "0";
-        this.transit = this.getPointToPointStatistics.ORDER_IN_TRANSIT
-          ? this.getPointToPointStatistics.ORDER_IN_TRANSIT.toString()
-          : "0";
-        this.failed = this.getPointToPointStatistics.ORDER_FAILED
-          ? this.getPointToPointStatistics.ORDER_FAILED.toString()
-          : "0";
-        this.completed = this.getPointToPointStatistics.ORDER_COMPLETED
-          ? this.getPointToPointStatistics.ORDER_COMPLETED.toString()
-          : "0";
-        this.cancelled = this.getPointToPointStatistics.ORDER_CANCELED
-          ? this.getPointToPointStatistics.ORDER_CANCELED.toString()
-          : "0";
-      },
-      deep: true,
-    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -225,6 +210,34 @@ export default {
         (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
       );
       return typeof status === "object" ? status.permission_granted : false;
+    },
+    pending() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : (
+            parseInt(this.getPointToPointStatistics?.ORDER_RECEIVED) +
+            parseInt(this.getPointToPointStatistics?.ORDER_IN_PROCESSING)
+          )?.toString();
+    },
+    transit() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_IN_TRANSIT?.toString();
+    },
+    failed() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_FAILED?.toString();
+    },
+    completed() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_COMPLETED?.toString();
+    },
+    cancelled() {
+      return Object.keys(this.getPointToPointStatistics).length === 0
+        ? "-"
+        : this.getPointToPointStatistics?.ORDER_CANCELED?.toString();
     },
   },
   methods: {

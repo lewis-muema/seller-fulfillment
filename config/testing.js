@@ -27,4 +27,7 @@ module.exports = {
   MERCHANT_GATEWAY: "https://merchant-gateway-test.sendyit.com/",
   RND_ORDER_PLACEMENT: "https://rnd-order-placement-test.sendyit.com/",
   FULFILMENT_API: "https://fulfillment-api-test.sendyit.com/",
+  SOLR_RIDER_SEARCH: "https://authtest.sendyit.com/solr/ridersstaging/",
+  METABASE_KEY:
+    "baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6",
 };

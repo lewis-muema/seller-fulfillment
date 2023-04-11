@@ -6,7 +6,7 @@
       </h5>
     </span>
     <span>
-      <button @click="closePage()">
+      <button @click="closePage()" data-test="header-close-btn">
         <img
           src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/close-button.svg"
         />
@@ -16,9 +16,24 @@
 </template>
 
 <script>
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
+
 export default {
+  data() {
+    return {
+      getUserDetails: inject("getUserDetails"),
+    };
+  },
+  mixins: [eventsMixin],
   methods: {
     closePage() {
+      this.sendSegmentEvents({
+        event: "[merchant] Closed platform integration",
+        data: {
+          userId: this.getUserDetails.user_id,
+        },
+      });
       this.$router.go({ path: "/settings/integrations" });
     },
   },

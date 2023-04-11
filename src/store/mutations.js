@@ -443,4 +443,16 @@ export default {
   setDirectOrderDetailsStep(state, val) {
     state.directOrderDetailsStep = val;
   },
+  setDirectOrderPartner(state, val) {
+    state.directOrderPartner = val;
+  },
+  setDirectOrderNumber(state, val) {
+    state.directOrderNumber = val;
+  },
+  setMapReady(state, val) {
+    state.mapReady = val;
+  },
+  setRiders(state, val) {
+    state.riders = val;
+  },
 };

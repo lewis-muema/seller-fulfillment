@@ -7,7 +7,11 @@
       <v-row class="desktop-dashboard-upper-content">
         <v-col cols="11">
           <div class="">
-            <div class="" v-for="(link, i) in links" :key="i">
+            <div
+              class="dashboard-articles-links"
+              v-for="(link, i) in links"
+              :key="i"
+            >
               <v-list class="stats-list-item" lines="two">
                 <v-list-item>
                   <v-list-item-header>

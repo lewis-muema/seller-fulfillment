@@ -50,6 +50,7 @@ import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
 import statements from "../modules/payments/statements/statements.vue";
 import direct from "../modules/deliveries/direct/direct.vue";
+import analytics from "../modules/analytics/analytics.vue";
 
 import integrations from "../modules/integrations/routes/index";
 
@@ -311,6 +312,11 @@ const routes = [
     path: "/direct/create-delivery",
     name: "Direct Fulfilment",
     component: direct,
+  },
+  {
+    path: "/analytics",
+    name: "Analytics",
+    component: analytics,
   },
   ...integrations,
 ];

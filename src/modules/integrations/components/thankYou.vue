@@ -8,7 +8,10 @@
           class="congratulations-container__image"
         />
       </div>
-      <div class="congratulations-container__heading">
+      <div
+        class="congratulations-container__heading"
+        data-test="congratulations"
+      >
         {{ $t("merchant.congratulations") }}
       </div>
       <div class="congratulations-container__text">
@@ -16,9 +19,12 @@
         {{ $t("merchant.is_now_integrated_with_sendy") }}
       </div>
       <div class="congratulations-container__bottom">
-        <v-btn class="congratulations-container__btn" @click="closePage">{{
-          $t("merchant.close")
-        }}</v-btn>
+        <v-btn
+          class="congratulations-container__btn"
+          @click="closePage"
+          data-test="close-thank-you"
+          >{{ $t("merchant.close") }}</v-btn
+        >
       </div>
     </div>
   </div>
@@ -26,11 +32,27 @@
 
 <script>
 import headerComponent from "./header.vue";
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
 
 export default {
   name: "ThankYou",
+  mixins: [eventsMixin],
   components: {
     headerComponent,
+  },
+  mounted() {
+    this.sendSegmentEvents({
+      event: "[merchant] Store integration success page",
+      data: {
+        userId: this.getUserDetails.user_id,
+      },
+    });
+  },
+  data() {
+    return {
+      getUserDetails: inject("getUserDetails"),
+    };
   },
   props: {
     storeName: {

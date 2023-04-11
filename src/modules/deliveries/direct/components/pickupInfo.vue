@@ -71,27 +71,29 @@
         </div>
       </div>
     </div>
-    <div v-if="vehicleTypes?.length" class="delivery-details-section">
-      <div class="delivery-details-section-title">
-        <i class="mdi mdi-motorbike delivery-details-section-icon"></i>
-        <div>
-          {{ $t("deliveries.whatTypeOfBikeDoYouWant") }}
+    <div class="delivery-details-section">
+      <div v-if="vehicleTypes?.length">
+        <div class="delivery-details-section-title">
+          <i class="mdi mdi-motorbike delivery-details-section-icon"></i>
+          <div>
+            {{ $t("deliveries.whatTypeOfBikeDoYouWant") }}
+          </div>
         </div>
-      </div>
-      <div class="delivery-details-section-items">
-        <div
-          v-for="(vehicleType, v) in vehicleTypes"
-          :key="v"
-          class="delivery-details-section-vehicle-types"
-          @click="getDirectOrderDetails.pickup.vehicle_option = vehicleType"
-          :class="
-            getDirectOrderDetails?.pickup?.vehicle_option
-              ?.option_description === vehicleType?.option_description
-              ? 'active-vehicle-option'
-              : ''
-          "
-        >
-          {{ vehicleType.option_description }}
+        <div class="delivery-details-section-items">
+          <div
+            v-for="(vehicleType, v) in vehicleTypes"
+            :key="v"
+            class="delivery-details-section-vehicle-types"
+            @click="getDirectOrderDetails.pickup.vehicle_option = vehicleType"
+            :class="
+              getDirectOrderDetails?.pickup?.vehicle_option
+                ?.option_description === vehicleType?.option_description
+                ? 'active-vehicle-option'
+                : ''
+            "
+          >
+            {{ vehicleType.option_description }}
+          </div>
         </div>
       </div>
     </div>
@@ -132,11 +134,31 @@
         ></textarea>
       </div>
     </div>
+    <div class="delivery-details-section">
+      <div class="delivery-details-section-select-partner-title">
+        <i class="mdi mdi-racing-helmet delivery-details-section-icon"></i>
+        {{ $t("deliveries.doYouHaveAPreferredRider") }}
+        <v-switch
+          v-model="getDirectOrderDetails.selectPartner"
+          class="partner-select-switch"
+          color="indigo"
+          hide-details
+        ></v-switch>
+      </div>
+      <div
+        class="delivery-details-section-items"
+        v-if="getDirectOrderDetails.selectPartner"
+      >
+        {{ $t("deliveries.enterDriversPhone") }}
+      </div>
+      <partnerSearch v-if="getDirectOrderDetails.selectPartner" />
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import moment from "moment";
+import partnerSearch from "../../../common/partnerSearch.vue";
 
 export default {
   computed: {
@@ -152,6 +174,7 @@ export default {
       "getSendyPhoneProps",
       "getVueTelInputProps",
       "getDirectOrderDetails",
+      "getDirectOrderPartner",
     ]),
     pickUpLocation() {
       return this.getMarkers[0]?.location;
@@ -160,6 +183,7 @@ export default {
       return this.getSelectedVehicleType?.vehicle_type_options;
     },
   },
+  components: { partnerSearch },
   data() {
     return {
       items: [
@@ -179,7 +203,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setOverlayStatus"]),
+    ...mapMutations(["setOverlayStatus", "setDirectOrderPartner"]),
     reschedule() {
       this.setOverlayStatus({
         overlay: true,
@@ -258,5 +282,34 @@ export default {
 .delivery-details-section-pick-up {
   font-size: 13px;
   margin-top: 5px;
+}
+.delivery-details-section-select-partner {
+  width: 100px;
+}
+.delivery-details-section-select-partner-title {
+  font-size: 16px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+.delivery-details-section-selected-partner {
+  padding: 15px 15px;
+  background: #dddfe6;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.partner-description {
+  width: 240px !important;
+}
+.selected-partner-remove {
+  font-size: 11px;
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+  text-decoration: underline;
+  color: #324aa8;
+}
+.partner-select-switch .v-input__control .v-selection-control {
+  float: right;
 }
 </style>

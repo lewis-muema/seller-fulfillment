@@ -43,6 +43,7 @@ import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
 import walletBanner from "../payments/wallet/components/walletBanner.vue";
 import moment from "moment";
+import cookieMixin from "@/mixins/cookie_mixin";
 
 export default {
   components: {
@@ -55,6 +56,7 @@ export default {
     onboarding,
     walletBanner,
   },
+  mixins: [cookieMixin],
   data() {
     return {
       tab: null,
@@ -85,10 +87,12 @@ export default {
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
-    this.setOverlayStatus({
-      overlay: true,
-      popup: "tour",
-    });
+    if (JSON.parse(this.getCookie("new_features_virtual_tour"))) {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "tour",
+      });
+    }
   },
   methods: {
     ...mapMutations([

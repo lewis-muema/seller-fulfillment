@@ -1,203 +1,15 @@
 <template>
   <v-card variant="outlined" class="dashboard-deliveries-container">
     <div v-if="!noAccess">
-      <div v-if="(getSelectedTab === 'dashboard.toYourCustomers')">
+      <div v-if="getSelectedTab === 'dashboard.toYourCustomers'">
         <to-your-customers-tab />
       </div>
       <div v-if="getSelectedTab === 'dashboard.toSendy'">
         <to-sendy-tab />
       </div>
-      <!--      <div class="deliveries-container-inner" v-if="filteredDeliveries.length">-->
-      <!--        <v-table class="">-->
-      <!--          <thead>-->
-      <!--            <tr>-->
-      <!--              <th class="text-left table-headers">-->
-      <!--                {{-->
-      <!--                  getSelectedTab === "dashboard.toYourCustomers"-->
-      <!--                    ? $t("deliveries.customerInfo")-->
-      <!--                    : $t("deliveries.products")-->
-      <!--                }}-->
-      <!--              </th>-->
-      <!--              <th class="text-left table-headers">-->
-      <!--                {{ $t("dashboard.progress") }}-->
-      <!--              </th>-->
-      <!--              <th class="text-left table-headers">-->
-      <!--                {{ $t("deliveries.platforms") }}-->
-      <!--              </th>-->
-      <!--              <th class="text-left table-headers">-->
-      <!--                {{ $t("dashboard.action") }}-->
-      <!--              </th>-->
-      <!--            </tr>-->
-      <!--          </thead>-->
-      <!--          <tbody>-->
-      <!--            <tr-->
-      <!--              v-for="(item, index) in filteredDeliveries"-->
-      <!--              :key="index"-->
-      <!--              class="dashboard-deliveries-row-container"-->
-      <!--            >-->
-      <!--              <td class="deliveries-date-row">-->
-      <!--                <v-list-item class="dashboard-customer-columns" lines="two">-->
-      <!--                  <v-list-item-header>-->
-      <!--                    <v-list-item-title>-->
-      <!--                      <span-->
-      <!--                        :class="-->
-      <!--                          getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                            ? getLoader.deliveries-->
-      <!--                            : getLoader.consignments-->
-      <!--                        "-->
-      <!--                      >-->
-      <!--                        {{-->
-      <!--                          getSelectedTab === "dashboard.toYourCustomers"-->
-      <!--                            ? formatName(item.destination.name)-->
-      <!--                            : formatProducts(item.products)-->
-      <!--                        }}-->
-      <!--                      </span>-->
-      <!--                    </v-list-item-title>-->
-      <!--                    <v-list-item-subtitle-->
-      <!--                      class="dashboard-customer-delivery-location"-->
-      <!--                      v-if="getSelectedTab === 'dashboard.toYourCustomers'"-->
-      <!--                    >-->
-      <!--                      <div class="dashboard-customer-delivery-location-inner">-->
-      <!--                        <span-->
-      <!--                          :class="-->
-      <!--                            getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                              ? getLoader.deliveries-->
-      <!--                              : getLoader.consignments-->
-      <!--                          "-->
-      <!--                        >-->
-      <!--                          {{-->
-      <!--                            formatName(-->
-      <!--                              item.destination.delivery_location.description-->
-      <!--                            )-->
-      <!--                          }}-->
-      <!--                        </span>-->
-      <!--                      </div>-->
-      <!--                    </v-list-item-subtitle>-->
-      <!--                  </v-list-item-header>-->
-      <!--                </v-list-item>-->
-      <!--              </td>-->
-      <!--              <td class="deliveries-product-row">-->
-      <!--                <v-list-item class="dashboard-customer-columns" lines="two">-->
-      <!--                  <v-list-item-header-->
-      <!--                    v-if="item.order_status === 'ORDER_FAILED'"-->
-      <!--                  >-->
-      <!--                    <p class="delivery-attempted-error">-->
-      <!--                      <i class="mdi mdi-information-outline mr-2"></i-->
-      <!--                      >{{ $t("deliveries.deliveryAttempt") }}-->
-      <!--                    </p>-->
-      <!--                    <p class="ml-6 mb-1">-->
-      <!--                      {{-->
-      <!--                        $t("deliveries.weWillDeliverAgain", {-->
-      <!--                          Date: deliveryDate(item.scheduled_date),-->
-      <!--                        })-->
-      <!--                      }}-->
-      <!--                    </p>-->
-      <!--                  </v-list-item-header>-->
-      <!--                  <v-list-item-header v-else>-->
-      <!--                    <v-list-item-title>-->
-      <!--                      <span-->
-      <!--                        :class="-->
-      <!--                          getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                            ? getLoader.deliveries-->
-      <!--                            : getLoader.consignments-->
-      <!--                        "-->
-      <!--                      >-->
-      <!--                        {{ formatStatus(item.order_event_status, item) }}-->
-      <!--                      </span>-->
-      <!--                    </v-list-item-title>-->
-      <!--                    <v-progress-linear-->
-      <!--                      :model-value="item.delivery_progress_ratio * 100"-->
-      <!--                      color="#324BA8"-->
-      <!--                      rounded-->
-      <!--                      height="7"-->
-      <!--                    ></v-progress-linear>-->
-      <!--                  </v-list-item-header>-->
-      <!--                </v-list-item>-->
-      <!--              </td>-->
-      <!--              <td class="deliveries-platform-row">-->
-      <!--                <span class="deliveries-platform-tag">-->
-      <!--                  <span-->
-      <!--                    :class="-->
-      <!--                      getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                        ? getLoader.deliveries-->
-      <!--                        : getLoader.consignments-->
-      <!--                    "-->
-      <!--                    class="deliveries-platform-tag-storefront"-->
-      <!--                    v-if="item.sales_channel_name"-->
-      <!--                  >-->
-      <!--                    {{ item.sales_channel_name }}-->
-      <!--                  </span>-->
-      <!--                  <span-->
-      <!--                    :class="-->
-      <!--                      getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                        ? getLoader.deliveries-->
-      <!--                        : getLoader.consignments-->
-      <!--                    "-->
-      <!--                    class="deliveries-platform-tag-fulfillment"-->
-      <!--                    v-else-->
-      <!--                  >-->
-      <!--                    {{ $t("dashboard.fulfillmentApp") }}-->
-      <!--                  </span>-->
-      <!--                </span>-->
-      <!--              </td>-->
-      <!--              <td class="deliveries-date-row">-->
-      <!--                <router-link-->
-      <!--                  :to="`/deliveries/tracking/${item.order_id}`"-->
-      <!--                  class="dashboard-track-order"-->
-      <!--                >-->
-      <!--                  <span-->
-      <!--                    :class="-->
-      <!--                      getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                        ? getLoader.deliveries-->
-      <!--                        : getLoader.consignments-->
-      <!--                    "-->
-      <!--                  >-->
-      <!--                    {{ $t("deliveries.trackOrder") }}-->
-      <!--                  </span>-->
-      <!--                </router-link>-->
-      <!--              </td>-->
-      <!--            </tr>-->
-      <!--          </tbody>-->
-      <!--        </v-table>-->
-      <!--        <div class="show-more-deliveries-link" v-if="showMoreDeliveries">-->
-      <!--          <router-link-->
-      <!--            :to="-->
-      <!--              getSelectedTab === 'dashboard.toYourCustomers'-->
-      <!--                ? '/deliveries/customer'-->
-      <!--                : '/deliveries/sendy'-->
-      <!--            "-->
-      <!--            class="show-more-deliveries-link"-->
-      <!--            >{{ $t("dashboard.showMoreDeliveries")-->
-      <!--            }}<v-icon>mdi mdi-arrow-right</v-icon></router-link-->
-      <!--          >-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <div class="deliveries-empty" v-else>-->
-      <!--        <div>-->
-      <!--          <img-->
-      <!--            src="https://images.sendyit.com/fulfilment/seller/track.png"-->
-      <!--            alt=""-->
-      <!--            class="deliveries-empty-img"-->
-      <!--          />-->
-      <!--        </div>-->
-      <!--        <p class="deliveries-empty-title">-->
-      <!--          {{ $t("deliveries.noDeliveriesToTrack") }}-->
-      <!--        </p>-->
-      <!--        <v-btn-->
-      <!--          class="deliveries-btn"-->
-      <!--          size="default"-->
-      <!--          v-if="getSelectedTab === 'dashboard.onDemand'"-->
-      <!--        >-->
-      <!--          {{ $t("deliveries.deliverToACustomer") }}-->
-      <!--        </v-btn>-->
-      <!--        <v-btn class="deliveries-btn" @click="redirect()" size="default" v-else>-->
-      <!--          {{-->
-      <!--            getSelectedTab === "dashboard.toYourCustomers"-->
-      <!--              ? $t("deliveries.deliverToACustomer")-->
-      <!--              : $t("deliveries.deliverToSendy")-->
-      <!--          }}-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
+      <div v-if="getSelectedTab === 'dashboard.onDemand'">
+        <on-demand-tab />
+      </div>
     </div>
     <div class="dashboard-noaccess-container" v-else>
       <accessDeniedComponent />
@@ -212,11 +24,17 @@ import eventLabels from "../../../mixins/event_labels";
 import placeholder from "../../../mixins/placeholders";
 import toYourCustomersTab from "./toYourCustomersTab.vue";
 import toSendyTab from "./toSendyTab.vue";
+import onDemandTab from "./onDemandTab.vue";
 
 export default {
   props: ["deliveries", "selectedTab"],
   mixins: [eventLabels, placeholder],
-  components: { accessDeniedComponent, toYourCustomersTab, toSendyTab },
+  components: {
+    onDemandTab,
+    accessDeniedComponent,
+    toYourCustomersTab,
+    toSendyTab,
+  },
   data() {
     return {
       params: "?max=5",
@@ -236,15 +54,54 @@ export default {
     getSelectedTab() {
       return this.selectedTab;
     },
+    deliveriesLoaderText() {
+      let loaderText = "";
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          loaderText = "deliveries";
+          break;
+        case "dashboard.toSendy":
+          loaderText = "consignments";
+          break;
+        case "dashboard.onDemand":
+          loaderText = "onDemandOrders";
+          break;
+      }
+      return loaderText;
+    },
+    deliveriesEndpoint() {
+      let deliveriesUrl = "";
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          deliveriesUrl = "deliveries";
+          break;
+        case "dashboard.toSendy":
+          deliveriesUrl = "consignments";
+          break;
+        case "dashboard.onDemand":
+          deliveriesUrl = "point-to-point";
+          break;
+      }
+      return deliveriesUrl;
+    },
   },
   watch: {
     selectedTab() {
-      if (this.getSelectedTab === "dashboard.toYourCustomers") {
-        this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
-        this.setDeliveries(this.placeHolderDeliveries);
-      } else {
-        this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
-        this.setConsignments(this.placeholderConsignments);
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
+          this.setDeliveries(this.placeHolderDeliveries);
+          break;
+        case "dashboard.toSendy":
+          this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
+          this.setConsignments(this.placeholderConsignments);
+          break;
+        case "dashboard.onDemand":
+          this.noAccess = this.getAccessDenied.includes(
+            "/deliveries/direct-deliveries/"
+          );
+          this.setOnDemandDeliveries(this.placeholderOnDemandDeliveries);
+          break;
       }
       this.fetchOrders();
     },
@@ -274,26 +131,22 @@ export default {
       "setLoader",
       "setDeliveries",
       "setConsignments",
+      "setOnDemandDeliveries",
     ]),
     fetchOrders() {
       this.setLoader({
-        type:
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "deliveries"
-            : "consignments",
+        type: this.deliveriesLoaderText,
         value: "loading-text",
       });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "deliveries"
-            : "consignments"
-        }${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${this.deliveriesEndpoint}${this.params}`,
       }).then((response) => {
         if (response.status === 200) {
           if (this.getSelectedTab === "dashboard.toYourCustomers") {
             this.setDeliveries(response.data.data.orders);
+          } else if (this.getSelectedTab === "dashboard.onDemand") {
+            this.setOnDemandDeliveries(response.data.data.orders);
           } else {
             this.setConsignments(response.data.data.orders);
           }
@@ -305,6 +158,10 @@ export default {
           });
           this.setLoader({
             type: "deliveries",
+            value: "",
+          });
+          this.setLoader({
+            type: "onDemandOrders",
             value: "",
           });
         }

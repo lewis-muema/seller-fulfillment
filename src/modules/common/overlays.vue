@@ -976,18 +976,19 @@
         </div>
         <div class="view-products-container tour-container-override">
           <p class="tour-container-override-title">
-            Test remote config {{ getVirtualTour }}
-            Welcome to the new homescreen
+            {{ $t("common.newHomeScreen") }}
           </p>
-          <p>Let’s checkout what we have changed</p>
+          <p>{{ $t("common.letsCheckout") }}</p>
           <div>
             <v-btn
               @click="takeTour()"
               class="edit-info-submit-button margin-override tour-button"
             >
-              Take a tour
+              {{ $t("common.takeTour") }}
             </v-btn>
-            <p class="skip-tour-text" @click="skipTour()">Skip tour</p>
+            <p class="skip-tour-text" @click="skipTour()">
+              {{ $t("common.skipTour") }}
+            </p>
           </div>
         </div>
       </div>
@@ -3007,24 +3008,21 @@ export default {
               position: "left",
             },
           ],
-          beforeStepCallback: () => {
-            // Update the tooltip content with custom step number and total steps
-            const tooltipContent = `Step ${this.currentStep}/${this.totalSteps}`;
-            document.querySelector(".introjs-tooltipNumber").textContent =
-              tooltipContent;
-          },
           tooltipClass: "introjs-tooltip",
           showBullets: false,
           exitOnOverlayClick: false,
         })
         .start();
       let closeElement = document.querySelector(".introjs-skipbutton");
-      let doneElement = document.querySelector(".introjs-donebutton");
+      let nextElement = document.querySelector(".introjs-nextbutton");
       closeElement.addEventListener("click", function () {
         this.disableTour();
       });
-      doneElement?.addEventListener("click", function () {
-        this.disableTour();
+      nextElement.addEventListener("click", function (event) {
+        let textContent = nextElement.textContent;
+        if (textContent === "Done") {
+          this.disableTour();
+        }
       });
     },
     disableTour() {

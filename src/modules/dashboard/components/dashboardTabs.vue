@@ -94,7 +94,11 @@ export default {
   watch: {
     "$store.state.loader": {
       handler(val) {
-        if (val.consignments === "" || val.deliveries === "") {
+        if (
+          val.consignments === "" ||
+          val.deliveries === "" ||
+          val.onDemandOrders === ""
+        ) {
           this.tabs[0].content = this.ongoingDeliveries
             ? this.ongoingDeliveries
             : 0;

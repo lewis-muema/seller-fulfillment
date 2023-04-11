@@ -42,7 +42,6 @@ import sideCard from "@/modules/dashboard/components/sideCard";
 import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
 import walletBanner from "../payments/wallet/components/walletBanner.vue";
-// import introJs from "intro.js";
 import moment from "moment";
 
 export default {
@@ -82,6 +81,7 @@ export default {
     this.getDeliveryStatsToday();
     this.getPickUpStatsToday();
     this.getDeliveryStats();
+    this.getPointToPointStats();
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
@@ -99,6 +99,7 @@ export default {
       "setDeliveriesStatistics",
       "setConsignmentStatistics",
       "setDeliveriesStatisticsToday",
+      "setPointToPointStatistics",
       "setConsignmentStatisticsToday",
       "setBillingCycles",
       "setOverlayStatus",
@@ -250,6 +251,18 @@ export default {
         if (response.status === 200) {
           this.setStockStatistics(
             response.data.data.grouped_by_stock_level_count
+          );
+        }
+      });
+    },
+    getPointToPointStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setPointToPointStatistics(
+            response.data.data.grouped_by_status_count
           );
         }
       });

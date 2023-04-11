@@ -82,14 +82,10 @@ Cypress.Commands.add("crossDockingStubs", () => {
   ).as("geofence");
 });
 Cypress.Commands.add("crossDockingProductsStubs", () => {
-  cy.intercept(
-    "PUT",
-    `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/user/fcm`,
-    {
-      statusCode: 200,
-      body: fcm,
-    }
-  ).as("fcm");
+  cy.intercept("PUT", `${constants.FULFILMENT_SERVER}seller/*/user/fcm`, {
+    statusCode: 200,
+    body: fcm,
+  }).as("fcm");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/products?max=6&offset=0`,
@@ -108,14 +104,10 @@ Cypress.Commands.add("crossDockingProductsStubs", () => {
   ).as("product");
 });
 Cypress.Commands.add("crossDockingFeeStubs", () => {
-  cy.intercept(
-    "PUT",
-    `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/user/fcm`,
-    {
-      statusCode: 200,
-      body: fcm,
-    }
-  ).as("fcm");
+  cy.intercept("PUT", `${constants.FULFILMENT_SERVER}seller/*/user/fcm`, {
+    statusCode: 200,
+    body: fcm,
+  }).as("fcm");
   cy.intercept(
     "POST",
     `${constants.FULFILMENT_SERVER}seller/B-AEB-9648/crossdocked-delivery/calculate-fee`,

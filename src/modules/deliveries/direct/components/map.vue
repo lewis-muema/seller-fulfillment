@@ -20,6 +20,24 @@
         position: marker.position,
         icon: marker.icon,
       }"
+    >
+    </Marker>
+    <InfoWindow
+      v-for="infoWindow in infoWindows"
+      :key="JSON.stringify(infoWindow)"
+      :options="{
+        position: infoWindowPosition(infoWindow.position),
+        content: infoWindow.location,
+      }"
+    />
+    <Marker
+      v-for="rider in riders"
+      :key="JSON.stringify(rider)"
+      :options="{
+        title: rider.name,
+        position: rider.position,
+        icon: rider.icon,
+      }"
     />
     <Polyline :options="polyline" />
   </GoogleMap>
@@ -27,7 +45,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { GoogleMap, Marker, Polyline } from "vue3-google-map";
+import { GoogleMap, Marker, Polyline, InfoWindow } from "vue3-google-map";
 import { mapGetters, mapMutations } from "vuex";
 
 export default defineComponent({
@@ -38,25 +56,39 @@ export default defineComponent({
         lng: 36.780982,
       },
       mapLoadedStatus: false,
+      infoWindows: [],
     };
   },
   components: {
     GoogleMap,
     Marker,
     Polyline,
+    InfoWindow,
   },
   watch: {
     markers: {
       handler(markers) {
         if (this.mapLoadedStatus && markers?.length) {
           this.fitMapToBounds();
+          this.initializeInfoWindows();
         }
       },
       deep: true,
     },
+    riders: {
+      handler(riders) {
+        if (this.mapLoadedStatus && riders?.length) {
+          this.fitMapToBounds();
+        }
+      },
+      deep: true,
+    },
+    mapLoadedStatus() {
+      this.initializeInfoWindows();
+    },
   },
   computed: {
-    ...mapGetters(["getMarkers", "getPolyline", "getMapStatus"]),
+    ...mapGetters(["getMarkers", "getPolyline", "getMapStatus", "getRiders"]),
     googleApiKey() {
       return process?.env?.GOOGLE_API_KEY_TEST;
     },
@@ -69,6 +101,15 @@ export default defineComponent({
       });
       return markers;
     },
+    riders() {
+      const riders = [];
+      this.getRiders.forEach((rider) => {
+        if (rider) {
+          riders.push(rider);
+        }
+      });
+      return riders;
+    },
     polyline() {
       return this.getPolyline;
     },
@@ -76,14 +117,24 @@ export default defineComponent({
   mounted() {
     this.mapLoaded();
   },
+  beforeUnmount() {
+    this.setMapReady(false);
+  },
   methods: {
-    ...mapMutations(["setMarkers", "setPolyline", "setMapStatus"]),
+    ...mapMutations([
+      "setMarkers",
+      "setPolyline",
+      "setMapStatus",
+      "setMapReady",
+      "setRiders",
+    ]),
     mapLoaded() {
       const mapLoaded = setInterval(() => {
         if (this?.$refs?.googleMapCmp?.mapTilesLoaded) {
           // this.setMapElements();
           this.mapLoadedStatus = true;
           clearInterval(mapLoaded);
+          this.setMapReady(true);
           if (this.markers?.length) {
             this.fitMapToBounds();
           }
@@ -107,6 +158,9 @@ export default defineComponent({
       for (const m of this.markers) {
         bounds.extend(m?.position);
       }
+      for (const m of this.riders) {
+        bounds.extend(m?.position);
+      }
       this.$refs.googleMapCmp.map.fitBounds(bounds);
       if (this.getMarkers?.length <= 1) {
         this.$refs.googleMapCmp.map.setZoom(this.$refs.googleMapCmp.zoom - 2);
@@ -114,11 +168,33 @@ export default defineComponent({
     },
     decode_path(path) {
       const polyline = [];
-      // eslint-disable-next-line no-undef
-      new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
-        polyline.push({ lat: row.lat(), lng: row.lng() });
-      });
+      if (typeof google === "object") {
+        // eslint-disable-next-line no-undef
+        new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
+          polyline.push({ lat: row.lat(), lng: row.lng() });
+        });
+      }
       return polyline;
+    },
+    infoWindowPosition(position) {
+      const lat = position.lat + 0.003;
+      const lng = position.lng;
+      return {
+        lat,
+        lng,
+      };
+    },
+    initializeInfoWindows() {
+      const infoWindow = [];
+      this.getMarkers.forEach((marker) => {
+        if (marker) {
+          infoWindow.push({
+            position: marker.position,
+            location: marker.location,
+          });
+        }
+      });
+      this.infoWindows = infoWindow;
     },
   },
 });

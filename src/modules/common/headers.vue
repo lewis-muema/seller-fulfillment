@@ -107,6 +107,7 @@
           transition="slide-y-transition"
           anchor="bottom end"
           v-model="profileToggle"
+          class="header-menu-dropdown"
         >
           <template v-slot:activator="{ props }">
             <v-btn
@@ -585,5 +586,8 @@ export default {
   color: #324ba8;
   float: right;
   margin: 16px;
+}
+.header-menu-dropdown .v-overlay__content {
+  position: sticky !important;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="direct-inputs-container">
     <div class="location-divider" />
     <div class="d-flex">
-      <div class="direct-inputs-prefix-icon" />
+      <div class="direct-inputs-prefix-icon pickup-prefix-icon" />
       <GMapAutocomplete
         id="pick-up"
         class="businessProfile-address direct-inputs"
@@ -350,12 +350,10 @@ export default {
         },
         location: location.description,
         icon: {
-          url: `https://images.sendyit.com/web_platform/orders/${
-            this.locationType === "pick-up"
-              ? "pickup_placeholder"
-              : "destination_placeholder"
+          url: `https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/${
+            this.locationType === "pick-up" ? "pickup" : "destination"
           }.png`,
-          scaledSize: { width: 23, height: 40 },
+          scaledSize: { width: 20, height: 20 },
         },
       };
       this.resetSuggestion();
@@ -367,10 +365,12 @@ export default {
     },
     decode_path(path) {
       const polyline = [];
-      // eslint-disable-next-line no-undef
-      new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
-        polyline.push({ lat: row.lat(), lng: row.lng() });
-      });
+      if (typeof google === "object") {
+        // eslint-disable-next-line no-undef
+        new google.maps.geometry.encoding.decodePath(path).forEach((row) => {
+          polyline.push({ lat: row.lat(), lng: row.lng() });
+        });
+      }
       return polyline;
     },
   },
@@ -390,6 +390,9 @@ export default {
   height: 8px;
   background: #324ba8;
   border-radius: 10px;
+}
+.pickup-prefix-icon {
+  background: #ee7d00 !important;
 }
 .direct-inputs {
   height: 40px;

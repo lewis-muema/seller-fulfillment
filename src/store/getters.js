@@ -151,4 +151,8 @@ export default {
   getSelectedVehicleType: (state) => state.selectedVehicleType,
   getDirectOrderDetails: (state) => state.directOrderDetails,
   getDirectOrderDetailsStep: (state) => state.directOrderDetailsStep,
+  getDirectOrderPartner: (state) => state.directOrderPartner,
+  getDirectOrderNumber: (state) => state.directOrderNumber,
+  getmapReady: (state) => state.mapReady,
+  getRiders: (state) => state.riders,
 };

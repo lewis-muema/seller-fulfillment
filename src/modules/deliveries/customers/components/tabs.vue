@@ -178,38 +178,8 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
-    pending: "-",
-    transit: "-",
-    failed: "-",
-    completed: "-",
-    cancelled: "-",
   }),
   watch: {
-    "$store.state.loader": {
-      handler() {
-        this.pending =
-          parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-          parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-            ? (
-                parseInt(this.getDeliveriesStatistics.ORDER_RECEIVED) +
-                parseInt(this.getDeliveriesStatistics.ORDER_IN_PROCESSING)
-              ).toString()
-            : "0";
-        this.transit = this.getDeliveriesStatistics.ORDER_IN_TRANSIT
-          ? this.getDeliveriesStatistics.ORDER_IN_TRANSIT.toString()
-          : "0";
-        this.failed = this.getDeliveriesStatistics.ORDER_FAILED
-          ? this.getDeliveriesStatistics.ORDER_FAILED.toString()
-          : "0";
-        this.completed = this.getDeliveriesStatistics.ORDER_COMPLETED
-          ? this.getDeliveriesStatistics.ORDER_COMPLETED.toString()
-          : "0";
-        this.cancelled = this.getDeliveriesStatistics.ORDER_CANCELED
-          ? this.getDeliveriesStatistics.ORDER_CANCELED.toString()
-          : "0";
-      },
-      deep: true,
-    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -230,6 +200,34 @@ export default {
         (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
       );
       return typeof status === "object" ? status.permission_granted : false;
+    },
+    pending() {
+      return Object.keys(this.getDeliveriesStatistics).length === 0
+        ? "-"
+        : (
+            parseInt(this.getDeliveriesStatistics?.ORDER_RECEIVED) +
+            parseInt(this.getDeliveriesStatistics?.ORDER_IN_PROCESSING)
+          )?.toString();
+    },
+    transit() {
+      return Object.keys(this.getDeliveriesStatistics).length === 0
+        ? "-"
+        : this.getDeliveriesStatistics?.ORDER_IN_TRANSIT?.toString();
+    },
+    failed() {
+      return Object.keys(this.getDeliveriesStatistics).length === 0
+        ? "-"
+        : this.getDeliveriesStatistics?.ORDER_FAILED?.toString();
+    },
+    completed() {
+      return Object.keys(this.getDeliveriesStatistics).length === 0
+        ? "-"
+        : this.getDeliveriesStatistics?.ORDER_COMPLETED?.toString();
+    },
+    cancelled() {
+      return Object.keys(this.getDeliveriesStatistics).length === 0
+        ? "-"
+        : this.getDeliveriesStatistics?.ORDER_CANCELED?.toString();
     },
   },
   methods: {

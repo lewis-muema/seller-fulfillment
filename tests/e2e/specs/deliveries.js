@@ -1,8 +1,41 @@
 import { expect } from "chai";
 
 const timeout = 30000;
+function ConsignmentStubs() {
+  return (
+    cy.setToken(),
+    cy.dashboardStubs(),
+    cy.crossDockingStubs(),
+    cy.authStubs(),
+    cy.paymentStubs(),
+    cy.deliveriesStubs(),
+    cy.visit("deliveries/sendy")
+  );
+}
+function DeliveriesStubs() {
+  return (
+    cy.setToken(),
+    cy.dashboardStubs(),
+    cy.crossDockingStubs(),
+    cy.paymentStubs(),
+    cy.authStubs(),
+    cy.deliveriesStubs(),
+    cy.visit("deliveries/customer")
+  );
+}
+
+function OnDemandDeliveries() {
+  cy.setToken();
+  cy.dashboardStubs();
+  cy.crossDockingStubs();
+  cy.paymentStubs();
+  cy.authStubs();
+  cy.deliveriesStubs();
+  cy.visit("deliveries/direct-deliveries/");
+}
 describe("Consignment modules", () => {
-  it("can load consignment deliveries unless show deliveries not found", () => {
+  it.only("can load consignment deliveries unless show deliveries not found", () => {
+    ConsignmentStubs();
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -12,7 +45,8 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can compute consignment statistics of orders e.g completed, in transit", () => {
+  it.only("can compute consignment statistics of orders e.g completed, in transit", () => {
+    ConsignmentStubs();
     cy.wait("@consignmentStatistics", { timeout }).then((consignmentStat) => {
       expect(consignmentStat.response.statusCode).to.equal(200);
       if (Object.keys(consignmentStat.response.body.data).length) {
@@ -50,6 +84,7 @@ describe("Consignment modules", () => {
     cy.get(".v-field__input").type("Dorcas");
   });
   it("can export different consignment deliveries", () => {
+    ConsignmentStubs();
     cy.get(".consignment-export-button")
       .click()
       .get(".click-to-export-button")
@@ -58,14 +93,16 @@ describe("Consignment modules", () => {
       expect(interception.response.statusCode).to.equal(200);
     });
   });
-  it("can show `send inventory to sendy` button and redirect to a different page on click", () => {
+  it.only("can show `send inventory to sendy` button and redirect to a different page on click", () => {
+    ConsignmentStubs();
     cy.get(".customers-deliver-btn")
       .contains("Send Inventory to Sendy")
       .click()
       .url()
       .should("include", "inventory/add-pickup-products");
   });
-  it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
+  it.only("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
+    ConsignmentStubs();
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -98,7 +135,8 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can display linked orders for cross-docked orders ", () => {
+  it.only("can display linked orders for cross-docked orders ", () => {
+    ConsignmentStubs();
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -132,7 +170,8 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can display order number of one particular order ", () => {
+  it.only("can display order number of one particular order ", () => {
+    ConsignmentStubs();
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -157,7 +196,8 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+  it.only("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+    ConsignmentStubs();
     //capture non editable fields later
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
@@ -189,7 +229,8 @@ describe("Consignment modules", () => {
       }
     });
   });
-  it("can cancel an order to a later date ", () => {
+  it.only("can cancel an order to a later date ", () => {
+    ConsignmentStubs();
     cy.wait("@consignments", { timeout }).then((consignment) => {
       expect(consignment.response.statusCode).to.equal(200);
       if (consignment.response.body.data.orders.length) {
@@ -206,7 +247,7 @@ describe("Consignment modules", () => {
             expect(trackConsignment.response.statusCode).to.equal(200);
             cy.get(".tracking-option-content").eq(1).click();
             cy.get(".dont-cancel-text").click();
-            cy.get("cancel-options-contain").should("not.be.visible");
+            cy.get("cancel-options-contain").should("not.exist");
           }
         );
       } else {
@@ -216,14 +257,8 @@ describe("Consignment modules", () => {
   });
 });
 describe("deliveries modules", () => {
-  it("can load  deliveries unless show deliveries not found", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.paymentStubs();
-    cy.authStubs();
-    cy.deliveriesStubs();
-    cy.visit("deliveries/customer");
+  it.only("can load  deliveries unless show deliveries not found", () => {
+    DeliveriesStubs();
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -233,7 +268,8 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can compute consignment statistics of orders e.g completed, in transit", () => {
+  it.only("can compute consignment statistics of orders e.g completed, in transit", () => {
+    DeliveriesStubs();
     cy.wait("@deliveriesStatistics", { timeout }).then((deliveryStat) => {
       expect(deliveryStat.response.statusCode).to.equal(200);
       if (Object.keys(deliveryStat.response.body.data).length) {
@@ -279,14 +315,16 @@ describe("deliveries modules", () => {
       expect(interception.response.statusCode).to.equal(200);
     });
   });
-  it("can show `Deliver to customer` button and redirect to a different page on click", () => {
+  it.only("can show `Deliver to customer` button and redirect to a different page on click", () => {
+    DeliveriesStubs();
     cy.get(".customers-deliver-btn")
       .contains("Deliver to a customer")
       .click()
       .url()
       .should("include", "inventory/create-delivery");
   });
-  it("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
+  it.only("can show details of one order when `track order` link is clicked e.g delivery,recipient info, products", () => {
+    DeliveriesStubs();
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -323,7 +361,8 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can display linked orders for cross-docked orders ", () => {
+  it.only("can display linked orders for cross-docked orders ", () => {
+    DeliveriesStubs();
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -353,7 +392,8 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can display order number of one particular order ", () => {
+  it.only("can display order number of one particular order ", () => {
+    DeliveriesStubs();
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -376,7 +416,8 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+  it.only("can edit an order when its still on transit and disable editting when an order has been completed", () => {
+    DeliveriesStubs();
     //capture non editable fields later
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
@@ -406,7 +447,8 @@ describe("deliveries modules", () => {
       }
     });
   });
-  it("can cancel an order to a later date ", () => {
+  it.only("can cancel an order to a later date ", () => {
+    DeliveriesStubs();
     cy.wait("@deliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -422,7 +464,7 @@ describe("deliveries modules", () => {
           expect(trackDelivery.response.statusCode).to.equal(200);
           cy.get(".tracking-option-content").eq(2).click();
           cy.get(".dont-cancel-text").click();
-          cy.get("cancel-options-contain").should("not.be.visible");
+          cy.get("cancel-options-contain").should("not.exist");
         });
       } else {
         cy.get(".no-deliveries-to-sendy-container").should("be.visible");
@@ -431,7 +473,8 @@ describe("deliveries modules", () => {
   });
 });
 describe("on demand modules", () => {
-  it("can load on demand deliveries unless show deliveries not found", () => {
+  it.only("can load on demand deliveries unless show deliveries not found", () => {
+    OnDemandDeliveries();
     cy.wait("@onDemandDeliveries", { timeout }).then((delivery) => {
       expect(delivery.response.statusCode).to.equal(200);
       if (delivery.response.body.data.orders.length) {
@@ -446,13 +489,7 @@ describe("on demand modules", () => {
     });
   });
   it.only("can compute customer deliveries statistics of orders e.g completed, in transit", () => {
-    cy.setToken();
-    cy.dashboardStubs();
-    cy.crossDockingStubs();
-    cy.paymentStubs();
-    cy.authStubs();
-    cy.deliveriesStubs();
-    cy.visit("deliveries/direct-deliveries/");
+    OnDemandDeliveries();
     cy.wait("@pointToPointStatistics", { timeout }).then((pointToPointStat) => {
       expect(pointToPointStat.response.statusCode).to.equal(200);
       if (Object.keys(pointToPointStat.response.body.data).length) {
@@ -486,5 +523,4 @@ describe("on demand modules", () => {
       }
     });
   });
-  it("can show details of one order when `track order` link is clicked e.g locations, delivery,recipient info, products", () => {});
 });

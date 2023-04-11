@@ -1,4 +1,3 @@
-x
 <template>
   <div>
     <Tabs />

@@ -306,6 +306,7 @@ export default {
   font-size: 14px;
   line-height: 20px;
   color: #909399 !important;
+  position: relative;
 }
 .introjs-tooltip .introjs-nextbutton {
   background: #324ba8;

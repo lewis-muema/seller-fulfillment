@@ -2979,32 +2979,36 @@ export default {
               element: document.querySelector(
                 ".dashboard-quicklinks-container"
               ),
-              intro: "Click on any item to select",
+              intro:
+                'Click on any item to select <div class="dashboard-tour-counter">1/5</div>',
               position: "bottom",
             },
             {
               title: "View your account balance!",
               element: document.querySelector(".dashboard-wallet-container"),
-              intro: "Click to access your wallet",
+              intro:
+                'Click to access your wallet <div class="dashboard-tour-counter">2/5</div>',
             },
             {
               title: "Track Ongoing On-demand deliveries",
               element: document.querySelector(
                 ".dashboard-deliveries-ondemand-section"
               ),
-              intro: "Click to display list of the on-demand deliveries",
+              intro:
+                'Click to display list of the on-demand deliveries<div class="dashboard-tour-counter">4/5</div>',
             },
             {
               title: "View stats summary",
               element: document.querySelector(".dashboard-sidecard-container"),
               intro:
-                "The stats have moved here. Select a category to view full details.",
+                'The stats have moved here. Select a category to view full details.<div class="dashboard-tour-counter">4/5</div>',
               position: "left",
             },
             {
               title: "Learn more ways to do more with Sendy",
               element: document.querySelector(".dashboard-articles-container"),
-              intro: "Discover offers and products",
+              intro:
+                'Discover offers and products<div class="dashboard-tour-counter">5/5</div>',
               position: "left",
             },
           ],
@@ -4786,6 +4790,14 @@ export default {
   font-weight: 500;
   margin-top: 10px;
   cursor: pointer;
+}
+.dashboard-tour-counter {
+  position: absolute;
+  bottom: -40px;
+  right: 0;
+  width: 60px;
+  height: 20px;
+  text-align: center;
 }
 .vue__time-picker .dropdown ul li:not([disabled]).active,
 .vue__time-picker .dropdown ul li:not([disabled]).active:focus,

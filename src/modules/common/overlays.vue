@@ -2548,6 +2548,7 @@ import { required } from "@vuelidate/validators";
 import VueTimepicker from "vue3-timepicker";
 import "vue3-timepicker/dist/VueTimepicker.css";
 import introJs from "intro.js";
+import packageJson from "../../../package.json";
 
 export default {
   setup() {
@@ -2915,7 +2916,10 @@ export default {
       );
     },
     getVirtualTour() {
-      return JSON.parse(this.getCookie("new_features_virtual_tour"));
+      return (
+        JSON.parse(this.getCookie("new_features_virtual_tour")) &&
+        packageJson.version === "0.1.0"
+      );
     },
   },
   beforeMount() {

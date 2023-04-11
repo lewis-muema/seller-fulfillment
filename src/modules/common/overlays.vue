@@ -3018,7 +3018,7 @@ export default {
       closeElement.addEventListener("click", function () {
         this.disableTour();
       });
-      nextElement.addEventListener("click", function (event) {
+      nextElement.addEventListener("click", function () {
         let textContent = nextElement.textContent;
         if (textContent === "Done") {
           this.disableTour();

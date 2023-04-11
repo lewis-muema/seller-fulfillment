@@ -19,13 +19,13 @@
       </span>
       <v-row>
         <v-col cols="8" class="">
-          <quick-links class="v-step-1" />
+          <quick-links class="dashboard-quicklinks-container" />
           <dashboard-tabs-content />
         </v-col>
         <v-col cols="3">
-          <wallet-balance class="v-step-2" />
-          <side-card class="v-step-4" />
-          <articles class="v-step-5" />
+          <wallet-balance class="dashboard-wallet-container" />
+          <side-card class="dashboard-sidecard-container" />
+          <articles class="dashboard-articles-container" />
         </v-col>
       </v-row>
     </div>
@@ -42,7 +42,6 @@ import sideCard from "@/modules/dashboard/components/sideCard";
 import articles from "@/modules/dashboard/components/articles";
 import walletBalance from "@/modules/dashboard/components/walletBalance";
 import walletBanner from "../payments/wallet/components/walletBanner.vue";
-// import introJs from "intro.js";
 import moment from "moment";
 
 export default {
@@ -82,6 +81,7 @@ export default {
     this.getDeliveryStatsToday();
     this.getPickUpStatsToday();
     this.getDeliveryStats();
+    this.getPointToPointStats();
     this.getPickUpStats();
     this.getStockStats();
     this.allBillingCycle();
@@ -89,51 +89,6 @@ export default {
       overlay: true,
       popup: "tour",
     });
-    // introJs()
-    //   .setOptions({
-    //     steps: [
-    //       {
-    //         title:
-    //           "<img src='https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png'><p>Welcome to the new homescreen</p>",
-    //         intro: "Let’s checkout what we have changed",
-    //       },
-    //       {
-    //         title: "Choose your action here",
-    //         element: document.querySelector(".v-step-1"),
-    //         intro: "Click on any item to select",
-    //         position: "bottom",
-    //       },
-    //       {
-    //         title: "View your account balance!",
-    //         element: document.querySelector(".v-step-2"),
-    //         intro: "Click to access your wallet",
-    //       },
-    //       {
-    //         title: "Track Ongoing On-demand deliveries",
-    //         element: document.querySelector(
-    //           ".dashboard-deliveries-tab-section"
-    //         ),
-    //         intro: "Click to display list of the on-demand deliveries",
-    //       },
-    //       {
-    //         title: "View stats summary",
-    //         element: document.querySelector(".v-step-4"),
-    //         intro:
-    //           "The stats have moved here. Select a category to view full details.",
-    //         position: "left",
-    //       },
-    //       {
-    //         title: "Learn more ways to do more with Sendy",
-    //         element: document.querySelector(".v-step-5"),
-    //         intro: "Discover offers and products",
-    //         position: "left",
-    //       },
-    //     ],
-    //     tooltipClass: "introjs-tooltip",
-    //     showBullets: false,
-    //   })
-    //   .start();
-    // document.querySelector(".introjs-button .introjs-nextbutton").value="Take a tour"
   },
   methods: {
     ...mapMutations([
@@ -144,6 +99,7 @@ export default {
       "setDeliveriesStatistics",
       "setConsignmentStatistics",
       "setDeliveriesStatisticsToday",
+      "setPointToPointStatistics",
       "setConsignmentStatisticsToday",
       "setBillingCycles",
       "setOverlayStatus",
@@ -299,6 +255,18 @@ export default {
         }
       });
     },
+    getPointToPointStats() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/statistics`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setPointToPointStatistics(
+            response.data.data.grouped_by_status_count
+          );
+        }
+      });
+    },
   },
 };
 </script>
@@ -355,13 +323,16 @@ export default {
   display: none;
 }
 .introjs-tooltip .introjs-skipbutton {
+  color: white;
+  background-color: #c0c4cc;
   border-radius: 50%;
-  font-size: 20px;
-  height: 24px;
-  width: 24px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  cursor: pointer;
+  margin: 10px !important;
+  font-weight: 400;
 }
 </style>

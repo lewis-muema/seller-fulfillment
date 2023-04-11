@@ -16,8 +16,12 @@
         :label="tab.label"
       >
         <div
-          class="dashboard-deliveries-tab-section"
-          :class="activeTab === tab.label ? 'active' : ''"
+          :class="[
+            tab.label === 'dashboard.onDemand'
+              ? 'dashboard-deliveries-ondemand-section'
+              : 'dashboard-deliveries-tab-section',
+            activeTab === tab.label ? 'active' : '',
+          ]"
         >
           <span
             class="d-flex"
@@ -90,7 +94,11 @@ export default {
   watch: {
     "$store.state.loader": {
       handler(val) {
-        if (val.consignments === "" || val.deliveries === "") {
+        if (
+          val.consignments === "" ||
+          val.deliveries === "" ||
+          val.onDemandOrders === ""
+        ) {
           this.tabs[0].content = this.ongoingDeliveries
             ? this.ongoingDeliveries
             : 0;
@@ -158,6 +166,14 @@ export default {
   color: #324ba8 !important;
 }
 .dashboard-deliveries-tab-section {
+  width: max-content;
+  display: flex;
+  color: #909399;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+}
+.dashboard-deliveries-ondemand-section {
   width: max-content;
   display: flex;
   color: #909399;

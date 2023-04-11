@@ -27,13 +27,19 @@
           <thead>
             <tr>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader.onDemandOrders">Pickup Location</span>
+                <span :class="getLoader.onDemandOrders">{{
+                  $t("deliveries.pickupLocation")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader.onDemandOrders">Delivery Location</span>
+                <span :class="getLoader.onDemandOrders">{{
+                  $t("deliveries.deliveryLocation")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
-                <span :class="getLoader.onDemandOrders">Progress</span>
+                <span :class="getLoader.onDemandOrders">{{
+                  $t("dashboard.progress")
+                }}</span>
               </th>
               <th class="text-left deliveries-table-header">
                 <span :class="getLoader.onDemandOrders">{{

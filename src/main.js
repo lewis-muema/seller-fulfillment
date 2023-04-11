@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import moment from "moment";
 import VueGoogleMaps from "@fawmi/vue-google-maps";
+
+import "vue3-tour/dist/vue3-tour.css";
 // import { initializeApp } from "firebase/app";
 import App from "./App.vue";
 import i18n from "./i18n";

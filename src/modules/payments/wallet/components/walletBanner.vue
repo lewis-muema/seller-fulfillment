@@ -44,7 +44,7 @@ export default {
       const cycle = this.currentCycle ? this.getBillingCycles[0] : "";
       return type === "date"
         ? moment(cycle.billing_cycle_end_date).format("dddd, Do MMM")
-        : `${this.getWallets[0].currency} ${cycle.amount_to_charge}`;
+        : `${this.getWallets[0]?.currency} ${cycle.amount_to_charge}`;
     },
   },
 };

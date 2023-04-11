@@ -3023,15 +3023,13 @@ export default {
         .start();
       let closeElement = document.querySelector(".introjs-skipbutton");
       let nextElement = document.querySelector(".introjs-nextbutton");
-      closeElement.addEventListener("click", function () {
+      closeElement.addEventListener("click", this.disableTour);
+      nextElement.addEventListener("click", this.handleTourDone);
+    },
+    handleTourDone(element) {
+      if (element.target.textContent === "Done") {
         this.disableTour();
-      });
-      nextElement.addEventListener("click", function () {
-        let textContent = nextElement.textContent;
-        if (textContent === "Done") {
-          this.disableTour();
-        }
-      });
+      }
     },
     disableTour() {
       this.setCookie("new_features_virtual_tour", false, 365);

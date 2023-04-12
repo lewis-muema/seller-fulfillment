@@ -185,27 +185,57 @@
                 :key="i"
                 class="statement-paid-container"
               >
-                <span> <i class="mdi mdi-information"></i></span>
                 <span>
-                  {{
-                    $t("payments.paidVia", {
-                      date: formatLineItemDate(row.payment_attempt_date),
-                      means: row.used_means_of_payment.means_of_payment_type,
-                    })
-                  }}</span
-                >
+                  <i class="mdi mdi-information statement-info-icon"></i
+                ></span>
                 <span>
-                  {{ getBusinessDetails.currency
-                  }}{{ row.payment_amount }}</span
-                >
+                  <span class="mr-1"
+                    >Paid on
+                    {{ formatLineItemDate(row.payment_attempt_date) }}</span
+                  >
+                  <span class="mr-1"
+                    >via
+                    {{ row.used_means_of_payment.means_of_payment_type }}</span
+                  >
+                  <span class="statement-amount-container-currency"
+                    >{{ getBusinessDetails.currency }}
+                    {{ row.payment_amount }}</span
+                  >
+                </span>
+                <!--                <span>-->
+                <!--                  {{-->
+                <!--                    $t("payments.paidVia", {-->
+                <!--                      date: formatLineItemDate(row.payment_attempt_date),-->
+                <!--                      means: row.used_means_of_payment.means_of_payment_type,-->
+                <!--                    })-->
+                <!--                  }}</span-->
+                <!--                >-->
+                <!--                <span>-->
+                <!--                  {{ getBusinessDetails.currency-->
+                <!--                  }}{{ row.payment_amount }}</span-->
+                <!--                >-->
               </div>
             </div>
-            <!--            <div class="" v-if="prompt">-->
-            <!--              <i class="mdi-alert-rhombus"></i>-->
-            <!--              <span class=""-->
-            <!--                >Payment Overdue. Please pay to continue placing deliveries-->
-            <!--              </span>-->
-            <!--            </div>-->
+            <div
+              class="statement-overdue-container"
+              v-if="cycle.paid_status === 'NOT_PAID' && !cycle.active"
+            >
+              <i class="mdi mdi-alert-rhombus statement-overdue-icon"></i>
+              <span class="">
+                <span class="payment-overdue-text">Payment Overdue.</span>Please
+                pay to continue placing deliveries
+              </span>
+            </div>
+            <div
+              class="statement-pay-container"
+              v-if="cycle.paid_status === 'NOT_PAID' && cycle.active"
+            >
+              <i class="mdi mdi-alert-rhombus statement-pay-icon"></i>
+              <span class=""
+                >To be Charged on
+                {{ formatDate(cycle.billing_cycle_end_date) }}</span
+              >
+            </div>
             <!--            <v-table-->
             <!--              class="mt-5"-->
             <!--              v-if="cycle.payments && cycle.payments.length > 0"-->
@@ -412,10 +442,6 @@ export default {
       "getExportDataType",
       "getActivePayment",
     ]),
-    prompt() {
-      const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
-    },
     headers() {
       return this.wht ? this.header : this.header2;
     },
@@ -665,14 +691,42 @@ export default {
   font-weight: 700;
 }
 .statement-paid-container {
-  float: right;
+  margin-left: auto;
+  margin-top: 50px;
+  width: 400px;
   background: #defad2;
-  padding: 8px;
+  padding: 5px;
   border-radius: 5px;
-  margin-left: 70%;
-  margin-top: 10px;
 }
 .statement-table-headers {
   white-space: nowrap;
+}
+.statement-info-icon {
+  color: #116f28;
+}
+.statement-overdue-container {
+  margin-left: auto;
+  margin-top: 50px;
+  width: 500px;
+  background: #fbdecf;
+  padding: 5px;
+  border-radius: 5px;
+}
+.statement-overdue-icon {
+  color: #9b101c;
+}
+.payment-overdue-text {
+  font-weight: 500;
+}
+.statement-pay-container {
+  margin-left: auto;
+  margin-top: 50px;
+  width: 500px;
+  background: #fdf1cc;
+  padding: 5px;
+  border-radius: 5px;
+}
+.statement-pay-icon {
+  color: #cc6100;
 }
 </style>

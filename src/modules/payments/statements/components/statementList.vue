@@ -92,8 +92,8 @@
           <v-expansion-panel-text>
             <v-table>
               <thead class="statement-table-titles">
-                <tr>
-                  <th v-for="(head, index) in header" :key="index">
+                <tr class="statement-table-headers">
+                  <th v-for="(head, index) in headers" :key="index">
                     {{ head.title }}
                     <el-tooltip
                       v-if="head.description"
@@ -155,13 +155,13 @@
                       {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
-                  <td class="statements-table-price-row">
+                  <td class="statements-table-price-row" v-if="wht">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       100
                     </span>
                   </td>
-                  <td class="statements-table-price-row">
+                  <td class="statements-table-price-row" v-if="wht">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       100
@@ -200,12 +200,12 @@
                 >
               </div>
             </div>
-            <div class="" v-if="prompt">
-              <i class="mdi-alert-rhombus"></i>
-              <span class=""
-                >Payment Overdue. Please pay to continue placing deliveries
-              </span>
-            </div>
+            <!--            <div class="" v-if="prompt">-->
+            <!--              <i class="mdi-alert-rhombus"></i>-->
+            <!--              <span class=""-->
+            <!--                >Payment Overdue. Please pay to continue placing deliveries-->
+            <!--              </span>-->
+            <!--            </div>-->
             <!--            <v-table-->
             <!--              class="mt-5"-->
             <!--              v-if="cycle.payments && cycle.payments.length > 0"-->
@@ -369,6 +369,35 @@ export default {
           description: "Net total due is the Total Due less Withholding Tax",
         },
       ],
+      header2: [
+        {
+          title: "",
+          description: "",
+        },
+        {
+          title: "Order No.",
+          description: "",
+        },
+
+        {
+          title: "Order Type.",
+          description: "",
+        },
+
+        {
+          title: "Delivery Location",
+          description: "",
+        },
+
+        {
+          title: "Delivery Date",
+          description: "",
+        },
+        {
+          title: "Total Due",
+          description: "Total value inclusive of 16% sales tax",
+        },
+      ],
     };
   },
   computed: {
@@ -386,6 +415,9 @@ export default {
     prompt() {
       const cycle = this.getActivePayment ? this.getActivePayment : {};
       return Object.keys(cycle).length > 0;
+    },
+    headers() {
+      return this.wht ? this.header : this.header2;
     },
   },
   watch: {
@@ -639,5 +671,8 @@ export default {
   border-radius: 5px;
   margin-left: 70%;
   margin-top: 10px;
+}
+.statement-table-headers {
+  white-space: nowrap;
 }
 </style>

@@ -110,5 +110,18 @@
   "withdrawalFailed": "Withdrawal Failed",
   "withdrawingFunds": "Withdrawing Funds...",
   "theMinimumAmount": "The minimum amount you can withdraw is {Amount}",
-  "paymentOverdue": "Payment Overdue"
+  "paymentOverdue": "Payment Overdue.",
+  "paidOn": "Paid on",
+  "via": "via",
+  "paymentOverdue": "Payment Overdue",
+  "pleasePay":"Please pay to continue placing deliveries",
+  "toBeChargedOn": "To be Charged on",
+  "totalValue": "Total Value",
+  "orderNo": "Order No",
+  "orderType": "Order Type",
+  "deliveryLocation": "Delivery Location",
+  "deliveryDate": "Delivery Date",
+  "totalDue": "Total Due",
+  "wthVat": "WTH VAT",
+  "netDue": "Net Due"
 }

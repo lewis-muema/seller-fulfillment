@@ -155,16 +155,22 @@
                       {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
-                  <td class="statements-table-price-row" v-if="wht">
+                  <td
+                    class="statements-table-price-row"
+                    v-if="witholdingTaxEnabled"
+                  >
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
-                      100
+                      {{ witheldTax(row) }}
                     </span>
                   </td>
-                  <td class="statements-table-price-row" v-if="wht">
+                  <td
+                    class="statements-table-price-row"
+                    v-if="witholdingTaxEnabled"
+                  >
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
-                      100
+                      {{ netDue(row) }}
                     </span>
                   </td>
                 </tr>
@@ -172,7 +178,7 @@
             </v-table>
             <div class="statement-amount-container">
               <span class="statement-amount-container-total-value"
-                >Total Value
+                >{{ $t("payments.totalValue") }}
               </span>
               <span class="statement-amount-container-currency"
                 >{{ getBusinessDetails.currency }}
@@ -190,11 +196,11 @@
                 ></span>
                 <span>
                   <span class="mr-1"
-                    >Paid on
+                    >{{ $t("payments.paidOn") }}
                     {{ formatLineItemDate(row.payment_attempt_date) }}</span
                   >
                   <span class="mr-1"
-                    >via
+                    >{{ $t("payments.via") }}
                     {{ row.used_means_of_payment.means_of_payment_type }}</span
                   >
                   <span class="statement-amount-container-currency"
@@ -202,18 +208,6 @@
                     {{ row.payment_amount }}</span
                   >
                 </span>
-                <!--                <span>-->
-                <!--                  {{-->
-                <!--                    $t("payments.paidVia", {-->
-                <!--                      date: formatLineItemDate(row.payment_attempt_date),-->
-                <!--                      means: row.used_means_of_payment.means_of_payment_type,-->
-                <!--                    })-->
-                <!--                  }}</span-->
-                <!--                >-->
-                <!--                <span>-->
-                <!--                  {{ getBusinessDetails.currency-->
-                <!--                  }}{{ row.payment_amount }}</span-->
-                <!--                >-->
               </div>
             </div>
             <div
@@ -222,8 +216,10 @@
             >
               <i class="mdi mdi-alert-rhombus statement-overdue-icon"></i>
               <span class="">
-                <span class="payment-overdue-text">Payment Overdue.</span>Please
-                pay to continue placing deliveries
+                <span class="payment-overdue-text">{{
+                  $t("payments.pleasePay")
+                }}</span
+                >{{ $t("payments.paymentOverdue") }}
               </span>
             </div>
             <div
@@ -232,83 +228,10 @@
             >
               <i class="mdi mdi-alert-rhombus statement-pay-icon"></i>
               <span class=""
-                >To be Charged on
+                >{{ $t("payments.toBeChargedOn") }}
                 {{ formatDate(cycle.billing_cycle_end_date) }}</span
               >
             </div>
-            <!--            <v-table-->
-            <!--              class="mt-5"-->
-            <!--              v-if="cycle.payments && cycle.payments.length > 0"-->
-            <!--            >-->
-            <!--              <thead>-->
-            <!--                <tr>-->
-            <!--                  <th></th>-->
-            <!--                  <th class="text-left">-->
-            <!--                    <span :class="getLoader.billingCycles">{{-->
-            <!--                      $t("payments.details")-->
-            <!--                    }}</span>-->
-            <!--                  </th>-->
-            <!--                  <th class="text-left">-->
-            <!--                    <span :class="getLoader.billingCycles">{{-->
-            <!--                      $t("payments.paymentDetails")-->
-            <!--                    }}</span>-->
-            <!--                  </th>-->
-            <!--                  <th class="text-left">-->
-            <!--                    <span :class="getLoader.billingCycles">{{-->
-            <!--                      $t("payments.datePaid")-->
-            <!--                    }}</span>-->
-            <!--                  </th>-->
-            <!--                  <th class="text-left">-->
-            <!--                    <span-->
-            <!--                      class="invoices-price-col"-->
-            <!--                      :class="getLoader.billingCycles"-->
-            <!--                      >{{ $t("payments.amountPaid") }}</span-->
-            <!--                    >-->
-            <!--                  </th>-->
-            <!--                </tr>-->
-            <!--              </thead>-->
-            <!--              <tbody>-->
-            <!--                <tr-->
-            <!--                  v-for="(row, x) in cycle.payments"-->
-            <!--                  :key="x"-->
-            <!--                  class="statements-table-row"-->
-            <!--                >-->
-            <!--                  <td class="statements-table-icon-row">-->
-            <!--                    <span v-if="cycle.loading" :class="cycle.loading">-->
-            <!--                      {{ row.payment_amount }}-->
-            <!--                    </span>-->
-            <!--                    <i v-else :class="`mdi mdi-cash-multiple`"></i>-->
-            <!--                  </td>-->
-            <!--                  <td class="statements-table-item-row">-->
-            <!--                    <span :class="cycle.loading">-->
-            <!--                      {{ row.payment_attempt_transaction_notes }}-->
-            <!--                    </span>-->
-            <!--                  </td>-->
-            <!--                  <td class="statements-table-item-row">-->
-            <!--                    <span :class="cycle.loading">-->
-            <!--                      {{-->
-            <!--                        $t("payments.paidVia", {-->
-            <!--                          method:-->
-            <!--                            row.used_means_of_payment.means_of_payment_type,-->
-            <!--                          code: row.payment_attempt_transaction_id,-->
-            <!--                        })-->
-            <!--                      }}-->
-            <!--                    </span>-->
-            <!--                  </td>-->
-            <!--                  <td class="statements-table-date-row">-->
-            <!--                    <span :class="cycle.loading">-->
-            <!--                      {{ formatLineItemDate(row.payment_attempt_date) }}-->
-            <!--                    </span>-->
-            <!--                  </td>-->
-            <!--                  <td class="statements-table-price-row">-->
-            <!--                    <span :class="cycle.loading" class="payments-amount">-->
-            <!--                      {{ getBusinessDetails.currency }}-->
-            <!--                      {{ Math.round(row.payment_amount * 100) / 100 }}-->
-            <!--                    </span>-->
-            <!--                  </td>-->
-            <!--                </tr>-->
-            <!--              </tbody>-->
-            <!--            </v-table>-->
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -360,7 +283,6 @@ export default {
       to: "",
       range: "",
       params: "",
-      wht: true,
       colorTooltipClass: "colorTooltipClass",
       header: [
         {
@@ -368,34 +290,34 @@ export default {
           description: "",
         },
         {
-          title: "Order No.",
+          title: this.$t("payments.orderNo"),
           description: "",
         },
 
         {
-          title: "Order Type.",
+          title: this.$t("payments.orderType"),
           description: "",
         },
 
         {
-          title: "Delivery Location",
+          title: this.$t("payments.deliveryLocation"),
           description: "",
         },
 
         {
-          title: "Delivery Date",
+          title: this.$t("payments.deliveryDate"),
           description: "",
         },
         {
-          title: "Total Due",
+          title: this.$t("payments.totalDue"),
           description: "Total value inclusive of 16% sales tax",
         },
         {
-          title: "WTH VAT",
+          title: this.$t("payments.wthVat"),
           description: "Withholding tax; 2% of Total Due excluding VAT",
         },
         {
-          title: "Net Due",
+          title: this.$t("payments.netDue"),
           description: "Net total due is the Total Due less Withholding Tax",
         },
       ],
@@ -405,26 +327,26 @@ export default {
           description: "",
         },
         {
-          title: "Order No.",
+          title: this.$t("payments.orderNo"),
           description: "",
         },
 
         {
-          title: "Order Type.",
+          title: this.$t("payments.orderType"),
           description: "",
         },
 
         {
-          title: "Delivery Location",
+          title: this.$t("payments.deliveryLocation"),
           description: "",
         },
 
         {
-          title: "Delivery Date",
+          title: this.$t("payments.deliveryDate"),
           description: "",
         },
         {
-          title: "Total Due",
+          title: this.$t("payments.totalDue"),
           description: "Total value inclusive of 16% sales tax",
         },
       ],
@@ -443,7 +365,10 @@ export default {
       "getActivePayment",
     ]),
     headers() {
-      return this.wht ? this.header : this.header2;
+      return this.witholdingTaxEnabled ? this.header : this.header2;
+    },
+    witholdingTaxEnabled() {
+      return this.getBusinessDetails.settings.withholding_tax_enabled;
     },
   },
   watch: {
@@ -461,6 +386,26 @@ export default {
       "setOverlayStatus",
       "setExportDataType",
     ]),
+    witheldTax(row) {
+      let withheldTax = 0;
+      if (row.invoice_adjustments?.length > 1) {
+        withheldTax = row.invoice_adjustments.find(
+          (adj) => adj.adjustment_type === "WITHHELD_TAX"
+        ).adjustment_value;
+      }
+      return Math.round(withheldTax * 100) / 100;
+    },
+    netDue(row) {
+      let withheldTax = 0;
+      if (row.invoice_adjustments?.length > 1) {
+        withheldTax = row.invoice_adjustments.find(
+          (adj) => adj.adjustment_type === "WITHHELD_TAX"
+        ).adjustment_value;
+      }
+      let amount = 0;
+      amount = row.amount - withheldTax;
+      return Math.round(amount * 100) / 100;
+    },
     formatDate(date) {
       return moment(date).format("dddd, Do MMM YYYY");
     },
@@ -507,6 +452,9 @@ export default {
     },
     billingStatus(billing) {
       const billingStatus = billing.replaceAll("_", " ").toLowerCase();
+      if (billingStatus === "notpaid") {
+        return "Pending";
+      }
       return billingStatus.charAt(0).toUpperCase() + billingStatus.slice(1);
     },
     getIcon(row) {
@@ -585,12 +533,14 @@ export default {
   border-bottom: none !important;
 }
 .statements-pending-status {
+  width: fit-content;
   background: #fbdf9a;
   padding: 2px 20px;
   border-radius: 10px;
   color: #7f3b02;
 }
 .statements-paid-status {
+  width: fit-content;
   background: #b8f5a8;
   padding: 2px 20px;
   border-radius: 10px;
@@ -693,7 +643,7 @@ export default {
 .statement-paid-container {
   margin-left: auto;
   margin-top: 50px;
-  width: 400px;
+  width: fit-content;
   background: #defad2;
   padding: 5px;
   border-radius: 5px;
@@ -707,7 +657,7 @@ export default {
 .statement-overdue-container {
   margin-left: auto;
   margin-top: 50px;
-  width: 500px;
+  width: fit-content;
   background: #fbdecf;
   padding: 5px;
   border-radius: 5px;
@@ -721,7 +671,7 @@ export default {
 .statement-pay-container {
   margin-left: auto;
   margin-top: 50px;
-  width: 500px;
+  width: fit-content;
   background: #fdf1cc;
   padding: 5px;
   border-radius: 5px;

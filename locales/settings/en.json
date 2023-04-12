@@ -184,5 +184,6 @@
   "exportNotificationUpdates": "Export notification updates",
   "exports": "Exports",
   "canExportSellerData": "Can export seller data",
-  "paymentCollections": "Payment collections"
+  "paymentCollections": "Payment collections",
+  "generalUpdatesForOnDemandDeliveries": "General updates for On Demand Deliveries"
 }

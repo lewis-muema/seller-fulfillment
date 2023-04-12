@@ -17,7 +17,7 @@
           "
         >
           <span class="delivery-info-edit" :class="getLoader.orderTracking">
-            <i class="mdi mdi-pencil"></i>
+            <i class="mdi mdi-pencil mdi-pencil-edit-pickup-info"></i>
             {{ $t("deliveries.edit") }}
           </span>
         </span>
@@ -28,7 +28,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-desc">
           {{
             getOrderTrackingData.order.destination.delivery_location.description
           }}
@@ -40,7 +40,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-instructions">
           {{
             getOrderTrackingData.order.destination.delivery_instructions
               ? getOrderTrackingData.order.destination.delivery_instructions
@@ -54,7 +54,7 @@
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="pickup-info-phone-number">
           {{ getOrderTrackingData.order.destination.phone_number }}
         </span>
       </p>
@@ -90,14 +90,17 @@
         <span>
           <i class="mdi mdi-map-marker-outline delivery-info-marker"></i>
         </span>
-        <span :class="getLoader.orderTracking">
+        <span :class="getLoader.orderTracking" class="delivery-info-desc">
           {{
             getOrderTrackingData.order.destination.delivery_location.description
           }}
         </span>
       </p>
       <p class="delivery-info-data">
-        <span :class="getLoader.orderTracking" class="delivery-house-location">
+        <span
+          :class="getLoader.orderTracking"
+          class="delivery-house-location delivery-info-location"
+        >
           {{ getOrderTrackingData.order.destination.house_location }}
         </span>
       </p>
@@ -105,7 +108,10 @@
         <span>
           <i class="mdi mdi-text delivery-info-marker"></i>
         </span>
-        <span :class="getLoader.orderTracking">
+        <span
+          :class="getLoader.orderTracking"
+          class="delivery-info-instruction"
+        >
           {{
             getOrderTrackingData.order.destination.delivery_instructions
               ? getOrderTrackingData.order.destination.delivery_instructions
@@ -116,6 +122,7 @@
       <p class="delivery-info-label edit-delivery">
         <span
           :class="getLoader.orderTracking"
+          class="mdi-pencil-edit-delivery-info"
           @click="
             setOverlayStatus({
               overlay: true,
@@ -137,7 +144,10 @@
         <span>
           <i class="mdi mdi-account-outline delivery-info-marker"></i>
         </span>
-        <span :class="getLoader.orderTracking">
+        <span
+          :class="getLoader.orderTracking"
+          class="delivery-info-recipient-name"
+        >
           {{ getOrderTrackingData.order.destination.name }}
         </span>
       </p>
@@ -145,7 +155,10 @@
         <span>
           <i class="mdi mdi-phone-outline delivery-info-marker"></i>
         </span>
-        <span :class="getLoader.orderTracking">
+        <span
+          :class="getLoader.orderTracking"
+          class="delivery-info-recipient-number"
+        >
           {{ getOrderTrackingData.order.destination.phone_number }}
         </span>
       </p>
@@ -168,7 +181,10 @@
       </p>
       <div v-if="view">
         <p class="delivery-info-label delivery-info-title mb-2">
-          <span :class="getLoader.orderTracking">
+          <span
+            :class="getLoader.orderTracking"
+            class="delivery-info-delivery-date"
+          >
             {{ $t("inventory.deliveryDate") }}
           </span>
         </p>

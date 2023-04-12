@@ -224,7 +224,7 @@
   "pickUpTime": "Pick up time",
   "asSoonAsPossible": "As soon as possible",
   "scheduleTime": "Schedule time",
-  "whatTypeOfBikeDoYouWant": "What type of bike do you want?",
+  "whatTypeOfBikeDoYouWant": "What type of vehicle do you want?",
   "addPickupInstructionsOptional": "Add pickup instructions (optional)",
   "addPickupInstructionsHere": "Add pickup instructions here",
   "continueToDeliveryInformation": "Continue to Delivery Information",
@@ -242,5 +242,15 @@
   "pleaseSelectAPaymentMethod": "Please select a payment method for this order",
   "enterName": "Enter Name of the recipient",
   "failedToCreateOrder": "Failed to create an order",
-  "scheduledDateCannotBeEarlier": "The scheduled date and time cannot be earlier than the current date and time"
+  "scheduledDateCannotBeEarlier": "The scheduled date and time cannot be earlier than the current date and time",
+  "doYouHaveAPartnerInMindToServiceThisOrder": "Do you have a partner in mind to service this order?",
+  "yes": "Yes",
+  "no": "No",
+  "remove": "Remove",
+  "doYouHaveAPreferredRider": "Do you have a preferred rider?",
+  "enterDriversPhone": "Enter driver’s phone number or the vehicle’s number plate to pair",
+  "vehicleIsNotRegistered": "Vehicle is not registered on the Sendy platform. Try again with a different number plate",
+  "yourOrderWillBePairedWith": "Your order will be paired with:",
+  "confirmSubmitOrder": "Confirm & Submit Order",
+  "driver": "Driver"
 }

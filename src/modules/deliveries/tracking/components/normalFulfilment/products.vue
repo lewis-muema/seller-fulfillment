@@ -36,7 +36,10 @@
       </span>
     </div>
     <p class="products-data">
-      <span :class="getLoader.orderTracking">
+      <span
+        :class="getLoader.orderTracking"
+        class="destination-tracking-products"
+      >
         {{ formatProducts(getOrderTrackingData.order.products) }}
       </span>
     </p>

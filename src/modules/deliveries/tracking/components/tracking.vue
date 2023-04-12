@@ -4,9 +4,9 @@
     <div class="col-7">
       <tracking-map />
     </div>
-    <div class="col-4" v-scroll:#scroll-target="onScroll">
+    <div class="col-4 right-tracking-column">
       <locations
-        :deliveryLocation="formatDeliveryLocation"
+        :deliveryLocation="this.deliveryLocation"
         :pickupLocation="this.pickUpLocation"
       />
       <timeline />
@@ -26,6 +26,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import mqtt from "../../../../mixins/mqtt";
 import locations from "../components/directFulfilment/locations.vue";
 import pickupInfo from "../components/directFulfilment/pickupInfo.vue";
 import deliveryInfo from "./directFulfilment/deliveryInfo.vue";
@@ -51,9 +52,10 @@ export default {
       products: "",
       pickupInstructions: "",
       dropOffInstructions: "",
+      partnerPolling: "",
     };
   },
-
+  mixins: [mqtt],
   computed: {
     ...mapGetters([
       "getLoader",
@@ -71,6 +73,9 @@ export default {
   },
   mounted() {
     this.fetchOrder();
+  },
+  beforeUnmount() {
+    clearInterval(this.partnerPolling);
   },
   watch: {
     "$store.getters.getDirectDeliveriesTrackingData":
@@ -133,7 +138,20 @@ export default {
           value: "",
         });
         if (response.status === 200) {
-          this.setDirectDeliveriesTrackingData(response.data.data);
+          this.setDirectDeliveriesTrackingData(response?.data?.data);
+          if (response?.data?.data?.order?.assigned_shipping_agent?.agent_id) {
+            this.getPartnersLastPosition();
+            this.partnerPolling = setInterval(() => {
+              if (
+                this.$route.path.includes(
+                  "/deliveries/track-direct-deliveries/"
+                )
+              ) {
+                this.getPartnersLastPosition();
+              }
+            }, 30000);
+            // this.initiateMQTT();
+          }
         }
       });
     },
@@ -144,15 +162,27 @@ export default {
 .direct-fulfilment-destination-container {
   border: 1px solid #e2e7ed;
   border-radius: 10px;
-  width: 100%;
+  width: calc(100% - 30px);
+  font-size: 14px;
+  background: white;
+  margin-left: 70px;
+  background: #fff;
+}
+.direct-fulfilment-destination-container-right {
+  border: 1px solid #e2e7ed;
+  border-radius: 10px;
   font-size: 14px;
   background: white;
   padding: 30px 30px 20px 30px;
-  margin-left: 70px;
+  margin-left: 30px;
   background: #fff;
 }
 .destination-divider-line {
   margin-top: 20px !important;
   height: 2px !important;
+}
+.right-tracking-column {
+  height: 80vh;
+  overflow-y: scroll;
 }
 </style>

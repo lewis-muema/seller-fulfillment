@@ -1,0 +1,30 @@
+{
+  "message":"list.cancellation.reasons.success",
+  "data":{
+    "cancellation-reasons":[
+      {
+        "reason_id":"DUPLICATE_ORDER",
+        "reason_description":"This is a duplicate order"
+      },
+      {
+        "reason_id":"DELAYED_ORDER",
+        "reason_description":"The order has delayed"
+      },
+      {
+        "reason_id":"PRODUCTS_NOT_AVAILABLE",
+        "reason_description":"The requested products are no longer available"
+      },
+      {
+        "reason_id":"CUSTOMER_CANCELED_ORDER",
+        "reason_description":"The customer has cancelled the order"
+      },
+      {
+        "reason_id":"ALREADY_DELIVERED",
+        "reason_description":"The order has been delivered by other means"
+      }
+    ]
+  },
+  "errors":[
+
+  ]
+}

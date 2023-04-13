@@ -11,14 +11,14 @@ describe("Product pages", () => {
     cy.deliveriesStubs();
     cy.productStubs();
     cy.visit("/inventory/products");
-    cy.fixture("productsList").then(() => {
+    cy.wait("@productsList", { timeout }).then(() => {
       cy.get(".v-list-item-title span").eq(0).contains("Ceramic Plate");
       cy.get(".v-list-item-title span").eq(1).contains("Black Board Chalk");
       cy.get(".v-list-item-title span").eq(2).contains("Univerval");
       cy.get(".v-list-item-title span").eq(3).contains("IPhone 11 Pro");
       cy.get(".v-list-item-title span").eq(4).contains("Nail Cutter");
     });
-    cy.fixture("productListStatistics").then(() => {
+    cy.wait("@productListStatistics", { timeout }).then(() => {
       cy.get(".desktop-product-tab-section .v-badge__content")
         .eq(0)
         .contains("84", { timeout });
@@ -29,7 +29,7 @@ describe("Product pages", () => {
     cy.get(".products-search")
       .find(".v-field__input")
       .type("C", { force: true });
-    cy.fixture("algoliaProduct").then(() => {
+    cy.wait("@algoliaProduct", { timeout }).then(() => {
       cy.get(".search-algolia .search-item-name")
         .eq(0)
         .contains("Ceramic Plate", { timeout });
@@ -40,15 +40,12 @@ describe("Product pages", () => {
   });
   it.only("Displays out of stock products", () => {
     cy.productStubs();
-    cy.wait(2000);
     cy.get(".desktop-product-tab-section")
       .contains("Out of Stock", { timeout })
       .click();
-    cy.fixture("productListStatistics").then(() => {
-      cy.get(".desktop-product-tab-section .v-badge__content")
-        .eq(2)
-        .contains("75");
-    });
+    cy.get(".desktop-product-tab-section .v-badge__content")
+      .eq(2)
+      .contains("75");
   });
   it.only("Loads products details for a single product", () => {
     cy.productStubs();

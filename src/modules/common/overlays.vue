@@ -2917,6 +2917,7 @@ export default {
     },
     getVirtualTour() {
       return (
+        this.getCookie("new_features_virtual_tour") &&
         JSON.parse(this.getCookie("new_features_virtual_tour")) &&
         packageJson.version === "0.1.0"
       );

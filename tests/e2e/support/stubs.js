@@ -431,4 +431,9 @@ Cypress.Commands.add("setToken", () => {
     "local_order_uuid",
     JSON.stringify(userDetails.local_order_uuid)
   );
+  const d = new Date();
+  d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toUTCString();
+  document.cookie =
+    "new_features_virtual_tour" + "=" + false + ";" + expires + ";path=/";
 });

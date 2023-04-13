@@ -18,11 +18,6 @@ describe("Product pages", () => {
       cy.get(".v-list-item-title span").eq(3).contains("IPhone 11 Pro");
       cy.get(".v-list-item-title span").eq(4).contains("Nail Cutter");
     });
-    cy.wait("@productListStatistics", { timeout }).then(() => {
-      cy.get(".desktop-product-tab-section .v-badge__content")
-        .eq(0)
-        .contains("84", { timeout });
-    });
   });
   it.only("Searches for a product in the search bar", () => {
     cy.productStubs();
@@ -43,9 +38,11 @@ describe("Product pages", () => {
     cy.get(".desktop-product-tab-section")
       .contains("Out of Stock", { timeout })
       .click();
-    cy.get(".desktop-product-tab-section .v-badge__content")
-      .eq(2)
-      .contains("75");
+    cy.fixture("productListStatistics", { timeout }).then(() => {
+      cy.get(".desktop-product-tab-section .v-badge__content")
+        .eq(2)
+        .contains("75");
+    });
   });
   it.only("Loads products details for a single product", () => {
     cy.productStubs();

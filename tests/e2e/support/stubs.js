@@ -40,6 +40,13 @@ import transactions from "../fixtures/transactions.json";
 import userDetails from "../fixtures/userDetails.json";
 import userAlt from "../fixtures/userAlt.json";
 import lineItems from "../fixtures/lineItems.json";
+import productsList from "../fixtures/productsList.json";
+import settings from "../fixtures/settings.json";
+import algoliaProduct from "../fixtures/algoliaProduct.json";
+import outOfStockProducts from "../fixtures/outOfStockProducts.json";
+import singleProduct from "../fixtures/singleProduct.json";
+import productListStatistics from "../fixtures/productListStatistics.json";
+import updateProduct from "../fixtures/updateProduct.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("authStubs", () => {
@@ -364,6 +371,52 @@ Cypress.Commands.add("deliveriesStubs", () => {
       body: trackingDeliveriesSummary,
     }
   ).as("trackingDeliveriesSummary");
+});
+Cypress.Commands.add("productStubs", () => {
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products?max=5&offset=0`,
+    {
+      statusCode: 200,
+      body: productsList,
+    }
+  ).as("productsList");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/settings`, {
+    statusCode: 200,
+    body: settings,
+  }).as("settings");
+  cy.intercept(
+    "POST",
+    `https://ygzo0b7nvs-dsn.algolia.net/1/indexes/staging_fulfillment/query?x-algolia-agent=Algolia%20for%20JavaScript%20(4.13.1)%3B%20Browser`,
+    {
+      statusCode: 200,
+      body: algoliaProduct,
+    }
+  ).as("algoliaProduct");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products/outofstock?max=5&offset=0`,
+    {
+      statusCode: 200,
+      body: outOfStockProducts,
+    }
+  ).as("outOfStockProducts");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: singleProduct,
+  }).as("singleProduct");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products/statistics`,
+    {
+      statusCode: 200,
+      body: productListStatistics,
+    }
+  ).as("productListStatistics");
+  cy.intercept("PUT", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: updateProduct,
+  }).as("updateProduct");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

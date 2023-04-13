@@ -1,0 +1,323 @@
+{
+  "message": "product.list.success",
+  "data": {
+    "products": [
+      {
+        "product_id": "P-XUA-1394",
+        "objectID": "P-XUA-1394",
+        "created_date": 1634363085000,
+        "product_name": "Ceramic Plate",
+        "product_description": "Eating Thing.. first one",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-EBP-6946",
+          "collection_name": "Plate"
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-YOP-3240",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-XUA-1394",
+            "universal_product_code": "482949394",
+            "product_variant_description": "Ceramic Plate",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 45.0,
+            "product_variant_image_link": "https://s3.eu-west-1.amazonaws.com/sendy-partner-docs/fulfillment_products/B-AEB-9648_1634363011226_image_picker_1FF0E2A1-23A6-435D-A789-0BF201C6D057-9861-0000089B133B3B26.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 177.0,
+            "product_variant_quantity_type": "MILLILITRE",
+            "product_variant_stock_levels": {
+              "available": 36,
+              "quantity_in_inventory": 402,
+              "quantity_in_sales_orders": 354,
+              "quantity_held_locally": 12,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 291,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-KLKG-8257",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-XUA-1394",
+            "universal_product_code": "45069305934",
+            "product_variant_description": "Thermos",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 400.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/fulfillment_products/B-000-1111_1668760087536.png",
+            "product_variant_expiry_date": null,
+            "product_variant_quantity": 500.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 178,
+              "quantity_in_inventory": 400,
+              "quantity_in_sales_orders": 205,
+              "quantity_held_locally": 17,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 210,
+              "last_updated_date": 1673004273000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-LZI-075",
+        "objectID": "P-LZI-075",
+        "created_date": 1634544500000,
+        "product_name": "Black Board Chalk",
+        "product_description": "Chalk",
+        "product_main_color": "White",
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-IUW-7336",
+          "collection_name": "School"
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-AGL-4533",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-LZI-075",
+            "universal_product_code": null,
+            "product_variant_description": "White",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 30.0,
+            "product_variant_image_link": "https://s3.eu-west-1.amazonaws.com/sendy-partner-docs/fulfillment_products/B-AEB-9648_1634543004898_image_picker_254DACC4-5844-4D17-89ED-D164DEAF6561-11577-00000A2C2B3F339F.jpg",
+            "product_variant_expiry_date": null,
+            "product_variant_quantity": 20.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 290,
+              "quantity_in_inventory": 2723,
+              "quantity_in_sales_orders": 2266,
+              "quantity_held_locally": 167,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 131,
+              "last_updated_date": 1673004387000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-EPB-6365",
+        "objectID": "P-EPB-6365",
+        "created_date": 1634563780000,
+        "product_name": "Univerval",
+        "product_description": "supliment",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-GBD-7755",
+          "collection_name": "supliment"
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-KLP-8646",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-EPB-6365",
+            "universal_product_code": "UNV-1234",
+            "product_variant_description": "Univerval",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 15.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-AEB-9648_1634563771922_cc740691-c22a-4d43-a87f-f8254a1fc6a48352328891121107953.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 500.0,
+            "product_variant_quantity_type": "MILLILITRE",
+            "product_variant_stock_levels": {
+              "available": 288,
+              "quantity_in_inventory": 506,
+              "quantity_in_sales_orders": 167,
+              "quantity_held_locally": 51,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 73,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [
+              {
+                "product_property_type": "FRAGILE",
+                "sensitivity_unit_of_measure": null,
+                "sensitivity_lower_limit": null,
+                "sensitivity_upper_limit": null
+              },
+              {
+                "product_property_type": "FRAGILE",
+                "sensitivity_unit_of_measure": null,
+                "sensitivity_lower_limit": null,
+                "sensitivity_upper_limit": null
+              },
+              {
+                "product_property_type": "PHOTO_SENSITIVE",
+                "sensitivity_unit_of_measure": null,
+                "sensitivity_lower_limit": null,
+                "sensitivity_upper_limit": null
+              },
+              {
+                "product_property_type": "TEMPERATURE_SENSITIVE",
+                "sensitivity_unit_of_measure": "CELSIUS",
+                "sensitivity_lower_limit": 0.0,
+                "sensitivity_upper_limit": 100.0
+              }
+            ],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-OKO-1168",
+        "objectID": "P-OKO-1168",
+        "created_date": 1638273492000,
+        "product_name": "IPhone 11 Pro ",
+        "product_description": "",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-BOQ-9343",
+          "collection_name": null
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-FRZ-8166",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-OKO-1168",
+            "universal_product_code": null,
+            "product_variant_description": "IPhone 11 Pro ",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 16.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-AEB-9648_1638273469157_26dfd3d7-dfe5-46ac-b8b3-e5961be53b413931356406695412001.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 200.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 474,
+              "quantity_in_inventory": 600,
+              "quantity_in_sales_orders": 106,
+              "quantity_held_locally": 20,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 72,
+              "last_updated_date": 1673004387000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-JDH-6654",
+        "objectID": "P-JDH-6654",
+        "created_date": 1638273615000,
+        "product_name": "Nail Cutter",
+        "product_description": "",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-ELY-7995",
+          "collection_name": null
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-GYS-0182",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-JDH-6654",
+            "universal_product_code": "2043948394",
+            "product_variant_description": "Nail Cutter",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 0.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-AEB-9648_1638273513940_1c78562b-0490-4e69-ab36-16a09b49614f4421921152117819341.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 0.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 190,
+              "quantity_in_inventory": 200,
+              "quantity_in_sales_orders": 4,
+              "quantity_held_locally": 6,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 5,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-KHU-1622",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-JDH-6654",
+            "universal_product_code": null,
+            "product_variant_description": "Spoon",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 10.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-AEB-9648_1638273564487_c1c9b4a0-7800-4e48-860c-8397f5ebc6843389192433799574739.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 30.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 174,
+              "quantity_in_inventory": 200,
+              "quantity_in_sales_orders": 13,
+              "quantity_held_locally": 13,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 15,
+              "last_updated_date": 1673004275000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-EUM-3478",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-JDH-6654",
+            "universal_product_code": null,
+            "product_variant_description": "Plastic ",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 13.0,
+            "product_variant_image_link": "https://sendy-partner-docs.s3.eu-west-1.amazonaws.com/fulfillment_products/B-AEB-9648_1638273595234_c1c91e1b-186f-4226-8a76-17b353578cc12022854604925034625.jpg",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 20.0,
+            "product_variant_quantity_type": "MILLILITRE",
+            "product_variant_stock_levels": {
+              "available": 897,
+              "quantity_in_inventory": 900,
+              "quantity_in_sales_orders": 2,
+              "quantity_held_locally": 1,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 5,
+              "last_updated_date": 1673004277000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      }
+    ],
+    "pagination": {
+      "current_page": 0,
+      "max": 5,
+      "page_count": 14
+    }
+  },
+  "errors": []
+}

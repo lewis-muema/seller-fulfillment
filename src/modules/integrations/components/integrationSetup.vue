@@ -41,11 +41,16 @@
                 v-model="field.value"
                 :required="field.required"
                 :rules="field.rules"
+                :id="`${field.fieldName}`"
                 variant="outlined"
                 class="personalInfo-field"
               ></v-text-field>
             </div>
-            <v-btn class="sendy-btn-default" @click="validateForm('default')">
+            <v-btn
+              class="sendy-btn-default"
+              @click="validateForm('default')"
+              data-test="integrate-btn"
+            >
               {{ $t("merchant.continue") }}
             </v-btn>
           </v-form>
@@ -59,6 +64,7 @@
                   <img
                     src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
                     class="connecting-dialog__icon"
+                    data-test="loading-gif"
                   />
                   <div class="connecting-dialog__msg">
                     {{ $t("merchant.waiting") }}
@@ -84,9 +90,12 @@
 import { mapActions } from "vuex";
 import Stores from "../classes/stores";
 import headerComponent from "./header.vue";
+import eventsMixin from "@/mixins/events_mixin";
+import { inject } from "vue";
 
 export default {
   name: "integrationSetup",
+  mixins: [eventsMixin],
   components: {
     headerComponent,
   },
@@ -118,6 +127,7 @@ export default {
       resultMessage: "",
       storeObj: null,
       hasError: false,
+      getUserDetails: inject("getUserDetails"),
     };
   },
   mounted() {
@@ -149,7 +159,9 @@ export default {
       const storeFields = {};
 
       for (const field of this.storeObj.storeRequiredFields) {
-        storeFields[field.fieldName] = field.value;
+        if (field.value !== "") {
+          storeFields[field.fieldName] = field.value;
+        }
       }
 
       let cartId = this.storePlatform.replace(" ", "").toLowerCase();
@@ -173,10 +185,20 @@ export default {
           endpoint: "api2cart/stores",
         };
 
-        const { status, data } = await this.connectStore(fullPayload);
+        const { data } = await this.connectStore(fullPayload);
+
+        this.sendSegmentEvents({
+          event: "[merchant] Integrate Platform store",
+          data: {
+            userId: this.getUserDetails.user_id,
+            payload: fullPayload,
+            response: data,
+          },
+        });
+
         this.connecting = false;
 
-        if (status === 200 && data.data.return_code === 0) {
+        if (data.return_code === 0) {
           this.storeConnected = true;
           this.connecting = false;
           this.$router.push({
@@ -189,7 +211,7 @@ export default {
           this.storeConnected = false;
           this.connecting = false;
           throw new Error(
-            data?.data?.return_message || this.$t("merchant.somethingWentWrong")
+            data?.return_message || this.$t("merchant.somethingWentWrong")
           );
         }
       } catch (error) {

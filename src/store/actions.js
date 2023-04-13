@@ -314,17 +314,17 @@ export default {
         },
       };
 
-      const response = await axios.post(
+      const { data } = await axios.post(
         `${payload.app}${payload.endpoint}`,
         payload.values,
         config
       );
-      return response;
+      return data;
     } catch (error) {
       return error.response;
     }
   },
-  async getStoreIntegrations({ dispatch }, payload) {
+  async getIntegrations({ dispatch }, payload) {
     try {
       const { params } = payload;
       const values = {
@@ -340,6 +340,71 @@ export default {
       const response = await axios.get(
         `${payload.app}${payload.endpoint}`,
         values
+      );
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async generateApiKey({ dispatch }, payload) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const { status, data } = await axios.post(
+        `${payload.app}${payload.endpoint}`,
+        payload.values,
+        config
+      );
+      return { data: data.data, status };
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async revokeApiKey({ dispatch }, payload) {
+    try {
+      const values = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const response = await axios.delete(
+        `${payload.app}${payload.endpoint}`,
+        values
+      );
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  },
+  async removePlatformIntegration({ dispatch }, payload) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+          "Fulfilment-Token": localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const response = await axios.post(
+        `${payload.app}${payload.endpoint}`,
+        payload.values,
+        config
       );
       return response;
     } catch (error) {

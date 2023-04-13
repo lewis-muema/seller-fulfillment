@@ -60,7 +60,7 @@ describe("Crossdocking", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Add delivery info")
       .click();
-    cy.get(".businessProfile-address").then(($el) => {
+    cy.find(".businessProfile-address").then(($el) => {
       if ($el.length) {
         cy.get(".businessProfile-address", { timeout }).type("nairobi");
         cy.get(".view-products-close").click();
@@ -71,7 +71,7 @@ describe("Crossdocking", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Add recipient info")
       .click();
-    cy.get(".recepient-info-label").then(($el) => {
+    cy.find(".recepient-info-label").then(($el) => {
       if ($el.length) {
         cy.get(".recepient-info-label", { timeout }).eq(0).click();
         cy.get(".edit-info-label").eq(0).contains("Name of the recipient");
@@ -84,7 +84,7 @@ describe("Crossdocking", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Select the delivery option")
       .click();
-    cy.get(".delivery-option-notice-message").then(($el) => {
+    cy.find(".delivery-option-notice-message").then(($el) => {
       if ($el.length) {
         cy.get(".delivery-option-notice-message", { timeout }).contains(
           "To view delivery options, select the products to send and fill in the delivery info"

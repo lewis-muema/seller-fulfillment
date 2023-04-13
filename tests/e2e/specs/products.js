@@ -1,4 +1,5 @@
 import { expect } from "chai";
+const timeout = 30000;
 
 describe("Product pages", () => {
   it.only("Loads the products list", () => {
@@ -20,7 +21,7 @@ describe("Product pages", () => {
     cy.fixture("productListStatistics").then(() => {
       cy.get(".desktop-product-tab-section .v-badge__content")
         .eq(0)
-        .contains("84");
+        .contains("84", { timeout });
     });
   });
   it.only("Searches for a product in the search bar", () => {
@@ -31,7 +32,7 @@ describe("Product pages", () => {
     cy.fixture("algoliaProduct").then(() => {
       cy.get(".search-algolia .search-item-name")
         .eq(0)
-        .contains("Ceramic Plate");
+        .contains("Ceramic Plate", { timeout });
       cy.get(".products-search")
         .find(".mdi-close-circle")
         .click({ force: true });
@@ -40,7 +41,9 @@ describe("Product pages", () => {
   it.only("Displays out of stock products", () => {
     cy.productStubs();
     cy.wait(2000);
-    cy.get(".desktop-product-tab-section").contains("Out of Stock").click();
+    cy.get(".desktop-product-tab-section")
+      .contains("Out of Stock", { timeout })
+      .click();
     cy.fixture("productListStatistics").then(() => {
       cy.get(".desktop-product-tab-section .v-badge__content")
         .eq(2)

@@ -60,14 +60,14 @@ describe("Crossdocking", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Add delivery info")
       .click();
-    cy.get(".businessProfile-address").type("nairobi");
+    cy.get(".businessProfile-address", { timeout }).type("nairobi");
     cy.get(".view-products-close").click();
   });
   it.only("Fills in recipient info", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Add recipient info")
       .click();
-    cy.get(".recepient-info-label").eq(0).click();
+    cy.get(".recepient-info-label", { timeout }).eq(0).click();
     cy.get(".edit-info-label").eq(0).contains("Name of the recipient");
     cy.get(".edit-info-label").eq(1).contains("Phone number");
     cy.get(".view-products-close").click();
@@ -76,7 +76,7 @@ describe("Crossdocking", () => {
     cy.get(".cross-docking-checkout-text", { timeout })
       .contains("Select the delivery option")
       .click();
-    cy.get(".delivery-option-notice-message").contains(
+    cy.get(".delivery-option-notice-message", { timeout }).contains(
       "To view delivery options, select the products to send and fill in the delivery info"
     );
     cy.get(".timeline-failed-attempt-close").click();

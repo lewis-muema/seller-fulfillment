@@ -1,0 +1,74 @@
+{
+  "message": "product.update.success",
+  "data": {
+    "productId": "P-XUA-1394",
+    "product": {
+      "product_id": "P-XUA-1394",
+      "objectID": "P-XUA-1394",
+      "created_date": 1634363085000,
+      "product_name": "Ceramic Plate",
+      "product_description": "Eating Thing.. first one",
+      "product_main_color": null,
+      "product_archived": false,
+      "business_id": "B-AEB-9648",
+      "product_collection": {
+        "collection_id": "PC-EBP-6946",
+        "collection_name": "Plate"
+      },
+      "sales_channel_collections": null,
+      "product_variants": [
+        {
+          "product_variant_id": "PV-YOP-3240",
+          "business_id": "B-AEB-9648",
+          "product_id": "P-XUA-1394",
+          "universal_product_code": "1111111",
+          "product_variant_description": "Ceramic Plate",
+          "product_variant_currency": "KES",
+          "product_variant_unit_price": 45.0,
+          "product_variant_image_link": "https://s3.eu-west-1.amazonaws.com/sendy-partner-docs/fulfillment_products/B-AEB-9648_1634363011226_image_picker_1FF0E2A1-23A6-435D-A789-0BF201C6D057-9861-0000089B133B3B26.jpg",
+          "product_variant_expiry_date": 0,
+          "product_variant_quantity": 177.0,
+          "product_variant_quantity_type": "MILLILITRE",
+          "product_variant_stock_levels": {
+            "available": 36,
+            "quantity_in_inventory": 402,
+            "quantity_in_sales_orders": 354,
+            "quantity_held_locally": 12,
+            "quantity_held_in_fulfilment_requests": 0,
+            "quantity_incoming": 291,
+            "last_updated_date": 1673004270000
+          },
+          "product_variant_archived": false,
+          "product_variant_properties": [],
+          "low_stock_threshold": 5
+        },
+        {
+          "product_variant_id": "PV-KLKG-8257",
+          "business_id": "B-AEB-9648",
+          "product_id": "P-XUA-1394",
+          "universal_product_code": "45069305934",
+          "product_variant_description": "Thermos",
+          "product_variant_currency": "KES",
+          "product_variant_unit_price": 400.0,
+          "product_variant_image_link": "https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/fulfillment_products/B-000-1111_1668760087536.png",
+          "product_variant_expiry_date": null,
+          "product_variant_quantity": 500.0,
+          "product_variant_quantity_type": "GRAM",
+          "product_variant_stock_levels": {
+            "available": 178,
+            "quantity_in_inventory": 400,
+            "quantity_in_sales_orders": 205,
+            "quantity_held_locally": 17,
+            "quantity_held_in_fulfilment_requests": 0,
+            "quantity_incoming": 210,
+            "last_updated_date": 1673004273000
+          },
+          "product_variant_archived": false,
+          "product_variant_properties": [],
+          "low_stock_threshold": 5
+        }
+      ]
+    }
+  },
+  "errors": []
+}

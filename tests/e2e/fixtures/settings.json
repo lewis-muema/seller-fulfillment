@@ -1,0 +1,27 @@
+{
+  "message": "list.business.settings.success",
+  "data": {
+    "payments_on_delivery_enabled": null,
+    "withdrawals_enabled": null,
+    "payments_enabled": true,
+    "cross_docking_enabled": null,
+    "consignment_returns_enabled": null,
+    "lpo_autofill_enabled": null,
+    "direct_fulfilment_enabled": null,
+    "direct_fulfilment_post_pay_enabled": null,
+    "attach_speed_policy_enabled": null,
+    "withholding_tax_enabled": null,
+    "payment_methods": [
+      {
+        "payment_method": "MPESA",
+        "sendy_payment_method_id": 1
+      },
+      {
+        "payment_method": "CARD",
+        "sendy_payment_method_id": 2
+      }
+    ],
+    "global_low_stock_threshhold": 5
+  },
+  "errors": []
+}

@@ -13,10 +13,10 @@ describe("Crossdocking", () => {
     cy.get(".payment-collection-select").contains("Don’t collect payment");
   });
   it.only("Adds products to the order", () => {
+    cy.crossDockingProductsStubs();
     cy.get(".cross-docking-checkout-text-no-underline", { timeout })
       .contains("Select products to send")
       .click();
-    cy.crossDockingProductsStubs();
     cy.get(".product-select-column")
       .contains("Black Board Chalk", { timeout })
       .parent()

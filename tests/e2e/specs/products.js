@@ -17,6 +17,11 @@ describe("Product pages", () => {
       cy.get(".v-list-item-title span").eq(3).contains("IPhone 11 Pro");
       cy.get(".v-list-item-title span").eq(4).contains("Nail Cutter");
     });
+    cy.fixture("productListStatistics").then(() => {
+      cy.get(".desktop-product-tab-section .v-badge__content")
+        .eq(0)
+        .contains("84");
+    });
   });
   it.only("Searches for a product in the search bar", () => {
     cy.productStubs();

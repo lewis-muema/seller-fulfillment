@@ -258,6 +258,20 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: wallets,
     }
   ).as("wallet");
+  cy.intercept(
+    "POST",
+    `https://session-replay.browser-intake-datadoghq.eu/api/v2/replay?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogReplay");
+  cy.intercept(
+    "POST",
+    `https://rum.browser-intake-datadoghq.eu/api/v2/rum?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*&batch_time=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogRumPost");
   Cypress.Commands.add("setTokens", () => {
     cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
   });
@@ -387,12 +401,19 @@ Cypress.Commands.add("productStubs", () => {
   }).as("settings");
   cy.intercept(
     "POST",
-    `https://ygzo0b7nvs-dsn.algolia.net/1/indexes/staging_fulfillment/query?x-algolia-agent=Algolia%20for%20JavaScript%20(4.13.1)%3B%20Browser`,
+    `https://*/1/indexes/staging_fulfillment/query?x-algolia-agent=*`,
     {
       statusCode: 200,
       body: algoliaProduct,
     }
   ).as("algoliaProduct");
+  cy.intercept(
+    "PUT",
+    `https://*/1/indexes/staging_fulfillment/settings?x-algolia-agent=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("algoliaInitiate");
   cy.intercept(
     "GET",
     `${constants.FULFILMENT_SERVER}seller/*/products/outofstock?max=5&offset=0`,
@@ -417,6 +438,20 @@ Cypress.Commands.add("productStubs", () => {
     statusCode: 200,
     body: updateProduct,
   }).as("updateProduct");
+  cy.intercept(
+    "POST",
+    `https://session-replay.browser-intake-datadoghq.eu/api/v2/replay?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogReplay");
+  cy.intercept(
+    "POST",
+    `https://rum.browser-intake-datadoghq.eu/api/v2/rum?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*&batch_time=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogRumPost");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

@@ -47,6 +47,9 @@ import outOfStockProducts from "../fixtures/outOfStockProducts.json";
 import singleProduct from "../fixtures/singleProduct.json";
 import productListStatistics from "../fixtures/productListStatistics.json";
 import updateProduct from "../fixtures/updateProduct.json";
+import archiveProduct from "../fixtures/archiveProduct.json";
+import archivedProduct from "../fixtures/archivedProduct.json";
+import unarchiveProduct from "../fixtures/unarchiveProduct.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("authStubs", () => {
@@ -439,6 +442,14 @@ Cypress.Commands.add("productStubs", () => {
     body: updateProduct,
   }).as("updateProduct");
   cy.intercept(
+    "PUT",
+    `${constants.FULFILMENT_SERVER}seller/*/products/*/unarchive`,
+    {
+      statusCode: 200,
+      body: unarchiveProduct,
+    }
+  ).as("unarchiveProduct");
+  cy.intercept(
     "POST",
     `https://session-replay.browser-intake-datadoghq.eu/api/v2/replay?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*`,
     {
@@ -452,6 +463,20 @@ Cypress.Commands.add("productStubs", () => {
       statusCode: 200,
     }
   ).as("datadogRumPost");
+});
+Cypress.Commands.add("archiveStubs", () => {
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: archivedProduct,
+  }).as("archivedProduct");
+  cy.intercept(
+    "PUT",
+    `${constants.FULFILMENT_SERVER}seller/*/products/*/archive`,
+    {
+      statusCode: 200,
+      body: archiveProduct,
+    }
+  ).as("archiveProduct");
 });
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));

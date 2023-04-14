@@ -1,0 +1,9 @@
+{
+  "message": "product.unarchive.success",
+  "data": {
+    "data": {
+      "product_id": "P-XUA-1394"
+    }
+  },
+  "errors": []
+}

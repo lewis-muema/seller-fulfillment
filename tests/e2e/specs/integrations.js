@@ -61,7 +61,7 @@ describe("Integration Process", () => {
     cy.dashboardStubs();
     cy.authStubs();
     cy.paymentStubs();
-    cy.intercept("GET", "/v1/internal/users", {
+    cy.intercept("GET", "**/v1/internal/users?enabled=true", {
       statusCode: 404,
     }).as("noIntegrations");
     cy.intercept("**/v1/internal/api/token", {
@@ -72,9 +72,6 @@ describe("Integration Process", () => {
   });
 
   it("should display buttons to integrate if they're no integrations", () => {
-    cy.intercept("GET", "/v1/internal/users", {
-      statusCode: 404,
-    }).as("noIntegrations");
     cy.getByData("no-store-integration").should(
       "contain",
       "No store integration found"

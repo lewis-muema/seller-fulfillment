@@ -64,5 +64,9 @@
   "integrations": "Integrations",
   "productAddedToList": "Product found, Scroll down to select it",
   "productAlreadyInTheList": "Product already in the list",
+  "newHomeScreen": "Welcome to the new homescreen",
+  "letsCheckout": "Let’s checkout what we have changed",
+  "takeTour": "Take a tour",
+  "skipTour": "Skip tour",
   "analytics": "Analytics"
 }

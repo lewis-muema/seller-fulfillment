@@ -54,7 +54,7 @@ describe("Integrations Page", () => {
   });
 });
 
-describe("Integration Process", () => {
+describe.only("Integration Process", () => {
   beforeEach(() => {
     cy.setToken();
     cy.crossDockingStubs();

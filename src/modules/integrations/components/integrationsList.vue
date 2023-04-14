@@ -24,7 +24,7 @@
             <button
               class="integration-content__no-integration--btn"
               data-test="add-platform-integration"
-              @click="addStoreDialog = true"
+              @click="addPlatformDialog = true"
             >
               <img
                 src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/connect-store.svg"
@@ -94,9 +94,9 @@
         />
       </v-card-item>
     </v-card>
-    <addStore
-      v-if="addStoreDialog"
-      :showDialog="addStoreDialog"
+    <addPlatformDialog
+      v-if="addPlatformDialog"
+      :showDialog="addPlatformDialog"
       @clicked="onClickChild"
     />
     <addApiKeyDialog
@@ -107,7 +107,7 @@
   </div>
 </template>
 <script>
-import addStore from "./platform/addStore.vue";
+import addPlatformDialog from "./addPlatformDialog.vue";
 import { getTimeAgo } from "@/utils/time";
 import { mapActions, mapGetters } from "vuex";
 import addApiKeyDialog from "./api/dialog.vue";
@@ -118,9 +118,9 @@ import { provide } from "vue";
 
 export default {
   mixins: [eventsMixin],
-  components: { addStore, addApiKeyDialog, integrationBlock },
+  components: { addPlatformDialog, addApiKeyDialog, integrationBlock },
   data: () => ({
-    addStoreDialog: false,
+    addPlatformDialog: false,
     apiKey: null,
     loading: false,
     generateAPIkeyDialog: false,
@@ -146,7 +146,7 @@ export default {
       "removePlatformIntegration",
     ]),
     onClickChild() {
-      this.addStoreDialog = false;
+      this.addPlatformDialog = false;
     },
     async getMerchantIntegrations() {
       this.loading = true;

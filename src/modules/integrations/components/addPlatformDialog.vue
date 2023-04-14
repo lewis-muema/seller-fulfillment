@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-import storePlatform from "../storePlatform.vue";
+import storePlatform from "./storePlatform.vue";
 
 export default {
   components: { storePlatform },

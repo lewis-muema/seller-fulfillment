@@ -318,7 +318,7 @@ const routes = [
     name: "Analytics",
     component: analytics,
   },
-  ...integrations,
+  integrations,
 ];
 
 const router = createRouter({

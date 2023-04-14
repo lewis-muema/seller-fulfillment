@@ -1,15 +1,13 @@
 <template>
   <div>
-    <integrations />
+    <router-view />
   </div>
 </template>
 
 <script>
-import integrations from "./integrations.vue";
 import { mapMutations } from "vuex";
 
 export default {
-  components: { integrations },
   data() {
     return {};
   },
@@ -22,4 +20,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>

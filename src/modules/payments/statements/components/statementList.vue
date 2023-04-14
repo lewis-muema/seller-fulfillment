@@ -186,28 +186,31 @@
               >
             </div>
             <div v-if="cycle.payments && cycle.payments.length > 0">
-              <div
-                v-for="(row, i) in cycle.payments"
-                :key="i"
-                class="statement-paid-container"
-              >
-                <span>
-                  <i class="mdi mdi-information statement-info-icon"></i
-                ></span>
-                <span>
-                  <span class="mr-1"
-                    >{{ $t("payments.paidOn") }}
-                    {{ formatLineItemDate(row.payment_attempt_date) }}</span
-                  >
-                  <span class="mr-1"
-                    >{{ $t("payments.via") }}
-                    {{ row.used_means_of_payment.means_of_payment_type }}</span
-                  >
-                  <span class="statement-amount-container-currency"
-                    >{{ getBusinessDetails.currency }}
-                    {{ row.payment_amount }}</span
-                  >
-                </span>
+              <div v-for="(row, i) in cycle.payments" :key="i">
+                <div
+                  class="statement-paid-container"
+                  v-if="row.payment_status === 'SUCCESS'"
+                >
+                  <span>
+                    <i class="mdi mdi-information statement-info-icon"></i
+                  ></span>
+                  <span>
+                    <span class="mr-1"
+                      >{{ $t("payments.paidOn") }}
+                      {{ formatLineItemDate(row.payment_attempt_date) }}</span
+                    >
+                    <span class="mr-1"
+                      >{{ $t("payments.via") }}
+                      {{
+                        row.used_means_of_payment.means_of_payment_type
+                      }}</span
+                    >
+                    <span class="statement-amount-container-currency"
+                      >{{ getBusinessDetails.currency }}
+                      {{ row.payment_amount }}</span
+                    >
+                  </span>
+                </div>
               </div>
             </div>
             <div
@@ -216,10 +219,10 @@
             >
               <i class="mdi mdi-alert-rhombus statement-overdue-icon"></i>
               <span class="">
-                <span class="payment-overdue-text">{{
-                  $t("payments.pleasePay")
+                <span class="payment-overdue-text mr-2">{{
+                  $t("payments.paymentOverdue")
                 }}</span
-                >{{ $t("payments.paymentOverdue") }}
+                >{{ $t("payments.pleasePay") }}
               </span>
             </div>
             <div
@@ -452,7 +455,7 @@ export default {
     },
     billingStatus(billing) {
       const billingStatus = billing.replaceAll("_", " ").toLowerCase();
-      if (billingStatus === "notpaid") {
+      if (billingStatus === "not paid") {
         return "Pending";
       }
       return billingStatus.charAt(0).toUpperCase() + billingStatus.slice(1);

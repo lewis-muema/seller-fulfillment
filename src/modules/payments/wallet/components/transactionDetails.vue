@@ -122,7 +122,67 @@
           {{ $t("payments.view") }}
         </div>
         <hr class="mt-5" />
-        <div class="transaction-amount">
+        <div class="transaction-amount" v-if="witholdingTaxEnabled">
+          <div>
+            <span>Total</span>
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="Total value inclusive of 16% sales tax"
+              placement="right"
+            >
+              <i class="mdi mdi-information-outline billing-info-icon"></i>
+            </el-tooltip>
+            <span
+              :class="
+                getSignMapping[getActiveTransaction.transaction_type] === '+'
+                  ? 'transaction-amount-right'
+                  : 'transaction-amount-right-negative'
+              "
+              >_</span
+            >
+          </div>
+          <div class="mt-2">
+            <span>Withholding VAT</span>
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="Withholding tax; 2% of Total Due excluding VAT"
+              placement="right"
+            >
+              <i class="mdi mdi-information-outline billing-info-icon"></i>
+            </el-tooltip>
+            <span
+              :class="
+                getSignMapping[getActiveTransaction.transaction_type] === '+'
+                  ? 'transaction-amount-right'
+                  : 'transaction-amount-right-negative'
+              "
+              >_</span
+            >
+          </div>
+          <hr class="mt-2" />
+          <div class="transaction-wth-amount">
+            <span>Amount</span>
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="Net total due is the Total Due less Withholding Tax"
+              placement="right"
+            >
+              <i class="mdi mdi-information-outline billing-info-icon"></i>
+            </el-tooltip>
+            <span
+              :class="
+                getSignMapping[getActiveTransaction.transaction_type] === '+'
+                  ? 'transaction-amount-right'
+                  : 'transaction-amount-right-negative'
+              "
+              >_</span
+            >
+          </div>
+        </div>
+        <div class="transaction-amount" v-else>
           <span>
             {{ $t("payments.amount") }}
             <i
@@ -152,7 +212,7 @@
             {{ getActiveTransaction.transaction_currency }}
             {{ getActiveTransaction.transaction_amount }}
           </span>
-        </div>
+        </div >
         <div
           v-if="
             [
@@ -244,7 +304,11 @@ export default {
       "getOrderTrackingData",
       "getSignMapping",
       "getCycleLineItems",
+      "getBusinessDetails",
     ]),
+    witholdingTaxEnabled() {
+      return this.getBusinessDetails.settings.withholding_tax_enabled;
+    },
     deliveryFee() {
       let fee = 0;
       if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
@@ -267,6 +331,7 @@ export default {
   data() {
     return {
       showLineItems: false,
+      wht: true,
     };
   },
   mounted() {
@@ -378,6 +443,9 @@ export default {
   font-size: 18px;
   margin-top: 20px;
 }
+.billing-info-icon {
+  cursor: pointer;
+}
 .transaction-amount-right {
   float: right;
   color: #116f28;
@@ -413,5 +481,8 @@ export default {
   padding-top: 1rem;
   color: #9d5004;
   font-style: italic;
+}
+.transaction-wth-amount {
+  padding: 10px 0px;
 }
 </style>

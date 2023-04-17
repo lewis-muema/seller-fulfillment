@@ -212,7 +212,7 @@
             {{ getActiveTransaction.transaction_currency }}
             {{ getActiveTransaction.transaction_amount }}
           </span>
-        </div >
+        </div>
         <div
           v-if="
             [

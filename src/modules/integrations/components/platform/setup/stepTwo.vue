@@ -58,24 +58,15 @@
         </v-form>
       </div>
     </v-card>
-    <integrationSetup
-      v-if="storeSetupDialog"
-      :setupDialog="storeSetupDialog"
-      :storePlatform="storePlatform"
-      :storeName="storeName"
-      :storeUrl="storeUrl"
-      @connected="onConnectedChild"
-    />
   </div>
 </template>
 <script>
-import integrationSetup from "@/modules/integrations/components/integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
 import headerComponent from "@/modules/integrations/components/header.vue";
 import eventsMixin from "@/mixins/events_mixin";
 
 export default {
-  components: { integrationSetup, headerComponent },
+  components: { headerComponent },
   inject: ["getUserDetails", "platform"],
   mixins: [eventsMixin],
   data() {
@@ -113,17 +104,27 @@ export default {
     },
     async validate() {
       const { valid } = await this.$refs.form.validate();
-      if (valid) this.storeSetupDialog = true;
-      this.sendSegmentEvents({
-        event: "[merchant]added_store_details",
-        data: {
-          userId: this.getUserDetails.user_id,
-          payload: {
+      if (valid) {
+        this.storeSetupDialog = true;
+        this.sendSegmentEvents({
+          event: "[merchant]added_store_details",
+          data: {
+            userId: this.getUserDetails.user_id,
+            payload: {
+              storeName: this.storeName,
+              storeUrl: this.storeUrl,
+            },
+          },
+        });
+        this.$router.push({
+          name: "SetupStep3",
+          params: {
             storeName: this.storeName,
             storeUrl: this.storeUrl,
+            storePlatform: this.storePlatform,
           },
-        },
-      });
+        });
+      }
     },
     reset() {
       this.$refs.form.reset();

@@ -1,97 +1,89 @@
 <template>
   <div>
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      :scrim="false"
-      transition="dialog-bottom-transition"
-      :retain-focus="false"
-    >
-      <v-card>
-        <headerComponent />
-        <div class="integrations-card">
-          <div class="top-action-bar">
-            <v-btn class="back-btn" dark @click="$emit('connected', false)">
-              <v-icon large dark left> mdi-arrow-left </v-icon>
-            </v-btn>
-          </div>
-          <div class="store-platform">
-            <img
-              :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
-              class="store-platform__image"
-            />
-            <span class="store-platform__name"
-              >{{ storePlatform }} {{ $t("merchant.integration") }}</span
-            >
-          </div>
-          <div class="tag">
-            <h5>{{ $t("merchant.storeDetails") }}</h5>
-            <p>{{ $t("merchant.storeDetailsTagline") }}</p>
-          </div>
-          <hr class="divider" />
-          <v-form ref="default" v-model="valid" lazy-validation>
-            <div
-              v-for="(field, index) in storeObj.storeRequiredFields"
-              :key="index"
-            >
-              <label for="field" class="personalInfo-label">
-                {{ $t(`merchant.${field.fieldName}`) }}
-              </label>
-              <v-text-field
-                v-model="field.value"
-                :required="field.required"
-                :rules="field.rules"
-                :id="`${field.fieldName}`"
-                variant="outlined"
-                class="personalInfo-field"
-              ></v-text-field>
-            </div>
-            <v-btn
-              class="sendy-btn-default"
-              @click="validateForm('default')"
-              data-test="integrate-btn"
-            >
-              {{ $t("merchant.continue") }}
-            </v-btn>
-          </v-form>
-          <div class="text-center">
-            <v-dialog v-model="connectDialog" class="connecting-dialog">
-              <v-card class="connect-store">
-                <div v-if="connecting" class="connect-progress">
-                  <div class="connecting-dialog__title">
-                    {{ $t("merchant.connecting_your_store") }}
-                  </div>
-                  <img
-                    src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
-                    class="connecting-dialog__icon"
-                    data-test="loading-gif"
-                  />
-                  <div class="connecting-dialog__msg">
-                    {{ $t("merchant.waiting") }}
-                  </div>
-                </div>
-                <div v-if="hasError && !connecting" class="connect-progress">
-                  <div class="connecting-dialog__title">
-                    {{ $t("merchant.somethingWentWrong") }}
-                  </div>
-                  <div class="connecting-dialog__msg">
-                    {{ resultMessage }}
-                  </div>
-                </div>
-              </v-card>
-            </v-dialog>
-          </div>
+    <v-card>
+      <headerComponent />
+      <div class="integrations-card">
+        <div class="top-action-bar">
+          <v-btn class="back-btn" dark @click="$emit('connected', false)">
+            <v-icon large dark left> mdi-arrow-left </v-icon>
+          </v-btn>
         </div>
-      </v-card>
-    </v-dialog>
+        <div class="store-platform">
+          <img
+            :src="`https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/${storePlatform.toLowerCase()}.svg`"
+            class="store-platform__image"
+          />
+          <span class="store-platform__name"
+            >{{ storePlatform }} {{ $t("merchant.integration") }}</span
+          >
+        </div>
+        <div class="tag">
+          <h5>{{ $t("merchant.storeDetails") }}</h5>
+          <p>{{ $t("merchant.storeDetailsTagline") }}</p>
+        </div>
+        <hr class="divider" />
+        <v-form ref="default" v-model="valid" lazy-validation>
+          <div
+            v-for="(field, index) in storeObj.storeRequiredFields"
+            :key="index"
+          >
+            <label for="field" class="personalInfo-label">
+              {{ $t(`merchant.${field.fieldName}`) }}
+            </label>
+            <v-text-field
+              v-model="field.value"
+              :required="field.required"
+              :rules="field.rules"
+              :id="`${field.fieldName}`"
+              variant="outlined"
+              class="personalInfo-field"
+            ></v-text-field>
+          </div>
+          <v-btn
+            class="sendy-btn-default"
+            @click="validateForm('default')"
+            data-test="integrate-btn"
+          >
+            {{ $t("merchant.continue") }}
+          </v-btn>
+        </v-form>
+        <div class="text-center">
+          <v-dialog v-model="connectDialog" class="connecting-dialog">
+            <v-card class="connect-store">
+              <div v-if="connecting" class="connect-progress">
+                <div class="connecting-dialog__title">
+                  {{ $t("merchant.connecting_your_store") }}
+                </div>
+                <img
+                  src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
+                  class="connecting-dialog__icon"
+                  data-test="loading-gif"
+                />
+                <div class="connecting-dialog__msg">
+                  {{ $t("merchant.waiting") }}
+                </div>
+              </div>
+              <div v-if="hasError && !connecting" class="connect-progress">
+                <div class="connecting-dialog__title">
+                  {{ $t("merchant.somethingWentWrong") }}
+                </div>
+                <div class="connecting-dialog__msg">
+                  {{ resultMessage }}
+                </div>
+              </div>
+            </v-card>
+          </v-dialog>
+        </div>
+      </div>
+    </v-card>
   </div>
 </template>
 <script>
 import { mapActions } from "vuex";
-import Stores from "../classes/stores";
-import headerComponent from "./header.vue";
+import Stores from "@/modules/integrations/classes/stores.js";
+import headerComponent from "@/modules/integrations/components/header.vue";
 import eventsMixin from "@/mixins/events_mixin";
-import { inject } from "vue";
+import { inject, reactive, onBeforeMount } from "vue";
 
 export default {
   name: "integrationSetup",
@@ -120,25 +112,26 @@ export default {
   data() {
     return {
       valid: true,
-      dialog: false,
       connectDialog: false,
       connecting: false,
       storeConnected: false,
       resultMessage: "",
-      storeObj: null,
       hasError: false,
       getUserDetails: inject("getUserDetails"),
     };
   },
-  mounted() {
-    this.storeObj = new Stores(this.storePlatform);
-    this.dialog = this.setupDialog;
-    this.storeObj.getStoreFields();
+  setup(props) {
+    let storeObj = reactive(new Stores(props.storePlatform));
+
+    onBeforeMount(() => {
+      storeObj.getStoreFields();
+    });
+
+    return {
+      storeObj,
+    };
   },
   watch: {
-    setupDialog() {
-      if (this.setupDialog) this.dialog = true;
-    },
     connectDialog(value) {
       if (!value) {
         this.hasError = false;

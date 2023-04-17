@@ -7,6 +7,7 @@ import index from "../components/index.vue";
 import platformIndex from "@/modules/integrations/components/platform/index.vue";
 import stepOne from "@/modules/integrations/components/platform/setup/stepOne.vue";
 import stepTwo from "@/modules/integrations/components/platform/setup/stepTwo.vue";
+import stepThree from "@/modules/integrations/components/platform/setup/stepThree.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -45,6 +46,23 @@ const routes = {
               next();
             } else {
               next({ name: "SetupStep1" });
+            }
+          },
+        },
+        {
+          path: "setup/3",
+          name: "SetupStep3",
+          component: stepThree,
+          props: true,
+          beforeEnter: (to, from, next) => {
+            if (
+              Object.keys(to.params).includes("storeName") &&
+              Object.keys(to.params).includes("storeUrl") &&
+              Object.keys(to.params).includes("storePlatform")
+            ) {
+              next();
+            } else {
+              next({ name: "SetupStep2" });
             }
           },
         },

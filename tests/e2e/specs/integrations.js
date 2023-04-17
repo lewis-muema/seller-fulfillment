@@ -177,8 +177,13 @@ describe("Integration Process", () => {
   });
 
   describe("Navigation guards - Platform Integration", () => {
-    it("should navigate to step 1 if user goes directly to setup URL", () => {
+    it("should navigate to step 1 if user goes directly to step 2", () => {
       cy.visit("/settings/integrations/platform/setup/2");
+      cy.url().should("include", "setup/1");
+    });
+
+    it("should navigate to step 1 if user goes directly to step 3", () => {
+      cy.visit("/settings/integrations/platform/setup/3");
       cy.url().should("include", "setup/1");
     });
   });

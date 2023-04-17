@@ -26,6 +26,11 @@ const routes = {
       redirect: { name: "SetupStep1" },
       children: [
         {
+          path: "setup",
+          name: "Setup",
+          redirect: { name: "SetupStep1" },
+        },
+        {
           path: "setup/1",
           name: "SetupStep1",
           component: platformSetup,
@@ -35,6 +40,13 @@ const routes = {
           path: "setup/2",
           name: "SetupStep2",
           component: storeDetails,
+          beforeEnter: (to, from, next) => {
+            if (Object.keys(to.params).includes("storePlatform")) {
+              next();
+            } else {
+              next({ name: "SetupStep1" });
+            }
+          },
         },
       ],
     },

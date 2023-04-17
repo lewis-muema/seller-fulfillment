@@ -54,7 +54,7 @@ describe("Integrations Page", () => {
   });
 });
 
-describe.only("Integration Process", () => {
+describe("Integration Process", () => {
   beforeEach(() => {
     cy.setToken();
     cy.crossDockingStubs();
@@ -174,5 +174,12 @@ describe.only("Integration Process", () => {
     //       cy.url().should("include", "/settings/integrations");
     //     });
     // });
+  });
+
+  describe("Navigation guards - Platform Integration", () => {
+    it("should navigate to step 1 if user goes directly to setup URL", () => {
+      cy.visit("/settings/integrations/platform/setup/2");
+      cy.url().should("include", "setup/1");
+    });
   });
 });

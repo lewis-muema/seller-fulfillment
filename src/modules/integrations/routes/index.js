@@ -1,11 +1,12 @@
 import integrationsList from "../components/integrationsList.vue";
-import storeDetails from "../components/storeDetails.vue";
+
 import thankYou from "../components/thankYou.vue";
 import index from "../components/index.vue";
 
 // Platform
 import platformIndex from "../components/platform/index.vue";
 import platformSetup from "../components/platformSetup.vue";
+import storeDetails from "../components/storeDetails.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -20,13 +21,20 @@ const routes = {
     },
     {
       path: "platform",
-      name: "platfom",
+      name: "platform",
       component: platformIndex,
+      redirect: { name: "SetupStep1" },
       children: [
         {
           path: "setup/1",
-          name: "PlatformSetup",
+          name: "SetupStep1",
           component: platformSetup,
+          props: true,
+        },
+        {
+          path: "setup/2",
+          name: "SetupStep2",
+          component: storeDetails,
         },
       ],
     },

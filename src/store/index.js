@@ -34,6 +34,7 @@ export default createStore({
         "/auth/complete-signup",
         "/external/invite",
         "/settings/integrations/platform/setup/1",
+        "/settings/integrations/platform/setup/2",
         "/settings/integrations/thank-you",
       ],
       autofillDetails: {},

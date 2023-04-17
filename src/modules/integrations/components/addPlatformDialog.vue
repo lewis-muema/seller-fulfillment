@@ -28,7 +28,7 @@
                   <div class="integrations-actions-inner">
                     <v-btn
                       class="sendy-btn-default"
-                      @click="$router.push({ name: 'PlatformSetup' })"
+                      @click="$router.push({ name: 'SetupStep1' })"
                       data-test="get-started-btn"
                     >
                       {{ $t("merchant.getStarted") }}
@@ -53,7 +53,6 @@ export default {
   },
   data: () => ({
     dialog: false,
-    storePlatformDialog: false,
   }),
   mounted() {
     this.dialog = this.showDialog;
@@ -61,11 +60,6 @@ export default {
   watch: {
     showDialog() {
       if (this.showDialog) this.dialog = true;
-    },
-  },
-  methods: {
-    onSelectChild() {
-      this.storePlatformDialog = false;
     },
   },
 };

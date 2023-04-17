@@ -43,7 +43,7 @@ import { inject } from "vue";
 export default {
   name: "SelectComponent",
   mixins: [eventsMixin],
-  inject: ["getUserDetails"],
+  inject: ["getUserDetails", "platform"],
   watch: {
     selectedStore: {
       handler: function (value) {
@@ -81,6 +81,7 @@ export default {
     },
     selectOption(selectedStore) {
       this.selectedStore = selectedStore;
+      this.platform.details.name = selectedStore;
       this.optionsVisible = false;
     },
   },

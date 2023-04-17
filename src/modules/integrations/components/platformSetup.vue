@@ -15,7 +15,12 @@
 
           <v-btn
             class="sendy-btn-default"
-            @click="storeDetailsDialog = true"
+            @click="
+              $router.push({
+                name: 'SetupStep2',
+                params: { storePlatform: platform.details.name },
+              })
+            "
             data-test="select-platform-btn"
           >
             {{ $t("merchant.continue") }}
@@ -45,7 +50,19 @@ import stores from "../constants/storeFields.json";
 import headerComponent from "./header.vue";
 import selectComponent from "./selectComponent.vue";
 
+import Platform from "@/modules/integrations/models/Platform";
+import { provide } from "vue";
+
 export default {
+  setup() {
+    const platform = new Platform();
+
+    provide("platform", platform);
+
+    return {
+      platform,
+    };
+  },
   components: { storeDetails, headerComponent, selectComponent },
   computed: {
     availableStores() {
@@ -56,21 +73,12 @@ export default {
   },
   data() {
     return {
-      platform: "",
-      platformSet: false,
       dialog: false,
       storeDetailsDialog: false,
       documentationLink: "https://fulfillment-api.sendyit.com/documentation",
     };
   },
   methods: {
-    updateStore(store) {
-      this.platform = store;
-      this.onPlatformSet();
-    },
-    onPlatformSet() {
-      this.platformSet = true;
-    },
     onSavedChild() {
       this.storeDetailsDialog = false;
     },

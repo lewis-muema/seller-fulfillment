@@ -1,6 +1,6 @@
 import integrationsList from "../components/integrationsList.vue";
 
-import thankYou from "../components/thankYou.vue";
+import thankYou from "@/modules/integrations/components/platform/setup/thankYou.vue";
 import index from "../components/index.vue";
 
 // Platform
@@ -67,13 +67,13 @@ const routes = {
             }
           },
         },
+        {
+          path: "thank-you",
+          name: "ThankYou",
+          component: thankYou,
+          props: true,
+        },
       ],
-    },
-    {
-      path: "thank-you",
-      name: "ThankYou",
-      component: thankYou,
-      props: true,
     },
   ],
 };

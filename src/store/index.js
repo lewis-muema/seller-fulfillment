@@ -36,7 +36,7 @@ export default createStore({
         "/settings/integrations/platform/setup/1",
         "/settings/integrations/platform/setup/2",
         "/settings/integrations/platform/setup/3",
-        "/settings/integrations/thank-you",
+        "/settings/integrations/platform/thank-you",
       ],
       autofillDetails: {},
       cancellationReasons: {},

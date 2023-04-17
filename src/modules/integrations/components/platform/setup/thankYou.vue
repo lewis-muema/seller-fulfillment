@@ -1,5 +1,4 @@
 <template>
-  <headerComponent />
   <div class="container">
     <div class="congratulations-container">
       <div class="congratulations-container__logo">
@@ -31,16 +30,12 @@
 </template>
 
 <script>
-import headerComponent from "./header.vue";
 import eventsMixin from "@/mixins/events_mixin";
 import { inject } from "vue";
 
 export default {
   name: "ThankYou",
   mixins: [eventsMixin],
-  components: {
-    headerComponent,
-  },
   mounted() {
     this.sendSegmentEvents({
       event: "[merchant] Store integration success page",

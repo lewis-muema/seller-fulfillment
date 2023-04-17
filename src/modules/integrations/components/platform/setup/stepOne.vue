@@ -40,8 +40,7 @@
 </template>
 <script>
 import stores from "@/modules/integrations/constants/storeFields.json";
-import headerComponent from "@/modules/integrations/components/header.vue";
-import selectComponent from "@/modules/integrations/components/selectComponent.vue";
+import selectComponent from "@/modules/integrations/components/platform/selectComponent.vue";
 
 import Platform from "@/modules/integrations/models/Platform";
 import { provide } from "vue";
@@ -56,7 +55,7 @@ export default {
       platform,
     };
   },
-  components: { headerComponent, selectComponent },
+  components: { selectComponent },
   computed: {
     availableStores() {
       return Object.keys(stores).sort((a, b) => {

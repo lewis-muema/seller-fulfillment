@@ -81,16 +81,12 @@
 <script>
 import { mapActions } from "vuex";
 import Stores from "@/modules/integrations/classes/stores.js";
-import headerComponent from "@/modules/integrations/components/header.vue";
 import eventsMixin from "@/mixins/events_mixin";
 import { inject, reactive, onBeforeMount } from "vue";
 
 export default {
   name: "integrationSetup",
   mixins: [eventsMixin],
-  components: {
-    headerComponent,
-  },
   props: {
     setupDialog: {
       type: Boolean,

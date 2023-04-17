@@ -62,11 +62,9 @@
 </template>
 <script>
 import { isValidUrl } from "@/utils/text-validation";
-import headerComponent from "@/modules/integrations/components/header.vue";
 import eventsMixin from "@/mixins/events_mixin";
 
 export default {
-  components: { headerComponent },
   inject: ["getUserDetails", "platform"],
   mixins: [eventsMixin],
   props: {

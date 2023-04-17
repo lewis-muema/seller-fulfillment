@@ -1,8 +1,11 @@
 import integrationsList from "../components/integrationsList.vue";
-import storePlatform from "../components/storePlatform.vue";
 import storeDetails from "../components/storeDetails.vue";
 import thankYou from "../components/thankYou.vue";
 import index from "../components/index.vue";
+
+// Platform
+import platformIndex from "../components/platform/index.vue";
+import platformSetup from "../components/platformSetup.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -16,9 +19,16 @@ const routes = {
       component: integrationsList,
     },
     {
-      path: "store-platform",
-      name: "Platform",
-      component: storePlatform,
+      path: "platform",
+      name: "platfom",
+      component: platformIndex,
+      children: [
+        {
+          path: "setup/1",
+          name: "PlatformSetup",
+          component: platformSetup,
+        },
+      ],
     },
     {
       path: "store-details",

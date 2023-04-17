@@ -43,12 +43,13 @@ import { inject } from "vue";
 export default {
   name: "SelectComponent",
   mixins: [eventsMixin],
+  inject: ["getUserDetails"],
   watch: {
     selectedStore: {
       handler: function (value) {
         this.$emit("update", value);
         this.sendSegmentEvents({
-          event: "[merchant] Selected Platform store",
+          event: "[merchant]Selected_Platform",
           data: {
             userId: this.getUserDetails.user_id,
             store: value,

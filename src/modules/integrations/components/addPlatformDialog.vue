@@ -28,7 +28,7 @@
                   <div class="integrations-actions-inner">
                     <v-btn
                       class="sendy-btn-default"
-                      @click="storePlatformDialog = true"
+                      @click="$router.push({ name: 'PlatformSetup' })"
                       data-test="get-started-btn"
                     >
                       {{ $t("merchant.getStarted") }}
@@ -41,18 +41,10 @@
         </v-card>
       </div>
     </v-dialog>
-    <storePlatform
-      v-if="storePlatformDialog"
-      :displayDialog="storePlatformDialog"
-      @selected="onSelectChild"
-    />
   </div>
 </template>
 <script>
-import storePlatform from "./storePlatform.vue";
-
 export default {
-  components: { storePlatform },
   props: {
     showDialog: {
       type: Boolean,

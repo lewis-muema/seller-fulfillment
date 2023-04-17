@@ -1,33 +1,26 @@
 <template>
-  <div>
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      :scrim="false"
-      transition="dialog-bottom-transition"
-      :retain-focus="false"
-    >
-      <v-card>
-        <headerComponent />
-        <div class="integrations-card">
-          <div class="top-action-bar">
-            <h5>{{ $t("merchant.platformInUse") }}</h5>
-          </div>
-          <div>
-            <selectComponent
-              :availableStores="availableStores"
-              class="dropdown"
-              @update="updateStore"
-            />
+  <div class="platform-container">
+    <v-card class="platform-container__card">
+      <headerComponent />
+      <div class="integrations-card">
+        <div class="top-action-bar">
+          <h5>{{ $t("merchant.platformInUse") }}</h5>
+        </div>
+        <div>
+          <selectComponent
+            :availableStores="availableStores"
+            class="dropdown"
+            @update="updateStore"
+          />
 
-            <v-btn
-              class="sendy-btn-default"
-              @click="storeDetailsDialog = true"
-              data-test="select-platform-btn"
-            >
-              {{ $t("merchant.continue") }}
-            </v-btn>
-            <!-- <div class="integration-actions">
+          <v-btn
+            class="sendy-btn-default"
+            @click="storeDetailsDialog = true"
+            data-test="select-platform-btn"
+          >
+            {{ $t("merchant.continue") }}
+          </v-btn>
+          <!-- <div class="integration-actions">
               <span class="integration-actions__text">{{
                 $t("merchant.missingPlatform")
               }}</span>
@@ -35,10 +28,9 @@
                 {{ $t("merchant.letsKnow") }}
               </a>
             </div> -->
-          </div>
         </div>
-      </v-card>
-    </v-dialog>
+      </div>
+    </v-card>
     <storeDetails
       v-if="storeDetailsDialog"
       :detailsDialog="storeDetailsDialog"
@@ -55,12 +47,6 @@ import selectComponent from "./selectComponent.vue";
 
 export default {
   components: { storeDetails, headerComponent, selectComponent },
-  props: {
-    displayDialog: {
-      type: Boolean,
-      default: false,
-    },
-  },
   computed: {
     availableStores() {
       return Object.keys(stores).sort((a, b) => {
@@ -76,14 +62,6 @@ export default {
       storeDetailsDialog: false,
       documentationLink: "https://fulfillment-api.sendyit.com/documentation",
     };
-  },
-  mounted() {
-    this.dialog = this.displayDialog;
-  },
-  watch: {
-    displayDialog() {
-      if (this.displayDialog) this.dialog = true;
-    },
   },
   methods: {
     updateStore(store) {
@@ -103,6 +81,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.platform-container {
+  height: 100%;
+
+  &__card {
+    height: 100vh;
+  }
+}
 .integration-actions {
   margin-top: 32px;
 

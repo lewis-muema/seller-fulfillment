@@ -132,7 +132,7 @@ export default {
       const { valid } = await this.$refs.form.validate();
       if (valid) this.storeSetupDialog = true;
       this.sendSegmentEvents({
-        event: "[merchant] Selected store platform from dropdown",
+        event: "[merchant]added_store_details",
         data: {
           userId: this.getUserDetails.user_id,
           payload: {

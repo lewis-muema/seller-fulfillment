@@ -6,10 +6,11 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { provide } from "vue";
 
 export default {
-  data() {
-    return {};
+  setup() {
+    provide("getUserDetails", JSON.parse(localStorage.getItem("userDetails")));
   },
   mounted() {
     this.setComponent("common.integrations");

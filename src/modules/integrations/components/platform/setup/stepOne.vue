@@ -36,19 +36,12 @@
         </div>
       </div>
     </v-card>
-    <storeDetails
-      v-if="storeDetailsDialog"
-      :detailsDialog="storeDetailsDialog"
-      :storePlatform="platform"
-      @saved="onSavedChild"
-    />
   </div>
 </template>
 <script>
-import storeDetails from "./storeDetails.vue";
-import stores from "../constants/storeFields.json";
-import headerComponent from "./header.vue";
-import selectComponent from "./selectComponent.vue";
+import stores from "@/modules/integrations/constants/storeFields.json";
+import headerComponent from "@/modules/integrations/components/header.vue";
+import selectComponent from "@/modules/integrations/components/selectComponent.vue";
 
 import Platform from "@/modules/integrations/models/Platform";
 import { provide } from "vue";
@@ -63,7 +56,7 @@ export default {
       platform,
     };
   },
-  components: { storeDetails, headerComponent, selectComponent },
+  components: { headerComponent, selectComponent },
   computed: {
     availableStores() {
       return Object.keys(stores).sort((a, b) => {

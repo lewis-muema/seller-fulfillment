@@ -224,7 +224,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "../assets/styling.scss";
+@import "~@/modules/integrations/assets/styling.scss";
 
 .connecting-dialog {
   border-radius: 6px;

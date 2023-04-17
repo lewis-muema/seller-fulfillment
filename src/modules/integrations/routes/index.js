@@ -4,9 +4,9 @@ import thankYou from "../components/thankYou.vue";
 import index from "../components/index.vue";
 
 // Platform
-import platformIndex from "../components/platform/index.vue";
-import platformSetup from "../components/platformSetup.vue";
-import storeDetails from "../components/storeDetails.vue";
+import platformIndex from "@/modules/integrations/components/platform/index.vue";
+import stepOne from "@/modules/integrations/components/platform/setup/stepOne.vue";
+import stepTwo from "@/modules/integrations/components/platform/setup/stepTwo.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -33,13 +33,13 @@ const routes = {
         {
           path: "setup/1",
           name: "SetupStep1",
-          component: platformSetup,
+          component: stepOne,
           props: true,
         },
         {
           path: "setup/2",
           name: "SetupStep2",
-          component: storeDetails,
+          component: stepTwo,
           beforeEnter: (to, from, next) => {
             if (Object.keys(to.params).includes("storePlatform")) {
               next();
@@ -49,11 +49,6 @@ const routes = {
           },
         },
       ],
-    },
-    {
-      path: "store-details",
-      name: "Store Details",
-      component: storeDetails,
     },
     {
       path: "thank-you",

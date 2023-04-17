@@ -69,9 +69,9 @@
   </div>
 </template>
 <script>
-import integrationSetup from "./integrationSetup.vue";
+import integrationSetup from "@/modules/integrations/components/integrationSetup.vue";
 import { isValidUrl } from "@/utils/text-validation";
-import headerComponent from "./header.vue";
+import headerComponent from "@/modules/integrations/components/header.vue";
 import eventsMixin from "@/mixins/events_mixin";
 
 export default {
@@ -135,7 +135,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "../assets/styling.scss";
+@import "~@/modules/integrations/assets/styling.scss";
 </style>
 <style scoped>
 .integrations-container {

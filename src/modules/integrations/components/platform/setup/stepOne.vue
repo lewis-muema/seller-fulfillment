@@ -66,15 +66,10 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      storeDetailsDialog: false,
       documentationLink: "https://fulfillment-api.sendyit.com/documentation",
     };
   },
   methods: {
-    onSavedChild() {
-      this.storeDetailsDialog = false;
-    },
     redirect() {
       window.open(this.documentationLink);
     },

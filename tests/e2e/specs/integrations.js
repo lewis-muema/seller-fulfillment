@@ -162,6 +162,8 @@ describe("Integration Process", () => {
       });
     });
 
+    // To-do: add test for fields validation
+
     // it.only(`should return to homepage after clicking close button`, () => {
     //   cy.getByData("add-platform-integration").click();
     //   cy.getByData("get-started-btn").click();

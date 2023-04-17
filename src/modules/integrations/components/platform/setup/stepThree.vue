@@ -180,7 +180,7 @@ export default {
         const { data } = await this.connectStore(fullPayload);
 
         this.sendSegmentEvents({
-          event: "[merchant] Integrate Platform store",
+          event: "[merchant]_integrate_platform_request",
           data: {
             userId: this.getUserDetails.user_id,
             payload: fullPayload,
@@ -199,6 +199,14 @@ export default {
               storeName: this.storeName,
             },
           });
+          this.sendSegmentEvents({
+            event: "[merchant]_successful_integration_request",
+            data: {
+              userId: this.getUserDetails.user_id,
+              payload: fullPayload,
+              response: data,
+            },
+          });
         } else {
           this.storeConnected = false;
           this.connecting = false;
@@ -207,6 +215,13 @@ export default {
           );
         }
       } catch (error) {
+        this.sendSegmentEvents({
+          event: "[merchant]_failed_integration_request",
+          data: {
+            userId: this.getUserDetails.user_id,
+            error: error,
+          },
+        });
         this.resultMessage = error;
         this.storeConnected = false;
         this.connecting = false;

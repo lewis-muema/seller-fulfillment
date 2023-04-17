@@ -40,6 +40,7 @@ const routes = {
         {
           path: "setup/2",
           name: "SetupStep2",
+          props: true,
           component: stepTwo,
           beforeEnter: (to, from, next) => {
             if (Object.keys(to.params).includes("storePlatform")) {

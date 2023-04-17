@@ -69,6 +69,12 @@ export default {
   components: { headerComponent },
   inject: ["getUserDetails", "platform"],
   mixins: [eventsMixin],
+  props: {
+    storePlatform: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       valid: true,
@@ -91,11 +97,6 @@ export default {
   watch: {
     detailsDialog() {
       if (this.detailsDialog) this.dialog = true;
-    },
-  },
-  computed: {
-    storePlatform() {
-      return this.$route.params.storePlatform;
     },
   },
   methods: {

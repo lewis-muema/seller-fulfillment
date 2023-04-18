@@ -149,7 +149,10 @@
                       {{ formatLineItemDate(row.created_date) }}
                     </span>
                   </td>
-                  <td class="statements-table-price-row">
+                  <td
+                    class="statements-table-price-row"
+                    v-if="witholdingTaxEnabled"
+                  >
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       {{ totalDue(row) }}
@@ -164,10 +167,7 @@
                       {{ witheldTax(row) }}
                     </span>
                   </td>
-                  <td
-                    class="statements-table-price-row"
-                    v-if="witholdingTaxEnabled"
-                  >
+                  <td class="statements-table-price-row">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
                       {{ Math.round(row.amount * 100) / 100 }}
@@ -349,8 +349,8 @@ export default {
           description: "",
         },
         {
-          title: this.$t("payments.totalDue"),
-          description: "Total value inclusive of 16% sales tax",
+          title: this.$t("payments.netDue"),
+          description: "Net total due is the Total Due less Withholding Tax",
         },
       ],
     };

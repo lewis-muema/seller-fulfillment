@@ -123,5 +123,6 @@
   "deliveryDate": "Delivery Date",
   "totalDue": "Total Due",
   "wthVat": "WTH VAT",
+  "vat": "Withholding VAT",
   "netDue": "Net Due"
 }

@@ -98,9 +98,7 @@
             )
           "
         >
-          <div class="transaction-label">
-            {{ $t("inventory.desc") }}
-          </div>
+          <div class="transaction-label">{{ $t("inventory.desc") }}</div>
           <div class="transaction-data">
             {{ getActiveTransaction.transaction_subtitle }}
           </div>
@@ -123,9 +121,9 @@
         </div>
         <hr class="mt-5" />
         <div class="transaction-amount">
-          <div v-if="getLineCycleItems[0]?.invoice_adjustments?.length > 1">
+          <div v-if="witholdingTax !== 0">
             <div>
-              <span>Net Due</span>
+              <span>{{ $t("payments.totalDue") }}</span>
               <el-tooltip
                 class="box-item"
                 effect="dark"
@@ -140,11 +138,13 @@
                     ? 'transaction-amount-right'
                     : 'transaction-amount-right-negative'
                 "
-                >{{ netDue }}</span
+                >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+                {{ getActiveTransaction.transaction_currency }}
+                {{ TotalDue }}</span
               >
             </div>
             <div class="mt-2">
-              <span>Withholding VAT</span>
+              <span>{{ $t("payments.vat") }}</span>
               <el-tooltip
                 class="box-item"
                 effect="dark"
@@ -159,21 +159,15 @@
                     ? 'transaction-amount-right'
                     : 'transaction-amount-right-negative'
                 "
-                >{{ witholdingTax }}</span
+                >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+                {{ getActiveTransaction.transaction_currency }}
+                {{ witholdingTax }}</span
               >
             </div>
             <hr class="mt-2" />
           </div>
           <div class="transaction-wth-amount">
-            <span>Total Due</span>
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="Net total due is the Total Due less Withholding Tax"
-              placement="right"
-            >
-              <i class="mdi mdi-information-outline billing-info-icon"></i>
-            </el-tooltip>
+            <span>{{ $t("payments.amount") }}</span>
             <span
               :class="
                 getSignMapping[getActiveTransaction.transaction_type] === '+'
@@ -186,37 +180,6 @@
             >
           </div>
         </div>
-        <!--        <div class="transaction-amount">-->
-        <!--          <span>-->
-        <!--            {{ $t("payments.amount") }}-->
-        <!--            <i-->
-        <!--              v-if="-->
-        <!--                [-->
-        <!--                  'UPCOMING_EARNING_FROM_SALE_OF_GOOD',-->
-        <!--                  'EARNING_FROM_SALE_OF_GOOD',-->
-        <!--                ].includes(getActiveTransaction.transaction_type)-->
-        <!--              "-->
-        <!--              class="mdi mdi-alert-circle-outline"-->
-        <!--              @click="-->
-        <!--                setOverlayStatus({-->
-        <!--                  overlay: true,-->
-        <!--                  popup: 'paymentBreakdown',-->
-        <!--                })-->
-        <!--              "-->
-        <!--            ></i>-->
-        <!--          </span>-->
-        <!--          <span-->
-        <!--            :class="-->
-        <!--              getSignMapping[getActiveTransaction.transaction_type] === '+'-->
-        <!--                ? 'transaction-amount-right'-->
-        <!--                : 'transaction-amount-right-negative'-->
-        <!--            "-->
-        <!--          >-->
-        <!--            {{ getSignMapping[getActiveTransaction.transaction_type] }}-->
-        <!--            {{ getActiveTransaction.transaction_currency }}-->
-        <!--            {{ getActiveTransaction.transaction_amount }}-->
-        <!--          </span>-->
-        <!--        </div>-->
         <div
           v-if="
             [
@@ -315,22 +278,31 @@ export default {
     },
     witholdingTax() {
       let withheldTaxAdjustmentUnitValue = 0;
-      if (this.getCycleLineItems[0].invoice_adjustments?.length > 1) {
-        console.log("here");
+      if (
+        this.getCycleLineItems.every(
+          (item) => item.invoice_adjustments?.length > 0
+        )
+      ) {
         withheldTaxAdjustmentUnitValue = this.getCycleLineItems
           .flatMap((item) => item.invoice_adjustments)
-          .find(
-            (adjustment) => adjustment.adjustment_type === "WITHHELD_TAX"
-          )?.adjustment_unit_value;
+          .filter((adjustment) => adjustment.adjustment_type === "WITHHELD_TAX")
+          .reduce(
+            (acc, adjustment) => acc + adjustment.adjustment_unit_value,
+            0
+          );
       }
       return withheldTaxAdjustmentUnitValue;
     },
-    netDue() {
-      const netDue = this.getCycleLineItems[0]?.amount + this.witholdingTax;
-      return netDue;
+    TotalDue() {
+      const totalDue = this.netDue + this.witholdingTax;
+      return totalDue;
     },
-    totalDue() {
-      return this.getCycleLineItems[0]?.amount;
+    netDue() {
+      const netDue = this.getCycleLineItems.reduce(
+        (acc, item) => acc + item.amount,
+        0
+      );
+      return netDue;
     },
     deliveryFee() {
       let fee = 0;
@@ -349,17 +321,6 @@ export default {
       return this.getOrderTrackingData.order.sale_of_goods_invoice
         ? this.getOrderTrackingData.order.sale_of_goods_invoice.invoice_status
         : "";
-    },
-  },
-  watch: {
-    totalDue(val) {
-      this.transactionType[0].amount = val;
-    },
-    witholdingTax(val) {
-      this.transactionType[1].amount = val;
-    },
-    netDue(val) {
-      this.transactionType[2].amount = val;
     },
   },
   data() {

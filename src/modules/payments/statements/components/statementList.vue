@@ -152,7 +152,7 @@
                   <td class="statements-table-price-row">
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
-                      {{ Math.round(row.amount * 100) / 100 }}
+                      {{ totalDue(row) }}
                     </span>
                   </td>
                   <td
@@ -170,7 +170,7 @@
                   >
                     <span :class="cycle.loading">
                       {{ getBusinessDetails.currency }}
-                      {{ netDue(row) }}
+                      {{ Math.round(row.amount * 100) / 100 }}
                     </span>
                   </td>
                 </tr>
@@ -398,7 +398,7 @@ export default {
       }
       return Math.round(withheldTax * 100) / 100;
     },
-    netDue(row) {
+    totalDue(row) {
       let withheldTax = 0;
       if (row.invoice_adjustments?.length > 1) {
         withheldTax = row.invoice_adjustments.find(
@@ -406,7 +406,7 @@ export default {
         ).adjustment_value;
       }
       let amount = 0;
-      amount = row.amount - withheldTax;
+      amount = row.amount + withheldTax;
       return Math.round(amount * 100) / 100;
     },
     formatDate(date) {

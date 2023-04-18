@@ -122,48 +122,50 @@
           {{ $t("payments.view") }}
         </div>
         <hr class="mt-5" />
-        <div class="transaction-amount" v-if="witholdingTaxEnabled">
-          <div>
-            <span>Total</span>
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="Total value inclusive of 16% sales tax"
-              placement="right"
-            >
-              <i class="mdi mdi-information-outline billing-info-icon"></i>
-            </el-tooltip>
-            <span
-              :class="
-                getSignMapping[getActiveTransaction.transaction_type] === '+'
-                  ? 'transaction-amount-right'
-                  : 'transaction-amount-right-negative'
-              "
-              >_</span
-            >
+        <div class="transaction-amount">
+          <div v-if="getLineCycleItems[0]?.invoice_adjustments?.length > 1">
+            <div>
+              <span>Net Due</span>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                content="Total value inclusive of 16% sales tax"
+                placement="right"
+              >
+                <i class="mdi mdi-information-outline billing-info-icon"></i>
+              </el-tooltip>
+              <span
+                :class="
+                  getSignMapping[getActiveTransaction.transaction_type] === '+'
+                    ? 'transaction-amount-right'
+                    : 'transaction-amount-right-negative'
+                "
+                >{{ netDue }}</span
+              >
+            </div>
+            <div class="mt-2">
+              <span>Withholding VAT</span>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                content="Withholding tax; 2% of Total Due excluding VAT"
+                placement="right"
+              >
+                <i class="mdi mdi-information-outline billing-info-icon"></i>
+              </el-tooltip>
+              <span
+                :class="
+                  getSignMapping[getActiveTransaction.transaction_type] === '+'
+                    ? 'transaction-amount-right'
+                    : 'transaction-amount-right-negative'
+                "
+                >{{ witholdingTax }}</span
+              >
+            </div>
+            <hr class="mt-2" />
           </div>
-          <div class="mt-2">
-            <span>Withholding VAT</span>
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="Withholding tax; 2% of Total Due excluding VAT"
-              placement="right"
-            >
-              <i class="mdi mdi-information-outline billing-info-icon"></i>
-            </el-tooltip>
-            <span
-              :class="
-                getSignMapping[getActiveTransaction.transaction_type] === '+'
-                  ? 'transaction-amount-right'
-                  : 'transaction-amount-right-negative'
-              "
-              >_</span
-            >
-          </div>
-          <hr class="mt-2" />
           <div class="transaction-wth-amount">
-            <span>Amount</span>
+            <span>Total Due</span>
             <el-tooltip
               class="box-item"
               effect="dark"
@@ -178,41 +180,43 @@
                   ? 'transaction-amount-right'
                   : 'transaction-amount-right-negative'
               "
-              >_</span
+              >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+              {{ getActiveTransaction.transaction_currency }}
+              {{ getActiveTransaction.transaction_amount }}</span
             >
           </div>
         </div>
-        <div class="transaction-amount" v-else>
-          <span>
-            {{ $t("payments.amount") }}
-            <i
-              v-if="
-                [
-                  'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
-                  'EARNING_FROM_SALE_OF_GOOD',
-                ].includes(getActiveTransaction.transaction_type)
-              "
-              class="mdi mdi-alert-circle-outline"
-              @click="
-                setOverlayStatus({
-                  overlay: true,
-                  popup: 'paymentBreakdown',
-                })
-              "
-            ></i>
-          </span>
-          <span
-            :class="
-              getSignMapping[getActiveTransaction.transaction_type] === '+'
-                ? 'transaction-amount-right'
-                : 'transaction-amount-right-negative'
-            "
-          >
-            {{ getSignMapping[getActiveTransaction.transaction_type] }}
-            {{ getActiveTransaction.transaction_currency }}
-            {{ getActiveTransaction.transaction_amount }}
-          </span>
-        </div >
+        <!--        <div class="transaction-amount">-->
+        <!--          <span>-->
+        <!--            {{ $t("payments.amount") }}-->
+        <!--            <i-->
+        <!--              v-if="-->
+        <!--                [-->
+        <!--                  'UPCOMING_EARNING_FROM_SALE_OF_GOOD',-->
+        <!--                  'EARNING_FROM_SALE_OF_GOOD',-->
+        <!--                ].includes(getActiveTransaction.transaction_type)-->
+        <!--              "-->
+        <!--              class="mdi mdi-alert-circle-outline"-->
+        <!--              @click="-->
+        <!--                setOverlayStatus({-->
+        <!--                  overlay: true,-->
+        <!--                  popup: 'paymentBreakdown',-->
+        <!--                })-->
+        <!--              "-->
+        <!--            ></i>-->
+        <!--          </span>-->
+        <!--          <span-->
+        <!--            :class="-->
+        <!--              getSignMapping[getActiveTransaction.transaction_type] === '+'-->
+        <!--                ? 'transaction-amount-right'-->
+        <!--                : 'transaction-amount-right-negative'-->
+        <!--            "-->
+        <!--          >-->
+        <!--            {{ getSignMapping[getActiveTransaction.transaction_type] }}-->
+        <!--            {{ getActiveTransaction.transaction_currency }}-->
+        <!--            {{ getActiveTransaction.transaction_amount }}-->
+        <!--          </span>-->
+        <!--        </div>-->
         <div
           v-if="
             [
@@ -309,6 +313,25 @@ export default {
     witholdingTaxEnabled() {
       return this.getBusinessDetails.settings.withholding_tax_enabled;
     },
+    witholdingTax() {
+      let withheldTaxAdjustmentUnitValue = 0;
+      if (this.getCycleLineItems[0].invoice_adjustments?.length > 1) {
+        console.log("here");
+        withheldTaxAdjustmentUnitValue = this.getCycleLineItems
+          .flatMap((item) => item.invoice_adjustments)
+          .find(
+            (adjustment) => adjustment.adjustment_type === "WITHHELD_TAX"
+          )?.adjustment_unit_value;
+      }
+      return withheldTaxAdjustmentUnitValue;
+    },
+    netDue() {
+      const netDue = this.getCycleLineItems[0]?.amount + this.witholdingTax;
+      return netDue;
+    },
+    totalDue() {
+      return this.getCycleLineItems[0]?.amount;
+    },
     deliveryFee() {
       let fee = 0;
       if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
@@ -328,10 +351,20 @@ export default {
         : "";
     },
   },
+  watch: {
+    totalDue(val) {
+      this.transactionType[0].amount = val;
+    },
+    witholdingTax(val) {
+      this.transactionType[1].amount = val;
+    },
+    netDue(val) {
+      this.transactionType[2].amount = val;
+    },
+  },
   data() {
     return {
       showLineItems: false,
-      wht: true,
     };
   },
   mounted() {

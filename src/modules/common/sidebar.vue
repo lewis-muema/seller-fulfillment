@@ -294,6 +294,14 @@
           :active="['common.analytics'].includes(route)"
         ></v-list-item>
       </v-list>
+      <template v-slot:append>
+        <div class="drawer-footer" @click="redirectToTally">
+          <span>
+            <i class="mdi mdi-forum"></i>
+            {{ $t("common.shareFeedback") }}
+          </span>
+        </div>
+      </template>
     </v-navigation-drawer>
   </div>
 </template>
@@ -355,6 +363,10 @@ export default {
       this.collapse(props, category);
       return props;
     },
+    redirectToTally() {
+      const formId = "nr5RR2";
+      window.Tally.openPopup(formId);
+    },
   },
 };
 </script>
@@ -395,5 +407,12 @@ export default {
 .v-navigation-drawer--start {
   border-inline-end-width: inherit !important;
   box-shadow: 0.5px 0px 0px rgb(0 0 0 / 15%) !important;
+}
+.drawer-footer {
+  height: 300px;
+  cursor: pointer;
+}
+.drawer-footer span {
+  margin-left: 20px;
 }
 </style>

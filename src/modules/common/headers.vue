@@ -132,11 +132,7 @@
               <v-list-item-title :append-icon="prof.icon">
                 <div
                   class="header-notification-flex"
-                  @click="
-                    prof.item !== this.$t('common.shareFeedback')
-                      ? $router.push(prof.route)
-                      : redirectToTally()
-                  "
+                  @click="$router.push(prof.route)"
                 >
                   <div>
                     <div>{{ prof.item }}</div>
@@ -198,12 +194,6 @@ export default {
           actionLabel: "",
           route: "/settings/profile/change-language",
           icon: "mdi-chevron-right",
-        },
-        {
-          item: this.$t("common.shareFeedback"),
-          actionLabel: "",
-          route: "",
-          icon: "",
         },
         {
           item: "",
@@ -277,7 +267,7 @@ export default {
       this.profile[1].item = `${this.$t("common.language")}: ${
         this.languageName
       }`;
-      this.profile[3].actionLabel = this.$t("common.logOut");
+      this.profile[2].actionLabel = this.$t("common.logOut");
       if (this.consignmentReturnFlag) {
         this.shortcuts[2] = {
           title: "common.inventoryBackToYou",
@@ -307,10 +297,6 @@ export default {
       "setMapOptions",
     ]),
     ...mapActions(["requestAxiosGet", "requestAxiosPatch", "requestAxiosPut"]),
-    redirectToTally() {
-      const formId = "nr5RR2";
-      window.Tally.openPopup(formId);
-    },
     getIcon(notification) {
       if (
         notification.message.includes(

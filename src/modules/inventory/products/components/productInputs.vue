@@ -759,6 +759,7 @@ export default {
 }
 .desktop-product-options-content {
   padding: 20px 20px 0px 20px !important;
+  width: 420px;
 }
 .add-product-sizes,
 .add-product-options {

@@ -293,15 +293,13 @@
           @click="$router.push('/analytics')"
           :active="['common.analytics'].includes(route)"
         ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi mdi-forum"
+          :title="$t('common.shareFeedback')"
+          class="desktop-sidebar-icons drawer-footer"
+          @click="redirectToTally"
+        ></v-list-item>
       </v-list>
-      <template v-slot:append>
-        <div class="drawer-footer" @click="redirectToTally">
-          <span>
-            <i class="mdi mdi-forum"></i>
-            {{ $t("common.shareFeedback") }}
-          </span>
-        </div>
-      </template>
     </v-navigation-drawer>
   </div>
 </template>
@@ -409,10 +407,6 @@ export default {
   box-shadow: 0.5px 0px 0px rgb(0 0 0 / 15%) !important;
 }
 .drawer-footer {
-  height: 300px;
-  cursor: pointer;
-}
-.drawer-footer span {
-  margin-left: 20px;
+  margin-top: 300px;
 }
 </style>

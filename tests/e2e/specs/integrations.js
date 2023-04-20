@@ -79,24 +79,19 @@ describe("Integration Process", () => {
     cy.getByData("no-api-integration").should("contain", "No API Keys found");
   });
 
-  // describe("API Key", () => {
-  //   it("should be able to generate an API key", () => {
-  //     cy.wait("@noIntegrations");
-  //     cy.getByData("generate-api-key-btn").click({ force: true }).debug();
-  //     cy.getByData("api-description-textbox").type("Sample API Key");
-  //     cy.getByData("create-api-key-button").click({ force: true });
-  //     // cy.getByData("loading-icon").should("be.visible");
-  //     cy.getByData("api-key").should(
-  //       "contain",
-  //       integrations.generateToken.data.token
-  //     );
-  //     cy.getByData("copy-key-btn").click();
-  //     navigator.clipboard.readText().then((clipText) => {
-  //       expect(clipText).to.be(integrations.generateToken.data.token);
-  //       cy.getByData("key-copied-txt").should("contain", "API Key copied");
-  //     });
-  //   });
-  // });
+  // To-Do: Make it work when using the Electron runner
+  describe("API Key", () => {
+    it("should be able to generate an API key", () => {
+      cy.getByData("generate-api-key-btn").click();
+      cy.getByData("api-description-textbox").type("Sample API Key");
+      cy.getByData("create-api-key-button").click({ force: true });
+      // cy.getByData("loading-icon").should("be.visible");
+      cy.getByData("api-key").should(
+        "contain",
+        integrations.generateToken.data.token
+      );
+    });
+  });
 
   describe("Add store integration", () => {
     beforeEach(() => {
@@ -162,17 +157,27 @@ describe("Integration Process", () => {
       });
     });
 
-    // it.only(`should return to homepage after clicking close button`, () => {
-    //   cy.getByData("add-platform-integration").click();
-    //   cy.getByData("get-started-btn").click();
-    //   cy.getByData("select-dropdown").click();
-    //   cy.getByData(`option-shopify`).click();
-    //   cy.getByData("select-platform-btn").click();
-    //   cy.getByData("header-close-btn")
-    //     .click({ multiple: true, force: true })
-    //     .then(() => {
-    //       cy.url().should("include", "/settings/integrations");
-    //     });
-    // });
+    it(`should remove empty fields from the payload`, () => {
+      cy.getByData("add-platform-integration").click();
+      cy.getByData("get-started-btn").click();
+      cy.getByData("select-dropdown").click();
+      cy.getByData(`option-woocommerce`).click();
+      cy.getByData("select-platform-btn").click();
+      cy.get("#store-name-field").type("Test button", { force: true });
+      cy.get("#store-url-field").type("https://www.samplestore", {
+        force: true,
+      });
+      cy.getByData("continue-btn").click();
+      cy.get("#bridgeUrl").type("http://test.store.com", {
+        force: true,
+      });
+      cy.get("#storeKey").type("8245989248924517899284128940", {
+        force: true,
+      });
+      cy.getByData("integrate-btn").click();
+      cy.wait("@createStores").then((intercept) => {
+        expect(intercept.request.body).to.not.have.property("storeRoot");
+      });
+    });
   });
 });

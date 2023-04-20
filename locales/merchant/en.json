@@ -1,4 +1,5 @@
 {
+    "apiKeyDescription":"API Key Description",
     "protectApiKeyMsg": "To protect your account, this API Key will not be displayed again. Make sure to store it safely",
     "descriptionRequired": "description is required",
     "enterDescription":"Enter description",

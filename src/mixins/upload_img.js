@@ -5,6 +5,10 @@ import { ElNotification } from "element-plus";
 let s3 = "";
 let s3Autofill = "";
 let uploadtimer;
+const chunkSize = 20;
+const percentCap = 75;
+const fullResponse = [];
+let percent = 0;
 
 const upload = {
   computed: {
@@ -109,7 +113,7 @@ const upload = {
       const photoKey = albumPhotosKey + fileName;
       let val = 0;
       uploadtimer = setInterval(() => {
-        if (val < 99) {
+        if (val < percentCap) {
           val += 1;
           this.uploadPercentage = val;
         }
@@ -156,7 +160,10 @@ const upload = {
           this.setLPOUploadError("");
           this.setAutofillDetails(response.data.deliveries);
           if (response.data.deliveries.products.length) {
-            this.fetchAutofillProducts(this.getDestinationIndex, photoKey);
+            this.fetchAutofillProductsBruteForce(
+              this.getDestinationIndex,
+              photoKey
+            );
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
@@ -192,6 +199,51 @@ const upload = {
       }
       return true;
     },
+    divideArray(arr) {
+      var result = [];
+      var len = arr.length;
+      for (var i = 0; i < len; i += chunkSize) {
+        result.push(arr.slice(i, i + chunkSize));
+      }
+      return result;
+    },
+    fetchAutofillProductsBruteForce(x, photoKey) {
+      if (this.getAutofillDetails.products.length > chunkSize) {
+        const chunks = this.divideArray(this.getAutofillDetails.products);
+        chunks.forEach((products) => {
+          products.forEach((row) => {
+            row.universal_product_code = row.UPC;
+            delete row.UPC;
+          });
+        });
+        this.fetchAutofillProductsChunks(0, chunks, x, photoKey);
+      } else {
+        this.fetchAutofillProducts(x, photoKey);
+      }
+    },
+    fetchAutofillProductsChunks(index, chunks, x, photoKey) {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/products/bulk-create-product-variants`,
+        values: { products: chunks[index] },
+      }).then((response) => {
+        if (response.status === 200) {
+          percent = percent + (99 - percentCap) / chunks.length;
+          this.uploadPercentage = Math.floor(percent + percentCap);
+          fullResponse.push(...response.data.products);
+          if (chunks[index + 1]) {
+            this.fetchAutofillProductsChunks(index + 1, chunks, x, photoKey);
+          } else {
+            const res = {
+              data: { products: fullResponse },
+            };
+            this.processAutofillResponse(res, x, photoKey);
+          }
+        } else {
+          this.fetchAutofillProductsChunks(index, chunks, x, photoKey);
+        }
+      });
+    },
     fetchAutofillProducts(x, photoKey) {
       this.getAutofillDetails.products.forEach((row) => {
         row.universal_product_code = row.UPC;
@@ -204,35 +256,7 @@ const upload = {
       })
         .then((response) => {
           if (response.status === 200) {
-            this.setLPOUploadError("");
-            clearInterval(uploadtimer);
-            this.uploadPercentage = 100;
-            const products = response.data.products;
-            const finalProducts = [];
-            this.getAutofillDetails.products.forEach((variants) => {
-              products.forEach((product) => {
-                product.product_variants.filter((row) => {
-                  const condition =
-                    row.universal_product_code ===
-                    variants.universal_product_code;
-                  if (condition && product.product_variants.length > 1) {
-                    row.quantity = variants.quantity;
-                    const altProduct = Object.assign({}, product);
-                    altProduct.selectedOption = row;
-                    altProduct.quantity = variants.quantity;
-                    finalProducts.push(altProduct);
-                  } else if (
-                    condition &&
-                    product.product_variants.length === 1
-                  ) {
-                    product.quantity = variants.quantity;
-                    finalProducts.push(product);
-                  }
-                  return condition;
-                });
-              });
-            });
-            this.autoFillFormDetails(x, finalProducts, photoKey);
+            this.processAutofillResponse(response, x, photoKey);
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
@@ -245,6 +269,34 @@ const upload = {
           }
         })
         .catch(() => {});
+    },
+    processAutofillResponse(response, x, photoKey) {
+      this.setLPOUploadError("");
+      clearInterval(uploadtimer);
+      this.uploadPercentage = 100;
+      const products = response.data.products;
+      const finalProducts = [];
+      this.getAutofillDetails.products.forEach((variants) => {
+        products.forEach((product) => {
+          product.product_variants.filter((row) => {
+            const condition =
+              row.universal_product_code === variants.universal_product_code &&
+              row.product_variant_description === variants.description;
+            if (condition && product.product_variants.length > 1) {
+              row.quantity = variants.quantity;
+              const altProduct = Object.assign({}, product);
+              altProduct.selectedOption = row;
+              altProduct.quantity = variants.quantity;
+              finalProducts.push(altProduct);
+            } else if (condition && product.product_variants.length === 1) {
+              product.quantity = variants.quantity;
+              finalProducts.push(product);
+            }
+            return condition;
+          });
+        });
+      });
+      this.autoFillFormDetails(x, finalProducts, photoKey);
     },
     failUpload() {
       clearInterval(uploadtimer);

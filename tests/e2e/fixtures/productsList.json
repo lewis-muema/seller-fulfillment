@@ -21,7 +21,7 @@
             "product_variant_id": "PV-YOP-3240",
             "business_id": "B-AEB-9648",
             "product_id": "P-XUA-1394",
-            "universal_product_code": null,
+            "universal_product_code": "482949394",
             "product_variant_description": "Ceramic Plate",
             "product_variant_currency": "KES",
             "product_variant_unit_price": 45.0,
@@ -30,24 +30,23 @@
             "product_variant_quantity": 177.0,
             "product_variant_quantity_type": "MILLILITRE",
             "product_variant_stock_levels": {
-              "available": 39,
+              "available": 36,
               "quantity_in_inventory": 402,
               "quantity_in_sales_orders": 354,
-              "quantity_held_locally": 9,
+              "quantity_held_locally": 12,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 289,
+              "quantity_incoming": 291,
               "last_updated_date": 1673004270000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           },
           {
             "product_variant_id": "PV-KLKG-8257",
             "business_id": "B-AEB-9648",
             "product_id": "P-XUA-1394",
-            "universal_product_code": null,
+            "universal_product_code": "45069305934",
             "product_variant_description": "Thermos",
             "product_variant_currency": "KES",
             "product_variant_unit_price": 400.0,
@@ -65,9 +64,8 @@
               "last_updated_date": 1673004273000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           }
         ]
       },
@@ -99,18 +97,17 @@
             "product_variant_quantity": 20.0,
             "product_variant_quantity_type": "GRAM",
             "product_variant_stock_levels": {
-              "available": 291,
+              "available": 290,
               "quantity_in_inventory": 2723,
               "quantity_in_sales_orders": 2266,
-              "quantity_held_locally": 166,
+              "quantity_held_locally": 167,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 128,
+              "quantity_incoming": 131,
               "last_updated_date": 1673004387000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           }
         ]
       },
@@ -142,12 +139,12 @@
             "product_variant_quantity": 500.0,
             "product_variant_quantity_type": "MILLILITRE",
             "product_variant_stock_levels": {
-              "available": 289,
+              "available": 288,
               "quantity_in_inventory": 506,
               "quantity_in_sales_orders": 167,
-              "quantity_held_locally": 50,
+              "quantity_held_locally": 51,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 68,
+              "quantity_incoming": 73,
               "last_updated_date": 1673004270000
             },
             "product_variant_archived": false,
@@ -176,7 +173,8 @@
                 "sensitivity_lower_limit": 0.0,
                 "sensitivity_upper_limit": 100.0
               }
-            ]
+            ],
+            "low_stock_threshold": 5
           }
         ]
       },
@@ -208,18 +206,17 @@
             "product_variant_quantity": 200.0,
             "product_variant_quantity_type": "GRAM",
             "product_variant_stock_levels": {
-              "available": 479,
+              "available": 474,
               "quantity_in_inventory": 600,
               "quantity_in_sales_orders": 106,
-              "quantity_held_locally": 15,
+              "quantity_held_locally": 20,
               "quantity_held_in_fulfilment_requests": 0,
               "quantity_incoming": 72,
               "last_updated_date": 1673004387000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           }
         ]
       },
@@ -242,7 +239,7 @@
             "product_variant_id": "PV-GYS-0182",
             "business_id": "B-AEB-9648",
             "product_id": "P-JDH-6654",
-            "universal_product_code": null,
+            "universal_product_code": "2043948394",
             "product_variant_description": "Nail Cutter",
             "product_variant_currency": "KES",
             "product_variant_unit_price": 0.0,
@@ -256,13 +253,12 @@
               "quantity_in_sales_orders": 4,
               "quantity_held_locally": 6,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 2,
+              "quantity_incoming": 5,
               "last_updated_date": 1673004270000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           },
           {
             "product_variant_id": "PV-KHU-1622",
@@ -277,18 +273,17 @@
             "product_variant_quantity": 30.0,
             "product_variant_quantity_type": "GRAM",
             "product_variant_stock_levels": {
-              "available": 184,
+              "available": 174,
               "quantity_in_inventory": 200,
               "quantity_in_sales_orders": 13,
-              "quantity_held_locally": 3,
+              "quantity_held_locally": 13,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 11,
+              "quantity_incoming": 15,
               "last_updated_date": 1673004275000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           },
           {
             "product_variant_id": "PV-EUM-3478",
@@ -308,67 +303,21 @@
               "quantity_in_sales_orders": 2,
               "quantity_held_locally": 1,
               "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 0,
+              "quantity_incoming": 5,
               "last_updated_date": 1673004277000
             },
             "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
-          }
-        ]
-      },
-      {
-        "product_id": "P-SHD-1998",
-        "objectID": "P-SHD-1998",
-        "created_date": 1638357019000,
-        "product_name": "Test",
-        "product_description": "something ",
-        "product_main_color": null,
-        "product_archived": false,
-        "business_id": "B-AEB-9648",
-        "product_collection": {
-          "collection_id": "PC-BVV-5875",
-          "collection_name": null
-        },
-        "sales_channel_collections": null,
-        "product_variants": [
-          {
-            "product_variant_id": "PV-ANA-5335",
-            "business_id": "B-AEB-9648",
-            "product_id": "P-SHD-1998",
-            "universal_product_code": null,
-            "product_variant_description": "Test",
-            "product_variant_currency": "KES",
-            "product_variant_unit_price": 12.0,
-            "product_variant_image_link": "",
-            "product_variant_expiry_date": null,
-            "product_variant_quantity": 23.0,
-            "product_variant_quantity_type": "MILLILITRE",
-            "product_variant_stock_levels": {
-              "available": 285,
-              "quantity_in_inventory": 300,
-              "quantity_in_sales_orders": 13,
-              "quantity_held_locally": 2,
-              "quantity_held_in_fulfilment_requests": 0,
-              "quantity_incoming": 3,
-              "last_updated_date": 1673004387000
-            },
-            "product_variant_archived": false,
-            "product_variant_properties": [
-
-            ]
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
           }
         ]
       }
     ],
     "pagination": {
       "current_page": 0,
-      "max": 6,
-      "page_count": 4
+      "max": 5,
+      "page_count": 14
     }
   },
-  "errors": [
-
-  ]
+  "errors": []
 }

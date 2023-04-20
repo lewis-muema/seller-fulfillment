@@ -27,7 +27,7 @@
             <v-row class="reset">
               <v-col cols="12" class="reset">
                 <label for="description" class="api-integraion-dialog__label">
-                  {{ $t(`API Key Description`) }}
+                  {{ $t(`merchant.apiKeyDescription`) }}
                 </label>
                 <v-text-field
                   data-test="api-description-textbox"
@@ -170,7 +170,8 @@ export default {
     ...mapActions(["generateApiKey"]),
     closeDialog() {
       this.$emit("closeDialog");
-      this.closeDialog();
+      this.description = false;
+      this.dialog = false;
     },
     copyToClipboard() {
       const copyText = document.getElementById("text__api-key");

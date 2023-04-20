@@ -1,0 +1,339 @@
+{
+  "message": "product.list.success",
+  "data": {
+    "products": [
+      {
+        "product_id": "P-LDG-0645",
+        "objectID": "P-LDG-0645",
+        "created_date": 1638357234000,
+        "product_name": "Ceramic Cup",
+        "product_description": "Hand made ceramic cups",
+        "product_main_color": "Red",
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-RYM-3325",
+          "collection_name": "Ceramic"
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-BNG-6643",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-LDG-0645",
+            "universal_product_code": null,
+            "product_variant_description": "Fortified Cup",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 12.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 30.0,
+            "product_variant_quantity_type": "KILOGRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 6,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 6,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-PRU-7018",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-LDG-0645",
+            "universal_product_code": null,
+            "product_variant_description": "Paper Cup",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 21.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 30.0,
+            "product_variant_quantity_type": "KILOGRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 12,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 11,
+              "last_updated_date": 1673004273000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-UEF-4020",
+        "objectID": "P-UEF-4020",
+        "created_date": 1638357438000,
+        "product_name": "fenugreek powder",
+        "product_description": "Increases breast milk productionIncreases testosterone levels in menHelps control diabetes and blood sugar levelsAids appetite controlLowers cholesterol and triglyceride levels -Fights heartburn.SKU: FEN001 ",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": {
+          "collection_id": "PC-RYM-3325",
+          "collection_name": "Ceramic"
+        },
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-GNR-5436",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UEF-4020",
+            "universal_product_code": null,
+            "product_variant_description": "fenugreek powder",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 16.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 30.0,
+            "product_variant_quantity_type": "KILOGRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 3,
+              "quantity_held_locally": 4,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 4,
+              "last_updated_date": 1673004387000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-IRZ-0017",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UEF-4020",
+            "universal_product_code": null,
+            "product_variant_description": "Contigo Cup",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 18.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 35.0,
+            "product_variant_quantity_type": "KILOGRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 8,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 3,
+              "last_updated_date": 1673004391000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-TOO-7997",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UEF-4020",
+            "universal_product_code": "305930593",
+            "product_variant_description": "fenugreek powder 100g",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 18.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 100.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 13,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 2,
+              "last_updated_date": 1673004392000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-XML-9460",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UEF-4020",
+            "universal_product_code": null,
+            "product_variant_description": "fenugreek powder 250g",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 47.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 250.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 1,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 1,
+              "last_updated_date": 1673004393000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          },
+          {
+            "product_variant_id": "PV-OBQ-1523",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UEF-4020",
+            "universal_product_code": "503859302",
+            "product_variant_description": "fenugreek powder 500g",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 20.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": 0,
+            "product_variant_quantity": 500.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 0,
+              "quantity_held_locally": 0,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 0,
+              "last_updated_date": 1673004394000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-CXJ-1758",
+        "objectID": "P-CXJ-1758",
+        "created_date": 1653560086000,
+        "product_name": "Bluesky Gel Polish",
+        "product_description": "BLUESKY Gel Polish (Cat Eye / Color Changers @ KSH 1,300) Retail",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": null,
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-HBI-6698",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-CXJ-1758",
+            "universal_product_code": null,
+            "product_variant_description": "Gel Polish - Retail",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 1000.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": null,
+            "product_variant_quantity": 10.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 36,
+              "quantity_held_locally": 20,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 59,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-UKZ-0459",
+        "objectID": "P-UKZ-0459",
+        "created_date": 1653560088000,
+        "product_name": "Bluesky Gel Polish",
+        "product_description": "RONIKI Gel Polish (Cat Eye / Color Changers @ KSH 1,000) bulk",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": null,
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-XKH-6500",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-UKZ-0459",
+            "universal_product_code": null,
+            "product_variant_description": "Gel Polish - Bulk",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 450.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": null,
+            "product_variant_quantity": 10.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 20,
+              "quantity_held_locally": 2,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 22,
+              "last_updated_date": 1673004387000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      },
+      {
+        "product_id": "P-TPG-7859",
+        "objectID": "P-TPG-7859",
+        "created_date": 1656732082000,
+        "product_name": "Pen",
+        "product_description": "Ball point",
+        "product_main_color": null,
+        "product_archived": false,
+        "business_id": "B-AEB-9648",
+        "product_collection": null,
+        "sales_channel_collections": null,
+        "product_variants": [
+          {
+            "product_variant_id": "PV-FCC-7468",
+            "business_id": "B-AEB-9648",
+            "product_id": "P-TPG-7859",
+            "universal_product_code": null,
+            "product_variant_description": "Pen",
+            "product_variant_currency": "KES",
+            "product_variant_unit_price": 20.0,
+            "product_variant_image_link": "",
+            "product_variant_expiry_date": null,
+            "product_variant_quantity": 10.0,
+            "product_variant_quantity_type": "GRAM",
+            "product_variant_stock_levels": {
+              "available": 0,
+              "quantity_in_inventory": 0,
+              "quantity_in_sales_orders": 11,
+              "quantity_held_locally": 20,
+              "quantity_held_in_fulfilment_requests": 0,
+              "quantity_incoming": 75,
+              "last_updated_date": 1673004270000
+            },
+            "product_variant_archived": false,
+            "product_variant_properties": [],
+            "low_stock_threshold": 5
+          }
+        ]
+      }
+    ],
+    "pagination": {
+      "current_page": 0,
+      "max": 5,
+      "page_count": 13
+    }
+  },
+  "errors": []
+}

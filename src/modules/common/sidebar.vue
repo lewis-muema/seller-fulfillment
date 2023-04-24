@@ -286,6 +286,7 @@
           ></v-list-item>
         </v-list-group>
         <v-list-item
+          v-if="metabaseAnalyticsFlag"
           prepend-icon="mdi-finance"
           :title="$t('common.analytics')"
           :value="'common.analytics'"
@@ -314,8 +315,13 @@ export default {
     },
     ...mapGetters(["getComponent", "getAccessDenied", "getBusinessDetails"]),
     directFulfillmentFlag() {
-      return this.getBusinessDetails.settings
-        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.direct_fulfilment_enabled
+        : false;
+    },
+    metabaseAnalyticsFlag() {
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.metabase_analytics_enabled
         : false;
     },
   },

@@ -197,37 +197,6 @@
             >
           </div>
         </div>
-        <!-- <div class="transaction-amount" v-else>
-          <span>
-            {{ $t("payments.amount") }}
-            <i
-              v-if="
-                [
-                  'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
-                  'EARNING_FROM_SALE_OF_GOOD',
-                ].includes(getActiveTransaction.transaction_type)
-              "
-              class="mdi mdi-alert-circle-outline"
-              @click="
-                setOverlayStatus({
-                  overlay: true,
-                  popup: 'paymentBreakdown',
-                })
-              "
-            ></i>
-          </span>
-          <span
-            :class="
-              getSignMapping[getActiveTransaction.transaction_type] === '+'
-                ? 'transaction-amount-right'
-                : 'transaction-amount-right-negative'
-            "
-          >
-            {{ getSignMapping[getActiveTransaction.transaction_type] }}
-            {{ getActiveTransaction.transaction_currency }}
-            {{ getActiveTransaction.transaction_amount }}
-          </span>
-        </div > -->
         <div
           v-if="
             [

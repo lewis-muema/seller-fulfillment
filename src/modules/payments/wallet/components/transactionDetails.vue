@@ -127,7 +127,7 @@
               <el-tooltip
                 class="box-item"
                 effect="dark"
-                content="Total value inclusive of 16% sales tax"
+                :content="this.$t('payments.totalDueDesc')"
                 placement="right"
               >
                 <i class="mdi mdi-information-outline billing-info-icon"></i>
@@ -135,8 +135,8 @@
               <span
                 :class="
                   getSignMapping[getActiveTransaction.transaction_type] === '+'
-                    ? 'transaction-amount-right'
-                    : 'transaction-amount-right-negative'
+                    ? `transaction-amount-right ${getLoader.transactionDetails}`
+                    : `transaction-amount-right-negative ${getLoader.transactionDetails}`
                 "
                 >{{ getSignMapping[getActiveTransaction.transaction_type] }}
                 {{ getActiveTransaction.transaction_currency }}
@@ -148,7 +148,7 @@
               <el-tooltip
                 class="box-item"
                 effect="dark"
-                content="Withholding tax; 2% of Total Due excluding VAT"
+                :content="this.$t('payments.wthVatDesc')"
                 placement="right"
               >
                 <i class="mdi mdi-information-outline billing-info-icon"></i>
@@ -156,8 +156,8 @@
               <span
                 :class="
                   getSignMapping[getActiveTransaction.transaction_type] === '+'
-                    ? 'transaction-amount-right'
-                    : 'transaction-amount-right-negative'
+                    ? `transaction-amount-right ${getLoader.transactionDetails}`
+                    : `transaction-amount-right-negative ${getLoader.transactionDetails}`
                 "
                 >{{ getSignMapping[getActiveTransaction.transaction_type] }}
                 {{ getActiveTransaction.transaction_currency }}
@@ -188,8 +188,8 @@
             <span
               :class="
                 getSignMapping[getActiveTransaction.transaction_type] === '+'
-                  ? 'transaction-amount-right'
-                  : 'transaction-amount-right-negative'
+                  ? `transaction-amount-right ${getLoader.transactionDetails}`
+                  : `transaction-amount-right-negative ${getLoader.transactionDetails}`
               "
               >{{ getSignMapping[getActiveTransaction.transaction_type] }}
               {{ getActiveTransaction.transaction_currency }}
@@ -289,6 +289,7 @@ export default {
       "getSignMapping",
       "getCycleLineItems",
       "getBusinessDetails",
+      "getLoader",
     ]),
     witholdingTaxEnabled() {
       return this.getBusinessDetails.settings.withholding_tax_enabled;
@@ -345,6 +346,9 @@ export default {
       showLineItems: false,
     };
   },
+  beforeUnmount() {
+    this.setCycleLineItems([]);
+  },
   mounted() {
     this.setComponent("payments.transactions");
     if (
@@ -352,7 +356,7 @@ export default {
         this.getActiveTransaction.transaction_type
       )
     ) {
-      this.getLineCycleItems();
+      this.lineCycleItems();
     } else if (
       [
         "UPCOMING_EARNING_FROM_SALE_OF_GOOD",
@@ -370,28 +374,45 @@ export default {
       "setOrderTrackingData",
       "setCycleLineItems",
       "setActivePayment",
+      "setLoader",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatDate(date) {
       return moment(date).format("ddd, Do MMMM");
     },
     fetchOrder() {
+      this.setLoader({
+        type: "transactionDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getActiveTransaction.resource_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setLoader({
+            type: "transactionDetails",
+            value: "",
+          });
         }
       });
     },
-    getLineCycleItems() {
+    lineCycleItems() {
+      this.setLoader({
+        type: "transactionDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.getActiveTransaction.resource_id}/lineitems`,
       }).then((response) => {
         if (response.status === 200) {
           this.setCycleLineItems(response.data.data.billing_cycle_line_items);
+          this.setLoader({
+            type: "transactionDetails",
+            value: "",
+          });
         } else {
           this.setActivePayment({});
         }

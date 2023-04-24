@@ -313,15 +313,15 @@ export default {
         },
         {
           title: this.$t("payments.totalDue"),
-          description: "Total value inclusive of 16% sales tax",
+          description: this.$t("payments.totalDueDesc"),
         },
         {
           title: this.$t("payments.wthVat"),
-          description: "Withholding tax; 2% of Total Due excluding VAT",
+          description: this.$t("payments.wthVatDesc"),
         },
         {
           title: this.$t("payments.netDue"),
-          description: "Net total due is the Total Due less Withholding Tax",
+          description: this.$t("payments.netDueDesc"),
         },
       ],
       header2: [

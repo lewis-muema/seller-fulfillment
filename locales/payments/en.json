@@ -124,5 +124,8 @@
   "totalDue": "Total Due",
   "wthVat": "WTH VAT",
   "vat": "Withholding VAT",
-  "netDue": "Net Due"
+  "netDue": "Net Due",
+  "totalDueDesc": "Total value inclusive of 16% sales tax",
+  "wthVatDesc":"Withholding tax; 2% of Total Due excluding VAT",
+  "netDueDesc":"Net total due is the Total Due less Withholding Tax"
 }

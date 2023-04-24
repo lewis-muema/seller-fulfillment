@@ -78,7 +78,7 @@ describe("Dashboard screens", () => {
           cy.get(".desktop-quick-links-tabs")
             .eq(2)
             .get(".quick-links-tabs-text")
-            .contains("Deliver on demand");
+            .contains("Hire a vehicle");
         } else {
           cy.get(".desktop-quick-links-tabs")
             .eq(0)

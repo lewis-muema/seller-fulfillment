@@ -532,6 +532,7 @@ export default {
     0px 0px 10px 0px rgb(0 0 0 / 14%), 0px 0px 10px 0px rgb(0 0 0 / 12%) !important;
   padding: 5px 10px;
   margin-top: 5px;
+  max-height: 90vh;
 }
 .header-profile-popup {
   box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%),

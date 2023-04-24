@@ -92,6 +92,9 @@ export default {
           "/direct/create-delivery",
         ]);
       }
+      if (!this.getBusinessDetails?.settings?.metabase_analytics_enabled) {
+        noAccess = noAccess.concat(["/analytics"]);
+      }
       this.setAccessDenied(noAccess);
       this.accessDenied = noAccess.find((row) =>
         this.$route.path.includes(row)

@@ -6,7 +6,7 @@
     <div class="mt-3">
       <el-timeline class="point-point-timeline-override">
         <el-timeline-item
-          class="el-timeline-item-desktop"
+          class=""
           v-for="(activity, index) in getOrderTimelines"
           :key="index"
           :icon="

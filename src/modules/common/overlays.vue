@@ -1710,8 +1710,11 @@
                         : speed.transport_provider.replace("_", " ")
                     }}
                   </span>
-                  <span class="delivery-option-crossdock-radio-right">
-                    {{ speed.currency }} {{ speed.price }}
+                  <span
+                    class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
+                  >
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
@@ -1964,8 +1967,9 @@
                   <span
                     :class="getLoader.speed"
                     class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
                   >
-                    {{ speed.currency }} {{ speed.price }}
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
@@ -2043,8 +2047,9 @@
                   <span
                     :class="getLoader.speed"
                     class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
                   >
-                    {{ speed.currency }} {{ speed.price }}
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">

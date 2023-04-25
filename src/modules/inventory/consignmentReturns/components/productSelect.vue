@@ -715,6 +715,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-align: left;
 }
 .product-select-expansion-description {
   margin-top: 10px;

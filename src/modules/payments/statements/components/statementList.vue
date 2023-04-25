@@ -350,7 +350,7 @@ export default {
         },
         {
           title: this.$t("payments.netDue"),
-          description: "Net total due is the Total Due less Withholding Tax",
+          description: this.$t("payments.netDueDesc"),
         },
       ],
     };

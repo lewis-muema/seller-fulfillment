@@ -6,7 +6,7 @@
         <el-tooltip
           v-if="header.description"
           class="box-item"
-          effect="dark"
+          effect="light"
           :content="$t(header.description)"
           placement="top"
         >

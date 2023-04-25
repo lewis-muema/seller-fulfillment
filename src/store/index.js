@@ -590,6 +590,7 @@ export default createStore({
         pointToPointPickup: "loading-text",
         pointToPointDeliveries: "loading-text",
         billingCycle: "loading-text",
+        transactionDetails: "loading-text",
       },
       overlay: false,
       userChanged: false,

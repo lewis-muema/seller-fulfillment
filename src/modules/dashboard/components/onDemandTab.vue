@@ -29,7 +29,7 @@
           <td class="deliveries-date-row">
             <v-list-item class="dashboard-customer-columns" lines="two">
               <v-list-item-header>
-                <v-list-item-title>
+                <v-list-item-title class="deliveries-name-row">
                   <span :class="getLoader.onDemandOrders">
                     {{ item.instructions[0].delivery_location.description }}
                   </span>
@@ -40,7 +40,7 @@
           <td class="deliveries-date-row">
             <v-list-item class="dashboard-customer-columns" lines="two">
               <v-list-item-header>
-                <v-list-item-title>
+                <v-list-item-title class="deliveries-name-row">
                   <span :class="getLoader.onDemandOrders">
                     {{ item.instructions[1].delivery_location.description }}
                   </span>

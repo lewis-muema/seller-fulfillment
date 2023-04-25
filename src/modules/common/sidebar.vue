@@ -407,6 +407,6 @@ export default {
   box-shadow: 0.5px 0px 0px rgb(0 0 0 / 15%) !important;
 }
 .drawer-footer {
-  margin-top: 300px;
+  margin-top: 500px;
 }
 </style>

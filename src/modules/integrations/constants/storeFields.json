@@ -30,19 +30,5 @@
             "fieldName":"storeRoot",
             "required": false
         }
-    ],
-    "Magento": [
-         {
-            "fieldName":"bridgeUrl",
-            "isUrl": true
-        },
-        {
-            "fieldName":"storeKey",
-            "required": true
-        },
-        {
-            "fieldName":"storeRoot",
-            "required": true
-        }
     ]
 }

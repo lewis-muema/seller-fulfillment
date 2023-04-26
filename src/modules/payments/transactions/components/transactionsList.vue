@@ -80,7 +80,7 @@
       </div>
     </div>
     <div
-      class="m-4 mt-3 transactions-top-recent-list-container"
+      class="m-4 mt-3 transactions-top-recent-list-container scroll-y"
       v-if="transactions.length"
     >
       <div
@@ -406,5 +406,10 @@ export default {
   margin: 10px 0px 0px 100px;
   color: #324ba8;
   cursor: pointer;
+}
+.scroll-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px;
 }
 </style>

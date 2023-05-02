@@ -1676,11 +1676,7 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span>
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span class="delivery-option-crossdock-radio-right">
                     {{ speed.currency }} {{ speed.price }}
@@ -1927,11 +1923,7 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span :class="getLoader.speed">
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span
                     :class="getLoader.speed"
@@ -2006,11 +1998,7 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span :class="getLoader.speed">
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_PICKUP`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span
                     :class="getLoader.speed"
@@ -2078,7 +2066,7 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span>
-                    {{ $t(`inventory.${speed.speed_pricing_type}_DELIVERY`) }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span class="delivery-option-crossdock-radio-right">
                     {{ speed.currency }} {{ speed.price }}

@@ -370,16 +370,7 @@
                       <span class="cross-docking-checkout-delivery-option-top">
                         {{
                           getDestinations[index - 1].speed
-                            .transport_provider === "SENDY"
-                            ? $t(
-                                `inventory.${
-                                  getDestinations[index - 1].speed
-                                    .speed_pricing_type
-                                }_DELIVERY`
-                              )
-                            : getDestinations[
-                                index - 1
-                              ].speed.transport_provider.replace("_", " ")
+                            .speed_pricing_description
                         }}
                       </span>
                     </p>
@@ -859,15 +850,7 @@
                     <p>
                       <span class="cross-docking-checkout-delivery-option-top">
                         {{
-                          getPickUpInfoCD.pickupSpeed.transport_provider ===
-                          "SENDY"
-                            ? $t(
-                                `inventory.${getPickUpInfoCD.pickupSpeed.speed_pricing_type}_PICKUP`
-                              )
-                            : getPickUpInfoCD.pickupSpeed.transport_provider.replace(
-                                "_",
-                                " "
-                              )
+                          getPickUpInfoCD.pickupSpeed.speed_pricing_description
                         }}
                       </span>
                     </p>

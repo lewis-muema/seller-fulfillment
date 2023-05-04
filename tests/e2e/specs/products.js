@@ -25,7 +25,7 @@ describe("Product pages", () => {
       .find(".v-field__input")
       .type("C", { force: true });
     cy.wait("@algoliaProduct", { timeout }).then(() => {
-      cy.get(".search-algolia .search-item-name")
+      cy.get(".products-search .search-product-name")
         .eq(0)
         .contains("Ceramic Plate", { timeout });
       cy.get(".products-search")

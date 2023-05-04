@@ -31,8 +31,8 @@ const mqttClient = {
             qos: 0,
             retain: false,
           },
-          username: "sendy",
-          password: "93a3a43dbac9ddd362702fb525b42a2d",
+          username: "",
+          password: "",
           rejectUnauthorized: false,
         };
         // eslint-disable-next-line no-undef

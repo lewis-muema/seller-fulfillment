@@ -1,38 +1,38 @@
 <template>
-  <v-menu
-    transition="slide-y-transition"
-    anchor="bottom center"
-    v-model="searchToggle"
-    class="search-algolia"
+  <v-text-field
+    color="#324BA8"
+    v-bind="props"
+    prepend-inner-icon="mdi-magnify"
+    clearable
+    :label="$t('deliveries.searchProducts')"
+    variant="outlined"
+    v-model="searchParam"
+    @click:clear="clearItems()"
+    :placeholder="$t('deliveries.searchProducts')"
+    @focus="searchActive = true"
+  ></v-text-field>
+  <div
+    class="search-suggestions-outer search-product-width"
+    v-if="searchItems.length && searchActive && searchParam !== ''"
   >
-    <template v-slot:activator="{ props }">
-      <v-text-field
-        color="#324BA8"
-        v-bind="props"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        :label="$t('deliveries.searchProducts')"
-        variant="outlined"
-        v-model="searchParam"
-        @click:clear="clearItems()"
-        :placeholder="$t('deliveries.searchProducts')"
-      ></v-text-field>
-    </template>
-    <v-list class="header-list-popup">
-      <v-list-item
+    <div class="search-suggestions-close" @click="searchActive = false">
+      {{ $t("inventory.hide") }}
+    </div>
+    <div class="search-suggestions-overlay">
+      <div
         v-for="(item, i) in searchItems"
         :key="i"
         class="list-item-padding-override"
       >
-        <v-list-item-title class="list-item-width-override">
+        <div class="list-item-width-override">
           <div class="row" v-if="item.product_variants.length > 1">
             <v-expansion-panels>
               <v-expansion-panel class="product-select-exp-panel">
                 <v-expansion-panel-title
-                  class="search-row-override product-select-height-override"
+                  class="search-row-override"
                   hide-actions
                 >
-                  <div class="col-4 crossdocking-product-select-titles">
+                  <div class="col-6 crossdocking-product-select-titles">
                     <span class="d-flex">
                       <span class="product-image-frame-container">
                         <div class="product-image-frame">
@@ -48,7 +48,7 @@
                       </span>
                       <span class="product-select-expansion-title">
                         <div>
-                          <span>
+                          <span class="search-row-product-name">
                             {{ item.product_name }}
                           </span>
                         </div>
@@ -61,7 +61,7 @@
                       </span>
                     </span>
                   </div>
-                  <div class="col-4"></div>
+                  <div class="col-2"></div>
                   <div class="col-4">
                     <span class="product-select-units">
                       <span>{{ $t("inventory.view") }}</span>
@@ -71,12 +71,12 @@
                 </v-expansion-panel-title>
                 <v-expansion-panel-text class="product-select-panel-text">
                   <div
-                    class="product-select-option row crossdocking-product-row-inner product-select-height-override"
+                    class="product-select-option row crossdocking-product-row-inner"
                     :class="disabledVariantStatus(option) ? 'disabled-row' : ''"
                     v-for="(option, x) in item.product_variants"
                     :key="x"
                   >
-                    <div class="col-4 crossdocking-product-select-titles">
+                    <div class="col-6 crossdocking-product-select-titles">
                       <div class="product-select-checkbox-inner ml-0"></div>
                       <span class="product-image-frame-container">
                         <div class="product-image-frame">
@@ -89,7 +89,7 @@
                       </span>
                       <span>{{ option.product_variant_description }}</span>
                     </div>
-                    <div class="col-4">
+                    <div class="col-2">
                       <div class="available-units-row hidden-unsellable-stock">
                         <el-input-number
                           class="crossdocking-product-counter"
@@ -157,7 +157,7 @@
             :class="disabledStatus(item) ? 'disabled-row' : ''"
             v-else
           >
-            <div class="row search-row-override product-select-height-override">
+            <div class="row search-row-override">
               <div class="search-item-flex col-4">
                 <span class="d-flex">
                   <span class="product-image-frame-container">
@@ -173,7 +173,7 @@
                   </span>
                   <span class="product-select-expansion-title">
                     <div>
-                      <span>
+                      <span class="search-row-product-name">
                         {{ item.product_name }}
                       </span>
                     </div>
@@ -230,10 +230,10 @@
               </div>
             </div>
           </div>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -253,6 +253,7 @@ export default {
     range: "",
     searchParam: "",
     searchToggle: false,
+    searchActive: false,
   }),
   computed: {
     ...mapGetters([
@@ -510,7 +511,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #818487;
-  font-size: 12px;
+  font-size: 14px;
 }
 .search-item-name {
   font-size: 14px;
@@ -534,6 +535,8 @@ export default {
 .search-row-override {
   border-bottom: 1px solid #e0e0e0;
   align-items: center;
+  padding-top: 5px !important;
+  padding-bottom: 7px !important;
 }
 .search-row-padding {
   padding: 10px 10px 0px 10px;

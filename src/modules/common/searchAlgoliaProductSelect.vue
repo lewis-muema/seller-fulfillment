@@ -1,26 +1,25 @@
 <template>
-  <v-menu
-    transition="slide-y-transition"
-    anchor="bottom center"
-    v-model="searchToggle"
-    class="search-algolia"
+  <v-text-field
+    color="#324BA8"
+    prepend-inner-icon="mdi-magnify"
+    clearable
+    :label="$t('deliveries.searchProducts')"
+    variant="outlined"
+    v-model="searchParam"
+    @click:clear="clearItems()"
+    :placeholder="$t('deliveries.searchProducts')"
+    @focus="searchActive = true"
+  ></v-text-field>
+  <div
+    class="search-suggestions-outer search-product-width"
+    v-if="searchItems.length && searchActive && searchParam !== ''"
   >
-    <template v-slot:activator="{ props }">
-      <v-text-field
-        color="#324BA8"
-        v-bind="props"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        :label="$t('deliveries.searchProducts')"
-        variant="outlined"
-        v-model="searchParam"
-        @click:clear="clearItems()"
-        :placeholder="$t('deliveries.searchProducts')"
-      ></v-text-field>
-    </template>
-    <v-list class="header-list-popup">
-      <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title class="list-item-width-override">
+    <div class="search-suggestions-close" @click="searchActive = false">
+      {{ $t("inventory.hide") }}
+    </div>
+    <div class="search-suggestions-overlay">
+      <div v-for="(item, i) in searchItems" :key="i">
+        <div class="list-item-width-override">
           <div class="row" v-if="item.product_variants.length > 1">
             <v-expansion-panels>
               <v-expansion-panel class="product-select-exp-panel">
@@ -41,7 +40,7 @@
                       </span>
                       <span class="product-select-expansion-title">
                         <div>
-                          <span>
+                          <span class="search-row-product-name">
                             {{ item.product_name }}
                           </span>
                         </div>
@@ -135,7 +134,7 @@
                 </span>
                 <span class="product-select-expansion-title">
                   <div>
-                    <span>
+                    <span class="search-row-product-name">
                       {{ item.product_name }}
                     </span>
                   </div>
@@ -170,10 +169,10 @@
               />
             </div>
           </div>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -193,6 +192,7 @@ export default {
     range: "",
     searchParam: "",
     searchToggle: false,
+    searchActive: false,
   }),
   computed: {
     ...mapGetters([
@@ -445,10 +445,10 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #818487;
-  font-size: 12px;
+  font-size: 14px;
 }
 .search-item-name {
-  font-size: 14px;
+  font-size: 16px;
 }
 .search-algolia .v-overlay__content {
   position: sticky !important;
@@ -468,6 +468,12 @@ export default {
 }
 .search-row {
   border-bottom: 1px solid #e0e0e0;
-  padding: 0px 0px 10px 0px !important;
+  padding: 10px 0px 10px 0px !important;
+}
+.search-row-product-name {
+  font-size: 14px;
+}
+.search-product-width {
+  width: 93%;
 }
 </style>

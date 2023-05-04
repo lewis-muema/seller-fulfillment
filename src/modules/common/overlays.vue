@@ -3563,6 +3563,14 @@ export default {
       return moment(date).format("ddd, Do MMM");
     },
     cancel() {
+      if (!this.cancelReason) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.pleaseSelectACancelReason"),
+          type: "warning",
+        });
+        return false;
+      }
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
@@ -3573,6 +3581,7 @@ export default {
           cancellation_reason: this.cancelReason,
         },
       }).then((response) => {
+        this.cancelReason = "";
         if (response.status === 200) {
           ElNotification({
             title: "",

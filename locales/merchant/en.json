@@ -59,5 +59,14 @@
     "success": "Your store is now integrated with Sendy.",
     "fail": "Failed",
     "somethingWentWrong": "Something went wrong",
-    "close": "Close"
+    "close": "Close",
+    "import_your_products": "Import your Products",
+    "import_products_text": "In order for Sendy to process orders coming from your store, we need to your import your products.",
+    "click": "Click",
+    "below_guide_through_steps_msg": "below and we’ll guide you through the steps.",
+    "importing_products_required": "Importing products is required",
+    "import_warning": "If you don’t import products, orders from your store will not be processed by Sendy.",
+    "import_note": "Note: You can still come back to finish this step later for the store connection to work properly",
+    "go_back_import": "Go back to import",
+    "cancel_import": "Cancel import for now"
 }

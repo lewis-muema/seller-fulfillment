@@ -2,7 +2,7 @@
   <div class="tracking-order-no">
     <i
       class="mdi mdi-arrow-left tracking-arrow-back"
-      @click="$router.back()"
+      @click="$router.push('/deliveries/direct-deliveries/')"
     ></i>
     <div class="tracking-order-title mb-0">
       <span :class="getLoader.onDemandOrders">

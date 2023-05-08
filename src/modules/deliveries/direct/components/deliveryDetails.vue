@@ -359,8 +359,8 @@ export default {
           }
         } else {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.failedToCreateOrder"),
+            title: this.$t("deliveries.failedToCreateOrder"),
+            message: response?.response?.data?.errors[0]?.message,
             type: "error",
           });
         }

@@ -11,6 +11,7 @@
         :placeholder="$t('deliveries.enterPickupLocation')"
         @place_changed="setPickUp"
         @click="showSuggestions('pick-up', 0)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
     </div>
@@ -24,6 +25,7 @@
         :placeholder="$t('deliveries.enterDestination')"
         @place_changed="setDestination"
         @click="showSuggestions('destination', 1)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
     </div>
@@ -37,6 +39,7 @@
         :placeholder="$t('deliveries.enterDestination')"
         @place_changed="setExtraDestination($event, x)"
         @click="showSuggestions('destination', x + 2)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
       <i
@@ -357,6 +360,11 @@ export default {
         },
       };
       this.resetSuggestion();
+    },
+    closeSuggestions() {
+      setTimeout(() => {
+        this.resetSuggestion();
+      }, 100);
     },
     resetSuggestion() {
       this.locationType = "";

@@ -280,8 +280,7 @@ const upload = {
         products.forEach((product) => {
           product.product_variants.filter((row) => {
             const condition =
-              row.universal_product_code === variants.universal_product_code &&
-              row.product_variant_description === variants.description;
+              row.universal_product_code === variants.universal_product_code;
             if (condition && product.product_variants.length > 1) {
               row.quantity = variants.quantity;
               const altProduct = Object.assign({}, product);

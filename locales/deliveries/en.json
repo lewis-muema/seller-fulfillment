@@ -254,5 +254,6 @@
   "yourOrderWillBePairedWith": "Your order will be paired with:",
   "confirmSubmitOrder": "Confirm & Submit Order",
   "driver": "Driver",
-  "pleaseSelectACancelReason": "Please select a cancellation reason"
+  "pleaseSelectACancelReason": "Please select a cancellation reason",
+  "trackOnDemandDeliveries": "Track on demand deliveries"
 }

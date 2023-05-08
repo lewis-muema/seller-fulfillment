@@ -108,6 +108,7 @@ export default {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.setParent("sendy");
       this.rescheduleStatus("sendy");
+      this.setComponent("deliveries.trackDeliveryToSendy");
     }
     if (
       this.$router.options.history.state.back === "/deliveries/customer" ||
@@ -116,6 +117,7 @@ export default {
     ) {
       this.setParent("customer");
       this.rescheduleStatus("customer");
+      this.setComponent("deliveries.trackDeliveryToCustomer");
     }
     this.fetchOrder();
     this.cancellationReasons();

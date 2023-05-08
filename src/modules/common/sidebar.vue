@@ -141,9 +141,17 @@
             :title="$t('common.onDemand')"
             @click="$router.push('/deliveries/direct-deliveries/')"
             class="desktop-sidebar-sub-menu"
-            :active="['common.onDemandDeliveries'].includes(route)"
+            :active="
+              [
+                'common.onDemandDeliveries',
+                'deliveries.trackOnDemandDeliveries',
+              ].includes(route)
+            "
             :append-icon="
-              ['common.onDemandDeliveries'].includes(route)
+              [
+                'common.onDemandDeliveries',
+                'deliveries.trackOnDemandDeliveries',
+              ].includes(route)
                 ? 'mdi-circle-small'
                 : ''
             "

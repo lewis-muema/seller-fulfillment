@@ -72,6 +72,7 @@ export default {
     },
   },
   mounted() {
+    this.setComponent("deliveries.trackOnDemandDeliveries");
     this.fetchOrder();
   },
   beforeUnmount() {
@@ -111,6 +112,7 @@ export default {
       "setLoader",
       "setOrderTrackingData",
       "setDirectDeliveriesTrackingData",
+      "setComponent",
     ]),
     ...mapActions(["requestAxiosGet"]),
     onScroll(e) {

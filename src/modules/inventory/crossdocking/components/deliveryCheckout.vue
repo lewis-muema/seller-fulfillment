@@ -1933,7 +1933,7 @@ export default {
           } else {
             ElNotification({
               title: this.$t("inventory.deliveryCreationFailed"),
-              message: "",
+              message: response?.response?.data?.errors[0]?.message,
               type: "error",
             });
           }

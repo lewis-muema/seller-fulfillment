@@ -455,4 +455,7 @@ export default {
   setRiders(state, val) {
     state.riders = val;
   },
+  setSyncedPlatformProducts(state, val) {
+    state.integrations.platform.syncedProducts = { ...val };
+  },
 };

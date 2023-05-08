@@ -7,10 +7,40 @@
 
 <script>
 import headerComponent from "@/modules/integrations/components/platform/header.vue";
-
+import { provide } from "vue";
 export default {
   name: "platform",
   components: { headerComponent },
+  setup() {
+    function nextStep() {
+      const currentRoute = this.$route;
+      const splitRouteArray = currentRoute.fullPath.split("/");
+      const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
+      let newStep = currentStep + 1;
+      this.$router.push({ name: `SetupStep${newStep}` });
+    }
+
+    function lastStep() {
+      const currentRoute = this.$route;
+      const splitRouteArray = currentRoute.fullPath.split("/");
+      const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
+      let newStep = currentStep - 1;
+      this.$router.push({ name: `SetupStep${newStep}` });
+    }
+
+    function backToIntegrations() {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        this.$router.push({ name: "Integrations" });
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    provide("nextStep", nextStep);
+    provide("lastStep", lastStep);
+    provide("backToIntegrations", backToIntegrations);
+  },
 };
 </script>
 

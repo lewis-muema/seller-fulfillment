@@ -411,4 +411,57 @@ export default {
       return error.response;
     }
   },
+  syncPlatformProducts({ dispatch }, { salesChannelId, currency = "KES" }) {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        const values = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "fulfilment-token": localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "sales-channel-id": salesChannelId,
+          },
+        };
+
+        const { data, status } = await axios.get(
+          `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
+          values
+        );
+
+        await dispatch("syncProducts", data.data);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  syncProducts({ dispatch, commit }, payload) {
+    commit("setSyncedPlatformProducts", payload);
+  },
+  async finishSyncingPlatformProducts({ dispatch }, payload) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.accessToken
+            ? localStorage.accessToken
+            : "",
+        },
+      };
+
+      const { status, data } = await axios.post(
+        `${process.env.MERCHANT_GATEWAY}api2cart/products/finish-sync`,
+        payload.values,
+        config
+      );
+      return { data: data.data, status };
+    } catch (error) {
+      return error.response;
+    }
+  },
 };

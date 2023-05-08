@@ -176,6 +176,8 @@ export default {
                   url: salesChannel.salesChannelProperties.url,
                   addedBy: salesChannel.salesChannelProperties.addedBy,
                 };
+                // fetch
+                localStorage.setItem("platformSalesChannelId", salesChannel.id);
                 break;
               case 3:
                 // API Integration

@@ -9,6 +9,17 @@ export default createStore({
   namespaced: true,
   state() {
     return {
+      integrations: {
+        platform: {
+          syncedProducts: {
+            products: {
+              partialMatchingProducts: [],
+              matchingProducts: [],
+              newProducts: [],
+            },
+          },
+        },
+      },
       mobile: false,
       component: "common.dashboard",
       languages: [
@@ -36,6 +47,9 @@ export default createStore({
         "/settings/integrations/platform/setup/1",
         "/settings/integrations/platform/setup/2",
         "/settings/integrations/platform/setup/3",
+        "/settings/integrations/platform/setup/4",
+        "/settings/integrations/platform/setup/5",
+        "/settings/integrations/platform/setup/6",
         "/settings/integrations/platform/thank-you",
       ],
       autofillDetails: {},

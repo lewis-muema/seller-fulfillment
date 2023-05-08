@@ -155,4 +155,15 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
+  getPlatformSyncStatus: (state) =>
+    state.integrations.platform.syncedProducts.syncStatus,
+  getPlatformSyncProducts: (state) =>
+    state.integrations.platform.syncedProducts.products,
+  getPlatformSyncPartialMatchingProducts: (state) =>
+    state.integrations.platform.syncedProducts.products
+      .partialMatchingProducts || [],
+  getPlatformSyncMatchingProducts: (state) =>
+    state.integrations.platform.syncedProducts.products.matchingProducts || [],
+  getPlatformSyncNewProducts: (state) =>
+    state.integrations.platform.syncedProducts.products.newProducts || [],
 };

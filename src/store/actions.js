@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import router from "../router";
 import { ElNotification } from "element-plus";
 import moment, { duration } from "moment";
+import inventoryJson from "../../tests/e2e/fixtures/integrations.json";
 
 let errorRefreshStatus = true;
 
@@ -428,12 +429,25 @@ export default {
           },
         };
 
-        const { data, status } = await axios.get(
-          `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
-          values
+        // const { data, status } = await axios.get(
+        //   `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
+        //   values
+        // );
+
+        // const { data, status } = JSON.parse(JSON.stringify(inventoryJson));
+
+        const { conflictingProductsInventory: data } = JSON.parse(
+          JSON.stringify(inventoryJson)
         );
 
-        await dispatch("syncProducts", data.data);
+        // console.log("response", response);
+
+        // state.integrations.platform.syncedProducts.syncStatus;
+
+        console.log("data is here", data.data.products);
+
+        await dispatch("syncProducts", data.data.products);
+        // await dispatch("setSyncStatus", data.data.products.syncStatus);
         resolve();
       } catch (error) {
         reject(error);
@@ -443,8 +457,14 @@ export default {
   syncProducts({ dispatch, commit }, payload) {
     commit("setSyncedPlatformProducts", payload);
   },
+  setSyncStatus({ dispatch, commit }, payload) {
+    commit("setSyncStatus", payload);
+  },
   setIntegrations({ dispatch, commit }, payload) {
     commit("setIntegrations", payload);
+  },
+  setFinishSyncPayload({ dispatch, commit }, payload) {
+    commit("setFinishSyncPayload", payload);
   },
   async finishSyncingPlatformProducts({ dispatch }, payload) {
     try {

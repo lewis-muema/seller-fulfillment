@@ -389,7 +389,7 @@ export default {
 .direct-inputs-container {
   margin: 25px;
   position: relative;
-  height: 60vh;
+  height: calc(100vh - 365px);
   overflow-y: scroll;
 }
 .direct-inputs-prefix-icon {

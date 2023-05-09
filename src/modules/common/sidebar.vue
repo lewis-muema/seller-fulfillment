@@ -305,7 +305,7 @@
         <v-list-item
           prepend-icon="mdi mdi-forum"
           :title="$t('common.shareFeedback')"
-          class="desktop-sidebar-icons drawer-footer"
+          class="desktop-sidebar-icons"
           @click="redirectToTally"
         ></v-list-item>
       </v-list>

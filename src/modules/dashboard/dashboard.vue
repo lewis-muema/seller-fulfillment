@@ -277,8 +277,8 @@ export default {
 
 <style>
 .dashbard-container {
-  margin-left: 30px;
-  margin-top: 30px;
+  padding-left: 30px;
+  padding-top: 30px;
 }
 .dashboard-payment-banner {
   max-width: 92% !important;

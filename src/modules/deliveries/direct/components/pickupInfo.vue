@@ -44,8 +44,7 @@
               : ''
           "
         >
-          <div>20-40mins</div>
-          <div class="as-soon-as-possible">
+          <div>
             {{ $t("deliveries.asSoonAsPossible") }}
           </div>
         </div>

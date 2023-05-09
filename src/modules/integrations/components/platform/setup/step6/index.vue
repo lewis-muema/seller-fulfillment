@@ -12,14 +12,14 @@
       <div>
         <v-card-text>
           <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-          <p class="step-5-dialog__text">
+          <p class="step-5-dialog__text" v-if="newProductsCount !== 0">
             <strong
               >{{ `${newProductsCount}` }}
               {{ $t("merchant.new_products") }}</strong
             >
             {{ $t("merchant.to_be_imported_as_new_products") }}.
           </p>
-          <p class="step-5-dialog__text">
+          <p class="step-5-dialog__text" v-if="matchingProductsCount !== 0">
             <strong
               >{{
                 `${matchingProductsCount} ${$t("merchant.matching_products")}`
@@ -28,7 +28,10 @@
             {{ $t("merchant.linked_to_existing_products") }}
           </p>
         </v-card-text>
-        <div class="step-5-dialog__link-container">
+        <div
+          class="step-5-dialog__link-container"
+          v-if="partialMatchingProductsCount !== 0"
+        >
           <p class="step-5-dialog__text">
             <strong
               >{{ `${partialMatchingProductsCount}` }}
@@ -88,7 +91,7 @@ import useProducts from "@/modules/integrations/composibles/useProducts";
 import { onMounted, computed } from "vue";
 
 export default {
-  name: "step5",
+  name: "step6",
   setup() {
     const {
       getPlatformSyncProducts,
@@ -103,15 +106,15 @@ export default {
     } = useProducts();
 
     const partialMatchingProductsCount = computed(
-      () => getPlatformSyncPartialMatchingProducts.length || 0
+      () => getPlatformSyncPartialMatchingProducts.length
     );
 
     const matchingProductsCount = computed(
-      () => getPlatformSyncMatchingProducts.length || 0
+      () => getPlatformSyncMatchingProducts.length
     );
 
     const newProductsCount = computed(
-      () => getPlatformSyncMatchingProducts.length || 0
+      () => getPlatformSyncMatchingProducts.length
     );
 
     onMounted(async () => {

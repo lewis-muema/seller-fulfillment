@@ -9,9 +9,9 @@ import stepThree from "@/modules/integrations/components/platform/setup/stepThre
 /// Step 4
 import Step4 from "@/modules/integrations/components/platform/setup/step4/index.vue";
 
-import stepFour from "@/modules/integrations/components/platform/setup/stepFour.vue";
-import stepFive from "@/modules/integrations/components/platform/setup/stepFive/index.vue";
-import resolveConflicts from "@/modules/integrations/components/platform/setup/stepFive/resolveConflicts.vue";
+import step5 from "@/modules/integrations/components/platform/setup/step5.vue";
+import step6 from "@/modules/integrations/components/platform/setup/step6/index.vue";
+import resolveConflicts from "@/modules/integrations/components/platform/setup/step6/resolveConflicts.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -80,13 +80,13 @@ const routes = {
         {
           path: "setup/5",
           name: "SetupStep5",
-          component: stepFour,
+          component: step5,
           props: true,
         },
         {
-          path: "setup/5",
-          name: "SetupStep5",
-          component: stepFive,
+          path: "setup/6",
+          name: "SetupStep6",
+          component: step6,
           props: true,
         },
         {

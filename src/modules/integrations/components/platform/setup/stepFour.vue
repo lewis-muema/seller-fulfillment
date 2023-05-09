@@ -35,7 +35,7 @@
                     <v-col cols="1" class="right">
                       <img
                         class="cancellation-dialog__close-btn"
-                        @click="backToIntegrationsPage"
+                        @click="backToIntegrationsPage()"
                         src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/close-button.svg"
                     /></v-col>
                   </v-row>
@@ -78,6 +78,7 @@
             <button
               class="step-4-dialog__button step-4-dialog__button--continue"
               @click="next()"
+              data-test="continue"
             >
               {{ $t("merchant.continue") }}
             </button>

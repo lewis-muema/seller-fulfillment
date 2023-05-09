@@ -1,6 +1,4 @@
 import integrationsList from "../components/integrationsList.vue";
-
-import thankYou from "@/modules/integrations/components/platform/setup/thankYou.vue";
 import index from "../components/index.vue";
 
 // Platform Setup Components
@@ -8,6 +6,9 @@ import platformIndex from "@/modules/integrations/components/platform/index.vue"
 import stepOne from "@/modules/integrations/components/platform/setup/stepOne.vue";
 import stepTwo from "@/modules/integrations/components/platform/setup/stepTwo.vue";
 import stepThree from "@/modules/integrations/components/platform/setup/stepThree.vue";
+/// Step 4
+import Step4 from "@/modules/integrations/components/platform/setup/step4/index.vue";
+
 import stepFour from "@/modules/integrations/components/platform/setup/stepFour.vue";
 import stepFive from "@/modules/integrations/components/platform/setup/stepFive/index.vue";
 import resolveConflicts from "@/modules/integrations/components/platform/setup/stepFive/resolveConflicts.vue";
@@ -73,6 +74,12 @@ const routes = {
         {
           path: "setup/4",
           name: "SetupStep4",
+          component: Step4,
+          props: true,
+        },
+        {
+          path: "setup/5",
+          name: "SetupStep5",
           component: stepFour,
           props: true,
         },
@@ -86,12 +93,6 @@ const routes = {
           path: "setup/5/resolve-conflicts",
           name: "ConflictResolution",
           component: resolveConflicts,
-          props: true,
-        },
-        {
-          path: "thank-you",
-          name: "ThankYou",
-          component: thankYou,
           props: true,
         },
       ],

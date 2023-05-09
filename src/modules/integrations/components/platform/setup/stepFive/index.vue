@@ -9,40 +9,29 @@
       <v-card-title class="step-5-dialog__title">
         {{ $t("merchant.ready_to_import") }}
       </v-card-title>
-      <div v-if="productsLoaded">
+      <div>
         <v-card-text>
           <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-          <p
-            class="step-5-dialog__text"
-            v-if="getPlatformSyncNewProducts.length !== 0"
-          >
+          <p class="step-5-dialog__text">
             <strong
-              >{{ `${getPlatformSyncNewProducts.length}` }}
+              >{{ `${newProductsCount}` }}
               {{ $t("merchant.new_products") }}</strong
             >
             {{ $t("merchant.to_be_imported_as_new_products") }}.
           </p>
-          <p
-            class="step-5-dialog__text"
-            v-if="getPlatformSyncMatchingProducts.length !== 0"
-          >
+          <p class="step-5-dialog__text">
             <strong
-              >{{ `${getPlatformSyncMatchingProducts.length}` }}
-              {{ $t("merchant.matching_products") }}
+              >{{
+                `${matchingProductsCount} ${$t("merchant.matching_products")}`
+              }}
             </strong>
             {{ $t("merchant.linked_to_existing_products") }}
           </p>
         </v-card-text>
-        <div
-          class="step-5-dialog__link-container"
-          v-if="
-            getPlatformSyncPartialMatchingProducts.length !== 0 &&
-            getPlatformSyncStatus == 2
-          "
-        >
+        <div class="step-5-dialog__link-container">
           <p class="step-5-dialog__text">
             <strong
-              >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+              >{{ `${partialMatchingProductsCount}` }}
               {{ $("merchant.products") }}</strong
             >
             {{ $t("merchant.we_couldnt_match") }}.
@@ -58,7 +47,7 @@
             @click="goToResolveConflics()"
           >
             {{ $t("merchant.link") }}
-            {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+            {{ `${partialMatchingProductsCount}` }}
             {{ $("merchant.products") }}
           </button>
         </div>
@@ -96,6 +85,7 @@
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 import useProducts from "@/modules/integrations/composibles/useProducts";
+import { onMounted, computed } from "vue";
 
 export default {
   name: "step5",
@@ -109,7 +99,24 @@ export default {
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
       finishSync,
+      sync,
     } = useProducts();
+
+    const partialMatchingProductsCount = computed(
+      () => getPlatformSyncPartialMatchingProducts.length || 0
+    );
+
+    const matchingProductsCount = computed(
+      () => getPlatformSyncMatchingProducts.length || 0
+    );
+
+    const newProductsCount = computed(
+      () => getPlatformSyncMatchingProducts.length || 0
+    );
+
+    onMounted(async () => {
+      await sync();
+    });
 
     const finishSyncingProducts = () => {
       let payload = {};
@@ -145,6 +152,9 @@ export default {
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
+      partialMatchingProductsCount,
+      matchingProductsCount,
+      newProductsCount,
     };
   },
   mixins: [platformSetupMixin],

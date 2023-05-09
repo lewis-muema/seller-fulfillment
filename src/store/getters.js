@@ -166,4 +166,6 @@ export default {
     state.integrations.platform.syncedProducts.matchingProducts || [],
   getPlatformSyncNewProducts: (state) =>
     state.integrations.platform.syncedProducts.newProducts || [],
+  getPlatformSyncPayload: (state) =>
+    state.integrations.platform.finishSyncPayload,
 };

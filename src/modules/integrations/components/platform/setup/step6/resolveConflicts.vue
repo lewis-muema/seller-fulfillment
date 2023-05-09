@@ -10,8 +10,8 @@
           </div>
         </v-col>
         <v-col class="text__heading">
-          {{ $t("mechant.link") }} {{ numberOfConflicts }}
-          {{ $t("mechant.products") }}
+          {{ $t("merchant.link") }} {{ numberOfConflicts }}
+          {{ $t("merchant.products") }}
         </v-col>
         <v-col class="cell-align__right">
           <span class="text__warning" v-if="unresolvedConflicts > 0">
@@ -97,15 +97,30 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import useProducts from "@/modules/integrations/composibles/useProducts";
 
 export default {
   name: "StepSix",
   inject: ["nextStep", "lastStep"],
-  setup() {
-    const { finishSync } = useProducts();
-
-    const resolveConflicts = () => {
+  watch: {
+    getPlatformSyncPartialMatchingProducts: {
+      handler: function (value) {
+        this.syncedProducts = value;
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
+  data() {
+    return {
+      syncedProducts: [],
+    };
+  },
+  methods: {
+    ...mapActions(["setFinishSyncPayload"]),
+    back() {
+      this.lastStep();
+    },
+    resolveConflicts() {
       let payload = {
         currency: "KES", // required
         createAllProducts: false,
@@ -115,55 +130,35 @@ export default {
       for (const conflict of this.syncedProducts) {
         if (conflict.selectedProductId !== 0) {
           payload.products.push({
-            api2CartProduct: conflict.selectedProductId, // api2cart product id required
+            api2CartProduct: conflict.selectedProductId,
             fulfilmentProduct: {
-              productId: conflict.baseProduct.productId, // fulfilment product id required
+              productId: conflict.baseProduct.productId,
               productVariationId:
-                conflict.baseProduct.productVariants[0].productVariantId, // fulfilment product variation id required
+                conflict.baseProduct.productVariants[0].productVariantId,
             },
-            createFulfilmentProduct: false, // required
+            createFulfilmentProduct: false,
           });
         } else {
           payload.products.push({
-            api2CartProduct: conflict.matchingProduct.id, // api2cart product id required
-            createFulfilmentProduct: true, // required
+            api2CartProduct: conflict.matchingProduct.id,
+            createFulfilmentProduct: true,
           });
         }
       }
-      finishSync(payload);
-    };
 
-    return {
-      resolveConflicts,
-    };
-  },
-  data() {
-    return {
-      syncedProducts: [],
-    };
-  },
-  methods: {
-    ...mapActions(["syncPlatformProducts"]),
-    back() {
-      this.lastStep();
+      this.setFinishSyncPayload(payload);
+      this.$router.push({ name: "SetupStep5" });
     },
-    computed: {
-      ...mapGetters(["getIntegrations"]),
-      numberOfConflicts() {
-        return this.syncedProducts.length;
-      },
-      unresolvedConflicts() {
-        return this.syncedProducts.filter((products) => {
-          return !products.selectedProductId;
-        }).length;
-      },
+  },
+  computed: {
+    ...mapGetters(["getPlatformSyncPartialMatchingProducts"]),
+    numberOfConflicts() {
+      return this.syncedProducts.length;
     },
-    mounted() {
-      this.syncPlatformProducts();
-      this.syncedProducts = this.getIntegrations.platform.syncedProducts;
-      if (this.syncedProducts.length === 0) {
-        this.back();
-      }
+    unresolvedConflicts() {
+      return this.syncedProducts.filter((products) => {
+        return !products.selectedProductId;
+      }).length;
     },
   },
 };

@@ -62,7 +62,7 @@
                       </v-col>
                       <v-col span="6">
                         <button
-                          @click="cancelDialog = false"
+                          @click="backToIntegrationsPage()"
                           class="cancellation-dialog__button cancellation-dialog__button--cancel"
                         >
                           {{ $t("merchant.cancel_import") }}
@@ -91,6 +91,7 @@
 
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
+import { mapGetters } from "vuex";
 export default {
   name: "step5",
   mixins: [platformSetupMixin],
@@ -98,6 +99,9 @@ export default {
     return {
       cancelDialog: false,
     };
+  },
+  computed: {
+    ...mapGetters(["getPlatformSyncPayload"]),
   },
 };
 </script>

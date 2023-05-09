@@ -464,4 +464,7 @@ export default {
   setSyncStatus(state, val) {
     state.integrations.platform.syncedProducts.syncStatus = val;
   },
+  setFinishSyncPayload(state, val) {
+    state.integrations.platform.finishSyncPayload = val;
+  },
 };

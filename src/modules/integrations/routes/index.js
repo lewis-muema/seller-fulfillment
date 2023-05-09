@@ -78,6 +78,12 @@ const routes = {
           props: true,
         },
         {
+          path: "setup/5/resolve-conflicts",
+          name: "ConflictResolution",
+          component: resolveConflicts,
+          props: true,
+        },
+        {
           path: "setup/5",
           name: "SetupStep5",
           component: step5,
@@ -87,12 +93,6 @@ const routes = {
           path: "setup/6",
           name: "SetupStep6",
           component: step6,
-          props: true,
-        },
-        {
-          path: "setup/5/resolve-conflicts",
-          name: "ConflictResolution",
-          component: resolveConflicts,
           props: true,
         },
       ],

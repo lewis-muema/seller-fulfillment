@@ -456,9 +456,12 @@ export default {
     state.riders = val;
   },
   setSyncedPlatformProducts(state, val) {
-    state.integrations.platform.syncedProducts = { ...val };
+    state.integrations.platform.syncedProducts = val;
   },
   setIntegrations(state, val) {
     state.integrations.activeIntegrations = { ...val };
+  },
+  setSyncStatus(state, val) {
+    state.integrations.platform.syncedProducts.syncStatus = val;
   },
 };

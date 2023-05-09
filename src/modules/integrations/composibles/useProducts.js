@@ -55,6 +55,7 @@ const useProducts = () => {
   });
 
   return {
+    sync,
     finishSync,
     productsLoaded,
     productsLoading,

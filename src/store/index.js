@@ -16,11 +16,9 @@ export default createStore({
         },
         platform: {
           syncedProducts: {
-            products: {
-              partialMatchingProducts: [],
-              matchingProducts: [],
-              newProducts: [],
-            },
+            partialMatchingProducts: [],
+            matchingProducts: [],
+            newProducts: [],
           },
         },
       },

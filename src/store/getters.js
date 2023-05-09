@@ -159,12 +159,11 @@ export default {
   getPlatformSyncStatus: (state) =>
     state.integrations.platform.syncedProducts.syncStatus,
   getPlatformSyncProducts: (state) =>
-    state.integrations.platform.syncedProducts.products,
+    state.integrations.platform.syncedProducts,
   getPlatformSyncPartialMatchingProducts: (state) =>
-    state.integrations.platform.syncedProducts.products
-      .partialMatchingProducts || [],
+    state.integrations.platform.syncedProducts.partialMatchingProducts || [],
   getPlatformSyncMatchingProducts: (state) =>
-    state.integrations.platform.syncedProducts.products.matchingProducts || [],
+    state.integrations.platform.syncedProducts.matchingProducts || [],
   getPlatformSyncNewProducts: (state) =>
-    state.integrations.platform.syncedProducts.products.newProducts || [],
+    state.integrations.platform.syncedProducts.newProducts || [],
 };

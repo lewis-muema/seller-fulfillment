@@ -2,17 +2,23 @@ import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 
-const useProducts = ({ salesChannelId }) => {
+const useProducts = () => {
   const store = useStore();
   const productsLoading = ref(false);
   const productsLoaded = ref(false);
+  //to-do: redirect user to previous step if the sales channel is not available
+  const salesChannelId = computed(
+    () => store.state.integrations.activeIntegrations.platform.id
+  );
 
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
         productsLoading.value = true;
-        await store.dispatch("syncPlatformProducts", { salesChannelId });
+        await store.dispatch("syncPlatformProducts", {
+          salesChannelId: salesChannelId.value,
+        });
         resolve();
       } catch (e) {
         ElNotification({

@@ -99,9 +99,7 @@ import useProducts from "@/modules/integrations/composibles/useProducts";
 
 export default {
   name: "step5",
-  inject: ["nextStep", "lastStep"],
   setup() {
-    const salesChannelId = localStorage.getItem("platformSalesChannelId");
     const {
       getPlatformSyncProducts,
       getPlatformSyncStatus,
@@ -111,13 +109,11 @@ export default {
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
       finishSync,
-    } = useProducts({
-      salesChannelId,
-    });
+    } = useProducts();
 
     const finishSyncingProducts = () => {
       let payload = {};
-      switch (this.getPlatformSyncStatus) {
+      switch (getPlatformSyncStatus) {
         case 1:
           payload = {
             currency: "KES", // required

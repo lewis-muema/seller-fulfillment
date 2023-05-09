@@ -113,27 +113,19 @@ import addApiKeyDialog from "./api/dialog.vue";
 import integrationBlock from "./shared/integration-block.vue";
 import { ElNotification } from "element-plus";
 import eventsMixin from "@/mixins/events_mixin";
-import { provide, onMounted } from "vue";
+import { provide, computed } from "vue";
 import useIntegrations from "@/modules/integrations/composibles/useIntegrations";
 
 export default {
   mixins: [eventsMixin],
   setup() {
-    const {
-      activeIntegrations,
-      integrations,
-      loadingIntegrations: loading,
-      fetchIntegrations,
-    } = useIntegrations();
-
-    onMounted(async () => {
-      await fetchIntegrations();
-    });
+    const { activeIntegrations, integrations, loadingIntegrations } =
+      useIntegrations();
 
     return {
       activeIntegrations,
       integrations,
-      loading,
+      loading: computed(() => loadingIntegrations.value),
     };
   },
   components: { addPlatformDialog, addApiKeyDialog, integrationBlock },

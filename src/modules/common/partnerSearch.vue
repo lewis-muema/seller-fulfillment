@@ -16,12 +16,14 @@
         v-model="getDirectOrderDetails.searchParam"
         @click:clear="clearItems()"
         @update:modelValue="
-          searchParterPhonePlate(getDirectOrderDetails.searchParam)
+          searchPartnerTrigger(getDirectOrderDetails.searchParam)
         "
       ></v-text-field>
       <div
         v-if="
-          !getDirectOrderPartner?.agent_id && getDirectOrderDetails.searchParam
+          !getDirectOrderPartner?.agent_id &&
+          getDirectOrderDetails.searchParam &&
+          !loadingStatus
         "
         class="partner-search-message"
       >
@@ -29,7 +31,9 @@
       </div>
       <div
         v-if="
-          getDirectOrderPartner?.agent_id && getDirectOrderDetails.searchParam
+          getDirectOrderPartner?.agent_id &&
+          getDirectOrderDetails.searchParam &&
+          !loadingStatus
         "
         class="partner-search-pair-message"
       >
@@ -41,6 +45,13 @@
           <div>{{ getDirectOrderPartner?.agent_phone_number }}</div>
           <div>{{ getDirectOrderPartner?.vehicle_identifier }}</div>
         </div>
+      </div>
+      <div
+        class="partner-search-pair-loading"
+        v-if="loadingStatus && getDirectOrderDetails.searchParam"
+      >
+        {{ $t("deliveries.weAreSearchingForTheDriverDetails") }}
+        <div v-loading="true" class="partner-search-pair-loading-icon"></div>
       </div>
     </template>
   </v-menu>
@@ -60,6 +71,7 @@ export default {
     searchItems: [],
     range: "",
     searchToggle: false,
+    loadingStatus: false,
   }),
   computed: {
     ...mapGetters([
@@ -95,11 +107,16 @@ export default {
         this.searchResults(response.data.response.docs);
       });
     },
+    searchPartnerTrigger(val) {
+      this.loadingStatus = true;
+      this.searchParterPhonePlate(val);
+    },
     searchParterPhonePlate: _.debounce(function (val) {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/shipping-agent/search?q=${val}`,
       }).then((response) => {
+        this.loadingStatus = false;
         if (response.status === 200) {
           this.setDirectOrderPartner(response.data.data.shipping_agent);
         } else {
@@ -163,5 +180,20 @@ export default {
   font-size: 14px;
   background: #ffe4cc;
   border-radius: 5px;
+}
+.partner-search-pair-loading {
+  height: 55px;
+  border-radius: 5px;
+  margin-top: 30px;
+  background: #ddf0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.partner-search-pair-loading-icon {
+  margin-top: -30px;
+  zoom: 65%;
+  margin-left: 15px;
 }
 </style>

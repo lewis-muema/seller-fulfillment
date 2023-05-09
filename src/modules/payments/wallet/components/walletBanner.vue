@@ -27,7 +27,12 @@ import { mapGetters } from "vuex";
 import moment from "moment";
 export default {
   computed: {
-    ...mapGetters(["getBillingCycles", "getWallets", "getLoader"]),
+    ...mapGetters([
+      "getBillingCycles",
+      "getWallets",
+      "getLoader",
+      "getBusinessDetails",
+    ]),
     activeCycleId() {
       return this.getBillingCycles[0].billing_cycle_instance_id;
     },
@@ -44,7 +49,7 @@ export default {
       const cycle = this.currentCycle ? this.getBillingCycles[0] : "";
       return type === "date"
         ? moment(cycle.billing_cycle_end_date).format("dddd, Do MMM")
-        : `${this.getWallets[0]?.currency} ${cycle.amount_to_charge}`;
+        : `${this.getBusinessDetails?.currency} ${cycle.amount_to_charge}`;
     },
   },
 };

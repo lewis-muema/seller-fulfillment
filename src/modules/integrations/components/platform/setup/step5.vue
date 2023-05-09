@@ -92,7 +92,7 @@
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 export default {
-  name: "step4",
+  name: "step5",
   mixins: [platformSetupMixin],
   data() {
     return {

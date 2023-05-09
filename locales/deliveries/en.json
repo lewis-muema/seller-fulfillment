@@ -256,5 +256,6 @@
   "driver": "Driver",
   "pleaseSelectACancelReason": "Please select a cancellation reason",
   "trackOnDemandDeliveries": "Track on demand deliveries",
-  "weAreSearchingForTheDriverDetails": "We are searching for the driver details"
+  "weAreSearchingForTheDriverDetails": "We are searching for the driver details",
+  "thisDriverCantBeAssignedToYourOrder": "This driver can't be assigned to your order because the vehicle type does not match your order"
 }

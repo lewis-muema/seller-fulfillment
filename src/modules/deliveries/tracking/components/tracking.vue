@@ -74,6 +74,7 @@ export default {
   mounted() {
     this.setComponent("deliveries.trackOnDemandDeliveries");
     this.fetchOrder();
+    this.cancellationReasons();
   },
   beforeUnmount() {
     clearInterval(this.partnerPolling);
@@ -113,6 +114,7 @@ export default {
       "setOrderTrackingData",
       "setDirectDeliveriesTrackingData",
       "setComponent",
+      "setCancellationReasons",
     ]),
     ...mapActions(["requestAxiosGet"]),
     onScroll(e) {
@@ -157,6 +159,18 @@ export default {
         }
       });
     },
+    cancellationReasons() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/cancellation-reasons`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCancellationReasons(
+            response.data.data["cancellation-reasons"]
+          );
+        }
+      });
+    },
   },
 };
 </script>
@@ -184,7 +198,7 @@ export default {
   height: 2px !important;
 }
 .right-tracking-column {
-  height: 80vh;
+  height: calc(100vh - 215px) !important;
   overflow-y: scroll;
 }
 </style>

@@ -218,6 +218,92 @@
         </div>
       </div>
     </div>
+    <div
+      class="tracking-reschedule-container cancel-options-contain"
+      v-if="popup === 'cancelOnDemandOptions'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.cancelOrder") }} ?
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'cancelOnDemandOptions')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <div class="cancel-options-text">
+        <p>
+          {{ $t("deliveries.cancelText") }}
+        </p>
+      </div>
+      <div class="cancel-options-container">
+        <div class="row">
+          <div class="col-5">
+            <p
+              class="cancel-options-desc dont-cancel-text"
+              @click="
+                setOverlayStatus({
+                  overlay: false,
+                  popup: 'cancelOnDemandOptions',
+                })
+              "
+            >
+              {{ $t("deliveries.dontCancel") }}
+            </p>
+          </div>
+          <div class="col-7">
+            <v-btn
+              class="tracking-cancel-button"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'cancelOnDemand',
+                })
+              "
+            >
+              {{ $t("deliveries.continueToCancel") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'cancelOnDemand'"
+    >
+      <div>
+        <span
+          class="cancel-back-text"
+          @click="
+            setOverlayStatus({
+              overlay: true,
+              popup: 'cancelOnDemandOptions',
+            })
+          "
+        >
+          <i class="mdi mdi-arrow-left delivery-info-marker"></i>
+          Back
+        </span>
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.whyCancel") }}
+        </p>
+      </div>
+      <v-radio-group v-model="cancelReason">
+        <v-radio
+          v-for="(reason, x) in getCancellationReasons"
+          :key="x"
+          :label="$t(reason.reason_description)"
+          :value="$t(reason.reason_id)"
+        ></v-radio>
+      </v-radio-group>
+      <v-btn
+        class="tracking-cancel-button"
+        v-loading="buttonLoader"
+        @click="cancel('direct')"
+      >
+        {{ $t("deliveries.cancelOrder") }}
+      </v-btn>
+    </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -2749,6 +2835,7 @@ export default {
       "getCancellationReasons",
       "getEditableFields",
       "getDirectOrderDetails",
+      "getDirectDeliveriesTrackingData",
     ]),
     partnerNotAssigned() {
       return (
@@ -3678,7 +3765,7 @@ export default {
     formatDate(date) {
       return moment(date).format("ddd, Do MMM");
     },
-    cancel() {
+    cancel(type) {
       if (!this.cancelReason) {
         ElNotification({
           title: "",
@@ -3691,8 +3778,16 @@ export default {
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getParent === "sendy" ? "consignments" : "deliveries"
-        }/${this.getOrderTrackingData.order.order_id}/cancel`,
+          type === "direct"
+            ? "point-to-point"
+            : this.getParent === "sendy"
+            ? "consignments"
+            : "deliveries"
+        }/${
+          type === "direct"
+            ? this.getDirectDeliveriesTrackingData.order?.order_id
+            : this.getOrderTrackingData.order.order_id
+        }/cancel`,
         values: {
           cancellation_reason: this.cancelReason,
         },
@@ -3700,26 +3795,28 @@ export default {
         this.cancelReason = "";
         if (response.status === 200) {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            title: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            message: "",
             type: "success",
           });
           this.overlayStatusSet(false, "reschedule");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.fetchOrder();
+            this.fetchOrder(type);
           }, 1000);
         } else {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryCancellingFailed"),
+            title: this.$t("deliveries.deliveryCancellingFailed"),
+            message: response.response.data.errors[0].message
+              .replaceAll(".", " ")
+              .replaceAll("_", " "),
             type: "error",
           });
           this.buttonLoader = false;
         }
       });
     },
-    fetchOrder() {
+    fetchOrder(type) {
       this.setLoader({
         type: "orderTracking",
         value: "loading-text",
@@ -3731,7 +3828,11 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getParent === "sendy" ? "consignments" : "deliveries"
+          type === "direct"
+            ? "point-to-point"
+            : this.getParent === "sendy"
+            ? "consignments"
+            : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader({
@@ -3739,7 +3840,11 @@ export default {
           value: "",
         });
         if (response.status === 200) {
-          this.setOrderTrackingData(response.data.data);
+          if (type === "direct") {
+            this.setDirectDeliveriesTrackingData(response?.data?.data);
+          } else {
+            this.setOrderTrackingData(response?.data?.data);
+          }
         }
       });
     },

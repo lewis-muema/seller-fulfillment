@@ -32,6 +32,7 @@ export default {
   getDefaultLanguage: (state) => state.defaultLanguage,
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,
+  getOnDemandDeliveryActions: (state) => state.onDemandDeliveryActions,
   getActivityLog: (state) => state.activityLog,
   getActivityLogs: (state) => state.activityLogs,
   getProductsToSubmit: (state) => state.productsToSubmit,

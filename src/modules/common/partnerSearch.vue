@@ -27,7 +27,7 @@
         "
         class="partner-search-message"
       >
-        {{ $t("deliveries.vehicleIsNotRegistered") }}
+        {{ $t(pairingError) }}
       </div>
       <div
         v-if="
@@ -72,6 +72,7 @@ export default {
     range: "",
     searchToggle: false,
     loadingStatus: false,
+    pairingError: "deliveries.vehicleIsNotRegistered",
   }),
   computed: {
     ...mapGetters([
@@ -118,8 +119,18 @@ export default {
       }).then((response) => {
         this.loadingStatus = false;
         if (response.status === 200) {
-          this.setDirectOrderPartner(response.data.data.shipping_agent);
+          if (
+            this.getSelectedVehicleType?.vehicle_type ===
+            response.data.data.shipping_agent.vehicle_type
+          ) {
+            this.setDirectOrderPartner(response.data.data.shipping_agent);
+          } else {
+            this.pairingError =
+              "deliveries.thisDriverCantBeAssignedToYourOrder";
+            this.setDirectOrderPartner({});
+          }
         } else {
+          this.pairingError = "deliveries.vehicleIsNotRegistered";
           this.setDirectOrderPartner({});
         }
       });

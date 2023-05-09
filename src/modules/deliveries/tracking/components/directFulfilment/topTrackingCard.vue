@@ -58,11 +58,11 @@ export default {
     ...mapGetters([
       "getLoader",
       "getOrderTrackingData",
-      "getDeliveryActions",
+      "getOnDemandDeliveryActions",
       "getDirectDeliveriesTrackingData",
     ]),
     deliveryActions() {
-      return this.getDeliveryActions;
+      return this.getOnDemandDeliveryActions;
     },
   },
   methods: {

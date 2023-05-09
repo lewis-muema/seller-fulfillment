@@ -558,6 +558,15 @@ export default createStore({
           icon: "mdi mdi-close-circle-outline",
         },
       ],
+      onDemandDeliveryActions: [
+        {
+          label: "deliveries.cancelOrder",
+          trigger: false,
+          popup: "cancelOnDemandOptions",
+          show: true,
+          icon: "mdi mdi-close-circle-outline",
+        },
+      ],
       overlayStatus: {
         overlay: false,
         popup: "",

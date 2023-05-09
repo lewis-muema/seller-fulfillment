@@ -276,20 +276,24 @@ const upload = {
       this.uploadPercentage = 100;
       const products = response.data.products;
       const finalProducts = [];
+      const finalProductIds = [];
       this.getAutofillDetails.products.forEach((variants) => {
         products.forEach((product) => {
           product.product_variants.filter((row) => {
             const condition =
-              row.universal_product_code === variants.universal_product_code;
+              row.universal_product_code === variants.universal_product_code &&
+              !finalProductIds.includes(row.universal_product_code);
             if (condition && product.product_variants.length > 1) {
               row.quantity = variants.quantity;
               const altProduct = Object.assign({}, product);
               altProduct.selectedOption = row;
               altProduct.quantity = variants.quantity;
               finalProducts.push(altProduct);
+              finalProductIds.push(row.universal_product_code);
             } else if (condition && product.product_variants.length === 1) {
               product.quantity = variants.quantity;
               finalProducts.push(product);
+              finalProductIds.push(row.universal_product_code);
             }
             return condition;
           });

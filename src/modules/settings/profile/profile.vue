@@ -61,7 +61,7 @@ export default {
 .profile-container {
   display: grid;
   grid-template-columns: 30% 70%;
-  margin-top: 50px;
+  padding-top: 50px;
 }
 .profile-navigation-bar {
   width: 50%;

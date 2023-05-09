@@ -255,5 +255,6 @@
   "confirmSubmitOrder": "Confirm & Submit Order",
   "driver": "Driver",
   "pleaseSelectACancelReason": "Please select a cancellation reason",
-  "trackOnDemandDeliveries": "Track on demand deliveries"
+  "trackOnDemandDeliveries": "Track on demand deliveries",
+  "weAreSearchingForTheDriverDetails": "We are searching for the driver details"
 }

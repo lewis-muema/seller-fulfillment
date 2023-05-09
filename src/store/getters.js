@@ -155,6 +155,7 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
+  getIntegrations: (state) => state.integrations.activeIntegrations,
   getPlatformSyncStatus: (state) =>
     state.integrations.platform.syncedProducts.syncStatus,
   getPlatformSyncProducts: (state) =>

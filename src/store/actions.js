@@ -443,6 +443,9 @@ export default {
   syncProducts({ dispatch, commit }, payload) {
     commit("setSyncedPlatformProducts", payload);
   },
+  setIntegrations({ dispatch, commit }, payload) {
+    commit("setIntegrations", payload);
+  },
   async finishSyncingPlatformProducts({ dispatch }, payload) {
     try {
       const config = {

@@ -108,29 +108,41 @@
 </template>
 <script>
 import addPlatformDialog from "./addPlatformDialog.vue";
-import { getTimeAgo } from "@/utils/time";
 import { mapActions, mapGetters } from "vuex";
 import addApiKeyDialog from "./api/dialog.vue";
 import integrationBlock from "./shared/integration-block.vue";
 import { ElNotification } from "element-plus";
 import eventsMixin from "@/mixins/events_mixin";
-import { provide } from "vue";
+import { provide, onMounted } from "vue";
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations";
 
 export default {
   mixins: [eventsMixin],
+  setup() {
+    const {
+      activeIntegrations,
+      integrations,
+      loadingIntegrations: loading,
+      fetchIntegrations,
+    } = useIntegrations();
+
+    onMounted(async () => {
+      await fetchIntegrations();
+    });
+
+    return {
+      activeIntegrations,
+      integrations,
+      loading,
+    };
+  },
   components: { addPlatformDialog, addApiKeyDialog, integrationBlock },
   data: () => ({
     addPlatformDialog: false,
     apiKey: null,
-    loading: false,
     generateAPIkeyDialog: false,
-    integrations: {
-      platform: {},
-      apiKey: {},
-    },
   }),
   mounted() {
-    this.getMerchantIntegrations();
     this.sendSegmentEvents({
       event: "[merchant] Visited Integrations Page",
       data: {
@@ -140,62 +152,9 @@ export default {
     provide(/* key */ "getUserDetails", /* value */ this.getUserDetails);
   },
   methods: {
-    ...mapActions([
-      "getIntegrations",
-      "revokeApiKey",
-      "removePlatformIntegration",
-    ]),
+    ...mapActions(["revokeApiKey", "removePlatformIntegration"]),
     onClickChild() {
       this.addPlatformDialog = false;
-    },
-    async getMerchantIntegrations() {
-      this.loading = true;
-      this.integrations.platform = {};
-      this.integrations.apiKey = {};
-      try {
-        const payload = {
-          app: process.env.FULFILMENT_API,
-          endpoint: "v1/internal/users",
-          params: {
-            enabled: true,
-          },
-        };
-
-        const { status, data } = await this.getIntegrations(payload);
-
-        if (status === 200) {
-          for (const salesChannel of data.salesChannels) {
-            switch (salesChannel.channel_id) {
-              // API2Cart
-              case 2:
-                this.integrations.platform = {
-                  name: salesChannel.name,
-                  dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
-                  channelId: salesChannel.channel_id,
-                  id: salesChannel.id,
-                  url: salesChannel.salesChannelProperties.url,
-                  addedBy: salesChannel.salesChannelProperties.addedBy,
-                };
-                // fetch
-                localStorage.setItem("platformSalesChannelId", salesChannel.id);
-                break;
-              case 3:
-                // API Integration
-                this.integrations.apiKey = {
-                  name: salesChannel.name,
-                  dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
-                  channelId: salesChannel.channel_id,
-                  id: salesChannel.id,
-                };
-                break;
-            }
-          }
-        }
-      } catch (error) {
-        return error;
-      } finally {
-        this.loading = false;
-      }
     },
     revokeSalesChannel(integration) {
       const { channelId, id } = integration;
@@ -283,12 +242,6 @@ export default {
     },
   },
   computed: {
-    activeIntegrations() {
-      return {
-        platform: Object.keys(this.integrations.platform).length !== 0,
-        api: Object.keys(this.integrations.apiKey).length !== 0,
-      };
-    },
     ...mapGetters(["getUserDetails"]),
   },
 };

@@ -458,4 +458,7 @@ export default {
   setSyncedPlatformProducts(state, val) {
     state.integrations.platform.syncedProducts = { ...val };
   },
+  setIntegrations(state, val) {
+    state.integrations.activeIntegrations = { ...val };
+  },
 };

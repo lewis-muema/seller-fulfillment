@@ -10,6 +10,10 @@ export default createStore({
   state() {
     return {
       integrations: {
+        activeIntegrations: {
+          platform: {},
+          apiKey: {},
+        },
         platform: {
           syncedProducts: {
             products: {

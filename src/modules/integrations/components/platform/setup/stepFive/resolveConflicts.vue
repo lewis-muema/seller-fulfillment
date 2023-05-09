@@ -97,22 +97,15 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { finishSync } from "@/modules/integrations/composibles/useProducts";
+import useProducts from "@/modules/integrations/composibles/useProducts";
 
 export default {
   name: "StepSix",
   inject: ["nextStep", "lastStep"],
-  data() {
-    return {
-      syncedProducts: [],
-    };
-  },
-  methods: {
-    ...mapActions(["syncPlatformProducts"]),
-    back() {
-      this.lastStep();
-    },
-    resolveConflicts() {
+  setup() {
+    const { finishSync } = useProducts();
+
+    const resolveConflicts = () => {
       let payload = {
         currency: "KES", // required
         createAllProducts: false,
@@ -137,27 +130,41 @@ export default {
           });
         }
       }
-
       finishSync(payload);
-    },
+    };
+
+    return {
+      resolveConflicts,
+    };
   },
-  computed: {
-    ...mapGetters(["getIntegrations"]),
-    numberOfConflicts() {
-      return this.syncedProducts.length;
-    },
-    unresolvedConflicts() {
-      return this.syncedProducts.filter((products) => {
-        return !products.selectedProductId;
-      }).length;
-    },
+  data() {
+    return {
+      syncedProducts: [],
+    };
   },
-  mounted() {
-    this.syncPlatformProducts();
-    this.syncedProducts = this.getIntegrations.platform.syncedProducts;
-    if (this.syncedProducts.length === 0) {
-      this.back();
-    }
+  methods: {
+    ...mapActions(["syncPlatformProducts"]),
+    back() {
+      this.lastStep();
+    },
+    computed: {
+      ...mapGetters(["getIntegrations"]),
+      numberOfConflicts() {
+        return this.syncedProducts.length;
+      },
+      unresolvedConflicts() {
+        return this.syncedProducts.filter((products) => {
+          return !products.selectedProductId;
+        }).length;
+      },
+    },
+    mounted() {
+      this.syncPlatformProducts();
+      this.syncedProducts = this.getIntegrations.platform.syncedProducts;
+      if (this.syncedProducts.length === 0) {
+        this.back();
+      }
+    },
   },
 };
 </script>

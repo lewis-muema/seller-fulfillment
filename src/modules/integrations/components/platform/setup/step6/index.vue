@@ -70,7 +70,7 @@
               <!-- todo: add action to go back to main screen using inject-->
               <button
                 class="step-5-dialog__button step-5-dialog__button--cancel"
-                @click="goToLastStep()"
+                @click="back()"
               >
                 {{ $t("merchant.back") }}
               </button>

@@ -1,6 +1,6 @@
 <template>
-  <div class="step-5-dialog" v-loading="productsLoading">
-    <div class="step-5-dialog__card">
+  <div class="step-5-dialog">
+    <div class="step-5-dialog__card" v-if="productsLoaded">
       <div class="top-action-bar">
         <v-btn class="back-btn" dark @click="back()">
           <v-icon large dark left> mdi-arrow-left </v-icon>
@@ -12,30 +12,35 @@
       <div>
         <v-card-text>
           <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-          <p class="step-5-dialog__text" v-if="newProductsCount !== 0">
+          <p
+            class="step-5-dialog__text"
+            v-if="getPlatformSyncNewProducts.length"
+          >
             <strong
-              >{{ `${newProductsCount}` }}
+              >{{ `${getPlatformSyncNewProducts.length}` }}
               {{ $t("merchant.new_products") }}</strong
             >
             {{ $t("merchant.to_be_imported_as_new_products") }}.
           </p>
-          <p class="step-5-dialog__text" v-if="matchingProductsCount !== 0">
+          <p
+            class="step-5-dialog__text"
+            v-if="getPlatformSyncMatchingProducts.length"
+          >
             <strong
-              >{{
-                `${matchingProductsCount} ${$t("merchant.matching_products")}`
-              }}
+              >{{ `${getPlatformSyncMatchingProducts.length} ` }}
+              {{ $t("merchant.matching_products") }}
             </strong>
             {{ $t("merchant.linked_to_existing_products") }}
           </p>
         </v-card-text>
-        <div
-          class="step-5-dialog__link-container"
-          v-if="partialMatchingProductsCount !== 0"
-        >
-          <p class="step-5-dialog__text">
+        <div class="step-5-dialog__link-container">
+          <p
+            class="step-5-dialog__text"
+            v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
+          >
             <strong
-              >{{ `${partialMatchingProductsCount}` }}
-              {{ $("merchant.products") }}</strong
+              >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+              {{ $t("merchant.products") }}</strong
             >
             {{ $t("merchant.we_couldnt_match") }}.
           </p>
@@ -50,8 +55,8 @@
             @click="goToResolveConflics()"
           >
             {{ $t("merchant.link") }}
-            {{ `${partialMatchingProductsCount}` }}
-            {{ $("merchant.products") }}
+            {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+            {{ $t("merchant.products") }}
           </button>
         </div>
         <v-card-text>
@@ -88,10 +93,11 @@
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 import useProducts from "@/modules/integrations/composibles/useProducts";
-import { onMounted, computed } from "vue";
+// import { onMounted } from "vue";
 
 export default {
   name: "step6",
+  mixins: [platformSetupMixin],
   setup() {
     const {
       getPlatformSyncProducts,
@@ -102,24 +108,7 @@ export default {
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
       finishSync,
-      sync,
     } = useProducts();
-
-    const partialMatchingProductsCount = computed(
-      () => getPlatformSyncPartialMatchingProducts.length
-    );
-
-    const matchingProductsCount = computed(
-      () => getPlatformSyncMatchingProducts.length
-    );
-
-    const newProductsCount = computed(
-      () => getPlatformSyncMatchingProducts.length
-    );
-
-    onMounted(async () => {
-      await sync();
-    });
 
     const finishSyncingProducts = () => {
       let payload = {};
@@ -155,12 +144,8 @@ export default {
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
-      partialMatchingProductsCount,
-      matchingProductsCount,
-      newProductsCount,
     };
   },
-  mixins: [platformSetupMixin],
   data() {
     return {
       cancelDialog: false,

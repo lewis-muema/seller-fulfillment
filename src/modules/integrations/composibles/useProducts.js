@@ -14,11 +14,12 @@ const useProducts = () => {
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
+      productsLoading.value = true;
       try {
-        productsLoading.value = true;
         await store.dispatch("syncPlatformProducts", {
           salesChannelId: salesChannelId.value,
         });
+        productsLoaded.value = true;
         resolve();
       } catch (e) {
         ElNotification({
@@ -26,6 +27,7 @@ const useProducts = () => {
           message: `${e}`,
           type: "error",
         });
+        productsLoaded.value = false;
         reject(e);
       } finally {
         productsLoading.value = false;

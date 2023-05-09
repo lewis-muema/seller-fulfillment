@@ -147,7 +147,7 @@ export default {
       }
 
       this.setFinishSyncPayload(payload);
-      this.$router.push({ name: "SetupStep5" });
+      this.$router.push({ name: "SetupStep6" });
     },
   },
   computed: {

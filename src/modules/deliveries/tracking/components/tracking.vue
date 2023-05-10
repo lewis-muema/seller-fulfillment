@@ -60,7 +60,9 @@ export default {
     ]),
   },
   mounted() {
+    this.setComponent("deliveries.trackOnDemandDeliveries");
     this.fetchOrder();
+    this.cancellationReasons();
   },
   beforeUnmount() {
     clearInterval(this.partnerPolling);
@@ -98,6 +100,8 @@ export default {
       "setLoader",
       "setOrderTrackingData",
       "setDirectDeliveriesTrackingData",
+      "setComponent",
+      "setCancellationReasons",
     ]),
     ...mapActions(["requestAxiosGet"]),
     onScroll(e) {
@@ -139,6 +143,18 @@ export default {
             }, 30000);
             // this.initiateMQTT();
           }
+        }
+      });
+    },
+    cancellationReasons() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/cancellation-reasons`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCancellationReasons(
+            response.data.data["cancellation-reasons"]
+          );
         }
       });
     },

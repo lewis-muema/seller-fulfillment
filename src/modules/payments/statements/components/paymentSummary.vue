@@ -162,7 +162,7 @@ export default {
     getActiveCycle() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.$route.params.cycle_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setActivePayment(response.data.data);

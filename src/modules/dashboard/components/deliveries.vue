@@ -247,4 +247,7 @@ export default {
 .on-demand-progress-bar {
   width: 300px !important;
 }
+.on-demand-title-row {
+  width: 150px !important;
+}
 </style>

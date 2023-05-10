@@ -43,7 +43,7 @@
         {{ $t("deliveries.dropOffInstructions") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
-        {{ dropOffInstruction.delivery_instructions }}
+        {{ dropOffInstruction.delivery_instructions || "_" }}
       </p>
     </div>
   </div>

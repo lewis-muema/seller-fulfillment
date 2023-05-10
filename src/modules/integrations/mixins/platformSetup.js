@@ -1,11 +1,19 @@
 export default {
   inject: ["nextStep", "lastStep", "backToIntegrations"],
   methods: {
-    next() {
-      this.nextStep();
+    next(params = null) {
+      if (params) {
+        this.nextStep(params);
+      } else {
+        this.nextStep();
+      }
     },
-    back() {
-      this.lastStep();
+    back(params = null) {
+      if (params) {
+        this.lastStep(params);
+      } else {
+        this.lastStep();
+      }
     },
     backToIntegrationsPage() {
       this.backToIntegrations();

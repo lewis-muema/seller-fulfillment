@@ -19,24 +19,24 @@
         class="congratulations-container__heading"
         data-test="congratulations"
       >
-        Your store is now connected
+        {{ $t("merchant.store_now_connected") }}
       </div>
       <div class="congratulations-container__text">
-        We have connected your store to Sendy
-      </div>
-      <div class="congratulations-container__text">
-        <img
-          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/successful-store.svg"
-          class="congratulations-container__image--checklist"
-        />
-        Correct store details were provided
+        {{ $t("merchant.connected_your_store_to_sendy") }}
       </div>
       <div class="congratulations-container__text">
         <img
           src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/successful-store.svg"
           class="congratulations-container__image--checklist"
         />
-        Webhooks to support product and order updates were created successfully
+        {{ $t("merchant.correct_store_details_provided") }}
+      </div>
+      <div class="congratulations-container__text">
+        <img
+          src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/successful-store.svg"
+          class="congratulations-container__image--checklist"
+        />
+        {{ $t("merchant.webhooks_and_order_updates_created_successfully") }}
       </div>
       <hr class="hr-line" />
       <div class="congratulations-container__bottom">
@@ -44,7 +44,7 @@
           class="congratulations-container__btn"
           @click="next()"
           data-test="import-products"
-          >Import your products</v-btn
+          >{{ $t("merchant.import_your_products") }}</v-btn
         >
       </div>
     </div>
@@ -57,7 +57,7 @@ import { inject } from "vue";
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 
 export default {
-  name: "ThankYou",
+  name: "ConnectionError",
   mixins: [eventsMixin, platformSetupMixin],
   mounted() {
     this.sendSegmentEvents({

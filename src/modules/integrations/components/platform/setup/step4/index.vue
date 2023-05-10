@@ -1,27 +1,11 @@
 <template>
   <div>
-    <success v-if="success" />
-    <error v-else />
+    <router-view />
   </div>
 </template>
-
 <script>
-import success from "./connectionSuccess.vue";
-import error from "./connectionError.vue";
-
 export default {
   name: "Step4",
-  components: {
-    success,
-    error,
-  },
-  props: {
-    success: {
-      type: Boolean,
-      require: true,
-      default: true,
-    },
-  },
 };
 </script>
 

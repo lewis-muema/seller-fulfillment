@@ -19,16 +19,19 @@
         class="congratulations-container__heading congratulations-container__section"
         data-test="congratulations"
       >
-        We could not fully connect to your store
+        {{ $t("merchant.we_could_not_fully_connect_to_your_store") }}
+      </div>
+      <div class="congratulations-container__text" v-if="message">
+        {{ message }}
       </div>
       <div class="congratulations-container__text">
-        We require you to enable some store permissions on your store admin
-        dashboard so that we can send and receive product and order data
+        {{ $t("merchant.we") }} {{ message ? "also" : "" }}
+        {{ $t("merchant.require_you_to_enable_some_store_permissions_msg") }}
       </div>
       <div class="congratulations-container__help-section">
-        <span class="congratulations-container__help-section-text"
-          >Learn about WooCommerce Store Permissions</span
-        >
+        <span class="congratulations-container__help-section-text">{{
+          $t("merchant.learn_about_woocommerce_store_permissions")
+        }}</span>
         <svg
           width="19"
           height="18"
@@ -60,7 +63,7 @@
               fill="white"
             />
           </svg>
-          Check permissions
+          {{ $t("merchant.check_permissions") }}
         </button>
       </div>
     </div>
@@ -70,6 +73,13 @@
 <script>
 export default {
   name: "ConnectionError",
+  props: {
+    message: {
+      type: String,
+      required: false,
+      default: null,
+    },
+  },
 };
 </script>
 

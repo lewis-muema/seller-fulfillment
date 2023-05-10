@@ -18,7 +18,7 @@ export default {
       const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
       let newStep = currentStep + 1;
       if (params) {
-        this.$router.push({ name: `SetupStep${newStep}`, params });
+        this.$router.push({ name: `SetupStep${newStep}`, ...params });
       } else {
         this.$router.push({ name: `SetupStep${newStep}` });
       }
@@ -30,7 +30,7 @@ export default {
       const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
       let newStep = currentStep - 1;
       if (params) {
-        this.$router.push({ name: `SetupStep${newStep}`, params });
+        this.$router.push({ name: `SetupStep${newStep}`, ...params });
       } else {
         this.$router.push({ name: `SetupStep${newStep}` });
       }

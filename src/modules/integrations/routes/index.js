@@ -8,6 +8,8 @@ import stepTwo from "@/modules/integrations/components/platform/setup/stepTwo.vu
 import stepThree from "@/modules/integrations/components/platform/setup/stepThree.vue";
 /// Step 4
 import Step4 from "@/modules/integrations/components/platform/setup/step4/index.vue";
+import ConnectionSuccess from "@/modules/integrations/components/platform/setup/step4/connectionSuccess.vue";
+import ConnectionError from "@/modules/integrations/components/platform/setup/step4/connectionError.vue";
 
 import step5 from "@/modules/integrations/components/platform/setup/step5.vue";
 import step6 from "@/modules/integrations/components/platform/setup/step6/index.vue";
@@ -77,6 +79,20 @@ const routes = {
           name: "SetupStep4",
           component: Step4,
           props: true,
+          children: [
+            {
+              path: "success",
+              name: "ConnectionSuccess",
+              component: ConnectionSuccess,
+              props: true,
+            },
+            {
+              path: "error",
+              name: "ConnectionError",
+              component: ConnectionError,
+              props: true,
+            },
+          ],
         },
         {
           path: "setup/5/resolve-conflicts",

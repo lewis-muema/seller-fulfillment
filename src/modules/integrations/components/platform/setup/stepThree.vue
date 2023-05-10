@@ -173,9 +173,6 @@ export default {
         const { data = null, status = null } = await savePlatform(payload);
         this.connecting = false;
 
-        console.log("data", data);
-        console.log("status", status);
-
         if (status === 201) {
           this.storeConnected = true;
           this.connecting = false;
@@ -198,24 +195,36 @@ export default {
         const { errorCode = null, errorType, message } = error.data;
         switch (errorType) {
           case 1: // STORE_CONFIG_ERRORS
-            this.next({ params: { success: false, errorMessage: message } });
+            this.$router.push({
+              name: "ConnectionError",
+              params: { message, errorType },
+            });
             break;
           case 2: // USER_ERRORS
             ElNotification({
-              title: "User Error",
+              title: this.$t("merchant.user_error"),
               message,
               type: "error",
             });
             break;
           case 3: // SERVER_ERRORS
             ElNotification({
-              title: "Server Error",
-              message:
-                "There was an error setting up your store, kindy try again after a few minutes.",
+              title: this.$t("merchant.server_error"),
+              message: `${this.$t(
+                "merchant.error_setting_up_your_store_msg"
+              )}.`,
+              type: "error",
+            });
+            break;
+          default:
+            ElNotification({
+              title: this.$t("merchant.unexpected_error"),
+              message,
               type: "error",
             });
             break;
         }
+
         this.sendSegmentEvents({
           event: "[merchant]_failed_integration_request",
           data: {

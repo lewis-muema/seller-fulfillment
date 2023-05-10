@@ -4,9 +4,9 @@
     <div class="col-7">
       <tracking-map />
     </div>
-    <div class="col-4 right-tracking-column">
+    <div class="col-4 right-tracking-column mb-5">
       <locations
-        :deliveryLocation="this.deliveryLocation"
+        :dropInstructions="this.dropOffInstructions"
         :pickupLocation="this.pickUpLocation"
       />
       <timeline />
@@ -16,11 +16,7 @@
         :products="this.products"
         :pickInstructions="this.pickupInstructions"
       />
-      <deliveryInfo
-        :deliveryLocation="formatDeliveryLocation"
-        :contactPerson="this.deliveryContactPerson"
-        :dropInstructions="this.dropOffInstructions"
-      />
+      <deliveryInfo :dropInstructions="this.dropOffInstructions" />
     </div>
   </div>
 </template>
@@ -48,10 +44,9 @@ export default {
       pickUpLocation: "",
       deliveryLocation: [],
       pickupContactPerson: "",
-      deliveryContactPerson: "",
       products: "",
       pickupInstructions: "",
-      dropOffInstructions: "",
+      dropOffInstructions: [],
       partnerPolling: "",
     };
   },
@@ -63,13 +58,6 @@ export default {
       "getStorageUserDetails",
       "getDirectDeliveriesTrackingData",
     ]),
-    formatDeliveryLocation() {
-      if (this.deliveryLocation.length === 1) {
-        return this.deliveryLocation[0];
-      } else {
-        return this.deliveryLocation.join(", ");
-      }
-    },
   },
   mounted() {
     this.setComponent("deliveries.trackOnDemandDeliveries");
@@ -82,29 +70,28 @@ export default {
   watch: {
     "$store.getters.getDirectDeliveriesTrackingData":
       function pointToPointOrders(val) {
-        val.order?.instructions.forEach((instruction) => {
-          instruction.actions?.forEach((action) => {
-            if (action.action_type === "PICK_PACKAGE") {
-              this.pickUpLocation = instruction.delivery_location.description;
-              this.pickupContactPerson = instruction.phone_number
-                ? instruction.phone_number
-                : "_";
-              this.products = action.package_description;
-              this.pickupInstructions = instruction.delivery_instructions
-                ? instruction.delivery_instructions
-                : "_";
-            }
-            if (action.action_type === "DROP_PACKAGE") {
-              this.deliveryLocation.push(
-                instruction.delivery_location.description
-              );
-              this.deliveryContactPerson = instruction.phone_number;
-              this.dropOffInstructions = instruction.delivery_instructions
-                ? instruction.delivery_instructions
-                : "_";
-            }
-          });
-        });
+        const instructions = val.order.instructions;
+        const pickInstructions = instructions.filter((instruction) =>
+          instruction.actions.some(
+            (action) => action.action_type === "PICK_PACKAGE"
+          )
+        );
+        if (pickInstructions.length > 0) {
+          const instruction = pickInstructions[0];
+          const action = instruction.actions.find(
+            (a) => a.action_type === "PICK_PACKAGE"
+          );
+          this.pickUpLocation = instruction.delivery_location.description;
+          this.pickupContactPerson = instruction.phone_number || "_";
+          this.products = action.package_description;
+          this.pickupInstructions = instruction.delivery_instructions || "_";
+        }
+        const dropInstructions = instructions.filter((instruction) =>
+          instruction.actions.some(
+            (action) => action.action_type === "DROP_PACKAGE"
+          )
+        );
+        this.dropOffInstructions = dropInstructions;
       },
   },
   methods: {
@@ -198,7 +185,7 @@ export default {
   height: 2px !important;
 }
 .right-tracking-column {
-  height: calc(100vh - 215px) !important;
+  height: 80vh;
   overflow-y: scroll;
 }
 </style>

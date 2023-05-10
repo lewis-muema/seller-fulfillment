@@ -43,7 +43,7 @@
               </th>
               <th class="text-left deliveries-table-header">
                 <span :class="getLoader.onDemandOrders">{{
-                  $t("deliveries.deliveryDate")
+                  $t("deliveries.createdDate")
                 }}</span>
               </th>
               <th class="text-left deliveries-table-header">
@@ -90,7 +90,7 @@
                 <div v-else>
                   <p class="deliveries-progress-row-top">
                     <span :class="getLoader.onDemandOrders">
-                      {{ formatStatus(item.order_event_status, item) }}
+                      {{ item.translated_order_event_status }}
                     </span>
                   </p>
                   <v-progress-linear
@@ -102,22 +102,15 @@
                 </div>
               </td>
               <td class="deliveries-date-row">
-                <div v-if="item.order_status === 'ORDER_COMPLETED'">
+                <div>
                   <p class="deliveries-date-row-top">
                     <span :class="getLoader.onDemandOrders">
-                      {{ deliveryDate(item.completed_date) }}
-                    </span>
-                  </p>
-                </div>
-                <div v-else>
-                  <p class="deliveries-date-row-top">
-                    <span :class="getLoader.onDemandOrders">
-                      {{ deliveryDate(item.scheduled_date) }}
+                      {{ deliveryDate(item.created_date) }}
                     </span>
                   </p>
                   <p class="deliveries-date-row-bottom">
                     <span :class="getLoader.onDemandOrders">
-                      {{ deliveryTime(item.scheduled_date) }}
+                      {{ deliveryTime(item.created_date) }}
                     </span>
                   </p>
                 </div>

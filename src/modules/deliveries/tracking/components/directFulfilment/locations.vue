@@ -29,7 +29,7 @@
       <el-timeline-item
         :color="color1"
         class="location-el-timeline-item-override"
-        v-for="(location, i) in deliveryLocation"
+        v-for="(location, i) in dropInstructions"
         :key="i"
       >
         <div class="destination-points-container">
@@ -38,7 +38,7 @@
               $t("deliveries.deliveryLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{ location }}
+              {{ location.delivery_location.description }}
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  props: ["deliveryLocation", "pickupLocation"],
+  props: ["dropInstructions", "pickupLocation"],
   data() {
     return {
       color1: "#324ba8",

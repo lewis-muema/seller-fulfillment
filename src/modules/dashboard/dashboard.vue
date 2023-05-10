@@ -72,7 +72,7 @@ export default {
     ]),
     onboardingStatus() {
       if (Object.values(this.getAchievements).includes(false)) {
-        return true;
+        return false;
       }
       return false;
     },

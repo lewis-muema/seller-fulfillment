@@ -412,11 +412,14 @@ export default {
       return error.response;
     }
   },
-  syncPlatformProducts({ dispatch }, { salesChannelId, currency = "KES" }) {
+  syncPlatformProducts(
+    { dispatch },
+    { salesChannelId, currency = "KES", payload }
+  ) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        const values = {
+        const config = {
           headers: {
             "Content-Type": "application/json",
             Authorization: localStorage.accessToken
@@ -429,25 +432,13 @@ export default {
           },
         };
 
-        // const { data, status } = await axios.get(
-        //   `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
-        //   values
-        // );
-
-        // const { data, status } = JSON.parse(JSON.stringify(inventoryJson));
-
-        const { conflictingProductsInventory: data } = JSON.parse(
-          JSON.stringify(inventoryJson)
+        const { data, status } = await axios.get(
+          `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
+          payload,
+          config
         );
 
-        // console.log("response", response);
-
-        // state.integrations.platform.syncedProducts.syncStatus;
-
-        console.log("data is here", data.data.products);
-
         await dispatch("syncProducts", data.data.products);
-        // await dispatch("setSyncStatus", data.data.products.syncStatus);
         resolve();
       } catch (error) {
         reject(error);
@@ -479,7 +470,7 @@ export default {
 
       const { status, data } = await axios.post(
         `${process.env.MERCHANT_GATEWAY}api2cart/products/finish-sync`,
-        payload.values,
+        payload,
         config
       );
       return { data: data.data, status };

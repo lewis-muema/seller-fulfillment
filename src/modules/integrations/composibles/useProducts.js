@@ -11,6 +11,10 @@ const useProducts = () => {
     () => store.state.integrations.activeIntegrations.platform.id
   );
 
+  const finishSyncPayload = computed(
+    () => store.state.integrations.platform.finishSyncPayload
+  );
+
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
@@ -35,11 +39,15 @@ const useProducts = () => {
     });
   };
 
-  const finishSync = (payload) => {
+  const finishSync = (payload = null) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        await store.dispatch("finishSyncingPlatformProducts", payload);
+        //to-do: ccleanup
+        await store.dispatch(
+          "finishSyncingPlatformProducts",
+          payload || finishSyncPayload.value
+        );
         resolve();
       } catch (e) {
         ElNotification({

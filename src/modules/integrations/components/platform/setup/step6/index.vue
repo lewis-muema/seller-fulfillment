@@ -78,7 +78,8 @@
             <v-col span="6">
               <button
                 class="step-5-dialog__button step-5-dialog__button--continue"
-                @click="next()"
+                @click="finishSyncingProducts()"
+                data-test="continue"
               >
                 {{ $t("merchant.continue") }}
               </button>
@@ -93,8 +94,9 @@
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 import useProducts from "@/modules/integrations/composibles/useProducts";
-// import { onMounted } from "vue";
+// import { onMounted } from "vue"
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
   name: "step6",
@@ -113,10 +115,12 @@ export default {
 
     const store = useStore();
 
+    const router = useRouter();
+
     const finishSyncingProducts = () => {
       try {
         let payload = {};
-        switch (getPlatformSyncStatus) {
+        switch (getPlatformSyncStatus.value) {
           case 1:
             payload = {
               currency: "KES", // required
@@ -136,9 +140,10 @@ export default {
           default:
             break;
         }
-
         store.dispatch("setFinishSyncPayload", payload);
+        router.push({ name: "SetupStep7" });
       } catch (error) {
+        //to-do: hanlde error better
         console.log("Could not create payload to sync items");
       }
     };

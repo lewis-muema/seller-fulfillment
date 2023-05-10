@@ -104,6 +104,7 @@ describe("Integration Process", () => {
         statusCode: 201,
         body: integrations.createStore,
       }).as("createStores");
+      cy.inventorySyncStubs();
     });
 
     for (const store of Object.keys(stores)) {
@@ -157,6 +158,78 @@ describe("Integration Process", () => {
       cy.getByData("integrate-btn").click();
       cy.wait("@createStores").then(() => {
         cy.url().should("include", "/setup/4/success");
+      });
+    });
+
+    describe("Finish all steps of the onboarding with new products", () => {
+      beforeEach(() => {
+        cy.intercept("**/api2cart/products/finish-sync", {
+          statusCode: 200,
+        }).as("finishSync");
+
+        cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+          statusCode: 200,
+          body: integrations.newProductsInventory,
+        }).as("newProductsInventory");
+      });
+
+      it.only(`Finish all steps of the onboarding(All steps) -- new products`, () => {
+        cy.integrationStepsToImport().then(() => {
+          cy.getByData("import-products").click();
+          cy.url().should("include", "/setup/5");
+          cy.getByData("continue").click();
+          cy.url().should("include", "/setup/6");
+          cy.getByData("continue").click();
+          cy.url().should("include", "/setup/7");
+          cy.getByData("importing-products").should(
+            "contain",
+            "We're importing your products"
+          );
+          cy.wait("@finishSync").then((interception) => {
+            assert.deepEqual(interception.request.body, {
+              currency: "KES", // required
+              createAllProducts: false, // required
+              syncStatus: 3,
+              matchingProducts: [],
+              newProducts: [],
+            });
+          });
+        });
+      });
+    });
+
+    it(`Finish all steps of the onboarding(All steps) -- conflicting products`, () => {
+      cy.intercept("**/api2cart/products/finish-sync").as("finishSync");
+
+      cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+        statusCode: 200,
+        body: integrations.conflictingProductsInventory,
+      }).as("getProductSyncItems");
+
+      cy.integrationStepsToImport().then(() => {
+        cy.getByData("import-products").click();
+        cy.url().should("include", "/setup/5");
+        cy.getByData("continue").click();
+        cy.url().should("include", "/setup/6");
+        cy.getByData("continue").click();
+        //to-do: conflicts in displayed products list
+        cy.url().should("include", "/setup/7");
+        cy.getByData("importing-products").should(
+          "contain",
+          "We're importing your products"
+        );
+        cy.wait("@finishSync").then((interception) => {
+          assert.isNotNull(interception.request.body, "1st API call has data");
+        });
+      });
+    });
+
+    it(`Should be able to resolve conflicts when importing products`, () => {
+      cy.integrationStepsToImport().then(() => {
+        cy.getByData("import-products").click();
+        cy.url().should("include", "/setup/5");
+        cy.getByData("continue").click();
+        cy.url().should("include", "/setup/6");
       });
     });
 

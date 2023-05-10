@@ -42,7 +42,7 @@
       <div class="congratulations-container__bottom">
         <v-btn
           class="congratulations-container__btn"
-          @click="next()"
+          @click="goToStepFive()"
           data-test="import-products"
           >{{ $t("merchant.import_your_products") }}</v-btn
         >
@@ -73,6 +73,9 @@ export default {
     };
   },
   methods: {
+    goToStepFive() {
+      this.$router.push({ name: "SetupStep5" });
+    },
     closePage() {
       this.$router.push({ path: "/settings/integrations" });
     },

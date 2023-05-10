@@ -6,7 +6,10 @@
         src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/loading.gif"
       />
     </div>
-    <div class="import-container__title import-container__section">
+    <div
+      class="import-container__title import-container__section"
+      data-test="importing-products"
+    >
       {{ $t("merchant.importing_your_products") }}...
     </div>
     <div class="import-container__text import-container__section">
@@ -35,6 +38,7 @@ export default {
   mixins: [platformSetupMixin],
   setup() {
     const { finishSync } = useProducts();
+
     onMounted(async () => {
       await finishSync();
     });

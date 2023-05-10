@@ -232,5 +232,15 @@
         "syncStatus": 2
       }
     }
+  },
+  "newProductsInventory":{
+    "data": {
+      "message": "store does not have any conflicting products in fulfilment, products are being synced",
+      "products":{
+        "newProducts": [],
+        "canSyncProducts": true,
+        "syncStatus": 3
+      }
+    }
   }
 }

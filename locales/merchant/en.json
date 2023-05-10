@@ -1,4 +1,8 @@
 {
+    "close_window": "Close Window",
+    "we_will_notify_you_msg": "We will notify you once this process is complete",
+    "importing_products_msg":"Importing products usually takes some time anywhere from a couple of minutes to an hour depending on the number of products in your store",
+    "importing_your_products":"We're importing your products",
     "we_couldnt_match": "we couldn’t match",
     "we_require_you_to_either": "We require you to either",
     "link_to_existing_products": "link to existing products",

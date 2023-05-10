@@ -12,6 +12,7 @@ import Step4 from "@/modules/integrations/components/platform/setup/step4/index.
 import step5 from "@/modules/integrations/components/platform/setup/step5.vue";
 import step6 from "@/modules/integrations/components/platform/setup/step6/index.vue";
 import resolveConflicts from "@/modules/integrations/components/platform/setup/step6/resolveConflicts.vue";
+import step7 from "@/modules/integrations/components/platform/setup/step7.vue";
 
 const routes = {
   path: "/settings/integrations",
@@ -93,6 +94,12 @@ const routes = {
           path: "setup/6",
           name: "SetupStep6",
           component: step6,
+          props: true,
+        },
+        {
+          path: "setup/7",
+          name: "SetupStep7",
+          component: step7,
           props: true,
         },
       ],

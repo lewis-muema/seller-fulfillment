@@ -74,6 +74,9 @@ const useProducts = () => {
     getPlatformSyncNewProducts: computed(
       () => store.getters.getPlatformSyncNewProducts
     ),
+    getPlatformSyncPayload: computed(
+      () => store.getters.getPlatformSyncPayload
+    ),
   };
 };
 

@@ -54,6 +54,7 @@ export default createStore({
         "/settings/integrations/platform/setup/5",
         "/settings/integrations/platform/setup/5/resolve-conflicts",
         "/settings/integrations/platform/setup/6",
+        "/settings/integrations/platform/setup/7",
       ],
       autofillDetails: {},
       cancellationReasons: {},

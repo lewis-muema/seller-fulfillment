@@ -78,7 +78,7 @@
             <v-col span="6">
               <button
                 class="step-5-dialog__button step-5-dialog__button--continue"
-                @click="finishSyncingProducts()"
+                @click="next()"
               >
                 {{ $t("merchant.continue") }}
               </button>
@@ -94,6 +94,7 @@
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 import useProducts from "@/modules/integrations/composibles/useProducts";
 // import { onMounted } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "step6",
@@ -107,32 +108,39 @@ export default {
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
-      finishSync,
+      getPlatformSyncPayload,
     } = useProducts();
 
+    const store = useStore();
+
     const finishSyncingProducts = () => {
-      let payload = {};
-      switch (getPlatformSyncStatus) {
-        case 1:
-          payload = {
-            currency: "KES", // required
-            createAllProducts: true, // required
-            syncStatus: 1,
-          };
-          break;
-        case 3:
-          payload = {
-            currency: "KES", // required
-            createAllProducts: false, // required
-            syncStatus: 3,
-            matchingProducts: [],
-            newProducts: [],
-          };
-          break;
-        default:
-          break;
+      try {
+        let payload = {};
+        switch (getPlatformSyncStatus) {
+          case 1:
+            payload = {
+              currency: "KES", // required
+              createAllProducts: true, // required
+              syncStatus: 1,
+            };
+            break;
+          case 3:
+            payload = {
+              currency: "KES", // required
+              createAllProducts: false, // required
+              syncStatus: 3,
+              matchingProducts: [],
+              newProducts: [],
+            };
+            break;
+          default:
+            break;
+        }
+
+        store.dispatch("setFinishSyncPayload", payload);
+      } catch (error) {
+        console.log("Could not create payload to sync items");
       }
-      finishSync(payload);
     };
 
     return {
@@ -144,6 +152,7 @@ export default {
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
+      getPlatformSyncPayload,
     };
   },
   data() {
@@ -152,9 +161,6 @@ export default {
     };
   },
   methods: {
-    goToLastStep() {
-      this.last();
-    },
     goToResolveConflics() {
       this.$router.push({ name: "ConflictResolution" });
     },

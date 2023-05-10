@@ -315,12 +315,12 @@ export default {
         },
       };
 
-      const { data } = await axios.post(
+      const { data, status } = await axios.post(
         `${payload.app}${payload.endpoint}`,
         payload.values,
         config
       );
-      return data;
+      return { data, status };
     } catch (error) {
       return error.response;
     }

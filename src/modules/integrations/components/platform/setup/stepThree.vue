@@ -83,10 +83,13 @@ import { mapActions } from "vuex";
 import Stores from "@/modules/integrations/classes/stores.js";
 import eventsMixin from "@/mixins/events_mixin";
 import { inject, reactive, onBeforeMount } from "vue";
+import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
+import usePlatform from "@/modules/integrations/composibles/usePlatform";
+import { ElNotification } from "element-plus";
 
 export default {
   name: "integrationSetup",
-  mixins: [eventsMixin],
+  mixins: [eventsMixin, platformSetupMixin],
   props: {
     setupDialog: {
       type: Boolean,
@@ -165,60 +168,64 @@ export default {
       this.saveStore(payload);
     },
     async saveStore(payload) {
+      const { savePlatform } = usePlatform();
       try {
-        const fullPayload = {
-          app: process.env.MERCHANT_GATEWAY,
-          values: payload,
-          storeKey: this.storeKey,
-          endpoint: "api2cart/stores",
-        };
-
-        const { data } = await this.connectStore(fullPayload);
-
-        this.sendSegmentEvents({
-          event: "[merchant]_integrate_platform_request",
-          data: {
-            userId: this.getUserDetails.user_id,
-            payload: fullPayload,
-            response: data,
-          },
-        });
-
+        const { data = null, status = null } = await savePlatform(payload);
         this.connecting = false;
 
-        if (data.return_code === 0) {
+        console.log("data", data);
+        console.log("status", status);
+
+        if (status === 201) {
           this.storeConnected = true;
           this.connecting = false;
-          this.$router.push({
-            name: "ThankYou",
-            params: {
-              storeName: this.storeName,
-            },
-          });
           this.sendSegmentEvents({
             event: "[merchant]_successful_integration_request",
             data: {
               userId: this.getUserDetails.user_id,
-              payload: fullPayload,
+              payload,
               response: data,
             },
           });
+          this.next();
         } else {
           this.storeConnected = false;
           this.connecting = false;
-          throw new Error(
-            data?.return_message || this.$t("merchant.somethingWentWrong")
-          );
+          throw data;
         }
       } catch (error) {
+        // Add logic to
+        const { errorCode = null, errorType, message } = error.data;
+        switch (errorType) {
+          case 1: // STORE_CONFIG_ERRORS
+            this.next({ params: { success: false, errorMessage: message } });
+            break;
+          case 2: // USER_ERRORS
+            ElNotification({
+              title: "User Error",
+              message,
+              type: "error",
+            });
+            break;
+          case 3: // SERVER_ERRORS
+            ElNotification({
+              title: "Server Error",
+              message:
+                "There was an error setting up your store, kindy try again after a few minutes.",
+              type: "error",
+            });
+            break;
+        }
         this.sendSegmentEvents({
           event: "[merchant]_failed_integration_request",
           data: {
             userId: this.getUserDetails.user_id,
-            error: error,
+            error: message,
+            errorCode,
           },
         });
-        this.resultMessage = error;
+
+        this.resultMessage = message;
         this.storeConnected = false;
         this.connecting = false;
         this.hasError = true;

@@ -12,20 +12,28 @@ export default {
   name: "platform",
   components: { headerComponent },
   setup() {
-    function nextStep() {
+    function nextStep(params) {
       const currentRoute = this.$route;
       const splitRouteArray = currentRoute.fullPath.split("/");
       const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
       let newStep = currentStep + 1;
-      this.$router.push({ name: `SetupStep${newStep}` });
+      if (params) {
+        this.$router.push({ name: `SetupStep${newStep}`, params });
+      } else {
+        this.$router.push({ name: `SetupStep${newStep}` });
+      }
     }
 
-    function lastStep() {
+    function lastStep(params) {
       const currentRoute = this.$route;
       const splitRouteArray = currentRoute.fullPath.split("/");
       const currentStep = parseInt(splitRouteArray[splitRouteArray.length - 1]);
       let newStep = currentStep - 1;
-      this.$router.push({ name: `SetupStep${newStep}` });
+      if (params) {
+        this.$router.push({ name: `SetupStep${newStep}`, params });
+      } else {
+        this.$router.push({ name: `SetupStep${newStep}` });
+      }
     }
 
     function backToIntegrations() {

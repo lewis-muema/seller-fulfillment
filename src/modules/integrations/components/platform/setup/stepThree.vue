@@ -184,7 +184,9 @@ export default {
               response: data,
             },
           });
-          this.next();
+          this.$router.push({
+            name: "ConnectionSuccess",
+          });
         } else {
           this.storeConnected = false;
           this.connecting = false;

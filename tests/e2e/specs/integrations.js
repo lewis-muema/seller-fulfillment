@@ -101,13 +101,13 @@ describe("Integration Process", () => {
   describe("Add store integration", () => {
     beforeEach(() => {
       cy.intercept("POST", "**/api2cart/stores", {
-        statusCode: 200,
+        statusCode: 201,
         body: integrations.createStore,
       }).as("createStores");
     });
 
     for (const store of Object.keys(stores)) {
-      it(`should be able to integrate ${store} store`, () => {
+      it(`should be able to integrate ${store} store(Without importing) until step 3)`, () => {
         cy.getByData("add-platform-integration").click();
         cy.getByData("get-started-btn").click();
         cy.getByData("select-dropdown").click();
@@ -129,12 +129,12 @@ describe("Integration Process", () => {
         }
         cy.getByData("integrate-btn").click();
         cy.wait("@createStores").then(() => {
-          cy.getByData("congratulations").should("contain", "Congratulations");
+          cy.url().should("include", "/setup/4/success");
         });
       });
     }
 
-    it(`should be able to return to integrations page after clicking exit`, () => {
+    it(`should be able to finish all steps of the onboarding(All steps)`, () => {
       cy.getByData("add-platform-integration").click();
       cy.getByData("get-started-btn").click();
       cy.getByData("select-dropdown").click();
@@ -156,15 +156,13 @@ describe("Integration Process", () => {
       }
       cy.getByData("integrate-btn").click();
       cy.wait("@createStores").then(() => {
-        cy.getByData("congratulations").should("contain", "Congratulations");
-        cy.getByData("close-thank-you").click();
-        cy.url().should("include", "/settings/integrations");
+        cy.url().should("include", "/setup/4/success");
       });
     });
 
     // To-do: add test for fields validation
 
-    // it.only(`should return to homepage after clicking close button`, () => {
+    // it(`should return to homepage after clicking close button`, () => {
     //   cy.getByData("add-platform-integration").click();
     //   cy.getByData("get-started-btn").click();
     //   cy.getByData("select-dropdown").click();

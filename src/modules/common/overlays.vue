@@ -276,8 +276,8 @@
           class="cancel-back-text"
           @click="
             setOverlayStatus({
-              overlay: true,
-              popup: 'cancelOnDemandOptions',
+              overlay: false,
+              popup: 'cancelOnDemand',
             })
           "
         >

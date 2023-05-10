@@ -364,10 +364,9 @@ export default {
     closeSuggestions() {
       setTimeout(() => {
         this.resetSuggestion();
-      }, 100);
+      }, 500);
     },
     resetSuggestion() {
-      this.locationType = "";
       this.locationIndex = 0;
       this.suggestionsActive = false;
     },

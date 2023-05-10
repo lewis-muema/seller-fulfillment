@@ -32,7 +32,7 @@
             "
           >
             <span :class="getLoader.onDemandOrders">
-              {{ formatStatus(activity.translated_event_code, activity) }}
+              {{ activity.translated_event_code }}
             </span>
           </span>
           <div

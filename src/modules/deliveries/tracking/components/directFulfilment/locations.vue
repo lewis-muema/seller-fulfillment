@@ -2,7 +2,7 @@
   <div class="direct-fulfilment-destination-container-right mt-3">
     <div class="destination-titles-containers">
       <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
-        {{ $t("deliveries.locations") }}
+        {{ $t("deliveries.orderDetails") }}
       </p>
       <a
         class="destination-desc-titles add-changes-popup"
@@ -29,7 +29,7 @@
       <el-timeline-item
         :color="color1"
         class="location-el-timeline-item-override"
-        v-for="(location, i) in deliveryLocation"
+        v-for="(location, i) in dropInstructions"
         :key="i"
       >
         <div class="destination-points-container">
@@ -38,18 +38,34 @@
               $t("deliveries.deliveryLocation")
             }}</span>
             <div class="dest-desc-loc" :class="getLoader.onDemandOrders">
-              {{ location }}
+              {{ location.delivery_location.description }}
             </div>
           </div>
         </div>
       </el-timeline-item>
     </el-timeline>
+    <p
+      class="destination-points-delivery-fee"
+      :class="getLoader.onDemandOrders"
+    >
+      <span class="destination-points-delivery-fee-title">
+        {{ $t("deliveries.deliveryFee") }}
+      </span>
+      <i class="mdi mdi-information"></i>
+      <span class="destination-points-delivery-fee-amount">
+        {{ getDirectDeliveriesTrackingData.order?.invoice_summary?.currency }}
+        {{
+          getDirectDeliveriesTrackingData.order?.invoice_summary
+            ?.invoiced_amount
+        }}
+      </span>
+    </p>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 export default {
-  props: ["deliveryLocation", "pickupLocation"],
+  props: ["dropInstructions", "pickupLocation"],
   data() {
     return {
       color1: "#324ba8",
@@ -104,5 +120,19 @@ export default {
 }
 .el-timeline-item__wrapper {
   top: -13px !important;
+}
+.destination-points-delivery-fee {
+  font-size: 14px;
+  color: #606266;
+  margin-bottom: 0px;
+}
+.destination-points-delivery-fee-title {
+  padding-right: 5px;
+  font-weight: 500;
+}
+.destination-points-delivery-fee-amount {
+  float: right;
+  font-size: 15px;
+  font-weight: 500;
 }
 </style>

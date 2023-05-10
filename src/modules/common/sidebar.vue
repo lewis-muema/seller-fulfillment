@@ -138,7 +138,7 @@
               !getAccessDenied.includes('/deliveries/direct-deliveries') &&
               directFulfillmentFlag
             "
-            :title="$t('common.onDemand')"
+            :title="$t('common.hiredVehicles')"
             @click="$router.push('/deliveries/direct-deliveries/')"
             class="desktop-sidebar-sub-menu"
             :active="

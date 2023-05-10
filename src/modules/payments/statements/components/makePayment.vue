@@ -10,10 +10,17 @@
       <p class="make-payment-description">
         <span :class="getLoader.pendingPayment">
           {{
-            $t("payments.pleaseMakeYourPayment", {
-              amount: `${getBusinessDetails.currency} ${getActivePayment.amount_to_charge}`,
-              total: getActivePayment.order_count,
-            })
+            $t(
+              `${
+                getActivePayment.type === "on-demand"
+                  ? "payments.pleasePayForYourOrder"
+                  : "payments.pleaseMakeYourPayment"
+              }`,
+              {
+                amount: `${getBusinessDetails.currency} ${getActivePayment.amount_to_charge}`,
+                total: getActivePayment.order_count,
+              }
+            )
           }}
         </span>
       </p>

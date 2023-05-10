@@ -177,7 +177,7 @@ export default {
           url: "/inventory/add-pickup-products",
         },
         {
-          title: "dashboard.deliverOnDemand",
+          title: "dashboard.hireAVehicle",
           icon: "mdi-truck-outline",
           url: "/direct/create-delivery",
         },

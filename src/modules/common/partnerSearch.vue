@@ -115,7 +115,7 @@ export default {
     searchParterPhonePlate: _.debounce(function (val) {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/shipping-agent/search?q=${val}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/shipping-agent/search?q=${val}&vehicle_type=${this.getSelectedVehicleType?.vehicle_type}`,
       }).then((response) => {
         this.loadingStatus = false;
         if (response.status === 200) {

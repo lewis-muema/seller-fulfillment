@@ -7,7 +7,7 @@
       <div v-if="getSelectedTab === 'dashboard.toSendy'">
         <to-sendy-tab />
       </div>
-      <div v-if="getSelectedTab === 'dashboard.onDemand'">
+      <div v-if="getSelectedTab === 'common.hiredVehicles'">
         <on-demand-tab />
       </div>
     </div>
@@ -63,7 +63,7 @@ export default {
         case "dashboard.toSendy":
           loaderText = "consignments";
           break;
-        case "dashboard.onDemand":
+        case "common.hiredVehicles":
           loaderText = "onDemandOrders";
           break;
       }
@@ -78,7 +78,7 @@ export default {
         case "dashboard.toSendy":
           deliveriesUrl = "consignments";
           break;
-        case "dashboard.onDemand":
+        case "common.hiredVehicles":
           deliveriesUrl = "point-to-point";
           break;
       }
@@ -96,7 +96,7 @@ export default {
           this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
           this.setConsignments(this.placeholderConsignments);
           break;
-        case "dashboard.onDemand":
+        case "common.hiredVehicles":
           this.noAccess = this.getAccessDenied.includes(
             "/deliveries/direct-deliveries/"
           );
@@ -145,7 +145,7 @@ export default {
         if (response.status === 200) {
           if (this.getSelectedTab === "dashboard.toYourCustomers") {
             this.setDeliveries(response.data.data.orders);
-          } else if (this.getSelectedTab === "dashboard.onDemand") {
+          } else if (this.getSelectedTab === "common.hiredVehicles") {
             this.setOnDemandDeliveries(response.data.data.orders);
           } else {
             this.setConsignments(response.data.data.orders);

@@ -186,7 +186,11 @@ export default {
     cancellationReasons() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/cancellation-reasons`,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/cancellation-reasons?order_type=${
+          this.getParent === "sendy" ? "PICKUP" : "DELIVERY"
+        }`,
       }).then((response) => {
         if (response.status === 200) {
           this.setCancellationReasons(
@@ -273,7 +277,7 @@ export default {
 .tracking-order-title {
   font-weight: 500;
   font-size: 16px;
-  width: calc(89% + 70px);
+  width: calc(91% + 70px);
 }
 .tracking-order-time-est {
   font-size: 14px;

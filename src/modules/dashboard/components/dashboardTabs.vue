@@ -17,7 +17,7 @@
       >
         <div
           :class="[
-            tab.label === 'dashboard.onDemand'
+            tab.label === 'common.hiredVehicles'
               ? 'dashboard-deliveries-ondemand-section'
               : 'dashboard-deliveries-tab-section',
             activeTab === tab.label ? 'active' : '',
@@ -65,7 +65,7 @@ export default {
         },
 
         {
-          label: "dashboard.onDemand",
+          label: "common.hiredVehicles",
           content: "-",
         },
       ],

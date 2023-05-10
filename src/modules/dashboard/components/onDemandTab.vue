@@ -49,7 +49,10 @@
             </v-list-item>
           </td>
           <td class="deliveries-product-row">
-            <v-list-item class="dashboard-customer-columns" lines="two">
+            <v-list-item
+              class="dashboard-customer-columns on-demand-progress-bar"
+              lines="two"
+            >
               <v-list-item-header v-if="item.order_status === 'ORDER_FAILED'">
                 <p class="delivery-attempted-error">
                   <i class="mdi mdi-information-outline mr-2"></i
@@ -66,7 +69,7 @@
               <v-list-item-header v-else>
                 <v-list-item-title>
                   <span :class="getLoader.onDemandOrders">
-                    {{ formatStatus(item.order_event_status, item) }}
+                    {{ item.translated_order_event_status }}
                   </span>
                 </v-list-item-title>
                 <v-progress-linear

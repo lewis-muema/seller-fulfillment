@@ -244,4 +244,7 @@ export default {
 .deliveries-platform-tag-storefront {
   color: #ee7d00;
 }
+.on-demand-progress-bar {
+  width: 300px !important;
+}
 </style>

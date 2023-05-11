@@ -19,7 +19,7 @@ export default {
     ...mapGetters(["getStorageUserDetails"]),
   },
   mounted() {
-    this.setComponent("common.onDemandDeliveries");
+    this.setComponent("common.hiredVehicles");
     this.sendSegmentEvents({
       event: "onDemandDeliveries",
       data: {

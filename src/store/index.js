@@ -511,6 +511,7 @@ export default createStore({
           ],
         },
       },
+      banner: false,
       defaultCountryCode: "KE",
       defaultCountryName: "KENYA",
       sendyPhoneProps: {

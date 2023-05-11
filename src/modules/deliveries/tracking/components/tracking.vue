@@ -49,11 +49,7 @@
           :products="this.products"
           :pickInstructions="this.pickupInstructions"
         />
-        <deliveryInfo
-          :deliveryLocation="formatDeliveryLocation"
-          :contactPerson="this.deliveryContactPerson"
-          :dropInstructions="this.dropOffInstructions"
-        />
+        <deliveryInfo :dropInstructions="this.dropOffInstructions" />
       </div>
     </div>
   </div>

@@ -16,7 +16,6 @@ const algoliaInit = {
       const businessId = this.$store.getters.getStorageUserDetails.business_id;
 
       const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
-      console.log("client", client);
 
       const index = client.initIndex(ALGOLIA_INDEX_NAME);
       index.setSettings({
@@ -26,8 +25,12 @@ const algoliaInit = {
         .search(item, {
           filters: `business_id:${businessId}`,
         })
-        .then((objects) => this.algoliaResults(objects))
-        .catch();
+        .then((objects) => {
+          this.algoliaResults(objects);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
   },
 };

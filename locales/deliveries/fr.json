@@ -9,6 +9,7 @@
   "attemptFailed": "La tentative de livraison a échoué. Veuillez reprogrammer",
   "attempts": "Tentatives",
   "createdDate": "Created Date",
+  "searchUsingDestination": "Search using Destination",
   "attemptsAndReasons": "Nous n'avons pas pu vous joindre voici les tentatives et les raisons",
   "cancelOrder": "Annuler la commande",
   "cantEditDelivery": "Vous ne pouvez pas modifier les informations de livraison pour le moment, car votre commande a été assignée à un livreur",

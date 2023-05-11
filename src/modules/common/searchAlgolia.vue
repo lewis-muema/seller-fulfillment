@@ -7,7 +7,9 @@
     :label="
       type === 'product'
         ? $t('deliveries.searchProducts')
-        : $t('deliveries.searchUsingNameOrPhoneNumber')
+        : type === 'delivery'
+        ? $t('deliveries.searchUsingNameOrPhoneNumber')
+        : $t('deliveries.searchUsingDestination')
     "
     variant="outlined"
     v-model="searchParam"
@@ -19,7 +21,6 @@
     "
     @focus="searchActive = true"
   ></v-text-field>
-  {{ searchItems }}
   <div
     class="search-suggestions-outer"
     v-if="searchItems.length && searchActive && searchParam !== ''"
@@ -48,70 +49,62 @@
         </div>
       </div>
     </div>
-    <!--    <div class="search-suggestions-overlay" v-if="type === 'onDemand'">-->
-    <!--      <div class="search-product" v-for="(item, i) in searchItems" :key="i">-->
-    <!--        <div-->
-    <!--          @click="-->
-    <!--            $router.push(`/deliveries/track-direct-deliveries/${item.order_id}`)-->
-    <!--          "-->
-    <!--        >-->
-    <!--          <div class="search-item-flex">-->
-    <!--            <div>-->
-    <!--              <div class="search-item-row">-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.orderNumber") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ item.order_id }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.name") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ item.destination.name }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.phone") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ item.destination.phone_number }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.location") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ item.destination.delivery_location.description }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.orderStatus") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ item.order_status.replaceAll("_", " ") }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--                <div>-->
-    <!--                  <span class="search-item-description">-->
-    <!--                    {{ $t("deliveries.products") }}:-->
-    <!--                  </span>-->
-    <!--                  <span class="search-item-name">-->
-    <!--                    {{ formatProducts(item.products) }}-->
-    <!--                  </span>-->
-    <!--                </div>-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+    <div class="search-suggestions-overlay" v-if="type === 'OnDemand'">
+      <div class="search-product" v-for="(item, i) in searchItems" :key="i">
+        <div
+          @click="
+            $router.push(`/deliveries/track-direct-deliveries/${item.order_id}`)
+          "
+        >
+          <div class="search-item-flex">
+            <div>
+              <div class="search-item-row">
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderNumber") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_id }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.pickupLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.deliveryLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[1].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderStatus") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_status.replaceAll("_", " ") }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.products") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].actions[0].package_description }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="search-suggestions-overlay" v-else>
       <div class="search-product" v-for="(item, i) in searchItems" :key="i">
         <div @click="$router.push(`/deliveries/tracking/${item.order_id}`)">
@@ -213,7 +206,6 @@ export default {
   methods: {
     ...mapMutations(["setProductLists", "setSearchedProducts"]),
     algoliaResults(object) {
-      console.log("object", object);
       this.searchToggle = true;
       this.searchObject = object;
       this.searchItems = object.hits;

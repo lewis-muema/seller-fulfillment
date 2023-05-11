@@ -1,38 +1,62 @@
 <template>
   <div class="integration">
-    <v-row class="platform integration__section">
-      <v-col class="platform__column-1">
-        <div
-          class="platform__title"
-          :data-test="`integration-${integration.channelId}`"
-        >
-          {{ integration.name }}
-        </div>
-        <div class="platform__sub-text">
-          {{ integration.addedBy ? `By ${integration.addedBy}.` : "" }}
-          {{ ` ${integration.dateAdded}` }}
-        </div>
-      </v-col>
-      <v-col class="platform__column-2">
-        <span
-          class="api__columns--remove-btn"
-          @click="$emit('revokeSalesChannel', integration)"
-        >
-          <img
-            src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/remove-store.svg"
-          /><a
-            href="#"
-            class="platform__remove-text"
-            :data-test="`remove-channel-${integration.channelId}`"
-            >{{ $t("merchant.remove") }}</a
+    <div class="platform">
+      <v-row class="integration__section">
+        <v-col class="platform__column-1">
+          <div
+            class="platform__title"
+            :data-test="`integration-${integration.channelId}`"
           >
-        </span>
-      </v-col>
-    </v-row>
+            {{ integration.name }}
+          </div>
+          <div class="platform__sub-text">
+            {{ integration.addedBy ? `By ${integration.addedBy}.` : "" }}
+            {{ ` ${integration.dateAdded}` }}
+          </div>
+        </v-col>
+        <v-col class="platform__column-2">
+          <span
+            class="api__columns--remove-btn"
+            @click="$emit('revokeSalesChannel', integration)"
+          >
+            <img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/remove-store.svg"
+            /><a
+              href="#"
+              class="platform__remove-text"
+              :data-test="`remove-channel-${integration.channelId}`"
+              >{{ $t("merchant.remove") }}</a
+            >
+          </span>
+        </v-col>
+      </v-row>
+      <div v-if="applicationPending" class="platform-steps">
+        <v-row
+          v-for="(status, index) in statuses"
+          :key="index"
+          class="platform-steps__section"
+        >
+          <v-col cols="1" class="platform-steps__icon-box">
+            <img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/grey-tick.svg"
+            />
+          </v-col>
+          <v-col class="align-left"
+            ><span class="platform-steps__msg-txt">{{
+              status.message
+            }}</span></v-col
+          >
+          <v-col class="align-right">
+            <span class="platform-steps__status">Pending</span>
+          </v-col>
+        </v-row>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { computed, reactive, ref } from "vue";
 export default {
   name: "IntegrationContainer",
   props: {
@@ -41,6 +65,34 @@ export default {
       default: () => {},
     },
   },
+  setup(props) {
+    // props.integration - Find a way to compute this
+    const applicationPending = ref(false);
+
+    // const greyTickImgUrl =
+    //   "https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/grey-tick.svg";
+
+    // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
+
+    const statuses = reactive([
+      { message: "Enter your store details", status: "STORE_DETAILS_ADDED" },
+      { message: "Store Permissions", status: "STORE_PERMISSIONS_VALIDATED" },
+      { message: "Import your products", status: "PRODUCTS_SYNCED" },
+      { message: "Send products to Sendy", status: "INITIAL_CONSIGNMENT_SENT" },
+    ]);
+
+    const currentStep = computed(() =>
+      statuses.values.findIndex(
+        (x) => x.status === props.integration.value.status
+      )
+    );
+
+    return {
+      currentStep,
+      applicationPending,
+      statuses,
+    };
+  },
 };
 </script>
 
@@ -48,36 +100,7 @@ export default {
 .integration {
   &__section {
     margin-bottom: 28px;
-  }
-  .api {
-    border: 0.5px solid #c0c4cc;
-    border-radius: 6px;
-    padding: 8px;
-    gap: 4px;
-    margin: 32px;
-
-    &__title {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 20px;
-      letter-spacing: 0.005em;
-      color: #303133;
-    }
-
-    &__columns {
-      display: flex;
-      overflow: scroll;
-    }
-
-    &__added-by {
-      font-style: normal;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-      letter-spacing: 0.005em;
-      color: #606266;
-    }
+    margin: 0;
   }
   .platform {
     border: 0.5px solid #c0c4cc;
@@ -132,5 +155,46 @@ export default {
       padding-left: 9px;
     }
   }
+
+  .platform-steps {
+    .v-row {
+      color: #909399;
+    }
+    .v-col {
+      padding: 0;
+    }
+    &__section {
+      margin: 4px 0;
+    }
+    &__status {
+      font-family: "DM Sans";
+      font-style: italic;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: right;
+      letter-spacing: 0.005em;
+    }
+    &__msg-txt {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    // &__icon-box {
+    //   display: contents;
+    //   margin-right: 8px;
+    // }
+  }
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-left {
+  text-align: left;
 }
 </style>

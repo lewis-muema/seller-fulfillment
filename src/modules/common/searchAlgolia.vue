@@ -7,7 +7,9 @@
     :label="
       type === 'product'
         ? $t('deliveries.searchProducts')
-        : $t('deliveries.searchUsingNameOrPhoneNumber')
+        : type === 'delivery'
+        ? $t('deliveries.searchUsingNameOrPhoneNumber')
+        : $t('deliveries.searchUsingDestination')
     "
     variant="outlined"
     v-model="searchParam"
@@ -47,7 +49,63 @@
         </div>
       </div>
     </div>
-    <div class="search-suggestions-overlay" v-else>
+    <div class="search-suggestions-overlay" v-if="type === 'OnDemand'">
+      <div class="search-product" v-for="(item, i) in searchItems" :key="i">
+        <div
+          @click="
+            $router.push(`/deliveries/track-direct-deliveries/${item.order_id}`)
+          "
+        >
+          <div class="search-item-flex">
+            <div>
+              <div class="search-item-row">
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderNumber") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_id }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.pickupLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.deliveryLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[1].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderStatus") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_status.replaceAll("_", " ") }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.products") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].actions[0].package_description }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="search-suggestions-overlay" v-if="type === 'delivery'">
       <div class="search-product" v-for="(item, i) in searchItems" :key="i">
         <div @click="$router.push(`/deliveries/tracking/${item.order_id}`)">
           <div class="search-item-flex">

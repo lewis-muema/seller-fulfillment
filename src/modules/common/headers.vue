@@ -228,8 +228,8 @@ export default {
       this.shortcuts.forEach((shortcut) => {
         if (
           (this.directFulfillmentFlag &&
-            shortcut.title === "dashboard.deliverOnDemand") ||
-          shortcut.title !== "dashboard.deliverOnDemand"
+            shortcut.title === "dashboard.hireAVehicle") ||
+          shortcut.title !== "dashboard.hireAVehicle"
         ) {
           links.push(shortcut);
         }

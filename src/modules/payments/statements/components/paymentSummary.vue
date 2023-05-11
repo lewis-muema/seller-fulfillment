@@ -124,11 +124,16 @@ export default {
       "getCycleLineItems",
       "getActivePayment",
       "getUserDetails",
+      "getPaymentRedirectURL",
     ]),
   },
   mounted() {
     this.setComponent("payments.makePayment");
     this.getCycles();
+    this.redirectToSource();
+  },
+  beforeUnmount() {
+    this.setPaymentRedirectURL("");
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),
@@ -136,7 +141,15 @@ export default {
     formatDate(date) {
       return moment(date).format("h:mm a");
     },
-    ...mapMutations(["setComponent", "setLoader"]),
+    ...mapMutations(["setComponent", "setLoader", "setPaymentRedirectURL"]),
+    redirectToSource() {
+      if (this.$router.options.history.state.back === "/success-view/") {
+        const url = this.getPaymentRedirectURL;
+        this.$router.push(url);
+      } else {
+        this.setPaymentRedirectURL(this.$router.options.history.state.back);
+      }
+    },
     getCycles() {
       this.setLoader({
         type: "cycleLineItems",

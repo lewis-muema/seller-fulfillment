@@ -73,8 +73,8 @@ export default {
       this.quickLinks.forEach((link) => {
         if (
           (this.directFulfillmentFlag &&
-            link.name === "dashboard.deliverOnDemand") ||
-          link.name !== "dashboard.deliverOnDemand"
+            link.name === "dashboard.hireAVehicle") ||
+          link.name !== "dashboard.hireAVehicle"
         ) {
           links.push(link);
         }

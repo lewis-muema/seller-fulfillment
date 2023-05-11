@@ -11,7 +11,7 @@
             ? 'inactive-tab'
             : 'active-tab'
         "
-        v-for="tab in tabs"
+        v-for="tab in filteredTabs"
         :key="tab.label"
         :label="tab.label"
       >
@@ -123,7 +123,26 @@ export default {
       "getDeliveries",
       "getConsignments",
       "getPointToPointStatistics",
+      "getBusinessDetails",
     ]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredTabs() {
+      const tabs = [];
+      this.tabs.forEach((tab) => {
+        if (
+          (this.directFulfillmentFlag &&
+            tab.label === "common.hiredVehicles") ||
+          tab.label !== "common.hiredVehicles"
+        ) {
+          tabs.push(tab);
+        }
+      });
+      return tabs;
+    },
     activeTab() {
       return this.getDashboardSelectedTab;
     },

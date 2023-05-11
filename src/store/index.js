@@ -176,6 +176,7 @@ export default createStore({
         max: 5,
         page_count: 5,
       },
+      paymentRedirectURL: "",
       supportedCountries: [],
       geofenceData: [],
       userData: {},

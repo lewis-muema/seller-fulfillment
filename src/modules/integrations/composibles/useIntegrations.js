@@ -52,7 +52,7 @@ const useIntegrations = () => {
                   url: salesChannel.salesChannelProperties.url,
                   addedBy: salesChannel.salesChannelProperties.addedBy,
                 };
-                // fetch
+                // to-do: remove after vuex implimentation
                 localStorage.setItem("platformSalesChannelId", salesChannel.id);
                 break;
               case 3:

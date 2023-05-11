@@ -1,98 +1,93 @@
 <template>
   <div class="integrations-container" v-loading="loading">
-    <v-card
-      class="integrations-card mx-auto"
-      max-width="1000 1   1§  1ES B"
-      variant="outlined"
-    >
-      <v-card-item>
-        <div class="integration-text" data-test="heading-platform">
-          {{ $t("merchant.connectedStore") }}
-        </div>
-        <v-divider class="divider"></v-divider>
+    <v-card class="integrations-container__card">
+      <div class="integration-content__heading" data-test="heading-platform">
+        {{ $t("merchant.connectedStore") }}
+      </div>
+      <div
+        class="integration-content integration-content__no-integration"
+        v-if="!activeIntegrations.platform"
+      >
         <div
-          class="integration-content integration-content__no-integration"
-          v-if="!activeIntegrations.platform"
+          class="integration-content__no-integration--msg integration-content__no-integration--section"
+          data-test="no-store-integration"
         >
-          <div
-            class="integration-content__no-integration--msg integration-content__no-integration--section"
-            data-test="no-store-integration"
+          {{ $t("merchant.noStoreFound") }}
+        </div>
+        <div class="integration-content__no-integration--section">
+          <button
+            class="integration-content__no-integration--btn"
+            data-test="add-platform-integration"
+            @click="addPlatformDialog = true"
           >
-            {{ $t("merchant.noStoreFound") }}
-          </div>
-          <div class="integration-content__no-integration--section">
-            <button
-              class="integration-content__no-integration--btn"
-              data-test="add-platform-integration"
-              @click="addPlatformDialog = true"
+            <img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/connect-store.svg"
+              class="integration-content__no-integration--btn-logo"
+            />
+            <span class="integration-content__no-integration--btn-txt"
+              >Connect your online store</span
             >
-              <img
-                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/connect-store.svg"
-                class="integration-content__no-integration--btn-logo"
-              />
-              <span class="integration-content__no-integration--btn-txt"
-                >Connect your online store</span
-              >
-            </button>
-          </div>
-          <div
-            class="integration-content__no-integration--section integration-content__no-integration--learn-txt"
-          >
-            {{ $t("merchant.learnMoreMsg") }}
-            <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
-          </div>
+          </button>
         </div>
-        <integrationBlock
-          :integration="integrations.platform"
-          :key="integrations.platform.channelId"
-          @revokeSalesChannel="revokeSalesChannel"
-          v-else
-        />
-      </v-card-item>
-      <v-card-item>
-        <div class="integration-text mb-1" data-test="heading-api-keys">
-          {{ $t("merchant.apiKeys") }}
-        </div>
-        <v-divider></v-divider>
         <div
-          class="integration-content integration-content__no-integration"
-          v-if="!activeIntegrations.api"
+          class="integration-content__no-integration--section integration-content__no-integration--learn-txt"
         >
-          <div
-            class="integration-content__no-integration--msg integration-content__no-integration--section"
-            data-test="no-api-integration"
-          >
-            {{ $t("merchant.noApiKeys") }}
-          </div>
-          <div class="integration-content__no-integration--section">
-            <button
-              class="integration-content__no-integration--btn"
-              @click="generateAPIkeyDialog = true"
-              data-test="generate-api-key-btn"
-            >
-              <img
-                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/connect-store.svg"
-                class="integration-content__no-integration--btn-logo"
-              />
-              <span class="integration-content__no-integration--btn-txt">{{
-                $t("merchant.createApiKey")
-              }}</span>
-            </button>
-          </div>
-          <div
-            class="integration-content__no-integration--section integration-content__no-integration--learn-txt"
-          >
-            {{ $t("merchant.learnMoreAboutFulfillment") }}
-            <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
-          </div>
+          {{ $t("merchant.learnMoreMsg") }}
+          <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
         </div>
-        <integrationBlock
-          :integration="integrations.apiKey"
-          :key="integrations.apiKey.channelId"
-          @revokeSalesChannel="revokeSalesChannel"
-          v-else
-        />
-      </v-card-item>
+      </div>
+      <integrationBlock
+        :integration="integrations.platform"
+        :key="integrations.platform.channelId"
+        @revokeSalesChannel="revokeSalesChannel"
+        v-else
+      />
+    </v-card>
+    <v-card class="integrations-container__card">
+      <div
+        class="integration-content__heading mb-1"
+        data-test="heading-api-keys"
+      >
+        {{ $t("merchant.apiKeys") }}
+      </div>
+      <div
+        class="integration-content integration-content__no-integration"
+        v-if="!activeIntegrations.api"
+      >
+        <div
+          class="integration-content__no-integration--msg integration-content__no-integration--section"
+          data-test="no-api-integration"
+        >
+          {{ $t("merchant.noApiKeys") }}
+        </div>
+        <div class="integration-content__no-integration--section">
+          <button
+            class="integration-content__no-integration--btn"
+            @click="generateAPIkeyDialog = true"
+            data-test="generate-api-key-btn"
+          >
+            <img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/add-sign.svg"
+              class="integration-content__no-integration--btn-logo"
+            />
+            <span class="integration-content__no-integration--btn-txt">{{
+              $t("merchant.createApiKey")
+            }}</span>
+          </button>
+        </div>
+        <div
+          class="integration-content__no-integration--section integration-content__no-integration--learn-txt"
+        >
+          {{ $t("merchant.learnMoreAboutFulfillment") }}
+          <v-icon start icon="mdi-arrow-right" size="small"></v-icon>
+        </div>
+      </div>
+      <integrationBlock
+        :integration="integrations.apiKey"
+        :key="integrations.apiKey.channelId"
+        @revokeSalesChannel="revokeSalesChannel"
+        v-else
+      />
     </v-card>
     <addPlatformDialog
       v-if="addPlatformDialog"
@@ -240,22 +235,34 @@ export default {
 </script>
 <style lang="scss">
 .integrations-container {
-  width: 85%;
-  margin: 50px auto;
+  margin: 40px 64px;
+
+  &__card {
+    margin: 32px;
+  }
 }
-.integrations-card {
-  padding: 32px !important;
-  border-color: #e2e7ed;
-}
-.integration-card-inner {
-  margin-top: 60px !important;
-}
+
 .integration-content {
   display: flex;
   justify-content: space-between;
   text-align: center;
   margin: 16px 0;
   align-items: baseline;
+
+  &__heading {
+    font-family: "Nunito Sans";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: -0.005em;
+    color: #303133;
+    margin: 32px;
+  }
+
+  &__card {
+    margin: 23px 0;
+  }
 
   &__no-integration {
     display: block !important;
@@ -333,16 +340,7 @@ export default {
 .v-card-actions {
   display: block !important;
 }
-.integration-text {
-  font-family: "Nunito Sans";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 24px;
-  letter-spacing: -0.005em;
-  color: #606266;
-  margin-bottom: 13px;
-}
+
 .integration-button-dark {
   background-color: #324ba8;
   color: #ffffff !important;

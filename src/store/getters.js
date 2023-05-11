@@ -157,4 +157,5 @@ export default {
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
   getBanner: (state) => state.banner,
+  getPaymentRedirectURL: (state) => state.paymentRedirectURL,
 };

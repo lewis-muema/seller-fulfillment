@@ -458,4 +458,7 @@ export default {
   setBanner(state, val) {
     state.banner = val;
   },
+  setPaymentRedirectURL(state, val) {
+    state.paymentRedirectURL = val;
+  },
 };

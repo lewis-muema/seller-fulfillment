@@ -2999,7 +2999,8 @@ export default {
       return (
         this.getCookie("new_features_virtual_tour") &&
         JSON.parse(this.getCookie("new_features_virtual_tour")) &&
-        packageJson.version === "0.1.0"
+        packageJson.version === "0.1.0" &&
+        this.$route.path === "/"
       );
     },
   },
@@ -3044,6 +3045,8 @@ export default {
       "setConsignmentReturn",
       "setDestinationIndex",
       "setDirectOrderDetails",
+      "setOrderTimelines",
+      "setDirectDeliveriesTrackingData",
     ]),
     validateFields() {
       this.v$.$validate();
@@ -3748,6 +3751,7 @@ export default {
           this.buttonLoader = false;
           setTimeout(() => {
             this.fetchOrder();
+            this.fetchSummary();
           }, 1000);
         } else {
           ElNotification({
@@ -3803,6 +3807,7 @@ export default {
           this.buttonLoader = false;
           setTimeout(() => {
             this.fetchOrder(type);
+            this.fetchSummary();
           }, 1000);
         } else {
           ElNotification({
@@ -3825,6 +3830,10 @@ export default {
         type: "orderTimeline",
         value: "loading-text",
       });
+      this.setLoader({
+        type: "onDemandOrders",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
@@ -3839,12 +3848,30 @@ export default {
           type: "orderTracking",
           value: "",
         });
+        this.setLoader({
+          type: "orderTimeline",
+          value: "",
+        });
+        this.setLoader({
+          type: "onDemandOrders",
+          value: "",
+        });
         if (response.status === 200) {
           if (type === "direct") {
             this.setDirectDeliveriesTrackingData(response?.data?.data);
           } else {
             this.setOrderTrackingData(response?.data?.data);
           }
+        }
+      });
+    },
+    fetchSummary() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setOrderTimelines(response.data.data.events);
         }
       });
     },

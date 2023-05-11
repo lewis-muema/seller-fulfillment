@@ -55,6 +55,7 @@ export default {
       "getAchievements",
       "getSendyPhoneProps",
       "getActivePayment",
+      "getParent",
     ]),
     onboardingStatus() {
       if (
@@ -67,7 +68,7 @@ export default {
     },
     activeCycle() {
       const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
+      return Object.keys(cycle).length > 0 && cycle?.paid_status !== "PAID";
     },
   },
   created() {
@@ -91,6 +92,8 @@ export default {
       "setDefaultCountryName",
       "setDefaultLanguage",
       "setOverlayStatus",
+      "setDirectDeliveriesTrackingData",
+      "setOrderTimelines",
     ]),
     registerFCM() {
       window.addEventListener("register-fcm", () => {
@@ -238,6 +241,8 @@ export default {
         });
         onMessage(messaging, (payload) => {
           this.listNotifications(payload);
+          this.fetchTrackingOrder();
+          this.fetchTrackingSummary();
         });
       } catch (error) {
         // ...
@@ -252,6 +257,42 @@ export default {
           this.setNotifications(response.data.data.notifications);
         }
       });
+    },
+    fetchTrackingOrder() {
+      if (
+        this.$route.path.includes("track-direct-deliveries") ||
+        this.$route.path.includes("tracking")
+      ) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+            this.$route.path.includes("track-direct-deliveries")
+              ? "point-to-point"
+              : this.getParent === "sendy"
+              ? "consignments"
+              : "deliveries"
+          }/${this.$route.params.order_id}`,
+        }).then((response) => {
+          if (response.status === 200) {
+            this.setDirectDeliveriesTrackingData(response?.data?.data);
+          }
+        });
+      }
+    },
+    fetchTrackingSummary() {
+      if (
+        this.$route.path.includes("track-direct-deliveries") ||
+        this.$route.path.includes("tracking")
+      ) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+        }).then((response) => {
+          if (response.status === 200) {
+            this.setOrderTimelines(response.data.data.events);
+          }
+        });
+      }
     },
     getOnboardingStatus() {
       this.requestAxiosGet({

@@ -37,7 +37,7 @@
           <tracking-map />
         </div>
       </div>
-      <div class="col-4 right-tracking-column mb-5">
+      <div class="col-4 right-tracking-column">
         <locations
           :dropInstructions="this.dropOffInstructions"
           :pickupLocation="this.pickUpLocation"
@@ -240,6 +240,7 @@ export default {
 .right-tracking-column {
   height: max-content !important;
   overflow-y: scroll;
+  height: calc(100vh - 155px) !important;
 }
 .on-demand-make-payment {
   margin-left: 65px;

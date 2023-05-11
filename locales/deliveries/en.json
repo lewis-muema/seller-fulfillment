@@ -264,5 +264,6 @@
   "weAreTringToFindYouARider": "We are finding a rider for you...",
   "awaitingPayment": "Awaiting Payment",
   "yourDriverIsOnTheWy": "Your driver is on the way!",
-  "ourDriversSeemToBeQuiteBusyAtTheMoment": "Our drivers seem to be quite busy at the moment. We shall notify you as soon as we find a driver for your order."
+  "ourDriversSeemToBeQuiteBusyAtTheMoment": "Our drivers seem to be quite busy at the moment. We shall notify you as soon as we find a driver for your order.",
+  "trackHiredVehicles": "Track hired vehicles"
 }

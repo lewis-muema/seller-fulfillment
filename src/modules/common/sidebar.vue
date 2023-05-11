@@ -143,14 +143,14 @@
             class="desktop-sidebar-sub-menu"
             :active="
               [
-                'common.onDemandDeliveries',
-                'deliveries.trackOnDemandDeliveries',
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
               ].includes(route)
             "
             :append-icon="
               [
-                'common.onDemandDeliveries',
-                'deliveries.trackOnDemandDeliveries',
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
               ].includes(route)
                 ? 'mdi-circle-small'
                 : ''

@@ -27,6 +27,10 @@
         "
         class="partner-search-message"
       >
+        <i
+          class="mdi mdi-close partner-search-pair-close"
+          @click="clearItems()"
+        ></i>
         {{ $t(pairingError) }}
       </div>
       <div
@@ -37,12 +41,18 @@
         "
         class="partner-search-pair-message"
       >
+        <i
+          class="mdi mdi-close partner-search-pair-close"
+          @click="clearItems()"
+        ></i>
         <div>
           {{ $t("deliveries.yourOrderWillBePairedWith") }}
         </div>
         <div>
           <div>{{ getDirectOrderPartner?.agent_name }}</div>
-          <div>{{ getDirectOrderPartner?.agent_phone_number }}</div>
+          <div>
+            {{ obfuscateNumber(getDirectOrderPartner?.agent_phone_number) }}
+          </div>
           <div>{{ getDirectOrderPartner?.vehicle_identifier }}</div>
         </div>
       </div>
@@ -107,6 +117,9 @@ export default {
       }).then((response) => {
         this.searchResults(response.data.response.docs);
       });
+    },
+    obfuscateNumber(number) {
+      return `${number.slice(0, 7)}XXXXXX`;
     },
     searchPartnerTrigger(val) {
       this.loadingStatus = true;
@@ -180,7 +193,7 @@ export default {
 .partner-search-message {
   margin-top: 30px;
   width: 100%;
-  background: #ddf0ff;
+  background: #ffe4cc;
   padding: 20px;
   border-radius: 5px;
   font-size: 14px;
@@ -189,7 +202,7 @@ export default {
   margin-top: 30px;
   padding: 15px;
   font-size: 14px;
-  background: #ffe4cc;
+  background: #ddf0ff;
   border-radius: 5px;
 }
 .partner-search-pair-loading {
@@ -206,5 +219,11 @@ export default {
   margin-top: -30px;
   zoom: 65%;
   margin-left: 15px;
+}
+.partner-search-pair-close {
+  position: absolute;
+  right: 15px;
+  margin-top: -5px;
+  cursor: pointer;
 }
 </style>

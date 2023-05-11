@@ -16,7 +16,7 @@
             <v-expansion-panel-title>
               <div class="summary-items-container">
                 <div class="summary-items">
-                  <div>
+                  <div class="summary-items-left">
                     <p :class="getLoader.cycleLineItems">
                       {{ summary.line_item_title }}
                     </p>
@@ -280,5 +280,8 @@ export default {
   text-align: left;
   margin: 15px;
   width: 100%;
+}
+.summary-items-left {
+  width: 80%;
 }
 </style>

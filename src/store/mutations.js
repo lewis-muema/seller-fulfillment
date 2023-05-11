@@ -455,4 +455,7 @@ export default {
   setRiders(state, val) {
     state.riders = val;
   },
+  setBanner(state, val) {
+    state.banner = val;
+  },
 };

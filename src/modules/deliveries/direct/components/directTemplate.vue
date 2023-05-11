@@ -8,7 +8,7 @@
           @click="this.$router.go(-1)"
         ></i>
         <div class="direct-location-inputs-top-left-title">
-          {{ $t("deliveries.deliverOnDemand") }}
+          {{ $t("dashboard.hireAVehicle") }}
         </div>
         <div class="direct-location-inputs-top-left-description">
           {{ $t("deliveries.getAVehicle") }}
@@ -22,7 +22,7 @@
         />
       </div>
     </div>
-    <div class="direct-location-inputs-top-banner" v-if="banner">
+    <div class="direct-location-inputs-top-banner" v-if="getBanner !== false">
       <i
         class="mdi mdi-information-outline direct-location-inputs-top-banner-info"
       ></i>
@@ -31,18 +31,47 @@
       </div>
       <i
         class="mdi mdi-close direct-location-inputs-top-banner-close"
-        @click="banner = false"
+        @click="closeBanner()"
       ></i>
     </div>
   </div>
 </template>
 
 <script>
+import cookieMixin from "@/mixins/cookie_mixin";
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
+  mixins: [cookieMixin],
   data() {
     return {
       banner: true,
     };
+  },
+  computed: {
+    ...mapGetters(["getBanner"]),
+    bannerStatus() {
+      return (
+        this.getCookie("direct_fulfillment_banner") &&
+        JSON.parse(this.getCookie("direct_fulfillment_banner"))
+      );
+    },
+  },
+  mounted() {
+    this.setBanner(
+      this.getCookie("direct_fulfillment_banner") &&
+        JSON.parse(this.getCookie("direct_fulfillment_banner"))
+    );
+  },
+  methods: {
+    ...mapMutations(["setBanner"]),
+    closeBanner() {
+      this.setCookie("direct_fulfillment_banner", false, 365);
+      this.setBanner(
+        this.getCookie("direct_fulfillment_banner") &&
+          JSON.parse(this.getCookie("direct_fulfillment_banner"))
+      );
+    },
   },
 };
 </script>

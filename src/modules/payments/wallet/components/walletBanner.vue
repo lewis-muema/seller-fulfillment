@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getBillingCycles[0]?.active" class="wallet-banner">
+  <div v-if="currentCycle" class="wallet-banner">
     <span :class="getLoader.billingCycle">
       <i
         class="mdi mdi-alert-circle-outline wallet-alert-icon"

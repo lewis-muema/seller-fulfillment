@@ -101,7 +101,7 @@ export default {
     ]),
   },
   mounted() {
-    this.setComponent("deliveries.trackOnDemandDeliveries");
+    this.setComponent("deliveries.trackHiredVehicles");
     this.fetchOrder();
     this.cancellationReasons();
     this.setActivePayment({});

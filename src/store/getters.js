@@ -156,4 +156,5 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
+  getBanner: (state) => state.banner,
 };

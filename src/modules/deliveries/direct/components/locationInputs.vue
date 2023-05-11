@@ -1,5 +1,12 @@
 <template>
-  <div class="direct-inputs-container">
+  <div
+    class="direct-inputs-cont"
+    :class="
+      getBanner !== false
+        ? 'direct-inputs-container'
+        : 'direct-inputs-container-long'
+    "
+  >
     <div class="location-divider" />
     <div class="d-flex">
       <div class="direct-inputs-prefix-icon pickup-prefix-icon" />
@@ -138,6 +145,7 @@ export default {
       "getLocationSuggestions",
       "getStorageUserDetails",
       "getDirectOrderStep",
+      "getBanner",
     ]),
     pricingInstructions() {
       const instructions = [];
@@ -455,5 +463,11 @@ export default {
   background: #90939980;
   top: 27px;
   left: 8px;
+}
+.direct-inputs-container-long {
+  margin: 25px;
+  position: relative;
+  height: calc(100vh - 265px);
+  overflow-y: scroll;
 }
 </style>

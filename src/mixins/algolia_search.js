@@ -29,7 +29,7 @@ const algoliaInit = {
           this.algoliaResults(objects);
         })
         .catch((error) => {
-          console.log("error", error);
+          console.log(error);
         });
     },
   },

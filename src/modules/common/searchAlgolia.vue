@@ -105,7 +105,7 @@
         </div>
       </div>
     </div>
-    <div class="search-suggestions-overlay" v-else>
+    <div class="search-suggestions-overlay" v-if="type === 'delivery'">
       <div class="search-product" v-for="(item, i) in searchItems" :key="i">
         <div @click="$router.push(`/deliveries/tracking/${item.order_id}`)">
           <div class="search-item-flex">

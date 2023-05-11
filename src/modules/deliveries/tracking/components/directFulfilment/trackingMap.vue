@@ -123,7 +123,7 @@ export default {
 </script>
 <style>
 .tracking-map-container {
-  height: 70vh !important;
+  height: 600px !important;
   position: relative;
 }
 .tracking-map-rider-label {

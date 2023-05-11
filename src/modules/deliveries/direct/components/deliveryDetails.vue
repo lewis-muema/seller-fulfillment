@@ -223,7 +223,7 @@ export default {
         this.stages[stage - 2].status = "done";
       }
       this.activeStage = stage;
-      document.querySelector(".direct-inputs-container").scrollTop = 0;
+      document.querySelector(".direct-inputs-cont").scrollTop = 0;
     },
     pickupValidationError() {
       ElNotification({
@@ -359,8 +359,8 @@ export default {
           }
         } else {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.failedToCreateOrder"),
+            title: this.$t("deliveries.failedToCreateOrder"),
+            message: response?.response?.data?.errors[0]?.message,
             type: "error",
           });
         }

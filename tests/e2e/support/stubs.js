@@ -40,6 +40,16 @@ import transactions from "../fixtures/transactions.json";
 import userDetails from "../fixtures/userDetails.json";
 import userAlt from "../fixtures/userAlt.json";
 import lineItems from "../fixtures/lineItems.json";
+import productsList from "../fixtures/productsList.json";
+import settings from "../fixtures/settings.json";
+import algoliaProduct from "../fixtures/algoliaProduct.json";
+import outOfStockProducts from "../fixtures/outOfStockProducts.json";
+import singleProduct from "../fixtures/singleProduct.json";
+import productListStatistics from "../fixtures/productListStatistics.json";
+import updateProduct from "../fixtures/updateProduct.json";
+import archiveProduct from "../fixtures/archiveProduct.json";
+import archivedProduct from "../fixtures/archivedProduct.json";
+import unarchiveProduct from "../fixtures/unarchiveProduct.json";
 
 import "cypress-localstorage-commands";
 Cypress.Commands.add("authStubs", () => {
@@ -251,6 +261,20 @@ Cypress.Commands.add("dashboardStubs", () => {
       body: wallets,
     }
   ).as("wallet");
+  cy.intercept(
+    "POST",
+    `https://session-replay.browser-intake-datadoghq.eu/api/v2/replay?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogReplay");
+  cy.intercept(
+    "POST",
+    `https://rum.browser-intake-datadoghq.eu/api/v2/rum?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*&batch_time=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogRumPost");
   Cypress.Commands.add("setTokens", () => {
     cy.setLocalStorage("accessToken", JSON.stringify(loginToken.access_token));
   });
@@ -365,6 +389,95 @@ Cypress.Commands.add("deliveriesStubs", () => {
     }
   ).as("trackingDeliveriesSummary");
 });
+Cypress.Commands.add("productStubs", () => {
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products?max=5&offset=0`,
+    {
+      statusCode: 200,
+      body: productsList,
+    }
+  ).as("productsList");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/settings`, {
+    statusCode: 200,
+    body: settings,
+  }).as("settings");
+  cy.intercept(
+    "POST",
+    `https://*/1/indexes/staging_fulfillment/query?x-algolia-agent=*`,
+    {
+      statusCode: 200,
+      body: algoliaProduct,
+    }
+  ).as("algoliaProduct");
+  cy.intercept(
+    "PUT",
+    `https://*/1/indexes/staging_fulfillment/settings?x-algolia-agent=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("algoliaInitiate");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products/outofstock?max=5&offset=0`,
+    {
+      statusCode: 200,
+      body: outOfStockProducts,
+    }
+  ).as("outOfStockProducts");
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: singleProduct,
+  }).as("singleProduct");
+  cy.intercept(
+    "GET",
+    `${constants.FULFILMENT_SERVER}seller/*/products/statistics`,
+    {
+      statusCode: 200,
+      body: productListStatistics,
+    }
+  ).as("productListStatistics");
+  cy.intercept("PUT", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: updateProduct,
+  }).as("updateProduct");
+  cy.intercept(
+    "PUT",
+    `${constants.FULFILMENT_SERVER}seller/*/products/*/unarchive`,
+    {
+      statusCode: 200,
+      body: unarchiveProduct,
+    }
+  ).as("unarchiveProduct");
+  cy.intercept(
+    "POST",
+    `https://session-replay.browser-intake-datadoghq.eu/api/v2/replay?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogReplay");
+  cy.intercept(
+    "POST",
+    `https://rum.browser-intake-datadoghq.eu/api/v2/rum?ddsource=*&ddtags=*&dd-api-key=*&dd-evp-origin-version=*&dd-evp-origin=*&dd-request-id=*&batch_time=*`,
+    {
+      statusCode: 200,
+    }
+  ).as("datadogRumPost");
+});
+Cypress.Commands.add("archiveStubs", () => {
+  cy.intercept("GET", `${constants.FULFILMENT_SERVER}seller/*/products/*`, {
+    statusCode: 200,
+    body: archivedProduct,
+  }).as("archivedProduct");
+  cy.intercept(
+    "PUT",
+    `${constants.FULFILMENT_SERVER}seller/*/products/*/archive`,
+    {
+      statusCode: 200,
+      body: archiveProduct,
+    }
+  ).as("archiveProduct");
+});
 Cypress.Commands.add("setToken", () => {
   cy.setLocalStorage("userDetails", JSON.stringify(userDetails.userDetails));
   cy.setLocalStorage("language", userDetails.language);
@@ -378,4 +491,9 @@ Cypress.Commands.add("setToken", () => {
     "local_order_uuid",
     JSON.stringify(userDetails.local_order_uuid)
   );
+  const d = new Date();
+  d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toUTCString();
+  document.cookie =
+    "new_features_virtual_tour" + "=" + false + ";" + expires + ";path=/";
 });

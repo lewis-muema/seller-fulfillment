@@ -108,6 +108,7 @@ export default {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.setParent("sendy");
       this.rescheduleStatus("sendy");
+      this.setComponent("deliveries.trackDeliveryToSendy");
     }
     if (
       this.$router.options.history.state.back === "/deliveries/customer" ||
@@ -116,6 +117,7 @@ export default {
     ) {
       this.setParent("customer");
       this.rescheduleStatus("customer");
+      this.setComponent("deliveries.trackDeliveryToCustomer");
     }
     this.fetchOrder();
     this.cancellationReasons();
@@ -184,7 +186,11 @@ export default {
     cancellationReasons() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/cancellation-reasons`,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/cancellation-reasons?order_type=${
+          this.getParent === "sendy" ? "PICKUP" : "DELIVERY"
+        }`,
       }).then((response) => {
         if (response.status === 200) {
           this.setCancellationReasons(
@@ -271,7 +277,7 @@ export default {
 .tracking-order-title {
   font-weight: 500;
   font-size: 16px;
-  width: calc(89% + 70px);
+  width: calc(91% + 70px);
 }
 .tracking-order-time-est {
   font-size: 14px;

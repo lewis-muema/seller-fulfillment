@@ -1,5 +1,12 @@
 <template>
-  <div class="direct-inputs-container">
+  <div
+    class="direct-inputs-cont"
+    :class="
+      getBanner !== false
+        ? 'direct-inputs-container'
+        : 'direct-inputs-container-long'
+    "
+  >
     <div class="location-divider" />
     <div class="d-flex">
       <div class="direct-inputs-prefix-icon pickup-prefix-icon" />
@@ -11,6 +18,7 @@
         :placeholder="$t('deliveries.enterPickupLocation')"
         @place_changed="setPickUp"
         @click="showSuggestions('pick-up', 0)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
     </div>
@@ -24,6 +32,7 @@
         :placeholder="$t('deliveries.enterDestination')"
         @place_changed="setDestination"
         @click="showSuggestions('destination', 1)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
     </div>
@@ -37,6 +46,7 @@
         :placeholder="$t('deliveries.enterDestination')"
         @place_changed="setExtraDestination($event, x)"
         @click="showSuggestions('destination', x + 2)"
+        @blur="closeSuggestions()"
       >
       </GMapAutocomplete>
       <i
@@ -135,6 +145,7 @@ export default {
       "getLocationSuggestions",
       "getStorageUserDetails",
       "getDirectOrderStep",
+      "getBanner",
     ]),
     pricingInstructions() {
       const instructions = [];
@@ -358,8 +369,12 @@ export default {
       };
       this.resetSuggestion();
     },
+    closeSuggestions() {
+      setTimeout(() => {
+        this.resetSuggestion();
+      }, 500);
+    },
     resetSuggestion() {
-      this.locationType = "";
       this.locationIndex = 0;
       this.suggestionsActive = false;
     },
@@ -381,7 +396,7 @@ export default {
 .direct-inputs-container {
   margin: 25px;
   position: relative;
-  height: 60vh;
+  height: calc(100vh - 365px);
   overflow-y: scroll;
 }
 .direct-inputs-prefix-icon {
@@ -448,5 +463,11 @@ export default {
   background: #90939980;
   top: 27px;
   left: 8px;
+}
+.direct-inputs-container-long {
+  margin: 25px;
+  position: relative;
+  height: calc(100vh - 265px);
+  overflow-y: scroll;
 }
 </style>

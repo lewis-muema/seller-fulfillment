@@ -2,7 +2,7 @@
   <div class="tracking-order-no">
     <i
       class="mdi mdi-arrow-left tracking-arrow-back"
-      @click="$router.back()"
+      @click="redirectToOrderList()"
     ></i>
     <div class="tracking-order-title mb-0">
       <span :class="getLoader.orderTracking" class="tracking-pickup-order-id">
@@ -105,7 +105,15 @@ import moment from "moment/moment";
 export default {
   props: ["linkedPickup"],
   computed: {
-    ...mapGetters(["getLoader", "getOrderTrackingData", "getDeliveryActions"]),
+    ...mapGetters([
+      "getLoader",
+      "getOrderTrackingData",
+      "getDeliveryActions",
+      "getComponent",
+    ]),
+    route() {
+      return this.getComponent;
+    },
     deliveryActions() {
       const actions = [];
       this.getDeliveryActions.forEach((row) => {
@@ -148,6 +156,13 @@ export default {
     },
     formatLongDate(date) {
       return moment(date).format("ddd, Do MMM");
+    },
+    redirectToOrderList() {
+      if (this.route === "deliveries.trackDeliveryToCustomer") {
+        this.$router.push("/deliveries/customer");
+      } else if (this.route === "deliveries.trackDeliveryToSendy") {
+        this.$router.push("/deliveries/sendy");
+      }
     },
   },
 };

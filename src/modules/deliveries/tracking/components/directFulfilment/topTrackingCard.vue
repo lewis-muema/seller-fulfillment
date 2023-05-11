@@ -1,15 +1,21 @@
 <template>
-  <div class="tracking-order-no">
+  <div class="tracking-order-no mb-0">
     <i
       class="mdi mdi-arrow-left tracking-arrow-back"
-      @click="$router.back()"
+      @click="$router.push('/deliveries/direct-deliveries/')"
     ></i>
     <div class="tracking-order-title mb-0">
       <span :class="getLoader.onDemandOrders">
-        {{ $t("deliveries.orderNo") }}
-        {{ getDirectDeliveriesTrackingData.order?.order_id }}
+        {{ $t(trackingStatus) }}
       </span>
-      <div class="tracking-options-container">
+      <div
+        class="tracking-options-container"
+        v-if="
+          !['ORDER_CANCELED', 'ORDER_COMPLETED'].includes(
+            getDirectDeliveriesTrackingData.order?.order_status
+          )
+        "
+      >
         <span
           v-for="(action, i) in deliveryActions"
           :key="i"
@@ -26,7 +32,16 @@
         >
       </div>
     </div>
-    <p class="tracking-order-time-est">
+    <div class="tracking-order-title mb-0">
+      <span
+        class="on-demand-tracking-order-number"
+        :class="getLoader.onDemandOrders"
+      >
+        {{ $t("deliveries.orderNo") }}
+        {{ getDirectDeliveriesTrackingData.order?.order_id }}
+      </span>
+    </div>
+    <p class="tracking-order-time-est d-none">
       <span
         :class="getLoader.orderTracking"
         v-if="
@@ -58,11 +73,33 @@ export default {
     ...mapGetters([
       "getLoader",
       "getOrderTrackingData",
-      "getDeliveryActions",
+      "getOnDemandDeliveryActions",
       "getDirectDeliveriesTrackingData",
     ]),
     deliveryActions() {
-      return this.getDeliveryActions;
+      return this.getOnDemandDeliveryActions;
+    },
+    trackingStatus() {
+      if (
+        this.getDirectDeliveriesTrackingData.order?.error_status ===
+        "WAITING_FOR_PRE_PAYMENT"
+      ) {
+        return "deliveries.awaitingPayment";
+      } else if (
+        this.getDirectDeliveriesTrackingData.order?.error_status ===
+          "FAILED_TRANSPORTER_ASSIGNMENT" ||
+        ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
+          this.getDirectDeliveriesTrackingData.order?.order_status
+        )
+      ) {
+        return "deliveries.weAreTringToFindYouARider";
+      } else if (
+        this.getDirectDeliveriesTrackingData.order?.order_status ===
+        "ORDER_IN_TRANSIT"
+      ) {
+        return "deliveries.yourDriverIsOnTheWy";
+      }
+      return "";
     },
   },
   methods: {
@@ -82,4 +119,10 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.on-demand-tracking-order-number {
+  font-size: 14px;
+  font-weight: 400;
+  color: #303133;
+}
+</style>

@@ -9,6 +9,7 @@
   "searchDelivery": "Search Deliveries",
   "searchProducts": "Search Products",
   "products": "Products",
+  "createdDate": "Created Date",
   "pickupInfo": "Pickup Information",
   "dropOffInstructions": "Drop off instructions",
   "edit": "Edit",
@@ -195,7 +196,7 @@
   "onDemandDelivery": "On demand delivery",
   "deliverOnDemand": "Deliver on demand",
   "getAVehicle": "Get a vehicle to deliver your items whenever, wherever",
-  "usingThisOption": "Using this option, you can request a dedicated vehicle to deliver your package. Items will be picked from you and delivered immediately. 2hrs",
+  "usingThisOption": "Using this option, you can request a dedicated vehicle to deliver your package. Items will be picked from you and delivered immediately",
   "enterPickupLocation": "Enter pickup location",
   "enterDestination": "Enter destination",
   "addDestination": "Add destination",
@@ -254,5 +255,15 @@
   "yourOrderWillBePairedWith": "Your order will be paired with:",
   "confirmSubmitOrder": "Confirm & Submit Order",
   "driver": "Driver",
-  "pleaseSelectACancelReason": "Please select a cancellation reason"
+  "pleaseSelectACancelReason": "Please select a cancellation reason",
+  "trackOnDemandDeliveries": "Track on demand deliveries",
+  "weAreSearchingForTheDriverDetails": "We are searching for the driver details",
+  "thisDriverCantBeAssignedToYourOrder": "This driver can't be assigned to your order because the vehicle type does not match your order",
+  "orderDetails": "Order details",
+  "deliveryFee": "Delivery Fee",
+  "weAreTringToFindYouARider": "We are finding a rider for you...",
+  "awaitingPayment": "Awaiting Payment",
+  "yourDriverIsOnTheWy": "Your driver is on the way!",
+  "ourDriversSeemToBeQuiteBusyAtTheMoment": "Our drivers seem to be quite busy at the moment. We shall notify you as soon as we find a driver for your order.",
+  "trackHiredVehicles": "Track hired vehicles"
 }

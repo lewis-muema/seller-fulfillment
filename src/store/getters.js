@@ -32,6 +32,7 @@ export default {
   getDefaultLanguage: (state) => state.defaultLanguage,
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,
+  getOnDemandDeliveryActions: (state) => state.onDemandDeliveryActions,
   getActivityLog: (state) => state.activityLog,
   getActivityLogs: (state) => state.activityLogs,
   getProductsToSubmit: (state) => state.productsToSubmit,
@@ -155,4 +156,5 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
+  getBanner: (state) => state.banner,
 };

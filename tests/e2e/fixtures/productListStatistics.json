@@ -1,0 +1,11 @@
+{
+  "message": "product.list.success",
+  "data": {
+    "grouped_by_stock_level_count": {
+      "available_products": 9,
+      "low_stock_products": 0,
+      "out_of_stock_products": 75
+    }
+  },
+  "errors": []
+}

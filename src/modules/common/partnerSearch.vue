@@ -16,31 +16,52 @@
         v-model="getDirectOrderDetails.searchParam"
         @click:clear="clearItems()"
         @update:modelValue="
-          searchParterPhonePlate(getDirectOrderDetails.searchParam)
+          searchPartnerTrigger(getDirectOrderDetails.searchParam)
         "
       ></v-text-field>
       <div
         v-if="
-          !getDirectOrderPartner?.agent_id && getDirectOrderDetails.searchParam
+          !getDirectOrderPartner?.agent_id &&
+          getDirectOrderDetails.searchParam &&
+          !loadingStatus
         "
         class="partner-search-message"
       >
-        {{ $t("deliveries.vehicleIsNotRegistered") }}
+        <i
+          class="mdi mdi-close partner-search-pair-close"
+          @click="clearItems()"
+        ></i>
+        {{ $t(pairingError) }}
       </div>
       <div
         v-if="
-          getDirectOrderPartner?.agent_id && getDirectOrderDetails.searchParam
+          getDirectOrderPartner?.agent_id &&
+          getDirectOrderDetails.searchParam &&
+          !loadingStatus
         "
         class="partner-search-pair-message"
       >
+        <i
+          class="mdi mdi-close partner-search-pair-close"
+          @click="clearItems()"
+        ></i>
         <div>
           {{ $t("deliveries.yourOrderWillBePairedWith") }}
         </div>
         <div>
           <div>{{ getDirectOrderPartner?.agent_name }}</div>
-          <div>{{ getDirectOrderPartner?.agent_phone_number }}</div>
+          <div>
+            {{ obfuscateNumber(getDirectOrderPartner?.agent_phone_number) }}
+          </div>
           <div>{{ getDirectOrderPartner?.vehicle_identifier }}</div>
         </div>
+      </div>
+      <div
+        class="partner-search-pair-loading"
+        v-if="loadingStatus && getDirectOrderDetails.searchParam"
+      >
+        {{ $t("deliveries.weAreSearchingForTheDriverDetails") }}
+        <div v-loading="true" class="partner-search-pair-loading-icon"></div>
       </div>
     </template>
   </v-menu>
@@ -60,6 +81,8 @@ export default {
     searchItems: [],
     range: "",
     searchToggle: false,
+    loadingStatus: false,
+    pairingError: "deliveries.vehicleIsNotRegistered",
   }),
   computed: {
     ...mapGetters([
@@ -95,14 +118,32 @@ export default {
         this.searchResults(response.data.response.docs);
       });
     },
+    obfuscateNumber(number) {
+      return `${number.slice(0, 7)}XXXXXX`;
+    },
+    searchPartnerTrigger(val) {
+      this.loadingStatus = true;
+      this.searchParterPhonePlate(val);
+    },
     searchParterPhonePlate: _.debounce(function (val) {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/shipping-agent/search?q=${val}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/shipping-agent/search?q=${val}&vehicle_type=${this.getSelectedVehicleType?.vehicle_type}`,
       }).then((response) => {
+        this.loadingStatus = false;
         if (response.status === 200) {
-          this.setDirectOrderPartner(response.data.data.shipping_agent);
+          if (
+            this.getSelectedVehicleType?.vehicle_type ===
+            response.data.data.shipping_agent.vehicle_type
+          ) {
+            this.setDirectOrderPartner(response.data.data.shipping_agent);
+          } else {
+            this.pairingError =
+              "deliveries.thisDriverCantBeAssignedToYourOrder";
+            this.setDirectOrderPartner({});
+          }
         } else {
+          this.pairingError = "deliveries.vehicleIsNotRegistered";
           this.setDirectOrderPartner({});
         }
       });
@@ -152,7 +193,7 @@ export default {
 .partner-search-message {
   margin-top: 30px;
   width: 100%;
-  background: #ddf0ff;
+  background: #ffe4cc;
   padding: 20px;
   border-radius: 5px;
   font-size: 14px;
@@ -161,7 +202,28 @@ export default {
   margin-top: 30px;
   padding: 15px;
   font-size: 14px;
-  background: #ffe4cc;
+  background: #ddf0ff;
   border-radius: 5px;
+}
+.partner-search-pair-loading {
+  height: 55px;
+  border-radius: 5px;
+  margin-top: 30px;
+  background: #ddf0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.partner-search-pair-loading-icon {
+  margin-top: -30px;
+  zoom: 65%;
+  margin-left: 15px;
+}
+.partner-search-pair-close {
+  position: absolute;
+  right: 15px;
+  margin-top: -5px;
+  cursor: pointer;
 }
 </style>

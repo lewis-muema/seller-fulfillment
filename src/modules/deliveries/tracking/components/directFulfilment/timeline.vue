@@ -6,7 +6,7 @@
     <div class="mt-3">
       <el-timeline class="point-point-timeline-override">
         <el-timeline-item
-          class="el-timeline-item-desktop"
+          class=""
           v-for="(activity, index) in getOrderTimelines"
           :key="index"
           :icon="
@@ -32,7 +32,7 @@
             "
           >
             <span :class="getLoader.onDemandOrders">
-              {{ formatStatus(activity.translated_event_code, activity) }}
+              {{ activity.translated_event_code }}
             </span>
           </span>
           <div

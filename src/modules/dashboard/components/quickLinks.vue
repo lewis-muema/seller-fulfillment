@@ -48,7 +48,7 @@ export default {
         },
         {
           icon: "on-demand.png",
-          name: "dashboard.deliverOnDemand",
+          name: "dashboard.hireAVehicle",
           path: "/direct/create-delivery",
           new: true,
         },

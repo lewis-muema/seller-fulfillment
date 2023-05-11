@@ -138,12 +138,20 @@
               !getAccessDenied.includes('/deliveries/direct-deliveries') &&
               directFulfillmentFlag
             "
-            :title="$t('common.onDemand')"
+            :title="$t('common.hiredVehicles')"
             @click="$router.push('/deliveries/direct-deliveries/')"
             class="desktop-sidebar-sub-menu"
-            :active="['common.onDemandDeliveries'].includes(route)"
+            :active="
+              [
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
+              ].includes(route)
+            "
             :append-icon="
-              ['common.onDemandDeliveries'].includes(route)
+              [
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
+              ].includes(route)
                 ? 'mdi-circle-small'
                 : ''
             "
@@ -286,12 +294,19 @@
           ></v-list-item>
         </v-list-group>
         <v-list-item
+          v-if="metabaseAnalyticsFlag"
           prepend-icon="mdi-finance"
           :title="$t('common.analytics')"
           :value="'common.analytics'"
           class="desktop-sidebar-icons"
           @click="$router.push('/analytics')"
           :active="['common.analytics'].includes(route)"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi mdi-forum"
+          :title="$t('common.shareFeedback')"
+          class="desktop-sidebar-icons"
+          @click="redirectToTally"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -314,8 +329,13 @@ export default {
     },
     ...mapGetters(["getComponent", "getAccessDenied", "getBusinessDetails"]),
     directFulfillmentFlag() {
-      return this.getBusinessDetails.settings
-        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.direct_fulfilment_enabled
+        : false;
+    },
+    metabaseAnalyticsFlag() {
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.metabase_analytics_enabled
         : false;
     },
   },
@@ -354,6 +374,10 @@ export default {
       this.expand(props, category);
       this.collapse(props, category);
       return props;
+    },
+    redirectToTally() {
+      const formId = "nr5RR2";
+      window.Tally.openPopup(formId);
     },
   },
 };
@@ -395,5 +419,8 @@ export default {
 .v-navigation-drawer--start {
   border-inline-end-width: inherit !important;
   box-shadow: 0.5px 0px 0px rgb(0 0 0 / 15%) !important;
+}
+.drawer-footer {
+  margin-top: 500px;
 }
 </style>

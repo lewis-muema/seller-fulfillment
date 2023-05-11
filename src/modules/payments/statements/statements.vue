@@ -172,7 +172,7 @@ export default {
 .statements-top-bar-container {
   display: grid;
   grid-template-columns: 70% 15% 15%;
-  margin: 50px 30px;
+  margin: 10px 30px;
 }
 .statements-top-bar-description {
   font-size: 16px;

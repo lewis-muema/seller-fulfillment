@@ -94,9 +94,9 @@
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 import useProducts from "@/modules/integrations/composibles/useProducts";
-// import { onMounted } from "vue"
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { ElNotification } from "element-plus";
 
 export default {
   name: "step6",
@@ -143,8 +143,11 @@ export default {
         store.dispatch("setFinishSyncPayload", payload);
         router.push({ name: "SetupStep7" });
       } catch (error) {
-        //to-do: hanlde error better
-        console.log("Could not create payload to sync items");
+        ElNotification({
+          title: this.$t("merchant.unexpected_error"),
+          message: this.$t("merchant.could_not_create_payload_to_sync_items"),
+          type: "error",
+        });
       }
     };
 

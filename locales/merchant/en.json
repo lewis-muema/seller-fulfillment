@@ -1,4 +1,5 @@
 {
+  "could_not_create_payload_to_sync_items": "Could not create payload to sync items",
   "we_could_not_fully_connect_to_your_store": "We could not fully connect to your store",
   "we": "We",
   "require_you_to_enable_some_store_permissions_msg": "require you to enable some store permissions on your store admin dashboard so that we can send and receive product and order data",

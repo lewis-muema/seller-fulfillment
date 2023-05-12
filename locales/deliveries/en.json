@@ -204,7 +204,7 @@
   "continueToVehicleType": "Continue to Vehicle Type",
   "pleaseEnterAPickupAndDestination": "Please enter a pick up location and destination",
   "couldNotFetchPricingTiers": "Could not fetch pricing tiers. Please try again",
-  "whatIsTheSize": "What is the size of the load to be delivered?",
+  "whatIsTheSize": "Select an appropriate vehicle based on the size of all your packages",
   "carriesUpTo": "Carries up to {Weight}",
   "continueToPickupInformation": "Continue to Pickup Information",
   "pickup": "Pickup",
@@ -266,5 +266,9 @@
   "awaitingPayment": "Awaiting Payment",
   "yourDriverIsOnTheWy": "Your driver is on the way!",
   "ourDriversSeemToBeQuiteBusyAtTheMoment": "Our drivers seem to be quite busy at the moment. We shall notify you as soon as we find a driver for your order.",
-  "trackHiredVehicles": "Track hired vehicles"
+  "trackHiredVehicles": "Track hired vehicles",
+  "backToLocations": "Back to locations",
+  "backToVehicleTypes": "Back to vehicle types",
+  "backToPickupInformation": "Back to pickup information",
+  "backToDeliveryInformation": "Back to delivery information"
 }

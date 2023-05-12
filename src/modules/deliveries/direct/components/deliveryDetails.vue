@@ -419,7 +419,6 @@ export default {
 .delivery-details-header {
   display: flex;
   width: 100%;
-  border-bottom: 1px solid #dcdfe6;
   height: 60px;
   align-items: center;
 }

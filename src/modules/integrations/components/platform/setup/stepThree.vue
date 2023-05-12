@@ -201,23 +201,25 @@ export default {
         if (errors.length === 1) {
           errorType = errors[0].errorType;
         }
-        messages = errors.map((e) => e.message);
 
         switch (errorType) {
           case 1: // STORE_CONFIG_ERRORS
+            messages = errors.map((e) => e.message).toString();
             this.$router.push({
               name: "ConnectionError",
-              params: { message: messages.toString(), errorType },
+              params: { message: messages, errorType },
             });
             break;
           case 2: // USER_ERRORS
+            messages = errors.map((e) => e.message).toString();
             ElNotification({
               title: this.$t("merchant.user_error"),
-              message: messages.toString(),
+              message: messages,
               type: "error",
             });
             break;
           case 3: // SERVER_ERRORS
+            console.log("error", Object.keys(error));
             ElNotification({
               title: this.$t("merchant.server_error"),
               message: `${this.$t(
@@ -225,11 +227,12 @@ export default {
               )}.`,
               type: "error",
             });
+            messages = error.data.message;
             break;
           default:
             ElNotification({
               title: this.$t("merchant.unexpected_error"),
-              message: messages.toString(),
+              message: messages,
               type: "error",
             });
             break;
@@ -239,12 +242,11 @@ export default {
           event: "[merchant]_failed_integration_request",
           data: {
             userId: this.getUserDetails.user_id,
-            error: messages,
-            errorCode: errors.map((e) => e.errorCode).toString(),
+            error,
           },
         });
 
-        this.resultMessage = messages.toString();
+        this.resultMessage = messages;
         this.storeConnected = false;
         this.connecting = false;
         this.hasError = true;

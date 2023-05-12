@@ -1,4 +1,6 @@
 {
+  "Pending": "Pending",
+  "Complete": "Complete",
   "could_not_create_payload_to_sync_items": "Could not create payload to sync items",
   "we_could_not_fully_connect_to_your_store": "We could not fully connect to your store",
   "we": "We",

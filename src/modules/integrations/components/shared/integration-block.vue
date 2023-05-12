@@ -30,7 +30,7 @@
           </span>
         </v-col>
       </v-row>
-      <div v-if="applicationPending" class="platform-steps">
+      <div v-if="integration.length !== 0" class="platform-steps">
         <v-row
           v-for="(status, index) in statuses"
           :key="index"
@@ -38,16 +38,30 @@
         >
           <v-col cols="1" class="platform-steps__icon-box">
             <img
+              v-if="currentStep < index"
               src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/grey-tick.svg"
+            />
+            <img
+              v-if="currentStep == index"
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/green-tick.svg"
             />
           </v-col>
           <v-col class="align-left"
-            ><span class="platform-steps__msg-txt">{{
-              status.message
-            }}</span></v-col
+            ><span
+              class="platform-steps__msg-txt"
+              :class="
+                currentStep >= +index ? 'platform-steps__msg-txt--complete' : ''
+              "
+              >{{ status.message }}</span
+            ></v-col
           >
           <v-col class="align-right">
-            <span class="platform-steps__status">Pending</span>
+            <span v-if="currentStep < index" class="platform-steps__status">{{
+              $("merchant.Pending")
+            }}</span>
+            <span v-else class="platform-steps__status">{{
+              $("merchant.Complete")
+            }}</span>
           </v-col>
         </v-row>
       </div>
@@ -82,12 +96,15 @@ export default {
     ]);
 
     const currentStep = computed(() =>
-      statuses.values.findIndex(
-        (x) => x.status === props.integration.value.status
+      statuses.findIndex(
+        (x) => x.status === props.integration.integration_status
       )
     );
 
+    const currentStatus = computed(() => props.integration.integration_status);
+
     return {
+      currentStatus,
       currentStep,
       applicationPending,
       statuses,
@@ -181,6 +198,10 @@ export default {
       font-weight: 500;
       font-size: 14px;
       line-height: 20px;
+
+      &--complete {
+        text-decoration: line-through;
+      }
     }
 
     // &__icon-box {

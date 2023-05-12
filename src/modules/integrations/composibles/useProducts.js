@@ -7,9 +7,13 @@ const useProducts = () => {
   const productsLoading = ref(false);
   const productsLoaded = ref(false);
   //to-do: redirect user to previous step if the sales channel is not available
-  const salesChannelId = computed(
-    () => store.state.integrations.activeIntegrations.platform.id
-  );
+  // const salesChannelId = computed(
+  //   () => store.state.integrations.activeIntegrations.platform.id
+  // );
+
+  onMounted(async () => {
+    await sync();
+  });
 
   const finishSyncPayload = computed(
     () => store.state.integrations.platform.finishSyncPayload
@@ -18,10 +22,11 @@ const useProducts = () => {
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
+      const salesChannelId = localStorage.getItem("platformSalesChannelId");
       productsLoading.value = true;
       try {
         await store.dispatch("syncPlatformProducts", {
-          salesChannelId: salesChannelId.value,
+          salesChannelId,
         });
         productsLoaded.value = true;
         resolve();
@@ -59,10 +64,6 @@ const useProducts = () => {
       }
     });
   };
-
-  onMounted(async () => {
-    await sync();
-  });
 
   return {
     sync,

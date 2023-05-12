@@ -346,6 +346,12 @@ export default {
           link: `/inventory/view-product/${notification.entity_identifier}`,
         };
       }
+      if (notification.entity_type === "POINT_TO_POINT_ORDER") {
+        return {
+          label: this.$t("common.trackDelivery"),
+          link: `/deliveries/track-direct-deliveries/${notification.entity_identifier}`,
+        };
+      }
       return "";
     },
     triggerAction(notification) {

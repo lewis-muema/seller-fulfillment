@@ -51,6 +51,7 @@ const useIntegrations = () => {
                   id: salesChannel.id,
                   url: salesChannel.salesChannelProperties.url,
                   addedBy: salesChannel.salesChannelProperties.addedBy,
+                  ...salesChannel,
                 };
                 // to-do: remove after vuex implimentation
                 localStorage.setItem("platformSalesChannelId", salesChannel.id);
@@ -62,6 +63,7 @@ const useIntegrations = () => {
                   dateAdded: getTimeAgo(new Date(salesChannel.created_at)),
                   channelId: salesChannel.channel_id,
                   id: salesChannel.id,
+                  ...salesChannel,
                 };
                 break;
             }

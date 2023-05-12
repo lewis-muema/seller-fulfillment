@@ -1271,7 +1271,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_ORDER_CREATED",
-          translated_event_code: "summarised.event.pickup.order.created",
+          translated_event_code: "Order created",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1279,7 +1279,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_WAITING_FOR_PARTNER",
-          translated_event_code: "summarised.event.pickup.waiting.for.partner",
+          translated_event_code: "Waiting for partner",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1287,8 +1287,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_PARTNER_ARRIVED_AT_PICKUP_LOCATION",
-          translated_event_code:
-            "summarised.event.pickup.partner.arrived.at.pickup.location",
+          translated_event_code: "Partner arrived at location",
           notes: "",
           event_tense: "FUTURE",
           metadata: {
@@ -1299,8 +1298,7 @@ const placeholders = {
           event_date: 1647870724000,
           event_code:
             "EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
-          translated_event_code:
-            "summarised.event.pickup.partner.submitted.items.at.hub.confirmed.via.code",
+          translated_event_code: "Partner submitted items",
           notes: null,
           event_tense: "FUTURE",
           metadata: {},

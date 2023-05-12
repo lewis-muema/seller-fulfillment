@@ -128,7 +128,13 @@
                     <span
                       :class="cycle.loading"
                       @click="
-                        $router.push(`/deliveries/tracking/${row.resource_id}`)
+                        row.line_item_grouping === 'POINT_TO_POINT'
+                          ? $router.push(
+                              `/deliveries/track-direct-deliveries/${row.resource_id}`
+                            )
+                          : $router.push(
+                              `/deliveries/tracking/${row.resource_id}`
+                            )
                       "
                     >
                       {{ row.resource_id }}

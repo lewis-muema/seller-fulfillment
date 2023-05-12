@@ -133,6 +133,7 @@ export default {
 }
 .pricing-tiers-title {
   margin-bottom: 15px;
+  text-align: center;
 }
 .pricing-tier-vendors {
   display: flex;

@@ -32,6 +32,37 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="
+        ['ORDER_RECEIVED', 'ORDER_IN_PROCESSING'].includes(
+          getDirectDeliveriesTrackingData.order?.order_status
+        )
+      "
+      class="on-demand-map-overlay"
+    >
+      <div class="on-demand-map-overlay-loader">
+        <v-progress-linear
+          color="deep-orange"
+          indeterminate
+          rounded
+          height="6"
+        ></v-progress-linear>
+      </div>
+      <div
+        v-if="
+          getDirectDeliveriesTrackingData.order?.error_status ===
+          'FAILED_TRANSPORTER_ASSIGNMENT'
+        "
+        class="on-demand-failed-transporter-banner"
+      >
+        <i
+          class="mdi mdi-information-outline on-demand-failed-transporter-banner-icon"
+        ></i>
+        <div class="on-demand-failed-transporter-banner-text">
+          {{ $t("deliveries.ourDriversSeemToBeQuiteBusyAtTheMoment") }}
+        </div>
+      </div>
+    </div>
     <directMap />
   </div>
 </template>
@@ -123,7 +154,7 @@ export default {
 </script>
 <style>
 .tracking-map-container {
-  height: calc(100vh - 195px) !important;
+  height: calc(100vh - 220px) !important;
   position: relative;
 }
 .tracking-map-rider-label {
@@ -163,5 +194,16 @@ export default {
   font-size: 16px;
   margin-left: 3px;
   margin-right: 5px;
+}
+.on-demand-map-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #a6a6a696;
+  z-index: 1000;
+}
+.on-demand-map-overlay-loader {
+  margin-top: -15px;
+  padding-bottom: 15px;
 }
 </style>

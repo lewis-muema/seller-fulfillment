@@ -219,7 +219,6 @@ export default {
             });
             break;
           case 3: // SERVER_ERRORS
-            console.log("error", Object.keys(error));
             ElNotification({
               title: this.$t("merchant.server_error"),
               message: `${this.$t(
@@ -228,6 +227,13 @@ export default {
               type: "error",
             });
             messages = error.data.message;
+            break;
+          case 4: // PERMISSION ERRORS
+            messages = errors.map((e) => e.message).toString();
+            this.$router.push({
+              name: "ConnectionError",
+              params: { message: messages, errorType },
+            });
             break;
           default:
             ElNotification({

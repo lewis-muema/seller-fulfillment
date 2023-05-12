@@ -193,19 +193,27 @@ export default {
           throw data;
         }
       } catch (error) {
-        // Add logic to
-        const { errorCode = null, errorType, message } = error.data;
+        const errors = error.data;
+
+        let messages = null;
+        let errorType = 422;
+
+        if (errors.length === 1) {
+          errorType = errors[0].errorType;
+        }
+        messages = errors.map((e) => e.message);
+
         switch (errorType) {
           case 1: // STORE_CONFIG_ERRORS
             this.$router.push({
               name: "ConnectionError",
-              params: { message, errorType },
+              params: { message: messages.toString(), errorType },
             });
             break;
           case 2: // USER_ERRORS
             ElNotification({
               title: this.$t("merchant.user_error"),
-              message,
+              message: messages.toString(),
               type: "error",
             });
             break;
@@ -221,7 +229,7 @@ export default {
           default:
             ElNotification({
               title: this.$t("merchant.unexpected_error"),
-              message,
+              message: messages.toString(),
               type: "error",
             });
             break;
@@ -231,12 +239,12 @@ export default {
           event: "[merchant]_failed_integration_request",
           data: {
             userId: this.getUserDetails.user_id,
-            error: message,
-            errorCode,
+            error: messages,
+            errorCode: errors.map((e) => e.errorCode).toString(),
           },
         });
 
-        this.resultMessage = message;
+        this.resultMessage = messages.toString();
         this.storeConnected = false;
         this.connecting = false;
         this.hasError = true;

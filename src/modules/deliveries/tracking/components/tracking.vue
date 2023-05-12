@@ -4,36 +4,7 @@
     <tracking-top-card />
     <div class="row">
       <div class="col-7">
-        <div
-          v-if="
-            ['ORDER_RECEIVED', 'ORDER_IN_PROCESSING'].includes(
-              getDirectDeliveriesTrackingData.order?.order_status
-            )
-          "
-        >
-          <div
-            v-if="
-              getDirectDeliveriesTrackingData.order?.error_status ===
-              'FAILED_TRANSPORTER_ASSIGNMENT'
-            "
-            class="on-demand-failed-transporter-banner"
-          >
-            <i
-              class="mdi mdi-information-outline on-demand-failed-transporter-banner-icon"
-            ></i>
-            <div class="on-demand-failed-transporter-banner-text">
-              {{ $t("deliveries.ourDriversSeemToBeQuiteBusyAtTheMoment") }}
-            </div>
-          </div>
-          <div class="on-demand-failed-transporter-rider-img-container">
-            <img
-              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/animated_rider.gif"
-              alt=""
-              class="on-demand-failed-transporter-rider-img"
-            />
-          </div>
-        </div>
-        <div v-else>
+        <div>
           <tracking-map />
         </div>
       </div>
@@ -132,6 +103,15 @@ export default {
         );
         this.dropOffInstructions = dropInstructions;
       },
+    "$route.params.order_id": {
+      handler: function (new_order, last_order) {
+        if (last_order !== new_order && last_order && new_order) {
+          this.fetchOrder();
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
   methods: {
     ...mapMutations([
@@ -240,7 +220,8 @@ export default {
 .right-tracking-column {
   height: max-content !important;
   overflow-y: scroll;
-  height: calc(100vh - 155px) !important;
+  height: calc(100vh - 205px) !important;
+  margin-bottom: 20px;
 }
 .on-demand-make-payment {
   margin-left: 65px;
@@ -253,11 +234,12 @@ export default {
 }
 .on-demand-failed-transporter-banner {
   width: 90%;
-  margin: 20px 0px 20px 70px;
   background: #d3ddf6;
   padding: 15px 35px;
   border-radius: 5px;
   display: flex;
+  margin: auto;
+  margin-top: 20px;
 }
 .on-demand-failed-transporter-banner-icon {
   font-size: 25px;

@@ -30,19 +30,10 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
-import useProducts from "@/modules/integrations/composibles/useProducts";
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
 
 export default {
   mixins: [platformSetupMixin],
-  setup() {
-    const { finishSync } = useProducts();
-
-    onMounted(async () => {
-      await finishSync();
-    });
-  },
 };
 </script>
 

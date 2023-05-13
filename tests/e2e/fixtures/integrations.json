@@ -237,7 +237,32 @@
     "data": {
       "message": "store does not have any conflicting products in fulfilment, products are being synced",
       "products":{
-        "newProducts": [],
+        "newProducts": [
+          {
+            "id": "29",
+            "u_sku": "",
+            "name": "Samsung Galaxy Tab",
+            "short_description": "",
+            "price": 1,
+            "quantity": 0,
+            "weight_unit": "g",
+            "images": [
+              {
+                "id": "base_22",
+                "http_path": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk9.png",
+                "file_name": "mk9.png",
+                "mime-type": "image/png",
+                "size": null,
+                "create_at": null,
+                "modified_at": null,
+                "alt": "Samsung Galaxy Tab",
+                "avail": true,
+                "sort_order": 0,
+                "type": "IMAGE_TYPE_BASE"
+              }
+            ]
+          }
+        ],
         "canSyncProducts": true,
         "syncStatus": 3
       }

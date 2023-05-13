@@ -61,9 +61,16 @@ describe("Integration Process", () => {
     cy.dashboardStubs();
     cy.authStubs();
     cy.paymentStubs();
-    cy.intercept("GET", "**/v1/internal/users?enabled=true", {
-      statusCode: 404,
-    }).as("noIntegrations");
+    cy.intercept(
+      {
+        method: "GET",
+        pathname: "**/v1/internal/users?enabled=true",
+        times: 1,
+      },
+      {
+        statusCode: 404,
+      }
+    ).as("noIntegrations");
     cy.intercept("**/v1/internal/api/token", {
       statusCode: 200,
       body: integrations.generateToken,
@@ -161,65 +168,118 @@ describe("Integration Process", () => {
       });
     });
 
-    describe("Finish all steps of the onboarding with new products", () => {
+    describe("Product Sync", () => {
       beforeEach(() => {
-        cy.intercept("**/api2cart/products/finish-sync", {
+        cy.intercept("POST", "**/api2cart/products/finish-sync", {
           statusCode: 200,
         }).as("finishSync");
 
-        cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+        cy.intercept("GET", "**/v1/internal/users?enabled=true", {
           statusCode: 200,
-          body: integrations.newProductsInventory,
-        }).as("newProductsInventory");
+          body: integrations.availableIntegrations,
+        }).as("getSalesChannelInfo");
       });
 
-      it.only(`Finish all steps of the onboarding(All steps) -- new products`, () => {
+      it(`Should be able to sync store with conflicting products`, () => {
+        cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+          statusCode: 200,
+          body: integrations.conflictingProductsInventory,
+        }).as("getProductSyncItems");
+
         cy.integrationStepsToImport().then(() => {
           cy.getByData("import-products").click();
           cy.url().should("include", "/setup/5");
           cy.getByData("continue").click();
           cy.url().should("include", "/setup/6");
           cy.getByData("continue").click();
+          //to-do: conflicts in displayed products list
           cy.url().should("include", "/setup/7");
           cy.getByData("importing-products").should(
             "contain",
             "We're importing your products"
           );
-          cy.wait("@finishSync").then((interception) => {
-            assert.deepEqual(interception.request.body, {
-              currency: "KES", // required
-              createAllProducts: false, // required
-              syncStatus: 3,
-              matchingProducts: [],
-              newProducts: [],
-            });
-          });
+          cy.wait("@finishSync")
+            .then((interception) => {
+              assert.isNotNull(
+                interception.request.body,
+                "1st API call has data"
+              );
+            })
+            .its("request.headers")
+            .should(
+              "have.property",
+              "sales-channel-id",
+              "18675699-8fe9-4d14-8704-4d555681447e"
+            );
         });
       });
-    });
 
-    it(`Finish all steps of the onboarding(All steps) -- conflicting products`, () => {
-      cy.intercept("**/api2cart/products/finish-sync").as("finishSync");
+      it.only(`Should be able to sync store with new products`, () => {
+        cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+          statusCode: 200,
+          body: integrations.newProductsInventory,
+        }).as("getProductSyncItems");
 
-      cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
-        statusCode: 200,
-        body: integrations.conflictingProductsInventory,
-      }).as("getProductSyncItems");
+        cy.integrationStepsToImport().then(() => {
+          cy.getByData("import-products").click();
+          cy.url().should("include", "/setup/5");
+          cy.getByData("continue").click();
+          cy.url().should("include", "/setup/6");
+          cy.getByData("continue").click();
+          //to-do: conflicts in displayed products list
+          cy.url().should("include", "/setup/7");
+          cy.getByData("importing-products").should(
+            "contain",
+            "We're importing your products"
+          );
+          cy.wait("@finishSync")
+            .then((interception) => {
+              assert.deepEqual(interception.request.body, {
+                currency: "KES", // required
+                createAllProducts: true, // required
+                syncStatus: 1,
+              });
+            })
+            .its("request.headers")
+            .should(
+              "have.property",
+              "sales-channel-id",
+              "18675699-8fe9-4d14-8704-4d555681447e"
+            );
+        });
+      });
 
-      cy.integrationStepsToImport().then(() => {
-        cy.getByData("import-products").click();
-        cy.url().should("include", "/setup/5");
-        cy.getByData("continue").click();
-        cy.url().should("include", "/setup/6");
-        cy.getByData("continue").click();
-        //to-do: conflicts in displayed products list
-        cy.url().should("include", "/setup/7");
-        cy.getByData("importing-products").should(
-          "contain",
-          "We're importing your products"
-        );
-        cy.wait("@finishSync").then((interception) => {
-          assert.isNotNull(interception.request.body, "1st API call has data");
+      it(`Should be able to sync store with new and matching products`, () => {
+        cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
+          statusCode: 200,
+          body: integrations.matchingProductsInventory,
+        }).as("getProductSyncItems");
+
+        cy.integrationStepsToImport().then(() => {
+          cy.getByData("import-products").click();
+          cy.url().should("include", "/setup/5");
+          cy.getByData("continue").click();
+          cy.url().should("include", "/setup/6");
+          cy.getByData("continue").click();
+          //to-do: conflicts in displayed products list
+          cy.url().should("include", "/setup/7");
+          cy.getByData("importing-products").should(
+            "contain",
+            "We're importing your products"
+          );
+          cy.wait("@finishSync")
+            .then((interception) => {
+              assert.isNotNull(
+                interception.request.body,
+                "1st API call has data"
+              );
+            })
+            .its("request.headers")
+            .should(
+              "have.property",
+              "sales-channel-id",
+              "18675699-8fe9-4d14-8704-4d555681447e"
+            );
         });
       });
     });

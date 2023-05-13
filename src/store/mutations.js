@@ -470,4 +470,7 @@ export default {
   setFinishSyncPayload(state, val) {
     state.integrations.platform.finishSyncPayload = val;
   },
+  setResolvedConflicts(state, val) {
+    state.integrations.platform.conflictsResolved = val;
+  },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="step-5-dialog">
-    <div class="step-5-dialog__card" v-if="productsLoaded">
+    <div class="step-5-dialog__card">
       <div class="top-action-bar">
         <v-btn class="back-btn" dark @click="back()">
           <v-icon large dark left> mdi-arrow-left </v-icon>
@@ -9,9 +9,9 @@
       <v-card-title class="step-5-dialog__title">
         {{ $t("merchant.ready_to_import") }}
       </v-card-title>
-      <div>
+      <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
+      <div v-loading="loading" v-show="productsLoaded">
         <v-card-text>
-          <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
           <p
             class="step-5-dialog__text"
             v-if="getPlatformSyncNewProducts.length"
@@ -33,11 +33,11 @@
             {{ $t("merchant.linked_to_existing_products") }}
           </p>
         </v-card-text>
-        <div class="step-5-dialog__link-container">
-          <p
-            class="step-5-dialog__text"
-            v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
-          >
+        <div
+          class="step-5-dialog__link-container"
+          v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
+        >
+          <p class="step-5-dialog__text">
             <strong
               >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
               {{ $t("merchant.products") }}</strong
@@ -64,29 +64,30 @@
             {{ $t("merchant.click_below_to_begin") }}?
           </p>
         </v-card-text>
-        <v-card-actions class="step-5-dialog__actions">
-          <v-row>
-            <v-col span="6">
-              <!-- todo: add action to go back to main screen using inject-->
-              <button
-                class="step-5-dialog__button step-5-dialog__button--cancel"
-                @click="back()"
-              >
-                {{ $t("merchant.back") }}
-              </button>
-            </v-col>
-            <v-col span="6">
-              <button
-                class="step-5-dialog__button step-5-dialog__button--continue"
-                @click="finishSyncingProducts()"
-                data-test="continue"
-              >
-                {{ $t("merchant.continue") }}
-              </button>
-            </v-col>
-          </v-row>
-        </v-card-actions>
       </div>
+      <v-card-actions class="step-5-dialog__actions">
+        <v-row>
+          <v-col span="6">
+            <!-- todo: add action to go back to main screen using inject-->
+            <button
+              class="step-5-dialog__button step-5-dialog__button--cancel"
+              @click="back()"
+            >
+              {{ $t("merchant.back") }}
+            </button>
+          </v-col>
+          <v-col span="6">
+            <button
+              class="step-5-dialog__button step-5-dialog__button--continue"
+              @click="finishSyncingProducts()"
+              data-test="continue"
+              :disabled="!shouldAllowContinue"
+            >
+              {{ $t("merchant.continue") }}
+            </button>
+          </v-col>
+        </v-row>
+      </v-card-actions>
     </div>
   </div>
 </template>
@@ -97,6 +98,7 @@ import useProducts from "@/modules/integrations/composibles/useProducts";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElNotification } from "element-plus";
+import { computed, onMounted } from "vue";
 
 export default {
   name: "step6",
@@ -111,13 +113,27 @@ export default {
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
       getPlatformSyncPayload,
+      conflictsResolved,
+      finishSync,
+      sync,
     } = useProducts();
 
     const store = useStore();
+    // const { t } = useI18n();
 
     const router = useRouter();
 
-    const finishSyncingProducts = () => {
+    onMounted(async () => {
+      await sync();
+    });
+
+    const shouldAllowContinue = computed(
+      () =>
+        (getPlatformSyncStatus.value === 2 && conflictsResolved) ||
+        getPlatformSyncStatus.value !== 2
+    );
+
+    const finishSyncingProducts = async () => {
       try {
         let payload = {};
         switch (getPlatformSyncStatus.value) {
@@ -133,29 +149,34 @@ export default {
               currency: "KES", // required
               createAllProducts: false, // required
               syncStatus: 3,
-              matchingProducts: [],
-              newProducts: [],
+              matchingProducts: getPlatformSyncMatchingProducts.value,
+              newProducts: getPlatformSyncNewProducts.value,
             };
             break;
           default:
             break;
         }
         store.dispatch("setFinishSyncPayload", payload);
+        await finishSync(payload);
         router.push({ name: "SetupStep7" });
       } catch (error) {
         ElNotification({
-          title: this.$t("merchant.unexpected_error"),
-          message: this.$t("merchant.could_not_create_payload_to_sync_items"),
+          // title: t("merchant.unexpected_error"),
+          // message: t("merchant.could_not_create_payload_to_sync_items"),
+          title: "Something Went Wrong",
+          message: error,
           type: "error",
         });
       }
     };
 
     return {
+      shouldAllowContinue,
+      conflictsResolved,
       finishSyncingProducts,
       getPlatformSyncProducts,
       getPlatformSyncStatus,
-      productsLoading,
+      loading: productsLoading,
       productsLoaded,
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,

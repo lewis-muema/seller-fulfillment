@@ -414,11 +414,14 @@ export default {
   },
   syncPlatformProducts(
     { dispatch },
-    { salesChannelId, currency = "KES", payload }
+    { salesChannelId = null, currency = "KES" }
   ) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
+        if (!salesChannelId) {
+          throw new Error("No sales channel Id provided");
+        }
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -434,11 +437,13 @@ export default {
 
         const { data, status } = await axios.get(
           `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
-          payload,
           config
         );
 
+        // console.log('data', dat)
+
         await dispatch("syncProducts", data.data.products);
+        await dispatch("setSyncStatus", data.data.syncStatus);
         resolve();
       } catch (error) {
         reject(error);
@@ -457,25 +462,41 @@ export default {
   setFinishSyncPayload({ dispatch, commit }, payload) {
     commit("setFinishSyncPayload", payload);
   },
+  setResolvedConflicts({ dispatch, commit }, payload) {
+    commit("setResolvedConflicts", payload);
+  },
   async finishSyncingPlatformProducts({ dispatch }, payload) {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.accessToken
-            ? localStorage.accessToken
-            : "",
-        },
-      };
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "fulfilment-token": localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "sales-channel-id": localStorage.getItem("platformSalesChannelId"),
+          },
+        };
 
-      const { status, data } = await axios.post(
-        `${process.env.MERCHANT_GATEWAY}api2cart/products/finish-sync`,
-        payload,
-        config
-      );
-      return { data: data.data, status };
-    } catch (error) {
-      return error.response;
-    }
+        const { data, status } = await axios.post(
+          `${process.env.MERCHANT_GATEWAY}api2cart/products/finish-sync`,
+          payload,
+          config
+        );
+
+        if (status === 200) {
+          resolve();
+          return { data: data.data, status };
+        } else {
+          throw data;
+        }
+      } catch (error) {
+        reject(error.response);
+      }
+    });
   },
 };

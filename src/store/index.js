@@ -15,6 +15,7 @@ export default createStore({
           apiKey: {},
         },
         platform: {
+          conflictsResolved: false,
           finishSyncPayload: {},
           syncedProducts: {
             partialMatchingProducts: [],

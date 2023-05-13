@@ -116,7 +116,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["setFinishSyncPayload"]),
+    ...mapActions(["setFinishSyncPayload", "setResolvedConflicts"]),
     back() {
       this.lastStep();
     },
@@ -147,6 +147,7 @@ export default {
       }
 
       this.setFinishSyncPayload(payload);
+      this.setResolvedConflicts(true);
       this.$router.push({ name: "SetupStep6" });
     },
   },

@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 
@@ -10,10 +10,6 @@ const useProducts = () => {
   // const salesChannelId = computed(
   //   () => store.state.integrations.activeIntegrations.platform.id
   // );
-
-  onMounted(async () => {
-    await sync();
-  });
 
   const finishSyncPayload = computed(
     () => store.state.integrations.platform.finishSyncPayload
@@ -56,7 +52,7 @@ const useProducts = () => {
         resolve();
       } catch (e) {
         ElNotification({
-          title: "Error fetching inventory",
+          title: "Error finishing sync",
           message: `${e}`,
           type: "error",
         });
@@ -86,6 +82,7 @@ const useProducts = () => {
     getPlatformSyncPayload: computed(
       () => store.getters.getPlatformSyncPayload
     ),
+    conflictsResolved: computed(() => store.getters.getConflictsResolvedStatus),
   };
 };
 

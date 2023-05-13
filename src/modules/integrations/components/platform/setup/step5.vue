@@ -21,7 +21,6 @@
       <v-card-actions class="step-4-dialog__actions">
         <v-row>
           <v-col span="6">
-            <!-- todo: add action to go back to main screen using inject-->
             <button class="step-4-dialog__button step-4-dialog__button--cancel">
               {{ $t("merchant.cancel") }}
               <v-dialog v-model="cancelDialog" activator="parent">

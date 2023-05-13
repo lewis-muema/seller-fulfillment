@@ -30,7 +30,7 @@
           </span>
         </v-col>
       </v-row>
-      <div v-if="integration.length !== 0" class="platform-steps">
+      <div v-if="showSteps" class="platform-steps">
         <v-row
           v-for="(status, index) in statuses"
           :key="index"
@@ -42,7 +42,7 @@
               src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/grey-tick.svg"
             />
             <img
-              v-if="currentStep == index"
+              v-if="currentStep >= index"
               src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/green-tick.svg"
             />
           </v-col>
@@ -57,10 +57,10 @@
           >
           <v-col class="align-right">
             <span v-if="currentStep < index" class="platform-steps__status">{{
-              $("merchant.Pending")
+              $t("merchant.Pending")
             }}</span>
             <span v-else class="platform-steps__status">{{
-              $("merchant.Complete")
+              $t("merchant.Complete")
             }}</span>
           </v-col>
         </v-row>
@@ -77,22 +77,28 @@ export default {
     integration: {
       type: Object,
       default: () => {},
+      require: true,
     },
   },
   setup(props) {
-    // props.integration - Find a way to compute this
-    const applicationPending = ref(false);
+    const availableIntegration = ref(
+      Object.keys(props.integration).length !== 0
+    );
 
-    // const greyTickImgUrl =
-    //   "https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/grey-tick.svg";
+    const integrationStatus = computed(
+      () => props.integration.integration_status || null
+    );
 
     // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
 
     const statuses = reactive([
       { message: "Enter your store details", status: "STORE_DETAILS_ADDED" },
       { message: "Store Permissions", status: "STORE_PERMISSIONS_VALIDATED" },
+      {
+        message: "Currently Syncing products",
+        status: "PRODUCTS_SYNC_INITIATED",
+      },
       { message: "Import your products", status: "PRODUCTS_SYNCED" },
-      { message: "Send products to Sendy", status: "INITIAL_CONSIGNMENT_SENT" },
     ]);
 
     const currentStep = computed(() =>
@@ -103,10 +109,14 @@ export default {
 
     const currentStatus = computed(() => props.integration.integration_status);
 
+    const showSteps = computed(() => availableIntegration.value);
+
     return {
+      integrationStatus,
+      showSteps,
       currentStatus,
       currentStep,
-      applicationPending,
+      availableIntegration,
       statuses,
     };
   },

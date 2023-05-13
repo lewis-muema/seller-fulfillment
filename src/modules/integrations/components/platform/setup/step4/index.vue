@@ -4,8 +4,18 @@
   </div>
 </template>
 <script>
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations";
+import { onMounted } from "vue";
+
 export default {
   name: "Step4",
+  setup() {
+    const { fetchIntegrations } = useIntegrations();
+
+    onMounted(async () => {
+      await fetchIntegrations();
+    });
+  },
 };
 </script>
 

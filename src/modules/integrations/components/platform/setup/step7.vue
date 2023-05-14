@@ -22,6 +22,7 @@
       <button
         class="import-container__button"
         @click="backToIntegrationsPage()"
+        data-test="close-btn"
       >
         {{ $t("merchant.close_window") }}
       </button>

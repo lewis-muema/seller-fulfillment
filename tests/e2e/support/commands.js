@@ -28,4 +28,8 @@ Cypress.Commands.add("integrationStepsToImport", () => {
   cy.wait("@createStores").then(() => {
     cy.url().should("include", "/setup/4/success");
   });
+  cy.getByData("import-products").click();
+  cy.url().should("include", "/setup/5");
+  cy.getByData("continue").click();
+  cy.url().should("include", "/setup/6");
 });

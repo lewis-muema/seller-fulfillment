@@ -16,7 +16,7 @@
             class="step-5-dialog__text"
             v-if="getPlatformSyncNewProducts.length"
           >
-            <strong
+            <strong data-test="newProductsCount"
               >{{ `${getPlatformSyncNewProducts.length}` }}
               {{ $t("merchant.new_products") }}</strong
             >
@@ -26,7 +26,7 @@
             class="step-5-dialog__text"
             v-if="getPlatformSyncMatchingProducts.length"
           >
-            <strong
+            <strong data-test="matchingProductsCount"
               >{{ `${getPlatformSyncMatchingProducts.length} ` }}
               {{ $t("merchant.matching_products") }}
             </strong>
@@ -38,7 +38,7 @@
           v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
         >
           <p class="step-5-dialog__text">
-            <strong
+            <strong data-test="partialProductsCount"
               >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
               {{ $t("merchant.products") }}</strong
             >

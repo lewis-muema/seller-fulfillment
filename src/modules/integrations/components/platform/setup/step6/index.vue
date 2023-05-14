@@ -72,6 +72,7 @@
             <button
               class="step-5-dialog__button step-5-dialog__button--cancel"
               @click="back()"
+              :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
             >
               {{ $t("merchant.back") }}
             </button>
@@ -81,7 +82,7 @@
               class="step-5-dialog__button step-5-dialog__button--continue"
               @click="finishSyncingProducts()"
               data-test="continue"
-              :disabled="!shouldAllowContinue"
+              :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
             >
               {{ $t("merchant.continue") }}
             </button>
@@ -98,7 +99,7 @@ import useProducts from "@/modules/integrations/composibles/useProducts";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElNotification } from "element-plus";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 export default {
   name: "step6",
@@ -139,12 +140,6 @@ export default {
         });
     });
 
-    const shouldAllowContinue = computed(
-      () =>
-        (getPlatformSyncStatus.value === 2 && conflictsResolved) ||
-        getPlatformSyncStatus.value !== 2
-    );
-
     const finishSyncingProducts = async () => {
       try {
         let payload = {};
@@ -183,7 +178,6 @@ export default {
     };
 
     return {
-      shouldAllowContinue,
       conflictsResolved,
       finishSyncingProducts,
       getPlatformSyncProducts,
@@ -280,12 +274,22 @@ export default {
       background: #324ba8;
       width: 260px;
       color: #ffffff;
+
+      &:disabled {
+        background: #e2e7ed;
+        color: #ffffff;
+      }
     }
 
     &--cancel {
       width: 160px;
       border: 1px solid #c0c4cc;
       color: #606266;
+
+      &:disabled {
+        border: 1px solid #d3ddf6;
+        color: #d3ddf6;
+      }
     }
   }
 }

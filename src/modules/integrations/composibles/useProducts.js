@@ -59,7 +59,9 @@ const useProducts = () => {
   return {
     sync,
     finishSync,
-    productsLoaded,
+    getPlatformProductsLoaded: computed(
+      () => store.getters.getPlatformProductsLoaded
+    ),
     getPlatformSyncStatus: computed(() => store.getters.getPlatformSyncStatus),
     getPlatformSyncProducts: computed(
       () => store.getters.getPlatformSyncProducts

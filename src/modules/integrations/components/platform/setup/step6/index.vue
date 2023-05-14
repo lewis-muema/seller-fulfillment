@@ -10,7 +10,7 @@
         {{ $t("merchant.ready_to_import") }}
       </v-card-title>
       <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-      <div v-show="productsLoaded">
+      <div v-show="getPlatformProductsLoaded">
         <v-card-text>
           <p
             class="step-5-dialog__text"
@@ -53,11 +53,25 @@
           <button
             class="step-5-dialog__link-container button"
             @click="goToResolveConflics()"
+            v-if="!conflictsResolved"
           >
             {{ $t("merchant.link") }}
             {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
             {{ $t("merchant.products") }}
           </button>
+          <span v-else>
+            <img
+              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/check-circle-filled.svg"
+            /><span class="step-5-dialog__link-container-text"
+              >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+              {{ $t("merchant.products_linked") }}.
+              <a
+                class="step-5-dialog__link-container-text-link"
+                @click="goToResolveConflics()"
+                >{{ $t("merchant.edit") }}</a
+              ></span
+            >
+          </span>
         </div>
         <v-card-text>
           <p class="step-5-dialog__text">
@@ -108,7 +122,7 @@ export default {
     const {
       getPlatformSyncProducts,
       getPlatformSyncStatus,
-      productsLoaded,
+      getPlatformProductsLoaded,
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
@@ -126,18 +140,20 @@ export default {
     const loading = ref(false);
 
     onMounted(async () => {
-      loading.value = true;
-      sync()
-        .then((response) => {
-          loading.value = false;
+      if (!getPlatformProductsLoaded.value) {
+        loading.value = true;
+        sync()
+          .then((response) => {
+            loading.value = false;
 
-          return response;
-        })
-        .catch((e) => {
-          loading.value = false;
+            return response;
+          })
+          .catch((e) => {
+            loading.value = false;
 
-          return e;
-        });
+            return e;
+          });
+      }
     });
 
     const finishSyncingProducts = async () => {
@@ -184,7 +200,7 @@ export default {
       getPlatformSyncProducts,
       getPlatformSyncStatus,
       loading,
-      productsLoaded,
+      getPlatformProductsLoaded,
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
       getPlatformSyncNewProducts,
@@ -233,6 +249,22 @@ export default {
       line-height: 18px;
       letter-spacing: 0.01em;
       color: #ffffff;
+    }
+
+    &-text {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0.005em;
+      color: #909399;
+      margin-left: 8px;
+    }
+
+    &-text-link {
+      color: #324ba8;
+      text-decoration: underline;
     }
   }
 

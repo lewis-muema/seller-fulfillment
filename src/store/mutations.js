@@ -473,4 +473,7 @@ export default {
   setResolvedConflicts(state, val) {
     state.integrations.platform.conflictsResolved = val;
   },
+  setProductsLoaded(state, val) {
+    state.integrations.platform.productsLoaded = val;
+  },
 };

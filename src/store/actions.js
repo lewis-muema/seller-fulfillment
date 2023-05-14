@@ -440,6 +440,7 @@ export default {
           config
         );
 
+        // to-do: add this in tests
         if (data.data.syncStatus === 0) {
           ElNotification({
             message: data.data.message,
@@ -448,6 +449,7 @@ export default {
           router.push({ name: "SetupStep7" });
         }
 
+        await dispatch("setProductsLoaded", true);
         await dispatch("syncProducts", data.data.products);
         await dispatch("setSyncStatus", data.data.syncStatus);
         resolve();
@@ -455,6 +457,9 @@ export default {
         reject(error);
       }
     });
+  },
+  setProductsLoaded({ dispatch, commit }, payload) {
+    commit("setProductsLoaded", payload);
   },
   syncProducts({ dispatch, commit }, payload) {
     commit("setSyncedPlatformProducts", payload);

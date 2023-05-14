@@ -170,4 +170,6 @@ export default {
     state.integrations.platform.finishSyncPayload,
   getConflictsResolvedStatus: (state) =>
     state.integrations.platform.conflictsResolved,
+  getPlatformProductsLoaded: (state) =>
+    state.integrations.platform.productsLoaded,
 };

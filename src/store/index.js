@@ -15,6 +15,7 @@ export default createStore({
           apiKey: {},
         },
         platform: {
+          productsLoaded: false,
           conflictsResolved: false,
           finishSyncPayload: {},
           syncedProducts: {

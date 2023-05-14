@@ -94,11 +94,11 @@ export default {
     const statuses = reactive([
       { message: "Enter your store details", status: "STORE_DETAILS_ADDED" },
       { message: "Store Permissions", status: "STORE_PERMISSIONS_VALIDATED" },
+      { message: "Import your products", status: "PRODUCTS_SYNC_INITIATED" },
       {
         message: "Currently Syncing products",
-        status: "PRODUCTS_SYNC_INITIATED",
+        status: "PRODUCTS_SYNCED",
       },
-      { message: "Import your products", status: "PRODUCTS_SYNCED" },
     ]);
 
     const currentStep = computed(() =>

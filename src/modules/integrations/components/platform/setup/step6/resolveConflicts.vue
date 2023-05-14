@@ -118,6 +118,13 @@ export default {
   data() {
     return {
       syncedProducts: [],
+      payload: {
+        currency: "KES", // required
+        createAllProducts: false,
+        products: [],
+        newProducts: [],
+        matchingProducts: [],
+      },
     };
   },
   methods: {
@@ -129,17 +136,9 @@ export default {
       this.$router.push({ name: "SetupStep6" });
     },
     resolveConflicts() {
-      let payload = {
-        currency: "KES", // required
-        createAllProducts: false,
-        products: [],
-        newProducts: this.getPlatformSyncNewProducts,
-        matchingProducts: this.getPlatformSyncMatchingProducts,
-      };
-
       for (const conflict of this.syncedProducts) {
         if (conflict.selectedProductId !== 0) {
-          payload.products.push({
+          this.payload.products.push({
             api2CartProduct: conflict.selectedProductId,
             fulfilmentProduct: {
               productId: conflict.baseProduct.productId,
@@ -149,14 +148,17 @@ export default {
             createFulfilmentProduct: false,
           });
         } else {
-          payload.products.push({
+          this.payload.products.push({
             api2CartProduct: conflict.matchingProduct.id,
             createFulfilmentProduct: true,
           });
         }
       }
 
-      this.setFinishSyncPayload(payload);
+      this.payload.newProducts = this.getPlatformSyncNewProducts;
+      this.payload.matchingProducts = this.getPlatformSyncMatchingProducts;
+
+      this.setFinishSyncPayload(this.payload);
       this.setResolvedConflicts(true);
       this.$router.push({ name: "SetupStep6" });
     },

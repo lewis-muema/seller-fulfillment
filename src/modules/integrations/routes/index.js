@@ -12,8 +12,10 @@ import ConnectionSuccess from "@/modules/integrations/components/platform/setup/
 import ConnectionError from "@/modules/integrations/components/platform/setup/step4/connectionError.vue";
 
 import step5 from "@/modules/integrations/components/platform/setup/step5.vue";
+
 import step6 from "@/modules/integrations/components/platform/setup/step6/index.vue";
 import resolveConflicts from "@/modules/integrations/components/platform/setup/step6/resolveConflicts.vue";
+
 import step7 from "@/modules/integrations/components/platform/setup/step7.vue";
 
 const routes = {
@@ -94,12 +96,7 @@ const routes = {
             },
           ],
         },
-        {
-          path: "setup/5/resolve-conflicts",
-          name: "ConflictResolution",
-          component: resolveConflicts,
-          props: true,
-        },
+
         {
           path: "setup/5",
           name: "SetupStep5",
@@ -110,6 +107,12 @@ const routes = {
           path: "setup/6",
           name: "SetupStep6",
           component: step6,
+          props: true,
+        },
+        {
+          path: "setup/6/resolve-conflicts",
+          name: "ConflictResolution",
+          component: resolveConflicts,
           props: true,
         },
         {

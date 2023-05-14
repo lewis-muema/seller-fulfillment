@@ -440,7 +440,13 @@ export default {
           config
         );
 
-        // console.log('data', dat)
+        if (data.data.syncStatus === 0) {
+          ElNotification({
+            message: data.data.message,
+            type: "success",
+          });
+          router.push({ name: "SetupStep7" });
+        }
 
         await dispatch("syncProducts", data.data.products);
         await dispatch("setSyncStatus", data.data.syncStatus);

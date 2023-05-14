@@ -4,13 +4,14 @@
       <v-row>
         <v-col cols="1">
           <div class="top-action-bar">
-            <v-btn class="back-btn" dark @click="back()">
+            <v-btn class="back-btn" dark @click="goToPreviousStep()">
               <v-icon large dark left> mdi-arrow-left </v-icon>
             </v-btn>
           </div>
         </v-col>
         <v-col class="text__heading">
-          {{ $t("merchant.link") }} {{ numberOfConflicts }}
+          {{ $t("merchant.link") }}
+          {{ unresolvedConflicts }}
           {{ $t("merchant.products") }}
         </v-col>
         <v-col class="cell-align__right">
@@ -20,7 +21,11 @@
           </span>
         </v-col>
         <v-col class="cell-align__right" cols="2">
-          <button class="button__select" @click="resolveConflicts()">
+          <button
+            class="button__select"
+            @click="resolveConflicts()"
+            :disabled="unresolvedConflicts > 0"
+          >
             {{ $t("merchant.save_changes") }}
           </button>
         </v-col>
@@ -120,11 +125,16 @@ export default {
     back() {
       this.lastStep();
     },
+    goToPreviousStep() {
+      this.$router.push({ name: "SetupStep6" });
+    },
     resolveConflicts() {
       let payload = {
         currency: "KES", // required
         createAllProducts: false,
         products: [],
+        newProducts: this.getPlatformSyncNewProducts,
+        matchingProducts: this.getPlatformSyncMatchingProducts,
       };
 
       for (const conflict of this.syncedProducts) {
@@ -152,7 +162,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getPlatformSyncPartialMatchingProducts"]),
+    ...mapGetters([
+      "getPlatformSyncPartialMatchingProducts",
+      "getPlatformSyncMatchingProducts",
+      "getPlatformSyncNewProducts",
+      "getPlatformSyncPartialMatchingProducts",
+    ]),
     numberOfConflicts() {
       return this.syncedProducts.length;
     },
@@ -224,6 +239,11 @@ export default {
     font-size: 16px;
     line-height: 22px;
     color: #ffffff;
+
+    &:disabled {
+      background: #e2e7ed;
+      color: #ffffff;
+    }
   }
 }
 

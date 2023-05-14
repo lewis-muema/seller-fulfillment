@@ -54,12 +54,13 @@
             class="step-5-dialog__link-container button"
             @click="goToResolveConflics()"
             v-if="!conflictsResolved"
+            data-test="resolve-conflicts"
           >
             {{ $t("merchant.link") }}
             {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
             {{ $t("merchant.products") }}
           </button>
-          <span v-else>
+          <span v-else data-test="products_linked_count">
             <img
               src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/check-circle-filled.svg"
             /><span class="step-5-dialog__link-container-text"
@@ -68,6 +69,7 @@
               <a
                 class="step-5-dialog__link-container-text-link"
                 @click="goToResolveConflics()"
+                data-test="edit_conflicts"
                 >{{ $t("merchant.edit") }}</a
               ></span
             >
@@ -268,9 +270,21 @@ export default {
     }
   }
 
-  &__actions {
-    margin-top: 130px;
+  &-text {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    letter-spacing: 0.005em;
+    /* Neutral - Grays/gray70 */
+    color: #909399;
   }
+
+  // &__actions {
+  //   margin-top: 130px;
+  // }
 
   &__title {
     font-family: "Nunito Sans";

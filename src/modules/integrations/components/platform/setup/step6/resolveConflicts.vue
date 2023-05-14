@@ -9,7 +9,7 @@
             </v-btn>
           </div>
         </v-col>
-        <v-col class="text__heading">
+        <v-col class="text__heading" data-test="conflicts-count">
           {{ $t("merchant.link") }}
           {{ unresolvedConflicts }}
           {{ $t("merchant.products") }}
@@ -25,6 +25,7 @@
             class="button__select"
             @click="resolveConflicts()"
             :disabled="unresolvedConflicts > 0"
+            data-test="resolve"
           >
             {{ $t("merchant.save_changes") }}
           </button>
@@ -52,12 +53,14 @@
             v-model="conflict.selectedProductId"
             :placeholder="$t('merchant.select_similar_products')"
             class="select-option__text"
+            :data-test="`conflict-selector-${index}`"
           >
             <el-option
               v-for="(product, index) in conflict.matchingProduct"
               :key="index"
               :label="product.name"
               :value="product.id"
+              :data-test="`conflict-solution-${index}`"
             >
               <span>{{ product.name }}</span>
             </el-option>

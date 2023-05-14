@@ -17,11 +17,18 @@ export default createStore({
         platform: {
           productsLoaded: false,
           conflictsResolved: false,
-          finishSyncPayload: {},
+          finishSyncPayload: {
+            currency: "KES", // required
+            createAllProducts: false,
+            products: [],
+            newProducts: [],
+            matchingProducts: [],
+          },
           syncedProducts: {
             partialMatchingProducts: [],
             matchingProducts: [],
             newProducts: [],
+            syncStatus: 0,
           },
         },
       },

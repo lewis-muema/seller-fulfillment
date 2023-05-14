@@ -56,9 +56,12 @@
             ></v-col
           >
           <v-col class="align-right">
-            <span v-if="currentStep < index" class="platform-steps__status">{{
-              $t("merchant.Pending")
-            }}</span>
+            <div v-if="currentStep < index">
+              <span class="platform-steps__status">{{
+                $t("merchant.Pending")
+              }}</span>
+              <button @click="status.action()">Resume</button>
+            </div>
             <span v-else class="platform-steps__status">{{
               $t("merchant.Complete")
             }}</span>
@@ -71,6 +74,7 @@
 
 <script>
 import { computed, reactive, ref } from "vue";
+
 export default {
   name: "IntegrationContainer",
   props: {
@@ -83,10 +87,6 @@ export default {
   setup(props) {
     const availableIntegration = ref(
       Object.keys(props.integration).length !== 0
-    );
-
-    const integrationStatus = computed(
-      () => props.integration.integration_status || null
     );
 
     // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
@@ -112,7 +112,6 @@ export default {
     const showSteps = computed(() => availableIntegration.value);
 
     return {
-      integrationStatus,
       showSteps,
       currentStatus,
       currentStep,

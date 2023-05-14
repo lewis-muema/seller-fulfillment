@@ -130,7 +130,75 @@
                 "fulfilmentProductIds": "P-HCPL-4895_PV-FNLU-1128"
               }
             ]
-          }
+          },
+           {
+             "baseProduct": {
+               "productId": "P-LKPG-0436",
+               "objectID": "P-LKPG-0436",
+               "createdDate": 1682489465000,
+               "productName": "Samsung Galaxy F62",
+               "productDescription": "Samsung Galaxy F62",
+               "productMainColor": null,
+               "productArchived": false,
+               "businessId": "B-CZOC-0141",
+               "productCollection": null,
+               "salesChannelCollections": [],
+               "productVariants": [
+                 {
+                   "productVariantId": "PV-ZLHB-3970",
+                   "businessId": "B-CZOC-0141",
+                   "productId": "P-LKPG-0436",
+                   "universalProductCode": "",
+                   "productVariantDescription": "Samsung Galaxy F62",
+                   "productVariantCurrency": "KES",
+                   "productVariantUnitPrice": 50000,
+                   "productVariantImageLink": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk2.png",
+                   "productVariantExpiryDate": 0,
+                   "productVariantQuantity": 0,
+                   "productVariantQuantityType": "GRAM",
+                   "productVariantStockLevels": {
+                     "available": 0,
+                     "quantityInInventory": 0,
+                     "quantityInSalesOrders": 0,
+                     "quantityHeldLocally": 0,
+                     "quantityHeldInFulfilmentRequests": 0,
+                     "quantityIncoming": 0,
+                     "lastUpdatedDate": 1682490712645
+                   },
+                   "productVariantArchived": false,
+                   "productVariantProperties": [],
+                   "lowStockThreshold": 5
+                 }
+               ]
+             },
+             "matchingProduct": [
+               {
+                 "id": "29",
+                 "u_sku": "",
+                 "name": "Samsung Galaxy Tab",
+                 "short_description": "",
+                 "price": 1,
+                 "quantity": 0,
+                 "weight_unit": "g",
+                 "images": [
+                   {
+                     "id": "base_22",
+                     "http_path": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk9.png",
+                     "file_name": "mk9.png",
+                     "mime-type": "image/png",
+                     "size": null,
+                     "create_at": null,
+                     "modified_at": null,
+                     "alt": "Samsung Galaxy Tab",
+                     "avail": true,
+                     "sort_order": 0,
+                     "type": "IMAGE_TYPE_BASE"
+                   }
+                 ],
+                 "fulfilmentProductIds": "P-HCPL-4895_PV-FNLU-1128"
+               }
+             ]
+           }
         ],
         "matchingProducts": [
           {
@@ -265,7 +333,7 @@
         ]
       },
       "canSyncProducts": true,
-      "syncStatus": 3
+      "syncStatus": 1
     }
   },
   "matchingProductsInventory": {
@@ -370,7 +438,125 @@
         ]
       },
       "canSyncProducts": false,
-      "syncStatus": 2
+      "syncStatus": 3
     }
+  },
+  "conflictingProductsPayload":{
+    "currency": "KES",
+    "createAllProducts": false,
+    "products": [
+      {
+        "api2CartProduct": "29",
+        "fulfilmentProduct": {
+          "productId": "P-LKPG-0436",
+          "productVariationId": "PV-ZLHB-3970"
+        },
+        "createFulfilmentProduct": false
+      },
+      {
+        "api2CartProduct": "29",
+        "fulfilmentProduct": {
+          "productId": "P-LKPG-0436",
+          "productVariationId": "PV-ZLHB-3970"
+        },
+        "createFulfilmentProduct": false
+      }
+    ],
+    "newProducts": [
+      {
+        "id": "29",
+        "u_sku": "",
+        "name": "Samsung Galaxy Tab",
+        "short_description": "",
+        "price": 1,
+        "quantity": 0,
+        "weight_unit": "g",
+        "images": [
+          {
+            "id": "base_22",
+            "http_path": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk9.png",
+            "file_name": "mk9.png",
+            "mime-type": "image/png",
+            "size": null,
+            "create_at": null,
+            "modified_at": null,
+            "alt": "Samsung Galaxy Tab",
+            "avail": true,
+            "sort_order": 0,
+            "type": "IMAGE_TYPE_BASE"
+          }
+        ]
+      }
+    ],
+    "matchingProducts": [
+      {
+        "baseProduct": {
+          "productId": "P-LKPG-0436",
+          "objectID": "P-LKPG-0436",
+          "createdDate": 1682489465000,
+          "productName": "Samsung Galaxy F62",
+          "productDescription": "Samsung Galaxy F62",
+          "productMainColor": null,
+          "productArchived": false,
+          "businessId": "B-CZOC-0141",
+          "productCollection": null,
+          "salesChannelCollections": [],
+          "productVariants": [
+            {
+              "productVariantId": "PV-ZLHB-3970",
+              "businessId": "B-CZOC-0141",
+              "productId": "P-LKPG-0436",
+              "universalProductCode": "",
+              "productVariantDescription": "Samsung Galaxy F62",
+              "productVariantCurrency": "KES",
+              "productVariantUnitPrice": 50000,
+              "productVariantImageLink": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk2.png",
+              "productVariantExpiryDate": 0,
+              "productVariantQuantity": 0,
+              "productVariantQuantityType": "GRAM",
+              "productVariantStockLevels": {
+                "available": 0,
+                "quantityInInventory": 0,
+                "quantityInSalesOrders": 0,
+                "quantityHeldLocally": 0,
+                "quantityHeldInFulfilmentRequests": 0,
+                "quantityIncoming": 0,
+                "lastUpdatedDate": 1682490712645
+              },
+              "productVariantArchived": false,
+              "productVariantProperties": [],
+              "lowStockThreshold": 5
+            }
+          ]
+        },
+        "matchingProduct": [
+          {
+            "id": "29",
+            "u_sku": "",
+            "name": "Samsung Galaxy Tab",
+            "short_description": "",
+            "price": 1,
+            "quantity": 0,
+            "weight_unit": "g",
+            "images": [
+              {
+                "id": "base_22",
+                "http_path": "https://demo.sendyit.com/wp-content/uploads/2022/09/mk9.png",
+                "file_name": "mk9.png",
+                "mime-type": "image/png",
+                "size": null,
+                "create_at": null,
+                "modified_at": null,
+                "alt": "Samsung Galaxy Tab",
+                "avail": true,
+                "sort_order": 0,
+                "type": "IMAGE_TYPE_BASE"
+              }
+            ],
+            "fulfilmentProductIds": "P-HCPL-4895_PV-FNLU-1128"
+          }
+        ]
+      }
+    ]
   }
 }

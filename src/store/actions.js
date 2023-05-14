@@ -4,7 +4,6 @@ import jwt_decode from "jwt-decode";
 import router from "../router";
 import { ElNotification } from "element-plus";
 import moment, { duration } from "moment";
-import inventoryJson from "../../tests/e2e/fixtures/integrations.json";
 
 let errorRefreshStatus = true;
 

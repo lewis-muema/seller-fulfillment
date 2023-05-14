@@ -189,34 +189,44 @@ describe("Integration Process", () => {
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("be.visible");
           cy.getByData("partialProductsCount").should("be.visible");
+          cy.getByData("continue").should("be.disabled");
+          cy.getByData("resolve-conflicts").click();
+          cy.url().should("include", "conflicts");
+          cy.getByData("resolve").should("be.disabled");
+          cy.getByData("conflict-selector-0").click();
+          cy.getByData("conflict-solution-0").click({
+            multiple: true,
+            force: true,
+          });
+          //
+          cy.getByData("conflicts-count").should("be.visible");
+          cy.getByData("resolve").click();
+          cy.url().should("include", "/setup/6");
+          cy.getByData("resolve-conflicts").should("not.exist");
+          cy.getByData("products_linked_count").should("be.visible");
+          cy.getByData("edit_conflicts").click();
+          cy.getByData("resolve").click();
           cy.getByData("continue").click();
+          cy.wait("@finishSync").then((interception) => {
+            cy.fixture("integrations").then((integrations) => {
+              integrations.conflictingProductsPayload;
+              assert.deepEqual(
+                interception.request.body,
+                integrations.conflictingProductsPayload
+              );
+            });
+          });
+          // .its("request.headers")
+          // .should(
+          //   "have.property",
+          //   "sales-channel-id",
+          //   "18675699-8fe9-4d14-8704-4d555681447e"
+          // );
           cy.url().should("include", "/setup/7");
           cy.getByData("importing-products").should(
             "contain",
             "We're importing your products"
           );
-          cy.wait("@finishSync")
-            // .then((interception) => {
-            //   cy.fixture("integrations").then((integrations) => {
-            //     assert.deepEqual(interception.request.body, {
-            //       currency: "KES", // required
-            //       createAllProducts: false, // required
-            //       syncStatus: 3,
-            //       matchingProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .matchingProducts,
-            //       newProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .newProducts,
-            //     });
-            //   });
-            // })
-            .its("request.headers")
-            .should(
-              "have.property",
-              "sales-channel-id",
-              "18675699-8fe9-4d14-8704-4d555681447e"
-            );
           cy.getByData("close-btn").click();
           cy.url().should("include", "/settings/integrations/index");
         });
@@ -226,9 +236,11 @@ describe("Integration Process", () => {
         cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
           statusCode: 200,
           body: integrations.newProductsInventory,
+          times: 1,
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("not.exist");
           cy.getByData("partialProductsCount").should("not.exist");
@@ -239,21 +251,13 @@ describe("Integration Process", () => {
             "We're importing your products"
           );
           cy.wait("@finishSync")
-            // .then((interception) => {
-            //   cy.fixture("integrations").then((integrations) => {
-            //     assert.deepEqual(interception.request.body, {
-            //       currency: "KES", // required
-            //       createAllProducts: false, // required
-            //       syncStatus: 3,
-            //       matchingProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .matchingProducts,
-            //       newProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .newProducts,
-            //     });
-            //   });
-            // })
+            .then((interception) => {
+              assert.deepEqual(interception.request.body, {
+                currency: "KES", // required
+                createAllProducts: true, // required
+                syncStatus: 1,
+              });
+            })
             .its("request.headers")
             .should(
               "have.property",
@@ -281,40 +285,24 @@ describe("Integration Process", () => {
             "contain",
             "We're importing your products"
           );
-          cy.wait("@finishSync")
-            // .then((interception) => {
-            //   cy.fixture("integrations").then((integrations) => {
-            //     assert.deepEqual(interception.request.body, {
-            //       currency: "KES", // required
-            //       createAllProducts: false, // required
-            //       syncStatus: 3,
-            //       matchingProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .matchingProducts,
-            //       newProducts:
-            //         integrations.matchingProductsInventory.data.products
-            //           .newProducts,
-            //     });
-            //   });
-            // })
-            .its("request.headers")
-            .should(
-              "have.property",
-              "sales-channel-id",
-              "18675699-8fe9-4d14-8704-4d555681447e"
-            );
+          cy.wait("@finishSync").then((interception) => {
+            cy.fixture("integrations").then((integrations) => {
+              assert.deepEqual(interception.request.body, {
+                currency: "KES", // required
+                createAllProducts: false, // required
+                syncStatus: 3,
+                matchingProducts:
+                  integrations.matchingProductsInventory.data.products
+                    .matchingProducts,
+                newProducts:
+                  integrations.matchingProductsInventory.data.products
+                    .newProducts,
+              });
+            });
+          });
           cy.getByData("close-btn").click();
           cy.url().should("include", "/settings/integrations/index");
         });
-      });
-    });
-
-    it(`Should be able to resolve conflicts when importing products`, () => {
-      cy.integrationStepsToImport().then(() => {
-        cy.getByData("import-products").click();
-        cy.url().should("include", "/setup/5");
-        cy.getByData("continue").click();
-        cy.url().should("include", "/setup/6");
       });
     });
 

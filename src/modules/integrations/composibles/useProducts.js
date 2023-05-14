@@ -36,14 +36,13 @@ const useProducts = () => {
     });
   };
 
-  const finishSync = (payload = null) => {
+  const finishSync = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        //to-do: ccleanup
         await store.dispatch(
           "finishSyncingPlatformProducts",
-          payload || finishSyncPayload.value
+          JSON.stringify(finishSyncPayload.value)
         );
         resolve();
       } catch (e) {

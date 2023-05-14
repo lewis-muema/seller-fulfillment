@@ -150,6 +150,7 @@ export default {
               createAllProducts: true, // required
               syncStatus: 1,
             };
+            store.dispatch("setFinishSyncPayload", payload);
             break;
           case 3:
             payload = {
@@ -159,11 +160,11 @@ export default {
               matchingProducts: getPlatformSyncMatchingProducts.value,
               newProducts: getPlatformSyncNewProducts.value,
             };
+            store.dispatch("setFinishSyncPayload", payload);
             break;
           default:
             break;
         }
-        store.dispatch("setFinishSyncPayload", payload);
         await finishSync(payload);
         router.push({ name: "SetupStep7" });
       } catch (error) {

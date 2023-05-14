@@ -53,7 +53,6 @@ const useIntegrations = () => {
                   addedBy: salesChannel.salesChannelProperties.addedBy,
                   ...salesChannel,
                 };
-                // to-do: remove after vuex implimentation
                 localStorage.setItem("platformSalesChannelId", salesChannel.id);
                 break;
               case 3:

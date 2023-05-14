@@ -32,9 +32,18 @@
 
 <script>
 import platformSetupMixin from "@/modules/integrations/mixins/platformSetup";
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations";
+import { onMounted } from "vue";
 
 export default {
   mixins: [platformSetupMixin],
+  setup() {
+    const { fetchIntegrations } = useIntegrations();
+
+    onMounted(async () => {
+      await fetchIntegrations();
+    });
+  },
 };
 </script>
 

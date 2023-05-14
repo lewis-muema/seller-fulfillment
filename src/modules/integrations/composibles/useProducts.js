@@ -4,7 +4,6 @@ import { ElNotification } from "element-plus";
 
 const useProducts = () => {
   const store = useStore();
-  const productsLoading = ref(false);
   const productsLoaded = ref(false);
   //to-do: redirect user to previous step if the sales channel is not available
   // const salesChannelId = computed(
@@ -19,7 +18,6 @@ const useProducts = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const salesChannelId = localStorage.getItem("platformSalesChannelId");
-      productsLoading.value = true;
       try {
         await store.dispatch("syncPlatformProducts", {
           salesChannelId,
@@ -34,8 +32,6 @@ const useProducts = () => {
         });
         productsLoaded.value = false;
         reject(e);
-      } finally {
-        productsLoading.value = false;
       }
     });
   };
@@ -65,7 +61,6 @@ const useProducts = () => {
     sync,
     finishSync,
     productsLoaded,
-    productsLoading,
     getPlatformSyncStatus: computed(() => store.getters.getPlatformSyncStatus),
     getPlatformSyncProducts: computed(
       () => store.getters.getPlatformSyncProducts

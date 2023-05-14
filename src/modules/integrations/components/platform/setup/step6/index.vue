@@ -1,5 +1,5 @@
 <template>
-  <div class="step-5-dialog">
+  <div class="step-5-dialog" v-loading="loading">
     <div class="step-5-dialog__card">
       <div class="top-action-bar">
         <v-btn class="back-btn" dark @click="back()">
@@ -10,7 +10,7 @@
         {{ $t("merchant.ready_to_import") }}
       </v-card-title>
       <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-      <div v-loading="loading" v-show="productsLoaded">
+      <div v-show="productsLoaded">
         <v-card-text>
           <p
             class="step-5-dialog__text"
@@ -98,7 +98,7 @@ import useProducts from "@/modules/integrations/composibles/useProducts";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElNotification } from "element-plus";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 export default {
   name: "step6",
@@ -107,7 +107,6 @@ export default {
     const {
       getPlatformSyncProducts,
       getPlatformSyncStatus,
-      productsLoading,
       productsLoaded,
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,
@@ -123,8 +122,21 @@ export default {
 
     const router = useRouter();
 
+    const loading = ref(false);
+
     onMounted(async () => {
-      await sync();
+      loading.value = true;
+      sync()
+        .then((response) => {
+          loading.value = false;
+
+          return response;
+        })
+        .catch((e) => {
+          loading.value = false;
+
+          return e;
+        });
     });
 
     const shouldAllowContinue = computed(
@@ -176,7 +188,7 @@ export default {
       finishSyncingProducts,
       getPlatformSyncProducts,
       getPlatformSyncStatus,
-      loading: productsLoading,
+      loading,
       productsLoaded,
       getPlatformSyncPartialMatchingProducts,
       getPlatformSyncMatchingProducts,

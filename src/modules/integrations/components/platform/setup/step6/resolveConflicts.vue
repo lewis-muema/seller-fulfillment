@@ -35,7 +35,7 @@
       <hr class="divider" />
       <v-row>
         <v-col offset="1" cols="5" class="text__sub-heading">
-          {{ $t("merchant.from_shopify_store") }}
+          {{ $t("merchant.from_your_store") }}
         </v-col>
         <v-col class="text__sub-heading"
           >{{ $t("merchant.import_products_to_sendy") }}

@@ -25,9 +25,16 @@ export default {
   },
   mounted() {
     this.setComponent("common.integrations");
+    provide(
+      "refreshIntegrationsComponent",
+      this.refreshIntegrationsComponent()
+    );
   },
   methods: {
     ...mapMutations(["setComponent"]),
+    refreshIntegrationsComponent() {
+      this.componentKey += 1;
+    },
   },
 };
 </script>

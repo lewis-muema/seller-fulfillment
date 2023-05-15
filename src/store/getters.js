@@ -12,13 +12,7 @@ export default {
   getDeliveries: (state) => state.deliveries,
   getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
-  getRecepientInfo: (state) => state.recepientInfo,
-  getOnDemandDeliveries: (state) => state.onDemandDeliveries,
-  getEdittedDocuments: (state) => state.edittedDocuments,
-  getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
-  getEditedDocuments: (state) => state.editedDocuments,
   getPickupInfo: (state) => state.pickupInfo,
-  getGeofenceData: (state) => state.geofenceData,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
   getStatements: (state) => state.statements,
@@ -32,6 +26,7 @@ export default {
   getDefaultLanguage: (state) => state.defaultLanguage,
   getDownloadActions: (state) => state.downloadActions,
   getDeliveryActions: (state) => state.deliveryActions,
+  getOnDemandDeliveryActions: (state) => state.onDemandDeliveryActions,
   getActivityLog: (state) => state.activityLog,
   getActivityLogs: (state) => state.activityLogs,
   getProductsToSubmit: (state) => state.productsToSubmit,
@@ -60,8 +55,6 @@ export default {
   isAuthenticated: (state) => state.accessToken !== null,
   getTabStatus: (state) => state.tabStatus,
   getOrderTrackingData: (state) => state.orderTrackingData,
-  getDirectDeliveriesTrackingData: (state) =>
-    state.directDeliveriesTrackingData,
   getTimelineIcons: (state) => state.timelineIcons,
   getDeliveryAttempts: (state) => state.deliveryAttempts,
   getProduct: (state) => state.product,
@@ -172,4 +165,6 @@ export default {
     state.integrations.platform.conflictsResolved,
   getPlatformProductsLoaded: (state) =>
     state.integrations.platform.productsLoaded,
+  getBanner: (state) => state.banner,
+  getPaymentRedirectURL: (state) => state.paymentRedirectURL,
 };

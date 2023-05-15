@@ -1,60 +1,113 @@
 <template>
-  <v-menu
-    transition="slide-y-transition"
-    anchor="bottom center"
-    v-model="searchToggle"
-    class="search-algolia"
+  <v-text-field
+    class="consignment-input-search"
+    color="#324BA8"
+    prepend-inner-icon="mdi-magnify"
+    clearable
+    :label="
+      type === 'product'
+        ? $t('deliveries.searchProducts')
+        : type === 'delivery'
+        ? $t('deliveries.searchUsingNameOrPhoneNumber')
+        : $t('deliveries.searchUsingDestination')
+    "
+    variant="outlined"
+    v-model="searchParam"
+    @click:clear="clearItems()"
+    :placeholder="
+      type === 'product'
+        ? $t('deliveries.searchProducts')
+        : $t('deliveries.searchUsingNameOrPhoneNumber')
+    "
+    @focus="searchActive = true"
+  ></v-text-field>
+  <div
+    class="search-suggestions-outer"
+    v-if="searchItems.length && searchActive && searchParam !== ''"
   >
-    <template v-slot:activator="{ props }">
-      <v-text-field
-        class="consignment-input-search"
-        color="#324BA8"
-        v-bind="props"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        :label="
-          type === 'product'
-            ? $t('deliveries.searchProducts')
-            : $t('deliveries.searchUsingNameOrPhoneNumber')
-        "
-        variant="outlined"
-        v-model="searchParam"
-        @click:clear="clearItems()"
-        :placeholder="
-          type === 'product'
-            ? $t('deliveries.searchProducts')
-            : $t('deliveries.searchUsingNameOrPhoneNumber')
-        "
-      ></v-text-field>
-    </template>
-    <v-list class="header-list-popup" v-if="type === 'product'">
-      <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title @click="productTrigger(item)">
-          <div class="search-item-flex">
-            <div class="search-items-image-container">
-              <img
-                class="search-items-image"
-                :src="item.product_variants[0].product_variant_image_link"
-                alt="product-image"
-              />
+    <div class="search-suggestions-close" @click="searchActive = false">
+      {{ $t("inventory.hide") }}
+    </div>
+    <div class="search-suggestions-overlay" v-if="type === 'product'">
+      <div class="search-product" v-for="(item, i) in searchItems" :key="i">
+        <div class="search-item-flex" @click="productTrigger(item)">
+          <div class="search-items-image-container">
+            <img
+              class="search-items-image"
+              :src="item.product_variants[0].product_variant_image_link"
+              alt="product-image"
+            />
+          </div>
+          <div>
+            <div class="search-item-row">
+              <div class="search-product-name">{{ item.product_name }}</div>
+              <div class="search-product-description">
+                {{ item.product_description }}
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="search-suggestions-overlay" v-if="type === 'OnDemand'">
+      <div class="search-product" v-for="(item, i) in searchItems" :key="i">
+        <div
+          @click="
+            $router.push(`/deliveries/track-direct-deliveries/${item.order_id}`)
+          "
+        >
+          <div class="search-item-flex">
             <div>
               <div class="search-item-row">
-                <div class="search-item-name">{{ item.product_name }}</div>
-                <div class="search-item-description">
-                  {{ item.product_description }}
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderNumber") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_id }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.pickupLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.deliveryLocation") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[1].delivery_location.description }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.orderStatus") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.order_status.replaceAll("_", " ") }}
+                  </span>
+                </div>
+                <div>
+                  <span class="search-item-description">
+                    {{ $t("deliveries.products") }}:
+                  </span>
+                  <span class="search-item-name">
+                    {{ item.instructions[0].actions[0].package_description }}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-    <v-list class="header-list-popup" v-else>
-      <v-list-item v-for="(item, i) in searchItems" :key="i">
-        <v-list-item-title
-          @click="$router.push(`/deliveries/tracking/${item.order_id}`)"
-        >
+        </div>
+      </div>
+    </div>
+    <div class="search-suggestions-overlay" v-if="type === 'delivery'">
+      <div class="search-product" v-for="(item, i) in searchItems" :key="i">
+        <div @click="$router.push(`/deliveries/tracking/${item.order_id}`)">
           <div class="search-item-flex">
             <div>
               <div class="search-item-row">
@@ -109,10 +162,10 @@
               </div>
             </div>
           </div>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -130,6 +183,7 @@ export default {
     range: "",
     searchParam: "",
     searchToggle: false,
+    searchActive: false,
   }),
   computed: {
     ...mapGetters([
@@ -231,9 +285,51 @@ export default {
   font-size: 12px;
 }
 .search-item-name {
-  font-size: 14px;
+  font-size: 16px;
 }
 .search-algolia .v-overlay__content {
   position: sticky !important;
+}
+.search-suggestions-outer {
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  border: 1px solid #e0e0e0;
+}
+.search-suggestions-overlay {
+  max-height: 400px;
+  overflow-y: scroll;
+  padding: 25px;
+}
+.search-product-name {
+  font-size: 18px;
+}
+.search-product-description {
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #818487;
+  font-size: 14px;
+}
+.search-product {
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.search-product:hover {
+  background-color: whitesmoke;
+}
+.search-suggestions-close {
+  float: right;
+  font-size: 15px;
+  cursor: pointer;
+  color: white;
+  background: #324aa8;
+  padding: 5px 10px;
+  border-radius: 5px;
+  position: absolute;
+  right: 0px;
+  top: -35px;
 }
 </style>

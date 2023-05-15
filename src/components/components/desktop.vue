@@ -7,7 +7,7 @@
         <v-main>
           <headers v-if="!external" />
           <accessDeniedScreen v-if="accessDenied" />
-          <router-view v-else />
+          <router-view class="router-view-container" v-else />
         </v-main>
       </v-layout>
     </v-card>
@@ -92,6 +92,9 @@ export default {
           "/direct/create-delivery",
         ]);
       }
+      if (!this.getBusinessDetails?.settings?.metabase_analytics_enabled) {
+        noAccess = noAccess.concat(["/analytics"]);
+      }
       this.setAccessDenied(noAccess);
       this.accessDenied = noAccess.find((row) =>
         this.$route.path.includes(row)
@@ -113,5 +116,9 @@ export default {
 }
 .sidebar {
   height: 100vh;
+}
+.router-view-container {
+  height: calc(100vh - 60px);
+  overflow-y: scroll;
 }
 </style>

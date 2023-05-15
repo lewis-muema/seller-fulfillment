@@ -54,7 +54,20 @@
           </el-option>
         </el-select>
       </div>
-      <div class="col-5"></div>
+      <div class="col-5">
+        <div class="transaction-info-bar-download">
+          <div class="transaction-info-export">
+            <div class="transaction-export-button" @click="triggerExport()">
+              <span>
+                <i class="mdi mdi-export-variant export-icon"></i>
+              </span>
+              <span>
+                {{ $t("common.export") }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="col-4">
         <el-date-picker
           class="deliveries-date-picker transaction-page-date-range"
@@ -67,7 +80,7 @@
       </div>
     </div>
     <div
-      class="m-4 mt-3 transactions-top-recent-list-container"
+      class="m-4 mt-3 transactions-top-recent-list-container scroll-y"
       v-if="transactions.length"
     >
       <div
@@ -257,7 +270,16 @@ export default {
       "setLoader",
       "setBillingCycles",
       "setActiveTransaction",
+      "setExportDataType",
+      "setOverlayStatus",
     ]),
+    triggerExport() {
+      this.setOverlayStatus({
+        overlay: true,
+        popup: "export",
+      });
+      this.setExportDataType("TRANSACTION");
+    },
     timeFormat(date) {
       return moment(date).format("h:mm A, Do MMM");
     },
@@ -379,5 +401,15 @@ export default {
 .billing-cycle-view {
   color: #324ba8;
   cursor: pointer;
+}
+.transaction-export-button {
+  margin: 10px 0px 0px 100px;
+  color: #324ba8;
+  cursor: pointer;
+}
+.scroll-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px;
 }
 </style>

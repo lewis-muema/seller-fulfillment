@@ -177,7 +177,7 @@ export default {
           url: "/inventory/add-pickup-products",
         },
         {
-          title: "dashboard.deliverOnDemand",
+          title: "dashboard.hireAVehicle",
           icon: "mdi-truck-outline",
           url: "/direct/create-delivery",
         },
@@ -228,8 +228,8 @@ export default {
       this.shortcuts.forEach((shortcut) => {
         if (
           (this.directFulfillmentFlag &&
-            shortcut.title === "dashboard.deliverOnDemand") ||
-          shortcut.title !== "dashboard.deliverOnDemand"
+            shortcut.title === "dashboard.hireAVehicle") ||
+          shortcut.title !== "dashboard.hireAVehicle"
         ) {
           links.push(shortcut);
         }
@@ -344,6 +344,12 @@ export default {
         return {
           label: this.$t("common.viewProduct"),
           link: `/inventory/view-product/${notification.entity_identifier}`,
+        };
+      }
+      if (notification.entity_type === "POINT_TO_POINT_ORDER") {
+        return {
+          label: this.$t("common.trackDelivery"),
+          link: `/deliveries/track-direct-deliveries/${notification.entity_identifier}`,
         };
       }
       return "";
@@ -532,6 +538,7 @@ export default {
     0px 0px 10px 0px rgb(0 0 0 / 14%), 0px 0px 10px 0px rgb(0 0 0 / 12%) !important;
   padding: 5px 10px;
   margin-top: 5px;
+  max-height: 90vh;
 }
 .header-profile-popup {
   box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%),

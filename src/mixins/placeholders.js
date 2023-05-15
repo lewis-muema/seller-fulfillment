@@ -909,6 +909,218 @@ const placeholders = {
             },
           ],
         },
+        {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
       ],
       placeholderProducts: [
         {
@@ -1059,7 +1271,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_ORDER_CREATED",
-          translated_event_code: "summarised.event.pickup.order.created",
+          translated_event_code: "Order created",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1067,7 +1279,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_WAITING_FOR_PARTNER",
-          translated_event_code: "summarised.event.pickup.waiting.for.partner",
+          translated_event_code: "Waiting for partner",
           notes: "",
           event_tense: "FUTURE",
           metadata: {},
@@ -1075,8 +1287,7 @@ const placeholders = {
         {
           event_date: 1647870724000,
           event_code: "EVENT_PICKUP_PARTNER_ARRIVED_AT_PICKUP_LOCATION",
-          translated_event_code:
-            "summarised.event.pickup.partner.arrived.at.pickup.location",
+          translated_event_code: "Partner arrived at location",
           notes: "",
           event_tense: "FUTURE",
           metadata: {
@@ -1087,8 +1298,7 @@ const placeholders = {
           event_date: 1647870724000,
           event_code:
             "EVENT_PICKUP_PARTNER_SUBMITTED_ITEMS_AT_HUB_CONFIRMED_VIA_CODE",
-          translated_event_code:
-            "summarised.event.pickup.partner.submitted.items.at.hub.confirmed.via.code",
+          translated_event_code: "Partner submitted items",
           notes: null,
           event_tense: "FUTURE",
           metadata: {},
@@ -1140,6 +1350,61 @@ const placeholders = {
           },
         },
         errors: [],
+      },
+      placeholderOnDemand: {
+        orders: {
+          order_id: "P2P-ZKJBD-04923",
+          order_status: "ORDER_RECEIVED",
+          order_type: "POINT_TO_POINT",
+          created_date: 1678416647000,
+          business_id: "B-AEB-9648",
+          updated_date: 1678416647000,
+          scheduled_date: 1678416646000,
+          instructions: [
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.9218576,
+                latitude: -1.1927458,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "PICK_PACKAGE",
+                },
+              ],
+            },
+            {
+              name: "Jim Wanjogu",
+              phone_number: "+254723333444",
+              secondary_phone_number: "string",
+              delivery_location: {
+                description: "Garden City, Thika Road, Nairobi",
+                longitude: 36.80885626951856,
+                latitude: -1.2701766584461716,
+                zone_name: null,
+                zone_id: null,
+              },
+              house_location: "House 3R ,4th Floor, Airpods Apartments",
+              delivery_instructions: "Leave at the door",
+              actions: [
+                {
+                  package_uuid: "12345678",
+                  package_description: "Bananas",
+                  action_type: "DROP_PACKAGE",
+                },
+              ],
+            },
+          ],
+        },
       },
     };
   },

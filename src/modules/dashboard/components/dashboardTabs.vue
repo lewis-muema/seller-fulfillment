@@ -11,13 +11,17 @@
             ? 'inactive-tab'
             : 'active-tab'
         "
-        v-for="tab in tabs"
+        v-for="tab in filteredTabs"
         :key="tab.label"
         :label="tab.label"
       >
         <div
-          class="dashboard-deliveries-tab-section"
-          :class="activeTab === tab.label ? 'active' : ''"
+          :class="[
+            tab.label === 'common.hiredVehicles'
+              ? 'dashboard-deliveries-ondemand-section'
+              : 'dashboard-deliveries-tab-section',
+            activeTab === tab.label ? 'active' : '',
+          ]"
         >
           <span
             class="d-flex"
@@ -59,6 +63,11 @@ export default {
           label: "dashboard.toSendy",
           content: "-",
         },
+
+        {
+          label: "common.hiredVehicles",
+          content: "-",
+        },
       ],
       deliveries: [
         {
@@ -85,12 +94,19 @@ export default {
   watch: {
     "$store.state.loader": {
       handler(val) {
-        if (val.consignments === "" || val.deliveries === "") {
+        if (
+          val.consignments === "" ||
+          val.deliveries === "" ||
+          val.onDemandOrders === ""
+        ) {
           this.tabs[0].content = this.ongoingDeliveries
             ? this.ongoingDeliveries
             : 0;
           this.tabs[1].content = this.ongoingConsignments
             ? this.ongoingConsignments
+            : 0;
+          this.tabs[2].content = this.ongoingPointToPointDeliveries
+            ? this.ongoingPointToPointDeliveries
             : 0;
         }
       },
@@ -106,7 +122,27 @@ export default {
       "getLoader",
       "getDeliveries",
       "getConsignments",
+      "getPointToPointStatistics",
+      "getBusinessDetails",
     ]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredTabs() {
+      const tabs = [];
+      this.tabs.forEach((tab) => {
+        if (
+          (this.directFulfillmentFlag &&
+            tab.label === "common.hiredVehicles") ||
+          tab.label !== "common.hiredVehicles"
+        ) {
+          tabs.push(tab);
+        }
+      });
+      return tabs;
+    },
     activeTab() {
       return this.getDashboardSelectedTab;
     },
@@ -130,6 +166,16 @@ export default {
         parseInt(this.getConsignmentStatistics.ORDER_CANCELED)
       );
     },
+    ongoingPointToPointDeliveries() {
+      return (
+        parseInt(this.getPointToPointStatistics.ORDER_RECEIVED) +
+        parseInt(this.getPointToPointStatistics.ORDER_IN_PROCESSING) +
+        parseInt(this.getPointToPointStatistics.ORDER_IN_TRANSIT) +
+        parseInt(this.getPointToPointStatistics.ORDER_FAILED) +
+        parseInt(this.getPointToPointStatistics.ORDER_COMPLETED) +
+        parseInt(this.getPointToPointStatistics.ORDER_CANCELED)
+      );
+    },
   },
 };
 </script>
@@ -146,12 +192,20 @@ export default {
   font-weight: 500;
   padding: 5px 10px;
 }
+.dashboard-deliveries-ondemand-section {
+  width: max-content;
+  display: flex;
+  color: #909399;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+}
 .dashboard-deliveries-tab-section-inner {
   cursor: pointer;
 }
 .desktop-dashboard-tab-container {
   display: grid;
-  grid-template-columns: 190px 190px;
+  grid-template-columns: 190px 130px 190px;
   border-bottom: 1px solid #e2e7ed;
 }
 .desktop-dashboard-tab {

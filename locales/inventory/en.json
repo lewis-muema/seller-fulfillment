@@ -331,5 +331,6 @@
   "weCouldntUseThisFile": "We couldn’t use this file. Please choose another one or fill in manually",
   "outsideGeofence": "You cannot select payment on delivery for this location",
   "couldNotReadProducts": "Sorry, We could not read products from this document",
-  "todaysStats": "Today’s stats"
+  "todaysStats": "Today’s stats",
+  "hide": "Hide"
 }

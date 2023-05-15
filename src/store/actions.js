@@ -138,25 +138,25 @@ export default {
 
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
-    dispatch("setErrorAction", error.response.data?.errors);
+    dispatch("setErrorAction", error?.response?.data?.errors);
 
-    if (error.response.status === 403 && errorRefreshStatus) {
+    if (error?.response?.status === 403 && errorRefreshStatus) {
       dispatch("refreshToken", error);
       errorRefreshStatus = false;
     }
-    if (error.response.status === 502) {
+    if (error?.response?.status === 502) {
       console.log(error);
     }
     if (
-      error.response.status === 404 &&
-      error.response.config.url.includes("token")
+      error?.response?.status === 404 &&
+      error?.response?.config?.url.includes("token")
     ) {
       router.push("/auth/sign-in");
     }
     if (
-      error.response.status === 404 &&
+      error?.response?.status === 404 &&
       ["business.notfound", "user.notfound"].includes(
-        error.response.data.errors[0].message
+        error?.response?.data?.errors[0]?.message
       )
     ) {
       router.push("/auth/sign-in");

@@ -376,7 +376,7 @@ export default {
           } else {
             ElNotification({
               title: this.$t("inventory.consignmentCreationFailed"),
-              message: "",
+              message: response?.response?.data?.errors[0]?.message,
               type: "error",
             });
           }

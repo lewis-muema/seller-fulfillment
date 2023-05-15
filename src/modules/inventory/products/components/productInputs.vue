@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="">
+      <v-col cols="" class="add-product-left-col">
         <div class="">
           <label for="productName" class="form-label">
             {{ $t("inventory.nameOfProduct") }}</label
@@ -12,7 +12,6 @@
               class="form-control"
               v-model="name"
               :placeholder="$t('inventory.whiteCoats')"
-              :disabled="action === 'editProduct'"
             />
           </div>
           <div class="add-product-helper-text">
@@ -759,6 +758,7 @@ export default {
 }
 .desktop-product-options-content {
   padding: 20px 20px 0px 20px !important;
+  width: 420px;
 }
 .add-product-sizes,
 .add-product-options {
@@ -809,5 +809,8 @@ label {
 }
 .el-slider {
   --el-slider-main-bg-color: #324ba8 !important;
+}
+.add-product-left-col {
+  width: 425px;
 }
 </style>

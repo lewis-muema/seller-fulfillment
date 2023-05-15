@@ -1,91 +1,103 @@
 <template>
-  <div class="direct-inputs-container">
-    <div class="location-divider" />
-    <div class="d-flex">
-      <div class="direct-inputs-prefix-icon pickup-prefix-icon" />
-      <GMapAutocomplete
-        id="pick-up"
-        class="businessProfile-address direct-inputs"
-        :value="pickup.name"
-        :options="getMapOptions"
-        :placeholder="$t('deliveries.enterPickupLocation')"
-        @place_changed="setPickUp"
-        @click="showSuggestions('pick-up', 0)"
-      >
-      </GMapAutocomplete>
-    </div>
-    <div class="d-flex">
-      <div class="direct-inputs-prefix-icon" />
-      <GMapAutocomplete
-        id="destination"
-        class="businessProfile-address direct-inputs"
-        :value="location.name"
-        :options="getMapOptions"
-        :placeholder="$t('deliveries.enterDestination')"
-        @place_changed="setDestination"
-        @click="showSuggestions('destination', 1)"
-      >
-      </GMapAutocomplete>
-    </div>
-    <div class="d-flex" v-for="(destination, x) in destinations" :key="x">
-      <div class="direct-inputs-prefix-icon" />
-      <GMapAutocomplete
-        :id="`destination${x}`"
-        class="businessProfile-address direct-inputs"
-        :value="destination.name"
-        :options="getMapOptions"
-        :placeholder="$t('deliveries.enterDestination')"
-        @place_changed="setExtraDestination($event, x)"
-        @click="showSuggestions('destination', x + 2)"
-      >
-      </GMapAutocomplete>
-      <i
-        class="mdi mdi-close direct-inputs-close-destination"
-        @click="removeDestination(x + 2)"
-      ></i>
-    </div>
+  <div
+    class="direct-inputs-cont"
+    :class="
+      getBanner !== false
+        ? 'direct-inputs-container'
+        : 'direct-inputs-container-long'
+    "
+  >
     <div v-if="getDirectOrderStep === 0">
-      <div class="direct-inputs-add-destination" @click="addDestination()">
-        <i class="mdi mdi-plus"></i>
-        {{ $t("deliveries.addDestination") }}
-      </div>
-      <div
-        class="mt-3 direct-inputs-suggestions-container"
-        v-if="suggestionsActive && getLocationSuggestions?.length"
-      >
-        <div
-          v-for="(location, l) in getLocationSuggestions"
-          :key="l"
-          class="direct-inputs-suggestion"
-          @click="selectSuggestion(location)"
+      <div class="location-divider" />
+      <div class="d-flex">
+        <div class="direct-inputs-prefix-icon pickup-prefix-icon" />
+        <GMapAutocomplete
+          id="pick-up"
+          class="businessProfile-address direct-inputs"
+          :value="pickup.name"
+          :options="getMapOptions"
+          :placeholder="$t('deliveries.enterPickupLocation')"
+          @place_changed="setPickUp"
+          @click="showSuggestions('pick-up', 0)"
+          @blur="closeSuggestions()"
         >
-          <i
-            class="mdi mdi-map-marker-outline direct-inputs-suggestion-icon"
-          ></i>
-          <div>
+        </GMapAutocomplete>
+      </div>
+      <div class="d-flex">
+        <div class="direct-inputs-prefix-icon" />
+        <GMapAutocomplete
+          id="destination"
+          class="businessProfile-address direct-inputs"
+          :value="location.name"
+          :options="getMapOptions"
+          :placeholder="$t('deliveries.enterDestination')"
+          @place_changed="setDestination"
+          @click="showSuggestions('destination', 1)"
+          @blur="closeSuggestions()"
+        >
+        </GMapAutocomplete>
+      </div>
+      <div class="d-flex" v-for="(destination, x) in destinations" :key="x">
+        <div class="direct-inputs-prefix-icon" />
+        <GMapAutocomplete
+          :id="`destination${x}`"
+          class="businessProfile-address direct-inputs"
+          :value="destination.name"
+          :options="getMapOptions"
+          :placeholder="$t('deliveries.enterDestination')"
+          @place_changed="setExtraDestination($event, x)"
+          @click="showSuggestions('destination', x + 2)"
+          @blur="closeSuggestions()"
+        >
+        </GMapAutocomplete>
+        <i
+          class="mdi mdi-close direct-inputs-close-destination"
+          @click="removeDestination(x + 2)"
+        ></i>
+      </div>
+      <div>
+        <div class="direct-inputs-add-destination" @click="addDestination()">
+          <i class="mdi mdi-plus"></i>
+          {{ $t("deliveries.addDestination") }}
+        </div>
+        <div
+          class="mt-3 direct-inputs-suggestions-container"
+          v-if="suggestionsActive && getLocationSuggestions?.length"
+        >
+          <div
+            v-for="(location, l) in getLocationSuggestions"
+            :key="l"
+            class="direct-inputs-suggestion"
+            @click="selectSuggestion(location)"
+          >
+            <i
+              class="mdi mdi-map-marker-outline direct-inputs-suggestion-icon"
+            ></i>
             <div>
-              {{ location.description }}
-            </div>
-            <div class="direct-inputs-suggestion-description">
-              {{ location?.zone_name?.replaceAll("-", " ") }}
+              <div>
+                {{ location.description }}
+              </div>
+              <div class="direct-inputs-suggestion-description">
+                {{ location?.zone_name?.replaceAll("-", " ") }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="mt-3">
-        <button
-          class="btn desktop-select-continue-button"
-          @click="fetchVehicleTypes()"
-          v-loading="pricingLoadingStatus"
-          :disabled="pricingLoadingStatus"
-          :class="
-            getMarkers?.length > 1 && getMarkers[0]?.name === 'pick-up'
-              ? 'btn-primary'
-              : 'disabled-continue'
-          "
-        >
-          {{ $t("deliveries.continueToVehicleType") }}
-        </button>
+        <div class="mt-3">
+          <button
+            class="btn desktop-select-continue-button"
+            @click="fetchVehicleTypes()"
+            v-loading="pricingLoadingStatus"
+            :disabled="pricingLoadingStatus"
+            :class="
+              getMarkers?.length > 1 && getMarkers[0]?.name === 'pick-up'
+                ? 'btn-primary'
+                : 'disabled-continue'
+            "
+          >
+            {{ $t("deliveries.continueToVehicleType") }}
+          </button>
+        </div>
       </div>
     </div>
     <div v-if="getDirectOrderStep === 1">
@@ -135,6 +147,7 @@ export default {
       "getLocationSuggestions",
       "getStorageUserDetails",
       "getDirectOrderStep",
+      "getBanner",
     ]),
     pricingInstructions() {
       const instructions = [];
@@ -358,8 +371,12 @@ export default {
       };
       this.resetSuggestion();
     },
+    closeSuggestions() {
+      setTimeout(() => {
+        this.resetSuggestion();
+      }, 500);
+    },
     resetSuggestion() {
-      this.locationType = "";
       this.locationIndex = 0;
       this.suggestionsActive = false;
     },
@@ -381,7 +398,7 @@ export default {
 .direct-inputs-container {
   margin: 25px;
   position: relative;
-  height: 60vh;
+  height: calc(100vh - 365px);
   overflow-y: scroll;
 }
 .direct-inputs-prefix-icon {
@@ -448,5 +465,11 @@ export default {
   background: #90939980;
   top: 27px;
   left: 8px;
+}
+.direct-inputs-container-long {
+  margin: 25px;
+  position: relative;
+  height: calc(100vh - 265px);
+  overflow-y: scroll;
 }
 </style>

@@ -1,5 +1,9 @@
 <template>
-  <div class="direct-fulfilment-destination-container-right mt-3 mb-5">
+  <div
+    class="direct-fulfilment-destination-container-right mt-3"
+    v-for="(dropOffInstruction, index) in dropInstructions"
+    :key="index"
+  >
     <div class="destination-titles-containers">
       <p class="destination-desc-titles" :class="getLoader.onDemandOrders">
         {{ $t("deliveries.deliveryInfo") }}
@@ -16,7 +20,7 @@
         :class="getLoader.onDemandOrders"
       ></i>
       <div class="destination-location-text" :class="getLoader.onDemandOrders">
-        {{ deliveryLocation }}
+        {{ dropOffInstruction.delivery_location.description }}
       </div>
     </span>
     <hr class="destination-divider-line" />
@@ -28,7 +32,7 @@
         {{ $t("deliveries.contactPerson") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
-        {{ contactPerson }}
+        {{ dropOffInstruction.phone_number }}
       </p>
     </div>
     <div class="destination-titles-containers mt-1">
@@ -39,7 +43,7 @@
         {{ $t("deliveries.dropOffInstructions") }}
       </p>
       <p class="dest-pickup-desc" :class="getLoader.onDemandOrders">
-        {{ dropInstructions }}
+        {{ dropOffInstruction.delivery_instructions || "_" }}
       </p>
     </div>
   </div>
@@ -47,7 +51,7 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  props: ["deliveryLocation", "contactPerson", "dropInstructions"],
+  props: ["dropInstructions"],
   data() {
     return {
       editLocation: false,

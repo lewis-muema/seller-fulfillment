@@ -218,6 +218,92 @@
         </div>
       </div>
     </div>
+    <div
+      class="tracking-reschedule-container cancel-options-contain"
+      v-if="popup === 'cancelOnDemandOptions'"
+    >
+      <div class="tracking-reschedule-title-section">
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.cancelOrder") }} ?
+        </p>
+        <i
+          @click="overlayStatusSet(false, 'cancelOnDemandOptions')"
+          class="mdi mdi-close tracking-reschedule-title-close"
+        ></i>
+      </div>
+      <div class="cancel-options-text">
+        <p>
+          {{ $t("deliveries.cancelText") }}
+        </p>
+      </div>
+      <div class="cancel-options-container">
+        <div class="row">
+          <div class="col-5">
+            <p
+              class="cancel-options-desc dont-cancel-text"
+              @click="
+                setOverlayStatus({
+                  overlay: false,
+                  popup: 'cancelOnDemandOptions',
+                })
+              "
+            >
+              {{ $t("deliveries.dontCancel") }}
+            </p>
+          </div>
+          <div class="col-7">
+            <v-btn
+              class="tracking-cancel-button"
+              @click="
+                setOverlayStatus({
+                  overlay: true,
+                  popup: 'cancelOnDemand',
+                })
+              "
+            >
+              {{ $t("deliveries.continueToCancel") }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tracking-reschedule-container"
+      v-if="popup === 'cancelOnDemand'"
+    >
+      <div>
+        <span
+          class="cancel-back-text"
+          @click="
+            setOverlayStatus({
+              overlay: false,
+              popup: 'cancelOnDemand',
+            })
+          "
+        >
+          <i class="mdi mdi-arrow-left delivery-info-marker"></i>
+          Back
+        </span>
+        <p class="tracking-cancel-title-label">
+          {{ $t("deliveries.whyCancel") }}
+        </p>
+      </div>
+      <v-radio-group v-model="cancelReason">
+        <v-radio
+          v-for="(reason, x) in getCancellationReasons"
+          :key="x"
+          :label="$t(reason.reason_description)"
+          :value="$t(reason.reason_id)"
+        ></v-radio>
+      </v-radio-group>
+      <v-btn
+        class="tracking-cancel-button"
+        v-loading="buttonLoader"
+        @click="cancel('direct')"
+      >
+        {{ $t("deliveries.cancelOrder") }}
+      </v-btn>
+    </div>
     <div v-if="popup === 'pickupInfo'" class="view-products-container">
       <div class="view-products-section">
         <p class="view-products-label">
@@ -965,6 +1051,34 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="getVirtualTour">
+      <div v-if="popup === 'tour'" class="">
+        <div>
+          <img
+            class="image-tour-overlay"
+            src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/tour.png"
+            alt=""
+          />
+        </div>
+        <div class="view-products-container tour-container-override">
+          <p class="tour-container-override-title">
+            {{ $t("common.newHomeScreen") }}
+          </p>
+          <p>{{ $t("common.letsCheckout") }}</p>
+          <div>
+            <v-btn
+              @click="takeTour()"
+              class="edit-info-submit-button margin-override tour-button"
+            >
+              {{ $t("common.takeTour") }}
+            </v-btn>
+            <p class="skip-tour-text" @click="skipTour()">
+              {{ $t("common.skipTour") }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-if="popup === 'code'" class="view-products-container">
       <div class="timeline-failed-attempt-section">
         <p class="edit-price-title">
@@ -1676,14 +1790,13 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span>
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
-                  <span class="delivery-option-crossdock-radio-right">
-                    {{ speed.currency }} {{ speed.price }}
+                  <span
+                    class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
+                  >
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
@@ -1927,17 +2040,14 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span :class="getLoader.speed">
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_DELIVERY`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span
                     :class="getLoader.speed"
                     class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
                   >
-                    {{ speed.currency }} {{ speed.price }}
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
@@ -2006,17 +2116,14 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span :class="getLoader.speed">
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? $t(`inventory.${speed.speed_pricing_type}_PICKUP`)
-                        : speed.transport_provider.replace("_", " ")
-                    }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span
                     :class="getLoader.speed"
                     class="delivery-option-crossdock-radio-right"
+                    v-if="speed.price"
                   >
-                    {{ speed.currency }} {{ speed.price }}
+                    + {{ speed.currency }} {{ speed.price }}
                   </span>
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
@@ -2078,7 +2185,7 @@
               <div class="font-override recepient-info-label">
                 <div class="delivery-option-crossdock-radio-group">
                   <span>
-                    {{ $t(`inventory.${speed.speed_pricing_type}_DELIVERY`) }}
+                    {{ speed.speed_pricing_description }}
                   </span>
                   <span class="delivery-option-crossdock-radio-right">
                     {{ speed.currency }} {{ speed.price }}
@@ -2512,12 +2619,15 @@ import Datepicker from "vuejs3-datepicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import upload_img from "../../mixins/upload_img";
+import cookieMixin from "../../mixins/cookie_mixin";
 import trackingPayloadMixin from "../../mixins/tracking_payload";
 import moment from "moment";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import VueTimepicker from "vue3-timepicker";
 import "vue3-timepicker/dist/VueTimepicker.css";
+import introJs from "intro.js";
+import packageJson from "../../../package.json";
 
 export default {
   setup() {
@@ -2525,7 +2635,7 @@ export default {
   },
   props: ["overlayVal", "editInfo"],
   components: { Datepicker, VueTimepicker },
-  mixins: [upload_img, trackingPayloadMixin],
+  mixins: [upload_img, trackingPayloadMixin, cookieMixin],
   data() {
     return {
       overlay: false,
@@ -2642,6 +2752,8 @@ export default {
         ss: "00",
         a: "am",
       },
+      currentStep: 1,
+      totalSteps: 2,
     };
   },
   validations() {
@@ -2723,6 +2835,7 @@ export default {
       "getCancellationReasons",
       "getEditableFields",
       "getDirectOrderDetails",
+      "getDirectDeliveriesTrackingData",
     ]),
     partnerNotAssigned() {
       return (
@@ -2882,6 +2995,14 @@ export default {
         this.getOrderTrackingData.order.order_status === "ORDER_IN_PROCESSING"
       );
     },
+    getVirtualTour() {
+      return (
+        this.getCookie("new_features_virtual_tour") &&
+        JSON.parse(this.getCookie("new_features_virtual_tour")) &&
+        packageJson.version === "0.1.0" &&
+        this.$route.path === "/"
+      );
+    },
   },
   beforeMount() {
     if (localStorage.country) {
@@ -2924,12 +3045,85 @@ export default {
       "setConsignmentReturn",
       "setDestinationIndex",
       "setDirectOrderDetails",
+      "setOrderTimelines",
+      "setDirectDeliveriesTrackingData",
     ]),
     validateFields() {
       this.v$.$validate();
       if (this.v$.$errors.length > 0) {
         return;
       }
+    },
+    takeTour() {
+      this.setOverlayStatus({
+        overlay: false,
+        popup: "tour",
+      });
+      introJs()
+        .setOptions({
+          steps: [
+            {
+              title: "Choose your action here",
+              element: document.querySelector(
+                ".dashboard-quicklinks-container"
+              ),
+              intro:
+                'Click on any item to select <div class="dashboard-tour-counter">1/5</div>',
+              position: "bottom",
+            },
+            {
+              title: "View your account balance!",
+              element: document.querySelector(".dashboard-wallet-container"),
+              intro:
+                'Click to access your wallet <div class="dashboard-tour-counter">2/5</div>',
+            },
+            {
+              title: "Track Ongoing On-demand deliveries",
+              element: document.querySelector(
+                ".dashboard-deliveries-ondemand-section"
+              ),
+              intro:
+                'Click to display list of the on-demand deliveries<div class="dashboard-tour-counter">4/5</div>',
+            },
+            {
+              title: "View stats summary",
+              element: document.querySelector(".dashboard-sidecard-container"),
+              intro:
+                'The stats have moved here. Select a category to view full details.<div class="dashboard-tour-counter">4/5</div>',
+              position: "left",
+            },
+            {
+              title: "Learn more ways to do more with Sendy",
+              element: document.querySelector(".dashboard-articles-container"),
+              intro:
+                'Discover offers and products<div class="dashboard-tour-counter">5/5</div>',
+              position: "left",
+            },
+          ],
+          tooltipClass: "introjs-tooltip",
+          showBullets: false,
+          exitOnOverlayClick: false,
+        })
+        .start();
+      let closeElement = document.querySelector(".introjs-skipbutton");
+      let nextElement = document.querySelector(".introjs-nextbutton");
+      closeElement.addEventListener("click", this.disableTour);
+      nextElement.addEventListener("click", this.handleTourDone);
+    },
+    handleTourDone(element) {
+      if (element.target.textContent === "Done") {
+        this.disableTour();
+      }
+    },
+    disableTour() {
+      this.setCookie("new_features_virtual_tour", false, 365);
+    },
+    skipTour() {
+      this.setOverlayStatus({
+        overlay: false,
+        popup: "tour",
+      });
+      this.disableTour();
     },
     formatAutofillDetails() {
       this.overlayStatusSet(false, "uploadLPO");
@@ -3557,6 +3751,7 @@ export default {
           this.buttonLoader = false;
           setTimeout(() => {
             this.fetchOrder();
+            this.fetchSummary();
           }, 1000);
         } else {
           ElNotification({
@@ -3574,39 +3769,59 @@ export default {
     formatDate(date) {
       return moment(date).format("ddd, Do MMM");
     },
-    cancel() {
+    cancel(type) {
+      if (!this.cancelReason) {
+        ElNotification({
+          title: "",
+          message: this.$t("deliveries.pleaseSelectACancelReason"),
+          type: "warning",
+        });
+        return false;
+      }
       this.buttonLoader = true;
       this.requestAxiosPut({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getParent === "sendy" ? "consignments" : "deliveries"
-        }/${this.getOrderTrackingData.order.order_id}/cancel`,
+          type === "direct"
+            ? "point-to-point"
+            : this.getParent === "sendy"
+            ? "consignments"
+            : "deliveries"
+        }/${
+          type === "direct"
+            ? this.getDirectDeliveriesTrackingData.order?.order_id
+            : this.getOrderTrackingData.order.order_id
+        }/cancel`,
         values: {
           cancellation_reason: this.cancelReason,
         },
       }).then((response) => {
+        this.cancelReason = "";
         if (response.status === 200) {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            title: this.$t("deliveries.deliveryCancelledSuccessfully"),
+            message: "",
             type: "success",
           });
           this.overlayStatusSet(false, "reschedule");
           this.buttonLoader = false;
           setTimeout(() => {
-            this.fetchOrder();
+            this.fetchOrder(type);
+            this.fetchSummary();
           }, 1000);
         } else {
           ElNotification({
-            title: "",
-            message: this.$t("deliveries.deliveryCancellingFailed"),
+            title: this.$t("deliveries.deliveryCancellingFailed"),
+            message: response.response.data.errors[0].message
+              .replaceAll(".", " ")
+              .replaceAll("_", " "),
             type: "error",
           });
           this.buttonLoader = false;
         }
       });
     },
-    fetchOrder() {
+    fetchOrder(type) {
       this.setLoader({
         type: "orderTracking",
         value: "loading-text",
@@ -3615,18 +3830,48 @@ export default {
         type: "orderTimeline",
         value: "loading-text",
       });
+      this.setLoader({
+        type: "onDemandOrders",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getParent === "sendy" ? "consignments" : "deliveries"
+          type === "direct"
+            ? "point-to-point"
+            : this.getParent === "sendy"
+            ? "consignments"
+            : "deliveries"
         }/${this.$route.params.order_id}`,
       }).then((response) => {
         this.setLoader({
           type: "orderTracking",
           value: "",
         });
+        this.setLoader({
+          type: "orderTimeline",
+          value: "",
+        });
+        this.setLoader({
+          type: "onDemandOrders",
+          value: "",
+        });
         if (response.status === 200) {
-          this.setOrderTrackingData(response.data.data);
+          if (type === "direct") {
+            this.setDirectDeliveriesTrackingData(response?.data?.data);
+          } else {
+            this.setOrderTrackingData(response?.data?.data);
+          }
+        }
+      });
+    },
+    fetchSummary() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setOrderTimelines(response.data.data.events);
         }
       });
     },
@@ -4205,7 +4450,6 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
 .resend-invite-title {
   color: #303133;
   margin-bottom: 0px;
@@ -4657,6 +4901,40 @@ export default {
 .reschedule-direct-time-picker input {
   border-radius: 5px;
   height: 40px !important;
+}
+.image-tour-overlay {
+  width: 390px !important;
+}
+.tour-container-override {
+  width: 390px !important;
+  border-radius: 0px 0px 5px 5px !important;
+  padding: 30px !important;
+}
+.tour-container-override-title {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: #303133;
+}
+.tour-button {
+  height: 45px !important;
+  font-size: 16px !important;
+}
+.skip-tour-text {
+  text-align: center;
+  font-size: 16px;
+  color: #324ba8;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.dashboard-tour-counter {
+  position: absolute;
+  bottom: -40px;
+  right: 0;
+  width: 60px;
+  height: 20px;
+  text-align: center;
 }
 .vue__time-picker .dropdown ul li:not([disabled]).active,
 .vue__time-picker .dropdown ul li:not([disabled]).active:focus,

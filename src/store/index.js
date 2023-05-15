@@ -208,6 +208,7 @@ export default createStore({
         max: 5,
         page_count: 5,
       },
+      paymentRedirectURL: "",
       supportedCountries: [],
       geofenceData: [],
       userData: {},
@@ -543,6 +544,7 @@ export default createStore({
           ],
         },
       },
+      banner: false,
       defaultCountryCode: "KE",
       defaultCountryName: "KENYA",
       sendyPhoneProps: {
@@ -590,6 +592,15 @@ export default createStore({
           icon: "mdi mdi-close-circle-outline",
         },
       ],
+      onDemandDeliveryActions: [
+        {
+          label: "deliveries.cancelOrder",
+          trigger: false,
+          popup: "cancelOnDemand",
+          show: true,
+          icon: "mdi mdi-close-circle-outline",
+        },
+      ],
       overlayStatus: {
         overlay: false,
         popup: "",
@@ -622,6 +633,7 @@ export default createStore({
         pointToPointPickup: "loading-text",
         pointToPointDeliveries: "loading-text",
         billingCycle: "loading-text",
+        transactionDetails: "loading-text",
       },
       overlay: false,
       userChanged: false,

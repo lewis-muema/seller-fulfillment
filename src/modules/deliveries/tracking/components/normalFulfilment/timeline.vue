@@ -32,7 +32,7 @@
             "
           >
             <span :class="getLoader.orderTimeline">
-              {{ formatStatus(activity.translated_event_code, activity) }}
+              {{ activity.translated_event_code }}
             </span>
           </span>
           <div

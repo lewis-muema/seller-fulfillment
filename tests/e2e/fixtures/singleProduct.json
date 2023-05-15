@@ -1,0 +1,73 @@
+{
+  "message": "product.retrieve.success",
+  "data": {
+    "product": {
+      "product_id": "P-LDG-0645",
+      "objectID": "P-LDG-0645",
+      "created_date": 1638357234000,
+      "product_name": "Ceramic Cup",
+      "product_description": "Hand made ceramic cups",
+      "product_main_color": "Red",
+      "product_archived": false,
+      "business_id": "B-AEB-9648",
+      "product_collection": {
+        "collection_id": "PC-RYM-3325",
+        "collection_name": "Ceramic"
+      },
+      "sales_channel_collections": null,
+      "product_variants": [
+        {
+          "product_variant_id": "PV-BNG-6643",
+          "business_id": "B-AEB-9648",
+          "product_id": "P-LDG-0645",
+          "universal_product_code": null,
+          "product_variant_description": "Fortified Cup",
+          "product_variant_currency": "KES",
+          "product_variant_unit_price": 12.0,
+          "product_variant_image_link": "https://m.media-amazon.com/images/SLawerR.jpg",
+          "product_variant_expiry_date": 0,
+          "product_variant_quantity": 30.0,
+          "product_variant_quantity_type": "KILOGRAM",
+          "product_variant_stock_levels": {
+            "available": 0,
+            "quantity_in_inventory": 0,
+            "quantity_in_sales_orders": 6,
+            "quantity_held_locally": 0,
+            "quantity_held_in_fulfilment_requests": 0,
+            "quantity_incoming": 6,
+            "last_updated_date": 1673004270000
+          },
+          "product_variant_archived": false,
+          "product_variant_properties": [],
+          "low_stock_threshold": 5
+        },
+        {
+          "product_variant_id": "PV-PRU-7018",
+          "business_id": "B-AEB-9648",
+          "product_id": "P-LDG-0645",
+          "universal_product_code": null,
+          "product_variant_description": "Paper Cup",
+          "product_variant_currency": "KES",
+          "product_variant_unit_price": 21.0,
+          "product_variant_image_link": "https://m.media-amazon.com/images/SLawerR.jpg",
+          "product_variant_expiry_date": 0,
+          "product_variant_quantity": 30.0,
+          "product_variant_quantity_type": "KILOGRAM",
+          "product_variant_stock_levels": {
+            "available": 0,
+            "quantity_in_inventory": 0,
+            "quantity_in_sales_orders": 12,
+            "quantity_held_locally": 0,
+            "quantity_held_in_fulfilment_requests": 0,
+            "quantity_incoming": 11,
+            "last_updated_date": 1673004273000
+          },
+          "product_variant_archived": false,
+          "product_variant_properties": [],
+          "low_stock_threshold": 5
+        }
+      ]
+    }
+  },
+  "errors": []
+}

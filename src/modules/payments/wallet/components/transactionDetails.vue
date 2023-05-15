@@ -98,9 +98,7 @@
             )
           "
         >
-          <div class="transaction-label">
-            {{ $t("inventory.desc") }}
-          </div>
+          <div class="transaction-label">{{ $t("inventory.desc") }}</div>
           <div class="transaction-data">
             {{ getActiveTransaction.transaction_subtitle }}
           </div>
@@ -123,35 +121,81 @@
         </div>
         <hr class="mt-5" />
         <div class="transaction-amount">
-          <span>
-            {{ $t("payments.amount") }}
-            <i
-              v-if="
-                [
-                  'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
-                  'EARNING_FROM_SALE_OF_GOOD',
-                ].includes(getActiveTransaction.transaction_type)
+          <div v-if="witholdingTax !== 0">
+            <div>
+              <span>{{ $t("payments.totalDue") }}</span>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="this.$t('payments.totalDueDesc')"
+                placement="right"
+              >
+                <i class="mdi mdi-information-outline billing-info-icon"></i>
+              </el-tooltip>
+              <span
+                :class="
+                  getSignMapping[getActiveTransaction.transaction_type] === '+'
+                    ? `transaction-amount-right ${getLoader.transactionDetails}`
+                    : `transaction-amount-right-negative ${getLoader.transactionDetails}`
+                "
+                >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+                {{ getActiveTransaction.transaction_currency }}
+                {{ TotalDue }}</span
+              >
+            </div>
+            <div class="mt-2">
+              <span>{{ $t("payments.vat") }}</span>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="this.$t('payments.wthVatDesc')"
+                placement="right"
+              >
+                <i class="mdi mdi-information-outline billing-info-icon"></i>
+              </el-tooltip>
+              <span
+                :class="
+                  getSignMapping[getActiveTransaction.transaction_type] === '+'
+                    ? `transaction-amount-right ${getLoader.transactionDetails}`
+                    : `transaction-amount-right-negative ${getLoader.transactionDetails}`
+                "
+                >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+                {{ getActiveTransaction.transaction_currency }}
+                {{ witholdingTax }}</span
+              >
+            </div>
+            <hr class="mt-2" />
+          </div>
+          <div class="transaction-wth-amount">
+            <span
+              >{{ $t("payments.amount") }}
+              <i
+                v-if="
+                  [
+                    'UPCOMING_EARNING_FROM_SALE_OF_GOOD',
+                    'EARNING_FROM_SALE_OF_GOOD',
+                  ].includes(getActiveTransaction.transaction_type)
+                "
+                class="mdi mdi-alert-circle-outline"
+                @click="
+                  setOverlayStatus({
+                    overlay: true,
+                    popup: 'paymentBreakdown',
+                  })
+                "
+              ></i>
+            </span>
+            <span
+              :class="
+                getSignMapping[getActiveTransaction.transaction_type] === '+'
+                  ? `transaction-amount-right ${getLoader.transactionDetails}`
+                  : `transaction-amount-right-negative ${getLoader.transactionDetails}`
               "
-              class="mdi mdi-alert-circle-outline"
-              @click="
-                setOverlayStatus({
-                  overlay: true,
-                  popup: 'paymentBreakdown',
-                })
-              "
-            ></i>
-          </span>
-          <span
-            :class="
-              getSignMapping[getActiveTransaction.transaction_type] === '+'
-                ? 'transaction-amount-right'
-                : 'transaction-amount-right-negative'
-            "
-          >
-            {{ getSignMapping[getActiveTransaction.transaction_type] }}
-            {{ getActiveTransaction.transaction_currency }}
-            {{ getActiveTransaction.transaction_amount }}
-          </span>
+              >{{ getSignMapping[getActiveTransaction.transaction_type] }}
+              {{ getActiveTransaction.transaction_currency }}
+              {{ getActiveTransaction.transaction_amount }}</span
+            >
+          </div>
         </div>
         <div
           v-if="
@@ -244,7 +288,40 @@ export default {
       "getOrderTrackingData",
       "getSignMapping",
       "getCycleLineItems",
+      "getBusinessDetails",
+      "getLoader",
     ]),
+    witholdingTaxEnabled() {
+      return this.getBusinessDetails.settings.withholding_tax_enabled;
+    },
+    witholdingTax() {
+      let withheldTaxAdjustmentUnitValue = 0;
+      if (
+        this.getCycleLineItems.every(
+          (item) => item.invoice_adjustments?.length > 0
+        )
+      ) {
+        withheldTaxAdjustmentUnitValue = this.getCycleLineItems
+          .flatMap((item) => item.invoice_adjustments)
+          .filter((adjustment) => adjustment.adjustment_type === "WITHHELD_TAX")
+          .reduce(
+            (acc, adjustment) => acc + adjustment.adjustment_unit_value,
+            0
+          );
+      }
+      return withheldTaxAdjustmentUnitValue;
+    },
+    TotalDue() {
+      const totalDue = this.netDue + this.witholdingTax;
+      return totalDue;
+    },
+    netDue() {
+      const netDue = this.getCycleLineItems.reduce(
+        (acc, item) => acc + item.amount,
+        0
+      );
+      return netDue;
+    },
     deliveryFee() {
       let fee = 0;
       if (this.getOrderTrackingData.order.sale_of_goods_invoice) {
@@ -269,6 +346,9 @@ export default {
       showLineItems: false,
     };
   },
+  beforeUnmount() {
+    this.setCycleLineItems([]);
+  },
   mounted() {
     this.setComponent("payments.transactions");
     if (
@@ -276,7 +356,7 @@ export default {
         this.getActiveTransaction.transaction_type
       )
     ) {
-      this.getLineCycleItems();
+      this.lineCycleItems();
     } else if (
       [
         "UPCOMING_EARNING_FROM_SALE_OF_GOOD",
@@ -294,28 +374,45 @@ export default {
       "setOrderTrackingData",
       "setCycleLineItems",
       "setActivePayment",
+      "setLoader",
     ]),
     ...mapActions(["requestAxiosGet"]),
     formatDate(date) {
       return moment(date).format("ddd, Do MMMM");
     },
     fetchOrder() {
+      this.setLoader({
+        type: "transactionDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getActiveTransaction.resource_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setLoader({
+            type: "transactionDetails",
+            value: "",
+          });
         }
       });
     },
-    getLineCycleItems() {
+    lineCycleItems() {
+      this.setLoader({
+        type: "transactionDetails",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.getActiveTransaction.resource_id}/lineitems`,
       }).then((response) => {
         if (response.status === 200) {
           this.setCycleLineItems(response.data.data.billing_cycle_line_items);
+          this.setLoader({
+            type: "transactionDetails",
+            value: "",
+          });
         } else {
           this.setActivePayment({});
         }
@@ -378,6 +475,9 @@ export default {
   font-size: 18px;
   margin-top: 20px;
 }
+.billing-info-icon {
+  cursor: pointer;
+}
 .transaction-amount-right {
   float: right;
   color: #116f28;
@@ -413,5 +513,8 @@ export default {
   padding-top: 1rem;
   color: #9d5004;
   font-style: italic;
+}
+.transaction-wth-amount {
+  padding: 10px 0px;
 }
 </style>

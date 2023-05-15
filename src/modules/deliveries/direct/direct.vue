@@ -26,7 +26,7 @@ export default {
     ...mapGetters(["getStorageUserDetails", "getUserDetails"]),
   },
   mounted() {
-    this.setComponent("deliveries.onDemandDelivery");
+    this.setComponent("dashboard.hireAVehicle");
   },
   methods: {
     ...mapMutations(["setComponent", "setLoader"]),

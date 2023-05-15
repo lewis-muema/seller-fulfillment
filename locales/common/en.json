@@ -36,7 +36,7 @@
   "notifications": "Notifications",
   "trackCustomerDelivery": "Track delivery to customer",
   "deliveriesToCustomers": "Deliveries to the customer",
-  "onDemandDeliveries": "Track on demand deliveries",
+  "onDemandDeliveries": "On demand deliveries",
   "deliveriesToSendy": "Deliveries to Sendy",
   "activityLog": "Activity Log",
   "inventoryToSendy": "Inventory to Sendy",
@@ -64,5 +64,11 @@
   "integrations": "Integrations",
   "productAddedToList": "Product found, Scroll down to select it",
   "productAlreadyInTheList": "Product already in the list",
-  "analytics": "Analytics"
+  "newHomeScreen": "Welcome to the new homescreen",
+  "letsCheckout": "Let’s checkout what we have changed",
+  "takeTour": "Take a tour",
+  "skipTour": "Skip tour",
+  "analytics": "Analytics",
+  "shareFeedback": "Share feedback",
+  "hiredVehicles": "Hired Vehicles"
 }

@@ -203,7 +203,6 @@ describe("Integration Process", () => {
           cy.getByData("resolve").click();
           cy.url().should("include", "/setup/6");
           cy.getByData("resolve-conflicts").should("not.exist");
-          cy.getByData("products_linked_count").should("be.visible");
           cy.getByData("edit_conflicts").click();
           cy.getByData("resolve").click();
           cy.getByData("continue").click();

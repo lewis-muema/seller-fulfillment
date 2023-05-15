@@ -57,7 +57,14 @@
           >
           <v-col class="align-right">
             <div v-if="currentStep < index">
-              <span class="platform-steps__status">{{
+              <button
+                v-if="status.hasAction && currentStep + 1 === index"
+                @click="status.action()"
+                class="platform-steps__button"
+              >
+                {{ status.actionButtonText }}
+              </button>
+              <span v-else class="platform-steps__status">{{
                 $t("merchant.Pending")
               }}</span>
             </div>
@@ -73,6 +80,7 @@
 
 <script>
 import { computed, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "IntegrationContainer",
@@ -88,6 +96,7 @@ export default {
     },
   },
   setup(props) {
+    const router = useRouter();
     const availableIntegration = ref(
       Object.keys(props.integration).length !== 0
     );
@@ -95,12 +104,29 @@ export default {
     // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
 
     const statuses = reactive([
-      { message: "Enter your store details", status: "STORE_DETAILS_ADDED" },
-      { message: "Store Permissions", status: "STORE_PERMISSIONS_VALIDATED" },
-      { message: "Import your products", status: "PRODUCTS_SYNC_INITIATED" },
+      {
+        message: "Enter your store details",
+        status: props.integration.integration_status,
+        hasAction: false,
+      },
+      {
+        message: "Store Permissions",
+        status: "STORE_PERMISSIONS_VALIDATED",
+        hasAction: false,
+      },
+      {
+        message: "Import your products",
+        status: "PRODUCTS_SYNC_INITIATED",
+        hasAction: true,
+        action: function () {
+          return router.push({ name: "SetupStep6" });
+        },
+        actionButtonText: "Import",
+      },
       {
         message: "Currently Syncing products",
         status: "PRODUCTS_SYNCED",
+        hasAction: false,
       },
     ]);
 
@@ -214,6 +240,18 @@ export default {
       &--complete {
         text-decoration: line-through;
       }
+    }
+
+    &__button {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 18px;
+      letter-spacing: 0.01em;
+      color: #ffffff;
+      background: #324ba8;
+      border-radius: 6px;
     }
 
     // &__icon-box {

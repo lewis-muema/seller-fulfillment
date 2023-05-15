@@ -15,26 +15,51 @@
         </v-card-text>
         <div v-show="getPlatformProductsLoaded">
           <v-card-text>
-            <p
-              class="step-5-dialog__text"
-              v-if="getPlatformSyncNewProducts.length"
-            >
-              <strong data-test="newProductsCount"
-                >{{ `${getPlatformSyncNewProducts.length}` }}
-                {{ $t("merchant.new_products") }}</strong
-              >
-              {{ $t("merchant.to_be_imported_as_new_products") }}.
-            </p>
-            <p
-              class="step-5-dialog__text"
-              v-if="getPlatformSyncMatchingProducts.length"
-            >
-              <strong data-test="matchingProductsCount"
-                >{{ `${getPlatformSyncMatchingProducts.length} ` }}
-                {{ $t("merchant.matching_products") }}
-              </strong>
-              {{ $t("merchant.linked_to_existing_products") }}
-            </p>
+            <ul>
+              <li>
+                <p
+                  class="step-5-dialog__text"
+                  v-if="getPlatformSyncNewProducts.length"
+                >
+                  <strong data-test="newProductsCount"
+                    >{{ `${getPlatformSyncNewProducts.length}` }}
+                    {{ $t("merchant.new") }}
+                    {{
+                      $tc("merchant.product", getPlatformSyncNewProducts.length)
+                    }}</strong
+                  >
+                  {{
+                    $tc(
+                      "merchant.to_be_imported_as_new_products",
+                      getPlatformSyncNewProducts.length
+                    )
+                  }}.
+                </p>
+              </li>
+              <li>
+                <p
+                  class="step-5-dialog__text"
+                  v-if="getPlatformSyncMatchingProducts.length"
+                >
+                  <strong data-test="matchingProductsCount"
+                    >{{ `${getPlatformSyncMatchingProducts.length} ` }}
+                    {{ $t("merchant.matching") }}
+                    {{
+                      $tc(
+                        "merchant.product",
+                        getPlatformSyncMatchingProducts.length
+                      )
+                    }}
+                  </strong>
+                  {{
+                    $tc(
+                      "merchant.linked_to_existing_products",
+                      getPlatformSyncMatchingProducts.length
+                    )
+                  }}
+                </p>
+              </li>
+            </ul>
           </v-card-text>
           <div
             class="step-5-dialog__link-container"
@@ -43,9 +68,14 @@
             <p class="step-5-dialog__text">
               <strong data-test="partialProductsCount"
                 >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-                {{ $t("merchant.products") }}</strong
+                {{
+                  $tc(
+                    "merchant.product",
+                    getPlatformSyncPartialMatchingProducts.length
+                  )
+                }}</strong
               >
-              {{ $t("merchant.we_couldnt_match") }}.
+              {{ $t("merchant.couldnt_match") }}.
             </p>
             <p class="step-5-dialog__text">
               {{ $t("merchant.we_require_you_to_either") }}
@@ -61,14 +91,25 @@
             >
               {{ $t("merchant.link") }}
               {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-              {{ $t("merchant.products") }}
+              {{
+                $tc(
+                  "merchant.product",
+                  getPlatformSyncPartialMatchingProducts.length
+                )
+              }}
             </button>
             <span v-else data-test="products_linked_count">
               <img
                 src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/check-circle-filled.svg"
               /><span class="step-5-dialog__link-container-text"
                 >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-                {{ $t("merchant.products_linked") }}.
+                {{
+                  $tc(
+                    "merchant.product",
+                    getPlatformSyncPartialMatchingProducts.length
+                  )
+                }}
+                {{ $t("merchant.linked") }}.
                 <a
                   class="step-5-dialog__link-container-text-link"
                   @click="goToResolveConflics()"
@@ -91,7 +132,7 @@
               <button
                 class="step-5-dialog__button step-5-dialog__button--cancel"
                 @click="back()"
-                :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
+                v-if="conflictsResolved && getPlatformSyncStatus === 2"
               >
                 {{ $t("merchant.back") }}
               </button>

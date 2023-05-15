@@ -12,12 +12,13 @@
         <v-col class="text__heading" data-test="conflicts-count">
           {{ $t("merchant.link") }}
           {{ unresolvedConflicts }}
-          {{ $t("merchant.products") }}
+          {{ $tc("merchant.product", unresolvedConflicts) }}
         </v-col>
         <v-col class="cell-align__right">
           <span class="text__warning" v-if="unresolvedConflicts > 0">
             {{ unresolvedConflicts }}
-            {{ $t("merchant.products_need_matching") }}
+            {{ $tc("merchant.product", unresolvedConflicts) }}
+            {{ $t("merchant.need_matching") }}
           </span>
         </v-col>
         <v-col class="cell-align__right" cols="2">
@@ -33,7 +34,7 @@
       </v-row>
       <hr class="divider" />
       <v-row>
-        <v-col offset="1" class="text__sub-heading">
+        <v-col offset="1" cols="5" class="text__sub-heading">
           {{ $t("merchant.from_shopify_store") }}
         </v-col>
         <v-col class="text__sub-heading"
@@ -70,7 +71,7 @@
             </el-option>
           </el-select>
         </v-col>
-        <v-col cols="1">
+        <v-col cols="1" class="cell-align__right">
           <img
             v-if="!conflict.selectedProductId"
             src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/empty-filled-circle.svg"

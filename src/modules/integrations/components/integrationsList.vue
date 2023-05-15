@@ -39,6 +39,7 @@
       <integrationBlock
         :integration="integrations.platform"
         :key="integrations.platform.channelId"
+        :salesChannelId="integrations.platform.channelId"
         @revokeSalesChannel="revokeSalesChannel"
         v-else
       />
@@ -84,6 +85,7 @@
       </div>
       <integrationBlock
         :integration="integrations.apiKey"
+        :salesChannelId="integrations.apiKey.channelId"
         :key="integrations.apiKey.channelId"
         @revokeSalesChannel="revokeSalesChannel"
         v-else

@@ -30,7 +30,7 @@
           </span>
         </v-col>
       </v-row>
-      <div v-if="showSteps" class="platform-steps">
+      <div v-if="showSteps && salesChannelId === 2" class="platform-steps">
         <v-row
           v-for="(status, index) in statuses"
           :key="index"
@@ -82,6 +82,10 @@ export default {
       type: Object,
       default: () => {},
       require: true,
+    },
+    salesChannelId: {
+      type: Number,
+      default: 3,
     },
   },
   setup(props) {

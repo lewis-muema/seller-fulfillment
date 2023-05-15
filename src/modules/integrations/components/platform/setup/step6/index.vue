@@ -1,5 +1,5 @@
 <template>
-  <div class="step-5-dialog" v-loading="loading">
+  <div class="step-5-dialog">
     <div class="step-5-dialog__card">
       <div class="top-action-bar">
         <v-btn class="back-btn" dark @click="back()">
@@ -9,102 +9,106 @@
       <v-card-title class="step-5-dialog__title">
         {{ $t("merchant.ready_to_import") }}
       </v-card-title>
-      <p class="step-5-dialog__text">{{ $t("merchant.we_have_found") }};</p>
-      <div v-show="getPlatformProductsLoaded">
-        <v-card-text>
-          <p
-            class="step-5-dialog__text"
-            v-if="getPlatformSyncNewProducts.length"
-          >
-            <strong data-test="newProductsCount"
-              >{{ `${getPlatformSyncNewProducts.length}` }}
-              {{ $t("merchant.new_products") }}</strong
-            >
-            {{ $t("merchant.to_be_imported_as_new_products") }}.
-          </p>
-          <p
-            class="step-5-dialog__text"
-            v-if="getPlatformSyncMatchingProducts.length"
-          >
-            <strong data-test="matchingProductsCount"
-              >{{ `${getPlatformSyncMatchingProducts.length} ` }}
-              {{ $t("merchant.matching_products") }}
-            </strong>
-            {{ $t("merchant.linked_to_existing_products") }}
-          </p>
+      <div v-loading="loading">
+        <v-card-text class="step-5-dialog__text">
+          <p>{{ $t("merchant.we_have_found") }};</p>
         </v-card-text>
-        <div
-          class="step-5-dialog__link-container"
-          v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
-        >
-          <p class="step-5-dialog__text">
-            <strong data-test="partialProductsCount"
-              >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-              {{ $t("merchant.products") }}</strong
+        <div v-show="getPlatformProductsLoaded">
+          <v-card-text>
+            <p
+              class="step-5-dialog__text"
+              v-if="getPlatformSyncNewProducts.length"
             >
-            {{ $t("merchant.we_couldnt_match") }}.
-          </p>
-          <p class="step-5-dialog__text">
-            {{ $t("merchant.we_require_you_to_either") }}
-            <strong>{{ $t("merchant.link_to_existing_products") }}</strong>
-            {{ $t("merchant.link_to_existing_products_or") }}
-            <strong>{{ $t("merchant.import_as_new_products") }}</strong>
-          </p>
-          <button
-            class="step-5-dialog__link-container button"
-            @click="goToResolveConflics()"
-            v-if="!conflictsResolved"
-            data-test="resolve-conflicts"
+              <strong data-test="newProductsCount"
+                >{{ `${getPlatformSyncNewProducts.length}` }}
+                {{ $t("merchant.new_products") }}</strong
+              >
+              {{ $t("merchant.to_be_imported_as_new_products") }}.
+            </p>
+            <p
+              class="step-5-dialog__text"
+              v-if="getPlatformSyncMatchingProducts.length"
+            >
+              <strong data-test="matchingProductsCount"
+                >{{ `${getPlatformSyncMatchingProducts.length} ` }}
+                {{ $t("merchant.matching_products") }}
+              </strong>
+              {{ $t("merchant.linked_to_existing_products") }}
+            </p>
+          </v-card-text>
+          <div
+            class="step-5-dialog__link-container"
+            v-if="getPlatformSyncPartialMatchingProducts.length !== 0"
           >
-            {{ $t("merchant.link") }}
-            {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-            {{ $t("merchant.products") }}
-          </button>
-          <span v-else data-test="products_linked_count">
-            <img
-              src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/check-circle-filled.svg"
-            /><span class="step-5-dialog__link-container-text"
-              >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
-              {{ $t("merchant.products_linked") }}.
-              <a
-                class="step-5-dialog__link-container-text-link"
-                @click="goToResolveConflics()"
-                data-test="edit_conflicts"
-                >{{ $t("merchant.edit") }}</a
-              ></span
+            <p class="step-5-dialog__text">
+              <strong data-test="partialProductsCount"
+                >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+                {{ $t("merchant.products") }}</strong
+              >
+              {{ $t("merchant.we_couldnt_match") }}.
+            </p>
+            <p class="step-5-dialog__text">
+              {{ $t("merchant.we_require_you_to_either") }}
+              <strong>{{ $t("merchant.link_to_existing_products") }}</strong>
+              {{ $t("merchant.link_to_existing_products_or") }}
+              <strong>{{ $t("merchant.import_as_new_products") }}</strong>
+            </p>
+            <button
+              class="step-5-dialog__link-container button"
+              @click="goToResolveConflics()"
+              v-if="!conflictsResolved"
+              data-test="resolve-conflicts"
             >
-          </span>
+              {{ $t("merchant.link") }}
+              {{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+              {{ $t("merchant.products") }}
+            </button>
+            <span v-else data-test="products_linked_count">
+              <img
+                src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/check-circle-filled.svg"
+              /><span class="step-5-dialog__link-container-text"
+                >{{ `${getPlatformSyncPartialMatchingProducts.length}` }}
+                {{ $t("merchant.products_linked") }}.
+                <a
+                  class="step-5-dialog__link-container-text-link"
+                  @click="goToResolveConflics()"
+                  data-test="edit_conflicts"
+                  >{{ $t("merchant.edit") }}</a
+                ></span
+              >
+            </span>
+          </div>
+          <v-card-text>
+            <p class="step-5-dialog__text">
+              {{ $t("merchant.click_below_to_begin") }}?
+            </p>
+          </v-card-text>
         </div>
-        <v-card-text>
-          <p class="step-5-dialog__text">
-            {{ $t("merchant.click_below_to_begin") }}?
-          </p>
-        </v-card-text>
+        <v-card-actions class="step-5-dialog__actions">
+          <v-row>
+            <v-col span="6">
+              <!-- todo: add action to go back to main screen using inject-->
+              <button
+                class="step-5-dialog__button step-5-dialog__button--cancel"
+                @click="back()"
+                :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
+              >
+                {{ $t("merchant.back") }}
+              </button>
+            </v-col>
+            <v-col span="6">
+              <button
+                class="step-5-dialog__button step-5-dialog__button--continue"
+                @click="finishSyncingProducts()"
+                data-test="continue"
+                :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
+              >
+                {{ $t("merchant.continue") }}
+              </button>
+            </v-col>
+          </v-row>
+        </v-card-actions>
       </div>
-      <v-card-actions class="step-5-dialog__actions">
-        <v-row>
-          <v-col span="6">
-            <!-- todo: add action to go back to main screen using inject-->
-            <button
-              class="step-5-dialog__button step-5-dialog__button--cancel"
-              @click="back()"
-              :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
-            >
-              {{ $t("merchant.back") }}
-            </button>
-          </v-col>
-          <v-col span="6">
-            <button
-              class="step-5-dialog__button step-5-dialog__button--continue"
-              @click="finishSyncingProducts()"
-              data-test="continue"
-              :disabled="!conflictsResolved && getPlatformSyncStatus === 2"
-            >
-              {{ $t("merchant.continue") }}
-            </button>
-          </v-col>
-        </v-row>
-      </v-card-actions>
     </div>
   </div>
 </template>
@@ -262,6 +266,7 @@ export default {
       letter-spacing: 0.005em;
       color: #909399;
       margin-left: 8px;
+      padding: 0.5rem;
     }
 
     &-text-link {
@@ -276,10 +281,9 @@ export default {
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    /* identical to box height, or 143% */
     letter-spacing: 0.005em;
-    /* Neutral - Grays/gray70 */
     color: #909399;
+    padding: 0.5rem !important;
   }
 
   // &__actions {
@@ -294,6 +298,7 @@ export default {
     line-height: 32px;
     letter-spacing: -0.01em;
     color: #303133;
+    padding: 0.5rem;
   }
 
   &__text {
@@ -304,6 +309,7 @@ export default {
     line-height: 22px;
     color: #606266;
     margin-top: 24px;
+    padding: 0.5rem;
   }
 
   &__button {

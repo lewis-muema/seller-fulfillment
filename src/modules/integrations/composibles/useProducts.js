@@ -5,10 +5,6 @@ import { ElNotification } from "element-plus";
 const useProducts = () => {
   const store = useStore();
   const productsLoaded = ref(false);
-  //to-do: redirect user to previous step if the sales channel is not available
-  // const salesChannelId = computed(
-  //   () => store.state.integrations.activeIntegrations.platform.id
-  // );
 
   const finishSyncPayload = computed(
     () => store.state.integrations.platform.finishSyncPayload

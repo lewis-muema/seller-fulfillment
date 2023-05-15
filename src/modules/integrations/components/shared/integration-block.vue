@@ -60,7 +60,6 @@
               <span class="platform-steps__status">{{
                 $t("merchant.Pending")
               }}</span>
-              <button @click="status.action()">Resume</button>
             </div>
             <span v-else class="platform-steps__status">{{
               $t("merchant.Complete")

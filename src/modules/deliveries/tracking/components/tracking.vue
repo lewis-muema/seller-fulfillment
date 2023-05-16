@@ -75,6 +75,7 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.partnerPolling);
+    clearInterval(this.orderPolling);
     this.setDirectDeliveriesTrackingData(this.placeholderOnDemand);
   },
   watch: {
@@ -176,6 +177,21 @@ export default {
             }, 30000);
             // this.initiateMQTT();
           }
+          if (
+            !["ORDER_CANCELED", "ORDER_COMPLETED"].includes(
+              response?.data?.data?.order?.order_status
+            )
+          ) {
+            this.orderPolling = setInterval(() => {
+              if (
+                this.$route.path.includes(
+                  "/deliveries/track-direct-deliveries/"
+                )
+              ) {
+                this.fetchOrderPolling();
+              }
+            }, 300000);
+          }
         }
       });
     },
@@ -188,6 +204,16 @@ export default {
           this.setCancellationReasons(
             response.data.data["cancellation-reasons"]
           );
+        }
+      });
+    },
+    fetchOrderPolling() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/point-to-point/${this.$route.params.order_id}`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDirectDeliveriesTrackingData(response?.data?.data);
         }
       });
     },

@@ -270,5 +270,6 @@
   "backToLocations": "Back to locations",
   "backToVehicleTypes": "Back to vehicle types",
   "backToPickupInformation": "Back to pickup information",
-  "backToDeliveryInformation": "Back to delivery information"
+  "backToDeliveryInformation": "Back to delivery information",
+  "transporter": "Transporter"
 }

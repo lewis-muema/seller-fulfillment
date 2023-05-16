@@ -10,6 +10,9 @@
             <input
               type="text"
               class="form-control"
+              :class="
+                !name && inputErrorStatus ? 'add-product-input-error-state' : ''
+              "
               v-model="name"
               :placeholder="$t('inventory.whiteCoats')"
             />
@@ -39,6 +42,12 @@
           <div class="">
             <v-text-field
               class="businessProfile-field"
+              :class="
+                !productVariants[0].product_variant_unit_price &&
+                inputErrorStatus
+                  ? 'add-product-v-input-error-state'
+                  : ''
+              "
               id="update-price"
               v-model="productVariants[0].product_variant_unit_price"
               :label="productVariants[0].product_variant_currency"
@@ -57,7 +66,14 @@
             <input
               type="number"
               class="form-control"
+              :class="
+                productVariants[0].product_variant_quantity <= 0 &&
+                inputErrorStatus
+                  ? 'add-product-input-error-state'
+                  : ''
+              "
               placeholder="0.0"
+              min="0"
               v-model="productVariants[0].product_variant_quantity"
             />
           </div>
@@ -258,6 +274,11 @@
         <p class="ml-12">{{ $t("inventory.img") }}</p>
         <div
           class="img-container"
+          :class="
+            !productVariants[0].product_variant_image_link && inputErrorStatus
+              ? 'add-product-input-error-state'
+              : ''
+          "
           @click="pickImg()"
           v-loading="productUploadStatus"
         >
@@ -357,10 +378,11 @@ export default {
       activeOption: {},
       productDescription: "",
       buttonLoader: false,
+      inputErrorStatus: false,
     };
   },
   mounted() {
-    this.setComponent("common.productDetails");
+    this.setComponent("common.addProduct");
     this.initiateS3();
     this.productVariants[0].product_id = this.getProduct.product_id;
     this.productVariants[0].business_id =
@@ -625,11 +647,12 @@ export default {
         this.productVariants[0].product_variant_currency &&
         (this.productVariants[0].product_variant_unit_price ||
           this.productVariants.length > 1) &&
-        (this.productVariants[0].product_variant_quantity ||
+        (this.productVariants[0].product_variant_quantity > 0 ||
           this.productVariants.length > 1) &&
         this.productVariants[0].product_variant_quantity_type &&
         this.productVariants[0].product_variant_image_link
       ) {
+        this.inputErrorStatus = false;
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
@@ -673,6 +696,7 @@ export default {
           }
         });
       } else {
+        this.inputErrorStatus = true;
         ElNotification({
           title: this.$t("deliveries.insufficientInformation"),
           message: this.$t("deliveries.pleaseFillInAllFields"),
@@ -812,5 +836,11 @@ label {
 }
 .add-product-left-col {
   width: 425px;
+}
+.add-product-input-error-state {
+  border: 2px solid #9b101c !important;
+}
+.add-product-v-input-error-state .v-input__control .v-field {
+  border: 2px solid #9b101c !important;
 }
 </style>

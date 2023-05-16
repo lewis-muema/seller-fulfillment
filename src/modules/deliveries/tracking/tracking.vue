@@ -41,6 +41,7 @@ export default {
       overlay: false,
       failedStatus: false,
       linkedPickup: {},
+      orderPolling: "",
     };
   },
   watch: {
@@ -121,6 +122,19 @@ export default {
     }
     this.fetchOrder();
     this.cancellationReasons();
+    this.orderPolling = setInterval(() => {
+      if (
+        this.$route.path.includes("/deliveries/tracking/") &&
+        !["ORDER_CANCELED", "ORDER_COMPLETED"].includes(
+          this.getOrderTrackingData?.order?.order_status
+        )
+      ) {
+        this.fetchOrder();
+      }
+    }, 300000);
+  },
+  beforeUnmount() {
+    clearInterval(this.orderPolling);
   },
   methods: {
     ...mapMutations([

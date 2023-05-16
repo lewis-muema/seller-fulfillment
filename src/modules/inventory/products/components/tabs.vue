@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="getRoute === '/inventory/products'">
+    <div v-if="getRoute.includes('/inventory/products')">
       <div class="desktop-product-tab-container">
         <div
           class="desktop-product-tab"
@@ -193,7 +193,7 @@ export default {
     },
   },
   watch: {
-    "$store.state.loader": {
+    "$store.state.stockStatistics": {
       handler() {
         this.productTabs[0].content =
           this.getStockStatistics.low_stock_products +

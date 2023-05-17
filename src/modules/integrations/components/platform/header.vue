@@ -34,7 +34,7 @@ export default {
           userId: this.getUserDetails.user_id,
         },
       });
-      this.$router.go({ path: "/settings/integrations" });
+      this.$router.push({ name: "Integrations" });
     },
   },
 };

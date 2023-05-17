@@ -1,33 +1,31 @@
 <template>
-  <div>
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      :scrim="false"
-      transition="dialog-bottom-transition"
-      :retain-focus="false"
-    >
-      <v-card>
-        <headerComponent />
-        <div class="integrations-card">
-          <div class="top-action-bar">
-            <h5>{{ $t("merchant.platformInUse") }}</h5>
-          </div>
-          <div>
-            <selectComponent
-              :availableStores="availableStores"
-              class="dropdown"
-              @update="updateStore"
-            />
+  <div class="platform-container">
+    <v-card class="platform-container__card">
+      <headerComponent />
+      <div class="integrations-card">
+        <div class="top-action-bar">
+          <h5>{{ $t("merchant.platformInUse") }}</h5>
+        </div>
+        <div>
+          <selectComponent
+            :availableStores="availableStores"
+            class="dropdown"
+            @update="updateStore"
+          />
 
-            <v-btn
-              class="sendy-btn-default"
-              @click="storeDetailsDialog = true"
-              data-test="select-platform-btn"
-            >
-              {{ $t("merchant.continue") }}
-            </v-btn>
-            <!-- <div class="integration-actions">
+          <v-btn
+            class="sendy-btn-default"
+            @click="
+              $router.push({
+                name: 'SetupStep2',
+                params: { storePlatform: platform.details.name },
+              })
+            "
+            data-test="select-platform-btn"
+          >
+            {{ $t("merchant.continue") }}
+          </v-btn>
+          <!-- <div class="integration-actions">
               <span class="integration-actions__text">{{
                 $t("merchant.missingPlatform")
               }}</span>
@@ -35,32 +33,29 @@
                 {{ $t("merchant.letsKnow") }}
               </a>
             </div> -->
-          </div>
         </div>
-      </v-card>
-    </v-dialog>
-    <storeDetails
-      v-if="storeDetailsDialog"
-      :detailsDialog="storeDetailsDialog"
-      :storePlatform="platform"
-      @saved="onSavedChild"
-    />
+      </div>
+    </v-card>
   </div>
 </template>
 <script>
-import storeDetails from "./storeDetails.vue";
-import stores from "../constants/storeFields.json";
-import headerComponent from "./header.vue";
-import selectComponent from "./selectComponent.vue";
+import stores from "@/modules/integrations/constants/storeFields.json";
+import selectComponent from "@/modules/integrations/components/platform/selectComponent.vue";
+
+import Platform from "@/modules/integrations/models/Platform";
+import { provide } from "vue";
 
 export default {
-  components: { storeDetails, headerComponent, selectComponent },
-  props: {
-    displayDialog: {
-      type: Boolean,
-      default: false,
-    },
+  setup() {
+    const platform = new Platform();
+
+    provide("platform", platform);
+
+    return {
+      platform,
+    };
   },
+  components: { selectComponent },
   computed: {
     availableStores() {
       return Object.keys(stores).sort((a, b) => {
@@ -70,32 +65,10 @@ export default {
   },
   data() {
     return {
-      platform: "",
-      platformSet: false,
-      dialog: false,
-      storeDetailsDialog: false,
       documentationLink: "https://fulfillment-api.sendyit.com/documentation",
     };
   },
-  mounted() {
-    this.dialog = this.displayDialog;
-  },
-  watch: {
-    displayDialog() {
-      if (this.displayDialog) this.dialog = true;
-    },
-  },
   methods: {
-    updateStore(store) {
-      this.platform = store;
-      this.onPlatformSet();
-    },
-    onPlatformSet() {
-      this.platformSet = true;
-    },
-    onSavedChild() {
-      this.storeDetailsDialog = false;
-    },
     redirect() {
       window.open(this.documentationLink);
     },
@@ -103,6 +76,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.platform-container {
+  height: 100%;
+
+  &__card {
+    height: 100vh;
+  }
+}
 .integration-actions {
   margin-top: 32px;
 

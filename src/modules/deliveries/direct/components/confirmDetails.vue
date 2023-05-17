@@ -52,6 +52,8 @@
             {{
               pickupDetails?.vehicle_option
                 ? pickupDetails?.vehicle_option?.option_description
+                : getSelectedVehicleType?.vehicle_type
+                ? getSelectedVehicleType?.vehicle_type.replaceAll("_", " ")
                 : "N/A"
             }}
           </div>
@@ -74,6 +76,19 @@
                 ? pickupDetails?.pickup_instructions
                 : "N/A"
             }}
+          </div>
+        </div>
+        <div
+          class="confirm-delivery-details-item-row"
+          v-if="getDirectOrderDetails?.selectPartner"
+        >
+          <div class="confirm-delivery-details-item-row-left">
+            {{ $t("deliveries.transporter") }}
+          </div>
+          <div class="confirm-delivery-details-item-row-right">
+            {{ getDirectOrderPartner?.agent_name }} ({{
+              getDirectOrderPartner?.vehicle_identifier
+            }})
           </div>
         </div>
       </div>
@@ -200,6 +215,7 @@ export default {
       "getBusinessDetails",
       "getPaymnetMethods",
       "getUserDetails",
+      "getDirectOrderPartner",
     ]),
     pickUpLocation() {
       return this.getMarkers[0]?.location;

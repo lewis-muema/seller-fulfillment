@@ -308,7 +308,7 @@ Cypress.Commands.add("deliveriesStubs", () => {
   ).as("exportTasks");
   cy.intercept(
     "GET",
-    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/cancellation-reasons`,
+    `${constants.FULFILMENT_SERVER}seller/B-VSW-5971/cancellation-reasons?order_type=*`,
     {
       statusCode: 200,
       body: cancellationReasons,

@@ -5,8 +5,6 @@ import router from "../router";
 import { ElNotification } from "element-plus";
 import moment, { duration } from "moment";
 
-let errorRefreshStatus = true;
-
 export default {
   async initializeAuth({ commit }) {
     const token = localStorage.getItem("accessToken");
@@ -139,10 +137,8 @@ export default {
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
     dispatch("setErrorAction", error?.response?.data?.errors);
-
-    if (error?.response?.status === 403 && errorRefreshStatus) {
+    if (error?.response?.status === 403) {
       dispatch("refreshToken", error);
-      errorRefreshStatus = false;
     }
     if (error?.response?.status === 502) {
       console.log(error);

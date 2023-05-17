@@ -114,7 +114,7 @@ const routes = [
     component: Import,
   },
   {
-    path: "/inventory/products",
+    path: "/inventory/products/:tab?",
     name: "Products",
     component: Products,
   },

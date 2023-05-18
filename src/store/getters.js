@@ -12,13 +12,7 @@ export default {
   getDeliveries: (state) => state.deliveries,
   getConsignments: (state) => state.consignments,
   getDeliveryInfo: (state) => state.deliveryInfo,
-  getRecepientInfo: (state) => state.recepientInfo,
-  getOnDemandDeliveries: (state) => state.onDemandDeliveries,
-  getEdittedDocuments: (state) => state.edittedDocuments,
-  getFinalDocumentsToEdit: (state) => state.finalDocumentsToEdit,
-  getEditedDocuments: (state) => state.editedDocuments,
   getPickupInfo: (state) => state.pickupInfo,
-  getGeofenceData: (state) => state.geofenceData,
   getProducts: (state) => state.products,
   getOverlay: (state) => state.overlay,
   getStatements: (state) => state.statements,
@@ -61,8 +55,6 @@ export default {
   isAuthenticated: (state) => state.accessToken !== null,
   getTabStatus: (state) => state.tabStatus,
   getOrderTrackingData: (state) => state.orderTrackingData,
-  getDirectDeliveriesTrackingData: (state) =>
-    state.directDeliveriesTrackingData,
   getTimelineIcons: (state) => state.timelineIcons,
   getDeliveryAttempts: (state) => state.deliveryAttempts,
   getProduct: (state) => state.product,
@@ -156,6 +148,23 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
+  getIntegrations: (state) => state.integrations.activeIntegrations,
+  getPlatformSyncStatus: (state) =>
+    state.integrations.platform.syncedProducts.syncStatus,
+  getPlatformSyncProducts: (state) =>
+    state.integrations.platform.syncedProducts,
+  getPlatformSyncPartialMatchingProducts: (state) =>
+    state.integrations.platform.syncedProducts.partialMatchingProducts || [],
+  getPlatformSyncMatchingProducts: (state) =>
+    state.integrations.platform.syncedProducts.matchingProducts || [],
+  getPlatformSyncNewProducts: (state) =>
+    state.integrations.platform.syncedProducts.newProducts || [],
+  getPlatformSyncPayload: (state) =>
+    state.integrations.platform.finishSyncPayload,
+  getConflictsResolvedStatus: (state) =>
+    state.integrations.platform.conflictsResolved,
+  getPlatformProductsLoaded: (state) =>
+    state.integrations.platform.productsLoaded,
   getBanner: (state) => state.banner,
   getPaymentRedirectURL: (state) => state.paymentRedirectURL,
 };

@@ -1,19 +1,26 @@
 <template>
   <div>
-    <integrations :key="componentKey" />
+    <router-view v-loading="loading" />
   </div>
 </template>
 
 <script>
-import integrations from "./integrations.vue";
 import { mapMutations } from "vuex";
-import { provide } from "vue";
+import { provide, onMounted } from "vue";
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations";
 
 export default {
-  components: { integrations },
-  data() {
+  setup() {
+    provide("getUserDetails", JSON.parse(localStorage.getItem("userDetails")));
+    const { fetchIntegrations, loadingIntegrations: loading } =
+      useIntegrations();
+
+    onMounted(async () => {
+      await fetchIntegrations();
+    });
+
     return {
-      componentKey: 1,
+      loading,
     };
   },
   mounted() {
@@ -32,8 +39,4 @@ export default {
 };
 </script>
 
-<style>
-.v-dialog--fullscreen .v-overlay__content {
-  overflow-y: scroll !important;
-}
-</style>
+<style lang="scss" scoped></style>

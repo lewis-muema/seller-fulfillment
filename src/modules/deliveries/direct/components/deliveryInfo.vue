@@ -37,6 +37,12 @@
               v-model="marker.delivery_phone"
               v-bind="getSendyPhoneProps"
               :input-options="getVueTelInputProps"
+              @input="
+                sendEvent(
+                  marker.delivery_name,
+                  'Enter_Destination_Contact_Person_Direct_Fulfillment'
+                )
+              "
             ></vue-tel-input>
           </div>
         </div>
@@ -57,6 +63,12 @@
             id="instructions"
             cols="37"
             rows="5"
+            @input="
+              sendEvent(
+                marker.delivery_phone,
+                'Add_Destination_Instructions_Direct_Fulfillment'
+              )
+            "
           ></textarea>
         </div>
       </div>
@@ -65,8 +77,10 @@
 </template>
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getPricing",
@@ -120,6 +134,16 @@ export default {
   },
   methods: {
     ...mapMutations(["setOverlayStatus"]),
+    sendEvent(val, event) {
+      this.sendSegmentEvents({
+        event,
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: val,
+        },
+      });
+    },
   },
 };
 </script>

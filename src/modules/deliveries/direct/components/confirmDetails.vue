@@ -11,7 +11,10 @@
           </div>
           <div
             class="confirm-delivery-details-edit"
-            @click="setDirectOrderDetailsStep(0)"
+            @click="
+              sendEvents('Edit_Pickup_Info_Direct_Fulfillment');
+              setDirectOrderDetailsStep(0);
+            "
           >
             {{ $t("deliveries.edit") }}
           </div>
@@ -101,7 +104,10 @@
           </div>
           <div
             class="confirm-delivery-details-edit"
-            @click="setDirectOrderDetailsStep(1)"
+            @click="
+              sendEvents('Edit_Destination_Info_Direct_Fulfillment');
+              setDirectOrderDetailsStep(1);
+            "
           >
             {{ $t("deliveries.edit") }}
           </div>
@@ -195,8 +201,10 @@
 <script>
 import moment from "moment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getPricing",
@@ -251,6 +259,15 @@ export default {
   methods: {
     ...mapActions(["requestAxiosPost"]),
     ...mapMutations(["setPaymentMethods", "setDirectOrderDetailsStep"]),
+    sendEvents(event) {
+      this.sendSegmentEvents({
+        event,
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
+      });
+    },
     formatDate(date) {
       return moment(date).format("ddd, Do MMM");
     },
@@ -283,6 +300,7 @@ export default {
         : method.pay_method_name;
     },
     selectPaymentMethod() {
+      this.sendEvents("Change_Payment_Method_Direct_Fulfillment");
       const buPayload = {
         user_id: this.getBusinessDetails.business_id,
         entity_id: 6,

@@ -174,7 +174,7 @@
           >
         </div>
         <div
-          class="confirm-delivery-details-payment-default"
+          class="confirm-delivery-details-payment-default payment-default-trigger"
           v-if="defaultPaymentMethod.length === 0"
           @click="selectPaymentMethod"
         >
@@ -379,14 +379,14 @@ export default {
   display: flex;
   align-items: center;
   font-size: 14px;
+  color: #324ba8;
+  font-weight: 600;
 }
 .confirm-delivery-details-no-payment-left {
   font-size: 13px;
-  color: #919399;
 }
 .confirm-delivery-details-no-payment-right {
   font-size: 13px;
-  color: #606266;
   margin-left: auto;
   cursor: pointer;
 }

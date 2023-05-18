@@ -76,8 +76,10 @@ import pickupInfo from "./pickupInfo.vue";
 import deliveryInfo from "./deliveryInfo.vue";
 import confirmDetails from "./confirmDetails.vue";
 import moment from "moment";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   components: { pickupInfo, deliveryInfo, confirmDetails },
   watch: {
     "$store.state.directOrderDetailsStep": function step(val) {
@@ -357,6 +359,14 @@ export default {
           } else {
             this.redirectToOrder();
           }
+          this.sendSegmentEvents({
+            event: "Place_Direct_Fulfillment_Order",
+            data: {
+              userId: this.getStorageUserDetails.business_id,
+              email: this.getStorageUserDetails.email,
+              data: response.data.data,
+            },
+          });
         } else {
           ElNotification({
             title: this.$t("deliveries.failedToCreateOrder"),

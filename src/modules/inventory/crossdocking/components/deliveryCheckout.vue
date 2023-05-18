@@ -1857,7 +1857,8 @@ export default {
               this.getPickUpInfoCD.location &&
               this.getPickUpInfoCD.phone &&
               ((this.getPickUpInfoCD.pickupSpeed && this.speedPolicyFlag) ||
-                !this.speedPolicyFlag)))
+                !this.speedPolicyFlag))) &&
+          this.defaultPaymentMethod[0]
         ) {
           fieldsPresent.push(true);
         } else {
@@ -1940,6 +1941,8 @@ export default {
         });
       } else {
         this.showErrors = true;
+        this.scanPayloadForErrors();
+        this.showNotification();
       }
     },
     showNotification() {
@@ -1963,6 +1966,18 @@ export default {
             400
           );
         }
+        if (!row.speed) {
+          this.showErrorNotification(
+            this.$t("inventory.addSpeedError", { index }),
+            400
+          );
+        }
+        if (!/^\+([0-9 ]+)$/i.test(row?.recipient?.phone)) {
+          this.showErrorNotification(
+            this.$t("inventory.validateRecipientPhoneNumber", { index }),
+            400
+          );
+        }
       });
       if (
         this.pickUpRequired &&
@@ -1973,6 +1988,24 @@ export default {
           100
         );
       }
+      if (!this.defaultPaymentMethod[0]) {
+        this.showErrorNotification(
+          this.$t("inventory.pleaseSelectAPaymentMethod"),
+          100
+        );
+      }
+    },
+    scanPayloadForErrors() {
+      this.getDestinations.forEach((row) => {
+        if (
+          !(row.products && row.products.length) ||
+          !row.delivery_info ||
+          !row.recipient ||
+          !row.speed
+        ) {
+          row.expanded = 1;
+        }
+      });
     },
     numberSuffix(n) {
       return ["st", "nd", "rd"][((((n + 90) % 100) - 10) % 10) - 1] || "th";

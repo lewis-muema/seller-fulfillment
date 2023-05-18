@@ -516,6 +516,14 @@
           v-model="phone"
           mode="international"
         ></vue-tel-input>
+        <div
+          v-if="phone && !/^\+([0-9 ]+)$/i.test(phone)"
+          class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+        >
+          <div>
+            {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+          </div>
+        </div>
         <label
           for="sec-phone-number"
           v-if="secondaryPhoneStatus"
@@ -531,6 +539,14 @@
           v-model="secPhone"
           mode="international"
         ></vue-tel-input>
+        <div
+          v-if="secPhone && !/^\+([0-9 ]+)$/i.test(secPhone)"
+          class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+        >
+          <div>
+            {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+          </div>
+        </div>
         <div
           class="add-phone-number mb-4"
           v-if="!secondaryPhoneStatus"
@@ -701,6 +717,14 @@
           v-model="phone"
           mode="international"
         ></vue-tel-input>
+        <div
+          v-if="phone && !/^\+([0-9 ]+)$/i.test(phone)"
+          class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+        >
+          <div>
+            {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+          </div>
+        </div>
         <label
           for="sec-phone-number"
           v-if="secondaryPhoneStatus"
@@ -716,6 +740,14 @@
           v-model="secPhone"
           mode="international"
         ></vue-tel-input>
+        <div
+          v-if="secPhone && !/^\+([0-9 ]+)$/i.test(secPhone)"
+          class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+        >
+          <div>
+            {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+          </div>
+        </div>
         <div
           class="add-phone-number mb-4"
           v-if="!secondaryPhoneStatus"
@@ -1873,6 +1905,14 @@
         v-model="phone"
         mode="international"
       ></vue-tel-input>
+      <div
+        v-if="phone && !/^\+([0-9 ]+)$/i.test(phone)"
+        class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+      >
+        <div>
+          {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+        </div>
+      </div>
       <label
         for="sec-phone-number"
         v-if="secondaryPhoneStatus"
@@ -1888,6 +1928,14 @@
         v-model="secPhone"
         mode="international"
       ></vue-tel-input>
+      <div
+        v-if="secPhone && !/^\+([0-9 ]+)$/i.test(secPhone)"
+        class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+      >
+        <div>
+          {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+        </div>
+      </div>
       <div
         class="add-phone-number mb-4"
         v-if="!secondaryPhoneStatus"
@@ -2879,13 +2927,25 @@ export default {
       return this.location.length;
     },
     isConsignmentReturnFieldsValid() {
-      return this.location.length && this.phone.length;
+      return (
+        this.location.length &&
+        this.phone.length &&
+        /^\+([0-9 ]+)$/i.test(this.phone)
+      );
     },
     isRecipientFieldsValid() {
-      return this.customerName.length && this.phone.length;
+      return (
+        this.customerName.length &&
+        this.phone.length &&
+        /^\+([0-9 ]+)$/i.test(this.phone)
+      );
     },
     isPickUpFieldsValid() {
-      return this.location.length && this.phone.length;
+      return (
+        this.location.length &&
+        this.phone.length &&
+        /^\+([0-9 ]+)$/i.test(this.phone)
+      );
     },
     isPaymentCollectionValid() {
       return this.deliveryFeeCollection;

@@ -48,7 +48,9 @@ export default createStore({
       directOrderStep: 0,
       directOrderDetailsStep: 0,
       directOrderDetails: {
-        pickup: {},
+        pickup: {
+          schedule_option: 0,
+        },
         destinations: [],
       },
       directOrderPartner: {},

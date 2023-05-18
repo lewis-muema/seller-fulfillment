@@ -948,9 +948,10 @@
       </div>
       <div v-if="paymentEnabled">
         <div
-          class="payment-method-default"
+          class="payment-method-default payment-default-trigger"
           v-for="(method, i) in defaultPaymentMethod"
           :key="i"
+          @click="selectPaymentMethod"
         >
           <img
             class="mr-2"
@@ -958,23 +959,19 @@
             alt=""
           />
           <span class="ml-3">{{ formatPaymentMethod(method) }}</span>
-          <span
-            class="payment-default-right payment-default-trigger"
-            @click="selectPaymentMethod"
-          >
+          <span class="payment-default-right payment-default-trigger">
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >
         </div>
         <div
-          class="payment-method-default"
+          class="payment-method-default payment-default-trigger"
           v-if="defaultPaymentMethod.length === 0"
+          @click="selectPaymentMethod"
         >
           <span class="payment-default-left">{{
             $t("payments.noDefaultPaymentMethodSelected")
           }}</span>
-          <span
-            class="payment-default-right payment-default-trigger"
-            @click="selectPaymentMethod"
+          <span class="payment-default-right payment-default-trigger"
             >{{ $t("inventory.change") }}
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >

@@ -106,7 +106,7 @@ export default {
     const statuses = reactive([
       {
         message: "Enter your store details",
-        status: props.integration.integration_status,
+        status: "STORE_DETAILS_ADDED",
         hasAction: false,
       },
       {

@@ -278,7 +278,7 @@ export default {
         overlay: true,
         popup: "export",
       });
-      this.setExportDataType("TRANSACTION");
+      this.setExportDataType("BUSINESS_TRANSACTION");
     },
     timeFormat(date) {
       return moment(date).format("h:mm A, Do MMM");

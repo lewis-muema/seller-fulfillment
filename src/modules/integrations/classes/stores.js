@@ -1,4 +1,4 @@
-import storeFields from "../constants/storeFields.json";
+import storeFields from "@/modules/integrations/constants/storeFields.json";
 import { isValidUrl } from "@/utils/text-validation";
 import i18n from "@/i18n";
 

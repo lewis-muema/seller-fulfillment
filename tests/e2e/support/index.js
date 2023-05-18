@@ -18,6 +18,7 @@ import "./commands";
 import "./stubs";
 import "./crossDockingStubs";
 import "./integrationStubs";
+import "./inventorySyncStubs";
 import "@cypress/code-coverage/support";
 
 // Alternatively you can use CommonJS syntax:

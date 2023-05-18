@@ -9,6 +9,29 @@ export default createStore({
   namespaced: true,
   state() {
     return {
+      integrations: {
+        activeIntegrations: {
+          platform: {},
+          apiKey: {},
+        },
+        platform: {
+          productsLoaded: false,
+          conflictsResolved: false,
+          finishSyncPayload: {
+            currency: "KES", // required
+            createAllProducts: false,
+            products: [],
+            newProducts: [],
+            matchingProducts: [],
+          },
+          syncedProducts: {
+            partialMatchingProducts: [],
+            matchingProducts: [],
+            newProducts: [],
+            syncStatus: 0,
+          },
+        },
+      },
       mobile: false,
       component: "common.dashboard",
       languages: [
@@ -33,7 +56,16 @@ export default createStore({
         "/auth/otp",
         "/auth/complete-signup",
         "/external/invite",
-        "/settings/integrations/thank-you",
+        "/settings/integrations/platform/setup/1",
+        "/settings/integrations/platform/setup/2",
+        "/settings/integrations/platform/setup/3",
+        "/settings/integrations/platform/setup/4",
+        "/settings/integrations/platform/setup/4/success",
+        "/settings/integrations/platform/setup/4/error",
+        "/settings/integrations/platform/setup/5",
+        "/settings/integrations/platform/setup/6",
+        "/settings/integrations/platform/setup/6/resolve-conflicts",
+        "/settings/integrations/platform/setup/7",
       ],
       autofillDetails: {},
       cancellationReasons: {},

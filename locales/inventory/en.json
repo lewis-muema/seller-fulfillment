@@ -1,4 +1,5 @@
 {
+  "products_linked":"Products Linked",
   "noInventoryToTrackYet": "There is no inventory to track yet.  Send products to Sendy and track the stock levels here",
   "sendInventoryToSendy": "Send inventory to Sendy",
   "importProducts": "Import Products",
@@ -289,7 +290,7 @@
   "SENDY_SCHEDULED_DELIVERY": "Scheduled delivery",
   "SENDY_SCHEDULED_PICKUP": "Scheduled pickup",
   "selectADateOfYourChoice": "Select a date of your choice",
-  "selectAPickUpDate": "Select a pick up date", 
+  "selectAPickUpDate": "Select a pick up date",
   "selectAPickUpOption": "Select a pick up option",
   "thePickUpDateCannotBeAheadOfTheDeliveryDate": "The pick up date can not be ahead of the delivery date, Please adjust it",
   "pleaseSelectThePickupTimeForTheUnavailable": "Please select the pickup time for the unavailable items to continue",

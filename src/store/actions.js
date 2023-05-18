@@ -310,12 +310,12 @@ export default {
         },
       };
 
-      const { data } = await axios.post(
+      const { data, status } = await axios.post(
         `${payload.app}${payload.endpoint}`,
         payload.values,
         config
       );
-      return data;
+      return { data, status };
     } catch (error) {
       return error.response;
     }
@@ -406,5 +406,103 @@ export default {
     } catch (error) {
       return error.response;
     }
+  },
+  syncPlatformProducts(
+    { dispatch },
+    { salesChannelId = null, currency = "KES" }
+  ) {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!salesChannelId) {
+          throw new Error("No sales channel Id provided");
+        }
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "fulfilment-token": localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "sales-channel-id": salesChannelId,
+          },
+        };
+
+        const { data, status } = await axios.get(
+          `${process.env.MERCHANT_GATEWAY}api2cart/products/sync?currency=${currency}`,
+          config
+        );
+
+        // to-do: add this in tests
+        if (data.data.syncStatus === 0) {
+          ElNotification({
+            message: data.data.message,
+            type: "success",
+          });
+          router.push({ name: "SetupStep7" });
+        }
+
+        await dispatch("setProductsLoaded", true);
+        await dispatch("syncProducts", data.data.products);
+        await dispatch("setSyncStatus", data.data.syncStatus);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  setProductsLoaded({ dispatch, commit }, payload) {
+    commit("setProductsLoaded", payload);
+  },
+  syncProducts({ dispatch, commit }, payload) {
+    commit("setSyncedPlatformProducts", payload);
+  },
+  setSyncStatus({ dispatch, commit }, payload) {
+    commit("setSyncStatus", payload);
+  },
+  setIntegrations({ dispatch, commit }, payload) {
+    commit("setIntegrations", payload);
+  },
+  setFinishSyncPayload({ dispatch, commit }, payload) {
+    commit("setFinishSyncPayload", payload);
+  },
+  setResolvedConflicts({ dispatch, commit }, payload) {
+    commit("setResolvedConflicts", payload);
+  },
+  async finishSyncingPlatformProducts({ dispatch }, payload) {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "fulfilment-token": localStorage.accessToken
+              ? localStorage.accessToken
+              : "",
+            "sales-channel-id": localStorage.getItem("platformSalesChannelId"),
+          },
+        };
+
+        const { data, status } = await axios.post(
+          `${process.env.MERCHANT_GATEWAY}api2cart/products/finish-sync`,
+          payload,
+          config
+        );
+
+        if (status === 200) {
+          resolve();
+          return { data: data.data, status };
+        } else {
+          throw data;
+        }
+      } catch (error) {
+        reject(error.response);
+      }
+    });
   },
 };

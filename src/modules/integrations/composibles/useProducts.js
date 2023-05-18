@@ -1,10 +1,10 @@
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 
 const useProducts = () => {
   const store = useStore();
-  const productsLoaded = ref(false);
+  // const productsLoaded = ref(false);
 
   const finishSyncPayload = computed(
     () => store.getters.getPlatformSyncPayload
@@ -20,7 +20,7 @@ const useProducts = () => {
         await store.dispatch("syncPlatformProducts", {
           salesChannelId,
         });
-        productsLoaded.value = true;
+        // productsLoaded.value = true;
         resolve();
       } catch (e) {
         ElNotification({
@@ -28,7 +28,7 @@ const useProducts = () => {
           message: `${e}`,
           type: "error",
         });
-        productsLoaded.value = false;
+        // productsLoaded.value = false;
         reject(e);
       }
     });

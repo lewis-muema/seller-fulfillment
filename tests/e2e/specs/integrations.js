@@ -192,6 +192,7 @@ describe("Integration Process", () => {
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("be.visible");
           cy.getByData("partialProductsCount").should("be.visible");
@@ -239,6 +240,7 @@ describe("Integration Process", () => {
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("not.exist");
           cy.getByData("partialProductsCount").should("not.exist");
@@ -275,6 +277,7 @@ describe("Integration Process", () => {
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("be.visible");
           cy.getByData("partialProductsCount").should("not.exist");

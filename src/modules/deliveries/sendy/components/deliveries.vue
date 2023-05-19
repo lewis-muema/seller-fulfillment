@@ -123,6 +123,13 @@
                     </span>
                   </p>
                 </div>
+                <div v-else-if="item.order_status === 'ORDER_CANCELED'">
+                  <p class="deliveries-date-row-top">
+                    <span :class="getLoader.deliveries">
+                      {{ deliveryDate(item.updated_date) }}
+                    </span>
+                  </p>
+                </div>
                 <div v-else>
                   <p class="deliveries-date-row-top">
                     <span :class="getLoader.consignments">
@@ -354,7 +361,7 @@ export default {
       });
     },
     deliveryDate(date) {
-      return moment(date).format("MMM M/D/YYYY");
+      return moment(date).format("Do MMM YYYY");
     },
     deliveryTime(date) {
       const finalTime = moment(date).add(2, "hours");

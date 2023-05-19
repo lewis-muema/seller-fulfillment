@@ -56,6 +56,7 @@ export default {
       "getSendyPhoneProps",
       "getActivePayment",
       "getParent",
+      "getMapOptions",
     ]),
     onboardingStatus() {
       if (
@@ -81,6 +82,7 @@ export default {
     this.detectPayments();
     this.countryDefault();
     this.setVirtualTourCookie();
+    this.setMapRestrictions();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
@@ -94,7 +96,18 @@ export default {
       "setOverlayStatus",
       "setDirectDeliveriesTrackingData",
       "setOrderTimelines",
+      "setMapOptions",
     ]),
+    setMapRestrictions() {
+      if (localStorage?.country) {
+        this.getMapOptions.componentRestrictions.country = [
+          localStorage?.country.toLowerCase(),
+        ];
+        const props = this.getSendyPhoneProps;
+        props.defaultCountry = localStorage?.country?.toLowerCase();
+        this.setSendyPhoneProps(props);
+      }
+    },
     registerFCM() {
       window.addEventListener("register-fcm", () => {
         this.firebase();
@@ -183,6 +196,11 @@ export default {
             ? "COTE_D_VOIRE"
             : localStorage?.country_name
         );
+        if (localStorage?.country) {
+          this.getMapOptions.componentRestrictions.country = [
+            localStorage?.country.toLowerCase(),
+          ];
+        }
         const francoPhoneCountries = ["FR", "CI"].includes(
           localStorage?.country
         );

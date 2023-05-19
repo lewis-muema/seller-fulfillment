@@ -72,8 +72,10 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       activeTier: 0,
@@ -82,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getPricing"]),
+    ...mapGetters(["getPricing", "getStorageUserDetails"]),
   },
   methods: {
     ...mapMutations(["setSelectedVehicleType", "setDirectOrderStep"]),
@@ -95,6 +97,14 @@ export default {
     selectVehicleType(vehicle) {
       this.activeVehicle = vehicle;
       this.vehicleSelectStatus = true;
+      this.sendSegmentEvents({
+        event: "Select_Vehicle_Direct_Fulfillment",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          vehicle: this.activeVehicle,
+        },
+      });
     },
     continueToVehicleType() {
       this.setSelectedVehicleType(this.activeVehicle);

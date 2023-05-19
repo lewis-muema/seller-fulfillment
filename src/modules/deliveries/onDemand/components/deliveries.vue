@@ -104,14 +104,14 @@
               <td class="deliveries-date-row">
                 <div v-if="item.order_status === 'ORDER_COMPLETED'">
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader.deliveries">
+                    <span :class="getLoader.onDemandOrders">
                       {{ deliveryDate(item.completed_date) }}
                     </span>
                   </p>
                 </div>
                 <div v-else-if="item.order_status === 'ORDER_CANCELED'">
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader.deliveries">
+                    <span :class="getLoader.onDemandOrders">
                       {{ deliveryDate(item.updated_date) }}
                     </span>
                   </p>

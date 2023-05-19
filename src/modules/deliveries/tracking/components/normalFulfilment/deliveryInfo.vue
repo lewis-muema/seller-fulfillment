@@ -214,19 +214,14 @@
             <span :class="getLoader.orderTracking">
               {{
                 getOrderTrackingData.order.documents &&
-                getOrderTrackingData.order.documents.length > 0
+                getOrderTrackingData.order.documents.length > 1
                   ? $t("inventory.otherDocuments", {
-                      Doc:
-                        getOrderTrackingData.order.documents[0]
-                          .document_type === "OTHER"
-                          ? getOrderTrackingData.order.documents[0]
-                              .document_description
-                          : getOrderTrackingData.order.documents[0].document_type.replace(
-                              /_/g,
-                              " "
-                            ),
+                      Doc: docName(getOrderTrackingData.order.documents[0]),
                       Count: getOrderTrackingData.order.documents.length - 1,
                     })
+                  : getOrderTrackingData.order.documents &&
+                    getOrderTrackingData.order.documents.length === 1
+                  ? docName(getOrderTrackingData.order.documents[0])
                   : $t("inventory.noDocuments")
               }}
             </span>
@@ -472,6 +467,11 @@ export default {
     },
     formatLongDate(date) {
       return moment(date).format("ddd, Do MMM YYYY");
+    },
+    docName(document) {
+      return document.document_type === "OTHER"
+        ? document.document_description
+        : document.document_type.replace(/_/g, " ");
     },
   },
 };

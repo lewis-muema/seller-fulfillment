@@ -119,6 +119,7 @@ export default {
         (pickup.schedule_option === 0 ||
           (pickup.schedule_option === 1 && pickup.pickup_date)) &&
         pickup.pickup_phone &&
+        /^\+([0-9 ]+)$/i.test(pickup.pickup_phone) &&
         ((this.getDirectOrderPartner?.agent_id &&
           this.getDirectOrderDetails?.selectPartner) ||
           !this.getDirectOrderDetails?.selectPartner)
@@ -128,7 +129,10 @@ export default {
       const delivery = this.getDirectOrderDetails.destinations;
       const status = [];
       delivery.forEach((details) => {
-        if (details.delivery_phone) {
+        if (
+          details.delivery_phone &&
+          /^\+([0-9 ]+)$/i.test(details.delivery_phone)
+        ) {
           status.push(true);
         } else {
           status.push(false);

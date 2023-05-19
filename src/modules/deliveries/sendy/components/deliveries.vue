@@ -125,7 +125,7 @@
                 </div>
                 <div v-else-if="item.order_status === 'ORDER_CANCELED'">
                   <p class="deliveries-date-row-top">
-                    <span :class="getLoader.deliveries">
+                    <span :class="getLoader.consignments">
                       {{ deliveryDate(item.updated_date) }}
                     </span>
                   </p>

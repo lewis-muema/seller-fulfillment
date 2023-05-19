@@ -1421,6 +1421,13 @@ export default {
     this.phone = this.getCheckoutDetails.phone;
     this.secPhone = this.getCheckoutDetails.secPhone;
     this.addPhoneStatus = this.getCheckoutDetails.addPhoneStatus;
+    this.sendSegmentEvents({
+      event: "Visit_Crossdocking_Delivery_Page",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        email: this.getStorageUserDetails.email,
+      },
+    });
   },
   methods: {
     ...mapMutations([
@@ -1458,12 +1465,33 @@ export default {
         this.setSelectedProducts([]);
         this.$router.push("/inventory/add-delivery-products");
       }
+      if (
+        this.getDestinations[index]?.autofillReviewStatus &&
+        this.getDestinations[index]?.products &&
+        this.getDestinations[index]?.autofillProductStatus
+      ) {
+        this.sendSegmentEvents({
+          event: "LPO_Products_Reviewed_In_Form",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: this.getDestinations[index]?.products,
+          },
+        });
+      }
     },
     openAutofillPopup(index) {
       this.setDestinationIndex(index);
       this.setOverlayStatus({
         overlay: true,
         popup: "uploadLPO",
+      });
+      this.sendSegmentEvents({
+        event: "LPO_Upload_Clicked",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
       });
     },
     LPOAutofillFlag() {
@@ -1524,6 +1552,14 @@ export default {
           reference_number: event.target.value,
         });
       }
+      this.sendSegmentEvents({
+        event: "Add_Crossdocking_Order_Reference_Number",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: event.target.value,
+        },
+      });
     },
     addLocation() {
       const destinations = this.getDestinations;
@@ -1536,6 +1572,13 @@ export default {
         },
       });
       this.setDestinations(destinations);
+      this.sendSegmentEvents({
+        event: "Add_Another_Crossdocking_Destination",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
+      });
     },
     removeLocation(index) {
       this.setDestinationIndex(index);
@@ -1569,6 +1612,20 @@ export default {
         overlay: true,
         popup: "deliveryInfoCrossdock",
       });
+      if (
+        this.getDestinations[index - 1]?.autofillReviewStatus &&
+        (!this.getDestinations[index - 1]?.delivery_info?.location ||
+          !this.getDestinations[index - 1]?.delivery_info?.place)
+      ) {
+        this.sendSegmentEvents({
+          event: "LPO_Delivery_Info_Reviewed",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: this.getDestinations[index - 1]?.delivery_info,
+          },
+        });
+      }
     },
     addRecepientInfo(index) {
       this.changeIndex(index);
@@ -1576,6 +1633,21 @@ export default {
         overlay: true,
         popup: "recepientInfoCrossdock",
       });
+      if (
+        this.getDestinations[index - 1]?.autofillReviewStatus &&
+        this.getMissingAutofillFields(
+          this.getDestinations[index - 1]?.recipient
+        )
+      ) {
+        this.sendSegmentEvents({
+          event: "LPO_Recipient_Info_Reviewed",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: this.getDestinations[index - 1]?.recipient,
+          },
+        });
+      }
     },
     addDeliveryOption(index) {
       this.changeIndex(index);
@@ -1612,12 +1684,13 @@ export default {
       this.setMismatchedDates(
         this.pickUpRequired &&
           ((this.getPickUpInfoCD.pickupSpeed &&
-            this.getDestinations[index].speed &&
-            this.getDestinations[index].speed.speed_pricing_upper_limit_date <=
+            this.getDestinations[index]?.speed &&
+            this.getDestinations[index]?.speed
+              ?.speed_pricing_upper_limit_date <=
               this.getPickUpInfoCD.pickupSpeed
                 .speed_pricing_upper_limit_date) ||
             (!this.getPickUpInfoCD.pickupSpeed &&
-              !this.getDestinations[index].speed))
+              !this.getDestinations[index]?.speed))
       );
     },
     addPickupOption() {
@@ -1763,6 +1836,14 @@ export default {
         this.speedPolicyFlag
       ) {
         pickUpInfoCD.pickupSpeed = nextDay[0];
+        this.sendSegmentEvents({
+          event: "Select_Crossdocking_Pickup_Option",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: nextDay[0],
+          },
+        });
       }
     },
     preselectDestinationSpeed(speeds) {
@@ -1780,6 +1861,14 @@ export default {
         this.speedPolicyFlag
       ) {
         destination.speed = nextDay[0];
+        this.sendSegmentEvents({
+          event: "Select_Crossdocking_Delivery_Option",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: nextDay[0],
+          },
+        });
       }
     },
     speedValidation(speeds) {
@@ -2054,7 +2143,13 @@ export default {
         company_code: this.getBusinessDetails.company_code,
         locale: this.getBusinessDetails.language,
       };
-
+      this.sendSegmentEvents({
+        event: "Change_A_Crossdocking_Order_Payment_Method",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
+      });
       this.$paymentInit(buPayload, "choose-payment");
     },
   },

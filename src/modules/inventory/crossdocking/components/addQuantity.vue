@@ -287,6 +287,13 @@ export default {
             products: this.getSelectedProducts,
           });
         }
+        this.sendSegmentEvents({
+          event: "Review_Crossdocking_Product_Quantities",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+          },
+        });
         this.setDestinations(destinations);
         destinations[index].autofillProductStatus = false;
         this.$router.push(`/inventory/create-delivery`);

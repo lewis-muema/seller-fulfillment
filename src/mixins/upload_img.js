@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import { mapGetters, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
+import eventsMixin from "./events_mixin";
 
 let s3 = "";
 let s3Autofill = "";
@@ -19,6 +20,7 @@ const upload = {
       "getUserDetails",
     ]),
   },
+  mixins: [eventsMixin],
   methods: {
     ...mapMutations([
       "setAutofillDetails",
@@ -138,6 +140,14 @@ const upload = {
           } else {
             this.LPO = data.Location;
             this.fetchAutofillDetails(photoKey);
+            this.sendSegmentEvents({
+              event: "LPO_Document_Selected",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                email: this.getStorageUserDetails.email,
+                data: data.Location,
+              },
+            });
           }
         }
       );
@@ -164,6 +174,14 @@ const upload = {
               this.getDestinationIndex,
               photoKey
             );
+            this.sendSegmentEvents({
+              event: "LPO_Products_Extraction_Success",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                email: this.getStorageUserDetails.email,
+                data: response.data.deliveries.products,
+              },
+            });
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
@@ -172,6 +190,13 @@ const upload = {
               title: this.$t("inventory.couldNotReadProducts"),
               message: "",
               type: "warning",
+            });
+            this.sendSegmentEvents({
+              event: "LPO_Products_Extraction_Failed",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                email: this.getStorageUserDetails.email,
+              },
             });
           }
           if (
@@ -257,6 +282,14 @@ const upload = {
         .then((response) => {
           if (response.status === 200) {
             this.processAutofillResponse(response, x, photoKey);
+            this.sendSegmentEvents({
+              event: "LPO_Products_Find_Or_Create_Success",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                email: this.getStorageUserDetails.email,
+                data: response.data.products,
+              },
+            });
           } else {
             clearInterval(uploadtimer);
             this.uploadPercentage = 100;
@@ -265,6 +298,13 @@ const upload = {
               title: this.$t("inventory.couldNotReadProducts"),
               message: "",
               type: "warning",
+            });
+            this.sendSegmentEvents({
+              event: "LPO_Products_Find_Or_Create_Failed",
+              data: {
+                userId: this.getStorageUserDetails.business_id,
+                email: this.getStorageUserDetails.email,
+              },
             });
           }
         })
@@ -310,6 +350,13 @@ const upload = {
         title: this.$t("inventory.couldNotUploadDocument"),
         message: "",
         type: "error",
+      });
+      this.sendSegmentEvents({
+        event: "LPO_Products_Extraction_Failed",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
       });
     },
     autoFillFormDetails(x, finalProducts, photoKey) {

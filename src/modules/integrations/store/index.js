@@ -182,14 +182,12 @@ const integrationsModule = {
                 : "",
               "sales-channel-id": salesChannelId,
             },
-            query: {
+            params: {
               currency,
             },
           };
 
           const { data } = await axios.get(`${app}${endpoint}`, config);
-
-          console.log("data", data);
 
           // to-do: add this in tests
           if (data.data.syncStatus === 0) {
@@ -255,6 +253,43 @@ const integrationsModule = {
           if (status === 200) {
             resolve();
             return { data: data.data, status };
+          } else {
+            throw data;
+          }
+        } catch (error) {
+          reject(error.response);
+        }
+      });
+    },
+    async retryCreatingWebhooks({ dispatch, commit }, payload) {
+      // eslint-disable-next-line no-async-promise-executor
+      return new Promise(async (resolve, reject) => {
+        try {
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.accessToken
+                ? localStorage.accessToken
+                : "",
+              "fulfilment-token": localStorage.accessToken
+                ? localStorage.accessToken
+                : "",
+              "sales-channel-id": localStorage.getItem(
+                "platformSalesChannelId"
+              ),
+            },
+          };
+
+          const { data, status } = await axios.post(
+            `${payload.app}${payload.endpoint}`,
+            {
+              salesChannelId: localStorage.getItem("platformSalesChannelId"),
+            },
+            config
+          );
+
+          if (status === 200) {
+            resolve({ data, status });
           } else {
             throw data;
           }

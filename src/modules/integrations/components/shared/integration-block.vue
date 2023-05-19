@@ -57,13 +57,14 @@
           >
           <v-col class="align-right">
             <div v-if="currentStep < index">
-              <button
+              <v-btn
                 v-if="status.hasAction && currentStep + 1 === index"
                 @click="status.action()"
                 class="platform-steps__button"
+                :loading="loading"
               >
                 {{ status.actionButtonText }}
-              </button>
+              </v-btn>
               <span v-else class="platform-steps__status">{{
                 $t("merchant.Pending")
               }}</span>
@@ -81,6 +82,7 @@
 <script>
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations.js";
 
 export default {
   name: "IntegrationContainer",
@@ -101,6 +103,8 @@ export default {
       Object.keys(props.integration).length !== 0
     );
 
+    const { retryCreatingWebhooks, webhooksRetryLoading } = useIntegrations();
+
     // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
 
     const statuses = reactive([
@@ -112,7 +116,12 @@ export default {
       {
         message: "Store Permissions",
         status: "STORE_PERMISSIONS_VALIDATED",
-        hasAction: false,
+        hasAction: true,
+        actionButtonText: "Retry Permissions",
+        action: function () {
+          return retryCreatingWebhooks();
+        },
+        loading: webhooksRetryLoading,
       },
       {
         message: "Import your products",
@@ -122,6 +131,7 @@ export default {
           return router.push({ name: "SetupStep6" });
         },
         actionButtonText: "Import",
+        loading: false,
       },
       {
         message: "Currently Syncing products",
@@ -141,6 +151,7 @@ export default {
     const showSteps = computed(() => availableIntegration.value);
 
     return {
+      webhooksRetryLoading,
       showSteps,
       currentStatus,
       currentStep,
@@ -252,6 +263,7 @@ export default {
       color: #ffffff;
       background: #324ba8;
       border-radius: 6px;
+      text-transform: none;
     }
 
     // &__icon-box {

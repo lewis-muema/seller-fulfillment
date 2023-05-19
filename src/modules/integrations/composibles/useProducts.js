@@ -20,6 +20,7 @@ const useProducts = () => {
           salesChannelId,
           app: process.env.MERCHANT_GATEWAY,
           endpoint: "api2cart/products/sync",
+          currency: "KES",
         });
         resolve();
       } catch (e) {

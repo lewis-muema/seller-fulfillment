@@ -1,9 +1,12 @@
 import { getTimeAgo } from "@/utils/time";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { ElNotification } from "element-plus";
 
 const useIntegrations = () => {
   const loadingIntegrations = ref(false);
+  const webhooksRetryLoading = ref(false);
+
   const integrations = computed(() => {
     return store.getters.getIntegrations;
   });
@@ -20,6 +23,36 @@ const useIntegrations = () => {
   });
 
   const store = useStore();
+
+  const retryCreatingWebhooks = () => {
+    webhooksRetryLoading.value = true;
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      try {
+        const payload = {
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/stores/webhooks",
+        };
+        const { status } = await store.dispatch(
+          "retryCreatingWebhooks",
+          payload
+        );
+
+        if (status === 200) {
+          ElNotification({
+            message: "Webhooks Created Successfully",
+            type: "success",
+          });
+          fetchIntegrations();
+        }
+      } catch (e) {
+        reject(e);
+      } finally {
+        webhooksRetryLoading.value = false;
+        fetchIntegrations();
+      }
+    });
+  };
 
   const fetchIntegrations = async () => {
     // eslint-disable-next-line no-async-promise-executor
@@ -83,6 +116,8 @@ const useIntegrations = () => {
     fetchIntegrations,
     loadingIntegrations,
     integrations,
+    retryCreatingWebhooks,
+    webhooksRetryLoading,
   };
 };
 

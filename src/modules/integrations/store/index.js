@@ -158,13 +158,16 @@ const integrationsModule = {
         return error.response;
       }
     },
-    syncPlatformProducts(
-      { dispatch },
-      { salesChannelId = null, currency = "KES" }
-    ) {
+    syncPlatformProducts({ dispatch }, payload) {
       // eslint-disable-next-line no-async-promise-executor
       return new Promise(async (resolve, reject) => {
         try {
+          const {
+            salesChannelId = null,
+            currency = "KES",
+            app,
+            endpoint,
+          } = payload;
           if (!salesChannelId) {
             throw new Error("No sales channel Id provided");
           }
@@ -179,12 +182,12 @@ const integrationsModule = {
                 : "",
               "sales-channel-id": salesChannelId,
             },
+            query: {
+              currency,
+            },
           };
 
-          const { data } = await axios.get(
-            `https://merchant-gateway-test.sendyit.com/api2cart/products/sync?currency=${currency}`,
-            config
-          );
+          const { data } = await axios.get(`${app}${endpoint}`, config);
 
           console.log("data", data);
 

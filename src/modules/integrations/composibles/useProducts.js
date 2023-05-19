@@ -4,7 +4,6 @@ import { ElNotification } from "element-plus";
 
 const useProducts = () => {
   const store = useStore();
-  // const productsLoaded = ref(false);
 
   const finishSyncPayload = computed(
     () => store.getters.getPlatformSyncPayload
@@ -19,8 +18,9 @@ const useProducts = () => {
       try {
         await store.dispatch("syncPlatformProducts", {
           salesChannelId,
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/products/sync",
         });
-        // productsLoaded.value = true;
         resolve();
       } catch (e) {
         ElNotification({
@@ -28,7 +28,6 @@ const useProducts = () => {
           message: `${e}`,
           type: "error",
         });
-        // productsLoaded.value = false;
         reject(e);
       }
     });

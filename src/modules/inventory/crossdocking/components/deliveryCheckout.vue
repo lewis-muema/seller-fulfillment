@@ -378,18 +378,7 @@
                       <span
                         class="cross-docking-checkout-delivery-option-bottom"
                       >
-                        {{
-                          getDestinations[index - 1].speed
-                            .speed_pricing_type === "SENDY_SCHEDULED"
-                            ? formatDate(
-                                getDestinations[index - 1].speed
-                                  .speed_pricing_scheduled_date
-                              )
-                            : formatDate(
-                                getDestinations[index - 1].speed
-                                  .speed_pricing_upper_limit_date
-                              )
-                        }}
+                        {{ displayDeliverySpeeds(getDestinations[index - 1]) }}
                       </span>
                     </p>
                   </div>
@@ -2053,6 +2042,12 @@ export default {
       };
 
       this.$paymentInit(buPayload, "choose-payment");
+    },
+    displayDeliverySpeeds(index) {
+      if (index.speed.speed_pricing_type === "SENDY_SCHEDULED") {
+        return this.formatDate(index.speed.speed_pricing_scheduled_date);
+      }
+      return index.speed.speed_pricing_subtitle;
     },
   },
 };

@@ -2100,13 +2100,7 @@
                 </div>
                 <div class="delivery-option-crossdock-radio-group-bottom">
                   <span :class="getLoader.speed">
-                    {{
-                      speed.transport_provider === "SENDY"
-                        ? speed.speed_pricing_type === "SENDY_SCHEDULED"
-                          ? $t("inventory.selectADateOfYourChoice")
-                          : formatDate(speed.speed_pricing_upper_limit_date)
-                        : formatDate(speed.speed_pricing_upper_limit_date)
-                    }}
+                    {{ renderDeliverySpeed(speed) }}
                   </span>
                 </div>
               </div>
@@ -4124,6 +4118,14 @@ export default {
           type: "warning",
         });
       }
+    },
+    renderDeliverySpeed(speed) {
+      if (speed.transport_provider === "SENDY") {
+        if (speed.speed_pricing_type === "SENDY_SCHEDULED") {
+          return this.$t("inventory.selectADateOfYourChoice");
+        }
+      }
+      return speed.speed_pricing_subtitle;
     },
   },
 };

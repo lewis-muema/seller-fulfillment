@@ -7,8 +7,10 @@ const useProducts = () => {
   const productsLoaded = ref(false);
 
   const finishSyncPayload = computed(
-    () => store.state.integrations.platform.finishSyncPayload
+    () => store.getters.getPlatformSyncPayload
   );
+
+  const storeIntegrations = computed(() => store);
 
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
@@ -33,13 +35,15 @@ const useProducts = () => {
   };
 
   const finishSync = () => {
+    console.log("finishSyncPayload", finishSyncPayload);
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        await store.dispatch(
-          "finishSyncingPlatformProducts",
-          JSON.stringify(finishSyncPayload.value)
-        );
+        await store.dispatch("finishSyncingPlatformProducts", {
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/products/finish-sync",
+          values: JSON.stringify(finishSyncPayload.value),
+        });
         resolve();
       } catch (e) {
         ElNotification({
@@ -53,6 +57,7 @@ const useProducts = () => {
   };
 
   return {
+    storeIntegrations,
     sync,
     finishSync,
     getPlatformProductsLoaded: computed(

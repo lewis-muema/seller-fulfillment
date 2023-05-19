@@ -4,34 +4,12 @@ import getters from "./getters";
 import mutations from "./mutations";
 import { shallowRef } from "vue";
 import { Check, Minus } from "@element-plus/icons-vue";
+import integrationsModule from "@/modules/integrations/store/index";
 
 export default createStore({
   namespaced: true,
   state() {
     return {
-      integrations: {
-        activeIntegrations: {
-          platform: {},
-          apiKey: {},
-        },
-        platform: {
-          productsLoaded: false,
-          conflictsResolved: false,
-          finishSyncPayload: {
-            currency: "KES", // required
-            createAllProducts: false,
-            products: [],
-            newProducts: [],
-            matchingProducts: [],
-          },
-          syncedProducts: {
-            partialMatchingProducts: [],
-            matchingProducts: [],
-            newProducts: [],
-            syncStatus: 0,
-          },
-        },
-      },
       mobile: false,
       component: "common.dashboard",
       languages: [
@@ -2350,4 +2328,7 @@ export default createStore({
   actions,
   getters,
   mutations,
+  modules: {
+    integrations: integrationsModule,
+  },
 });

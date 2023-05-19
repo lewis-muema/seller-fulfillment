@@ -299,25 +299,4 @@ export default {
   setExportDataType(state, val) {
     state.exportDataType = val;
   },
-  setSyncedPlatformProducts(state, val) {
-    state.integrations.platform.syncedProducts = {
-      ...state.integrations.platform.syncedProducts,
-      ...val,
-    };
-  },
-  setIntegrations(state, val) {
-    state.integrations.activeIntegrations = { ...val };
-  },
-  setSyncStatus(state, val) {
-    state.integrations.platform.syncedProducts.syncStatus = val;
-  },
-  setFinishSyncPayload(state, val) {
-    state.integrations.platform.finishSyncPayload = val;
-  },
-  setResolvedConflicts(state, val) {
-    state.integrations.platform.conflictsResolved = val;
-  },
-  setProductsLoaded(state, val) {
-    state.integrations.platform.productsLoaded = val;
-  },
 };

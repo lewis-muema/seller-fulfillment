@@ -15,7 +15,7 @@
         <div>{{ shippingAgent?.agent_name }}</div>
         <div class="rider-contacts">
           <span><i class="mdi mdi-phone rider-contacts-icon"></i></span>
-          <span>{{ shippingAgent?.agent_phone_number }}</span>
+          <span>{{ obfuscateNumber(shippingAgent?.agent_phone_number) }}</span>
         </div>
         <div class="rider-contacts">
           <span
@@ -148,6 +148,9 @@ export default {
         });
       }
       return polyline;
+    },
+    obfuscateNumber(number) {
+      return `${number.slice(0, 7)}XXXXXX`;
     },
   },
 };

@@ -200,7 +200,10 @@ export default {
       app: process.env.AUTH,
       endpoint: "token",
       values: {
-        refresh_token: localStorage.refreshToken,
+        refresh_token: localStorage.refreshToken.replaceAll(
+          /(\r\n|\n|\r)/gm,
+          ""
+        ),
         access_token: localStorage.accessToken,
       },
     };

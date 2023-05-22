@@ -74,28 +74,37 @@ const mqttClient = {
           ),
         ],
       };
-      this.requestAxiosPost({
-        app: process.env.AUTH,
-        endpoint: `positions/partner_cached_position`,
-        values: payload,
-      }).then((response) => {
-        const riders = [];
-        response?.data?.partnerArray.forEach((rider) => {
-          riders.push({
-            name: "rider",
-            position: {
-              lat: rider.lat,
-              lng: rider.lng,
-            },
-            location: "",
-            icon: {
-              url: `https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/LiveTracking.png`,
-              scaledSize: { width: 40, height: 40 },
-            },
+      if (
+        !["ORDER_CANCELED", "ORDER_COMPLETED"].includes(
+          this.getDirectDeliveriesTrackingData?.order?.order_status
+        )
+      ) {
+        this.requestAxiosPost({
+          app: process.env.AUTH,
+          endpoint: `positions/partner_cached_position`,
+          values: payload,
+        }).then((response) => {
+          const riders = [];
+          response?.data?.partnerArray.forEach((rider) => {
+            riders.push({
+              name: "rider",
+              position: {
+                lat: rider.lat,
+                lng: rider.lng,
+              },
+              location: "",
+              icon: {
+                url: this.getDirectDeliveriesTrackingData?.order
+                  ?.assigned_shipping_agent?.vehicle_type_image_url,
+                scaledSize: { width: 50, height: 50 },
+              },
+            });
+            this.setRiders(riders);
           });
         });
-        this.setRiders(riders);
-      });
+      } else {
+        this.setRiders([]);
+      }
     },
   },
 };

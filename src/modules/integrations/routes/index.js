@@ -3,19 +3,15 @@ import index from "../components/index.vue";
 
 // Platform Setup Components
 import platformIndex from "@/modules/integrations/components/platform/index.vue";
-import stepOne from "@/modules/integrations/components/platform/setup/stepOne.vue";
-import stepTwo from "@/modules/integrations/components/platform/setup/stepTwo.vue";
-import stepThree from "@/modules/integrations/components/platform/setup/stepThree.vue";
-/// Step 4
+import step1 from "@/modules/integrations/components/platform/setup/step1.vue";
+import step2 from "@/modules/integrations/components/platform/setup/step2.vue";
+import step3 from "@/modules/integrations/components/platform/setup/step3.vue";
 import Step4 from "@/modules/integrations/components/platform/setup/step4/index.vue";
 import ConnectionSuccess from "@/modules/integrations/components/platform/setup/step4/connectionSuccess.vue";
 import ConnectionError from "@/modules/integrations/components/platform/setup/step4/connectionError.vue";
-
 import step5 from "@/modules/integrations/components/platform/setup/step5.vue";
-
 import step6 from "@/modules/integrations/components/platform/setup/step6/index.vue";
 import resolveConflicts from "@/modules/integrations/components/platform/setup/step6/resolveConflicts.vue";
-
 import step7 from "@/modules/integrations/components/platform/setup/step7.vue";
 
 const routes = {
@@ -43,14 +39,14 @@ const routes = {
         {
           path: "setup/1",
           name: "SetupStep1",
-          component: stepOne,
+          component: step1,
           props: true,
         },
         {
           path: "setup/2",
           name: "SetupStep2",
           props: true,
-          component: stepTwo,
+          component: step2,
           beforeEnter: (to, from, next) => {
             if (Object.keys(to.params).includes("storePlatform")) {
               next();
@@ -62,7 +58,7 @@ const routes = {
         {
           path: "setup/3",
           name: "SetupStep3",
-          component: stepThree,
+          component: step3,
           props: true,
           beforeEnter: (to, from, next) => {
             if (

@@ -46,24 +46,32 @@
               src="https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/green-tick.svg"
             />
           </v-col>
-          <v-col class="align-left"
-            ><span
+          <v-col cols="auto" class="align-left"
+            ><div
               class="platform-steps__msg-txt"
               :class="
                 currentStep >= +index ? 'platform-steps__msg-txt--complete' : ''
               "
-              >{{ status.message }}</span
-            ></v-col
-          >
+            >
+              {{ status.message }}
+            </div>
+            <span
+              v-if="status.subText && currentStep === index - 1"
+              class="platform-steps__sub-txt"
+            >
+              {{ status.subText }}
+            </span>
+          </v-col>
           <v-col class="align-right">
             <div v-if="currentStep < index">
-              <button
+              <v-btn
                 v-if="status.hasAction && currentStep + 1 === index"
                 @click="status.action()"
                 class="platform-steps__button"
+                :loading="loading"
               >
                 {{ status.actionButtonText }}
-              </button>
+              </v-btn>
               <span v-else class="platform-steps__status">{{
                 $t("merchant.Pending")
               }}</span>
@@ -81,6 +89,7 @@
 <script>
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import useIntegrations from "@/modules/integrations/composibles/useIntegrations.js";
 
 export default {
   name: "IntegrationContainer",
@@ -101,18 +110,27 @@ export default {
       Object.keys(props.integration).length !== 0
     );
 
+    const { retryCreatingWebhooks, webhooksRetryLoading } = useIntegrations();
+
     // button warning sign url: https://s3.eu-west-1.amazonaws.com/images.sendyit.com/fulfilment/seller/merchant/warning-sign.svg
 
     const statuses = reactive([
       {
         message: "Enter your store details",
-        status: props.integration.integration_status,
+        status: "STORE_DETAILS_ADDED",
         hasAction: false,
       },
       {
         message: "Store Permissions",
         status: "STORE_PERMISSIONS_VALIDATED",
-        hasAction: false,
+        hasAction: true,
+        actionButtonText: "Retry Permissions",
+        action: function () {
+          return retryCreatingWebhooks();
+        },
+        loading: webhooksRetryLoading,
+        subText:
+          "We require you to enable some store permissions on your store admin dashboard",
       },
       {
         message: "Import your products",
@@ -122,6 +140,7 @@ export default {
           return router.push({ name: "SetupStep6" });
         },
         actionButtonText: "Import",
+        loading: false,
       },
       {
         message: "Currently Syncing products",
@@ -141,6 +160,7 @@ export default {
     const showSteps = computed(() => availableIntegration.value);
 
     return {
+      webhooksRetryLoading,
       showSteps,
       currentStatus,
       currentStep,
@@ -242,6 +262,16 @@ export default {
       }
     }
 
+    &__sub-txt {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      letter-spacing: 0.01em;
+      color: #9b101c;
+    }
+
     &__button {
       font-family: "DM Sans";
       font-style: normal;
@@ -252,6 +282,7 @@ export default {
       color: #ffffff;
       background: #324ba8;
       border-radius: 6px;
+      text-transform: none;
     }
 
     // &__icon-box {

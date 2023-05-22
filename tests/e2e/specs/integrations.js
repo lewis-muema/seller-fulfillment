@@ -107,6 +107,11 @@ describe("Integration Process", () => {
 
   describe("Add store integration", () => {
     beforeEach(() => {
+      cy.setToken();
+      cy.crossDockingStubs();
+      cy.dashboardStubs();
+      cy.authStubs();
+      cy.paymentStubs();
       cy.intercept("POST", "**/api2cart/stores", {
         statusCode: 201,
         body: integrations.createStore,
@@ -183,9 +188,11 @@ describe("Integration Process", () => {
         cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
           statusCode: 200,
           body: integrations.conflictingProductsInventory,
+          times: 1,
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("be.visible");
           cy.getByData("partialProductsCount").should("be.visible");
@@ -198,7 +205,6 @@ describe("Integration Process", () => {
             multiple: true,
             force: true,
           });
-          //
           cy.getByData("conflicts-count").should("be.visible");
           cy.getByData("resolve").click();
           cy.url().should("include", "/setup/6");
@@ -206,6 +212,7 @@ describe("Integration Process", () => {
           cy.getByData("edit_conflicts").click();
           cy.getByData("resolve").click();
           cy.getByData("continue").click();
+          cy.url().should("include", "/setup/7");
           cy.wait("@finishSync").then((interception) => {
             cy.fixture("integrations").then((integrations) => {
               integrations.conflictingProductsPayload;
@@ -215,12 +222,6 @@ describe("Integration Process", () => {
               );
             });
           });
-          // .its("request.headers")
-          // .should(
-          //   "have.property",
-          //   "sales-channel-id",
-          //   "18675699-8fe9-4d14-8704-4d555681447e"
-          // );
           cy.url().should("include", "/setup/7");
           cy.getByData("importing-products").should(
             "contain",
@@ -272,9 +273,11 @@ describe("Integration Process", () => {
         cy.intercept("GET", "**/api2cart/products/sync?currency=KES", {
           statusCode: 200,
           body: integrations.matchingProductsInventory,
+          times: 1,
         }).as("getProductSyncItems");
 
         cy.integrationStepsToImport().then(() => {
+          cy.wait("@getProductSyncItems");
           cy.getByData("newProductsCount").should("be.visible");
           cy.getByData("matchingProductsCount").should("be.visible");
           cy.getByData("partialProductsCount").should("not.exist");

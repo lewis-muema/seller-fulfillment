@@ -1,14 +1,15 @@
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 
 const useProducts = () => {
   const store = useStore();
-  const productsLoaded = ref(false);
 
   const finishSyncPayload = computed(
-    () => store.state.integrations.platform.finishSyncPayload
+    () => store.getters.getPlatformSyncPayload
   );
+
+  const storeIntegrations = computed(() => store);
 
   const sync = () => {
     // eslint-disable-next-line no-async-promise-executor
@@ -17,8 +18,10 @@ const useProducts = () => {
       try {
         await store.dispatch("syncPlatformProducts", {
           salesChannelId,
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/products/sync",
+          currency: "KES",
         });
-        productsLoaded.value = true;
         resolve();
       } catch (e) {
         ElNotification({
@@ -26,7 +29,6 @@ const useProducts = () => {
           message: `${e}`,
           type: "error",
         });
-        productsLoaded.value = false;
         reject(e);
       }
     });
@@ -36,10 +38,11 @@ const useProducts = () => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        await store.dispatch(
-          "finishSyncingPlatformProducts",
-          JSON.stringify(finishSyncPayload.value)
-        );
+        await store.dispatch("finishSyncingPlatformProducts", {
+          app: process.env.MERCHANT_GATEWAY,
+          endpoint: "api2cart/products/finish-sync",
+          values: JSON.stringify(finishSyncPayload.value),
+        });
         resolve();
       } catch (e) {
         ElNotification({
@@ -53,6 +56,7 @@ const useProducts = () => {
   };
 
   return {
+    storeIntegrations,
     sync,
     finishSync,
     getPlatformProductsLoaded: computed(

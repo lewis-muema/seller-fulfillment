@@ -52,7 +52,7 @@ import statements from "../modules/payments/statements/statements.vue";
 import direct from "../modules/deliveries/direct/direct.vue";
 import analytics from "../modules/analytics/analytics.vue";
 
-import integrations from "../modules/integrations/routes/index";
+import integrations from "@/modules/integrations/routes/index";
 
 const routes = [
   {

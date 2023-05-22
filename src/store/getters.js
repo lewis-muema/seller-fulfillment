@@ -156,23 +156,6 @@ export default {
   getDirectOrderNumber: (state) => state.directOrderNumber,
   getmapReady: (state) => state.mapReady,
   getRiders: (state) => state.riders,
-  getIntegrations: (state) => state.integrations.activeIntegrations,
-  getPlatformSyncStatus: (state) =>
-    state.integrations.platform.syncedProducts.syncStatus,
-  getPlatformSyncProducts: (state) =>
-    state.integrations.platform.syncedProducts,
-  getPlatformSyncPartialMatchingProducts: (state) =>
-    state.integrations.platform.syncedProducts.partialMatchingProducts || [],
-  getPlatformSyncMatchingProducts: (state) =>
-    state.integrations.platform.syncedProducts.matchingProducts || [],
-  getPlatformSyncNewProducts: (state) =>
-    state.integrations.platform.syncedProducts.newProducts || [],
-  getPlatformSyncPayload: (state) =>
-    state.integrations.platform.finishSyncPayload,
-  getConflictsResolvedStatus: (state) =>
-    state.integrations.platform.conflictsResolved,
-  getPlatformProductsLoaded: (state) =>
-    state.integrations.platform.productsLoaded,
   getBanner: (state) => state.banner,
   getPaymentRedirectURL: (state) => state.paymentRedirectURL,
 };

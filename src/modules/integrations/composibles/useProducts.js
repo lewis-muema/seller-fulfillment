@@ -35,7 +35,6 @@ const useProducts = () => {
   };
 
   const finishSync = () => {
-    console.log("finishSyncPayload", finishSyncPayload);
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {

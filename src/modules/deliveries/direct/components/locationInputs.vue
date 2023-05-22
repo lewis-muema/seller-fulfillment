@@ -114,8 +114,10 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import { ElNotification } from "element-plus";
 import pricingTiers from "./pricingTiers.vue";
 import deliveryDetails from "./deliveryDetails.vue";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   data() {
     return {
       pickup: {
@@ -177,6 +179,13 @@ export default {
   mounted() {
     this.mapLoaded();
     this.fetchSuggestions();
+    this.sendSegmentEvents({
+      event: "Visit_Direct_Fulfillment_Order_Creation_page",
+      data: {
+        userId: this.getStorageUserDetails.business_id,
+        email: this.getStorageUserDetails.email,
+      },
+    });
   },
   methods: {
     ...mapMutations([
@@ -218,6 +227,14 @@ export default {
         place,
       };
       this.addMarker(0, place, "pick-up", location);
+      this.sendSegmentEvents({
+        event: "Enter_Direct_Fulfillment_Pick_Up",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          location: this.pickup,
+        },
+      });
     },
     setDestination(place) {
       const location = document.querySelector(`#destination`).value;
@@ -226,6 +243,14 @@ export default {
         place,
       };
       this.addMarker(1, place, "destination", location);
+      this.sendSegmentEvents({
+        event: "Enter_Direct_Fulfillment_Destination",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          location: this.location,
+        },
+      });
     },
     setExtraDestination(place, x) {
       const location = document.querySelector(`#destination${x}`).value;
@@ -234,6 +259,14 @@ export default {
         place,
       });
       this.addMarker(x + 2, place, "destination", location);
+      this.sendSegmentEvents({
+        event: "Add_Extra_Direct_Fulfillment_Destination",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          location: this.destinations[x],
+        },
+      });
     },
     addDestination() {
       this.destinations.push({
@@ -309,6 +342,13 @@ export default {
             type: "error",
           });
         }
+      });
+      this.sendSegmentEvents({
+        event: "Click_Continue_To_Vehicle_Direct_Fulfillment",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
       });
     },
     formatPricing(pricing) {

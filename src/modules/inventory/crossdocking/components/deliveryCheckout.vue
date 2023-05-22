@@ -378,18 +378,7 @@
                       <span
                         class="cross-docking-checkout-delivery-option-bottom"
                       >
-                        {{
-                          getDestinations[index - 1].speed
-                            .speed_pricing_type === "SENDY_SCHEDULED"
-                            ? formatDate(
-                                getDestinations[index - 1].speed
-                                  .speed_pricing_scheduled_date
-                              )
-                            : formatDate(
-                                getDestinations[index - 1].speed
-                                  .speed_pricing_upper_limit_date
-                              )
-                        }}
+                        {{ displayDeliverySpeeds(getDestinations[index - 1]) }}
                       </span>
                     </p>
                   </div>
@@ -948,9 +937,10 @@
       </div>
       <div v-if="paymentEnabled">
         <div
-          class="payment-method-default"
+          class="payment-method-default payment-default-trigger"
           v-for="(method, i) in defaultPaymentMethod"
           :key="i"
+          @click="selectPaymentMethod"
         >
           <img
             class="mr-2"
@@ -958,23 +948,19 @@
             alt=""
           />
           <span class="ml-3">{{ formatPaymentMethod(method) }}</span>
-          <span
-            class="payment-default-right payment-default-trigger"
-            @click="selectPaymentMethod"
-          >
+          <span class="payment-default-right payment-default-trigger">
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >
         </div>
         <div
-          class="payment-method-default"
+          class="payment-method-default payment-default-trigger"
           v-if="defaultPaymentMethod.length === 0"
+          @click="selectPaymentMethod"
         >
           <span class="payment-default-left">{{
             $t("payments.noDefaultPaymentMethodSelected")
           }}</span>
-          <span
-            class="payment-default-right payment-default-trigger"
-            @click="selectPaymentMethod"
+          <span class="payment-default-right payment-default-trigger"
             >{{ $t("inventory.change") }}
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >
@@ -1857,7 +1843,8 @@ export default {
               this.getPickUpInfoCD.location &&
               this.getPickUpInfoCD.phone &&
               ((this.getPickUpInfoCD.pickupSpeed && this.speedPolicyFlag) ||
-                !this.speedPolicyFlag)))
+                !this.speedPolicyFlag))) &&
+          this.defaultPaymentMethod[0]
         ) {
           fieldsPresent.push(true);
         } else {
@@ -1940,6 +1927,8 @@ export default {
         });
       } else {
         this.showErrors = true;
+        this.scanPayloadForErrors();
+        this.showNotification();
       }
     },
     showNotification() {
@@ -1963,6 +1952,18 @@ export default {
             400
           );
         }
+        if (!row.speed) {
+          this.showErrorNotification(
+            this.$t("inventory.addSpeedError", { index }),
+            400
+          );
+        }
+        if (!/^\+([0-9 ]+)$/i.test(row?.recipient?.phone)) {
+          this.showErrorNotification(
+            this.$t("inventory.validateRecipientPhoneNumber", { index }),
+            400
+          );
+        }
       });
       if (
         this.pickUpRequired &&
@@ -1973,6 +1974,24 @@ export default {
           100
         );
       }
+      if (!this.defaultPaymentMethod[0]) {
+        this.showErrorNotification(
+          this.$t("inventory.pleaseSelectAPaymentMethod"),
+          100
+        );
+      }
+    },
+    scanPayloadForErrors() {
+      this.getDestinations.forEach((row) => {
+        if (
+          !(row.products && row.products.length) ||
+          !row.delivery_info ||
+          !row.recipient ||
+          !row.speed
+        ) {
+          row.expanded = 1;
+        }
+      });
     },
     numberSuffix(n) {
       return ["st", "nd", "rd"][((((n + 90) % 100) - 10) % 10) - 1] || "th";
@@ -2023,6 +2042,12 @@ export default {
       };
 
       this.$paymentInit(buPayload, "choose-payment");
+    },
+    displayDeliverySpeeds(index) {
+      if (index.speed.speed_pricing_type === "SENDY_SCHEDULED") {
+        return this.formatDate(index.speed.speed_pricing_scheduled_date);
+      }
+      return index.speed.speed_pricing_subtitle;
     },
   },
 };

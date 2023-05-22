@@ -248,6 +248,8 @@
   "addProductsError": "Please add products for the {index} destination",
   "addDeliveryInfoError": "Please fill in the delivery information for the {index} destination",
   "addRecipientInfoError": "Please fill in your recipient's contact information for the {index} destination",
+  "addSpeedError": "Please fill in your delivery speed information for the {index} destination",
+  "validateRecipientPhoneNumber": "Please enter a valid recipient phone number for the {index} destination",
   "addPODError": "Please select whether you would like payment on delivery for the {index} destination, This option is under the preferences section",
   "addPickUpInfoError": "You dont have sufficient stock to place this delivery. We will require you to enter pick up details so we can retrieve the products",
   "fulfillmentFees": "Fulfillment fees",
@@ -332,5 +334,7 @@
   "outsideGeofence": "You cannot select payment on delivery for this location",
   "couldNotReadProducts": "Sorry, We could not read products from this document",
   "todaysStats": "Today’s stats",
-  "hide": "Hide"
+  "hide": "Hide",
+  "pleaseMakeSureThisNumberIsValid": "Please make sure this number is valid",
+  "pleaseSelectAPaymentMethod": "Please select a payment method"
 }

@@ -158,8 +158,10 @@
 import { mapGetters, mapMutations } from "vuex";
 import moment from "moment";
 import partnerSearch from "../../../common/partnerSearch.vue";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getPricing",
@@ -200,6 +202,73 @@ export default {
         "others",
       ],
     };
+  },
+  watch: {
+    "$store.state.directOrderDetails.pickup.delivery_item": {
+      handler(val) {
+        this.sendSegmentEvents({
+          event: "Add_Pickup_item_Direct_Fulfillment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: val,
+          },
+        });
+      },
+      deep: true,
+    },
+    "$store.state.directOrderDetails.pickup.pickup_date": {
+      handler(val) {
+        this.sendSegmentEvents({
+          event: "Add_Pickup_Time_Direct_Fulfillment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: val,
+          },
+        });
+      },
+      deep: true,
+    },
+    "$store.state.directOrderDetails.pickup.pickup_phone": {
+      handler(val) {
+        this.sendSegmentEvents({
+          event: "Add_Pickup_Contact_Direct_Fulfillment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: val,
+          },
+        });
+      },
+      deep: true,
+    },
+    "$store.state.directOrderDetails.pickup.pickup_instructions": {
+      handler(val) {
+        this.sendSegmentEvents({
+          event: "Add_Pickup_Instructions_Direct_Fulfillment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: val,
+          },
+        });
+      },
+      deep: true,
+    },
+    "$store.state.directOrderPartner": {
+      handler(val) {
+        this.sendSegmentEvents({
+          event: "Select_Preferred_Pairing_Partner_Direct_Fulfillment",
+          data: {
+            userId: this.getStorageUserDetails.business_id,
+            email: this.getStorageUserDetails.email,
+            data: val,
+          },
+        });
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapMutations(["setOverlayStatus", "setDirectOrderPartner"]),

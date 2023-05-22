@@ -11,7 +11,10 @@
           </div>
           <div
             class="confirm-delivery-details-edit"
-            @click="setDirectOrderDetailsStep(0)"
+            @click="
+              sendEvents('Edit_Pickup_Info_Direct_Fulfillment');
+              setDirectOrderDetailsStep(0);
+            "
           >
             {{ $t("deliveries.edit") }}
           </div>
@@ -101,7 +104,10 @@
           </div>
           <div
             class="confirm-delivery-details-edit"
-            @click="setDirectOrderDetailsStep(1)"
+            @click="
+              sendEvents('Edit_Destination_Info_Direct_Fulfillment');
+              setDirectOrderDetailsStep(1);
+            "
           >
             {{ $t("deliveries.edit") }}
           </div>
@@ -158,9 +164,10 @@
       </div>
       <div v-if="paymentEnabled">
         <div
-          class="confirm-delivery-details-payment-default"
+          class="confirm-delivery-details-payment-default payment-default-trigger"
           v-for="(method, i) in defaultPaymentMethod"
           :key="i"
+          @click="selectPaymentMethod"
         >
           <img
             class="mr-2"
@@ -168,23 +175,20 @@
             alt=""
           />
           <span class="ml-3">{{ formatPaymentMethod(method) }}</span>
-          <span
-            class="payment-default-right payment-default-trigger"
-            @click="selectPaymentMethod"
-          >
+          <span class="payment-default-right payment-default-trigger">
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >
         </div>
         <div
-          class="confirm-delivery-details-payment-default"
+          class="confirm-delivery-details-payment-default payment-default-trigger"
           v-if="defaultPaymentMethod.length === 0"
+          @click="selectPaymentMethod"
         >
           <span class="confirm-delivery-details-no-payment-left">{{
             $t("payments.noDefaultPaymentMethodSelected")
           }}</span>
           <span
             class="confirm-delivery-details-no-payment-right payment-default-trigger"
-            @click="selectPaymentMethod"
             >{{ $t("inventory.change") }}
             <v-icon class="payment-method-icon">mdi-chevron-right</v-icon></span
           >
@@ -197,8 +201,10 @@
 <script>
 import moment from "moment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import eventsMixin from "../../../../mixins/events_mixin";
 
 export default {
+  mixins: [eventsMixin],
   computed: {
     ...mapGetters([
       "getPricing",
@@ -253,6 +259,15 @@ export default {
   methods: {
     ...mapActions(["requestAxiosPost"]),
     ...mapMutations(["setPaymentMethods", "setDirectOrderDetailsStep"]),
+    sendEvents(event) {
+      this.sendSegmentEvents({
+        event,
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
+      });
+    },
     formatDate(date) {
       return moment(date).format("ddd, Do MMM");
     },
@@ -285,6 +300,7 @@ export default {
         : method.pay_method_name;
     },
     selectPaymentMethod() {
+      this.sendEvents("Change_Payment_Method_Direct_Fulfillment");
       const buPayload = {
         user_id: this.getBusinessDetails.business_id,
         entity_id: 6,
@@ -381,14 +397,14 @@ export default {
   display: flex;
   align-items: center;
   font-size: 14px;
+  color: #324ba8;
+  font-weight: 600;
 }
 .confirm-delivery-details-no-payment-left {
   font-size: 13px;
-  color: #919399;
 }
 .confirm-delivery-details-no-payment-right {
   font-size: 13px;
-  color: #606266;
   margin-left: auto;
   cursor: pointer;
 }

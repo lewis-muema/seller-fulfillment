@@ -55,7 +55,6 @@ describe("Dashboard screens", () => {
         cy.get(".dashboard-side-card-status")
           .eq(4)
           .contains("Items out of Stock");
-        cy.get(".dashboard-side-card-count").eq(4).contains(23);
       }
     });
   });

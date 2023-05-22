@@ -1504,12 +1504,10 @@
                 {{ $t("inventory.deliveryFeeToBeCollected") }}
               </p>
               <v-text-field
-                :label="`${getOrderTrackingData.order.sale_of_goods_invoice.currency} 60`"
+                :label="`${productCurrency} 60`"
                 v-model="deliveryFeeAmount"
                 variant="outlined"
-                :prefix="
-                  getOrderTrackingData.order.sale_of_goods_invoice.currency
-                "
+                :prefix="productCurrency"
                 clearable
                 clear-icon="mdi-close"
               ></v-text-field>
@@ -2027,7 +2025,7 @@
         <p class="mb-3 payment-breakdown-title" v-if="deliveryFee">
           <span>{{ $t("inventory.deliveryFee") }}</span>
           <span class="payment-method-icon">
-            {{ getOrderTrackingData.order.sale_of_goods_invoice.currency }}
+            {{ getOrderTrackingData.order.invoice_summary.currency }}
             {{ deliveryFee }}
           </span>
         </p>
@@ -2670,6 +2668,7 @@ import VueTimepicker from "vue3-timepicker";
 import "vue3-timepicker/dist/VueTimepicker.css";
 import introJs from "intro.js";
 import packageJson from "../../../package.json";
+import eventsMixin from "../../mixins/events_mixin";
 
 export default {
   setup() {
@@ -2677,7 +2676,7 @@ export default {
   },
   props: ["overlayVal", "editInfo"],
   components: { Datepicker, VueTimepicker },
-  mixins: [upload_img, trackingPayloadMixin, cookieMixin],
+  mixins: [upload_img, trackingPayloadMixin, cookieMixin, eventsMixin],
   data() {
     return {
       overlay: false,
@@ -3222,10 +3221,20 @@ export default {
         });
       }
       this.setDestinations(destinations);
+      this.sendSegmentEvents({
+        event: "Select_Crossdocking_Delivery_Option",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: speed,
+        },
+      });
       setTimeout(() => {
         this.deliveryOption = "";
       }, 500);
-      if (destinations[index].speed.speed_pricing_type === "SENDY_SCHEDULED") {
+      if (
+        destinations[index]?.speed?.speed_pricing_type === "SENDY_SCHEDULED"
+      ) {
         this.deliveryDate = scheduledDate ? scheduledDate : new Date();
         this.deliverySpeeds[this.deliveryOption].speed_pricing_scheduled_date =
           scheduledDate;
@@ -3235,16 +3244,16 @@ export default {
       this.overlayStatusSet(false, "deliveryOptionCrossdock");
       this.misMatchedDatesError = "";
       if (
-        destinations[index].speed &&
+        destinations[index]?.speed &&
         this.getPickUpInfoCD.pickupSpeed &&
-        destinations[index].speed.speed_pricing_upper_limit_date >
+        destinations[index]?.speed?.speed_pricing_upper_limit_date >
           this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
       ) {
         this.setMismatchedDates(false);
       } else if (
-        destinations[index].speed &&
+        destinations[index]?.speed &&
         this.getPickUpInfoCD.pickupSpeed &&
-        destinations[index].speed.speed_pricing_upper_limit_date <=
+        destinations[index]?.speed.speed_pricing_upper_limit_date <=
           this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
       ) {
         this.overlayStatusSet(true, "pickupOptionCrossdock");
@@ -3263,6 +3272,14 @@ export default {
       pickup.pickupSpeed = this.pickUpSpeeds[this.pickUpOption];
       pickup.pickupSpeed.index = this.pickUpOption;
       this.setPickUpInfoCD(pickup);
+      this.sendSegmentEvents({
+        event: "Select_Crossdocking_Pickup_Option",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: pickup.pickupSpeed,
+        },
+      });
       this.clearInputs();
       setTimeout(() => {
         this.pickUpOption = "";
@@ -3277,9 +3294,9 @@ export default {
       this.overlayStatusSet(false, "pickupOptionCrossdock");
       this.misMatchedDatesError = "";
       if (
-        this.activeDestination.speed &&
+        this.activeDestination?.speed &&
         this.getPickUpInfoCD.pickupSpeed &&
-        this.activeDestination.speed.speed_pricing_upper_limit_date <=
+        this.activeDestination?.speed?.speed_pricing_upper_limit_date <=
           this.getPickUpInfoCD.pickupSpeed.speed_pricing_upper_limit_date
       ) {
         this.overlayStatusSet(true, "deliveryOptionCrossdock");
@@ -3381,6 +3398,13 @@ export default {
       destinations.splice(index, 1);
       this.setDestinations(destinations);
       this.overlayStatusSet(false, "removeDestination");
+      this.sendSegmentEvents({
+        event: "Remove_A_Crossdocking_Destination",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+        },
+      });
     },
     removePhoneNumber() {
       this.secondaryPhoneStatus = !this.secondaryPhoneStatus;
@@ -3457,6 +3481,14 @@ export default {
         this.documentType = "";
         this.v$.$reset();
       }, 500);
+      this.sendSegmentEvents({
+        event: "Add_Crossdocking_Order_Documents",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: documents,
+        },
+      });
     },
     editPDFDocument() {
       const docObj = {
@@ -3509,6 +3541,14 @@ export default {
       };
       this.overlayStatusSet(false, "pickUpInfoCrossDock");
       this.setPickUpInfoCD(pickUpDetails);
+      this.sendSegmentEvents({
+        event: "Add_Crossdocking_Pickup_Order_Info",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: pickUpDetails,
+        },
+      });
       this.clearInputs();
     },
     submitDeliveryInfo() {
@@ -3530,6 +3570,14 @@ export default {
         });
       }
       this.setDestinations(destinations);
+      this.sendSegmentEvents({
+        event: "Add_Crossdocking_Delivery_Info",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: deliveryDetails,
+        },
+      });
       this.clearInputs();
     },
     submitRecepientInfo() {
@@ -3551,6 +3599,14 @@ export default {
         });
       }
       this.setDestinations(destinations);
+      this.sendSegmentEvents({
+        event: "Add_Crossdocking_Recipient_Info",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: recepientDetails,
+        },
+      });
       this.clearInputs();
     },
     submitConsignmentReturn() {
@@ -3618,6 +3674,14 @@ export default {
       setTimeout(() => {
         this.v$.$reset();
       }, 500);
+      this.sendSegmentEvents({
+        event: "Select_Crossdocking_POD_Collection_Method",
+        data: {
+          userId: this.getStorageUserDetails.business_id,
+          email: this.getStorageUserDetails.email,
+          data: this.getPaymentCollectionStatus,
+        },
+      });
     },
     exportData() {
       this.buttonLoader = true;

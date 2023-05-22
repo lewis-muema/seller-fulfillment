@@ -46,6 +46,17 @@
             ></vue-tel-input>
           </div>
         </div>
+        <div
+          v-if="
+            marker.delivery_phone &&
+            !/^\+([0-9 ]+)$/i.test(marker.delivery_phone)
+          "
+          class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+        >
+          <div>
+            {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+          </div>
+        </div>
         <div class="delivery-details-section-title">
           <i
             class="mdi mdi-file-document-outline delivery-details-section-icon"

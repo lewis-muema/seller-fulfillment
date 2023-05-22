@@ -71,6 +71,7 @@ export default defineComponent({
         if (this.mapLoadedStatus && markers?.length) {
           this.fitMapToBounds();
           this.initializeInfoWindows();
+          this.repositionCloseIcon();
         }
       },
       deep: true,
@@ -195,6 +196,14 @@ export default defineComponent({
         }
       });
       this.infoWindows = infoWindow;
+    },
+    repositionCloseIcon() {
+      setTimeout(() => {
+        document.querySelectorAll(".gm-ui-hover-effect").forEach((close) => {
+          close.style.right = "5px";
+          close.blur();
+        });
+      }, 500);
     },
   },
 });

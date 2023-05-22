@@ -538,7 +538,7 @@ export default {
       this.selectedProducts.push(newProduct);
       this.setSelectedProducts(this.selectedProducts);
       this.sendSegmentEvents({
-        event: "Product_Selection",
+        event: "Select_Crossdocking_Products",
         data: {
           userId: this.getStorageUserDetails.business_id,
           SKU: product.product_id,

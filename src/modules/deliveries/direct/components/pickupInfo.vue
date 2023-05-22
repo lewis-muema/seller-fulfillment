@@ -112,6 +112,17 @@
         ></vue-tel-input>
       </div>
     </div>
+    <div
+      v-if="
+        getDirectOrderDetails.pickup.pickup_phone &&
+        !/^\+([0-9 ]+)$/i.test(getDirectOrderDetails.pickup.pickup_phone)
+      "
+      class="row error-msg withdraw-transaction-error mb-2 mt-1 field-required-error"
+    >
+      <div>
+        {{ $t("inventory.pleaseMakeSureThisNumberIsValid") }}
+      </div>
+    </div>
     <div class="delivery-details-section">
       <div class="delivery-details-section-title">
         <i

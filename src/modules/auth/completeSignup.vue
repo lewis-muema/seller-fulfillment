@@ -24,6 +24,7 @@
                 type="text"
                 class="form-control"
                 :placeholder="$t('auth.enterYourFirstName')"
+                data-test="first-name"
               />
               <div v-if="v$.params.firstName.$error" class="error-msg">
                 {{ $t("auth.nameRequired") }}
@@ -41,6 +42,7 @@
                 type="text"
                 class="form-control"
                 :placeholder="$t('auth.enterYourLastName')"
+                data-test="last-name"
               />
               <div v-if="v$.params.lastName.$error" class="error-msg">
                 {{ $t("auth.nameRequired") }}
@@ -54,6 +56,7 @@
             <vue-tel-input
               v-bind="getSendyPhoneProps"
               v-model="params.phoneNo"
+              data-test="phone-no"
             ></vue-tel-input>
             <div v-if="v$.params.phoneNo.$error" class="error-msg">
               {{ $t("auth.phoneRequired") }}
@@ -63,12 +66,17 @@
             <label for="industry" class="form-label">{{
               $t("auth.industryOfBusiness")
             }}</label>
-            <select class="form-select" @change="selectIndustryId($event)">
+            <select
+              class="form-select"
+              @change="selectIndustryId($event)"
+              data-test="business-industry"
+            >
               <option selected>Select</option>
               <option
                 v-for="industry in supportedIndustries"
                 :key="industry.industry_id"
                 :value="industry.industry_id"
+                data-test="business-industry-option"
               >
                 {{ industry.name }}
               </option>
@@ -84,6 +92,7 @@
               @click="completeSignUp"
               v-loading="loading"
               :class="loading ? 'disabled' : ''"
+              data-test="complete-signup"
             >
               {{
                 getOTPRedirectUrl === "otp/signIn"
@@ -227,6 +236,7 @@ export default {
         business: {
           business_id: this.businessId,
           business_industry_id: this.params.industryOfBusiness,
+          terms_of_service_accepted: true,
         },
         user: {
           first_name: this.params.firstName,

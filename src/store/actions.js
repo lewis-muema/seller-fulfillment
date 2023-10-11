@@ -5,8 +5,6 @@ import router from "../router";
 import { ElNotification } from "element-plus";
 import moment, { duration } from "moment";
 
-let errorRefreshStatus = true;
-
 export default {
   async initializeAuth({ commit }) {
     const token = localStorage.getItem("accessToken");
@@ -19,7 +17,29 @@ export default {
     commit("setAccessToken", token);
     commit("setRefreshToken", refreshToken);
   },
-
+  requestAxiosPostMerchant({ dispatch }, payload) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.accessToken ? localStorage.accessToken : "",
+        "Fulfilment-Token": localStorage.accessToken
+          ? localStorage.accessToken
+          : "",
+      },
+    };
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${payload.app}${payload.endpoint}`, payload.values, config)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch("handleErrors", error);
+          resolve(error);
+          return false;
+        });
+    });
+  },
   requestAxiosPost({ dispatch }, payload) {
     const config = {
       headers: {
@@ -116,31 +136,23 @@ export default {
 
   handleErrors({ dispatch, commit }, error) {
     commit("setLoader", "loading-text");
-    dispatch("setErrorAction", error.response.data.errors);
-    if (error.response.status === 403 && errorRefreshStatus) {
+    dispatch("setErrorAction", error?.response?.data?.errors);
+    if (error?.response?.status === 403) {
       dispatch("refreshToken", error);
-      errorRefreshStatus = false;
     }
-    if (
-      error.response.status === 500 &&
-      router.currentRoute.value.path ===
-        "/inventory/send-inventory/customer/checkout"
-    ) {
-      router.push("/inventory/send-inventory/customer/select-products");
-    }
-    if (error.response.status === 502) {
+    if (error?.response?.status === 502) {
       console.log(error);
     }
     if (
-      error.response.status === 404 &&
-      error.response.config.url.includes("token")
+      error?.response?.status === 404 &&
+      error?.response?.config?.url.includes("token")
     ) {
       router.push("/auth/sign-in");
     }
     if (
-      error.response.status === 404 &&
+      error?.response?.status === 404 &&
       ["business.notfound", "user.notfound"].includes(
-        error.response.data.errors[0].message
+        error?.response?.data?.errors[0]?.message
       )
     ) {
       router.push("/auth/sign-in");
@@ -188,7 +200,10 @@ export default {
       app: process.env.AUTH,
       endpoint: "token",
       values: {
-        refresh_token: localStorage.refreshToken,
+        refresh_token: localStorage.refreshToken.replaceAll(
+          /(\r\n|\n|\r)/gm,
+          ""
+        ),
         access_token: localStorage.accessToken,
       },
     };
@@ -281,7 +296,6 @@ export default {
   async updateOrderTrackingData({ dispatch, commit }, payload) {
     try {
       const res = await dispatch("requestAxiosPatch", payload);
-      commit("setUpdatedData", res.data.data);
       return res;
     } catch (error) {
       return error.response;

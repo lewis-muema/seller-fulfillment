@@ -16,7 +16,7 @@
             <v-expansion-panel-title>
               <div class="summary-items-container">
                 <div class="summary-items">
-                  <div>
+                  <div class="summary-items-left">
                     <p :class="getLoader.cycleLineItems">
                       {{ summary.line_item_title }}
                     </p>
@@ -124,11 +124,16 @@ export default {
       "getCycleLineItems",
       "getActivePayment",
       "getUserDetails",
+      "getPaymentRedirectURL",
     ]),
   },
   mounted() {
     this.setComponent("payments.makePayment");
     this.getCycles();
+    this.redirectToSource();
+  },
+  beforeUnmount() {
+    this.setPaymentRedirectURL("");
   },
   methods: {
     ...mapActions(["requestAxiosGet"]),
@@ -136,7 +141,15 @@ export default {
     formatDate(date) {
       return moment(date).format("h:mm a");
     },
-    ...mapMutations(["setComponent", "setLoader"]),
+    ...mapMutations(["setComponent", "setLoader", "setPaymentRedirectURL"]),
+    redirectToSource() {
+      if (this.$router.options.history.state.back === "/success-view/") {
+        const url = this.getPaymentRedirectURL;
+        this.$router.push(url);
+      } else {
+        this.setPaymentRedirectURL(this.$router.options.history.state.back);
+      }
+    },
     getCycles() {
       this.setLoader({
         type: "cycleLineItems",
@@ -162,7 +175,7 @@ export default {
     getActiveCycle() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/paymentrequired`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles/${this.$route.params.cycle_id}`,
       }).then((response) => {
         if (response.status === 200) {
           this.setActivePayment(response.data.data);
@@ -280,5 +293,8 @@ export default {
   text-align: left;
   margin: 15px;
   width: 100%;
+}
+.summary-items-left {
+  width: 80%;
 }
 </style>

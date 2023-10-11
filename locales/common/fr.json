@@ -5,8 +5,10 @@
   "addProducts": "Ajouter des produits",
   "billings": "Facturation",
   "cancel": "Annulé",
+  "onDemand": "On demand",
   "couldNotFetchDownloadFile": "Impossible de télécharger le fichier",
   "dashboard": "tableau de bord",
+  "onDemandDeliveries": "Track on demand deliveries",
   "deliveries": "Livraisons",
   "deliveriesToCustomers": "Livraisons au client",
   "deliveriesToSendy": "Livraisons à Sendy",
@@ -57,5 +59,10 @@
   "trackDeliveries": "Suivi des livraisons",
   "trackDelivery": "Suivre la livraison",
   "viewProduct": "Afficher le produit",
-  "yourExportWillTakeAFewMinutes": "Nous préparons votre export, cela prendra quelques minutes. Nous vous notifierons par email à {email} quand il sera prêt"
+  "yourExportWillTakeAFewMinutes": "Nous préparons votre export, cela prendra quelques minutes. Nous vous notifierons par email à {email} quand il sera prêt",
+  "newHomeScreen": "Welcome to the new homescreen",
+  "letsCheckout": "Let’s checkout what we have changed",
+  "takeTour": "Take a tour",
+  "skipTour": "Skip tour",
+  "shareFeedback": "Share feedback"
 }

@@ -11,6 +11,9 @@ const eventLabels = {
       if (!event) {
         return;
       }
+      if (!this.getEventLabels[event]) {
+        return event.replaceAll(".", " ");
+      }
       if (
         ["orderPlaced", "orderPlacedOn"].includes(
           this.getEventLabels[event].split(".")[1]

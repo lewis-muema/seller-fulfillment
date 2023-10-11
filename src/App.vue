@@ -11,15 +11,14 @@ import Canvas from "./components/canvas.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { initializeApp } from "firebase/app";
 import eventsMixin from "../src/mixins/events_mixin";
+import cookieMixin from "@/mixins/cookie_mixin";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
   name: "App",
   components: { Canvas },
-  mixins: [eventsMixin],
-  data: () => ({
-    //
-  }),
+  mixins: [eventsMixin, cookieMixin],
+  data: () => ({}),
   watch: {
     $route(to) {
       if (
@@ -30,10 +29,10 @@ export default {
       ) {
         this.getOnboardingStatus();
       }
-      if (
-        to.path.includes("/inventory/send-inventory/customer") &&
-        this.activeCycle
-      ) {
+      if (to.path.includes("/inventory/send-inventory/customer")) {
+        this.$router.push("/inventory/create-delivery");
+      }
+      if (to.path.includes("/inventory/create-delivery") && this.activeCycle) {
         this.$router.go(-1);
         setTimeout(() => {
           this.setOverlayStatus({
@@ -56,6 +55,8 @@ export default {
       "getAchievements",
       "getSendyPhoneProps",
       "getActivePayment",
+      "getParent",
+      "getMapOptions",
     ]),
     onboardingStatus() {
       if (
@@ -68,7 +69,7 @@ export default {
     },
     activeCycle() {
       const cycle = this.getActivePayment ? this.getActivePayment : {};
-      return Object.keys(cycle).length > 0;
+      return Object.keys(cycle).length > 0 && cycle?.paid_status !== "PAID";
     },
   },
   created() {
@@ -80,6 +81,8 @@ export default {
     this.detectMobile();
     this.detectPayments();
     this.countryDefault();
+    this.setVirtualTourCookie();
+    this.setMapRestrictions();
   },
   methods: {
     ...mapActions(["requestAxiosPut", "requestAxiosGet"]),
@@ -91,7 +94,20 @@ export default {
       "setDefaultCountryName",
       "setDefaultLanguage",
       "setOverlayStatus",
+      "setDirectDeliveriesTrackingData",
+      "setOrderTimelines",
+      "setMapOptions",
     ]),
+    setMapRestrictions() {
+      if (localStorage?.country) {
+        this.getMapOptions.componentRestrictions.country = [
+          localStorage?.country.toLowerCase(),
+        ];
+        const props = this.getSendyPhoneProps;
+        props.defaultCountry = localStorage?.country?.toLowerCase();
+        this.setSendyPhoneProps(props);
+      }
+    },
     registerFCM() {
       window.addEventListener("register-fcm", () => {
         this.firebase();
@@ -170,18 +186,23 @@ export default {
     },
     countryDefault() {
       window.dispatchEvent(new CustomEvent("country-default"));
-      window.addEventListener("country-fetched", (event) => {
+      window.addEventListener("country-fetched", () => {
         const props = this.getSendyPhoneProps;
-        props.defaultCountry = event.detail.countryCode.toLowerCase();
+        props.defaultCountry = localStorage?.country?.toLowerCase();
         this.setSendyPhoneProps(props);
-        this.setDefaultCountryCode(event.detail.countryCode);
+        this.setDefaultCountryCode(localStorage?.country?.toLowerCase());
         this.setDefaultCountryName(
-          event.detail.country === "Ivory Coast"
+          localStorage?.country_name === "Ivory Coast"
             ? "COTE_D_VOIRE"
-            : event.detail.country.toUpperCase()
+            : localStorage?.country_name
         );
+        if (localStorage?.country) {
+          this.getMapOptions.componentRestrictions.country = [
+            localStorage?.country.toLowerCase(),
+          ];
+        }
         const francoPhoneCountries = ["FR", "CI"].includes(
-          event.detail.countryCode
+          localStorage?.country
         );
         let locale;
         if (francoPhoneCountries) {
@@ -238,6 +259,8 @@ export default {
         });
         onMessage(messaging, (payload) => {
           this.listNotifications(payload);
+          this.fetchTrackingOrder();
+          this.fetchTrackingSummary();
         });
       } catch (error) {
         // ...
@@ -253,10 +276,46 @@ export default {
         }
       });
     },
+    fetchTrackingOrder() {
+      if (
+        this.$route.path.includes("track-direct-deliveries") ||
+        this.$route.path.includes("tracking")
+      ) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/${
+            this.$route.path.includes("track-direct-deliveries")
+              ? "point-to-point"
+              : this.getParent === "sendy"
+              ? "consignments"
+              : "deliveries"
+          }/${this.$route.params.order_id}`,
+        }).then((response) => {
+          if (response.status === 200) {
+            this.setDirectDeliveriesTrackingData(response?.data?.data);
+          }
+        });
+      }
+    },
+    fetchTrackingSummary() {
+      if (
+        this.$route.path.includes("track-direct-deliveries") ||
+        this.$route.path.includes("tracking")
+      ) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/tracking/summary/${this.$route.params.order_id}`,
+        }).then((response) => {
+          if (response.status === 200) {
+            this.setOrderTimelines(response.data.data.events);
+          }
+        });
+      }
+    },
     getOnboardingStatus() {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `/seller/${this.getStorageUserDetails.business_id}/onboarding/achievements`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/onboarding/achievements`,
       }).then((response) => {
         response.data.data.achievements.account_created = true;
         this.setAchievements(response.data.data.achievements);
@@ -281,6 +340,14 @@ export default {
         }
       }
       return "";
+    },
+    setVirtualTourCookie() {
+      let initialVal = true;
+      if (this.getCookie("new_features_virtual_tour")) {
+        initialVal = this.getCookie("new_features_virtual_tour");
+      } else {
+        this.setCookie("new_features_virtual_tour", initialVal, 365);
+      }
     },
   },
 };

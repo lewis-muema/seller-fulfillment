@@ -40,7 +40,13 @@
             </span>
             <i
               class="mdi mdi-chevron-right dpp-top-recent-arrow"
-              @click="$router.push(`/deliveries/tracking/${item.resource_id}`)"
+              @click="
+                item.line_item_grouping === 'POINT_TO_POINT'
+                  ? $router.push(
+                      `/deliveries/track-direct-deliveries/${item.resource_id}`
+                    )
+                  : $router.push(`/deliveries/tracking/${item.resource_id}`)
+              "
             ></i>
           </span>
         </p>

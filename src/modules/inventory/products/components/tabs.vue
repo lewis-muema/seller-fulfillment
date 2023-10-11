@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="getRoute === '/inventory/products'">
+    <div v-if="getRoute.includes('/inventory/products')">
       <div class="desktop-product-tab-container">
         <div
           class="desktop-product-tab"
@@ -26,8 +26,8 @@
             >
               {{ $t(tab.label) }}
               <v-badge
-                color="#D3DDF6"
-                text-color="#324BA8"
+                :color="tab.bgColor"
+                :text-color="tab.color"
                 :content="tab.content"
                 inline
               ></v-badge>
@@ -122,10 +122,26 @@ export default {
         {
           label: "inventory.all",
           content: "-",
+          color: "#324BA8",
+          bgColor: "#D3DDF6",
+        },
+        {
+          label: "inventory.lowStock",
+          content: "-",
+          color: "#7F3B02",
+          bgColor: "#FBDF9A",
+        },
+        {
+          label: "inventory.outOfStock",
+          content: "-",
+          color: "#9B101C",
+          bgColor: "#FBDECF",
         },
         {
           label: "inventory.archived",
-          content: "0",
+          content: "-",
+          color: "#324BA8",
+          bgColor: "#D3DDF6",
         },
       ],
       stockLevelTabs: [
@@ -177,23 +193,17 @@ export default {
     },
   },
   watch: {
-    "$store.state.loader": {
+    "$store.state.stockStatistics": {
       handler() {
-        this.productTabs[0].content = `${this.getAllProductCount}`;
-        this.productTabs[1].content = `${this.getArchivedProductCount}`;
-        this.stockLevelTabs[0].content =
-          Object.keys(this.getStockStatistics).length > 0
-            ? (
-                this.getStockStatistics.available_products +
-                this.getStockStatistics.low_stock_products +
-                this.getStockStatistics.out_of_stock_products
-              ).toString()
-            : "-";
-        this.stockLevelTabs[1].content =
+        this.productTabs[0].content =
+          this.getStockStatistics.low_stock_products +
+          this.getStockStatistics.out_of_stock_products +
+          this.getStockStatistics.available_products;
+        this.productTabs[1].content =
           Object.keys(this.getStockStatistics).length > 0
             ? this.getStockStatistics.low_stock_products.toString()
             : "-";
-        this.stockLevelTabs[2].content =
+        this.productTabs[2].content =
           Object.keys(this.getStockStatistics).length > 0
             ? this.getStockStatistics.out_of_stock_products.toString()
             : "-";
@@ -225,7 +235,7 @@ export default {
 <style>
 .desktop-product-tab-container {
   display: grid;
-  grid-template-columns: 100px 145px 155px auto;
+  grid-template-columns: 100px 145px 155px 150px;
   margin: 30px;
 }
 .desktop-product-tab {

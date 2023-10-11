@@ -1,0 +1,34 @@
+{
+    "Shopify":[
+        {
+            "fieldName":"shopifyApiKey",
+            "required": true
+        },
+        {
+            "fieldName": "shopifyApiPassword",
+            "required": true
+        },
+        {
+            "fieldName":"shopifyAccessToken",
+            "required":true
+        },
+        {
+            "fieldName":"shopifySharedSecret",
+            "required": true
+        }
+    ],
+    "WooCommerce":[
+        {
+            "fieldName":"bridgeUrl",
+            "isUrl": true
+        },
+        {
+            "fieldName":"storeKey",
+            "required": true
+        },
+        {
+            "fieldName":"storeRoot",
+            "required": false
+        }
+    ]
+}

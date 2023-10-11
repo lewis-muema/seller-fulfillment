@@ -1,156 +1,14 @@
 <template>
   <v-card variant="outlined" class="dashboard-deliveries-container">
     <div v-if="!noAccess">
-      <div class="deliveries-container-inner" v-if="filteredDeliveries.length">
-        <v-table class="">
-          <thead>
-            <tr>
-              <th class="text-left table-headers">
-                {{
-                  getSelectedTab === "dashboard.toYourCustomers"
-                    ? $t("deliveries.customerInfo")
-                    : $t("deliveries.products")
-                }}
-              </th>
-              <th class="text-left table-headers">
-                {{ $t("dashboard.progress") }}
-              </th>
-              <th class="text-left table-headers">
-                {{ $t("dashboard.action") }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in filteredDeliveries" :key="index">
-              <td>
-                <v-list-item class="dashboard-customer-columns" lines="two">
-                  <v-list-item-header>
-                    <v-list-item-title>
-                      <span
-                        :class="
-                          getSelectedTab === 'dashboard.toYourCustomers'
-                            ? getLoader.deliveries
-                            : getLoader.consignments
-                        "
-                      >
-                        {{
-                          getSelectedTab === "dashboard.toYourCustomers"
-                            ? formatName(item.destination.name)
-                            : formatProducts(item.products)
-                        }}
-                      </span>
-                    </v-list-item-title>
-                    <v-list-item-subtitle
-                      class="dashboard-customer-delivery-location"
-                      v-if="getSelectedTab === 'dashboard.toYourCustomers'"
-                    >
-                      <div class="dashboard-customer-delivery-location-inner">
-                        <span
-                          :class="
-                            getSelectedTab === 'dashboard.toYourCustomers'
-                              ? getLoader.deliveries
-                              : getLoader.consignments
-                          "
-                        >
-                          {{
-                            formatName(
-                              item.destination.delivery_location.description
-                            )
-                          }}
-                        </span>
-                      </div>
-                    </v-list-item-subtitle>
-                  </v-list-item-header>
-                </v-list-item>
-              </td>
-              <td>
-                <v-list-item class="dashboard-customer-columns" lines="two">
-                  <v-list-item-header
-                    v-if="item.order_status === 'ORDER_FAILED'"
-                  >
-                    <p class="delivery-attempted-error">
-                      <i class="mdi mdi-information-outline mr-2"></i
-                      >{{ $t("deliveries.deliveryAttempt") }}
-                    </p>
-                    <p class="ml-6 mb-1">
-                      {{
-                        $t("deliveries.weWillDeliverAgain", {
-                          Date: deliveryDate(item.scheduled_date),
-                        })
-                      }}
-                    </p>
-                  </v-list-item-header>
-                  <v-list-item-header v-else>
-                    <v-list-item-title>
-                      <span
-                        :class="
-                          getSelectedTab === 'dashboard.toYourCustomers'
-                            ? getLoader.deliveries
-                            : getLoader.consignments
-                        "
-                      >
-                        {{ formatStatus(item.order_event_status, item) }}
-                      </span>
-                    </v-list-item-title>
-                    <v-progress-linear
-                      :model-value="item.delivery_progress_ratio * 100"
-                      color="#324BA8"
-                      rounded
-                      height="7"
-                    ></v-progress-linear>
-                  </v-list-item-header>
-                </v-list-item>
-              </td>
-              <td>
-                <router-link
-                  :to="`/deliveries/tracking/${item.order_id}`"
-                  class="dashboard-track-order"
-                >
-                  <span
-                    :class="
-                      getSelectedTab === 'dashboard.toYourCustomers'
-                        ? getLoader.deliveries
-                        : getLoader.consignments
-                    "
-                  >
-                    {{ $t("deliveries.trackOrder") }}
-                  </span>
-                </router-link>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-        <div class="show-more-deliveries-link" v-if="showMoreDeliveries">
-          <router-link
-            :to="
-              getSelectedTab === 'dashboard.toYourCustomers'
-                ? '/deliveries/customer'
-                : '/deliveries/sendy'
-            "
-            class="show-more-deliveries-link"
-            >{{ $t("dashboard.showMoreDeliveries")
-            }}<v-icon>mdi mdi-arrow-right</v-icon></router-link
-          >
-        </div>
+      <div v-if="getSelectedTab === 'dashboard.toYourCustomers'">
+        <to-your-customers-tab />
       </div>
-      <div class="deliveries-empty" v-else>
-        <div>
-          <img
-            src="https://images.sendyit.com/fulfilment/seller/track.png"
-            alt=""
-            class="deliveries-empty-img"
-          />
-        </div>
-        <p class="deliveries-empty-title">
-          {{ $t("deliveries.noDeliveriesToTrack") }}
-        </p>
-        <v-btn class="deliveries-btn" @click="redirect()" size="default">
-          {{
-            getSelectedTab === "dashboard.toYourCustomers"
-              ? $t("deliveries.deliverToACustomer")
-              : $t("deliveries.deliverToSendy")
-          }}
-        </v-btn>
+      <div v-if="getSelectedTab === 'dashboard.toSendy'">
+        <to-sendy-tab />
+      </div>
+      <div v-if="getSelectedTab === 'common.hiredVehicles'">
+        <on-demand-tab />
       </div>
     </div>
     <div class="dashboard-noaccess-container" v-else>
@@ -164,12 +22,19 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 import accessDeniedComponent from "../../common/accessDenied.vue";
 import eventLabels from "../../../mixins/event_labels";
 import placeholder from "../../../mixins/placeholders";
-import moment from "moment";
+import toYourCustomersTab from "./toYourCustomersTab.vue";
+import toSendyTab from "./toSendyTab.vue";
+import onDemandTab from "./onDemandTab.vue";
 
 export default {
   props: ["deliveries", "selectedTab"],
   mixins: [eventLabels, placeholder],
-  components: { accessDeniedComponent },
+  components: {
+    onDemandTab,
+    accessDeniedComponent,
+    toYourCustomersTab,
+    toSendyTab,
+  },
   data() {
     return {
       params: "?max=5",
@@ -184,36 +49,69 @@ export default {
       "getConsignments",
       "getStorageUserDetails",
       "getAccessDenied",
+      "getOnDemandDeliveries",
     ]),
     getSelectedTab() {
       return this.selectedTab;
     },
-    filteredDeliveries() {
-      if (this.getSelectedTab === "dashboard.toYourCustomers") {
-        return this.getDeliveries;
+    deliveriesLoaderText() {
+      let loaderText = "";
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          loaderText = "deliveries";
+          break;
+        case "dashboard.toSendy":
+          loaderText = "consignments";
+          break;
+        case "common.hiredVehicles":
+          loaderText = "onDemandOrders";
+          break;
       }
-      return this.getConsignments;
+      return loaderText;
     },
-    showMoreDeliveries() {
-      return this.filteredDeliveries.length >= 5;
+    deliveriesEndpoint() {
+      let deliveriesUrl = "";
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          deliveriesUrl = "deliveries";
+          break;
+        case "dashboard.toSendy":
+          deliveriesUrl = "consignments";
+          break;
+        case "common.hiredVehicles":
+          deliveriesUrl = "point-to-point";
+          break;
+      }
+      return deliveriesUrl;
     },
   },
   watch: {
     selectedTab() {
-      if (this.getSelectedTab === "dashboard.toYourCustomers") {
-        this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
-        this.setDeliveries(this.placeHolderDeliveries);
-      } else {
-        this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
-        this.setConsignments(this.placeholderConsignments);
+      switch (this.getSelectedTab) {
+        case "dashboard.toYourCustomers":
+          this.noAccess = this.getAccessDenied.includes("/deliveries/customer");
+          this.setDeliveries(this.placeHolderDeliveries);
+          break;
+        case "dashboard.toSendy":
+          this.noAccess = this.getAccessDenied.includes("/deliveries/sendy");
+          this.setConsignments(this.placeholderConsignments);
+          break;
+        case "common.hiredVehicles":
+          this.noAccess = this.getAccessDenied.includes(
+            "/deliveries/direct-deliveries/"
+          );
+          this.setOnDemandDeliveries(this.placeholderOnDemandDeliveries);
+          break;
       }
       this.fetchOrders();
     },
     "$store.state.accessDenied": function accessDenied(val) {
-      this.noAccess =
-        this.getSelectedTab === "dashboard.toYourCustomers"
-          ? val.includes("/deliveries/customer")
-          : val.includes("/deliveries/sendy");
+      if (this.getSelectedTab === "dashboard.toYourCustomers") {
+        this.noAccess = val.includes("/deliveries/customer");
+      }
+      if (this.getSelectedTab === "dashboard.toSendy") {
+        this.noAccess = val.includes("/deliveries/sendy");
+      }
     },
   },
   mounted() {
@@ -233,26 +131,22 @@ export default {
       "setLoader",
       "setDeliveries",
       "setConsignments",
+      "setOnDemandDeliveries",
     ]),
     fetchOrders() {
       this.setLoader({
-        type:
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "deliveries"
-            : "consignments",
+        type: this.deliveriesLoaderText,
         value: "loading-text",
       });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
-        endpoint: `seller/${this.getStorageUserDetails.business_id}/${
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "deliveries"
-            : "consignments"
-        }${this.params}`,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/${this.deliveriesEndpoint}${this.params}`,
       }).then((response) => {
         if (response.status === 200) {
           if (this.getSelectedTab === "dashboard.toYourCustomers") {
             this.setDeliveries(response.data.data.orders);
+          } else if (this.getSelectedTab === "common.hiredVehicles") {
+            this.setOnDemandDeliveries(response.data.data.orders);
           } else {
             this.setConsignments(response.data.data.orders);
           }
@@ -266,41 +160,12 @@ export default {
             type: "deliveries",
             value: "",
           });
+          this.setLoader({
+            type: "onDemandOrders",
+            value: "",
+          });
         }
       });
-    },
-    deliveryDate(date) {
-      return moment(date).format("MMM M/D/YYYY");
-    },
-    deliveryTime(date) {
-      const finalTime = moment(date).add(2, "hours");
-      return `${moment(date).format("ha")} - ${moment(finalTime).format("ha")}`;
-    },
-    formatName(name) {
-      const nameArr = name.split(" ");
-      nameArr.forEach((name, i) => {
-        nameArr[i] = name.charAt(0).toUpperCase() + name.slice(1);
-      });
-      return nameArr.join(" ");
-    },
-    formatProducts(products) {
-      return `${products[0].product_variant_description} ${
-        products.length > 1
-          ? this.$t("deliveries.otherItems", { count: products.length - 1 })
-          : ""
-      }`;
-    },
-    formatStatus(status, item) {
-      return this.showEventLabels(status, item);
-    },
-    redirect() {
-      this.$router.push(
-        `/inventory/send-inventory/${
-          this.getSelectedTab === "dashboard.toYourCustomers"
-            ? "customer"
-            : "sendy"
-        }/select-products?`
-      );
     },
   },
 };
@@ -368,5 +233,21 @@ export default {
 .dashboard-noaccess-container {
   zoom: 80%;
   margin-top: -5%;
+}
+.deliveries-platform-tag {
+  font-weight: 500;
+  font-size: 13px;
+}
+.deliveries-platform-tag-fulfillment {
+  color: #303133;
+}
+.deliveries-platform-tag-storefront {
+  color: #ee7d00;
+}
+.on-demand-progress-bar {
+  width: 300px !important;
+}
+.on-demand-title-row {
+  width: 150px !important;
 }
 </style>

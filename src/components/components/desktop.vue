@@ -7,7 +7,7 @@
         <v-main>
           <headers v-if="!external" />
           <accessDeniedScreen v-if="accessDenied" />
-          <router-view v-else />
+          <router-view class="router-view-container" v-else />
         </v-main>
       </v-layout>
     </v-card>
@@ -41,6 +41,7 @@ export default {
       "getExternal",
       "getUserDetails",
       "getUserAccessPermissions",
+      "getBusinessDetails",
     ]),
     external() {
       if (this.getExternal.includes(this.$route.path)) {
@@ -74,6 +75,26 @@ export default {
           );
         }
       });
+      if (!this.getBusinessDetails?.settings?.consignment_returns_enabled) {
+        noAccess = noAccess.concat([
+          "/inventory/add-consignment-return-products",
+          "/inventory/add-consignment-return-quantities",
+          "/inventory/create-consignment-return",
+        ]);
+      }
+      if (
+        this.getBusinessDetails?.settings &&
+        !this.getBusinessDetails?.settings?.direct_fulfilment_enabled
+      ) {
+        noAccess = noAccess.concat([
+          "/deliveries/direct-deliveries/",
+          "/deliveries/track-direct-deliveries/",
+          "/direct/create-delivery",
+        ]);
+      }
+      if (!this.getBusinessDetails?.settings?.metabase_analytics_enabled) {
+        noAccess = noAccess.concat(["/analytics"]);
+      }
       this.setAccessDenied(noAccess);
       this.accessDenied = noAccess.find((row) =>
         this.$route.path.includes(row)
@@ -95,5 +116,9 @@ export default {
 }
 .sidebar {
   height: 100vh;
+}
+.router-view-container {
+  height: calc(100vh - 60px);
+  overflow-y: scroll;
 }
 </style>

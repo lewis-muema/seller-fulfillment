@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /dist
-
+coverage
 
 # local env files
 .env
@@ -22,3 +22,15 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# screenshots
+tests/e2e/screenshots/*
+
+# test results
+test-results.xml
+test-results
+test-results/*
+
+# some output files
+.nyc_output
+.nyc_output/*

@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import moment from "moment";
 import VueGoogleMaps from "@fawmi/vue-google-maps";
+
+import "vue3-tour/dist/vue3-tour.css";
 // import { initializeApp } from "firebase/app";
 import App from "./App.vue";
 import i18n from "./i18n";
@@ -57,6 +59,10 @@ if (localStorage.userDetails && localStorage.user) {
 
 library.add(faSpinner, faThumbsUp, faThumbsDown);
 loadFonts();
+if (window.Cypress) {
+  // Add `store` to the window object only when testing with Cypress
+  window.store = store;
+}
 createApp(App)
   .use(router)
   .use(store)
@@ -80,7 +86,7 @@ createApp(App)
   .use(moment)
   .use(VueGoogleMaps, {
     load: {
-      libraries: ["places", "geometry"],
+      libraries: ["places"],
       key: process.env.GOOGLE_API_KEY_TEST,
     },
   })

@@ -23,8 +23,14 @@ export default {
   setConsignments(state, val) {
     state.consignments = val;
   },
+  setOnDemandDeliveries(state, val) {
+    state.onDemandDeliveries = val;
+  },
   setDeliveryInfo(state, val) {
     state.deliveryInfo = val;
+  },
+  setRecepientInfo(state, val) {
+    state.recepientInfo = val;
   },
   setPickupInfo(state, val) {
     state.pickupInfo = val;
@@ -58,6 +64,9 @@ export default {
   },
   setDefaultLanguage(state, val) {
     state.defaultLanguage = val;
+  },
+  setGeofenceData(state, val) {
+    state.geofenceData = val;
   },
   setDownloadActions(state, val) {
     state.downloadActions = val;
@@ -131,6 +140,12 @@ export default {
   setVueTelInputProps(state, val) {
     state.vueTelInputProps = val;
   },
+  setCancellationReasons(state, val) {
+    state.cancellationReasons = val;
+  },
+  setEditableFields(state, val) {
+    state.editableFields = val;
+  },
   setErrors(state, val) {
     state.errors = val;
   },
@@ -157,6 +172,9 @@ export default {
   },
   setOrderTrackingData(state, val) {
     state.orderTrackingData = val;
+  },
+  setDirectDeliveriesTrackingData(state, val) {
+    state.directDeliveriesTrackingData = val;
   },
   setTimelineIcons(state, val) {
     state.timelineIcons = val;
@@ -229,6 +247,9 @@ export default {
   },
   setDeliveriesStatistics(state, val) {
     state.deliveriesStatistics = val;
+  },
+  setPointToPointStatistics(state, val) {
+    state.pointToPointStatistics = val;
   },
   setConsignmentStatistics(state, val) {
     state.consignmentStatistics = val;
@@ -328,5 +349,116 @@ export default {
   },
   setWithDrawalAmount(state, val) {
     state.withDrawalAmount = val;
+  },
+  setPagination(state, val) {
+    state.pagination = val;
+  },
+  setSearchedProducts(state, val) {
+    state.searchedProducts = val;
+  },
+  setDestinations(state, val) {
+    state.destinations = val;
+  },
+  setDestinationIndex(state, val) {
+    state.destinationIndex = val;
+  },
+  setDocumentURL(state, val) {
+    state.documentURL = val;
+  },
+  setPickUpOptions(state, val) {
+    state.pickUpOptions = val;
+  },
+  setPickUpInfoCD(state, val) {
+    state.pickUpInfoCD = val;
+  },
+  setStations(state, val) {
+    state.stations = val;
+  },
+  setPickUpStation(state, val) {
+    state.pickUpStation = val;
+  },
+  setDeliverySpeed(state, val) {
+    state.deliverySpeed = val;
+  },
+  setPickUpSpeed(state, val) {
+    state.pickUpSpeed = val;
+  },
+  setMismatchedDates(state, val) {
+    state.mismatchedDates = val;
+  },
+  setEdittedDocuments(state, val) {
+    state.edittedDocuments = val;
+  },
+  setEditedDocuments(state, val) {
+    state.editedDocuments = val;
+  },
+  setFinalDocumentsToEdit(state, val) {
+    state.finalDocumentsToEdit = val;
+  },
+  setConsignmentReturn(state, val) {
+    state.consignmentReturn = val;
+  },
+  setConsignmentReturnSpeed(state, val) {
+    state.consignmentReturnSpeed = val;
+  },
+  setAutofillDetails(state, val) {
+    state.autofillDetails = val;
+  },
+  setAutoFillVariants(state, val) {
+    state.autoFillVariants = val;
+  },
+  setAutofillReviewStatus(state, val) {
+    state.autofillReviewStatus = val;
+  },
+  setLPOUploadError(state, val) {
+    state.LPOUploadError = val;
+  },
+  setAutofillProductStatus(state, val) {
+    state.autofillProductStatus = val;
+  },
+  setMarkers(state, val) {
+    state.markers = val;
+  },
+  setPolyline(state, val) {
+    state.polyline = val;
+  },
+  setMapStatus(state, val) {
+    state.mapStatus = val;
+  },
+  setLocationSuggestions(state, val) {
+    state.locationSuggestions = val;
+  },
+  setPricing(state, val) {
+    state.pricing = val;
+  },
+  setDirectOrderStep(state, val) {
+    state.directOrderStep = val;
+  },
+  setSelectedVehicleType(state, val) {
+    state.selectedVehicleType = val;
+  },
+  setDirectOrderDetails(state, val) {
+    state.directOrderDetails = val;
+  },
+  setDirectOrderDetailsStep(state, val) {
+    state.directOrderDetailsStep = val;
+  },
+  setDirectOrderPartner(state, val) {
+    state.directOrderPartner = val;
+  },
+  setDirectOrderNumber(state, val) {
+    state.directOrderNumber = val;
+  },
+  setMapReady(state, val) {
+    state.mapReady = val;
+  },
+  setRiders(state, val) {
+    state.riders = val;
+  },
+  setBanner(state, val) {
+    state.banner = val;
+  },
+  setPaymentRedirectURL(state, val) {
+    state.paymentRedirectURL = val;
   },
 };

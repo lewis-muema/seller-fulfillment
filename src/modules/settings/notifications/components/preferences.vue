@@ -559,7 +559,7 @@ export default {
       inventory: [
         {
           item: this.$t("settings.inventoryRunningLow"),
-          id: "",
+          id: "STOCK_LEVEL_THRESHOLD_REACHED",
         },
         {
           item: this.$t("settings.inventoryAcceptedAtTheFulfillmentCentre"),
@@ -618,6 +618,10 @@ export default {
         {
           item: this.$t("settings.whenDeliveryHasBeenCompleted"),
           id: "EVENT_DELIVERY_PARTNER_SUBMITTED_ITEMS_TO_BUYER_CONFIRMED_VIA_CODE",
+        },
+        {
+          item: this.$t("settings.generalUpdatesForOnDemandDeliveries"),
+          id: "POINT_TO_POINT_GENERAL_UPDATES",
         },
       ],
       payment: [

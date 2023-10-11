@@ -21,7 +21,7 @@
             </v-btn>
           </template>
           <v-list class="header-list-popup">
-            <v-list-item v-for="(shrt, i) in shortcuts" :key="i">
+            <v-list-item v-for="(shrt, i) in filteredShortcuts" :key="i">
               <v-list-item-title
                 @click="$router.push(shrt.url)"
                 class="header-list-item"
@@ -107,6 +107,7 @@
           transition="slide-y-transition"
           anchor="bottom end"
           v-model="profileToggle"
+          class="header-menu-dropdown"
         >
           <template v-slot:activator="{ props }">
             <v-btn
@@ -168,12 +169,17 @@ export default {
         {
           title: "common.deliverToCustomer",
           icon: "mdi-truck-outline",
-          url: "/inventory/send-inventory/customer/select-products",
+          url: "/inventory/create-delivery",
         },
         {
           title: "common.inventoryToSendy",
           icon: "mdi-warehouse",
-          url: "/inventory/send-inventory/sendy/select-products",
+          url: "/inventory/add-pickup-products",
+        },
+        {
+          title: "dashboard.hireAVehicle",
+          icon: "mdi-truck-outline",
+          url: "/direct/create-delivery",
         },
       ],
       profile: [
@@ -210,7 +216,26 @@ export default {
       "getNotifications",
       "getStorageUserDetails",
       "getMapOptions",
+      "getAccessDenied",
     ]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.direct_fulfilment_enabled
+        : false;
+    },
+    filteredShortcuts() {
+      const links = [];
+      this.shortcuts.forEach((shortcut) => {
+        if (
+          (this.directFulfillmentFlag &&
+            shortcut.title === "dashboard.hireAVehicle") ||
+          shortcut.title !== "dashboard.hireAVehicle"
+        ) {
+          links.push(shortcut);
+        }
+      });
+      return links;
+    },
     languageName() {
       let lang = "";
       this.getLanguages.forEach((row) => {
@@ -231,6 +256,11 @@ export default {
       });
       return notifications;
     },
+    consignmentReturnFlag() {
+      return this.getBusinessDetails.settings
+        ? this.getBusinessDetails.settings.consignment_returns_enabled
+        : false;
+    },
   },
   watch: {
     "$store.state.businessDetails": function businessDetails() {
@@ -238,6 +268,13 @@ export default {
         this.languageName
       }`;
       this.profile[2].actionLabel = this.$t("common.logOut");
+      if (this.consignmentReturnFlag) {
+        this.shortcuts[2] = {
+          title: "common.inventoryBackToYou",
+          icon: "mdi-undo",
+          url: "/inventory/add-consignment-return-products",
+        };
+      }
     },
     "$store.state.userDetails": function businessDetails() {
       this.profile[0].item = `${this.getUserDetails.first_name} ${this.getUserDetails.last_name}`;
@@ -246,6 +283,7 @@ export default {
   },
   mounted() {
     this.listLanguages();
+    this.listBusinessDetails();
     this.listUsersDetails();
     this.listNotifications();
   },
@@ -302,6 +340,18 @@ export default {
           link: "",
         };
       }
+      if (notification.notification_type === "STOCK_LEVEL_THRESHOLD_REACHED") {
+        return {
+          label: this.$t("common.viewProduct"),
+          link: `/inventory/view-product/${notification.entity_identifier}`,
+        };
+      }
+      if (notification.entity_type === "POINT_TO_POINT_ORDER") {
+        return {
+          label: this.$t("common.trackDelivery"),
+          link: `/deliveries/track-direct-deliveries/${notification.entity_identifier}`,
+        };
+      }
       return "";
     },
     triggerAction(notification) {
@@ -341,17 +391,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setBusinessDetails(response.data.data.business);
-          this.profile[1].item = `${this.$t("common.language")}: ${
-            this.languageName
-          }`;
-          let mapOptions = this.getMapOptions;
-          mapOptions.componentRestrictions.country = [
-            response.data.data.business.country_code.toLowerCase(),
-          ];
-          this.setMapOptions(mapOptions);
-          if (!localStorage.country) {
-            localStorage.country = response.data.data.business.country_code;
-          }
+          localStorage.country = response.data.data.business.country_code;
+          localStorage.country_name = response.data.data.business.country;
+          window.dispatchEvent(
+            new CustomEvent("country-fetched", { detail: response.data })
+          );
         }
       });
     },
@@ -362,7 +406,11 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setLanguages(this.languageFormat(response.data.data.languages));
-          this.listBusinessDetails();
+          this.profile[1].item = `${this.$t("common.language")}: ${
+            this.languageName
+          }`;
+        } else {
+          this.profile[1].item = `${this.$t("common.language")}: ${"English"}`;
         }
       });
     },
@@ -393,12 +441,16 @@ export default {
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/notifications`,
-      }).then((response) => {
-        if (response.status === 200) {
-          this.setNotifications(response.data.data.notifications);
-          this.notificationLoader = "";
-        }
-      });
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.setNotifications(response.data.data.notifications);
+            this.notificationLoader = "";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     archiveNotifications(notificationId) {
       this.notificationLoader = "loading-text";
@@ -486,6 +538,7 @@ export default {
     0px 0px 10px 0px rgb(0 0 0 / 14%), 0px 0px 10px 0px rgb(0 0 0 / 12%) !important;
   padding: 5px 10px;
   margin-top: 5px;
+  max-height: 90vh;
 }
 .header-profile-popup {
   box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%),
@@ -540,5 +593,8 @@ export default {
   color: #324ba8;
   float: right;
   margin: 16px;
+}
+.header-menu-dropdown .v-overlay__content {
+  position: sticky !important;
 }
 </style>

@@ -1,0 +1,14 @@
+{
+  "message":"business.create.success",
+  "data":{
+     "business":{
+        "business_id":"B-VSW-5971",
+        "user_id":"U-MQC-0567",
+        "business_name":"qwertyui",
+        "business_email":"dorcas+vsoooo@sendyit.com"
+     }
+  },
+  "errors":[
+     
+  ]
+}

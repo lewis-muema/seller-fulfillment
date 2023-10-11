@@ -38,6 +38,7 @@
         >
           {{ $t("deliveries.pending") }}
           <v-badge
+            class="pending-badge"
             color="#FBDF9A"
             text-color="#7F3B02"
             :content="pending"
@@ -65,6 +66,7 @@
         >
           {{ $t("deliveries.inTransit") }}
           <v-badge
+            class="inTransit-badge"
             color="#B8F5A8"
             text-color="#7F3B02"
             :content="transit"
@@ -90,6 +92,7 @@
         >
           {{ $t("deliveries.failed") }}
           <v-badge
+            class="failed-badge"
             color="#9B101C"
             text-color="white"
             :content="failed"
@@ -117,6 +120,7 @@
         >
           {{ $t("deliveries.completed") }}
           <v-badge
+            class="completed-badge"
             color="#324BA8"
             text-color="white"
             :content="completed"
@@ -124,9 +128,39 @@
           ></v-badge>
         </span>
       </div>
+      <div
+        class="customers-orders-tab-section"
+        :class="activeTab === 'Cancelled' ? 'active-orders-tab' : ''"
+      >
+        <span
+          :class="
+            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+              ? 'inactive-tab'
+              : 'customers-orders-tab-section-inner'
+          "
+          @click="
+            activeTab !== 'Cancelled' && getLoader.deliveries === 'loading-text'
+              ? nothing()
+              : passActiveTab('Cancelled')
+          "
+        >
+          {{ $t("deliveries.cancelled") }}
+          <v-badge
+            class="cancelled-badge"
+            color="#9B101C"
+            text-color="white"
+            :content="cancelled"
+            inline
+          ></v-badge>
+        </span>
+      </div>
     </div>
     <div class="deliver-btn-container">
-      <div v-if="exportStatus" class="export-button" @click="triggerExport()">
+      <div
+        v-if="exportStatus"
+        class="export-button consignment-export-button"
+        @click="triggerExport()"
+      >
         <span>
           <i class="mdi mdi-export-variant export-icon"></i>
         </span>
@@ -139,7 +173,7 @@
         color="#324BA8"
         text-color="white"
         size="default"
-        @click="$router.push('/inventory/send-inventory/sendy/select-products')"
+        @click="$router.push('/inventory/add-pickup-products')"
         >{{ $t("deliveries.inventoryToSendy") }}</v-btn
       >
     </div>
@@ -152,34 +186,8 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data: () => ({
     tab: "All",
-    pending: "-",
-    transit: "-",
-    failed: "-",
-    completed: "-",
   }),
   watch: {
-    "$store.state.loader": {
-      handler() {
-        this.pending =
-          parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
-          parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
-            ? (
-                parseInt(this.getConsignmentStatistics.ORDER_RECEIVED) +
-                parseInt(this.getConsignmentStatistics.ORDER_IN_PROCESSING)
-              ).toString()
-            : "0";
-        this.transit = this.getConsignmentStatistics.ORDER_IN_TRANSIT
-          ? this.getConsignmentStatistics.ORDER_IN_TRANSIT.toString()
-          : "0";
-        this.failed = this.getConsignmentStatistics.ORDER_FAILED
-          ? this.getConsignmentStatistics.ORDER_FAILED.toString()
-          : "0";
-        this.completed = this.getConsignmentStatistics.ORDER_COMPLETED
-          ? this.getConsignmentStatistics.ORDER_COMPLETED.toString()
-          : "0";
-      },
-      deep: true,
-    },
     "$store.state.tab": function tab(val) {
       this.passActiveTab(val);
     },
@@ -200,6 +208,34 @@ export default {
         (row) => row.permission_id === "CAN_EXPORT_SELLER_DATA"
       );
       return typeof status === "object" ? status.permission_granted : false;
+    },
+    pending() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : (
+            parseInt(this.getConsignmentStatistics?.ORDER_RECEIVED) +
+            parseInt(this.getConsignmentStatistics?.ORDER_IN_PROCESSING)
+          )?.toString();
+    },
+    transit() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_IN_TRANSIT?.toString();
+    },
+    failed() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_FAILED?.toString();
+    },
+    completed() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_COMPLETED?.toString();
+    },
+    cancelled() {
+      return Object.keys(this.getConsignmentStatistics).length === 0
+        ? "-"
+        : this.getConsignmentStatistics?.ORDER_CANCELED?.toString();
     },
   },
   methods: {

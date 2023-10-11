@@ -15,7 +15,14 @@
           :value="'common.home'"
           class="desktop-sidebar-icons"
           @click="$router.push('/')"
-          :active="route === 'common.dashboard'"
+          :active="
+            [
+              'common.dashboard',
+              'common.sendInventoryToSendy',
+              'common.sendDeliveryToCustomer',
+              'common.sendBackInventory',
+            ].includes(route)
+          "
         ></v-list-item>
 
         <v-list-group>
@@ -52,15 +59,7 @@
                 : ''
             "
           ></v-list-item>
-          <v-list-item
-            v-if="!getAccessDenied.includes('/inventory/stock-levels')"
-            :title="$t('common.stocks')"
-            @click="$router.push('/inventory/stock-levels')"
-            class="desktop-sidebar-sub-menu"
-            :active="route === 'common.stocks'"
-            :append-icon="route === 'common.stocks' ? 'mdi-circle-small' : ''"
-          ></v-list-item>
-          <v-list-item
+          <!-- <v-list-item
             v-if="!getAccessDenied.includes('/inventory/send-inventory')"
             :title="$t('common.sendInventory')"
             @click="$router.push('/inventory/send-inventory')"
@@ -81,7 +80,7 @@
                 ? 'mdi-circle-small'
                 : ''
             "
-          ></v-list-item>
+          ></v-list-item> -->
         </v-list-group>
         <v-list-group>
           <template v-slot:activator="{ props }">
@@ -129,6 +128,29 @@
               [
                 'common.deliveriesToSendy',
                 'deliveries.trackDeliveryToSendy',
+              ].includes(route)
+                ? 'mdi-circle-small'
+                : ''
+            "
+          ></v-list-item>
+          <v-list-item
+            v-if="
+              !getAccessDenied.includes('/deliveries/direct-deliveries') &&
+              directFulfillmentFlag
+            "
+            :title="$t('common.hiredVehicles')"
+            @click="$router.push('/deliveries/direct-deliveries/')"
+            class="desktop-sidebar-sub-menu"
+            :active="
+              [
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
+              ].includes(route)
+            "
+            :append-icon="
+              [
+                'common.hiredVehicles',
+                'deliveries.trackHiredVehicles',
               ].includes(route)
                 ? 'mdi-circle-small'
                 : ''
@@ -251,6 +273,16 @@
             "
           ></v-list-item>
           <v-list-item
+            v-if="!getAccessDenied.includes('/settings/integrations')"
+            :title="$t('common.integrations')"
+            @click="$router.push('/settings/integrations')"
+            class="desktop-sidebar-sub-menu"
+            :active="route === 'common.integrations'"
+            :append-icon="
+              route === 'common.integrations' ? 'mdi-circle-small' : ''
+            "
+          ></v-list-item>
+          <v-list-item
             v-if="!getAccessDenied.includes('/settings/activity-log')"
             :title="$t('common.activityLog')"
             @click="$router.push('/settings/activity-log')"
@@ -261,6 +293,21 @@
             "
           ></v-list-item>
         </v-list-group>
+        <v-list-item
+          v-if="metabaseAnalyticsFlag"
+          prepend-icon="mdi-finance"
+          :title="$t('common.analytics')"
+          :value="'common.analytics'"
+          class="desktop-sidebar-icons"
+          @click="$router.push('/analytics')"
+          :active="['common.analytics'].includes(route)"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi mdi-forum"
+          :title="$t('common.shareFeedback')"
+          class="desktop-sidebar-icons"
+          @click="redirectToTally"
+        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -280,7 +327,17 @@ export default {
     route() {
       return this.getComponent;
     },
-    ...mapGetters(["getComponent", "getAccessDenied"]),
+    ...mapGetters(["getComponent", "getAccessDenied", "getBusinessDetails"]),
+    directFulfillmentFlag() {
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.direct_fulfilment_enabled
+        : false;
+    },
+    metabaseAnalyticsFlag() {
+      return this.getBusinessDetails?.settings
+        ? this.getBusinessDetails?.settings?.metabase_analytics_enabled
+        : false;
+    },
   },
   watch: {
     $route(to, from) {
@@ -317,6 +374,10 @@ export default {
       this.expand(props, category);
       this.collapse(props, category);
       return props;
+    },
+    redirectToTally() {
+      const formId = "nr5RR2";
+      window.Tally.openPopup(formId);
     },
   },
 };
@@ -358,5 +419,8 @@ export default {
 .v-navigation-drawer--start {
   border-inline-end-width: inherit !important;
   box-shadow: 0.5px 0px 0px rgb(0 0 0 / 15%) !important;
+}
+.drawer-footer {
+  margin-top: 500px;
 }
 </style>

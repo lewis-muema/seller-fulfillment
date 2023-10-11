@@ -2,11 +2,15 @@
   <div>
     <form action="" @submit.prevent>
       <div class="sign-in-card">
-        <v-card-title class="text-center">
+        <v-card-title class="text-center" data-textId="signin-card-title">
           {{ $t("auth.welcomeBack") }}</v-card-title
         >
         <p class="text-grey ml-5">{{ $t("auth.loginToContinue") }}</p>
-        <div class="auth-error-container" v-if="isSendyEmail">
+        <div
+          class="auth-error-container"
+          v-if="isSendyEmail"
+          data-test="signin-error-message"
+        >
           <i class="mdi mdi-alert-circle-outline auth-error-warning-icon"></i>
           <div>
             <p class="auth-error-title">
@@ -30,6 +34,7 @@
                   type="email"
                   class="form-control"
                   :placeholder="$t('auth.enterBusinessEmailAddress')"
+                  data-test="signin-email-input"
                 />
                 <div v-if="v$.params.emailAddress.$error" class="error-msg">
                   {{ $t("auth.businessEmailRequired") }}
@@ -44,6 +49,7 @@
                 v-loading="loading"
                 :class="loading ? 'disabled' : ''"
                 style="height: 46px"
+                data-test="signin-submit-button"
               >
                 {{ $t("auth.continueWithEmailAddress") }}
               </button>
@@ -183,8 +189,8 @@ export default {
           this.sendSegmentEvents({
             event: "Sign_in",
             data: {
-              userId: data.data.data.business.business_id,
-              email: this.params.emailAddress,
+              userId: data?.data?.data?.business_id,
+              email: this.params?.emailAddress,
               clientType: "web",
               device: "desktop",
             },
@@ -195,7 +201,7 @@ export default {
         this.loading = false;
         if (!this.isSendyEmail) {
           ElNotification({
-            title: this.getErrors.message.replaceAll(".", " "),
+            title: this.getErrors.message?.replaceAll(".", " "),
             message: "",
             type: "error",
           });

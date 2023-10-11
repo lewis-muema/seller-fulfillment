@@ -1,0 +1,74 @@
+.store-platform {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+
+  &__name {
+    margin-left: 10px;
+    font-weight: 500;
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  &__image {
+    width: 32px;
+    height: 32px;
+  }
+}
+.divider {
+  border: 1px solid #e2e7ed !important;
+  margin-top: 40px !important;
+  margin-bottom: 32px !important;
+}
+.tag {
+  margin-bottom: 30px;
+}
+
+.import-container {
+  margin: 0 auto;
+  width: 100vw;
+  height: 100vh;
+  padding: 10vh 10vw;
+}
+.import-card {
+  margin: 0 auto;
+  width: 50vw;
+  height: 50vh;
+  padding: 30px;
+
+  &__button-continer {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+  }
+  &__btn {
+    display: inline-block;
+    margin: 16px;
+
+    &--cancel {
+      background-color: #ffffff;
+      color: #324ba8;
+    }
+
+    &--import {
+      background-color: #324ba8;
+      color: #ffffff !important;
+
+      :hover {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.top-action-bar {
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  box-shadow: none !important;
+}

@@ -17,6 +17,7 @@ module.exports = {
   ALGOLIA_API_KEY: "d19d556ce4b0b3897d5c8956e43428c2",
   ALGOLIA_INDEX_NAME: "production_fulfillment",
   ALGOLIA_INDEX_NAME_ORDERS: "production_fulfillment_orders",
+  ALGOLIA_INDEX_ON_DEMAND_ORDERS: "production_fulfillment_point_to_point_index",
   FULFILMENT_SERVER: "https://auth.sendyit.com/fulfilment/v1/",
   SELLER_FULFILLMENT_SERVER:
     "https://fulfillment-biz-logic-service-dev.sendyit.com/v1/",
@@ -24,4 +25,10 @@ module.exports = {
   VUE_APP_VGS_VAULT_ID: "tntrt5wb0ic",
   VUE_APP_VGS_ENVIRONMENT: "live",
   EXTREME_IP_KEY: "dmmw1HciGEhld0FiG2ID",
+  MERCHANT_GATEWAY: "https://merchant-gateway-test.sendyit.com/",
+  RND_ORDER_PLACEMENT: "https://rnd-order-placement.sendyit.com/",
+  FULFILMENT_API: "https://fulfillment-api-test.sendyit.com/",
+  SOLR_RIDER_SEARCH: "https://auth.sendyit.com/solr/riders/",
+  METABASE_KEY:
+    "baddc28e2149d570c8967cd8c6589e13d7356cd6a1c71e50f07d5f08d6b3bdc6",
 };

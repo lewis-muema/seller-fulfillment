@@ -19,7 +19,10 @@
           />
         </div>
       </div>
-      <div v-if="getConsignments.length > 0">
+      <div
+        v-if="getConsignments.length > 0"
+        class="deliveries-to-sendy-container"
+      >
         <v-table>
           <thead>
             <tr>
@@ -31,6 +34,11 @@
               <th class="text-left deliveries-table-header">
                 <span :class="getLoader.consignments">{{
                   $t("deliveries.progress")
+                }}</span>
+              </th>
+              <th class="text-left deliveries-table-header">
+                <span :class="getLoader.consignments">{{
+                  $t("deliveries.platforms")
                 }}</span>
               </th>
               <th class="text-left deliveries-table-header">
@@ -86,11 +94,39 @@
                   ></v-progress-linear>
                 </div>
               </td>
+              <td class="deliveries-platform-row">
+                <span
+                  :class="getLoader.consignments"
+                  class="deliveries-platform-tag"
+                >
+                  <span
+                    :class="getLoader.deliveries"
+                    class="deliveries-platform-tag-storefront"
+                    v-if="item.sales_channel_name"
+                  >
+                    {{ item.sales_channel_name }}
+                  </span>
+                  <span
+                    :class="getLoader.consignments"
+                    class="deliveries-platform-tag-fulfillment"
+                    v-else
+                  >
+                    {{ $t("dashboard.fulfillmentApp") }}
+                  </span>
+                </span>
+              </td>
               <td class="deliveries-date-row">
                 <div v-if="item.order_status === 'ORDER_COMPLETED'">
                   <p class="deliveries-date-row-top">
                     <span :class="getLoader.consignments">
                       {{ deliveryDate(item.completed_date) }}
+                    </span>
+                  </p>
+                </div>
+                <div v-else-if="item.order_status === 'ORDER_CANCELED'">
+                  <p class="deliveries-date-row-top">
+                    <span :class="getLoader.consignments">
+                      {{ deliveryDate(item.updated_date) }}
                     </span>
                   </p>
                 </div>
@@ -112,7 +148,10 @@
                   class="deliveries-action-row-top"
                   @click="navigate(`/deliveries/tracking/${item.order_id}`)"
                 >
-                  <span :class="getLoader.consignments">
+                  <span
+                    :class="getLoader.consignments"
+                    class="consignment-order-id-component"
+                  >
                     {{ $t("deliveries.trackOrder") }}
                   </span>
                 </p>
@@ -121,7 +160,7 @@
           </tbody>
         </v-table>
       </div>
-      <div v-else>
+      <div v-else class="no-deliveries-to-sendy-container">
         <div v-if="ongoingDeliveries > 0">
           <div class="no-products-card-container">
             <span class="no-deliveries-icon-halo">
@@ -148,14 +187,21 @@
           </p>
           <v-btn
             class="deliveries-btn"
-            @click="
-              $router.push('/inventory/send-inventory/sendy/select-products')
-            "
+            @click="$router.push('/inventory/add-pickup-products')"
             size="default"
           >
             {{ $t("deliveries.deliverToSendy") }}
           </v-btn>
         </div>
+      </div>
+      <div>
+        <v-pagination
+          class="mt-3"
+          v-model="page"
+          :length="getPagination.page_count"
+          :total-visible="getPagination.page_count < 10 ? '' : 10"
+          rounded="circle"
+        ></v-pagination>
       </div>
     </div>
   </div>
@@ -175,6 +221,7 @@ export default {
     deliveries: [],
     range: "",
     params: "",
+    page: 1,
   }),
   watch: {
     range(val) {
@@ -206,6 +253,16 @@ export default {
       this.setConsignments(this.placeholderConsignments);
       this.fetchOrders();
     },
+    page() {
+      if (this.params === "?" || this.params.includes("?offset=")) {
+        this.params = `?offset=${this.page - 1}`;
+      } else {
+        const offset = this.params.split("&offset");
+        this.params = offset[1]
+          ? `${offset[0]}&offset=${this.page - 1}`
+          : `${this.params}&offset=${this.page - 1}`;
+      }
+    },
   },
   mounted() {
     this.setConsignments(this.placeholderConsignments);
@@ -232,6 +289,7 @@ export default {
       "getStorageUserDetails",
       "getConsignmentStatistics",
       "getTabStatuses",
+      "getPagination",
     ]),
     ongoingDeliveries() {
       let orderCount = 0;
@@ -250,14 +308,15 @@ export default {
       "setConsignmentStatistics",
       "setTab",
       "setTabStatus",
+      "setPagination",
     ]),
     navigate(route) {
       this.$router.push(route);
     },
     limitParams() {
-      return `?lowerLimitDate=${moment(this.range[0]).format(
+      return `?lower_limit_date=${moment(this.range[0]).format(
         "YYYY-MM-DD"
-      )}&upperLimitDate=${moment(this.range[1]).format("YYYY-MM-DD")}`;
+      )}&upper_limit_date=${moment(this.range[1]).format("YYYY-MM-DD")}`;
     },
     statusParams() {
       return `status=${this.getTabStatus}`;
@@ -278,6 +337,8 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setConsignments(response.data.data.orders);
+          this.setPagination(response.data.data.pagination);
+          this.page = response.data.data.pagination.current_page + 1;
         }
         if (this.$route.path.includes("/deliveries/sendy")) {
           this.setLoader({
@@ -300,7 +361,7 @@ export default {
       });
     },
     deliveryDate(date) {
-      return moment(date).format("MMM M/D/YYYY");
+      return moment(date).format("Do MMM YYYY");
     },
     deliveryTime(date) {
       const finalTime = moment(date).add(2, "hours");
@@ -341,24 +402,12 @@ export default {
 .deliveries-table-column {
   height: 60px;
 }
-.deliveries-product-row,
-.deliveries-date-row,
-.deliveries-action-row {
-  width: 20%;
-}
-.deliveries-progress-row {
-  width: 40%;
-}
 .deliveries-product-row {
   font-size: 16px !important;
 }
 .deliveries-date-row-top {
   font-size: 14px;
   margin: 0px;
-}
-.deliveries-date-row-bottom {
-  font-size: 12px;
-  color: #606266;
 }
 .deliveries-progress-row-top {
   font-size: 12px;

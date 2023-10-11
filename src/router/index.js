@@ -7,7 +7,9 @@ import OTP from "../modules/auth/OTP.vue";
 import CompleteSignup from "../modules/auth/completeSignup";
 import Dashboard from "../modules/dashboard/dashboard.vue";
 import Customers from "../modules/deliveries/customers/customers.vue";
+import onDemand from "../modules/deliveries/onDemand/onDemand.vue";
 import Tracking from "../modules/deliveries/tracking/tracking.vue";
+import DirectFulfilmentTracking from "../modules/deliveries/tracking/components/tracking.vue";
 import Sendy from "../modules/deliveries/sendy/sendy.vue";
 import Transactions from "../modules/payments/transactions/transactions.vue";
 import Wallet from "../modules/payments/wallet/wallet.vue";
@@ -26,7 +28,7 @@ import addUser from "../modules/settings/manageUsers/components/addUser.vue";
 import userPermissions from "../modules/settings/manageUsers/components/userPermissions.vue";
 import invite from "../modules/external/invite.vue";
 import editUser from "../modules/settings/manageUsers/components/editUser.vue";
-import editOrder from "../modules/deliveries/tracking/components/editOrder.vue";
+import editOrder from "../modules/deliveries/tracking/components/normalFulfilment/editOrder.vue";
 import activityLog from "../modules/settings/activityLog/activityLog.vue";
 import Onboarding from "../modules/dashboard/components/onboarding";
 import AddProduct from "../modules/inventory/products/components/addProduct.vue";
@@ -35,8 +37,22 @@ import EditProduct from "../modules/inventory/products/components/editProduct";
 import ViewProduct from "../modules/inventory/products/viewProduct/viewProduct";
 import Import from "../modules/inventory/products/components/import";
 import StockLevels from "../modules/inventory/stocklevels/stockLevels.vue";
-import SendProducts from "../modules/inventory/sendproducts/sendProducts.vue";
+import SendInventory from "../modules/inventory/sendProducts.vue";
+import CreateConsignmentReturn from "../modules/inventory/consignmentReturns/checkout.vue";
+import AddConsignmentReturnProducts from "../modules/inventory/consignmentReturns/components/productSelect.vue";
+import AddConsignmentReturnQuantities from "../modules/inventory/consignmentReturns/components/addQuantity.vue";
+import CreatePickup from "../modules/inventory/sendproducts/checkout.vue";
+import AddPickupProducts from "../modules/inventory/sendproducts/components/productSelect.vue";
+import AddPickupQuantities from "../modules/inventory/sendproducts/components/addQuantity.vue";
+import CreateDelivery from "../modules/inventory/crossdocking/checkout.vue";
+import AddDeliveryProducts from "../modules/inventory/crossdocking/components/productSelect.vue";
+import AddDeliveryQuantities from "../modules/inventory/crossdocking/components/addQuantity.vue";
 import paymentSummary from "../modules/payments/statements/components/paymentSummary.vue";
+import statements from "../modules/payments/statements/statements.vue";
+import direct from "../modules/deliveries/direct/direct.vue";
+import analytics from "../modules/analytics/analytics.vue";
+
+import integrations from "@/modules/integrations/routes/index";
 
 const routes = [
   {
@@ -98,7 +114,7 @@ const routes = [
     component: Import,
   },
   {
-    path: "/inventory/products",
+    path: "/inventory/products/:tab?",
     name: "Products",
     component: Products,
   },
@@ -113,9 +129,54 @@ const routes = [
     component: ViewProduct,
   },
   {
-    path: "/inventory/send-inventory/:path?/:page?",
+    path: "/inventory/send-inventory",
     name: "Send Inventory",
-    component: SendProducts,
+    component: SendInventory,
+  },
+  {
+    path: "/inventory/create-consignment-return",
+    name: "Create Consignment Return",
+    component: CreateConsignmentReturn,
+  },
+  {
+    path: "/inventory/add-consignment-return-products",
+    name: "Add Consignment Return Inventory",
+    component: AddConsignmentReturnProducts,
+  },
+  {
+    path: "/inventory/add-consignment-return-quantities",
+    name: "Add Consignment Return Quantities",
+    component: AddConsignmentReturnQuantities,
+  },
+  {
+    path: "/inventory/create-pickup",
+    name: "Create pickup",
+    component: CreatePickup,
+  },
+  {
+    path: "/inventory/add-pickup-products",
+    name: "Add pickup Inventory",
+    component: AddPickupProducts,
+  },
+  {
+    path: "/inventory/add-pickup-quantities",
+    name: "Add pickup Quantities",
+    component: AddPickupQuantities,
+  },
+  {
+    path: "/inventory/create-delivery",
+    name: "Create Delivery",
+    component: CreateDelivery,
+  },
+  {
+    path: "/inventory/add-delivery-products",
+    name: "Add Delivery Products",
+    component: AddDeliveryProducts,
+  },
+  {
+    path: "/inventory/add-delivery-quantities",
+    name: "Add Delivery Quantities",
+    component: AddDeliveryQuantities,
   },
   {
     path: "/deliveries/customer/:tab?/:date?",
@@ -128,9 +189,19 @@ const routes = [
     component: Sendy,
   },
   {
+    path: "/deliveries/direct-deliveries/",
+    name: "On Demand",
+    component: onDemand,
+  },
+  {
     path: "/deliveries/tracking/:order_id",
     name: "Tracking",
     component: Tracking,
+  },
+  {
+    path: "/deliveries/track-direct-deliveries/:order_id",
+    name: "DirectFulfilmentTracking",
+    component: DirectFulfilmentTracking,
   },
   {
     path: "/deliveries/edit-order/",
@@ -166,6 +237,11 @@ const routes = [
     path: "/payments/withdraw",
     name: "Withdraw",
     component: Withdraw,
+  },
+  {
+    path: "/payments/statements",
+    name: "Statements",
+    component: statements,
   },
   {
     path: "/payments/view-invoice/:invoice_id?",
@@ -232,6 +308,17 @@ const routes = [
     name: "Invite",
     component: invite,
   },
+  {
+    path: "/direct/create-delivery",
+    name: "Direct Fulfilment",
+    component: direct,
+  },
+  {
+    path: "/analytics",
+    name: "Analytics",
+    component: analytics,
+  },
+  integrations,
 ];
 
 const router = createRouter({

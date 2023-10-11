@@ -1,57 +1,6 @@
 <template>
   <div>
-    <div class="tracking-order-no">
-      <i
-        class="mdi mdi-arrow-left tracking-arrow-back"
-        @click="$router.back()"
-      ></i>
-      <p class="tracking-order-title mb-0">
-        <span :class="getLoader.orderTracking">
-          {{ $t("deliveries.orderNo") }}
-          {{ getOrderTrackingData.order.order_id }}
-        </span>
-        <span>
-          <v-menu transition="slide-y-transition" anchor="bottom center">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                class="tracking-order-actions-btn elevation-0"
-                append-icon="mdi-chevron-down"
-                v-bind="props"
-              >
-                {{ $t("deliveries.actions") }}
-              </v-btn>
-            </template>
-            <v-list class="users-actions-popup">
-              <v-list-item v-for="(action, i) in deliveryActions" :key="i">
-                <v-list-item-title
-                  @click="
-                    setOverlayStatus({
-                      overlay: true,
-                      popup: action.popup,
-                    })
-                  "
-                >
-                  {{ $t(action.label) }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </span>
-      </p>
-      <p class="tracking-order-time-est">
-        <span
-          :class="getLoader.orderTracking"
-          v-if="getOrderTrackingData.order.order_status === 'ORDER_COMPLETED'"
-        >
-          {{ $t("deliveries.dateOfCompletion") }}
-          {{ formatDateComplete(getOrderTrackingData.order.completed_date) }}
-        </span>
-        <span :class="getLoader.orderTracking" v-else>
-          {{ $t("deliveries.timeOfArrival") }}
-          {{ formatDate(getOrderTrackingData.order.scheduled_date) }}
-        </span>
-      </p>
-    </div>
+    <top-tracking-card :linkedPickup="this.linkedPickup" />
     <div class="tracking-order-failed-delivery">
       <failed-delivery v-if="failedStatus" />
     </div>
@@ -68,12 +17,13 @@
 </template>
 
 <script>
-import moment from "moment";
-import timeline from "./components/timeline.vue";
-import deliveryInfo from "./components/deliveryInfo.vue";
-import products from "./components/products.vue";
-import failedDelivery from "./components/failedDelivery.vue";
+import timeline from "./components/normalFulfilment/timeline.vue";
+import deliveryInfo from "./components/normalFulfilment/deliveryInfo.vue";
+import topTrackingCard from "./components/normalFulfilment/topTrackingCard.vue";
+import products from "./components/normalFulfilment/products.vue";
+import failedDelivery from "./components/normalFulfilment/failedDelivery.vue";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import trackingPayloadMixin from "../../../mixins/tracking_payload";
 
 export default {
   components: {
@@ -81,13 +31,17 @@ export default {
     deliveryInfo,
     products,
     failedDelivery,
+    topTrackingCard,
   },
+  mixins: [trackingPayloadMixin],
   data() {
     return {
       orderNo: "AQW4567787",
       timeOfArrival: "Thursday, 25th Jan  2pm - 4pm",
       overlay: false,
       failedStatus: false,
+      linkedPickup: {},
+      orderPolling: "",
     };
   },
   watch: {
@@ -120,33 +74,42 @@ export default {
       "getParent",
       "getStorageUserDetails",
       "getParent",
+      "getEditableFields",
     ]),
     deliveryActions() {
       const actions = [];
       this.getDeliveryActions.forEach((row) => {
         let showCancel = true;
-        if (row.popup === "cancel") {
-          showCancel =
-            [
-              "event.delivery.order.created",
-              "event.delivery.at.hub.processing.for.delivery",
-              "event.delivery.at.hub.waiting.for.partner",
-            ].includes(this.getOrderTrackingData.order.order_event_status) ||
-            this.getOrderTrackingData.order.order_event_status.includes(
-              "pickup"
-            );
+        if (row.popup === "cancelOptions") {
+          showCancel = ["ORDER_RECEIVED", "ORDER_IN_PROCESSING"].includes(
+            this.getOrderTrackingData.order.order_status
+          );
         }
-        if (row.show && showCancel) {
+        let showCode =
+          (row.popup === "code" &&
+            this.getOrderTrackingData.order.confirmation_pin &&
+            this.$route.params.order_id ===
+              this.getOrderTrackingData.order.order_id) ||
+          row.popup !== "code";
+        if (row.show && showCancel && showCode) {
           actions.push(row);
         }
       });
       return actions;
+    },
+    hideActionButtons() {
+      return (
+        this.getOrderTrackingData.order.order_status === "ORDER_COMPLETED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_CANCELED" ||
+        this.getOrderTrackingData.order.order_status === "ORDER_FAILED"
+      );
     },
   },
   mounted() {
     if (this.$router.options.history.state.back === "/deliveries/sendy") {
       this.setParent("sendy");
       this.rescheduleStatus("sendy");
+      this.setComponent("deliveries.trackDeliveryToSendy");
     }
     if (
       this.$router.options.history.state.back === "/deliveries/customer" ||
@@ -155,8 +118,23 @@ export default {
     ) {
       this.setParent("customer");
       this.rescheduleStatus("customer");
+      this.setComponent("deliveries.trackDeliveryToCustomer");
     }
     this.fetchOrder();
+    this.cancellationReasons();
+    this.orderPolling = setInterval(() => {
+      if (
+        this.$route.path.includes("/deliveries/tracking/") &&
+        !["ORDER_CANCELED", "ORDER_COMPLETED"].includes(
+          this.getOrderTrackingData?.order?.order_status
+        )
+      ) {
+        this.fetchOrder();
+      }
+    }, 300000);
+  },
+  beforeUnmount() {
+    clearInterval(this.orderPolling);
   },
   methods: {
     ...mapMutations([
@@ -168,8 +146,12 @@ export default {
       "setParent",
       "setDeliveryActions",
       "setProductsToSubmit",
+      "setDeliverySpeed",
+      "setFinalDocumentsToEdit",
+      "setCancellationReasons",
+      "setEditableFields",
     ]),
-    ...mapActions(["requestAxiosGet"]),
+    ...mapActions(["requestAxiosGet", "requestAxiosPost"]),
     fetchOrder() {
       this.setLoader({
         type: "orderTracking",
@@ -177,6 +159,10 @@ export default {
       });
       this.setLoader({
         type: "orderTimeline",
+        value: "loading-text",
+      });
+      this.setLoader({
+        type: "pickUpDetails",
         value: "loading-text",
       });
       this.requestAxiosGet({
@@ -191,23 +177,99 @@ export default {
         });
         if (response.status === 200) {
           this.setOrderTrackingData(response.data.data);
+          this.setFinalDocumentsToEdit(
+            this.getOrderTrackingData.order.documents
+          );
           this.setProductsToSubmit(response.data.data.order.products);
+          this.getParent === "customer"
+            ? this.editableFieldsOnConsignmemts()
+            : this.editableFieldsOnPickups();
+          if (response.data.data.order.order_type === "PICKUP") {
+            this.setParent("sendy");
+            this.setLoader({
+              type: "pickUpDetails",
+              value: "",
+            });
+          } else {
+            this.setParent("customer");
+            this.fetchPickup();
+          }
         }
       });
+    },
+    cancellationReasons() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${
+          this.getStorageUserDetails.business_id
+        }/cancellation-reasons?order_type=${
+          this.getParent === "sendy" ? "PICKUP" : "DELIVERY"
+        }`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setCancellationReasons(
+            response.data.data["cancellation-reasons"]
+          );
+        }
+      });
+    },
+    editableFieldsOnConsignmemts() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/deliveries/${this.getOrderTrackingData.order.order_id}/editablefields`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setEditableFields(response.data.data.editablefields);
+        }
+      });
+    },
+    editableFieldsOnPickups() {
+      this.requestAxiosGet({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${this.getOrderTrackingData.order.order_id}/editablefields`,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setEditableFields(response.data.data.editablefields);
+        }
+      });
+    },
+    fetchPickup() {
+      const pickups =
+        this.getOrderTrackingData.order.cross_dock_linked_orders.filter(
+          (row) => {
+            return row.order_type === "PICKUP";
+          }
+        );
+      if (pickups.length) {
+        this.requestAxiosGet({
+          app: process.env.FULFILMENT_SERVER,
+          endpoint: `seller/${this.getStorageUserDetails.business_id}/consignments/${pickups[0].order_id}`,
+        }).then((response) => {
+          this.setLoader({
+            type: "pickUpDetails",
+            value: "",
+          });
+          if (response.status === 200) {
+            this.linkedPickup = response.data.data.order;
+          }
+        });
+      }
     },
     rescheduleStatus(val) {
       let actions = this.getDeliveryActions;
       actions[1].show = val === "customer";
       this.setDeliveryActions(actions);
     },
-    formatDate(date) {
-      const finalTime = moment(date).add(2, "hours");
-      return `${moment(date).format("dddd, Do MMM")} ${moment(date).format(
-        "ha"
-      )} - ${moment(finalTime).format("ha")}`;
-    },
-    formatDateComplete(date) {
-      return moment(date).format("dddd, Do MMM YYYY");
+    calculateSpeed() {
+      this.requestAxiosPost({
+        app: process.env.FULFILMENT_SERVER,
+        endpoint: `seller/${this.getStorageUserDetails.business_id}/crossdocked-delivery/calculate-speed`,
+        values: this.calculateSpeedPayload,
+      }).then((response) => {
+        if (response.status === 200) {
+          this.setDeliverySpeed(response.data.data.deliveries);
+        }
+      });
     },
   },
 };
@@ -229,6 +291,7 @@ export default {
 .tracking-order-title {
   font-weight: 500;
   font-size: 16px;
+  width: calc(91% + 70px);
 }
 .tracking-order-time-est {
   font-size: 14px;
@@ -248,5 +311,45 @@ export default {
 }
 .tracking-order-failed-delivery {
   margin: 0px 40px;
+}
+.tracking-reference-number {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 1px solid #909399;
+  color: #303133;
+  font-weight: 100;
+}
+.tracking-pickup-banner {
+  border: 1px solid #324ba8;
+  border-radius: 5px;
+  padding: 20px 30px 20px 0px;
+  width: calc(88% + 70px);
+  margin-bottom: 20px;
+}
+.tracking-pickup-banner-icon {
+  font-size: 25px;
+  color: #324ba8;
+  float: right;
+}
+.tracking-pick-up-banner-text {
+  font-size: 18px;
+}
+.tracking-pickup-banner-link {
+  color: #324ba8;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tracking-options-container {
+  float: right;
+}
+.tracking-option-content {
+  margin-right: 10px;
+  font-size: 15px;
+  color: #324ba8;
+  cursor: pointer;
+  border: 1px #c0c4cc solid;
+  border-radius: 5px;
+  padding: 5px;
+  font-weight: 400;
 }
 </style>

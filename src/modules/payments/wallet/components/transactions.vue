@@ -201,8 +201,6 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           this.setWallets(response.data.data.wallets);
-        } else {
-          this.setWallets([]);
         }
       });
     },
@@ -227,11 +225,19 @@ export default {
       });
     },
     allBillingCycle() {
+      this.setLoader({
+        type: "billingCycle",
+        value: "loading-text",
+      });
       this.requestAxiosGet({
         app: process.env.FULFILMENT_SERVER,
         endpoint: `seller/${this.getStorageUserDetails.business_id}/billingcycles`,
       }).then((response) => {
         if (response.status === 200) {
+          this.setLoader({
+            type: "billingCycle",
+            value: "",
+          });
           this.setBillingCycles(response.data.data.billing_cycles);
         }
       });

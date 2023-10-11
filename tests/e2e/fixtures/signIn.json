@@ -1,0 +1,13 @@
+{
+  "message":"login.otp.generated.success",
+  "data":{
+    "business_id":"B-VSW-5971",
+    "business_name":"Dorcas Business",
+    "user_id":"U-MQC-0567",
+    "email":"dorcas@sendyit.com",
+    "phone_number":null
+  },
+  "errors":[
+
+  ]
+}

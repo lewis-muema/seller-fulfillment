@@ -1,0 +1,82 @@
+{
+  "message": "speed.calculate.success",
+  "data": {
+    "pickups": [
+      {
+        "local_order_uuid": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+        "proposed_speeds": [
+          {
+            "local_order_uuid": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+            "speed_pricing_type": "SENDY_SAME_DAY",
+            "transport_provider": "SENDY",
+            "speed_pricing_uuid": "242d1f42-1925-4078-8795-01f48ad0d900",
+            "speed_pricing_description": "Sendy Same Day Shipment",
+            "price": 0.0,
+            "currency": "KES",
+            "speed_pricing_lower_limit_date": 1675854388667,
+            "speed_pricing_upper_limit_date": 1675890388667,
+            "pricing_expiration_date": 1675940789040
+          },
+          {
+            "local_order_uuid": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+            "speed_pricing_type": "SENDY_NEXT_DAY",
+            "transport_provider": "SENDY",
+            "speed_pricing_uuid": "f68c6d90-7c15-4727-b649-1c75180cff63",
+            "speed_pricing_description": "Sendy Next Day Shipment",
+            "price": 0.0,
+            "currency": "KES",
+            "speed_pricing_lower_limit_date": 1675854388667,
+            "speed_pricing_upper_limit_date": 1675940788667,
+            "pricing_expiration_date": 1675940789347
+          },
+          {
+            "local_order_uuid": "e2f1a3bf-ea52-4d1b-8a7f-adeba1f0b8fa",
+            "speed_pricing_type": "SENDY_SCHEDULED",
+            "transport_provider": "SENDY",
+            "speed_pricing_uuid": "6f038f9c-d853-458d-a719-7fa7b385a753",
+            "speed_pricing_description": "Sendy Scheduled Shipment",
+            "price": 0.0,
+            "currency": "KES",
+            "speed_pricing_lower_limit_date": 1675854388667,
+            "speed_pricing_upper_limit_date": 1676286388667,
+            "pricing_expiration_date": 1675940789658
+          }
+        ]
+      }
+    ],
+    "deliveries": [
+      {
+        "local_order_uuid": "0af649f5-b0c4-4800-8c98-4f4759de9944",
+        "proposed_speeds": [
+          {
+            "local_order_uuid": "0af649f5-b0c4-4800-8c98-4f4759de9944",
+            "speed_pricing_type": "SENDY_SAME_DAY",
+            "transport_provider": "SENDY",
+            "speed_pricing_uuid": "7086d1ff-674e-4c8b-8e2a-ace399919e29",
+            "speed_pricing_description": "Sendy Same Day Shipment",
+            "price": 60.0,
+            "currency": "KES",
+            "speed_pricing_lower_limit_date": 1675854389658,
+            "speed_pricing_upper_limit_date": 1675890389658,
+            "pricing_expiration_date": 1675940790043
+          },
+          {
+            "local_order_uuid": "0af649f5-b0c4-4800-8c98-4f4759de9944",
+            "speed_pricing_type": "SENDY_NEXT_DAY",
+            "transport_provider": "SENDY",
+            "speed_pricing_uuid": "fde10238-f816-4bbe-9222-a66f805a0149",
+            "speed_pricing_description": "Sendy Next Day Shipment",
+            "price": 0.0,
+            "currency": "KES",
+            "speed_pricing_lower_limit_date": 1675854389658,
+            "speed_pricing_upper_limit_date": 1675940789658,
+            "pricing_expiration_date": 1675940790274
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+
+  ]
+}

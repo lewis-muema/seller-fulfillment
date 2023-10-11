@@ -1,0 +1,14 @@
+{
+  "message": "order.list.success",
+  "data": {
+    "grouped_by_status_count": {
+      "ORDER_RECEIVED": 11,
+      "ORDER_IN_PROCESSING": 1,
+      "ORDER_IN_TRANSIT": 6,
+      "ORDER_COMPLETED": 7,
+      "ORDER_CANCELED": 3,
+      "ORDER_FAILED": 0
+    }
+  },
+  "errors": []
+}

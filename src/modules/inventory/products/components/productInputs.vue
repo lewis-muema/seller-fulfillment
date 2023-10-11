@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="">
-        <div class="mb-2">
+      <v-col cols="" class="add-product-left-col">
+        <div class="">
           <label for="productName" class="form-label">
             {{ $t("inventory.nameOfProduct") }}</label
           >
@@ -10,22 +10,44 @@
             <input
               type="text"
               class="form-control"
+              :class="
+                !name && inputErrorStatus ? 'add-product-input-error-state' : ''
+              "
               v-model="name"
               :placeholder="$t('inventory.whiteCoats')"
-              :disabled="action === 'editProduct'"
             />
           </div>
           <div class="add-product-helper-text">
             {{ $t("inventory.enterTheNameOnThePackage") }}
           </div>
         </div>
-        <div class="row mb-2">
+        <div class="">
+          <label for="upc" class="form-label">{{
+            $t("inventory.upcCode")
+          }}</label>
+          <div class="">
+            <v-text-field
+              class="businessProfile-field"
+              v-model="productVariants[0].universal_product_code"
+              variant="outlined"
+              clearable
+              clear-icon="mdi-close"
+            ></v-text-field>
+          </div>
+        </div>
+        <div class="">
           <label for="price" class="form-label">{{
             $t("inventory.sellingPrice")
           }}</label>
           <div class="">
             <v-text-field
               class="businessProfile-field"
+              :class="
+                !productVariants[0].product_variant_unit_price &&
+                inputErrorStatus
+                  ? 'add-product-v-input-error-state'
+                  : ''
+              "
               id="update-price"
               v-model="productVariants[0].product_variant_unit_price"
               :label="productVariants[0].product_variant_currency"
@@ -33,21 +55,26 @@
               :prefix="productVariants[0].product_variant_currency"
               clearable
               clear-icon="mdi-close"
-              :disabled="productVariants.length > 1"
             ></v-text-field>
           </div>
         </div>
-        <div class="row mb-2">
-          <label for="price" class="form-label">
+        <div class="row">
+          <label for="weight" class="form-label">
             {{ $t("inventory.weight") }}
           </label>
           <div class="col-8">
             <input
               type="number"
               class="form-control"
+              :class="
+                productVariants[0].product_variant_quantity <= 0 &&
+                inputErrorStatus
+                  ? 'add-product-input-error-state'
+                  : ''
+              "
               placeholder="0.0"
+              min="0"
               v-model="productVariants[0].product_variant_quantity"
-              :disabled="productVariants.length > 1"
             />
           </div>
           <div class="col-4">
@@ -55,7 +82,6 @@
               class="edit-product-weight-field"
               :items="dimensions"
               v-model="productVariants[0].product_variant_quantity_type"
-              :disabled="productVariants.length > 1"
               outlined
             ></v-select>
           </div>
@@ -63,7 +89,7 @@
             {{ $t("inventory.thisHelpsUsToKnow") }}
           </div>
         </div>
-        <div class="mb-2">
+        <div class="">
           <label for="desc" class="form-label">
             {{ $t("inventory.description") }}</label
           >
@@ -77,6 +103,81 @@
           </div>
           <div class="add-product-helper-text">
             {{ $t("inventory.aShortDescriptionToHelp") }}
+          </div>
+        </div>
+        <div class="">
+          <p>{{ $t("inventory.preference") }}</p>
+          <p>
+            {{ $t("inventory.setProductPreference") }}
+          </p>
+          <div v-if="!view">
+            <span class="add-product-preference" @click="view = true">
+              <span class="">
+                {{ $t("inventory.viewMore") }}
+              </span>
+              <i class="mdi mdi-chevron-down add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-else>
+            <span class="add-product-preference" @click="view = false">
+              <span class="">
+                {{ $t("inventory.viewLess") }}
+              </span>
+              <i class="mdi mdi-chevron-up add-product-preference-icon"></i>
+            </span>
+          </div>
+          <div v-if="view">
+            <p class="preference-titles-desc">
+              {{ $t("inventory.productAttributes") }}
+            </p>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="prodPref.isPhotosensitive"
+                :label="$t(`inventory.PHOTO_SENSITIVE`)"
+              ></v-checkbox>
+            </div>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="prodPref.isFragile"
+                :label="$t(`inventory.FRAGILE`)"
+              ></v-checkbox>
+            </div>
+            <div class="add-product-preference-checkbox">
+              <v-checkbox
+                v-model="prodPref.isTemperaturesensitive"
+                :label="$t(`inventory.TEMPERATURE_SENSITIVE`)"
+              ></v-checkbox>
+            </div>
+            <div v-if="prodPref.isTemperaturesensitive">
+              <p>{{ $t("inventory.temperature") }}</p>
+              <div class="slider-demo-block">
+                <span class="d-flex">
+                  <el-slider v-model="tempRange" range show-stops :step="10" />
+                  <span class="ml-3">°C</span>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <p class="preference-titles-desc">
+                {{ $t("inventory.stockLevels") }}
+              </p>
+              <div class="">
+                <label for="threshold" class="form-label"
+                  >{{ $t("inventory.getNotified") }}
+                </label>
+                <div class="">
+                  <v-text-field
+                    v-model="productVariants[0].low_stock_threshold"
+                    placeholder="0"
+                    suffix="units"
+                    variant="outlined"
+                    clearable
+                    clear-icon="mdi-close"
+                  ></v-text-field>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="desktop-product-options-container mt-3 mb-3">
@@ -116,7 +217,10 @@
                     <v-icon>mdi mdi-pencil </v-icon>
                   </div>
                 </v-list-item-avatar>
-                <v-list-item-avatar end>
+                <v-list-item-avatar
+                  end
+                  v-if="$route.path === '/inventory/add-product'"
+                >
                   <div
                     class="desktop-product-options-icon"
                     @click="deleteProductOption(index + 1)"
@@ -170,6 +274,11 @@
         <p class="ml-12">{{ $t("inventory.img") }}</p>
         <div
           class="img-container"
+          :class="
+            !productVariants[0].product_variant_image_link && inputErrorStatus
+              ? 'add-product-input-error-state'
+              : ''
+          "
           @click="pickImg()"
           v-loading="productUploadStatus"
         >
@@ -229,12 +338,22 @@ export default {
           product_variant_quantity_type: "GRAM",
           product_variant_stock_levels: {},
           product_variant_unit_price: "",
+          universal_product_code: "",
+          low_stock_threshold: "",
+          product_variant_properties: [],
         },
       ],
+      tempRange: [0, 100],
       showProductOptions: false,
       image: "",
       name: "",
       price: "",
+      view: false,
+      prodPref: {
+        isPhotosensitive: false,
+        isFragile: false,
+        isTemperaturesensitive: false,
+      },
       quantity: "",
       productUploadStatus: false,
       dimensions: [
@@ -259,10 +378,11 @@ export default {
       activeOption: {},
       productDescription: "",
       buttonLoader: false,
+      inputErrorStatus: false,
     };
   },
   mounted() {
-    this.setComponent("common.productDetails");
+    this.setComponent("common.addProduct");
     this.initiateS3();
     this.productVariants[0].product_id = this.getProduct.product_id;
     this.productVariants[0].business_id =
@@ -300,11 +420,21 @@ export default {
     },
     productVariants: {
       handler(val) {
-        if (val.length > 1) {
-          this.productVariants[0].product_variant_unit_price = "0";
-          this.productVariants[0].product_variant_quantity = "0";
-          this.productVariants[0].product_variant_quantity_type = "GRAM";
-        }
+        val[0].product_variant_properties.length
+          ? val[0].product_variant_properties.forEach((sensitivity) => {
+              if (sensitivity.product_property_type === "PHOTO_SENSITIVE") {
+                this.prodPref.isPhotosensitive = true;
+              }
+              if (sensitivity.product_property_type === "FRAGILE") {
+                this.prodPref.isFragile = true;
+              }
+              if (
+                sensitivity.product_property_type === "TEMPERATURE_SENSITIVE"
+              ) {
+                this.prodPref.isTemperaturesensitive = true;
+              }
+            })
+          : [];
       },
       deep: true,
     },
@@ -336,6 +466,81 @@ export default {
         }
       });
       return variants;
+    },
+    productPayload() {
+      const products = [];
+      this.productVariants.forEach((variant) => {
+        const {
+          business_id,
+          product_id,
+          product_variant_archived,
+          product_variant_currency,
+          product_variant_description,
+          product_variant_expiry_date,
+          product_variant_id,
+          product_variant_image_link,
+          product_variant_quantity,
+          product_variant_quantity_type,
+          product_variant_stock_levels,
+          product_variant_unit_price,
+          universal_product_code,
+          low_stock_threshold,
+        } = variant;
+        const productProperties = {
+          business_id,
+          product_id,
+          product_variant_archived,
+          product_variant_currency,
+          product_variant_description,
+          product_variant_expiry_date,
+          product_variant_id,
+          product_variant_image_link,
+          product_variant_quantity,
+          product_variant_quantity_type,
+          product_variant_stock_levels,
+          product_variant_unit_price,
+          universal_product_code,
+          low_stock_threshold,
+          product_variant_properties: this.sensitivityRange,
+        };
+        products.push(productProperties);
+      });
+      return products;
+    },
+    sensitivityRange() {
+      const data = [];
+      const productPreference = [
+        {
+          product_property_type: "PHOTO_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "FRAGILE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: null,
+        },
+        {
+          product_property_type: "TEMPERATURE_SENSITIVE",
+          sensitivity_lower_limit: 0,
+          sensitivity_upper_limit: 0,
+          sensitivity_unit_of_measure: "CELSIUS",
+        },
+      ];
+      if (this.prodPref.isPhotosensitive) {
+        data.push(productPreference[0]);
+      }
+      if (this.prodPref.isFragile) {
+        data.push(productPreference[1]);
+      }
+      if (this.prodPref.isTemperaturesensitive) {
+        productPreference[2].sensitivity_lower_limit = this.tempRange[0];
+        productPreference[2].sensitivity_upper_limit = this.tempRange[1];
+        data.push(productPreference[2]);
+      }
+      return data;
     },
     variants() {
       const res = [];
@@ -393,7 +598,7 @@ export default {
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPut({
@@ -442,15 +647,16 @@ export default {
         this.productVariants[0].product_variant_currency &&
         (this.productVariants[0].product_variant_unit_price ||
           this.productVariants.length > 1) &&
-        (this.productVariants[0].product_variant_quantity ||
+        (this.productVariants[0].product_variant_quantity > 0 ||
           this.productVariants.length > 1) &&
         this.productVariants[0].product_variant_quantity_type &&
         this.productVariants[0].product_variant_image_link
       ) {
+        this.inputErrorStatus = false;
         const product = {
           product_name: this.name,
           product_description: this.productDescription,
-          product_variants: this.productVariants,
+          product_variants: this.productPayload,
         };
         this.buttonLoader = true;
         this.requestAxiosPost({
@@ -490,6 +696,7 @@ export default {
           }
         });
       } else {
+        this.inputErrorStatus = true;
         ElNotification({
           title: this.$t("deliveries.insufficientInformation"),
           message: this.$t("deliveries.pleaseFillInAllFields"),
@@ -575,6 +782,7 @@ export default {
 }
 .desktop-product-options-content {
   padding: 20px 20px 0px 20px !important;
+  width: 420px;
 }
 .add-product-sizes,
 .add-product-options {
@@ -607,5 +815,32 @@ label {
 }
 .img-container .el-loading-mask {
   padding-top: 35%;
+}
+.add-product-preference {
+  cursor: pointer;
+  color: #324ba8;
+}
+.add-product-preference-checkbox {
+  height: 45px !important;
+}
+.preference-titles-desc {
+  color: #909399;
+  font-size: 14px;
+  margin: 12px 0px 0px;
+}
+.v-selection-control--dirty .v-icon {
+  color: #324ba8 !important;
+}
+.el-slider {
+  --el-slider-main-bg-color: #324ba8 !important;
+}
+.add-product-left-col {
+  width: 425px;
+}
+.add-product-input-error-state {
+  border: 2px solid #9b101c !important;
+}
+.add-product-v-input-error-state .v-input__control .v-field {
+  border: 2px solid #9b101c !important;
 }
 </style>
